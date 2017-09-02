@@ -1,0 +1,112 @@
+id,element,type,outbound_degree,inbound_degree,diagram,useCase
+1,invalid input error message,boundary,0,2,Login,Login
+2,error message for empty input,boundary,0,2,Login,Login
+3,user info,entity,0,1,Login,Login
+4,query authentication info,control,1,1,Login,Login
+5,pre-check if input is empty,control,3,1,Login,Login
+6,login page,boundary,1,1,Login,Login
+7,User,actor,3,0,Login,Login
+8,Session,entity,0,2,Logout,Logout
+9,clear session,control,4,1,Logout,Logout
+10,logout button,boundary,1,1,Logout,Logout
+11,User,actor,3,0,Logout,Logout
+12,successful information for creation,boundary,0,2,Create profile,Create profile
+13,existing profile error message,boundary,0,2,Create profile,Create profile
+14,error message for empty input,boundary,0,2,Create profile,Create profile
+15,user info,entity,0,1,Create profile,Create profile
+16,send information in db,control,1,1,Create profile,Create profile
+17,pre-check if input is empty,control,4,1,Create profile,Create profile
+18,Create Profile Page,boundary,1,1,Create profile,Create profile
+19,User,actor,4,0,Create profile,Create profile
+20,successful change message,boundary,0,2,Manage Profile,Manage Profile
+21,pre-check required fields,control,2,1,Manage Profile,Manage Profile
+22,profile edit page,boundary,1,1,Manage Profile,Manage Profile
+23,invalid information error message,boundary,0,2,Manage Profile,Manage Profile
+24,user info,entity,0,1,Manage Profile,Manage Profile
+25,update profile entry,control,2,1,Manage Profile,Manage Profile
+26,display profile edit page,control,0,1,Manage Profile,Manage Profile
+27,Edit profile button,boundary,1,1,Manage Profile,Manage Profile
+28,User,actor,5,0,Manage Profile,Manage Profile
+29,No product error message,boundary,0,2,Search Product,Search Product
+30,product page,boundary,0,2,Search Product,Search Product
+31,product,entity,0,1,Search Product,Search Product
+32,query product by criteria,control,3,1,Search Product,Search Product
+33,product search page,boundary,1,1,Search Product,Search Product
+34,User,actor,3,0,Search Product,Search Product
+35,not available error message,boundary,0,2,Add to cart,Add to cart
+36,product,entity,0,1,Add to cart,Add to cart
+37,check db if available,control,3,1,Add to cart,Add to cart
+38,cart,entity,0,1,Add to cart,Add to cart
+39,add to cart,control,1,1,Add to cart,Add to cart
+40,add to cart button,boundary,1,1,Add to cart,Add to cart
+41,User,actor,2,0,Add to cart,Add to cart
+42,missing information for payment message,boundary,0,3,Place Order,Place Order
+43,invalid payment inforrmation,boundary,1,1,Place Order,Place Order
+44,send error message for invalid payment information,control,1,1,Place Order,Place Order
+45,redirect to payment page,control,1,2,Place Order,Place Order
+46,payment successful message,boundary,1,1,Place Order,Place Order
+47,approve transaction and display successful message,control,1,1,Place Order,Place Order
+48,thirdpart payment system,actor,2,1,Place Order,Place Order
+49,verify payment information,control,1,1,Place Order,Place Order
+50,pre-check if required information is empty,control,2,1,Place Order,Place Order
+51,payment information page,boundary,1,1,Place Order,Place Order
+52,User,actor,2,0,Place Order,Place Order
+53,no order history page,boundary,0,2,View order history,View order history
+54,order history list,boundary,0,2,View order history,View order history
+55,order,entity,0,1,View order history,View order history
+56,retrieve order history,control,3,1,View order history,View order history
+57,Order history button,boundary,1,1,View order history,View order history
+58,User,actor,3,0,View order history,View order history
+59,no order history page,boundary,0,2,View Past Transactions,View Past Transactions
+60,order history list,boundary,0,2,View Past Transactions,View Past Transactions
+61,order,entity,0,1,View Past Transactions,View Past Transactions
+62,retrieve order history for a florist,control,3,1,View Past Transactions,View Past Transactions
+63,Order history button,boundary,1,1,View Past Transactions,View Past Transactions
+64,florist,actor,3,0,View Past Transactions,View Past Transactions
+65,order status,boundary,0,2,Track Order,Track Order
+66,order,entity,0,1,Track Order,Track Order
+67,retrieve order status,control,3,1,Track Order,Track Order
+68,Track order button,boundary,1,1,Track Order,Track Order
+69,user,actor,3,0,Track Order,Track Order
+70,update successful page,boundary,0,2,Provide tracking information,Provide tracking information
+71,order,entity,0,1,Provide tracking information,Provide tracking information
+72,update order status information,control,2,1,Provide tracking information,Provide tracking information
+73,Order page,boundary,1,1,Provide tracking information,Provide tracking information
+74,florist,actor,2,0,Provide tracking information,Provide tracking information
+75,too short review error message,boundary,0,2,Review and Rating,Review and Rating
+76,store review and rating information,control,1,1,Review and Rating,Review and Rating
+77,pre-check if length of review is legal,control,2,1,Review and Rating,Review and Rating
+78,review panel,boundary,1,2,Review and Rating,Review and Rating
+79,review,entity,0,1,Review and Rating,Review and Rating
+80,display review penal,control,1,1,Review and Rating,Review and Rating
+81,review button,boundary,1,1,Review and Rating,Review and Rating
+82,customer,actor,3,0,Review and Rating,Review and Rating
+83,exceeded limit error message,boundary,0,2,Upload catalog,Upload catalog
+84,save uploaded information to db,control,1,1,Upload catalog,Upload catalog
+85,information is invalid,boundary,0,2,Upload catalog,Upload catalog
+86,category,entity,0,1,Upload catalog,Upload catalog
+87,pre-check if required information valid,control,3,1,Upload catalog,Upload catalog
+88,Upload page,boundary,1,1,Upload catalog,Upload catalog
+89,florist,actor,3,0,Upload catalog,Upload catalog
+90,exceeded limit error message,boundary,0,2,Manage Catalog,Manage Catalog
+91,save uploaded information to db,control,1,1,Manage Catalog,Manage Catalog
+92,information is invalid,boundary,0,2,Manage Catalog,Manage Catalog
+93,category,entity,0,1,Manage Catalog,Manage Catalog
+94,pre-check if required information valid,control,3,1,Manage Catalog,Manage Catalog
+95,catalog manage page,boundary,1,1,Manage Catalog,Manage Catalog
+96,florist,actor,3,0,Manage Catalog,Manage Catalog
+97,successful communication message,boundary,0,2,Private message,Private message
+98,save comments/concerns,control,2,1,Private message,Private message
+99,comment and concerns panel,boundary,1,2,Private message,Private message
+100,message,entity,0,1,Private message,Private message
+101,display chat panel,control,1,1,Private message,Private message
+102,chat button,boundary,1,1,Private message,Private message
+103,customer,actor,4,0,Private message,Private message
+104,save replied message,control,1,1,Private Message - Florist,Private Message - Florist
+105,reply input panel,boundary,1,2,Private Message - Florist,Private Message - Florist
+106,display comment input panel,control,2,1,Private Message - Florist,Private Message - Florist
+107,unread message,boundary,1,2,Private Message - Florist,Private Message - Florist
+108,message,entity,0,3,Private Message - Florist,Private Message - Florist
+109,display unread message,control,2,1,Private Message - Florist,Private Message - Florist
+110,dashboard page,boundary,1,1,Private Message - Florist,Private Message - Florist
+111,customer,actor,3,0,Private Message - Florist,Private Message - Florist

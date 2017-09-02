@@ -1,0 +1,109 @@
+if useCaseInfo
+ div.use-case-detail-content(data-use-case-title=useCaseInfo.Name)
+  ul.nav.nav-tabs
+   li.active
+    a(data-toggle='tab', href='#use-case-info-pane') UseCase Info
+   li
+    a(data-toggle='tab', href='#use-case-analytics') Analytics
+   li
+    a(data-toggle='tab', href='#use-case-distributions') Distributions
+   li
+    a(data-toggle='tab', href='#use-case-evaluation') Evaluation
+ div.tab-content
+  div.tab-pane.fade.in.active(id="use-case-info-pane")
+   -var diagrams = useCaseInfo.Diagrams
+   include diagramsDisplay 
+  div.tab-pane.fade(id="use-case-analytics")
+     div.use-case-analytics
+        h3 Calculated:
+        ul
+         li
+          span.statistical-item Number of Interface Management Transactions: #{useCaseAnalytics.INT}
+         li
+          span.statistical-item Number of Data Management Transactions: #{useCaseAnalytics.DM}
+         li
+          span.statistical-item Number of Control Transactions: #{useCaseAnalytics.CTRL}
+         li
+          span.statistical-item Number of External Inovations: #{useCaseAnalytics.EXTIVK}
+         li
+          span.statistical-item Number of External Calls: #{useCaseAnalytics.EXTCLL}
+         li
+          span.statistical-item Number of Not Matched Transactions: #{useCaseAnalytics.TRAN_NA}
+         li
+          span.statistical-item Number of EI: #{useCaseAnalytics.EI}
+         li
+          span.statistical-item Number of EO: #{useCaseAnalytics.EO}
+         li
+          span.statistical-item Number of EQ: #{useCaseAnalytics.EQ}
+         li
+          span.statistical-item Number of Not Matched Functions: #{useCaseAnalytics.FUNC_NA}
+         li
+          span.statistical-item Average Path length: #{useCaseAnalytics.AvgPathLength}
+         li
+          span.statistical-Item Average Element Degree: #{useCaseAnalytics.AvgDegree}
+         li
+          span.statistical-item Number of Paths: #{useCaseAnalytics.PathNum}
+         li
+          span.statistical-Item Number of Elements: #{useCaseAnalytics.ElementNum}
+         li
+          span.statistical-item Number of Actors: #{useCaseAnalytics.ActorNum}
+         li
+          span.statistical-item Number of Boundary Elements: #{useCaseAnalytics.BoundaryNum}
+         li
+          span.statistical-item Number of Control Elements: #{useCaseAnalytics.ControlNum}
+         li
+          span.statistical-item Number of Entity Elements: #{useCaseAnalytics.EntityNum}
+  div.tab-pane.fade(id="use-case-distributions")
+    div.use-case-distributions
+        div.stats-chart
+         img(src="#{useCaseAnalytics.AccessDir}/control_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{useCaseAnalytics.AccessDir}/data_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{useCaseAnalytics.AccessDir}/interface_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{useCaseAnalytics.AccessDir}/partial_match_analysis_result.svg")
+        div.stats-chart
+         img(src="#{useCaseAnalytics.AccessDir}/functional_pattern_counts.svg")
+        div.stats-chart
+         img(src="#{useCaseAnalytics.AccessDir}/trasactional_pattern_counts.svg")
+  div.tab-pane.fade(id="use-case-evaluation")
+     div.use-case-evaluation
+        h3 Evaluation:
+        form(id="use-case-evaluation-form", onsubmit="return false;")
+         div
+          div Number of transactions (#{useCaseAnalytics.PathNum}):
+           input(type='text', name='path_num', id='path_num')
+          div Number of Data Management Transactions (#{useCaseAnalytics.DM}):
+           input(type='text', name='dm', id='dm')
+          div Number of Interface Management Transactions (#{useCaseAnalytics.IM}):
+           input(type='text', name='im', id='im')
+          div Number of Control Transactions (#{useCaseAnalytics.CT}):
+           input(type='text', name='ct', id='ct')
+          div Number of external invocations (#{useCaseAnalytics.EIVK}):
+           input(type='text', name='eivk', id='eivk')
+          div Number of external calls (#{useCaseAnalytics.ECLL}):
+           input(type='text', name='ecll', id='ecll')
+          div Cyclomatic coplexity of structured scenarios (#{useCaseAnalytics.CCSS}):
+           input(type='text', name='ccss', id='ccss')
+          div Number of transactions (#{useCaseAnalytics.IT}):
+           input(type='text', name='it', id='it')
+          div Internal logical files (#{useCaseAnalytics.ILF}):
+           input(type='text', name='ilf', id='ilf')
+          div External logical files (#{useCaseAnalytics.ELF}):
+           input(type='text', name='elf', id='elf')
+          div External inputs (#{useCaseAnalytics.EI}):
+           input(type='text', name='ei', id='ei')
+          div External outputs(#{useCaseAnalytics.EO}):
+           input(type='text', name='eo', id='eo')
+          div External inquiries (#{useCaseAnalytics.EQ}):
+           input(type='text', name='eq', id='eq')
+          div Effort (person-hours) (#{useCaseAnalytics.PH}):
+           input(type='text', name='ph', id='ph')
+           input(type='hidden', name='use-case-id', value='#{useCaseAnalytics._id}')
+           input(type='hidden', name='model-id', value='#{modelId}')
+          div
+           button(id='use-case-evaluation-form-submit-button') Submit
+        div
+          a(id='delete-use-case-btn' href='deleteUseCase?useCase_id=#{useCaseAnalytics._id}&model_id=#{modelId}') Delete Model
+  div.clear

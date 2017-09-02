@@ -1,0 +1,8 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Admin->All vendors tab->redirect vendors page->user list with edit and remove buttons,EQ,CTRL|INT,4,undefined,1,0,1,Manage vendor,Manage vendor
+2,Admin->All vendors tab->redirect vendors page->vendor,EI,CTRL|DM|EI,4,undefined,1,1,1,Manage vendor,Manage vendor
+3,Admin->vendor detail page->update vendor info->notify amdin->User info updated message,EQ,CTRL|INT,5,undefined,2,0,1,Manage vendor,Manage vendor
+4,Admin->vendor detail page->update vendor info->vendor,EI,CTRL|DM|EI,4,undefined,1,1,1,Manage vendor,Manage vendor
+5,Admin->user list with edit and remove buttons->redirect to vendor details page->query vendor detail->vendor,EI,CTRL|DM|EI,5,undefined,2,1,1,Manage vendor,Manage vendor
+6,Admin->user list with edit and remove buttons->redirect to vendor details page->vendor detail page,EQ,CTRL|INT,4,undefined,1,0,1,Manage vendor,Manage vendor
+7,Admin->user list with edit and remove buttons->remove vendor->vendor,EI,CTRL|DM|EI,4,undefined,1,1,1,Manage vendor,Manage vendor

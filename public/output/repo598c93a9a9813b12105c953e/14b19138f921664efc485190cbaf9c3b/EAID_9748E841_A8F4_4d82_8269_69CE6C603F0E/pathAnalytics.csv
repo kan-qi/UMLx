@@ -1,0 +1,15 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,User->Login Page->open sign up page->sign up page,EQ,CTRL|INT,4,undefined,1,0,1,Signup,Signup
+2,User->sign up page->save user info for admin->User info already created,EQ,CTRL|INT,4,undefined,1,0,1,Signup,Signup
+3,User->sign up page->save user info for admin->user info,EI,CTRL|DM|EI,4,undefined,1,1,1,Signup,Signup
+4,User->sign up page->save user info for admin->Display error message->Invalid information,EQ,CTRL|INT,5,undefined,2,0,1,Signup,Signup
+5,User->sign up page->save user info for admin->View user registration info,EQ,CTRL|INT,4,undefined,1,0,1,Signup,Signup
+6,User->sign up page->save user info for admin->Notification of unsuccessful registration,EQ,CTRL|INT,4,undefined,1,0,1,Signup,Signup
+7,User->sign up page->save user info for admin->notification of successful registration,EQ,CTRL|INT,4,undefined,1,0,1,Signup,Signup
+8,User->sign up page->select admin option->save user info for admin->User info already created,EQ,CTRL|INT,5,undefined,2,0,1,Signup,Signup
+9,User->sign up page->select admin option->save user info for admin->user info,EI,CTRL|DM|EI,5,undefined,2,1,1,Signup,Signup
+10,User->sign up page->select admin option->save user info for admin->Display error message->Invalid information,EQ,CTRL|INT,6,undefined,3,0,1,Signup,Signup
+11,User->sign up page->select admin option->save user info for admin->View user registration info,EQ,CTRL|INT,5,undefined,2,0,1,Signup,Signup
+12,User->sign up page->select admin option->save user info for admin->Notification of unsuccessful registration,EQ,CTRL|INT,5,undefined,2,0,1,Signup,Signup
+13,User->sign up page->select admin option->save user info for admin->notification of successful registration,EQ,CTRL|INT,5,undefined,2,0,1,Signup,Signup
+14,Admin->View user registration info->approve user registration->user info,EI,CTRL|DM|EI,4,undefined,1,1,1,Signup,Signup

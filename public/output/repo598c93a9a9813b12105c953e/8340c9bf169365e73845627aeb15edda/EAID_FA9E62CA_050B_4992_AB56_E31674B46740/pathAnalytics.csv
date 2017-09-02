@@ -1,0 +1,8 @@
+id,path,functional,transactional,path_length,diagram,useCase
+1,User->profile edit icon->popup profile edit page->profile edit page,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+2,User->profile edit page->popup image selector field->Image selector field,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+3,User->Image selector field->save image->invalid file name,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+4,User->Image selector field->save image->profile,EI,CTRL|DM|EI,undefined,Update profile picture,Update profile picture
+5,User->Image selector field->save image->invalid file size error message,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+6,User->Image selector field->save image->picture format error message,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+7,User->Image selector field->save image->redirect to profile page->profile page,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture

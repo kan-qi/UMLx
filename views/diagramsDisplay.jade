@@ -1,0 +1,31 @@
+if diagrams
+#diagrams-carousel.carousel.slide(data-ride='carousel')
+  // Indicators
+  ol.carousel-indicators
+   -var diagramCount = 0;
+   each diagram in diagrams
+    -if (diagramCount == 0){
+      li.active(data-target='#diagrams-carousel', data-slide-to=diagramCount)
+    -} else {
+      li(data-target='#diagrams-carousel', data-slide-to=diagramCount)
+    -}
+    - diagramCount++;
+  // Wrapper for slides
+  .carousel-inner
+   - diagramCount = 0;
+   each diagram in diagrams
+     -if (diagramCount == 0){
+      .item.active
+        include diagramDisplay
+     -} else {
+      .item
+        include diagramDisplay
+     -}
+     -diagramCount++;
+  // Left and right controls
+  a.left.carousel-control(href='#diagrams-carousel', data-slide='prev')
+    span.glyphicon.glyphicon-chevron-left
+    span.sr-only Previous
+  a.right.carousel-control(href='#diagrams-carousel', data-slide='next')
+    span.glyphicon.glyphicon-chevron-right
+    span.sr-only Next

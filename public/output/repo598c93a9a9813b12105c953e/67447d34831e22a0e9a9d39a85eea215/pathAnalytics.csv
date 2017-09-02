@@ -1,0 +1,53 @@
+id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
+1,Admin->Manage course page->redirect to home page->home page,EQ,CTRL|INT,4,2,1,0,1,3,Add course,Add course
+2,Admin->Manage course page->Process course information->Invalid entered information,EQ,CTRL|INT,4,2,1,0,1,3,Add course,Add course
+3,Admin->Manage course page->Process course information->save course information into database->course,EI,CTRL|DM|EI,5,1,2,1,1,1,Add course,Add course
+4,Admin->Delete confirmation dialog->delete course->send email to attendees->Email protocol,FUNC_NA,CTRL|EXTIVK,5,1,2,0,2,1,Delete course,Delete course
+5,Admin->Delete confirmation dialog->delete course->send email to attendees->delete success message,EQ,CTRL|INT,5,2,2,0,1,3,Delete course,Delete course
+6,Admin->Delete confirmation dialog->delete course->course,EI,CTRL|DM|EI,4,1,1,1,1,1,Delete course,Delete course
+7,Admin->delete course button->show delete confirmation box->Delete confirmation dialog,EQ,CTRL|INT,4,2,1,0,1,3,Delete course,Delete course
+8,Admin->Course management page->verify course information->save course info->course,EI,CTRL|DM|EI,5,1,2,1,1,1,Modify course,Modify course
+9,Admin->Course management page->verify course information->Invalid course information,EQ,CTRL|INT,4,2,1,0,1,3,Modify course,Modify course
+10,Admin->Course management page->Redirect to home page->home page,EQ,CTRL|INT,4,2,1,0,1,3,Modify course,Modify course
+11,Admin->course informaton->save the acceptance information->course information is no t valid message,EQ,CTRL|INT,4,2,1,0,1,3,Verify new course,Verify new course
+12,Admin->course informaton->save the acceptance information->acceptance,EI,CTRL|DM|EI,4,1,1,1,1,1,Verify new course,Verify new course
+13,Admin->course informaton->save the acceptance information->send email to trianer->Email protocol,FUNC_NA,CTRL|EXTIVK,5,1,2,0,2,1,Verify new course,Verify new course
+14,Admin->course list->load course information->course informaton,EQ,CTRL|INT,4,2,1,0,1,3,Verify new course,Verify new course
+15,Admin->course list->load course information->course,EI,CTRL|DM|EI,4,1,1,1,1,1,Verify new course,Verify new course
+16,User->Log out button->clear local cache->home page,EQ,CTRL|INT,4,2,1,0,1,3,Request new course,Request new course
+17,User->Log out button->clear local cache->cache,EI,CTRL|DM|EI,4,1,1,1,1,1,Request new course,Request new course
+18,User->home page->save course information for review->course information is no t valid message,EQ,CTRL|INT,4,2,1,0,1,3,Request new course,Request new course
+19,Trainer->load schedule button->query schedule info->schedule,EI,CTRL|DM|EI,4,1,1,1,1,1,Update schedule,Update schedule
+20,Trainer->load schedule button->query schedule info->schedule info page,EQ,CTRL|INT,4,2,1,0,1,3,Update schedule,Update schedule
+21,Trainer->schedule info page->display update schedule page->schedule update page,EQ,CTRL|INT,4,2,1,0,1,3,Update schedule,Update schedule
+22,Trainer->schedule update page->validate updated schedule info->save updated schedule->schedule,EI,CTRL|DM|EI,5,1,2,1,1,1,Update schedule,Update schedule
+23,Trainer->schedule update page->validate updated schedule info->Invalid input schedule info,EQ,CTRL|INT,4,2,1,0,1,3,Update schedule,Update schedule
+24,User->Login page->Redirect to home page->Home page,EQ,CTRL|INT,4,2,1,0,1,3,Login,Login
+25,User->Login page->verify login information->Login invalid message,EQ,CTRL|INT,4,2,1,0,1,3,Login,Login
+26,User->Login page->verify login information->update role->cache,EI,CTRL|DM|EI,5,1,2,1,1,1,Login,Login
+27,User->Login page->verify login information->update role->Login success information,EQ,CTRL|INT,5,2,2,0,1,3,Login,Login
+28,User->Login page->verify login information->user,EI,CTRL|DM|EI,4,1,1,1,1,1,Login,Login
+29,User->Log out button->clear local cache->home page,EQ,CTRL|INT,4,2,1,0,1,3,Logout,Logout
+30,User->Log out button->clear local cache->cache,EI,CTRL|DM|EI,4,1,1,1,1,1,Logout,Logout
+31,User->Sign up page->verify sign up information->Save sign up information->user,EI,CTRL|DM|EI,5,1,2,1,1,1,Setup account,Setup account
+32,User->Sign up page->verify sign up information->Save sign up information->home page,EQ,CTRL|INT,5,2,2,0,1,3,Setup account,Setup account
+33,User->Sign up page->verify sign up information->invalid sign up informatin,EQ,CTRL|INT,4,2,1,0,1,3,Setup account,Setup account
+34,User->course list button->load course list->Course list,EQ,CTRL|INT,4,2,1,0,1,3,Share course,Share course
+35,User->course list button->load course list->user,EI,CTRL|DM|EI,4,1,1,1,1,1,Share course,Share course
+36,User->Share menu->send course information to users->Notification,EI,CTRL|DM|EI,4,1,1,1,1,1,Share course,Share course
+37,User->Share menu->Redirect to login page->Login page,EQ,CTRL|INT,4,2,1,0,1,3,Share course,Share course
+38,User->Course list->Open course share menu->Share menu,EQ,CTRL|INT,4,2,1,0,1,3,Share course,Share course
+39,User->Search page->Search course by keywords->course,EI,CTRL|DM|EI,4,1,1,1,1,1,Search course,Search course
+40,User->Search page->Search course by keywords->course list,EQ,CTRL|INT,4,2,1,0,1,3,Search course,Search course
+41,User->Search page->Search course by keywords->No matched results,EQ,CTRL|INT,4,2,1,0,1,3,Search course,Search course
+42,User->Search page->redirect to home page->home page,EQ,CTRL|INT,4,2,1,0,1,3,Search course,Search course
+43,Attendee->Course detail page->Redirect to home page->Home page,EQ,CTRL|INT,4,2,1,0,1,3,Register course,Register course
+44,Attendee->Course detail page->setupPayment->EventBrite,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,Register course,Register course
+45,Attendee->Payment page->make payment,FUNC_NA,TRAN_NA,3,2,0,0,1,3,Register course,Register course
+46,EventBrite->bring up payment page->Payment page,FUNC_NA,CTRL|EXTCLL|INT,3,1,1,0,1,1,Register course,Register course
+47,EventBrite->receive payment result->Send out confirmation email->Email protocol,FUNC_NA,CTRL|EXTIVK,4,0,2,0,2,1,Register course,Register course
+48,EventBrite->receive payment result->Send out confirmation email->registration success,FUNC_NA,CTRL|EXTCLL|INT,4,1,2,0,1,1,Register course,Register course
+49,Attendee->Course detail page->Display review page->Review page,EQ,CTRL|INT,4,2,1,0,1,3,Review course,Review course
+50,Attendee->Review page->Redirect to home page->Home page,EQ,CTRL|INT,4,2,1,0,1,3,Review course,Review course
+51,Attendee->Review page->Update cours information in db->Cours information update success message,EQ,CTRL|INT,4,2,1,0,1,3,Review course,Review course
+52,Attendee->Review page->Update cours information in db->Course,EI,CTRL|DM|EI,4,1,1,1,1,1,Review course,Review course

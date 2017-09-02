@@ -1,0 +1,91 @@
+id,path,transactional,path_length,diagram,useCase
+1,user->Account Creation Page->Specify Credentials->check if passwords match,TRAN_NA,4,Create Account,Create Account
+2,user->Account Creation Page->Specify Credentials->check password format,TRAN_NA,4,Create Account,Create Account
+3,Account Creation Page->Account Creation Page->user->Account Creation Page,TRAN_NA,4,Create Account Sequence,Create Account
+4,user->Account Creation Page->Specify Credentials->check if passwords match,TRAN_NA,4,Create Account,Create Account
+5,user->Account Creation Page->Specify Credentials->check password format,TRAN_NA,4,Create Account,Create Account
+6,User->Not In Hawaii Mode->Check if in Hawaii or not->Get Location,TRAN_NA,4,Render Intial Mode,Render Intial Mode
+7,User->In Hawaii Mode->Check if in Hawaii or not->Get Location,TRAN_NA,4,Render Intial Mode,Render Intial Mode
+8,User->Avatar's Page->Select Avatar->Avatars,CTRL,4,Choose Avatar,Choose Avatar
+9,User->Avatar's Page->Select Avatar->Avatars,DM,4,Choose Avatar,Choose Avatar
+10,User->Avatar's Page->Select Avatar->Avatars,EI,4,Choose Avatar,Choose Avatar
+11,User->Avatar's Page->Select Avatar->Render Avatar,TRAN_NA,4,Choose Avatar,Choose Avatar
+12,User->GPS->Fetch Lat Lon->Update Database,TRAN_NA,4,Get Location,Play Ar mode
+13,User->GPS->Fetch Lat Lon->Location,CTRL,4,Get Location,Play Ar mode
+14,User->GPS->Fetch Lat Lon->Location,DM,4,Get Location,Play Ar mode
+15,User->GPS->Fetch Lat Lon->Location,EI,4,Get Location,Play Ar mode
+16,User->Map->Check if the location is inside a geofence,TRAN_NA,3,GeoFence,Navigate in AR Mode
+17,User->Map->Get Location->Location,CTRL,4,GeoFence,Navigate in AR Mode
+18,User->Map->Get Location->Location,DM,4,GeoFence,Navigate in AR Mode
+19,User->Map->Get Location->Location,EI,4,GeoFence,Navigate in AR Mode
+20,User->Map->Get Location->Check if the location is inside a geofence,CTRL,4,GeoFence,Navigate in AR Mode
+21,User->Map->Get Location->Check if the location is inside a geofence,INT,4,GeoFence,Navigate in AR Mode
+22,User->Doug's E-book->Render the e-cook link,TRAN_NA,3,Link the tourist spot to Doug's E-book,Link the tourist spot to Doug's E-book
+23,User->Battle Scene->Render Background of the location,TRAN_NA,3,Render Battle Scene,Render Battle Scene
+24,User->Weapons Bar->Select Weapon available->Weapons,CTRL,4,Choose Weapon,Choose Weapon
+25,User->Weapons Bar->Select Weapon available->Weapons,DM,4,Choose Weapon,Choose Weapon
+26,User->Weapons Bar->Select Weapon available->Weapons,EI,4,Choose Weapon,Choose Weapon
+27,User->Weapons Bar->Select Weapon available->Check Weapon Inventory,TRAN_NA,4,Choose Weapon,Choose Weapon
+28,User->Battle Scene->Flick Weapon->Weapon,CTRL,4,Use Weapon,Use Weapon
+29,User->Battle Scene->Flick Weapon->Weapon,DM,4,Use Weapon,Use Weapon
+30,User->Battle Scene->Flick Weapon->Weapon,EI,4,Use Weapon,Use Weapon
+31,User->Battle Scene->Flick Weapon->Show in-App purchases,TRAN_NA,4,Use Weapon,Use Weapon
+32,User->Battle Scene->Flick Weapon->Reduce Weapon Count,TRAN_NA,4,Use Weapon,Use Weapon
+33,User->Battle Scene->Check if weapon hit the army->Update Minimap,TRAN_NA,4,Fight Army,Fight Battle
+34,User->Battle Scene->Check if weapon hit the army->Destroy armyMan->Calculate Score->Achievements,CTRL,6,Fight Army,Fight Battle
+35,User->Battle Scene->Check if weapon hit the army->Destroy armyMan->Calculate Score->Achievements,DM,6,Fight Army,Fight Battle
+36,User->Battle Scene->Check if weapon hit the army->Destroy armyMan->Calculate Score->Achievements,EI,6,Fight Army,Fight Battle
+37,User->Battle Scene->Check if weapon hit the army->Move Army Closer->Battle,CTRL,5,Fight Army,Fight Battle
+38,User->Battle Scene->Check if weapon hit the army->Move Army Closer->Battle,DM,5,Fight Army,Fight Battle
+39,User->Battle Scene->Check if weapon hit the army->Move Army Closer->Battle,EI,5,Fight Army,Fight Battle
+40,User->Minimap->Update Minimap,TRAN_NA,3,Fight Army,Fight Battle
+41,User->Map view->Update the Database with all values->Achivements,CTRL,4,Update Database,Update Database
+42,User->Map view->Update the Database with all values->Achivements,DM,4,Update Database,Update Database
+43,User->Map view->Update the Database with all values->Achivements,EI,4,Update Database,Update Database
+44,User->Map view->Update the Database with all values->User Master,CTRL,4,Update Database,Update Database
+45,User->Map view->Update the Database with all values->User Master,DM,4,Update Database,Update Database
+46,User->Map view->Update the Database with all values->User Master,EI,4,Update Database,Update Database
+47,User->Map view->Update the Database with all values->Battle,CTRL,4,Update Database,Update Database
+48,User->Map view->Update the Database with all values->Battle,DM,4,Update Database,Update Database
+49,User->Map view->Update the Database with all values->Battle,EI,4,Update Database,Update Database
+50,Score->Algortihm to scale->Update Rank,TRAN_NA,3,Algorithm,Algorithm
+51,Score->Algortihm to scale->Show Rank,TRAN_NA,3,Algorithm,Algorithm
+52,User->Battle Scene->Increase Opponenent Weapons,TRAN_NA,3,Increase Difficulty accordingly,Increase Difficulty accordingly
+53,User->Battle Scene->Increase Number of Army->Increase Closing-in speed->Increase Opponenent Weapons,TRAN_NA,5,Increase Difficulty accordingly,Increase Difficulty accordingly
+54,User->Battle Scene->Increase Number of Army->Battle,CTRL,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+55,User->Battle Scene->Increase Number of Army->Battle,DM,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+56,User->Battle Scene->Increase Number of Army->Battle,EI,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+57,User->Battle Scene->Increase Number of Army->Achievements,CTRL,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+58,User->Battle Scene->Increase Number of Army->Achievements,DM,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+59,User->Battle Scene->Increase Number of Army->Achievements,EI,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+60,User->Battle Scene->Increase Number of Army->User Master,CTRL,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+61,User->Battle Scene->Increase Number of Army->User Master,DM,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+62,User->Battle Scene->Increase Number of Army->User Master,EI,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+63,User->Battle Scene->Increase Closing-in speed->Increase Opponenent Weapons,TRAN_NA,4,Increase Difficulty accordingly,Increase Difficulty accordingly
+64,User->ScoreCards->Retrieve Score->Battle,TRAN_NA,4,Get Score,Get Score
+65,User->ScoreCards->Retrieve Score->USer Master,TRAN_NA,4,Get Score,Get Score
+66,User->Ar Mode->if in Hawaii->Check Location->If not in Hawaii,TRAN_NA,5,Render Battle scene,Render Battle scene
+67,User->VR mode->If not in Hawaii,TRAN_NA,3,Render Battle scene,Render Battle scene
+68,Location->Check Location->If not in Hawaii,TRAN_NA,3,Render Battle scene,Render Battle scene
+69,Army men ->Get army information->Enemy,TRAN_NA,3,Render Army,Render Army
+70,User->Minimap ->Update Minimap,TRAN_NA,3,Render Minimap,Render Minimap
+71,User->Minimap ->Check if the enemy is hit with the balll,TRAN_NA,3,Render Minimap,Render Minimap
+72,User->Single Weapon ->Flick Weapon->Decrease inventory count->Weapons Inventory,CTRL,5,Use Weapon,Use Weapon
+73,User->Single Weapon ->Flick Weapon->Decrease inventory count->Weapons Inventory,DM,5,Use Weapon,Use Weapon
+74,User->Single Weapon ->Flick Weapon->Decrease inventory count->Weapons Inventory,EI,5,Use Weapon,Use Weapon
+75,User->Single Weapon ->Flick Weapon->Check if weapon availble->Weapons Inventory,CTRL,5,Use Weapon,Use Weapon
+76,User->Single Weapon ->Flick Weapon->Check if weapon availble->Weapons Inventory,DM,5,Use Weapon,Use Weapon
+77,User->Single Weapon ->Flick Weapon->Check if weapon availble->Weapons Inventory,EI,5,Use Weapon,Use Weapon
+78,User->Army Men->Increase Speed->Algorithm->Get level->User Account,CTRL,6,Increase difficulty ,Increase difficulty 
+79,User->Army Men->Increase Speed->Algorithm->Get level->User Account,DM,6,Increase difficulty ,Increase difficulty 
+80,User->Army Men->Increase Speed->Algorithm->Get level->User Account,EI,6,Increase difficulty ,Increase difficulty 
+81,User->Army Men->Increase Speed->Algorithm->Get Number of tikimen killed in that round,TRAN_NA,5,Increase difficulty ,Increase difficulty 
+82,User->Army Men->Increase Speed->Algorithm->Increase Number of spawn,TRAN_NA,5,Increase difficulty ,Increase difficulty 
+83,User->Army Men->Increase Speed->Algorithm->Time Elapsed,TRAN_NA,5,Increase difficulty ,Increase difficulty 
+84,User->Army Men->Increase Number of spawn,TRAN_NA,3,Increase difficulty ,Increase difficulty 
+85,User->Weapons Bar->Display weapons->Choose a main weapon,TRAN_NA,4,Change Weapon,Change Weapon
+86,User->Single weapon->Choose a main weapon,TRAN_NA,3,Change Weapon,Change Weapon
+87,Check if weapon availble->Display weapons->Choose a main weapon,TRAN_NA,3,Change Weapon,Change Weapon
+88,User->Display score at end of battle->Calculate Score->Update Database->User Account,CTRL,5,Calculate score ,Calculate score 
+89,User->Display score at end of battle->Calculate Score->Update Database->User Account,INT,5,Calculate score ,Calculate score 
+90,Count the number of enemies killed->Calculate Score->Update Database->User Account,TRAN_NA,4,Calculate score ,Calculate score 

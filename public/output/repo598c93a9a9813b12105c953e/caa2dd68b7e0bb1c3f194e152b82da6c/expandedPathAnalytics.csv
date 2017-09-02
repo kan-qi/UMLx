@@ -1,0 +1,62 @@
+id,path,transactional,path_length,diagram,useCase
+1,Owner->users list->change user file->user info,CTRL,4,Authorize tour creator,Authorize tour creator
+2,Owner->users list->change user file->user info,DM,4,Authorize tour creator,Authorize tour creator
+3,Owner->users list->change user file->user info,EI,4,Authorize tour creator,Authorize tour creator
+4,Owner->users list->change user file->send error message if not successful->Error message,CTRL,5,Authorize tour creator,Authorize tour creator
+5,Owner->users list->change user file->send error message if not successful->Error message,INT,5,Authorize tour creator,Authorize tour creator
+6,retrieve user profile->users list->change user file->user info,TRAN_NA,4,Authorize tour creator,Authorize tour creator
+7,retrieve user profile->users list->change user file->send error message if not successful->Error message,TRAN_NA,5,Authorize tour creator,Authorize tour creator
+8,Owner->List of tours->delete tour->tours,CTRL,4,Delete irrelevant tours,Delete irrelevant tours
+9,Owner->List of tours->delete tour->tours,DM,4,Delete irrelevant tours,Delete irrelevant tours
+10,Owner->List of tours->delete tour->tours,EI,4,Delete irrelevant tours,Delete irrelevant tours
+11,retrieve tours->List of tours->delete tour->tours,TRAN_NA,4,Delete irrelevant tours,Delete irrelevant tours
+12,Creator->Login page->check login Info->login error,CTRL,4,Creator log in and register,Creator log in and register
+13,Creator->Login page->check login Info->login error,INT,4,Creator log in and register,Creator log in and register
+14,Creator->Login page->check login Info->User Info,CTRL,4,Creator log in and register,Creator log in and register
+15,Creator->Login page->check login Info->User Info,DM,4,Creator log in and register,Creator log in and register
+16,Creator->Login page->check login Info->User Info,EI,4,Creator log in and register,Creator log in and register
+17,Creator->register page->process login info->sign up error message,CTRL,4,Creator log in and register,Creator log in and register
+18,Creator->register page->process login info->sign up error message,INT,4,Creator log in and register,Creator log in and register
+19,Creator->register page->process login info->save user info->User Info,CTRL,5,Creator log in and register,Creator log in and register
+20,Creator->register page->process login info->save user info->User Info,DM,5,Creator log in and register,Creator log in and register
+21,Creator->register page->process login info->save user info->User Info,EI,5,Creator log in and register,Creator log in and register
+22,Creator->login error->redirect to login page->Login page,CTRL,4,Creator log in and register,Creator log in and register
+23,Creator->login error->redirect to login page->Login page,INT,4,Creator log in and register,Creator log in and register
+24,Creator->sign up error message->redirect to sign up page->register page,CTRL,4,Creator log in and register,Creator log in and register
+25,Creator->sign up error message->redirect to sign up page->register page,INT,4,Creator log in and register,Creator log in and register
+26,Creator->tour info page->process tour->tour info,CTRL,4,Upload tours,Upload tours
+27,Creator->tour info page->process tour->tour info,DM,4,Upload tours,Upload tours
+28,Creator->tour info page->process tour->tour info,EI,4,Upload tours,Upload tours
+29,Creator->tour info page->process tour->tour info error,CTRL,4,Upload tours,Upload tours
+30,Creator->tour info page->process tour->tour info error,INT,4,Upload tours,Upload tours
+31,taker->tour search criteria page->retrieve tour->tour info,CTRL,4,Search for a tour,Search for a tour
+32,taker->tour search criteria page->retrieve tour->tour info,DM,4,Search for a tour,Search for a tour
+33,taker->tour search criteria page->retrieve tour->tour info,EI,4,Search for a tour,Search for a tour
+34,taker->tour search criteria page->retrieve tour->list of tours,CTRL,4,Search for a tour,Search for a tour
+35,taker->tour search criteria page->retrieve tour->list of tours,INT,4,Search for a tour,Search for a tour
+36,taker->tour search criteria page->retrieve tour->retrieve nearby tours->list of tours,CTRL,5,Search for a tour,Search for a tour
+37,taker->tour search criteria page->retrieve tour->retrieve nearby tours->list of tours,INT,5,Search for a tour,Search for a tour
+38,taker->tour search criteria page->retrieve tour->retrieve nearby tours->tour info,CTRL,5,Search for a tour,Search for a tour
+39,taker->tour search criteria page->retrieve tour->retrieve nearby tours->tour info,DM,5,Search for a tour,Search for a tour
+40,taker->tour search criteria page->retrieve tour->retrieve nearby tours->tour info,EI,5,Search for a tour,Search for a tour
+41,Taker->list of stops->retrieve tour->empty map view,CTRL,4,View a particular stop,View a particular stop
+42,Taker->list of stops->retrieve tour->empty map view,INT,4,View a particular stop,View a particular stop
+43,Taker->list of stops->retrieve tour->stop info,CTRL,4,View a particular stop,View a particular stop
+44,Taker->list of stops->retrieve tour->stop info,INT,4,View a particular stop,View a particular stop
+45,Taker->list of stops->retrieve tour->check internet connection->empty map view,CTRL,5,View a particular stop,View a particular stop
+46,Taker->list of stops->retrieve tour->check internet connection->empty map view,INT,5,View a particular stop,View a particular stop
+47,Taker->list of stops->retrieve tour->check internet connection->tour info,CTRL,5,View a particular stop,View a particular stop
+48,Taker->list of stops->retrieve tour->check internet connection->tour info,DM,5,View a particular stop,View a particular stop
+49,Taker->list of stops->retrieve tour->check internet connection->tour info,EI,5,View a particular stop,View a particular stop
+50,Creator->tour detail page->check update information->tour info,CTRL,4,Update tour,Update tour
+51,Creator->tour detail page->check update information->tour info,DM,4,Update tour,Update tour
+52,Creator->tour detail page->check update information->tour info,EI,4,Update tour,Update tour
+53,Creator->tour detail page->check update information->Popup for reenter tour info,CTRL,4,Update tour,Update tour
+54,Creator->tour detail page->check update information->Popup for reenter tour info,INT,4,Update tour,Update tour
+55,Creator->Tour detail->check tour detail->Information invalidity error,CTRL,4,Creator modify tour details,Creator modify tour details
+56,Creator->Tour detail->check tour detail->Information invalidity error,INT,4,Creator modify tour details,Creator modify tour details
+57,Creator->Tour detail->check tour detail->update tour detail->update error->Update error message,CTRL,6,Creator modify tour details,Creator modify tour details
+58,Creator->Tour detail->check tour detail->update tour detail->update error->Update error message,INT,6,Creator modify tour details,Creator modify tour details
+59,Creator->Tour detail->check tour detail->update tour detail->tour detail info,CTRL,5,Creator modify tour details,Creator modify tour details
+60,Creator->Tour detail->check tour detail->update tour detail->tour detail info,DM,5,Creator modify tour details,Creator modify tour details
+61,Creator->Tour detail->check tour detail->update tour detail->tour detail info,EI,5,Creator modify tour details,Creator modify tour details

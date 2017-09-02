@@ -1,0 +1,178 @@
+id,element,type,outbound_degree,inbound_degree,diagram,useCase
+1,login information invalid box,boundary,0,2,Login,Login
+2,main page,boundary,0,2,Login,Login
+3,user info,entity,0,1,Login,Login
+4,query user info,control,3,1,Login,Login
+5,login page,boundary,1,1,Login,Login
+6,User,actor,3,0,Login,Login
+7,Logout error message,boundary,0,2,Logout,Logout
+8,message box,boundary,0,2,Logout,Logout
+9,display a logout message,control,2,1,Logout,Logout
+10,Clear cache data,control,1,1,Logout,Logout
+11,Logout button,boundary,1,1,Logout,Logout
+12,User,actor,3,0,Logout,Logout
+13,invalid info message,boundary,0,2,Submit buyer registration,Submit buyer registration
+14,main page,entity,0,2,Submit buyer registration,Submit buyer registration
+15,user info,entity,0,1,Submit buyer registration,Submit buyer registration
+16,add user info,control,2,1,Submit buyer registration,Submit buyer registration
+17,verify user info,control,2,1,Submit buyer registration,Submit buyer registration
+18,registration page,boundary,1,1,Submit buyer registration,Submit buyer registration
+19,buyer,actor,3,0,Submit buyer registration,Submit buyer registration
+20,invalid info message,boundary,0,2,Submit vendor registration,Submit vendor registration
+21,main page,entity,0,2,Submit vendor registration,Submit vendor registration
+22,user info,entity,0,1,Submit vendor registration,Submit vendor registration
+23,add user info,control,2,1,Submit vendor registration,Submit vendor registration
+24,verify user info,control,2,1,Submit vendor registration,Submit vendor registration
+25,registration page,boundary,1,1,Submit vendor registration,Submit vendor registration
+26,vendor,actor,3,0,Submit vendor registration,Submit vendor registration
+27,buying list,entity,0,1,Add item to cart,Add item to cart
+28,adding product in buying list,control,1,1,Add item to cart,Add item to cart
+29,add to cart button,boundary,1,1,Add item to cart,Add item to cart
+30,User,actor,1,0,Add item to cart,Add item to cart
+31,order detail,boundary,0,2,Check out,Check out
+32,receive receipt,control,1,1,Check out,Check out
+33,order,entity,0,1,Check out,Check out
+34,cart item,entity,0,1,Check out,Check out
+35,third party payment,actor,2,1,Check out,Check out
+36,generate orders,control,3,1,Check out,Check out
+37,clear cart item,control,1,1,Check out,Check out
+38,finish payment,control,2,1,Check out,Check out
+39,payment info page,boundary,1,3,Check out,Check out
+40,redirect to third party payment page,control,1,1,Check out,Check out
+41,payment method page,boundary,1,1,Check out,Check out
+42,Buyer,actor,3,0,Check out,Check out
+43,user info,entity,0,1,Edit cart,Edit cart
+44,notify user,control,1,1,Edit cart,Edit cart
+45,redirect to cart page,control,2,1,Edit cart,Edit cart
+46,Item quantity field in cart,boundary,1,2,Edit cart,Edit cart
+47,User,actor,1,0,Edit cart,Edit cart
+48,user info,entity,0,1,Delete item in cart,Delete item in cart
+49,notify user,control,1,1,Delete item in cart,Delete item in cart
+50,redirect to cart page,control,2,1,Delete item in cart,Delete item in cart
+51,Item quantity field in cart,boundary,1,2,Delete item in cart,Delete item in cart
+52,User,actor,1,0,Delete item in cart,Delete item in cart
+53,invalid information error,boundary,0,2,Edit product,Edit product
+54,display invalid information,control,1,1,Edit product,Edit product
+55,redirect vendor when back button clicked,control,1,1,Edit product,Edit product
+56,change unsaved dialog,boundary,0,2,Edit product,Edit product
+57,product,entity,0,1,Edit product,Edit product
+58,update product information,control,3,1,Edit product,Edit product
+59,product edit page,boundary,1,2,Edit product,Edit product
+60,redirect to product edit page,control,1,1,Edit product,Edit product
+61,edit button for specific product,boundary,1,1,Edit product,Edit product
+62,Vendor,actor,4,0,Edit product,Edit product
+63,product,entity,0,1,Create product,Create product
+64,display "create success" dialog,boundary,0,2,Create product,Create product
+65,invalid information error,boundary,0,2,Create product,Create product
+66,change unsaved dialog,boundary,0,2,Create product,Create product
+67,update product,control,5,1,Create product,Create product
+68,product create page,boundary,1,2,Create product,Create product
+69,redirect vendor,control,1,1,Create product,Create product
+70,Create product button,boundary,1,1,Create product,Create product
+71,Vendor,actor,5,0,Create product,Create product
+72,delete failed dialog,boundary,0,2,Delete product,Delete product
+73,delete success message,boundary,0,2,Delete product,Delete product
+74,product,entity,0,1,Delete product,Delete product
+75,delete product,control,3,1,Delete product,Delete product
+76,open confirm dialog,control,1,1,Delete product,Delete product
+77,Confirm dialog,boundary,1,2,Delete product,Delete product
+78,delete product button,boundary,1,1,Delete product,Delete product
+79,Vendor,actor,4,0,Delete product,Delete product
+80,blog,entity,0,1,Create blog,Create blog
+81,save blog in db,control,1,1,Create blog,Create blog
+82,blog page,boundary,1,2,Create blog,Create blog
+83,redirect to blog page,control,1,1,Create blog,Create blog
+84,post blog button,boundary,1,1,Create blog,Create blog
+85,User,actor,2,0,Create blog,Create blog
+86,comment,entity,0,1,Write comment,Write comment
+87,invalid comment length,boundary,0,2,Write comment,Write comment
+88,post page,boundary,0,2,Write comment,Write comment
+89,post,control,3,1,Write comment,Write comment
+90,comment page,boundary,1,1,Write comment,Write comment
+91,User,actor,3,0,Write comment,Write comment
+92,No result is found,boundary,0,2,Search product,Search product
+93,list of product,boundary,0,2,Search product,Search product
+94,product,entity,0,1,Search product,Search product
+95,search by criteria,control,3,1,Search product,Search product
+96,Search page,boundary,1,1,Search product,Search product
+97,User,actor,3,0,Search product,Search product
+98,Email protocol,actor,0,1,Vendor email customer,Vendor email customer
+99,send email,control,1,1,Vendor email customer,Vendor email customer
+100,user,entity,0,1,Vendor email customer,Vendor email customer
+101,query user email,control,2,1,Vendor email customer,Vendor email customer
+102,list of users,boundary,1,1,Vendor email customer,Vendor email customer
+103,Vendor,actor,1,0,Vendor email customer,Vendor email customer
+104,Email protocol,actor,0,1,Admin email vendor,Admin email vendor
+105,send email,control,1,1,Admin email vendor,Admin email vendor
+106,vendor,entity,0,1,Admin email vendor,Admin email vendor
+107,query vendor email,control,2,1,Admin email vendor,Admin email vendor
+108,list of vendors,boundary,1,1,Admin email vendor,Admin email vendor
+109,Admin,actor,1,0,Admin email vendor,Admin email vendor
+110,notification,entity,0,1,Create and email newsletter,Create and email newsletter
+111,send notification,control,1,1,Create and email newsletter,Create and email newsletter
+112,newsletter,entity,0,1,Create and email newsletter,Create and email newsletter
+113,save newsletter information,control,2,1,Create and email newsletter,Create and email newsletter
+114,newsletter creating page,boundary,1,2,Create and email newsletter,Create and email newsletter
+115,redirect to newsletter creating page,control,1,1,Create and email newsletter,Create and email newsletter
+116,newsletter them page,boundary,1,2,Create and email newsletter,Create and email newsletter
+117,redirect to select theme page,control,1,1,Create and email newsletter,Create and email newsletter
+118,newsletter main page,boundary,1,2,Create and email newsletter,Create and email newsletter
+119,redirect to newsletter main page,control,1,1,Create and email newsletter,Create and email newsletter
+120,Newsletter tag,boundary,1,1,Create and email newsletter,Create and email newsletter
+121,Admin,actor,4,0,Create and email newsletter,Create and email newsletter
+122,email protocol,actor,0,1,Signup for newsletter,Signup for newsletter
+123,send confirmation email,control,1,1,Signup for newsletter,Signup for newsletter
+124,newsletter sending list,entity,0,1,Signup for newsletter,Signup for newsletter
+125,add email address into newsletter sending list,control,2,1,Signup for newsletter,Signup for newsletter
+126,newsletter subscription page,boundary,1,1,Signup for newsletter,Signup for newsletter
+127,User,actor,1,0,Signup for newsletter,Signup for newsletter
+128,list of unshipped orders,boundary,0,2,Check order,Check order
+129,orders,entity,0,1,Check order,Check order
+130,query list of unshipped orders,control,2,1,Check order,Check order
+131,unshipped orders button,boundary,1,1,Check order,Check order
+132,Admin,actor,2,0,Check order,Check order
+133,vendor already exists message,boundary,0,2,Approve new vendors,Approve new vendors
+134,Email protocol,actor,0,1,Approve new vendors,Approve new vendors
+135,send email with unique code,control,1,1,Approve new vendors,Approve new vendors
+136,vendor,entity,0,1,Approve new vendors,Approve new vendors
+137,add vendor into list,control,3,1,Approve new vendors,Approve new vendors
+138,Vendor approve page,boundary,1,1,Approve new vendors,Approve new vendors
+139,Admin,actor,2,0,Approve new vendors,Approve new vendors
+140,check input information,control,2,1,Manage account setting,Manage account setting
+141,Invalid input information,boundary,0,2,Manage account setting,Manage account setting
+142,Notification,entity,0,1,Manage account setting,Manage account setting
+143,notify user,control,1,1,Manage account setting,Manage account setting
+144,setting,entity,0,1,Manage account setting,Manage account setting
+145,save setting changes,control,2,1,Manage account setting,Manage account setting
+146,Account information page,boundary,1,2,Manage account setting,Manage account setting
+147,redirect account information page,control,1,1,Manage account setting,Manage account setting
+148,Edit setting button,boundary,1,1,Manage account setting,Manage account setting
+149,Admin,actor,3,0,Manage account setting,Manage account setting
+150,vendor,entity,0,1,Display vendors,Display vendors
+151,query vendors,control,1,1,Display vendors,Display vendors
+152,vendor page,boundary,0,2,Display vendors,Display vendors
+153,redirect to vendor page,control,2,1,Display vendors,Display vendors
+154,vendor side bar,boundary,1,1,Display vendors,Display vendors
+155,Admin,actor,2,0,Display vendors,Display vendors
+156,remove vendor,control,1,1,Manage vendor,Manage vendor
+157,query vendor detail,control,1,1,Manage vendor,Manage vendor
+158,User info updated message,boundary,0,2,Manage vendor,Manage vendor
+159,notify amdin,control,1,1,Manage vendor,Manage vendor
+160,update vendor info,control,2,1,Manage vendor,Manage vendor
+161,vendor detail page,boundary,1,2,Manage vendor,Manage vendor
+162,redirect to vendor details page,control,2,1,Manage vendor,Manage vendor
+163,user list with edit and remove buttons,boundary,2,2,Manage vendor,Manage vendor
+164,vendor,entity,0,4,Manage vendor,Manage vendor
+165,redirect vendors page,control,2,1,Manage vendor,Manage vendor
+166,All vendors tab,boundary,1,1,Manage vendor,Manage vendor
+167,Admin,actor,4,0,Manage vendor,Manage vendor
+168,update of product message,boundary,0,2,Approve pending product,Approve pending product
+169,notify update of product,control,1,1,Approve pending product,Approve pending product
+170,change product status,control,2,1,Approve pending product,Approve pending product
+171,product detail,boundary,1,2,Approve pending product,Approve pending product
+172,query product detail,control,2,1,Approve pending product,Approve pending product
+173,product list,boundary,1,2,Approve pending product,Approve pending product
+174,product,entity,0,3,Approve pending product,Approve pending product
+175,redirect to all product lists,control,2,1,Approve pending product,Approve pending product
+176,products tab,boundary,1,1,Approve pending product,Approve pending product
+177,Admin,actor,4,0,Approve pending product,Approve pending product

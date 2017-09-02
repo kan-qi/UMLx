@@ -1,0 +1,12 @@
+id,element,type,outboundDegree,inboundDegree,diagram,useCase
+1,Update successful message,boundary,0,2,Update Profile,Update Profile,
+2,account,entity,0,1,Update Profile,Update Profile,
+3,Update language learner information,control,2,1,Update Profile,Update Profile,
+4,check required fields,control,1,1,Update Profile,Update Profile,
+5,Submit button,boundary,1,1,Update Profile,Update Profile,
+6,Profile update form,boundary,0,1,Update Profile,Update Profile,
+7,Lanugage learner,actor,3,0,Update Profile,Update Profile,
+8,Database,entity,1,1,validate_data(),Update Profile,
+9,Profile API,control,2,4,validate_data(),Update Profile,
+10,Authorization API,control,1,1,validate_data(),Update Profile,
+11,Profile Management Page,boundary,3,5,validate_data(),Update Profile,

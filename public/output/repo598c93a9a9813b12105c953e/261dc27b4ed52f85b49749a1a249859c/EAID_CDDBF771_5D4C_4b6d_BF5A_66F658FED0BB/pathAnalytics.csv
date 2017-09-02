@@ -1,0 +1,14 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Valet->notification of invalid transaction->redirect to payment screen->payment screen,EQ,CTRL|INT,4,undefined,1,0,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+2,Valet->request queue page->display dropdown->dropdown for retrieve and invalid,EQ,CTRL|INT,4,undefined,1,0,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+3,Valet->remove request button->Remove request->check payment->payment,EI,CTRL|DM|EI,5,undefined,2,1,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+4,Valet->remove request button->Remove request->check payment->Close out confirmation,EQ,CTRL|INT,5,undefined,2,0,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+5,Valet->remove request button->Remove request->request,EI,CTRL|DM|EI,4,undefined,1,1,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+6,Valet->Close out confirmation->send out email with the transaction record.->Email protocol,FUNC_NA,CTRL|EXTIVK,4,undefined,1,0,2,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+7,Valet->Close out confirmation->send out email with the transaction record.->Email send confirmation message,EQ,CTRL|INT,4,undefined,1,0,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+8,Valet->Close out confirmation->send out email with the transaction record.->payment,EI,CTRL|DM|EI,4,undefined,1,1,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+9,Valet->dropdown for retrieve and invalid->retrive and invalid request->request,EI,CTRL|DM|EI,4,undefined,1,1,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+10,Valet->dropdown for retrieve and invalid->retrive and invalid request->check payment exists->payment,EI,CTRL|DM|EI,5,undefined,2,1,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+11,Valet->dropdown for retrieve and invalid->retrive and invalid request->check payment exists->status of the payment,EQ,CTRL|INT,5,undefined,2,0,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+12,Valet->dropdown for retrieve and invalid->retrive and invalid request->check payment exists->notification of invalid transaction,EQ,CTRL|INT,5,undefined,2,0,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle
+13,Valet->dropdown for retrieve and invalid->retrive and invalid request->invalid request,EQ,CTRL|INT,4,undefined,1,0,1,Retrieve and Return Vehicle,Retrieve and Return Vehicle

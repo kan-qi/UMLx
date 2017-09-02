@@ -1,0 +1,151 @@
+id,path,functional,transactional,path_length,diagram,useCase
+1,User->Login page->check with blackprofessions external system->BlackProfessionals.net checking system,FUNC_NA,CTRL|EXTIVK,undefined,Login,Login
+2,BlackProfessionals.net checking system->redirect to main page->Main page,FUNC_NA,CTRL|EXTCLL|INT,undefined,Login,Login
+3,BlackProfessionals.net checking system->login fail and display error messsage->Login page,FUNC_NA,CTRL|EXTCLL|INT,undefined,Login,Login
+4,User->Logout button->clear current session->Session,EI,CTRL|DM|EI,undefined,Logout,Logout
+5,User->Logout button->clear current session->redirect to login page->Login page,EQ,CTRL|INT,undefined,Logout,Logout
+6,User->Sign-in form->send email for verification->Email protocol,FUNC_NA,CTRL|EXTIVK,undefined,Create Profile,Create Profile
+7,User->Sign-in form->send email for verification->check validity of input information->Invalid email format,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+8,User->Sign-in form->send email for verification->check validity of input information->save entered user information->User Info,EI,CTRL|DM|EI,undefined,Create Profile,Create Profile
+9,User->Sign-in form->send email for verification->check validity of input information->Not consistent passwords,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+10,User->Not consistent passwords->redirect to sign in page->Sign-in form,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+11,User->Invalid email format->redirect to sign in page->Sign-in form,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+12,User->LikedIn Credential Input Page->Query user information from LinkedIN->Invalid/incorrect LinkedIn credentials,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+13,User->LikedIn Credential Input Page->Query user information from LinkedIN->display login failure message with LinkIn->Login error,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+14,User->LikedIn Credential Input Page->Query user information from LinkedIN->save it to user info->User Info,EI,CTRL|DM|EI,undefined,Create Profile,Create Profile
+15,User->LikedIn Credential Input Page->Query user information from LinkedIN->save it to user info->display information from LinkedIN->My Profile,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+16,User->LikedIn Button->open linkedin crendential input page->LikedIn Credential Input Page,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+17,User->Login error->redirect to sign in page->Sign-in form,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+18,User->Invalid/incorrect LinkedIn credentials->redirect to sign in page->Sign-in form,EQ,CTRL|INT,undefined,Create Profile,Create Profile
+19,User->Headline edit field->check input headline->save updated headline->My Profile Page,EQ,CTRL|INT,undefined,Create short summary/headline for profile,Create short summary/headline for profile
+20,User->Headline edit field->check input headline->save updated headline->Headline,EI,CTRL|DM|EI,undefined,Create short summary/headline for profile,Create short summary/headline for profile
+21,User->Headline edit field->check input headline->headline input error message,EQ,CTRL|INT,undefined,Create short summary/headline for profile,Create short summary/headline for profile
+22,User->headline edit icon->popup window for headline edit->My Profile Page,EQ,CTRL|INT,undefined,Create short summary/headline for profile,Create short summary/headline for profile
+23,User->headline edit icon->popup window for headline edit->Headline edit field,EQ,CTRL|INT,undefined,Create short summary/headline for profile,Create short summary/headline for profile
+24,User->profile edit icon->popup profile edit page->profile edit page,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+25,User->profile edit page->popup image selector field->Image selector field,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+26,User->Image selector field->save image->invalid file name,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+27,User->Image selector field->save image->profile,EI,CTRL|DM|EI,undefined,Update profile picture,Update profile picture
+28,User->Image selector field->save image->invalid file size error message,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+29,User->Image selector field->save image->picture format error message,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+30,User->Image selector field->save image->redirect to profile page->profile page,EQ,CTRL|INT,undefined,Update profile picture,Update profile picture
+31,User->New message button->display new message page->retrive connections of a user->Connection,EI,CTRL|DM|EI,undefined,Send Message,Send Message
+32,User->New message button->display new message page->retrive connections of a user->Message edit page,EQ,CTRL|INT,undefined,Send Message,Send Message
+33,User->Message edit page->check input message->send message->message,EI,CTRL|DM|EI,undefined,Send Message,Send Message
+34,User->Message edit page->check input message->send message->redirect to message page->Message page,EQ,CTRL|INT,undefined,Send Message,Send Message
+35,User->Message edit page->check input message->invalid input warning message,EQ,CTRL|INT,undefined,Send Message,Send Message
+36,User->Message edit page->close new message page->Message page,EQ,CTRL|INT,undefined,Send Message,Send Message
+37,User->Sent button->retrieves sent messages->message,EI,CTRL|DM|EI,undefined,View sent messages,View sent messages
+38,User->Sent button->retrieves sent messages->display list of sent messages->no sent messages,EQ,CTRL|INT,undefined,View sent messages,View sent messages
+39,User->Sent button->retrieves sent messages->display list of sent messages->List of sent messages,EQ,CTRL|INT,undefined,View sent messages,View sent messages
+40,User->home page link->retrieve recommendations->shuffles recommendations->list of random recommendations,EQ,CTRL|INT,undefined,Get recommendation,Get recommendation
+41,User->home page link->retrieve recommendations->algorithm for similarity->sorted list of messages by similarity,EQ,CTRL|INT,undefined,Get recommendation,Get recommendation
+42,User->home page link->retrieve recommendations->recommendations,EI,CTRL|DM|EI,undefined,Get recommendation,Get recommendation
+43,User->Search bar->check validity of input search string->Input message invalidty,EQ,CTRL|INT,undefined,General Search Functionality,General Search Functionality
+44,User->Search bar->check validity of input search string->sql injection protection->query matched users->recommendations,EI,CTRL|DM|EI,undefined,General Search Functionality,General Search Functionality
+45,User->Search bar->check validity of input search string->sql injection protection->query matched users->No matched results found,EQ,CTRL|INT,undefined,General Search Functionality,General Search Functionality
+46,User->advanced search button->redirected to advanced search page->advanced search page,EQ,CTRL|INT,undefined,Advanced Search Functionality,Advanced Search Functionality
+47,User->advanced search page->check validity of search string->invalid search string,EQ,CTRL|INT,undefined,Advanced Search Functionality,Advanced Search Functionality
+48,User->advanced search page->check validity of search string->search people company group by options->SQl injection protection->No matched results,EQ,CTRL|INT,undefined,Advanced Search Functionality,Advanced Search Functionality
+49,User->advanced search page->check validity of search string->search people company group by options->SQl injection protection->people,EI,CTRL|DM|EI,undefined,Advanced Search Functionality,Advanced Search Functionality
+50,User->advanced search page->check validity of search string->search people company group by options->SQl injection protection->company,EI,CTRL|DM|EI,undefined,Advanced Search Functionality,Advanced Search Functionality
+51,User->advanced search page->check validity of search string->search people company group by options->SQl injection protection->group,EI,CTRL|DM|EI,undefined,Advanced Search Functionality,Advanced Search Functionality
+52,User->advanced search page->check validity of search string->search people company group by options->SQl injection protection->empty list of search results,EQ,CTRL|INT,undefined,Advanced Search Functionality,Advanced Search Functionality
+53,User->advanced search page->check validity of search string->search people company group by options->SQl injection protection->Matched results,EQ,CTRL|INT,undefined,Advanced Search Functionality,Advanced Search Functionality
+54,User->Connection request button->send request->button state change,EQ,CTRL|INT,undefined,Send connection request,Send connection request
+55,User->Connection request button->send request->request,EI,CTRL|DM|EI,undefined,Send connection request,Send connection request
+56,User->Reject button->send request accept->button state change to acceptance,EQ,CTRL|INT,undefined,Accept/Reject connection,Accept/Reject connection
+57,User->Reject button->send request accept->request,EI,CTRL|DM|EI,undefined,Accept/Reject connection,Accept/Reject connection
+58,User->Accept button->send request accept->button state change to acceptance,EQ,CTRL|INT,undefined,Accept/Reject connection,Accept/Reject connection
+59,User->Accept button->send request accept->request,EI,CTRL|DM|EI,undefined,Accept/Reject connection,Accept/Reject connection
+60,User->Confirmation dialog->Redirect to connection list->Remove button,EQ,CTRL|INT,undefined,Cancel Connection,Cancel Connection
+61,User->Confirmation dialog->remove connection between users->connection,EI,CTRL|DM|EI,undefined,Cancel Connection,Cancel Connection
+62,User->Remove button->show up confirmation dialog->Confirmation dialog,EQ,CTRL|INT,undefined,Cancel Connection,Cancel Connection
+63,User->Unfollow button->Update the follow status->Follow button,EQ,CTRL|INT,undefined,Follow/unfollow company,Follow/unfollow company
+64,User->Unfollow button->Update the follow status->connection,EI,CTRL|DM|EI,undefined,Follow/unfollow company,Follow/unfollow company
+65,User->Follow button->Update the follow status->Unfollow button,EQ,CTRL|INT,undefined,Follow/unfollow company,Follow/unfollow company
+66,User->Follow button->Update the follow status->connection,EI,CTRL|DM|EI,undefined,Follow/unfollow company,Follow/unfollow company
+67,User->Ad detail page->Check input information->Update ad description->ads,EI,CTRL|DM|EI,undefined,Manage Advertisement,Manage Advertisement
+68,User->Ad detail page->Check input information->Update ad description->Ad management panel,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+69,User->Ad detail page->Check input information->Save added Ad->ads,EI,CTRL|DM|EI,undefined,Manage Advertisement,Manage Advertisement
+70,User->Ad detail page->Check input information->Check input information->Invalid input information,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+71,User->Existing ads list->Popup management panel->Ad management panel,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+72,User->Manage ads link->show up existing ads page->Existing ads list,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+73,User->Manage ads link->show up existing ads page->ads,EI,CTRL|DM|EI,undefined,Manage Advertisement,Manage Advertisement
+74,User->Delete confirmation dialog->Delete Ad->ads,EI,CTRL|DM|EI,undefined,Manage Advertisement,Manage Advertisement
+75,User->Ad management panel->display delete confirmation dialog->Delete confirmation dialog,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+76,User->Ad management panel->Cancel updating and redirect to ->Existing ads list,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+77,User->Ad management panel->Show Ad Add page->Ad add page,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+78,User->Ad management panel->Show Ad detail page->ads,EI,CTRL|DM|EI,undefined,Manage Advertisement,Manage Advertisement
+79,User->Ad management panel->Show Ad detail page->Ad detail page,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+80,User->Ad add page->Check input information->Update ad description->ads,EI,CTRL|DM|EI,undefined,Manage Advertisement,Manage Advertisement
+81,User->Ad add page->Check input information->Update ad description->Ad management panel,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+82,User->Ad add page->Check input information->Save added Ad->ads,EI,CTRL|DM|EI,undefined,Manage Advertisement,Manage Advertisement
+83,User->Ad add page->Check input information->Check input information->Invalid input information,EQ,CTRL|INT,undefined,Manage Advertisement,Manage Advertisement
+84,User->Send recommendation letter button->Redirect to recommendation letter edit page->Recommendation letter page,EQ,CTRL|INT,undefined,Write recommendation letter,Write recommendation letter
+85,User->Recommendation letter page->Validate input recommendation information->Save recommendation record->Display no user exist->No user exist error message,EQ,CTRL|INT,undefined,Write recommendation letter,Write recommendation letter
+86,User->Recommendation letter page->Validate input recommendation information->Save recommendation record->Send message->Message,EI,CTRL|DM|EI,undefined,Write recommendation letter,Write recommendation letter
+87,User->Recommendation letter page->Validate input recommendation information->Save recommendation record->Send message->Profile Page,EQ,CTRL|INT,undefined,Write recommendation letter,Write recommendation letter
+88,User->Recommendation letter page->Validate input recommendation information->Save recommendation record->Recommendation,EI,CTRL|DM|EI,undefined,Write recommendation letter,Write recommendation letter
+89,User->cancel button->cancel selections->recommendation list,EQ,CTRL|INT,undefined,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+90,User->recommendation list->Save the selected recommendation letter->Display recommendation letter->profile page,EQ,CTRL|INT,undefined,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+91,User->recommendation list->Save the selected recommendation letter->recommendation letter,EI,CTRL|DM|EI,undefined,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+92,User->group create form->cancel group creation->Group list page,EQ,CTRL|INT,undefined,Create Group,Create Group
+93,User->group create form->validate input group information->Information input is not valid,EQ,CTRL|INT,undefined,Create Group,Create Group
+94,User->group create form->validate input group information->Save group information->group,EI,CTRL|DM|EI,undefined,Create Group,Create Group
+95,User->group create form->validate input group information->Save group information->Group page,EQ,CTRL|INT,undefined,Create Group,Create Group
+96,User->Group operation panel->Adit group information->group,EI,CTRL|DM|EI,undefined,Group management,Group management
+97,User->Group operation panel->Adit group information->Group information edit page,EQ,CTRL|INT,undefined,Group management,Group management
+98,User->Group operation panel->Approve/decline applicants->group,EI,CTRL|DM|EI,undefined,Group management,Group management
+99,User->Group List->query groups->group,EI,CTRL|DM|EI,undefined,Group management,Group management
+100,User->Group List->query groups->View groups button,EQ,CTRL|INT,undefined,Group management,Group management
+101,User->Group List->Popup group operation panel->Group operation panel,EQ,CTRL|INT,undefined,Group management,Group management
+102,User->Group information edit page->Validate input group information->Save group information->group,EI,CTRL|DM|EI,undefined,Group management,Group management
+103,User->View groups button->query groups->group,EI,CTRL|DM|EI,undefined,Group management,Group management
+104,User->View groups button->query groups->Group List,EQ,CTRL|INT,undefined,Group management,Group management
+105,User->join/leave group button->Popup confirmation dialog->Confirmation dialog,EQ,CTRL|INT,undefined,Join/leave group,Join/leave group
+106,User->Confirmation dialog->Popup confirmation dialog->join/leave group button,EQ,CTRL|INT,undefined,Join/leave group,Join/leave group
+107,User->Confirmation dialog->Save corresponding status->Show corresponding status->Group status change,EQ,CTRL|INT,undefined,Join/leave group,Join/leave group
+108,User->Confirmation dialog->Save corresponding status->group,EI,CTRL|DM|EI,undefined,Join/leave group,Join/leave group
+109,User->invite friend form->Check if input is valid->information input invalid message,EQ,CTRL|INT,undefined,Invite frieds through email,Invite frieds through email
+110,User->invite friend form->Check if input is valid->Check if friend already exists->fried already exist message,EQ,CTRL|INT,undefined,Invite frieds through email,Invite frieds through email
+111,User->invite friend form->Check if input is valid->Check if friend already exists->friend,EI,CTRL|DM|EI,undefined,Invite frieds through email,Invite frieds through email
+112,User->invite friend form->Check if input is valid->Check if friend already exists->Check if email already exists->email already exists,EQ,CTRL|INT,undefined,Invite frieds through email,Invite frieds through email
+113,User->invite friend form->Check if input is valid->Check if friend already exists->Check if email already exists->invitation,EI,CTRL|DM|EI,undefined,Invite frieds through email,Invite frieds through email
+114,User->invite friend form->Check if input is valid->Check if friend already exists->Check if email already exists->Send an invitation email->Email protocol,FUNC_NA,CTRL|EXTIVK,undefined,Invite frieds through email,Invite frieds through email
+115,User->invite friend form->Check if input is valid->Check if friend already exists->Check if email already exists->Invitation paage,EQ,CTRL|INT,undefined,Invite frieds through email,Invite frieds through email
+116,Email protocol->check email sent status->invitation,FUNC_NA,CTRL|EXTCLL|DM|EI,undefined,Invite frieds through email,Invite frieds through email
+117,Email protocol->check email sent status->show invitation page->Invitation paage,FUNC_NA,CTRL|EXTCLL|INT,undefined,Invite frieds through email,Invite frieds through email
+118,User->Linkedin login page->Validate login info by LinkedIn->LinkedIn,FUNC_NA,CTRL|EXTIVK,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+119,User->Linkedin login page->Validate login info by LinkedIn->login fail message,EQ,CTRL|INT,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+120,User->Linkedin login page->redirect to invitation page->Invitation page,EQ,CTRL|INT,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+121,User->invite button->get friend list->LinkedIn,FUNC_NA,CTRL|EXTIVK,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+122,User->Friend list for invitation->send email to friend->Email protocol,FUNC_NA,CTRL|EXTIVK,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+123,LinkedIn->popup input email and password page->Linkedin login page,FUNC_NA,CTRL|EXTCLL|INT,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+124,LinkedIn->A list of friends->Check if friends exist in system->Fiends,FUNC_NA,CTRL|EXTCLL|DM|EI,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+125,LinkedIn->A list of friends->Check if friends exist in system->Friend list for invitation,FUNC_NA,CTRL|EXTCLL|INT,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+126,Email protocol->return the status of email being sent->Invitation page,FUNC_NA,CTRL|EXTCLL|INT,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+127,Email protocol->return the status of email being sent->email sending failed message,FUNC_NA,CTRL|EXTCLL|INT,undefined,Invite friends from LinkedIn,Invite friends from LinkedIn
+128,User->List of friends->check invitation sent or not->Send friend invitation->Invitation,EI,CTRL|DM|EI,undefined,Invite friends to group,Invite friends to group
+129,User->List of friends->check invitation sent or not->Send friend invitation->group home page,EQ,CTRL|INT,undefined,Invite friends to group,Invite friends to group
+130,User->List of friends->check invitation sent or not->Invitation,EI,CTRL|DM|EI,undefined,Invite friends to group,Invite friends to group
+131,User->List of friends->check invitation sent or not->group home page,EQ,CTRL|INT,undefined,Invite friends to group,Invite friends to group
+132,User->invite button->query friends who is not in group->List of friends,EQ,CTRL|INT,undefined,Invite friends to group,Invite friends to group
+133,User->invite button->query friends who is not in group->friends,EI,CTRL|DM|EI,undefined,Invite friends to group,Invite friends to group
+134,User->update panel->validate update->create an update record->refresh social feed->latest updates,EQ,CTRL|INT,undefined,Post an update,Post an update
+135,User->update panel->validate update->create an update record->refresh social feed->update,EI,CTRL|DM|EI,undefined,Post an update,Post an update
+136,User->update panel->validate update->create an update record->update,EI,CTRL|DM|EI,undefined,Post an update,Post an update
+137,User->update panel->validate update->latest updates,EQ,CTRL|INT,undefined,Post an update,Post an update
+138,User->update panel->validate update->Invalid input information,EQ,CTRL|INT,undefined,Post an update,Post an update
+139,User->update choice panel->show update panel->update panel,EQ,CTRL|INT,undefined,Post an update,Post an update
+140,User->Home link->retrive recent activities->no activity message,EQ,CTRL|INT,undefined,View social feed,View social feed
+141,User->Home link->retrive recent activities->recent activities,EI,CTRL|DM|EI,undefined,View social feed,View social feed
+142,User->Home link->retrive recent activities->categorize activities->activity list,EQ,CTRL|INT,undefined,View social feed,View social feed
+143,User-> comment list->display commenting box->commenting box,EQ,CTRL|INT,undefined,Comment on a post,Comment on a post
+144,User->commenting box->Save comments->comments,EI,CTRL|DM|EI,undefined,Comment on a post,Comment on a post
+145,User->commenting box->Save comments->query comments based on update->No comments available on update,EQ,CTRL|INT,undefined,Comment on a post,Comment on a post
+146,User->commenting box->Save comments->query comments based on update->comments,EI,CTRL|DM|EI,undefined,Comment on a post,Comment on a post
+147,User->commenting box->Save comments->query comments based on update->order comments-> comment list,EQ,CTRL|INT,undefined,Comment on a post,Comment on a post
+148,User->Comment link->query comments based on update->No comments available on update,EQ,CTRL|INT,undefined,Comment on a post,Comment on a post
+149,User->Comment link->query comments based on update->comments,EI,CTRL|DM|EI,undefined,Comment on a post,Comment on a post
+150,User->Comment link->query comments based on update->order comments-> comment list,EQ,CTRL|INT,undefined,Comment on a post,Comment on a post

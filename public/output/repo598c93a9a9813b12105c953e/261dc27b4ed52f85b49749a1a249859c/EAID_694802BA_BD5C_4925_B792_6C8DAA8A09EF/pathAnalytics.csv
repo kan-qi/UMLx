@@ -1,0 +1,10 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Valet->register button->displays registration page->registration page,EQ,CTRL|INT,4,undefined,1,0,1,Register as Valet,Register as Valet
+2,Valet->successfully save registration information->navigate to manage employee page->management empolyee page,EQ,CTRL|INT,4,undefined,1,0,1,Register as Valet,Register as Valet
+3,Valet->registration page->validate registration information->duplicate registration information,EQ,CTRL|INT,4,undefined,1,0,1,Register as Valet,Register as Valet
+4,Valet->registration page->validate registration information->registration information invalid message,EQ,CTRL|INT,4,undefined,1,0,1,Register as Valet,Register as Valet
+5,Valet->registration page->validate registration information->employee,EI,CTRL|DM|EI,4,undefined,1,1,1,Register as Valet,Register as Valet
+6,Valet->registration page->validate registration information->display spinner while saving information,EQ,CTRL|INT,4,undefined,1,0,1,Register as Valet,Register as Valet
+7,Valet->registration page->validate registration information->save valet information->system error when saving registration information,EQ,CTRL|INT,5,undefined,2,0,1,Register as Valet,Register as Valet
+8,Valet->registration page->validate registration information->save valet information->employee,EI,CTRL|DM|EI,5,undefined,2,1,1,Register as Valet,Register as Valet
+9,Valet->registration page->validate registration information->save valet information->successfully save registration information,EQ,CTRL|INT,5,undefined,2,0,1,Register as Valet,Register as Valet

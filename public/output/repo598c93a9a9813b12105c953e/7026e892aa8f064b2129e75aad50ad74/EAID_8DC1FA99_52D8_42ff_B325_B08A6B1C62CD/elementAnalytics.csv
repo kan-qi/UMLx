@@ -1,0 +1,12 @@
+id,element,type,outboundDegree,inboundDegree,diagram,useCase
+1,Email user reset password confirmation email,control,0,1,Partner Login,Partner Login,
+2,Display reset password dialog,control,1,1,Partner Login,Partner Login,
+3,System Database,entity,1,1,Partner Login,Partner Login,
+4,Query database with username and password,control,1,2,Partner Login,Partner Login,
+5,Is a match found?,control,3,1,Partner Login,Partner Login,
+6,Display error message,control,0,1,Partner Login,Partner Login,
+7,Enter username and password,control,1,1,Partner Login,Partner Login,
+8,Display Partner Login,control,1,0,Partner Login,Partner Login,
+9,Partner Portal,boundary,0,2,Partner Login,Partner Login,
+10,Partner Login,boundary,2,2,Partner Login,Partner Login,
+11,User,actor,2,0,Partner Login,Partner Login,

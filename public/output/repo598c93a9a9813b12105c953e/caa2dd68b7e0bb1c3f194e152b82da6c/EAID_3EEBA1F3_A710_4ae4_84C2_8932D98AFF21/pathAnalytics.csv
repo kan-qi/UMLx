@@ -1,0 +1,5 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Owner->users list->change user file->user info,EI,CTRL|DM|EI,4,undefined,1,1,1,Authorize tour creator,Authorize tour creator
+2,Owner->users list->change user file->send error message if not successful->Error message,EQ,CTRL|INT,5,undefined,2,0,1,Authorize tour creator,Authorize tour creator
+3,retrieve user profile->users list->change user file->user info,FUNC_NA,TRAN_NA,4,undefined,2,1,0,Authorize tour creator,Authorize tour creator
+4,retrieve user profile->users list->change user file->send error message if not successful->Error message,FUNC_NA,TRAN_NA,5,undefined,3,0,0,Authorize tour creator,Authorize tour creator

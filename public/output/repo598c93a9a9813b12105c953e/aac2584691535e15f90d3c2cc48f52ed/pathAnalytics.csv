@@ -1,0 +1,17 @@
+id,path,functional,transactional,path_length,diagram,useCase
+1,Language Learner->Login Button->Check Password->Profile Information,EI,CTRL|DM|EI,undefined,Login,Login
+2,Language Learner->Login Button->Check Password->Login successful message,EQ,CTRL|INT,undefined,Login,Login
+3,Language Learner->Logout button->Clear user session->Home page,EQ,CTRL|INT,undefined,Logout,Logout
+4,Language Learner->choose language button->system check language preferences->language preference info,EI,CTRL|DM|EI,undefined,Search for Native Speaker,Search for Native Speaker
+5,Language Learner->choose language button->system check language preferences->List of language learners,EQ,CTRL|INT,undefined,Search for Native Speaker,Search for Native Speaker
+6,Language Learner->choose language button->system check language preferences->No matching message,EQ,CTRL|INT,undefined,Search for Native Speaker,Search for Native Speaker
+7,Language learner->Submit button->check username/email exist->Sign up message,EQ,CTRL|INT,undefined,Sign Up,Sign Up
+8,Language learner->Submit button->check username/email exist->checks required fields->Sign up message,EQ,CTRL|INT,undefined,Sign Up,Sign Up
+9,Language learner->Submit button->check username/email exist->checks required fields->Create account->Account,EI,CTRL|DM|EI,undefined,Sign Up,Sign Up
+10,Language learner->Submit button->check username/email exist->checks required fields->Create account->Log in user->Home page,EQ,CTRL|INT,undefined,Sign Up,Sign Up
+11,Lanugage learner->Submit button->check required fields->Update language learner information->account,EI,CTRL|DM|EI,undefined,Update Profile,Update Profile
+12,Lanugage learner->Submit button->check required fields->Update language learner information->Update successful message,EQ,CTRL|INT,undefined,Update Profile,Update Profile
+13,Language learner->send message button->display send message page->type message content,FUNC_NA,TRAN_NA,undefined,Send Messages to Other Language Learner,Send Messages to Other Language Learner
+14,Language learner->send button->check message is not empty->"please fill in the content" page,EQ,CTRL|INT,undefined,Send Messages to Other Language Learner,Send Messages to Other Language Learner
+15,Language learner->send button->check message is not empty->save message into database->successfully sent page,EQ,CTRL|INT,undefined,Send Messages to Other Language Learner,Send Messages to Other Language Learner
+16,Language learner->send button->check message is not empty->save message into database->message,EI,CTRL|DM|EI,undefined,Send Messages to Other Language Learner,Send Messages to Other Language Learner

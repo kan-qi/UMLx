@@ -1,0 +1,72 @@
+id,path,transactional,path_length,diagram,useCase
+1,User->Register Online Button->redirect to registration page->Registration Page,CTRL,4,Online registration,Online registration
+2,User->Register Online Button->redirect to registration page->Registration Page,INT,4,Online registration,Online registration
+3,User->Registration Page->Rest cal for inserting registration data->Validate registration information->Neon CRM,CTRL,5,Online registration,Online registration
+4,User->Registration Page->Rest cal for inserting registration data->Validate registration information->Neon CRM,EXTIVK,5,Online registration,Online registration
+5,User->Registration Page->Rest cal for inserting registration data->Validate registration information->Display an invalid error message->Invalid error message,CTRL,6,Online registration,Online registration
+6,User->Registration Page->Rest cal for inserting registration data->Validate registration information->Display an invalid error message->Invalid error message,INT,6,Online registration,Online registration
+7,User->Feedback form->Rest cal for inserting feedback->Validate feedback data->Neon CRM,CTRL,5,Online Feedback Process,Online Feedback Process
+8,User->Feedback form->Rest cal for inserting feedback->Validate feedback data->Neon CRM,EXTIVK,5,Online Feedback Process,Online Feedback Process
+9,User->Feedback form->Rest cal for inserting feedback->Validate feedback data->Display an invalid feedback error message->Invalid error message,CTRL,6,Online Feedback Process,Online Feedback Process
+10,User->Feedback form->Rest cal for inserting feedback->Validate feedback data->Display an invalid feedback error message->Invalid error message,INT,6,Online Feedback Process,Online Feedback Process
+11,User->Feedback page->display feedback form->Feedback form,CTRL,4,Online Feedback Process,Online Feedback Process
+12,User->Feedback page->display feedback form->Feedback form,INT,4,Online Feedback Process,Online Feedback Process
+13,User->checkin page->Rest cal for validating checkin information->Neon CRM,CTRL,4,Onsite user checkin,Onsite user checkin
+14,User->checkin page->Rest cal for validating checkin information->Neon CRM,EXTIVK,4,Onsite user checkin,Onsite user checkin
+15,User->Invalid checkin information->save checkin information->Checkin information,CTRL,4,Onsite user checkin,Onsite user checkin
+16,User->Invalid checkin information->save checkin information->Checkin information,DM,4,Onsite user checkin,Onsite user checkin
+17,User->Invalid checkin information->save checkin information->Checkin information,EI,4,Onsite user checkin,Onsite user checkin
+18,User->Checkin button->display checkin page->checkin page,CTRL,4,Onsite user checkin,Onsite user checkin
+19,User->Checkin button->display checkin page->checkin page,INT,4,Onsite user checkin,Onsite user checkin
+20,Neon CRM->Invalid checkin information->save checkin information->Checkin information,CTRL,4,Onsite user checkin,Onsite user checkin
+21,Neon CRM->Invalid checkin information->save checkin information->Checkin information,DM,4,Onsite user checkin,Onsite user checkin
+22,Neon CRM->Invalid checkin information->save checkin information->Checkin information,EI,4,Onsite user checkin,Onsite user checkin
+23,User->document upload button->validate login information->document upload page,CTRL,4,Secure Document Management,Secure Document Management
+24,User->document upload button->validate login information->document upload page,INT,4,Secure Document Management,Secure Document Management
+25,User->document upload button->validate login information->login,CTRL,4,Secure Document Management,Secure Document Management
+26,User->document upload button->validate login information->login,DM,4,Secure Document Management,Secure Document Management
+27,User->document upload button->validate login information->login,EI,4,Secure Document Management,Secure Document Management
+28,User->document upload page->store the document->document,CTRL,4,Secure Document Management,Secure Document Management
+29,User->document upload page->store the document->document,DM,4,Secure Document Management,Secure Document Management
+30,User->document upload page->store the document->document,EI,4,Secure Document Management,Secure Document Management
+31,User->document upload page->store the document->Display an invalid store error message->Invalid store error message,CTRL,5,Secure Document Management,Secure Document Management
+32,User->document upload page->store the document->Display an invalid store error message->Invalid store error message,INT,5,Secure Document Management,Secure Document Management
+33,User->document view button->validate login information->load documents->document,CTRL,5,Secure File Management View Process,Secure File Management View Process
+34,User->document view button->validate login information->load documents->document,DM,5,Secure File Management View Process,Secure File Management View Process
+35,User->document view button->validate login information->load documents->document,EI,5,Secure File Management View Process,Secure File Management View Process
+36,User->document view button->validate login information->load documents->document view page,CTRL,5,Secure File Management View Process,Secure File Management View Process
+37,User->document view button->validate login information->load documents->document view page,INT,5,Secure File Management View Process,Secure File Management View Process
+38,User->document view button->validate login information->login,CTRL,4,Secure File Management View Process,Secure File Management View Process
+39,User->document view button->validate login information->login,DM,4,Secure File Management View Process,Secure File Management View Process
+40,User->document view button->validate login information->login,EI,4,Secure File Management View Process,Secure File Management View Process
+41,User->document view page->query document->document,CTRL,4,Secure File Management View Process,Secure File Management View Process
+42,User->document view page->query document->document,DM,4,Secure File Management View Process,Secure File Management View Process
+43,User->document view page->query document->document,EI,4,Secure File Management View Process,Secure File Management View Process
+44,User->document view page->query document->Display error message->viewing document error message,CTRL,5,Secure File Management View Process,Secure File Management View Process
+45,User->document view page->query document->Display error message->viewing document error message,INT,5,Secure File Management View Process,Secure File Management View Process
+46,User->document view page->query document->document detail page,CTRL,4,Secure File Management View Process,Secure File Management View Process
+47,User->document view page->query document->document detail page,INT,4,Secure File Management View Process,Secure File Management View Process
+48,User->report generation button->query report->report list,CTRL,4,Report generation,Report generation
+49,User->report generation button->query report->report list,INT,4,Report generation,Report generation
+50,User->report generation button->query report->report,CTRL,4,Report generation,Report generation
+51,User->report generation button->query report->report,DM,4,Report generation,Report generation
+52,User->report generation button->query report->report,EI,4,Report generation,Report generation
+53,User->report list->dump report to Excel->Excel,CTRL,4,Report generation,Report generation
+54,User->report list->dump report to Excel->Excel,DM,4,Report generation,Report generation
+55,User->report list->dump report to Excel->Excel,EI,4,Report generation,Report generation
+56,User->Article list->query article info->article,CTRL,4,Sharing articles to social media,Sharing articles to social media
+57,User->Article list->query article info->article,DM,4,Sharing articles to social media,Sharing articles to social media
+58,User->Article list->query article info->article,EI,4,Sharing articles to social media,Sharing articles to social media
+59,User->Article list->query article info->article info,CTRL,4,Sharing articles to social media,Sharing articles to social media
+60,User->Article list->query article info->article info,INT,4,Sharing articles to social media,Sharing articles to social media
+61,User->article info->share to social network->Twitter,CTRL,4,Sharing articles to social media,Sharing articles to social media
+62,User->article info->share to social network->Twitter,EXTIVK,4,Sharing articles to social media,Sharing articles to social media
+63,User->article info->share to social network->Facebook,CTRL,4,Sharing articles to social media,Sharing articles to social media
+64,User->article info->share to social network->Facebook,EXTIVK,4,Sharing articles to social media,Sharing articles to social media
+65,User->article info->share to social network->Google plus,CTRL,4,Sharing articles to social media,Sharing articles to social media
+66,User->article info->share to social network->Google plus,EXTIVK,4,Sharing articles to social media,Sharing articles to social media
+67,Administrator->article add page->submit article to blog category->article,CTRL,4,Add articles to blog,Add articles to blog
+68,Administrator->article add page->submit article to blog category->article,DM,4,Add articles to blog,Add articles to blog
+69,Administrator->article add page->submit article to blog category->article,EI,4,Add articles to blog,Add articles to blog
+70,Administrator->Admin interface->navigate article add page->article add page,CTRL,4,Add articles to blog,Add articles to blog
+71,Administrator->Admin interface->navigate article add page->article add page,INT,4,Add articles to blog,Add articles to blog

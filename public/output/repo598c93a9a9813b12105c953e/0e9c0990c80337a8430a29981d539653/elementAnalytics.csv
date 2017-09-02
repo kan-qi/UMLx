@@ -1,0 +1,606 @@
+id,element,type,outbound_degree,inbound_degree,diagram,useCase
+1,Error messagge popup,boundary,0,1,Experiment Use Case,Validate Redemption Password
+2,Display Popup Error Message,control,1,1,Experiment Use Case,Validate Redemption Password
+3,Display Pop-up Error Message,control,1,1,Experiment Use Case,Validate Redemption Password
+4,Error message popup,boundary,0,1,Experiment Use Case,Validate Redemption Password
+5,get Redeem password,control,2,1,Experiment Use Case,Validate Redemption Password
+6,Is redemption password valid?,control,4,1,Experiment Use Case,Validate Redemption Password
+7,Coupon Successfully Redeemed Popup Message,boundary,0,1,Experiment Use Case,Validate Redemption Password
+8,Enter Password,control,1,1,Experiment Use Case,Validate Redemption Password
+9,Display Redeem Coupon Page,control,1,1,Experiment Use Case,Validate Redemption Password
+10,Coupon,entity,1,0,Experiment Use Case,Validate Redemption Password
+11,Traveler,actor,1,0,Experiment Use Case,Validate Redemption Password
+12,Traveler Account,entity,0,1,Experiment Use Case,Validate Redemption Password
+13,Display Coupon Successfully Redeemed Popup Message,control,1,1,Experiment Use Case,Validate Redemption Password
+14,Redemption Password Validation Page,boundary,1,3,Experiment Use Case,Validate Redemption Password
+15,Display Redemption Password Validation Page,control,2,1,Experiment Use Case,Validate Redemption Password
+16,Redeem Coupon Page,boundary,0,1,Experiment Use Case,Validate Redemption Password
+17,is there similiar transaction,control,2,1,Notify Partner of Redemption,Notify Partner of Redemption
+18,Click cancel button,control,1,3,Notify Partner of Redemption,Notify Partner of Redemption
+19,Redeem failed page,boundary,1,1,Notify Partner of Redemption,Notify Partner of Redemption
+20,Alert message page,boundary,2,1,Notify Partner of Redemption,Notify Partner of Redemption
+21,Traveler,actor,2,0,Notify Partner of Redemption,Notify Partner of Redemption
+22,Enter password,control,1,1,Notify Partner of Redemption,Notify Partner of Redemption
+23,Coupon Redeem Page,boundary,1,4,Notify Partner of Redemption,Notify Partner of Redemption
+24,Is password valid?,control,3,1,Notify Partner of Redemption,Notify Partner of Redemption
+25,Is network connection working,control,3,2,Notify Partner of Redemption,Notify Partner of Redemption
+26,Enter Password,control,2,1,Notify Partner of Redemption,Notify Partner of Redemption
+27,Display Redeem Coupon Page,control,1,1,Notify Partner of Redemption,Notify Partner of Redemption
+28,Employee,actor,1,0,Notify Partner of Redemption,Notify Partner of Redemption
+29,Traveler Account,entity,0,1,Notify Partner of Redemption,Notify Partner of Redemption
+30,Alert message page,boundary,1,2,Notify Partner of Redemption,Notify Partner of Redemption
+31,Redeem Success Page,boundary,0,2,Notify Partner of Redemption,Notify Partner of Redemption
+32,Logging transaction,control,0,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+33,Validating redemption password,control,0,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+34,Generate barcode,control,4,2,Bill partner for redemption transaction,Bill partner for redemption transaction
+35,Billing partner,control,1,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+36,Display,control,1,4,Bill partner for redemption transaction,Bill partner for redemption transaction
+37,Redeem Coupon,control,1,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+38,Coupon Redeem Page,boundary,1,4,Bill partner for redemption transaction,Bill partner for redemption transaction
+39,Invoke,control,5,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+40,retrieve data from account,control,3,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+41,Notifying partner,control,0,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+42,Display,control,1,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+43,Employee,actor,2,0,Bill partner for redemption transaction,Bill partner for redemption transaction
+44,account,entity,0,1,Bill partner for redemption transaction,Bill partner for redemption transaction
+45,Coupon template,boundary,0,3,Bill partner for redemption transaction,Bill partner for redemption transaction
+46,Partner Info,entity,0,1,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+47,Temporary storage,entity,0,3,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+48,Display redemption statistics screen,control,2,1,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+49,Chooses filtering or sorting option,control,2,1,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+50,Query Transaction Log and Partner Info,control,4,2,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+51,Filter and sort result,control,2,2,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+52,Leave Reemption statistics screen,control,1,1,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+53,Administrator,actor,2,0,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+54,Transaction Log,entity,0,1,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+55,Redemption statistics screen,boundary,3,2,View redemption statistics for partner storyboard,View redemption statistics for partner storyboard
+56,Search result page,boundary,0,1,Billstatus page,View Partner Billing status storyboard
+57,Partner data,entity,0,2,Billstatus page,View Partner Billing status storyboard
+58,Display search result,control,1,1,Billstatus page,View Partner Billing status storyboard
+59,Search,control,3,2,Billstatus page,View Partner Billing status storyboard
+60,Display search result,control,1,1,Billstatus page,View Partner Billing status storyboard
+61,Administrator,actor,1,0,Billstatus page,View Partner Billing status storyboard
+62,Billstatus page,boundary,2,2,Billstatus page,View Partner Billing status storyboard
+63,Partner,actor,0,1,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+64,Email the partner,control,1,2,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+65,Display partner account with errors,control,1,0,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+66,Suspend a partner account,control,2,1,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+67,Suspend failed page,boundary,0,3,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+68,Suspend succeed page,boundary,0,3,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+69,Partner Info,entity,0,2,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+70,Change account state,control,5,2,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+71,Administrator,actor,3,0,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+72,Page of Partner Account can be suspended,boundary,3,3,Suspend Partner Account Storyboard,Suspend Partner Account Storyboard
+73,Reactive failure,boundary,0,2,Reactive Partner Account,Reactive Partner Account
+74,Reactive success,boundary,0,2,Reactive Partner Account,Reactive Partner Account
+75,Partner data,entity,2,2,Reactive Partner Account,Reactive Partner Account
+76,Reactive Partner,control,2,1,Reactive Partner Account,Reactive Partner Account
+77,Display search result,control,1,2,Reactive Partner Account,Reactive Partner Account
+78,Administrator,actor,3,0,Reactive Partner Account,Reactive Partner Account
+79,Suspended Partners List,boundary,1,1,Reactive Partner Account,Reactive Partner Account
+80,Error message popup,boundary,0,1,Delete Partner Account,Delete Partner Account
+81,Display partner biling status page,control,2,1,Delete Partner Account,Delete Partner Account
+82,Partner List,boundary,0,1,Delete Partner Account,Delete Partner Account
+83,display partner list,control,1,1,Delete Partner Account,Delete Partner Account
+84,Partner,actor,0,1,Delete Partner Account,Delete Partner Account
+85,Display popup error message,control,2,2,Delete Partner Account,Delete Partner Account
+86,Suspend Account,control,1,0,Delete Partner Account,Delete Partner Account
+87,Display delete confirmation page,control,3,1,Delete Partner Account,Delete Partner Account
+88,Delete confirmation page,boundary,1,2,Delete Partner Account,Delete Partner Account
+89,Partner Info,entity,0,1,Delete Partner Account,Delete Partner Account
+90,Delete Partner Account,control,1,1,Delete Partner Account,Delete Partner Account
+91,Administrator,actor,2,0,Delete Partner Account,Delete Partner Account
+92,Partner Biling Status Page,boundary,3,2,Delete Partner Account,Delete Partner Account
+93,Display pritner failure message,control,1,1,View Transaction Log,View Transaction Log
+94,Retrieve selected transactions,control,1,1,View Transaction Log,View Transaction Log
+95,Transaction DB,entity,0,4,View Transaction Log,View Transaction Log
+96,Dispute Redemption Page,boundary,0,1,View Transaction Log,View Transaction Log
+97,Display connection error message,control,2,2,View Transaction Log,View Transaction Log
+98,Display transactions,control,8,1,View Transaction Log,View Transaction Log
+99,Direct to modify,control,3,1,View Transaction Log,View Transaction Log
+100,Display no transactions message,control,1,1,View Transaction Log,View Transaction Log
+101,Retrieve transactions,control,1,1,View Transaction Log,View Transaction Log
+102,System message page,boundary,0,3,View Transaction Log,View Transaction Log
+103,Retrieve and print,control,1,1,View Transaction Log,View Transaction Log
+104,Administrator,actor,1,0,View Transaction Log,View Transaction Log
+105,Transaction Log Page,boundary,2,1,View Transaction Log,View Transaction Log
+106,Display locked account message,control,0,1,Admin Login,Admin Login
+107,Display Home Page,control,1,1,Admin Login,Admin Login
+108,Partner Info,entity,1,1,Admin Login,Admin Login
+109,display partner list,control,1,1,Admin Login,Admin Login
+110,Admin home page,boundary,0,2,Admin Login,Admin Login
+111,Validate user,control,3,2,Admin Login,Admin Login
+112,Display Password Reset Page,control,2,1,Admin Login,Admin Login
+113,Enter username and password,control,2,1,Admin Login,Admin Login
+114,Display Invalid Email Message,control,2,1,Admin Login,Admin Login
+115,Display login page,control,1,0,Admin Login,Admin Login
+116,Display Invalid Username Password Message,control,1,1,Admin Login,Admin Login
+117,Admin password reset page,boundary,1,1,Admin Login,Admin Login
+118,Enter email address,control,1,2,Admin Login,Admin Login
+119,Administrator,actor,1,0,Admin Login,Admin Login
+120,Admin Login Page,boundary,4,2,Admin Login,Admin Login
+121,Partner,entity,0,1,Resolve Dispute,Resolve Dispute
+122,Bills,entity,0,1,Resolve Dispute,Resolve Dispute
+123,Resolve Dispute page,boundary,3,2,Resolve Dispute,Resolve Dispute
+124,Selects Dispute,control,1,1,Resolve Dispute,Resolve Dispute
+125,ErrorController,control,1,1,Resolve Dispute,Resolve Dispute
+126,Dispute,entity,0,2,Resolve Dispute,Resolve Dispute
+127,ApproveDisputeController,control,4,1,Resolve Dispute,Resolve Dispute
+128,Display Error Page,boundary,0,1,Resolve Dispute,Resolve Dispute
+129,FetchDisputeController,control,3,3,Resolve Dispute,Resolve Dispute
+130,View Redemption Statistics for Partner,control,0,1,Resolve Dispute,Resolve Dispute
+131,View Partneer Billing Status,control,0,1,Resolve Dispute,Resolve Dispute
+132,Display Success Page,boundary,0,1,Resolve Dispute,Resolve Dispute
+133,EmailNotificationController,control,1,1,Resolve Dispute,Resolve Dispute
+134,Administrator,actor,2,0,Resolve Dispute,Resolve Dispute
+135,Dispute Redemption Page,boundary,3,2,Resolve Dispute,Resolve Dispute
+136,Fail to connect internet page,boundary,0,1,Receive Coupon,Receive Coupon - Android
+137,Coupon Retrieve Page,boundary,1,1,Receive Coupon,Receive Coupon - Android
+138,Ad server,actor,1,0,Receive Coupon,Receive Coupon - Android
+139,Server Partner - coupon database,entity,0,1,Receive Coupon,Receive Coupon - Android
+140,Retrieve specific partner's coupon information,control,2,1,Receive Coupon,Receive Coupon - Android
+141,Local coupon database,entity,0,1,Receive Coupon,Receive Coupon - Android
+142,Save it later,control,1,1,Receive Coupon,Receive Coupon - Android
+143,Cancel,control,0,1,Receive Coupon,Receive Coupon - Android
+144,Geo fence,control,3,3,Receive Coupon,Receive Coupon - Android
+145,check internet,control,3,1,Receive Coupon,Receive Coupon - Android
+146,Redeem,control,0,1,Receive Coupon,Receive Coupon - Android
+147,Coupon Notification Popup Window,boundary,3,4,Receive Coupon,Receive Coupon - Android
+148,Check GPS,control,2,1,Receive Coupon,Receive Coupon - Android
+149,Employee,actor,3,0,Receive Coupon,Receive Coupon - Android
+150,GPS not work page,boundary,0,1,Receive Coupon,Receive Coupon - Android
+151,Sort coupons from far to close,control,1,1,Save it for later,Save it for later
+152,Categories,entity,0,1,Save it for later,Save it for later
+153,Add coupon into category,control,1,1,Save it for later,Save it for later
+154,Category list,boundary,1,3,Save it for later,Save it for later
+155,Random coupoon pool,entity,0,1,Save it for later,Save it for later
+156,Choose a category or not,control,4,1,Save it for later,Save it for later
+157,Create a category,control,1,2,Save it for later,Save it for later
+158,User,actor,1,0,Save it for later,Save it for later
+159,Coupon receiving page,boundary,1,1,Save it for later,Save it for later
+160,Remove coupon,control,2,0,View stored coupons,View stored coupons - Android
+161,Show details,boundary,1,3,View stored coupons,View stored coupons - Android
+162,Coupons,entity,0,3,View stored coupons,View stored coupons - Android
+163,Redeem coupon,control,0,1,View stored coupons,View stored coupons - Android
+164,Dispute,entity,1,0,View stored coupons,View stored coupons - Android
+165,Verify coupon,control,2,1,View stored coupons,View stored coupons - Android
+166,Show coupons,boundary,1,2,View stored coupons,View stored coupons - Android
+167,Get coupons list,control,4,1,View stored coupons,View stored coupons - Android
+168,User,actor,1,0,View stored coupons,View stored coupons - Android
+169,Originating page,boundary,1,1,View stored coupons,View stored coupons - Android
+170,Scan QR Code,control,1,1,Redeem Coupon,Redeem Coupon - Android
+171,Input Coupon Code ID,control,1,1,Redeem Coupon,Redeem Coupon - Android
+172,Redeem Coupon Page,boundary,2,1,Redeem Coupon,Redeem Coupon - Android
+173,Click Redeem Button,boundary,1,2,Redeem Coupon,Redeem Coupon - Android
+174,Remove,control,1,1,Redeem Coupon,Redeem Coupon - Android
+175,Admin Login page,boundary,1,1,Redeem Coupon,Redeem Coupon - Android
+176,Enter Username and password,control,1,1,Redeem Coupon,Redeem Coupon - Android
+177,Database,entity,1,0,Redeem Coupon,Redeem Coupon - Android
+178,Display redeemed coupon page,control,2,1,Redeem Coupon,Redeem Coupon - Android
+179,Redeemed coupon record page,boundary,0,3,Redeem Coupon,Redeem Coupon - Android
+180,Enter Username and password,control,2,1,Redeem Coupon,Redeem Coupon - Android
+181,User,actor,3,0,Redeem Coupon,Redeem Coupon - Android
+182,Login page,boundary,1,1,Redeem Coupon,Redeem Coupon - Android
+183,Login page,boundary,0,1,Connect to trip plan,Connect to trip plan - Android
+184,Verify user's session,control,2,2,Connect to trip plan,Connect to trip plan - Android
+185,Show trip plans page,boundary,1,2,Connect to trip plan,Connect to trip plan - Android
+186,users' database table,entity,1,1,Connect to trip plan,Connect to trip plan - Android
+187,Trip plans database table,entity,1,0,Connect to trip plan,Connect to trip plan - Android
+188,Collect information,control,1,3,Connect to trip plan,Connect to trip plan - Android
+189,View trip plans,control,1,1,Connect to trip plan,Connect to trip plan - Android
+190,User,actor,1,0,Connect to trip plan,Connect to trip plan - Android
+191,Previous Page,boundary,1,1,Connect to trip plan,Connect to trip plan - Android
+192,Display,control,1,1,Login to tripplanner,Login to tripplanner - Android
+193,Create account page,boundary,1,2,Login to tripplanner,Login to tripplanner - Android
+194,display,control,1,1,Login to tripplanner,Login to tripplanner - Android
+195,Validate/check,control,1,1,Login to tripplanner,Login to tripplanner - Android
+196,Account,entity,2,1,Login to tripplanner,Login to tripplanner - Android
+197,display,control,1,1,Login to tripplanner,Login to tripplanner - Android
+198,Create an account,control,1,1,Login to tripplanner,Login to tripplanner - Android
+199,start auth session,control,1,1,Login to tripplanner,Login to tripplanner - Android
+200,display,control,1,1,Login to tripplanner,Login to tripplanner - Android
+201,Email password,control,1,1,Login to tripplanner,Login to tripplanner - Android
+202,Retrieve account info,control,2,1,Login to tripplanner,Login to tripplanner - Android
+203,display,control,1,1,Login to tripplanner,Login to tripplanner - Android
+204,Account,entity,2,1,Login to tripplanner,Login to tripplanner - Android
+205,Login main page,boundary,3,4,Login to tripplanner,Login to tripplanner - Android
+206,Display,control,1,1,Login to tripplanner,Login to tripplanner - Android
+207,Display,control,1,1,Login to tripplanner,Login to tripplanner - Android
+208,Main page,boundary,1,1,Login to tripplanner,Login to tripplanner - Android
+209,Start auth session,control,1,1,Login to tripplanner,Login to tripplanner - Android
+210,Validate/check,control,1,1,Login to tripplanner,Login to tripplanner - Android
+211,Previous page (any page),boundary,0,1,Login to tripplanner,Login to tripplanner - Android
+212,Validate/check,control,1,1,Login to tripplanner,Login to tripplanner - Android
+213,Display,control,1,2,Login to tripplanner,Login to tripplanner - Android
+214,Account,entity,1,1,Login to tripplanner,Login to tripplanner - Android
+215,Traveler,actor,2,0,Login to tripplanner,Login to tripplanner - Android
+216,Retrieve account info,control,1,1,Login to tripplanner,Login to tripplanner - Android
+217,Forget password page,boundary,2,1,Login to tripplanner,Login to tripplanner - Android
+218,display,control,1,1,Login to tripplanner,Login to tripplanner - Android
+219,Previous page,boundary,0,2,Login to tripplanner,Login to tripplanner - Android
+220,Fail to connect internet page,boundary,0,1,Receive Coupon,Receive Coupon - iOS
+221,Coupon Retrieve Page,boundary,1,1,Receive Coupon,Receive Coupon - iOS
+222,Ad server,actor,1,0,Receive Coupon,Receive Coupon - iOS
+223,Server Partner - coupon database,entity,0,1,Receive Coupon,Receive Coupon - iOS
+224,Retrieve specific partner's coupon information,control,2,1,Receive Coupon,Receive Coupon - iOS
+225,Local coupon database,entity,0,1,Receive Coupon,Receive Coupon - iOS
+226,Save it later,control,1,1,Receive Coupon,Receive Coupon - iOS
+227,Cancel,control,0,1,Receive Coupon,Receive Coupon - iOS
+228,Geo fence,control,1,2,Receive Coupon,Receive Coupon - iOS
+229,check internet,control,3,1,Receive Coupon,Receive Coupon - iOS
+230,Redeem,control,0,1,Receive Coupon,Receive Coupon - iOS
+231,Coupon Notification Popup Window,boundary,3,4,Receive Coupon,Receive Coupon - iOS
+232,Check GPS,control,2,1,Receive Coupon,Receive Coupon - iOS
+233,Employee,actor,3,0,Receive Coupon,Receive Coupon - iOS
+234,GPS not work page,boundary,0,1,Receive Coupon,Receive Coupon - iOS
+235,Login page,boundary,0,1,Connect to trip plan,Connect to trip plan - iOS
+236,Verify user's session,control,2,2,Connect to trip plan,Connect to trip plan - iOS
+237,Show trip plans page,boundary,0,1,Connect to trip plan,Connect to trip plan - iOS
+238,users' database table,entity,1,0,Connect to trip plan,Connect to trip plan - iOS
+239,Trip plans database table,entity,1,0,Connect to trip plan,Connect to trip plan - iOS
+240,Collect information,control,1,2,Connect to trip plan,Connect to trip plan - iOS
+241,View trip plans,control,1,1,Connect to trip plan,Connect to trip plan - iOS
+242,User,actor,1,0,Connect to trip plan,Connect to trip plan - iOS
+243,Previous Page,boundary,1,1,Connect to trip plan,Connect to trip plan - iOS
+244,Display,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+245,Create account page,boundary,1,2,Login to tripplanner,Login to tripplanner - iOS
+246,display,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+247,Validate/check,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+248,Account,entity,2,1,Login to tripplanner,Login to tripplanner - iOS
+249,display,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+250,Create an account,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+251,start auth session,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+252,display,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+253,Email password,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+254,Retrieve account info,control,2,1,Login to tripplanner,Login to tripplanner - iOS
+255,display,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+256,Account,entity,2,1,Login to tripplanner,Login to tripplanner - iOS
+257,Login main page,boundary,3,4,Login to tripplanner,Login to tripplanner - iOS
+258,Display,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+259,Display,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+260,Main page,boundary,1,1,Login to tripplanner,Login to tripplanner - iOS
+261,Start auth session,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+262,Validate/check,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+263,Previous page (any page),boundary,0,1,Login to tripplanner,Login to tripplanner - iOS
+264,Validate/check,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+265,Display,control,1,2,Login to tripplanner,Login to tripplanner - iOS
+266,Account,entity,1,1,Login to tripplanner,Login to tripplanner - iOS
+267,Traveler,actor,2,0,Login to tripplanner,Login to tripplanner - iOS
+268,Retrieve account info,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+269,Forget password page,boundary,2,1,Login to tripplanner,Login to tripplanner - iOS
+270,display,control,1,1,Login to tripplanner,Login to tripplanner - iOS
+271,Previous page,boundary,0,2,Login to tripplanner,Login to tripplanner - iOS
+272,Scan QR Code,control,1,1,Redeem Coupon,Redeem Coupon - iOS
+273,Input Coupon Code ID,control,1,1,Redeem Coupon,Redeem Coupon - iOS
+274,Redeem Coupon Page,boundary,2,1,Redeem Coupon,Redeem Coupon - iOS
+275,Click Redeem Button,boundary,1,2,Redeem Coupon,Redeem Coupon - iOS
+276,Remove,control,0,1,Redeem Coupon,Redeem Coupon - iOS
+277,Admin Login page,boundary,1,1,Redeem Coupon,Redeem Coupon - iOS
+278,Enter Username and password,control,1,1,Redeem Coupon,Redeem Coupon - iOS
+279,Database,entity,1,0,Redeem Coupon,Redeem Coupon - iOS
+280,Display redeemed coupon page,control,1,1,Redeem Coupon,Redeem Coupon - iOS
+281,Redeemed coupon record page,boundary,0,3,Redeem Coupon,Redeem Coupon - iOS
+282,Enter Username and password,control,1,1,Redeem Coupon,Redeem Coupon - iOS
+283,User,actor,3,0,Redeem Coupon,Redeem Coupon - iOS
+284,Login page,boundary,1,1,Redeem Coupon,Redeem Coupon - iOS
+285,Sort coupons from far to close,control,1,1,Save it for lateer,Save it for lateer
+286,Categories,entity,0,1,Save it for lateer,Save it for lateer
+287,Add coupon into category,control,1,1,Save it for lateer,Save it for lateer
+288,Category list,boundary,1,2,Save it for lateer,Save it for lateer
+289,Random coupoon pool,entity,0,1,Save it for lateer,Save it for lateer
+290,Choose a category or not,control,3,1,Save it for lateer,Save it for lateer
+291,Create a category,control,1,1,Save it for lateer,Save it for lateer
+292,User,actor,1,0,Save it for lateer,Save it for lateer
+293,Coupon receiving page,boundary,1,1,Save it for lateer,Save it for lateer
+294,Remove coupon,control,2,0,View stored coupons,View stored coupons - iOS
+295,Show details,boundary,1,3,View stored coupons,View stored coupons - iOS
+296,Coupons,entity,0,3,View stored coupons,View stored coupons - iOS
+297,Redeem coupon,control,0,1,View stored coupons,View stored coupons - iOS
+298,Dispute,entity,1,0,View stored coupons,View stored coupons - iOS
+299,Verify coupon,control,2,1,View stored coupons,View stored coupons - iOS
+300,Show coupons,boundary,1,1,View stored coupons,View stored coupons - iOS
+301,Get coupons list,control,2,1,View stored coupons,View stored coupons - iOS
+302,User,actor,1,0,View stored coupons,View stored coupons - iOS
+303,Originating page,boundary,1,1,View stored coupons,View stored coupons - iOS
+304,Invoke design coupon use case,boundary,0,1,Modify Offer,Modify Offer
+305,Enter offer's new values,boundary,0,1,Modify Offer,Modify Offer
+306,Modify offer page,boundary,3,1,Modify Offer,Modify Offer
+307,Modify Offer,control,1,1,Modify Offer,Modify Offer
+308,Edit Offer,control,1,1,Modify Offer,Modify Offer
+309,Offer,entity,0,1,Modify Offer,Modify Offer
+310,Offers Page,boundary,1,1,Modify Offer,Modify Offer
+311,FTSR,actor,1,0,Modify Offer,Modify Offer
+312,Email user reset password confirmation email,control,0,1,Partner Login,Partner Login
+313,Display reset password dialog,control,1,1,Partner Login,Partner Login
+314,System Database,entity,1,1,Partner Login,Partner Login
+315,Query database with username and password,control,1,2,Partner Login,Partner Login
+316,Is a match found?,control,3,1,Partner Login,Partner Login
+317,Display error message,control,0,1,Partner Login,Partner Login
+318,Enter username and password,control,1,1,Partner Login,Partner Login
+319,Display Partner Login,control,1,0,Partner Login,Partner Login
+320,Partner Portal,boundary,0,2,Partner Login,Partner Login
+321,Partner Login,boundary,2,2,Partner Login,Partner Login
+322,User,actor,2,0,Partner Login,Partner Login
+323,Display Home Page(Designed by other part),control,0,1,Buy Partner Subscription,Buy Partner Subscription
+324,Buy Success Page,boundary,1,2,Buy Partner Subscription,Buy Partner Subscription
+325,Display Buy My Subscription Success Page,control,1,1,Buy Partner Subscription,Buy Partner Subscription
+326,Subscription,entity,1,1,Buy Partner Subscription,Buy Partner Subscription
+327,Marked as Subscirpted,control,1,1,Buy Partner Subscription,Buy Partner Subscription
+328,Buy Subscription Comfirmation Page,boundary,1,2,Buy Partner Subscription,Buy Partner Subscription
+329,Display Subscription Comfirmation Page,control,1,1,Buy Partner Subscription,Buy Partner Subscription
+330,Buy Subscription Page(1),boundary,1,2,Buy Partner Subscription,Buy Partner Subscription
+331,Display Subscription Page(2),control,1,1,Buy Partner Subscription,Buy Partner Subscription
+332,Buy Subscription Page(1),boundary,1,1,Buy Partner Subscription,Buy Partner Subscription
+333,Business Parter,actor,4,0,Buy Partner Subscription,Buy Partner Subscription
+334,Auto publish reschedule,control,1,0,Publish Offer,Publish Offer
+335,Display modify error,control,0,1,Publish Offer,Publish Offer
+336,Add Server,actor,1,0,Publish Offer,Publish Offer
+337,Publish offer,control,0,2,Publish Offer,Publish Offer
+338,Check validate,control,2,1,Publish Offer,Publish Offer
+339,offer details,boundary,1,3,Publish Offer,Publish Offer
+340,Offers,entity,1,0,Publish Offer,Publish Offer
+341,Retrieve offers,control,1,2,Publish Offer,Publish Offer
+342,Display offer,control,2,1,Publish Offer,Publish Offer
+343,Dispaly Error Msg,control,0,1,Publish Offer,Publish Offer
+344,offers pages,boundary,1,1,Publish Offer,Publish Offer
+345,FTSR,actor,2,0,Publish Offer,Publish Offer
+346,Coupon Invalid,boundary,1,1,Test Coupon,Test Coupon
+347,Coupon Redeemed,boundary,1,1,Test Coupon,Test Coupon
+348,Coupon Validator,control,1,2,Test Coupon,Test Coupon
+349,FT,actor,3,0,Test Coupon,Test Coupon
+350,Coupon Database,entity,0,2,Test Coupon,Test Coupon
+351,Redeem Coupon,control,1,1,Test Coupon,Test Coupon
+352,Coupon Page,boundary,2,1,Test Coupon,Test Coupon
+353,Open Coupon Page,control,0,1,Test Coupon,Test Coupon
+354,Save coupon for later,control,1,1,Test Coupon,Test Coupon
+355,Partner's Mobile,entity,1,2,Test Coupon,Test Coupon
+356,Generate Test Coupon,control,1,1,Test Coupon,Test Coupon
+357,Test Coupon,entity,1,0,Test Coupon,Test Coupon
+358,Display Home Page,control,0,1,Cancel Partner Subscription,Cancel Partner Subscription
+359,Cancel Subscription Success Page,boundary,1,2,Cancel Partner Subscription,Cancel Partner Subscription
+360,Subscription,entity,0,1,Cancel Partner Subscription,Cancel Partner Subscription
+361,Display Success Page,control,1,1,Cancel Partner Subscription,Cancel Partner Subscription
+362,Marked as Canceled,control,2,1,Cancel Partner Subscription,Cancel Partner Subscription
+363,Cancel Subscription Comfirmation Page,boundary,2,2,Cancel Partner Subscription,Cancel Partner Subscription
+364,Display Comfirmation Page,control,1,1,Cancel Partner Subscription,Cancel Partner Subscription
+365,Display Cancel Sub page,control,0,1,Cancel Partner Subscription,Cancel Partner Subscription
+366,Cancel Subscription Page,boundary,1,1,Cancel Partner Subscription,Cancel Partner Subscription
+367,Business Partner,actor,3,0,Cancel Partner Subscription,Cancel Partner Subscription
+368,Cancel Button,boundary,0,2,Upload Image,Upload Image
+369,Display Image in Coupon Image,control,1,1,Upload Image,Upload Image
+370,Open Button,boundary,1,1,Upload Image,Upload Image
+371,Select the Image file,boundary,0,2,Upload Image,Upload Image
+372,File Chooser Windows,control,2,1,Upload Image,Upload Image
+373,Upload Image button,boundary,1,1,Upload Image,Upload Image
+374,Design Coupon screen,boundary,0,2,Upload Image,Upload Image
+375,User,actor,5,0,Upload Image,Upload Image
+376,Error Message,boundary,0,1,Design Coupon,Design Coupon
+377,access,control,1,1,Design Coupon,Design Coupon
+378,External Image Service,actor,0,1,Design Coupon,Design Coupon
+379,Third Party Client,actor,1,0,Design Coupon,Design Coupon
+380,Coupon,entity,0,2,Design Coupon,Design Coupon
+381,Coupon Templates,entity,0,1,Design Coupon,Design Coupon
+382,Offers,entity,1,0,Design Coupon,Design Coupon
+383,Retrieves,control,1,2,Design Coupon,Design Coupon
+384,Upload Image,control,1,1,Design Coupon,Design Coupon
+385,Test,control,0,1,Design Coupon,Design Coupon
+386,Save,control,1,1,Design Coupon,Design Coupon
+387,Coupon Designer,boundary,5,1,Design Coupon,Design Coupon
+388,Edit,control,1,1,Design Coupon,Design Coupon
+389,Business Partner,actor,1,0,Design Coupon,Design Coupon
+390,Offers database,entity,0,1,Create Offer,Create Offer
+391,Create offer,control,1,1,Create Offer,Create Offer
+392,Create Geo-fence,control,1,1,Create Offer,Create Offer
+393,Process,control,1,4,Create Offer,Create Offer
+394,Design Coupon Page,boundary,1,3,Create Offer,Create Offer
+395,Create Geo-fence page,boundary,1,2,Create Offer,Create Offer
+396,Create offer page 2,boundary,1,2,Create Offer,Create Offer
+397,Display error message,control,2,3,Create Offer,Create Offer
+398,Create Offer Page 1,boundary,1,1,Create Offer,Create Offer
+399,Design coupon,control,2,2,Create Offer,Create Offer
+400,Link offers,control,1,2,Create Offer,Create Offer
+401,Proceed,control,4,1,Create Offer,Create Offer
+402,Check,control,2,1,Create Offer,Create Offer
+403,Link DC & Geo,control,4,1,Create Offer,Create Offer
+404,Offers Page,boundary,1,1,Create Offer,Create Offer
+405,Enter Value,control,3,1,Create Offer,Create Offer
+406,FT sales rep,actor,3,0,Create Offer,Create Offer
+407,Display bills,control,1,1,View Bill,View Bill
+408,Bills,entity,1,1,View Bill,View Bill
+409,Redeem coupon,control,0,1,View Bill,View Bill
+410,Partneer subscriptions,entity,0,1,View Bill,View Bill
+411,Unbilled Transactions,entity,2,1,View Bill,View Bill
+412,Submit disputation request,control,1,1,View Bill,View Bill
+413,Validate disputation request,control,1,2,View Bill,View Bill
+414,Disputation request page,boundary,2,1,View Bill,View Bill
+415,Display unbilled transactions,control,1,1,View Bill,View Bill
+416,Disputation request success page,boundary,0,1,View Bill,View Bill
+417,Post bills,control,2,1,View Bill,View Bill
+418,Dispute bill,control,2,1,View Bill,View Bill
+419,Bill Detail Page,boundary,2,1,View Bill,View Bill
+420,Make payment,control,0,1,View Bill,View Bill
+421,View Bill Details,control,1,1,View Bill,View Bill
+422,Bills view page,boundary,2,2,View Bill,View Bill
+423,Business Partner,actor,1,0,View Bill,View Bill
+424,Send confirm email,control,0,1,Create Account,Create Account
+425,retrieve registered email,control,1,2,Create Account,Create Account
+426,Delete information cookies,control,1,1,Create Account,Create Account
+427,Customer page,boundary,0,1,Create Account,Create Account
+428,Success action,control,3,1,Create Account,Create Account
+429,Check duplication,control,2,1,Create Account,Create Account
+430,system database account information,entity,2,1,Create Account,Create Account
+431,retrieve information,control,1,2,Create Account,Create Account
+432,Valid information duplication,control,1,1,Create Account,Create Account
+433,Create success page,boundary,1,1,Create Account,Create Account
+434,Web browerser-cookies storage,entity,2,2,Create Account,Create Account
+435,check information correctness,control,2,1,Create Account,Create Account
+436,Store information cookies,control,1,1,Create Account,Create Account
+437,Create account page,boundary,1,3,Create Account,Create Account
+438,direct to create account page,control,1,1,Create Account,Create Account
+439,Information incorrect and redirect back,control,1,2,Create Account,Create Account
+440,First page,boundary,1,1,Create Account,Create Account
+441,Customer,actor,2,0,Create Account,Create Account
+442,Authorization success,boundary,1,1,Specify default payment method use case,Specify default payment method use case
+443,Display Success Page,control,1,1,Specify default payment method use case,Specify default payment method use case
+444,Payment Processor,entity,1,1,Specify default payment method use case,Specify default payment method use case
+445,HTTPS Connection,control,1,1,Specify default payment method use case,Specify default payment method use case
+446,Payment Cateway,entity,1,1,Specify default payment method use case,Specify default payment method use case
+447,Merchant Web Server Account,entity,1,4,Specify default payment method use case,Specify default payment method use case
+448,HTTPS Connection,control,1,1,Specify default payment method use case,Specify default payment method use case
+449,Subscription,entity,0,0,Specify default payment method use case,Specify default payment method use case
+450,HTTPs Connection,control,1,1,Specify default payment method use case,Specify default payment method use case
+451,Check internet,control,0,1,Specify default payment method use case,Specify default payment method use case
+452,Check all details are entered,control,2,1,Specify default payment method use case,Specify default payment method use case
+453,HTTPS Connection,control,1,2,Specify default payment method use case,Specify default payment method use case
+454,Acquirer Bank,entity,2,2,Specify default payment method use case,Specify default payment method use case
+455,Display Success Page,control,2,1,Specify default payment method use case,Specify default payment method use case
+456,Validate details with user's bank account,control,2,3,Specify default payment method use case,Specify default payment method use case
+457,enter details,control,2,1,Specify default payment method use case,Specify default payment method use case
+458,Payment Screen,boundary,3,2,Specify default payment method use case,Specify default payment method use case
+459,Business Partner,actor,4,0,Specify default payment method use case,Specify default payment method use case
+460,Display not found page,control,1,1,Contact us,Contact us
+461,Not found page,boundary,0,2,Contact us,Contact us
+462,Admin,actor,0,1,Contact us,Contact us
+463,Display customer complain notification,control,1,1,Contact us,Contact us
+464,Customer,entity,0,1,Contact us,Contact us
+465,Customer complain Notification,entity,0,1,Contact us,Contact us
+466,Admin gets the message,boundary,1,1,Contact us,Contact us
+467,Home page,boundary,1,1,Contact us,Contact us
+468,Display,control,1,1,Contact us,Contact us
+469,Contact Admin,control,2,2,Contact us,Contact us
+470,Validate,control,5,1,Contact us,Contact us
+471,successfully submitted page,boundary,0,2,Contact us,Contact us
+472,E-coupon,entity,0,1,Contact us,Contact us
+473,Successfully submitted,control,3,1,Contact us,Contact us
+474,Display successful submitted page,control,1,1,Contact us,Contact us
+475,Display contact us page,control,1,1,Contact us,Contact us
+476,ContactUs page,boundary,1,3,Contact us,Contact us
+477,Partner,actor,4,0,Contact us,Contact us
+478,Display login page,control,1,0,Login to TripPlanner,Login to TripPlanner
+479,Enter username and password,control,1,1,Login to TripPlanner,Login to TripPlanner
+480,Display home page,control,1,1,Login to TripPlanner,Login to TripPlanner
+481,Does username exist?,control,1,1,Login to TripPlanner,Login to TripPlanner
+482,Email password,control,2,1,Login to TripPlanner,Login to TripPlanner
+483,Is username/password correct?,control,2,1,Login to TripPlanner,Login to TripPlanner
+484,Traveler,actor,1,0,Login to TripPlanner,Login to TripPlanner
+485,Login page,boundary,1,3,Login to TripPlanner,Login to TripPlanner
+486,Trip plan homepage,boundary,0,1,Connect to trip plan,Connect to trip plan - Trip Planner
+487,Get personnel trip plan information,control,1,1,Connect to trip plan,Connect to trip plan - Trip Planner
+488,Trip plan cloud database,entity,1,1,Connect to trip plan,Connect to trip plan - Trip Planner
+489,Login page,boundary,1,2,Connect to trip plan,Connect to trip plan - Trip Planner
+490,Already logged in?,control,2,1,Connect to trip plan,Connect to trip plan - Trip Planner
+491,check login,control,2,2,Connect to trip plan,Connect to trip plan - Trip Planner
+492,Connect to trip plan cloud database,control,3,2,Connect to trip plan,Connect to trip plan - Trip Planner
+493,Traveler,actor,2,0,Connect to trip plan,Connect to trip plan - Trip Planner
+494,Travel Book,boundary,1,3,Connect to trip plan,Connect to trip plan - Trip Planner
+495,NavigateManageSubscription,control,1,1,Manage Trip Plan,Manage Trip Plan
+496,Trip Calendar Page,boundary,0,1,Manage Trip Plan,Manage Trip Plan
+497,Annotates Trip Plan with Photos Page,boundary,0,1,Manage Trip Plan,Manage Trip Plan
+498,Share trip plan page,boundary,0,1,Manage Trip Plan,Manage Trip Plan
+499,Manage subscriptions page,boundary,0,1,Manage Trip Plan,Manage Trip Plan
+500,NavigateTripCalendar,control,1,1,Manage Trip Plan,Manage Trip Plan
+501,NavigateAnnotation,control,1,1,Manage Trip Plan,Manage Trip Plan
+502,NavigateShareTripPlan,control,1,1,Manage Trip Plan,Manage Trip Plan
+503,DeleteTripPlan,control,1,1,Manage Trip Plan,Manage Trip Plan
+504,Find or Add Places Page,boundary,0,1,Manage Trip Plan,Manage Trip Plan
+505,Navigation Delete Places,control,1,1,Manage Trip Plan,Manage Trip Plan
+506,Trip Plans Database,entity,0,1,Manage Trip Plan,Manage Trip Plan
+507,TripPlanDetaillsPage,boundary,6,4,Manage Trip Plan,Manage Trip Plan
+508,AddTripPlan,control,1,1,Manage Trip Plan,Manage Trip Plan
+509,NavigateFindorAddPlaces,control,1,1,Manage Trip Plan,Manage Trip Plan
+510,Manage Trip Plans,control,2,1,Manage Trip Plan,Manage Trip Plan
+511,Traveler,actor,2,0,Manage Trip Plan,Manage Trip Plan
+512,Travel Plan Home Page,boundary,3,2,Manage Trip Plan,Manage Trip Plan
+513,user data database,entity,3,2,Find, add, and delete places,Find, add, and delete places
+514,Place,entity,3,0,Find, add, and delete places,Find, add, and delete places
+515,Displays a list of added place of this user,control,1,3,Find, add, and delete places,Find, add, and delete places
+516,Display the add button in color gray,control,2,1,Find, add, and delete places,Find, add, and delete places
+517,Display the add button tin color blue,control,2,1,Find, add, and delete places,Find, add, and delete places
+518,Displays a list of related places with add button,control,1,3,Find, add, and delete places,Find, add, and delete places
+519,a list of places with add button on find screen,boundary,0,3,Find, add, and delete places,Find, add, and delete places
+520,delete this place from added places  list,control,2,3,Find, add, and delete places,Find, add, and delete places
+521,Manage subscription screen with a list of added places,boundary,1,2,Find, add, and delete places,Find, add, and delete places
+522,Displays a delete button under place item,control,1,3,Find, add, and delete places,Find, add, and delete places
+523,Display Find screen,control,1,1,Find, add, and delete places,Find, add, and delete places
+524,Fnd screen with search bar,boundary,1,2,Find, add, and delete places,Find, add, and delete places
+525,Display keyboard and entering process,control,3,3,Find, add, and delete places,Find, add, and delete places
+526,Place database,entity,1,0,Find, add, and delete places,Find, add, and delete places
+527,Displays manage subscriptions screen,control,3,1,Find, add, and delete places,Find, add, and delete places
+528,add this place to added places list,control,1,2,Find, add, and delete places,Find, add, and delete places
+529,display no results,control,3,1,Find, add, and delete places,Find, add, and delete places
+530,Traveler,actor,2,0,Find, add, and delete places,Find, add, and delete places
+531,Main screen,boundary,2,1,Find, add, and delete places,Find, add, and delete places
+532,Empty list prompting box,boundary,0,2,Manage subscription,Manage subscription
+533,Error prompting box,boundary,0,2,Manage subscription,Manage subscription
+534,Place,entity,0,1,Manage subscription,Manage subscription
+535,Place list page,boundary,6,2,Manage subscription,Manage subscription
+536,Error controller,control,1,1,Manage subscription,Manage subscription
+537,Place Controller,control,4,1,Manage subscription,Manage subscription
+538,Traveler,actor,1,0,Manage subscription,Manage subscription
+539,Trip plan selection page,boundary,2,2,Manage subscription,Manage subscription
+540,Retrieve coupon list,control,1,1,View partner offer,View partner offer
+541,Return search results,control,1,1,View partner offer,View partner offer
+542,Search coupon,control,1,1,View partner offer,View partner offer
+543,Sort coupon list,control,1,2,View partner offer,View partner offer
+544,click "popular",control,1,1,View partner offer,View partner offer
+545,Click back,control,1,1,View partner offer,View partner offer
+546,Partner info,entity,0,1,View partner offer,View partner offer
+547,Retrieve partner info,control,1,1,View partner offer,View partner offer
+548,Coupon Info,entity,0,2,View partner offer,View partner offer
+549,partner offer page,boundary,4,1,View partner offer,View partner offer
+550,Display partner info,control,2,1,View partner offer,View partner offer
+551,Click "detail",control,3,1,View partner offer,View partner offer
+552,Traveler,actor,1,0,View partner offer,View partner offer
+553,Management subscription page,boundary,1,2,View partner offer,View partner offer
+554,subscription failed,boundary,0,1,Subscribe and unsubscribe from partner offer,Subscribe and unsubscribe from partner offer
+555,subscription success,boundary,0,1,Subscribe and unsubscribe from partner offer,Subscribe and unsubscribe from partner offer
+556,Offer,entity,0,2,Subscribe and unsubscribe from partner offer,Subscribe and unsubscribe from partner offer
+557,partner offer page,boundary,5,1,Subscribe and unsubscribe from partner offer,Subscribe and unsubscribe from partner offer
+558,subscription controller,control,4,2,Subscribe and unsubscribe from partner offer,Subscribe and unsubscribe from partner offer
+559,Traveler,actor,2,0,Subscribe and unsubscribe from partner offer,Subscribe and unsubscribe from partner offer
+560,Management subscription page,boundary,1,2,Subscribe and unsubscribe from partner offer,Subscribe and unsubscribe from partner offer
+561,Schedule Date and time conflict with another visit,control,1,1,Schedule visit and view trip calendar,Schedule visit and view trip calendar
+562,Display details of scheduled visit,control,0,1,Schedule visit and view trip calendar,Schedule visit and view trip calendar
+563,Enter arrival and departure date andtime for visit,control,2,1,Schedule visit and view trip calendar,Schedule visit and view trip calendar
+564,Calendar interface,control,4,3,Schedule visit and view trip calendar,Schedule visit and view trip calendar
+565,Traveler,actor,2,0,Schedule visit and view trip calendar,Schedule visit and view trip calendar
+566,Display places in trip plan,boundary,1,1,Schedule visit and view trip calendar,Schedule visit and view trip calendar
+567,Map,entity,0,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+568,Place,entity,0,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+569,Pinch on map,control,1,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+570,Map,entity,0,2,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+571,pan on map,control,1,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+572,get directions from current location,control,0,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+573,View trip plan on map screen,boundary,3,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+574,Display,control,1,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+575,fetch place,control,1,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+576,fetch map,control,2,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+577,trip plan controller,control,3,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+578,Traveler,actor,1,0,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+579,Manage trip plan screen,boundary,1,1,View Trip Plan on Map and get Directions,View Trip Plan on Map and get Directions
+580,Print page,boundary,0,1,Annotate trip plan,Annotate trip plan
+581,Annotation page,boundary,2,2,Annotate trip plan,Annotate trip plan
+582,Display,control,1,1,Annotate trip plan,Annotate trip plan
+583,Delete Photos,control,1,1,Annotate trip plan,Annotate trip plan
+584,Pop-up Alert,boundary,0,1,Annotate trip plan,Annotate trip plan
+585,Annotation,entity,1,2,Annotate trip plan,Annotate trip plan
+586,Photos,entity,1,2,Annotate trip plan,Annotate trip plan
+587,Edit comment,control,1,1,Annotate trip plan,Annotate trip plan
+588,Comment,entity,1,2,Annotate trip plan,Annotate trip plan
+589,Click update annotation,control,1,1,Annotate trip plan,Annotate trip plan
+590,Click print button,control,1,1,Annotate trip plan,Annotate trip plan
+591,Annotation create/update page,boundary,4,2,Annotate trip plan,Annotate trip plan
+592,Display,control,3,2,Annotate trip plan,Annotate trip plan
+593,Upload more photos,control,1,2,Annotate trip plan,Annotate trip plan
+594,Check the number of photos,control,2,1,Annotate trip plan,Annotate trip plan
+595,Checking existing,control,3,2,Annotate trip plan,Annotate trip plan
+596,Traveler,actor,1,0,Annotate trip plan,Annotate trip plan
+597,Travel Plan Page,boundary,1,1,Annotate trip plan,Annotate trip plan
+598,display,control,2,1,Print photo books,Print photo books
+599,Walgreens checkout,boundary,1,2,Print photo books,Print photo books
+600,Trip Plan,entity,0,1,Print photo books,Print photo books
+601,Select images screen,boundary,5,5,Print photo books,Print photo books
+602,walgreens,control,2,2,Print photo books,Print photo books
+603,display,control,3,2,Print photo books,Print photo books
+604,Traveler,actor,3,0,Print photo books,Print photo books
+605,Place screen,boundary,2,3,Print photo books,Print photo books

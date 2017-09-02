@@ -1,0 +1,269 @@
+id,element,type,outbound_degree,inbound_degree,diagram,useCase
+1,login fail and display error messsage,control,1,1,Login,Login
+2,Main page,boundary,0,2,Login,Login
+3,redirect to main page,control,1,1,Login,Login
+4,check with blackprofessions external system,control,1,1,Login,Login
+5,BlackProfessionals.net checking system,actor,2,1,Login,Login
+6,Login page,boundary,1,2,Login,Login
+7,User,actor,2,0,Login,Login
+8,Session,entity,0,1,Logout,Logout
+9,redirect to login page,control,1,2,Logout,Logout
+10,Login page,boundary,0,3,Logout,Logout
+11,clear current session,control,3,1,Logout,Logout
+12,Logout button,boundary,1,1,Logout,Logout
+13,User,actor,2,0,Logout,Logout
+14,Invalid/incorrect LinkedIn credentials,boundary,1,2,Create Profile,Create Profile
+15,Invalid email format,boundary,1,2,Create Profile,Create Profile
+16,Not consistent passwords,boundary,1,2,Create Profile,Create Profile
+17,check validity of input information,control,3,1,Create Profile,Create Profile
+18,redirect to sign in page,control,1,4,Create Profile,Create Profile
+19,display login failure message with LinkIn,control,1,1,Create Profile,Create Profile
+20,Login error,boundary,1,2,Create Profile,Create Profile
+21,display information from LinkedIN,control,1,1,Create Profile,Create Profile
+22,My Profile,boundary,0,2,Create Profile,Create Profile
+23,save it to user info,control,2,1,Create Profile,Create Profile
+24,Query user information from LinkedIN,control,4,1,Create Profile,Create Profile
+25,LikedIn Credential Input Page,boundary,1,2,Create Profile,Create Profile
+26,LinkedIn,actor,0,0,Create Profile,Create Profile
+27,open linkedin crendential input page,control,1,1,Create Profile,Create Profile
+28,LikedIn Button,boundary,1,1,Create Profile,Create Profile
+29,Email protocol,actor,0,1,Create Profile,Create Profile
+30,User Info,entity,0,2,Create Profile,Create Profile
+31,save entered user information,control,2,1,Create Profile,Create Profile
+32,send email for verification,control,2,1,Create Profile,Create Profile
+33,Sign-in form,boundary,1,2,Create Profile,Create Profile
+34,User,actor,9,0,Create Profile,Create Profile
+35,headline input error message,boundary,0,2,Create short summary/headline for profile,Create short summary/headline for profile
+36,save updated headline,control,2,1,Create short summary/headline for profile,Create short summary/headline for profile
+37,My Profile Page,boundary,0,3,Create short summary/headline for profile,Create short summary/headline for profile
+38,check input headline,control,2,1,Create short summary/headline for profile,Create short summary/headline for profile
+39,Headline,entity,0,1,Create short summary/headline for profile,Create short summary/headline for profile
+40,Headline edit field,boundary,1,3,Create short summary/headline for profile,Create short summary/headline for profile
+41,popup window for headline edit,control,3,1,Create short summary/headline for profile,Create short summary/headline for profile
+42,headline edit icon,boundary,1,1,Create short summary/headline for profile,Create short summary/headline for profile
+43,User,actor,4,0,Create short summary/headline for profile,Create short summary/headline for profile
+44,invalid file name,boundary,0,2,Update profile picture,Update profile picture
+45,invalid file size error message,boundary,0,2,Update profile picture,Update profile picture
+46,picture format error message,boundary,0,2,Update profile picture,Update profile picture
+47,redirect to profile page,control,1,1,Update profile picture,Update profile picture
+48,profile page,boundary,0,2,Update profile picture,Update profile picture
+49,save image,control,5,1,Update profile picture,Update profile picture
+50,Image selector field,boundary,1,2,Update profile picture,Update profile picture
+51,popup image selector field,control,1,1,Update profile picture,Update profile picture
+52,profile,entity,0,1,Update profile picture,Update profile picture
+53,profile edit page,boundary,1,2,Update profile picture,Update profile picture
+54,popup profile edit page,control,1,1,Update profile picture,Update profile picture
+55,profile edit icon,boundary,1,1,Update profile picture,Update profile picture
+56,User,actor,7,0,Update profile picture,Update profile picture
+57,redirect to message page,control,1,1,Send Message,Send Message
+58,message,entity,0,1,Send Message,Send Message
+59,send message,control,2,1,Send Message,Send Message
+60,invalid input warning message,boundary,0,2,Send Message,Send Message
+61,check input message,control,2,1,Send Message,Send Message
+62,close new message page,control,1,1,Send Message,Send Message
+63,Message page,boundary,0,3,Send Message,Send Message
+64,Connection,entity,0,1,Send Message,Send Message
+65,retrive connections of a user,control,2,1,Send Message,Send Message
+66,Message edit page,boundary,2,2,Send Message,Send Message
+67,display new message page,control,1,1,Send Message,Send Message
+68,New message button,boundary,1,1,Send Message,Send Message
+69,User,actor,4,0,Send Message,Send Message
+70,no sent messages,boundary,0,2,View sent messages,View sent messages
+71,message,entity,0,1,View sent messages,View sent messages
+72,display list of sent messages,control,2,1,View sent messages,View sent messages
+73,List of sent messages,boundary,0,2,View sent messages,View sent messages
+74,retrieves sent messages,control,2,1,View sent messages,View sent messages
+75,Sent button,boundary,1,1,View sent messages,View sent messages
+76,User,actor,3,0,View sent messages,View sent messages
+77,algorithm for similarity,control,1,1,Get recommendation,Get recommendation
+78,list of random recommendations,boundary,0,2,Get recommendation,Get recommendation
+79,recommendations,entity,0,1,Get recommendation,Get recommendation
+80,shuffles recommendations,control,1,1,Get recommendation,Get recommendation
+81,sorted list of messages by similarity,boundary,0,2,Get recommendation,Get recommendation
+82,retrieve recommendations,control,3,1,Get recommendation,Get recommendation
+83,home page link,boundary,1,1,Get recommendation,Get recommendation
+84,User,actor,3,0,Get recommendation,Get recommendation
+85,Input message invalidty,boundary,0,2,General Search Functionality,General Search Functionality
+86,query matched users,control,2,1,General Search Functionality,General Search Functionality
+87,recommendations,entity,0,1,General Search Functionality,General Search Functionality
+88,sql injection protection,control,2,1,General Search Functionality,General Search Functionality
+89,No matched results found,boundary,0,2,General Search Functionality,General Search Functionality
+90,check validity of input search string,control,2,1,General Search Functionality,General Search Functionality
+91,Search bar,boundary,1,1,General Search Functionality,General Search Functionality
+92,User,actor,4,0,General Search Functionality,General Search Functionality
+93,invalid search string,boundary,0,2,Advanced Search Functionality,Advanced Search Functionality
+94,search people company group by options,control,1,1,Advanced Search Functionality,Advanced Search Functionality
+95,No matched results,boundary,0,2,Advanced Search Functionality,Advanced Search Functionality
+96,group,entity,0,1,Advanced Search Functionality,Advanced Search Functionality
+97,company,entity,0,1,Advanced Search Functionality,Advanced Search Functionality
+98,redirected to advanced search page,control,1,1,Advanced Search Functionality,Advanced Search Functionality
+99,advanced search button,boundary,1,1,Advanced Search Functionality,Advanced Search Functionality
+100,empty list of search results,boundary,0,2,Advanced Search Functionality,Advanced Search Functionality
+101,check validity of search string,control,2,2,Advanced Search Functionality,Advanced Search Functionality
+102,people,entity,0,1,Advanced Search Functionality,Advanced Search Functionality
+103,Matched results,boundary,0,2,Advanced Search Functionality,Advanced Search Functionality
+104,SQl injection protection,control,7,1,Advanced Search Functionality,Advanced Search Functionality
+105,advanced search page,boundary,1,2,Advanced Search Functionality,Advanced Search Functionality
+106,User,actor,6,0,Advanced Search Functionality,Advanced Search Functionality
+107,button state change,boundary,0,2,Send connection request,Send connection request
+108,request,entity,0,1,Send connection request,Send connection request
+109,send request,control,3,1,Send connection request,Send connection request
+110,Connection request button,boundary,1,2,Send connection request,Send connection request
+111,User,actor,3,0,Send connection request,Send connection request
+112,Reject button,boundary,1,1,Accept/Reject connection,Accept/Reject connection
+113,button state change to acceptance,boundary,0,2,Accept/Reject connection,Accept/Reject connection
+114,request,entity,0,1,Accept/Reject connection,Accept/Reject connection
+115,send request accept,control,2,2,Accept/Reject connection,Accept/Reject connection
+116,Accept button,boundary,1,1,Accept/Reject connection,Accept/Reject connection
+117,User,actor,3,0,Accept/Reject connection,Accept/Reject connection
+118,Remove button,boundary,0,2,Cancel Connection,Cancel Connection
+119,Redirect to connection list,control,1,1,Cancel Connection,Cancel Connection
+120,remove connection between users,control,1,1,Cancel Connection,Cancel Connection
+121,Confirmation dialog,boundary,2,2,Cancel Connection,Cancel Connection
+122,connection,entity,0,1,Cancel Connection,Cancel Connection
+123,show up confirmation dialog,control,1,1,Cancel Connection,Cancel Connection
+124,Remove button,boundary,1,1,Cancel Connection,Cancel Connection
+125,User,actor,4,0,Cancel Connection,Cancel Connection
+126,Unfollow button,boundary,3,2,Follow/unfollow company,Follow/unfollow company
+127,connection,entity,0,2,Follow/unfollow company,Follow/unfollow company
+128,Update the follow status,control,3,2,Follow/unfollow company,Follow/unfollow company
+129,Follow button,boundary,1,2,Follow/unfollow company,Follow/unfollow company
+130,User,actor,3,0,Follow/unfollow company,Follow/unfollow company
+131,Invalid input information,boundary,0,2,Manage Advertisement,Manage Advertisement
+132,Check input information,control,1,1,Manage Advertisement,Manage Advertisement
+133,Check input information,control,3,2,Manage Advertisement,Manage Advertisement
+134,Popup management panel,control,1,1,Manage Advertisement,Manage Advertisement
+135,Existing ads list,boundary,1,3,Manage Advertisement,Manage Advertisement
+136,Cancel updating and redirect to ,control,1,1,Manage Advertisement,Manage Advertisement
+137,Delete Ad,control,1,1,Manage Advertisement,Manage Advertisement
+138,display delete confirmation dialog,control,1,1,Manage Advertisement,Manage Advertisement
+139,Delete confirmation dialog,boundary,1,2,Manage Advertisement,Manage Advertisement
+140,Save added Ad,control,1,1,Manage Advertisement,Manage Advertisement
+141,Show Ad Add page,control,1,1,Manage Advertisement,Manage Advertisement
+142,Update ad description,control,3,1,Manage Advertisement,Manage Advertisement
+143,Ad detail page,boundary,1,2,Manage Advertisement,Manage Advertisement
+144,Ad add page,boundary,1,3,Manage Advertisement,Manage Advertisement
+145,Show Ad detail page,control,2,1,Manage Advertisement,Manage Advertisement
+146,Ad management panel,boundary,4,3,Manage Advertisement,Manage Advertisement
+147,ads,entity,0,5,Manage Advertisement,Manage Advertisement
+148,show up existing ads page,control,2,1,Manage Advertisement,Manage Advertisement
+149,Manage ads link,boundary,1,1,Manage Advertisement,Manage Advertisement
+150,User,actor,7,0,Manage Advertisement,Manage Advertisement
+151,No user exist error message,boundary,0,2,Write recommendation letter,Write recommendation letter
+152,Display no user exist,control,1,1,Write recommendation letter,Write recommendation letter
+153,Profile Page,boundary,0,2,Write recommendation letter,Write recommendation letter
+154,Send message,control,2,1,Write recommendation letter,Write recommendation letter
+155,Message,entity,0,1,Write recommendation letter,Write recommendation letter
+156,Recommendation,entity,0,1,Write recommendation letter,Write recommendation letter
+157,Validate input recommendation information,control,1,2,Write recommendation letter,Write recommendation letter
+158,Recommendation letter page,boundary,1,2,Write recommendation letter,Write recommendation letter
+159,Save recommendation record,control,3,2,Write recommendation letter,Write recommendation letter
+160,Redirect to recommendation letter edit page,control,2,1,Write recommendation letter,Write recommendation letter
+161,Send recommendation letter button,boundary,1,1,Write recommendation letter,Write recommendation letter
+162,User,actor,4,0,Write recommendation letter,Write recommendation letter
+163,cancel selections,control,1,1,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+164,cancel button,boundary,1,1,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+165,Display recommendation letter,control,1,1,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+166,profile page,boundary,0,2,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+167,recommendation letter,entity,0,1,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+168,Save the selected recommendation letter,control,2,1,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+169,recommendation list,boundary,1,2,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+170,User,actor,3,0,Accept/Reject recommendation letter,Accept/Reject recommendation letter
+171,Information input is not valid,boundary,0,2,Create Group,Create Group
+172,cancel group creation,control,1,1,Create Group,Create Group
+173,Group page,boundary,0,2,Create Group,Create Group
+174,Save group information,control,2,1,Create Group,Create Group
+175,Group list page,boundary,0,2,Create Group,Create Group
+176,group,entity,0,1,Create Group,Create Group
+177,validate input group information,control,2,1,Create Group,Create Group
+178,group create form,boundary,2,1,Create Group,Create Group
+179,User,actor,4,0,Create Group,Create Group
+180,Validate input group information,control,1,1,Group management,Group management
+181,Save group information,control,1,1,Group management,Group management
+182,Group information edit page,boundary,1,2,Group management,Group management
+183,Adit group information,control,2,1,Group management,Group management
+184,Approve/decline applicants,control,1,1,Group management,Group management
+185,Group operation panel,boundary,2,2,Group management,Group management
+186,Popup group operation panel,control,1,1,Group management,Group management
+187,Group List,boundary,2,2,Group management,Group management
+188,group,entity,0,4,Group management,Group management
+189,query groups,control,3,2,Group management,Group management
+190,View groups button,boundary,1,2,Group management,Group management
+191,User,actor,4,0,Group management,Group management
+192,Group status change,boundary,0,2,Join/leave group,Join/leave group
+193,Show corresponding status,control,1,1,Join/leave group,Join/leave group
+194,Save corresponding status,control,2,1,Join/leave group,Join/leave group
+195,Confirmation dialog,boundary,2,2,Join/leave group,Join/leave group
+196,group,entity,0,1,Join/leave group,Join/leave group
+197,Popup confirmation dialog,control,2,2,Join/leave group,Join/leave group
+198,join/leave group button,boundary,1,2,Join/leave group,Join/leave group
+199,User,actor,3,0,Join/leave group,Join/leave group
+200,email already exists,boundary,0,2,Invite frieds through email,Invite frieds through email
+201,fried already exist message,boundary,0,2,Invite frieds through email,Invite frieds through email
+202,Check if email already exists,control,4,1,Invite frieds through email,Invite frieds through email
+203,invitation,entity,0,2,Invite frieds through email,Invite frieds through email
+204,show invitation page,control,1,1,Invite frieds through email,Invite frieds through email
+205,check email sent status,control,2,1,Invite frieds through email,Invite frieds through email
+206,Email protocol,actor,1,1,Invite frieds through email,Invite frieds through email
+207,Send an invitation email,control,1,1,Invite frieds through email,Invite frieds through email
+208,information input invalid message,boundary,1,2,Invite frieds through email,Invite frieds through email
+209,Check if friend already exists,control,3,1,Invite frieds through email,Invite frieds through email
+210,Invitation paage,boundary,0,3,Invite frieds through email,Invite frieds through email
+211,friend,entity,0,1,Invite frieds through email,Invite frieds through email
+212,Check if input is valid,control,2,1,Invite frieds through email,Invite frieds through email
+213,invite friend form,boundary,1,2,Invite frieds through email,Invite frieds through email
+214,User,actor,5,0,Invite frieds through email,Invite frieds through email
+215,redirect to invitation page,control,1,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+216,login fail message,boundary,0,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+217,Invitation page,boundary,0,3,Invite friends from LinkedIn,Invite friends from LinkedIn
+218,return the status of email being sent,control,2,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+219,Email protocol,actor,1,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+220,send email to friend,control,1,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+221,Check if friends exist in system,control,2,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+222,popup input email and password page,control,1,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+223,LinkedIn,actor,2,2,Invite friends from LinkedIn,Invite friends from LinkedIn
+224,email sending failed message,boundary,0,2,Invite friends from LinkedIn,Invite friends from LinkedIn
+225,Validate login info by LinkedIn,control,2,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+226,Linkedin login page,boundary,2,2,Invite friends from LinkedIn,Invite friends from LinkedIn
+227,A list of friends,control,1,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+228,Friend list for invitation,boundary,1,2,Invite friends from LinkedIn,Invite friends from LinkedIn
+229,Fiends,entity,0,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+230,get friend list,control,1,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+231,invite button,boundary,1,1,Invite friends from LinkedIn,Invite friends from LinkedIn
+232,User,actor,5,0,Invite friends from LinkedIn,Invite friends from LinkedIn
+233,Send friend invitation,control,2,1,Invite friends to group,Invite friends to group
+234,Invitation,entity,0,2,Invite friends to group,Invite friends to group
+235,group home page,boundary,0,4,Invite friends to group,Invite friends to group
+236,check invitation sent or not,control,4,1,Invite friends to group,Invite friends to group
+237,List of friends,boundary,1,2,Invite friends to group,Invite friends to group
+238,friends,entity,0,1,Invite friends to group,Invite friends to group
+239,query friends who is not in group,control,2,1,Invite friends to group,Invite friends to group
+240,invite button,boundary,1,1,Invite friends to group,Invite friends to group
+241,User,actor,3,0,Invite friends to group,Invite friends to group
+242,Invalid input information,boundary,0,2,Post an update,Post an update
+243,refresh social feed,control,2,1,Post an update,Post an update
+244,create an update record,control,3,1,Post an update,Post an update
+245,latest updates,boundary,0,3,Post an update,Post an update
+246,validate update,control,4,1,Post an update,Post an update
+247,update panel,boundary,2,2,Post an update,Post an update
+248,update,entity,0,2,Post an update,Post an update
+249,show update panel,control,1,2,Post an update,Post an update
+250,update choice panel,boundary,1,1,Post an update,Post an update
+251,User,actor,4,0,Post an update,Post an update
+252,no activity message,boundary,0,3,View social feed,View social feed
+253,categorize activities,control,2,1,View social feed,View social feed
+254,activity list,boundary,0,2,View social feed,View social feed
+255,recent activities,entity,0,1,View social feed,View social feed
+256,retrive recent activities,control,4,1,View social feed,View social feed
+257,Home link,boundary,1,2,View social feed,View social feed
+258,User,actor,3,0,View social feed,View social feed
+259,No comments available on update,boundary,0,2,Comment on a post,Comment on a post
+260,order comments,control,1,1,Comment on a post,Comment on a post
+261,Save comments,control,3,1,Comment on a post,Comment on a post
+262,commenting box,boundary,1,2,Comment on a post,Comment on a post
+263,display commenting box,control,1,1,Comment on a post,Comment on a post
+264, comment list,boundary,1,2,Comment on a post,Comment on a post
+265,comments,entity,0,2,Comment on a post,Comment on a post
+266,query comments based on update,control,3,2,Comment on a post,Comment on a post
+267,Comment link,boundary,1,1,Comment on a post,Comment on a post
+268,User,actor,4,0,Comment on a post,Comment on a post

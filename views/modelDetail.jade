@@ -1,0 +1,17 @@
+div.one-column
+ div.block.panel.panel-default(id="model-use-cases-panel")
+  div.block-title.panel-heading Use Cases
+  div.panel-body.pre-scrollable
+   if modelInfo
+    each useCase in modelInfo.UseCases
+     div.list-item
+      a.sub-model-title.use-case-title(href="requestUseCaseDetail?useCase_id="+useCase._id+"&model_id="+modelInfo._id) #{useCase.Name}
+    if modelInfo.DomainModel
+     div.list-item
+      a.sub-model-title.domain-model-title(href="requestDomainModelDetail?model_id="+modelInfo._id) Domain Model
+div.three-column
+ div.block.panel.panel-default
+  div.block-title.panel-heading Use Case Detail
+   span(id='use-case-title')
+  div.panel-body(id="use-case-detail-panel")
+   

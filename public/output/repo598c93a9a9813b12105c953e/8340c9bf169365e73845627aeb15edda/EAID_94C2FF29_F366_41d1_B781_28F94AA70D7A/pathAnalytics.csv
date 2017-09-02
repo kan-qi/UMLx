@@ -1,0 +1,6 @@
+id,path,functional,transactional,path_length,diagram,useCase
+1,User->Send recommendation letter button->Redirect to recommendation letter edit page->Recommendation letter page,EQ,CTRL|INT,undefined,Write recommendation letter,Write recommendation letter
+2,User->Recommendation letter page->Validate input recommendation information->Save recommendation record->Display no user exist->No user exist error message,EQ,CTRL|INT,undefined,Write recommendation letter,Write recommendation letter
+3,User->Recommendation letter page->Validate input recommendation information->Save recommendation record->Send message->Message,EI,CTRL|DM|EI,undefined,Write recommendation letter,Write recommendation letter
+4,User->Recommendation letter page->Validate input recommendation information->Save recommendation record->Send message->Profile Page,EQ,CTRL|INT,undefined,Write recommendation letter,Write recommendation letter
+5,User->Recommendation letter page->Validate input recommendation information->Save recommendation record->Recommendation,EI,CTRL|DM|EI,undefined,Write recommendation letter,Write recommendation letter

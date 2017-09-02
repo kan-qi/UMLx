@@ -1,0 +1,8 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Valet->Vehicle request screen->pull advertisement for random venue->venue,EI,CTRL|DM|EI,4,undefined,1,1,1,Check in as customer,Check in as customer
+2,Valet->Vehicle request screen->pull advertisement for random venue->Advertisement for random venue,EQ,CTRL|INT,4,undefined,1,0,1,Check in as customer,Check in as customer
+3,Valet->confirmation prompt->Redirect to vehicle request screen->Vehicle request screen,EQ,CTRL|INT,4,undefined,1,0,1,Check in as customer,Check in as customer
+4,Valet->confirmation prompt->Redirect to venue list->venue list,EQ,CTRL|INT,4,undefined,1,0,1,Check in as customer,Check in as customer
+5,Valet->venue list->display confirmation prompt->confirmation prompt,EQ,CTRL|INT,4,undefined,1,0,1,Check in as customer,Check in as customer
+6,Valet->venue list->display confirmation prompt->venue,EI,CTRL|DM|EI,4,undefined,1,1,1,Check in as customer,Check in as customer
+7,Valet->venue list->display confirmation prompt->server error,EQ,CTRL|INT,4,undefined,1,0,1,Check in as customer,Check in as customer

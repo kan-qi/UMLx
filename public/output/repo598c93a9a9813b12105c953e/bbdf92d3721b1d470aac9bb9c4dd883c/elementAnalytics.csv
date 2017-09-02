@@ -1,0 +1,98 @@
+id,element,type,outbound_degree,inbound_degree,diagram,useCase
+1,redirect to search panel,control,1,1,Search Business,Search Business
+2,No result found message,boundary,1,2,Search Business,Search Business
+3,Query business information,control,1,1,Search Business,Search Business
+4,business list,boundary,1,2,Search Business,Search Business
+5,business,entity,0,2,Search Business,Search Business
+6,Query business by options,control,3,1,Search Business,Search Business
+7,operation selection panel,boundary,1,3,Search Business,Search Business
+8,display selection panel,control,1,1,Search Business,Search Business
+9,Home page,boundary,1,1,Search Business,Search Business
+10,User,actor,4,0,Search Business,Search Business
+11,save the approval status of the business,control,1,1,Add a new business,Add a new business
+12,business info,boundary,1,2,Add a new business,Add a new business
+13,display added business page,control,3,0,Add a new business,Add a new business
+14,Admin,actor,3,0,Add a new business,Add a new business
+15,added business button,boundary,1,2,Add a new business,Add a new business
+16,query information for a specific business,control,2,1,Add a new business,Add a new business
+17,business list,boundary,1,2,Add a new business,Add a new business
+18,business,entity,0,4,Add a new business,Add a new business
+19,save business information for verification,control,1,1,Add a new business,Add a new business
+20,business input information,boundary,1,3,Add a new business,Add a new business
+21,display add business page,control,1,1,Add a new business,Add a new business
+22,Add a business button,boundary,1,1,Add a new business,Add a new business
+23,User,actor,2,0,Add a new business,Add a new business
+24,save the approval status of registration,control,1,1,Business Owner Registration,Business Owner Registration
+25,Registration Detail,boundary,1,2,Business Owner Registration,Business Owner Registration
+26,display registratiion requests,control,2,1,Business Owner Registration,Business Owner Registration
+27,Admin,actor,3,0,Business Owner Registration,Business Owner Registration
+28,registration button,boundary,2,1,Business Owner Registration,Business Owner Registration
+29,Query registration detail,control,2,1,Business Owner Registration,Business Owner Registration
+30,list of registrations,boundary,1,2,Business Owner Registration,Business Owner Registration
+31,registration information,entity,0,4,Business Owner Registration,Business Owner Registration
+32,save information for verification,control,1,1,Business Owner Registration,Business Owner Registration
+33,registration page,boundary,1,3,Business Owner Registration,Business Owner Registration
+34,display registration page,control,1,1,Business Owner Registration,Business Owner Registration
+35,Register button,boundary,1,1,Business Owner Registration,Business Owner Registration
+36,User,actor,2,0,Business Owner Registration,Business Owner Registration
+37,remove claim information,control,1,1,Business Claim,Business Claim
+38,save the approval status of claim,control,2,1,Business Claim,Business Claim
+39,Claim Detail,boundary,1,2,Business Claim,Business Claim
+40,display claims requests,control,2,1,Business Claim,Business Claim
+41,Admin,actor,3,0,Business Claim,Business Claim
+42,load claims button,boundary,1,1,Business Claim,Business Claim
+43,Query claim detail,control,2,1,Business Claim,Business Claim
+44,list of claims,boundary,1,2,Business Claim,Business Claim
+45,claim information,entity,0,5,Business Claim,Business Claim
+46,save claim information for verification,control,1,1,Business Claim,Business Claim
+47,claim page,boundary,1,2,Business Claim,Business Claim
+48,display claim page,control,1,1,Business Claim,Business Claim
+49,Claim button,boundary,1,1,Business Claim,Business Claim
+50,User,actor,2,0,Business Claim,Business Claim
+51,pdf file,entity,0,1,Travel Tipping Guides,Travel Tipping Guides
+52,Internet browser,actor,0,1,Travel Tipping Guides,Travel Tipping Guides
+53,display added business page,control,2,1,Travel Tipping Guides,Travel Tipping Guides
+54,search for relevant information online,control,3,1,Travel Tipping Guides,Travel Tipping Guides
+55,Tipping guide page,boundary,1,2,Travel Tipping Guides,Travel Tipping Guides
+56,display Tipping Guide Page,control,1,1,Travel Tipping Guides,Travel Tipping Guides
+57,traverl tipping guides button,boundary,1,1,Travel Tipping Guides,Travel Tipping Guides
+58,User,actor,2,0,Travel Tipping Guides,Travel Tipping Guides
+59,calculate tips based on input info,control,2,1,Use Tip Calculator,Use Tip Calculator
+60,tip calculator page,boundary,1,2,Use Tip Calculator,Use Tip Calculator
+61,display tip calculator page,control,1,1,Use Tip Calculator,Use Tip Calculator
+62,tip calculator  button,boundary,1,1,Use Tip Calculator,Use Tip Calculator
+63,User,actor,2,0,Use Tip Calculator,Use Tip Calculator
+64,notification,entity,0,1,Submit questions and responses,Submit questions and responses
+65,Send notification,control,1,1,Submit questions and responses,Submit questions and responses
+66,response,entity,0,2,Submit questions and responses,Submit questions and responses
+67,check if the question is already answered,control,3,1,Submit questions and responses,Submit questions and responses
+68,load questions,control,2,1,Submit questions and responses,Submit questions and responses
+69,load questions button,boundary,1,2,Submit questions and responses,Submit questions and responses
+70,Admin,actor,3,0,Submit questions and responses,Submit questions and responses
+71,save the response to db,control,1,1,Submit questions and responses,Submit questions and responses
+72,create a response page,boundary,1,3,Submit questions and responses,Submit questions and responses
+73,display create a response page,control,1,1,Submit questions and responses,Submit questions and responses
+74,create a response button,boundary,1,3,Submit questions and responses,Submit questions and responses
+75,Client,actor,3,0,Submit questions and responses,Submit questions and responses
+76,questions,entity,0,2,Submit questions and responses,Submit questions and responses
+77,save questions,control,1,1,Submit questions and responses,Submit questions and responses
+78,question form,boundary,1,2,Submit questions and responses,Submit questions and responses
+79,display ask a question form,control,1,1,Submit questions and responses,Submit questions and responses
+80,Ask a question button,boundary,1,1,Submit questions and responses,Submit questions and responses
+81,User,actor,2,0,Submit questions and responses,Submit questions and responses
+82,remove comment,control,1,1,User comments and moderation,User comments and moderation
+83,save approval status of comment,control,2,1,User comments and moderation,User comments and moderation
+84,comment detail,boundary,1,2,User comments and moderation,User comments and moderation
+85,display comment detail,control,2,1,User comments and moderation,User comments and moderation
+86,comment list,boundary,1,2,User comments and moderation,User comments and moderation
+87,load comments,control,2,1,User comments and moderation,User comments and moderation
+88,load comment button,boundary,1,1,User comments and moderation,User comments and moderation
+89,Admin,actor,3,0,User comments and moderation,User comments and moderation
+90,comment,entity,0,5,User comments and moderation,User comments and moderation
+91,business information,entity,0,1,User comments and moderation,User comments and moderation
+92,query business information,control,2,1,User comments and moderation,User comments and moderation
+93,save comment to db,control,1,1,User comments and moderation,User comments and moderation
+94,comment panel,boundary,1,2,User comments and moderation,User comments and moderation
+95,display comment section,control,1,1,User comments and moderation,User comments and moderation
+96,comment section button,boundary,1,1,User comments and moderation,User comments and moderation
+97,User,actor,2,0,User comments and moderation,User comments and moderation

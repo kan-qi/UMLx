@@ -1,0 +1,6 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Buyer->payment info page->finish payment->third party payment,FUNC_NA,CTRL|EXTIVK,4,undefined,1,0,2,Check out,Check out
+2,Buyer->payment method page->redirect to third party payment page->payment info page,EQ,CTRL|INT,4,undefined,1,0,1,Check out,Check out
+3,third party payment->receive receipt->generate orders->order detail,FUNC_NA,CTRL|EXTCLL|INT,4,undefined,2,0,1,Check out,Check out
+4,third party payment->receive receipt->generate orders->order,FUNC_NA,CTRL|EXTCLL|DM|EI,4,undefined,2,1,1,Check out,Check out
+5,third party payment->receive receipt->generate orders->clear cart item->cart item,FUNC_NA,CTRL|EXTCLL|DM|EI,5,undefined,3,1,1,Check out,Check out

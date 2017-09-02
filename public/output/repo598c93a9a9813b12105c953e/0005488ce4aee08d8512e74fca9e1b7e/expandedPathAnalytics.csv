@@ -1,0 +1,83 @@
+id,path,transactional,path_length,diagram,useCase
+1,Insurance Agent->List of reports screen->Select Report->Display Report->Bad Dirver Report->Review Report,TRAN_NA,6,Query bad driver reporting DB,Query bad driver reporting DB
+2,Insurance Agent->List of reports screen->Select Report->Display Report->Bad Dirver Report->Bad Driver Database,TRAN_NA,6,Query bad driver reporting DB,Query bad driver reporting DB
+3,Insurance Agent->Enter License Plate# Screen->Query for report by license plate #->List of reports screen,CTRL,4,Query bad driver reporting DB,Query bad driver reporting DB
+4,Insurance Agent->Enter License Plate# Screen->Query for report by license plate #->List of reports screen,INT,4,Query bad driver reporting DB,Query bad driver reporting DB
+5,License lace # database associated with Bad Drivers->Query for report by license plate #->List of reports screen,TRAN_NA,3,Query bad driver reporting DB,Query bad driver reporting DB
+6,Report Poster->Enter License Plate# Screen->Capture Image,TRAN_NA,3,Post Bad Driver Report to Insurance DB,Post Bad Driver Report to Insurance DB
+7,describe incident (category security etc)->Enter License Plate# Screen->Capture Image,TRAN_NA,3,Post Bad Driver Report to Insurance DB,Post Bad Driver Report to Insurance DB
+8,Report Poster->Bad driver reporting screen->Record hazardous videos and Call 911->Display emergency alert web form,TRAN_NA,4,Send Drunk Driver Alert,Send Drunk Driver Alert
+9,Report Poster->Enter License Plate# Screen->Record hazardous videos and Call 911->Display emergency alert web form,TRAN_NA,4,Send Drunk Driver Alert,Send Drunk Driver Alert
+10,Report Poster->Enter License Plate# Screen->Cancel report->Email client,CTRL,4,Send Drunk Driver Alert,Send Drunk Driver Alert
+11,Report Poster->Enter License Plate# Screen->Cancel report->Email client,INT,4,Send Drunk Driver Alert,Send Drunk Driver Alert
+12,Report Poster->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+13,Report Poster->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+14,Report Poster->Enter License Plate# Screen->Enter name and phone number->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+15,Report Poster->Enter License Plate# Screen->Describe incident->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+16,Upload the video->Enter License Plate# Screen->Record hazardous videos and Call 911->Display emergency alert web form,TRAN_NA,4,Send Drunk Driver Alert,Send Drunk Driver Alert
+17,Upload the video->Enter License Plate# Screen->Cancel report->Email client,TRAN_NA,4,Send Drunk Driver Alert,Send Drunk Driver Alert
+18,Upload the video->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+19,Upload the video->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+20,Upload the video->Enter License Plate# Screen->Enter name and phone number->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+21,Upload the video->Enter License Plate# Screen->Describe incident->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+22,fill video metadata in non-editable fields->get time date location from video metadata->Video,TRAN_NA,3,Send Drunk Driver Alert,Send Drunk Driver Alert
+23,fill video metadata in non-editable fields->Enter License Plate# Screen->Record hazardous videos and Call 911->Display emergency alert web form,TRAN_NA,4,Send Drunk Driver Alert,Send Drunk Driver Alert
+24,fill video metadata in non-editable fields->Enter License Plate# Screen->Cancel report->Email client,TRAN_NA,4,Send Drunk Driver Alert,Send Drunk Driver Alert
+25,fill video metadata in non-editable fields->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+26,fill video metadata in non-editable fields->Enter License Plate# Screen->Describe vehicle details->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+27,fill video metadata in non-editable fields->Enter License Plate# Screen->Enter name and phone number->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+28,fill video metadata in non-editable fields->Enter License Plate# Screen->Describe incident->emergency alert->get time date location from video metadata->Video,TRAN_NA,6,Send Drunk Driver Alert,Send Drunk Driver Alert
+29,App user->Mobile app->send request with video file->receive file at node.js->Video,CTRL,5,Upload video clip to bad driver recording DB,Upload video clip to bad driver recording DB
+30,App user->Mobile app->send request with video file->receive file at node.js->Video,DM,5,Upload video clip to bad driver recording DB,Upload video clip to bad driver recording DB
+31,App user->Mobile app->send request with video file->receive file at node.js->Video,EI,5,Upload video clip to bad driver recording DB,Upload video clip to bad driver recording DB
+32,receive response->receive file at node.js->Video,TRAN_NA,3,Upload video clip to bad driver recording DB,Upload video clip to bad driver recording DB
+33,Review/Agent->Invalid user popup->Invalid user alert->Query for valid users->Account collection,CTRL,5,Reviewer/Agent Login,Reviewer/Agent Login
+34,Review/Agent->Invalid user popup->Invalid user alert->Query for valid users->Account collection,DM,5,Reviewer/Agent Login,Reviewer/Agent Login
+35,Review/Agent->Invalid user popup->Invalid user alert->Query for valid users->Account collection,EI,5,Reviewer/Agent Login,Reviewer/Agent Login
+36,Review/Agent->Invalid user popup->check blank fields->Validate user->Query for valid users->Account collection,CTRL,6,Reviewer/Agent Login,Reviewer/Agent Login
+37,Review/Agent->Invalid user popup->check blank fields->Validate user->Query for valid users->Account collection,DM,6,Reviewer/Agent Login,Reviewer/Agent Login
+38,Review/Agent->Invalid user popup->check blank fields->Validate user->Query for valid users->Account collection,EI,6,Reviewer/Agent Login,Reviewer/Agent Login
+39,Review/Agent->Login screen->check blank fields->Validate user->Query for valid users->Account collection,CTRL,6,Reviewer/Agent Login,Reviewer/Agent Login
+40,Review/Agent->Login screen->check blank fields->Validate user->Query for valid users->Account collection,DM,6,Reviewer/Agent Login,Reviewer/Agent Login
+41,Review/Agent->Login screen->check blank fields->Validate user->Query for valid users->Account collection,EI,6,Reviewer/Agent Login,Reviewer/Agent Login
+42,Review/Agent->unauthoried access popup->privileges alert->Query for valid users->Account collection,CTRL,5,Reviewer/Agent Login,Reviewer/Agent Login
+43,Review/Agent->unauthoried access popup->privileges alert->Query for valid users->Account collection,DM,5,Reviewer/Agent Login,Reviewer/Agent Login
+44,Review/Agent->unauthoried access popup->privileges alert->Query for valid users->Account collection,EI,5,Reviewer/Agent Login,Reviewer/Agent Login
+45,Review/Agent->Blank fields popup->check blank fields->Validate user->Query for valid users->Account collection,CTRL,6,Reviewer/Agent Login,Reviewer/Agent Login
+46,Review/Agent->Blank fields popup->check blank fields->Validate user->Query for valid users->Account collection,DM,6,Reviewer/Agent Login,Reviewer/Agent Login
+47,Review/Agent->Blank fields popup->check blank fields->Validate user->Query for valid users->Account collection,EI,6,Reviewer/Agent Login,Reviewer/Agent Login
+48,Independent Reviewer->Duplicate popup->Display alert->Query for potential duplicates->Bad driver database,CTRL,5,Independent Review of Bad Driver Report,Independent Review of Bad Driver Report
+49,Independent Reviewer->Duplicate popup->Display alert->Query for potential duplicates->Bad driver database,DM,5,Independent Review of Bad Driver Report,Independent Review of Bad Driver Report
+50,Independent Reviewer->Duplicate popup->Display alert->Query for potential duplicates->Bad driver database,EI,5,Independent Review of Bad Driver Report,Independent Review of Bad Driver Report
+51,Independent Reviewer->Login screen->Get next report->Bad driver report->Get next report->Review Queue->Generate review queue->Bad driver database,TRAN_NA,8,Independent Review of Bad Driver Report,Independent Review of Bad Driver Report
+52,Independent Reviewer->Login screen->Get next report->Query for potential duplicates->Bad driver database,CTRL,5,Independent Review of Bad Driver Report,Independent Review of Bad Driver Report
+53,Independent Reviewer->Login screen->Get next report->Query for potential duplicates->Bad driver database,DM,5,Independent Review of Bad Driver Report,Independent Review of Bad Driver Report
+54,Independent Reviewer->Login screen->Get next report->Query for potential duplicates->Bad driver database,EI,5,Independent Review of Bad Driver Report,Independent Review of Bad Driver Report
+55,Report Poster->Capture frame from video and extract LP#->Display video with media controls->video,CTRL,4,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+56,Report Poster->Capture frame from video and extract LP#->Display video with media controls->video,DM,4,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+57,Report Poster->Capture frame from video and extract LP#->Display video with media controls->video,EI,4,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+58,Report Poster->Capture frame from video and extract LP#->Zoom and crop functionality->Display cropped image,TRAN_NA,4,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+59,Report Poster->Capture frame from video and extract LP#->Displlay captured frame,TRAN_NA,3,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+60,confirm LP#->Capture frame from video and extract LP#->Display video with media controls->video,TRAN_NA,4,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+61,confirm LP#->Capture frame from video and extract LP#->Zoom and crop functionality->Display cropped image,TRAN_NA,4,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+62,confirm LP#->Capture frame from video and extract LP#->Displlay captured frame,TRAN_NA,3,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+63,confirm LP#->Finish->Capture frame from video and extract LP#,TRAN_NA,3,Capture Frame from Video and get  LP number,Capture Frame from Video and get  LP number
+64,Driver->View Review Screen->Display Thumbnails->Retrieve recorded videos->Circular Buffer,CTRL,5,View video clips,View video clips
+65,Driver->View Review Screen->Display Thumbnails->Retrieve recorded videos->Circular Buffer,DM,5,View video clips,View video clips
+66,Driver->View Review Screen->Display Thumbnails->Retrieve recorded videos->Circular Buffer,EI,5,View video clips,View video clips
+67,App user->Signup Screen->check first time user->Video record screen,CTRL,4,App user login,App user login
+68,App user->Signup Screen->check first time user->Video record screen,INT,4,App user login,App user login
+69,App user->Signup Screen->check first time user->Query for first time users->Account collection,CTRL,5,App user login,App user login
+70,App user->Signup Screen->check first time user->Query for first time users->Account collection,DM,5,App user login,App user login
+71,App user->Signup Screen->check first time user->Query for first time users->Account collection,EI,5,App user login,App user login
+72,App user->Registered user popup->Registered user alert->Query for first time users->Account collection,CTRL,5,App user login,App user login
+73,App user->Registered user popup->Registered user alert->Query for first time users->Account collection,DM,5,App user login,App user login
+74,App user->Registered user popup->Registered user alert->Query for first time users->Account collection,EI,5,App user login,App user login
+75,Independent reviewer->Resolve duplicate screen->display 2 reports->Bad driver reports,CTRL,4,Resolve Potential Duplicates,Resolve Potential Duplicates
+76,Independent reviewer->Resolve duplicate screen->display 2 reports->Bad driver reports,INT,4,Resolve Potential Duplicates,Resolve Potential Duplicates
+77,Independent reviewer->Resolve duplicate screen->display 2 reports->Get potential duplicate reports->Bad driver database,CTRL,5,Resolve Potential Duplicates,Resolve Potential Duplicates
+78,Independent reviewer->Resolve duplicate screen->display 2 reports->Get potential duplicate reports->Bad driver database,DM,5,Resolve Potential Duplicates,Resolve Potential Duplicates
+79,Independent reviewer->Resolve duplicate screen->display 2 reports->Get potential duplicate reports->Bad driver database,EI,5,Resolve Potential Duplicates,Resolve Potential Duplicates
+80,Driver->Recording screen->Recording video clips->Receive report bad driver command->Fetch two most recent video clips->Circular Buffer,CTRL,6,Recording video clips in a circular buffer,Recording video clips in a circular buffer
+81,Driver->Recording screen->Recording video clips->Receive report bad driver command->Fetch two most recent video clips->Circular Buffer,DM,6,Recording video clips in a circular buffer,Recording video clips in a circular buffer
+82,Driver->Recording screen->Recording video clips->Receive report bad driver command->Fetch two most recent video clips->Circular Buffer,EI,6,Recording video clips in a circular buffer,Recording video clips in a circular buffer

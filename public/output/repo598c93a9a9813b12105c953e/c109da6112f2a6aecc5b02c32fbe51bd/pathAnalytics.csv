@@ -1,0 +1,35 @@
+id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
+1,User->Login page->verify user information->Invalid information error message,EQ,CTRL|INT,4,2,1,0,1,3,login,Login
+2,User->Login page->verify user information->My account page,EQ,CTRL|INT,4,2,1,0,1,3,login,Login
+3,User->Login page->verify user information->user info,EI,CTRL|DM|EI,4,1,1,1,1,1,login,Login
+4,User->Invalid information error message->redirect to login page->Login page,EQ,CTRL|INT,4,2,1,0,1,3,login,Login
+5,User->Forgotten username or password link->send email including credential->Email Protocol,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,login,Login
+6,User->feature detail->update feature detail->feature,EI,CTRL|DM|EI,4,1,1,1,1,1,View Dashboard Page,View Dashboard Page
+7,User->Feature List->redirect to feature page->feature detail,EQ,CTRL|INT,4,2,1,0,1,3,View Dashboard Page,View Dashboard Page
+8,User->User profile page->verify input message->Error message for update failure,EQ,CTRL|INT,4,2,1,0,1,3,Edit Consumer Profile,Edit Consumer Profile
+9,User->User profile page->verify input message->save udpated profile->profile,EI,CTRL|DM|EI,5,1,2,1,1,1,Edit Consumer Profile,Edit Consumer Profile
+10,User->price detail input page->verify input price information->input information invalid error message,EQ,CTRL|INT,4,2,1,0,1,3,Share Prices,Share Prices
+11,User->price detail input page->verify input price information->save input price information->profile,EI,CTRL|DM|EI,5,1,2,1,1,1,Share Prices,Share Prices
+12,User->Share price button->diplay price input page->price detail input page,EQ,CTRL|INT,4,2,1,0,1,3,Share Prices,Share Prices
+13,User->photo list->OCR read the medical information->unable to recoginize information from photo,EQ,CTRL|INT,4,2,1,0,1,3,Share Price through OCR capture,Share Price through OCR capture
+14,User->photo list->OCR read the medical information->update the recognized information into database.->Price,EI,CTRL|DM|EI,5,1,2,1,1,1,Share Price through OCR capture,Share Price through OCR capture
+15,User->Share price through picture capture button->load photo from library->photo list,EQ,CTRL|INT,4,2,1,0,1,3,Share Price through OCR capture,Share Price through OCR capture
+16,User->Search crieteria input page->retrieve matched doctors from db->Invalid input message,EQ,CTRL|INT,4,2,1,0,1,3,Search Provider,Search Provider
+17,User->Search crieteria input page->retrieve matched doctors from db->Doctor,EI,CTRL|DM|EI,4,1,1,1,1,1,Search Provider,Search Provider
+18,User->Search crieteria input page->retrieve matched doctors from db->non matched doctor,EQ,CTRL|INT,4,2,1,0,1,3,Search Provider,Search Provider
+19,User->Search provide page->Display all provider based on criteria->Provider,EI,CTRL|DM|EI,4,1,1,1,1,1,Follow/unfollow a provider,Follow/unfollow a provider
+20,User->Search provide page->Display all provider based on criteria->follow/unfollow button,EQ,CTRL|INT,4,2,1,0,1,3,Follow/unfollow a provider,Follow/unfollow a provider
+21,User->Confirm dialog->Update subscription information->Subscription,EI,CTRL|DM|EI,4,1,1,1,1,1,Follow/unfollow a provider,Follow/unfollow a provider
+22,User->follow/unfollow button->Popup confirm diagram->Confirm dialog,EQ,CTRL|INT,4,2,1,0,1,3,Follow/unfollow a provider,Follow/unfollow a provider
+23,User->follow/unfollow button->Popup confirm diagram->Redirect to search page->Search provide page,EQ,CTRL|INT,5,2,2,0,1,3,Follow/unfollow a provider,Follow/unfollow a provider
+24,User->Search provider page->Display all provider based on criteria->rate button,EQ,CTRL|INT,4,2,1,0,1,3,Rate a provider,Rate a provider
+25,User->Search provider page->Display all provider based on criteria->Provider,EI,CTRL|DM|EI,4,1,1,1,1,1,Rate a provider,Rate a provider
+26,User->rate button->Display rating input page->Rating input page,EQ,CTRL|INT,4,2,1,0,1,3,Rate a provider,Rate a provider
+27,User->Rating input page->Update provider rating information->Rating,EI,CTRL|DM|EI,4,1,1,1,1,1,Rate a provider,Rate a provider
+28,User->provider information input page->create a new provider->Provider,EI,CTRL|DM|EI,4,1,1,1,1,1,Add New Provider,Add New Provider
+29,User->provider information input page->create a new provider->Provider created success message,EQ,CTRL|INT,4,2,1,0,1,3,Add New Provider,Add New Provider
+30,User->Add provider button->Display provider add page->provider information input page,EQ,CTRL|INT,4,2,1,0,1,3,Add New Provider,Add New Provider
+31,User->request list->update status of requests->Request,EI,CTRL|DM|EI,4,1,1,1,1,1,Maintain the system,Maintain the system
+32,User->request list->update status of requests->request status is successfully updated.,EQ,CTRL|INT,4,2,1,0,1,3,Maintain the system,Maintain the system
+33,User->check requests button->load requests->Request,EI,CTRL|DM|EI,4,1,1,1,1,1,Maintain the system,Maintain the system
+34,User->check requests button->load requests->request list,EQ,CTRL|INT,4,2,1,0,1,3,Maintain the system,Maintain the system

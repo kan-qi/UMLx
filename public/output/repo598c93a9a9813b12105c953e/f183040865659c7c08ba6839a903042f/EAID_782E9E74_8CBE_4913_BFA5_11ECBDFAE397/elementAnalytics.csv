@@ -1,0 +1,13 @@
+id,element,type,outboundDegree,inboundDegree,diagram,useCase
+1,order detail,boundary,0,2,Check out,Check out,
+2,receive receipt,control,1,1,Check out,Check out,
+3,order,entity,0,1,Check out,Check out,
+4,cart item,entity,0,1,Check out,Check out,
+5,third party payment,actor,2,1,Check out,Check out,
+6,generate orders,control,3,1,Check out,Check out,
+7,clear cart item,control,1,1,Check out,Check out,
+8,finish payment,control,2,1,Check out,Check out,
+9,payment info page,boundary,1,3,Check out,Check out,
+10,redirect to third party payment page,control,1,1,Check out,Check out,
+11,payment method page,boundary,1,1,Check out,Check out,
+12,Buyer,actor,3,0,Check out,Check out,

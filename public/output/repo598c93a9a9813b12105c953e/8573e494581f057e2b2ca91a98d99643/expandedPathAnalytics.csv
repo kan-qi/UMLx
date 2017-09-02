@@ -1,0 +1,133 @@
+id,path,transactional,path_length,diagram,useCase
+1,User->Camera App->show picture and options to post nearby or to an event->Options to post,CTRL,4,Post Picture,Post Picture
+2,User->Camera App->show picture and options to post nearby or to an event->Options to post,INT,4,Post Picture,Post Picture
+3,User->Camera App->Event and caption Input,TRAN_NA,3,Post Picture,Post Picture
+4,User->Camera App->opens up the gallery application->gallery application,CTRL,4,Post Picture,Post Picture
+5,User->Camera App->opens up the gallery application->gallery application,INT,4,Post Picture,Post Picture
+6,User->gallery application->shows the picture and text box for caption->Event and caption Input,CTRL,4,Post Picture,Post Picture
+7,User->gallery application->shows the picture and text box for caption->Event and caption Input,INT,4,Post Picture,Post Picture
+8,User->Camera Icon->Launch Camera Application->Camera App,CTRL,4,Post Picture,Post Picture
+9,User->Camera Icon->Launch Camera Application->Camera App,INT,4,Post Picture,Post Picture
+10,User->Options to post->retrive user's location and posts the picture at location->Picture,CTRL,4,Post Picture,Post Picture
+11,User->Options to post->retrive user's location and posts the picture at location->Picture,DM,4,Post Picture,Post Picture
+12,User->Options to post->retrive user's location and posts the picture at location->Picture,EI,4,Post Picture,Post Picture
+13,User->Delete Button->Shows confirm prompt->Confirm Box,CTRL,4,Delete Picture,Delete Picture
+14,User->Delete Button->Shows confirm prompt->Confirm Box,INT,4,Delete Picture,Delete Picture
+15,User->Confirm Box->close the prompt and delete the picture->Picture,CTRL,4,Delete Picture,Delete Picture
+16,User->Confirm Box->close the prompt and delete the picture->Picture,DM,4,Delete Picture,Delete Picture
+17,User->Confirm Box->close the prompt and delete the picture->Picture,EI,4,Delete Picture,Delete Picture
+18,User->Picture Gallery->retrieve picture details->Picture,CTRL,4,View Specific Picture,View Specific Picture
+19,User->Picture Gallery->retrieve picture details->Picture,DM,4,View Specific Picture,View Specific Picture
+20,User->Picture Gallery->retrieve picture details->Picture,EI,4,View Specific Picture,View Specific Picture
+21,User->Heart Icon on a picture->Store the like information->Like Information,CTRL,4,Like Picture,Like Picture
+22,User->Heart Icon on a picture->Store the like information->Like Information,DM,4,Like Picture,Like Picture
+23,User->Heart Icon on a picture->Store the like information->Like Information,EI,4,Like Picture,Like Picture
+24,User->Heart Icon on a picture->Store the like information->The total number of likes,CTRL,4,Like Picture,Like Picture
+25,User->Heart Icon on a picture->Store the like information->The total number of likes,INT,4,Like Picture,Like Picture
+26,User->The heart icon on picture->remove the user liking information->Like Information,CTRL,4,Unlike Picture,Unlike Picture
+27,User->The heart icon on picture->remove the user liking information->Like Information,DM,4,Unlike Picture,Unlike Picture
+28,User->The heart icon on picture->remove the user liking information->Like Information,EI,4,Unlike Picture,Unlike Picture
+29,User->The heart icon on picture->remove the user liking information->Total Number of Likes,CTRL,4,Unlike Picture,Unlike Picture
+30,User->The heart icon on picture->remove the user liking information->Total Number of Likes,INT,4,Unlike Picture,Unlike Picture
+31,User->report confirm dialog->store report information->report information,CTRL,4,Report Picture - Submit,Report Picture - Submit
+32,User->report confirm dialog->store report information->report information,DM,4,Report Picture - Submit,Report Picture - Submit
+33,User->report confirm dialog->store report information->report information,EI,4,Report Picture - Submit,Report Picture - Submit
+34,User->Report icon on the picture->prompot confirm->report confirm dialog,CTRL,4,Report Picture - Submit,Report Picture - Submit
+35,User->Report icon on the picture->prompot confirm->report confirm dialog,INT,4,Report Picture - Submit,Report Picture - Submit
+36,User->Download button->download to phone->Local Storage,CTRL,4,Save Picture to Device,Save Picture to Device
+37,User->Download button->download to phone->Local Storage,DM,4,Save Picture to Device,Save Picture to Device
+38,User->Download button->download to phone->Local Storage,EI,4,Save Picture to Device,Save Picture to Device
+39,User->Hashtag input box->Search->picture->shows the search result->Search Result,CTRL,6,Browse Event Pictures,Browse Event Pictures
+40,User->Hashtag input box->Search->picture->shows the search result->Search Result,DM,6,Browse Event Pictures,Browse Event Pictures
+41,User->Hashtag input box->Search->picture->shows the search result->Search Result,EQ,6,Browse Event Pictures,Browse Event Pictures
+42,User->Hashtag input box->Search->picture->shows the search result->Search Result,INT,6,Browse Event Pictures,Browse Event Pictures
+43,User->Search Result->shows the  pictures clicked->Picture Display,CTRL,4,Browse Event Pictures,Browse Event Pictures
+44,User->Search Result->shows the  pictures clicked->Picture Display,INT,4,Browse Event Pictures,Browse Event Pictures
+45,User->Hashtag icon->Show hashtag text input->Hashtag input box,CTRL,4,Browse Event Pictures,Browse Event Pictures
+46,User->Hashtag icon->Show hashtag text input->Hashtag input box,INT,4,Browse Event Pictures,Browse Event Pictures
+47,User->Filter Icon->Display sorting options->Sorting options,CTRL,4,Sort Pictures,Sort Pictures
+48,User->Filter Icon->Display sorting options->Sorting options,INT,4,Sort Pictures,Sort Pictures
+49,User->Sorting options->sort the picture->Sorted List of Pictures,CTRL,4,Sort Pictures,Sort Pictures
+50,User->Sorting options->sort the picture->Sorted List of Pictures,INT,4,Sort Pictures,Sort Pictures
+51,User->Private Event Name and Password Input->Check the presence of the event->Warning information of duplicate,CTRL,4,Create Private Event,Create Private Event
+52,User->Private Event Name and Password Input->Check the presence of the event->Warning information of duplicate,INT,4,Create Private Event,Create Private Event
+53,User->Delete Event Button->Show warning of deletion->Confirm Box,CTRL,4,Delete Event,Delete Event
+54,User->Delete Event Button->Show warning of deletion->Confirm Box,INT,4,Delete Event,Delete Event
+55,User->Confirm Box->Close warning and delete event->Delete Picture->Picture,CTRL,5,Delete Event,Delete Event
+56,User->Confirm Box->Close warning and delete event->Delete Picture->Picture,DM,5,Delete Event,Delete Event
+57,User->Confirm Box->Close warning and delete event->Delete Picture->Picture,EI,5,Delete Event,Delete Event
+58,User->Confirm Box->Close warning and delete event->Event,CTRL,4,Delete Event,Delete Event
+59,User->Confirm Box->Close warning and delete event->Event,DM,4,Delete Event,Delete Event
+60,User->Confirm Box->Close warning and delete event->Event,EI,4,Delete Event,Delete Event
+61,User->Search box of events->Search events by name->List of Events,CTRL,4,Search Events,Search Events
+62,User->Search box of events->Search events by name->List of Events,INT,4,Search Events,Search Events
+63,User->Search box of events->Search events by name->Event,CTRL,4,Search Events,Search Events
+64,User->Search box of events->Search events by name->Event,DM,4,Search Events,Search Events
+65,User->Search box of events->Search events by name->Event,EI,4,Search Events,Search Events
+66,User->Public Event Name Field->Create the public event->Public Event,CTRL,4,Create Public Events,Create Public Events
+67,User->Public Event Name Field->Create the public event->Public Event,DM,4,Create Public Events,Create Public Events
+68,User->Public Event Name Field->Create the public event->Public Event,EI,4,Create Public Events,Create Public Events
+69,User->Public Event Name Field->Check presence of the event->Warning Information of Duplicate,CTRL,4,Create Public Events,Create Public Events
+70,User->Public Event Name Field->Check presence of the event->Warning Information of Duplicate,INT,4,Create Public Events,Create Public Events
+71,User->Query Users List Button->query user list->user list filter box,CTRL,4,Browse Users,Browse Users
+72,User->Query Users List Button->query user list->user list filter box,INT,4,Browse Users,Browse Users
+73,User->Query Users List Button->query user list->User,CTRL,4,Browse Users,Browse Users
+74,User->Query Users List Button->query user list->User,DM,4,Browse Users,Browse Users
+75,User->Query Users List Button->query user list->User,EI,4,Browse Users,Browse Users
+76,User->user list filter box->Filter users->Filtered List of Users,CTRL,4,Browse Users,Browse Users
+77,User->user list filter box->Filter users->Filtered List of Users,INT,4,Browse Users,Browse Users
+78,User->Click user suspend button->Prompt confirm dialog->Confirm Dialog,CTRL,4,Suspend User - Confirm,Suspend User - Confirm
+79,User->Click user suspend button->Prompt confirm dialog->Confirm Dialog,INT,4,Suspend User - Confirm,Suspend User - Confirm
+80,User->Confirm Dialog->Suspend User->User List,CTRL,4,Suspend User - Confirm,Suspend User - Confirm
+81,User->Confirm Dialog->Suspend User->User List,INT,4,Suspend User - Confirm,Suspend User - Confirm
+82,User->Confirm Dialog->Suspend User->User,CTRL,4,Suspend User - Confirm,Suspend User - Confirm
+83,User->Confirm Dialog->Suspend User->User,DM,4,Suspend User - Confirm,Suspend User - Confirm
+84,User->Confirm Dialog->Suspend User->User,EI,4,Suspend User - Confirm,Suspend User - Confirm
+85,Admin->Event Update Button->retrieve events->Event List,CTRL,4,Update Event,Update Event
+86,Admin->Event Update Button->retrieve events->Event List,INT,4,Update Event,Update Event
+87,Admin->Event Update Button->retrieve events->Event,CTRL,4,Update Event,Update Event
+88,Admin->Event Update Button->retrieve events->Event,DM,4,Update Event,Update Event
+89,Admin->Event Update Button->retrieve events->Event,EI,4,Update Event,Update Event
+90,Admin->Event List->Prompt Event Update Dialog->Event Information Update Page,CTRL,4,Update Event,Update Event
+91,Admin->Event List->Prompt Event Update Dialog->Event Information Update Page,INT,4,Update Event,Update Event
+92,Admin->Event Information Update Page->Update Event Information->Event,CTRL,4,Update Event,Update Event
+93,Admin->Event Information Update Page->Update Event Information->Event,DM,4,Update Event,Update Event
+94,Admin->Event Information Update Page->Update Event Information->Event,EI,4,Update Event,Update Event
+95,User->Query Picture List->retrive the list of picture->Image Filter Box,CTRL,4,Search Pictures,Search Pictures
+96,User->Query Picture List->retrive the list of picture->Image Filter Box,INT,4,Search Pictures,Search Pictures
+97,User->Query Picture List->retrive the list of picture->Picture,CTRL,4,Search Pictures,Search Pictures
+98,User->Query Picture List->retrive the list of picture->Picture,DM,4,Search Pictures,Search Pictures
+99,User->Query Picture List->retrive the list of picture->Picture,EI,4,Search Pictures,Search Pictures
+100,User->Image Filter Box->Filter Pictures->List of pictures,CTRL,4,Search Pictures,Search Pictures
+101,User->Image Filter Box->Filter Pictures->List of pictures,INT,4,Search Pictures,Search Pictures
+102,User->Picture restore button->Restore reported picture->Report,CTRL,4,Restore Reported Picture,Restore Reported Picture
+103,User->Picture restore button->Restore reported picture->Report,DM,4,Restore Reported Picture,Restore Reported Picture
+104,User->Picture restore button->Restore reported picture->Report,EI,4,Restore Reported Picture,Restore Reported Picture
+105,Admin->Click system setting button->Load system setting page->System Setting Page,CTRL,4,Change App Settings,Change App Settings
+106,Admin->Click system setting button->Load system setting page->System Setting Page,INT,4,Change App Settings,Change App Settings
+107,Admin->System Setting Page->Store System Settings->System Settings,CTRL,4,Change App Settings,Change App Settings
+108,Admin->System Setting Page->Store System Settings->System Settings,DM,4,Change App Settings,Change App Settings
+109,Admin->System Setting Page->Store System Settings->System Settings,EI,4,Change App Settings,Change App Settings
+110,Admin->Click the number of pictures posted per month->Search pictures posted in the month->Pictures,CTRL,4,Generate Statistics Report,Generate Statistics Report
+111,Admin->Click the number of pictures posted per month->Search pictures posted in the month->Pictures,DM,4,Generate Statistics Report,Generate Statistics Report
+112,Admin->Click the number of pictures posted per month->Search pictures posted in the month->Pictures,EI,4,Generate Statistics Report,Generate Statistics Report
+113,Admin->Click the number of pictures posted per month->Search pictures posted in the month->The number of pictures per month,CTRL,4,Generate Statistics Report,Generate Statistics Report
+114,Admin->Click the number of pictures posted per month->Search pictures posted in the month->The number of pictures per month,INT,4,Generate Statistics Report,Generate Statistics Report
+115,User->Login Page->Check username and password->Facebook Service,CTRL,4,Login,Login
+116,User->Login Page->Check username and password->Facebook Service,EXTIVK,4,Login,Login
+117,User->Login Page->Check username and password->App Main Page,CTRL,4,Login,Login
+118,User->Login Page->Check username and password->App Main Page,INT,4,Login,Login
+119,User->Login Page->Check username and password->User,CTRL,4,Login,Login
+120,User->Login Page->Check username and password->User,DM,4,Login,Login
+121,User->Login Page->Check username and password->User,EI,4,Login,Login
+122,User->Register Page->Check User Information->User,CTRL,4,Register,Register
+123,User->Register Page->Check User Information->User,DM,4,Register,Register
+124,User->Register Page->Check User Information->User,EI,4,Register,Register
+125,User->Register Page->Check User Information->Warning Invalid Information,CTRL,4,Register,Register
+126,User->Register Page->Check User Information->Warning Invalid Information,INT,4,Register,Register
+127,User->Logout Button->Clear Local Storage and Exit->Local Storage,CTRL,4,Logout,Logout
+128,User->Logout Button->Clear Local Storage and Exit->Local Storage,DM,4,Logout,Logout
+129,User->Logout Button->Clear Local Storage and Exit->Local Storage,EI,4,Logout,Logout
+130,User->Radius Setting Button->Search pictures by radius->Pictures,CTRL,4,View Nearby Pictures,View Nearby Pictures
+131,User->Radius Setting Button->Search pictures by radius->Pictures,DM,4,View Nearby Pictures,View Nearby Pictures
+132,User->Radius Setting Button->Search pictures by radius->Pictures,EI,4,View Nearby Pictures,View Nearby Pictures

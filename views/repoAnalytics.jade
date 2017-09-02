@@ -1,0 +1,122 @@
+div.block.panel.panel-default
+  div.block-title.panel-heading Repo Analytics
+  div.panel-body(id="repo-stats-chart")
+   div.repo-info-content
+    ul.nav.nav-tabs
+     li.active
+      a(data-toggle='tab', href='#repo_analytics') Analytics
+     li
+      a(data-toggle='tab', href='#repo_distributions') Distributions
+     li
+      a(data-toggle='tab', href='#repo_estimation') Estimation
+    div.tab-content
+     div.tab-pane.fade.in.active(id="repo_analytics")
+      if repoAnalytics
+       h3 Calculated:
+       ul
+        li
+         span.statistical-item Average Path Length: #{repoAnalytics.AvgPathLength}
+        li
+         span.statistical-item Number of Paths: #{repoAnalytics.PathNum}
+        li
+         span.statistical-item Total Number of Links: #{repoAnalytics.TotalLinks}
+        li
+         span.statistical-item Number of Actors: #{repoAnalytics.ActorNum}
+        li
+         span.statistical-item Number of Boundaries: #{repoAnalytics.BoundaryNum}
+        li
+         span.statistical-item Number of Actors: #{repoAnalytics.ControlNum}
+        li
+         span.statistical-item Number of Boundaries: #{repoAnalytics.EntityNum}
+        li
+         span.statistical-item Number of Elements: #{repoAnalytics.ElementNum}
+        li
+         span.statistical-item Average Element Degree: #{repoAnalytics.AvgDegree}
+        li
+         span.statistical-item Number of Interface Management: #{repoAnalytics.INT}
+        li
+         span.statistical-item Number of Data Management: #{repoAnalytics.DM}
+        li
+         span.statistical-item Number of Control Flows: #{repoAnalytics.CTRL}
+        li
+         span.statistical-item Number of External Invocations: #{repoAnalytics.EXTIVK}
+        li
+         span.statistical-item Number of External Calls: #{repoAnalytics.EXTCLL}
+        li
+         span.statistical-item Number of External Inputs: #{repoAnalytics.EI}
+        li
+         span.statistical-item Number of External Inquiries: #{repoAnalytics.EQ}
+        li
+         span.statistical-item Number of External Outputs: #{repoAnalytics.EO}
+        li
+         span.statistical-item Number of Transactions: #{repoAnalytics.TN}
+       div.repo-analytics-ops
+         div
+          a.dumpEvaluationData(href='evaluateRepoForModels?repo_id=#{repoAnalytics._id}&simulation=false&refresh=true') Dump Repo Evaluation For Models
+         div
+          a.dumpEvaluationData(href='evaluateRepoForModels?repo_id=#{repoAnalytics._id}&simulation=true&refresh=true') Dump Repo Evaluation For Models (simulation)
+         div
+          a.dumpEvaluationData(href='evaluateRepoForUseCases?repo_id=#{repoAnalytics._id}&simulation=false') Dump Repo Evaluation For Use Cases
+         div
+          a(href='loadEmpiricalUsecaseDataForRepo?repo_id=#{repoAnalytics._id}') Load Empirical Data For Use Cases
+         div
+          a(href='loadEmpiricalModelDataForRepo?repo_id=#{repoAnalytics._id}') Load Empirical Data For Models
+         div
+          a.request-repo-analytics(href='queryRepoAnalytics?repo_id=#{repoAnalytics._id}&refresh=true') Reanalyse Repo
+         div
+          a(href='reloadRepo?repo_id=#{repoAnalytics._id}') Reload Repo
+         div
+          a(href='loadCOCOMOData?repo_id=#{repoAnalytics._id}') Load COCOMO Data
+     div.tab-pane.fade(id="repo_distributions")
+      if repoAnalytics
+       div(id="repo-stats-chart")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/control_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/data_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/interface_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/partial_match_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/architecture_difficulty_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/average_degree_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/average_path_length_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/path_number_analysis_result.svg")
+     div.tab-pane.fade(id="repo_estimation")
+      if repoAnalytics
+       div(id="estimation-models-panel")
+        div(id="model-query-box")
+         div.row-item(id='estimator-selector-box')
+          div.dropdown
+           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Estimator
+            span.caret
+           ul.dropdown-menu
+            li
+             a.estimator-selector(data-estimator='OLSR') Linear Regression
+            li
+             a.estimator-selector(data-estimator='RR') Ridge Regression
+            li
+             a.estimator-selector(data-estimator='LS') Linear Spline
+         div.row-item(id='model-selector-box')
+          div.dropdown
+           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Model
+            span.caret
+           ul.dropdown-menu
+            li
+             a.estimator-selector(data-model='EUCP') EUCP
+            li
+             a.estimator-selector(data-model='EXUCP') EXUCP
+            li
+             a.estimator-selector(data-model='AFP') AFPC
+         div.checkbox.row-item
+          label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           input(type='checkbox' value='simulation-data')
+         button.btn.btn-primary.row-item(id='query-model-btn', data-repo-id="#{repoAnalytics._id}") Query
+         img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
+         div.clear
+       div(id='estimation-model-detail')
+       

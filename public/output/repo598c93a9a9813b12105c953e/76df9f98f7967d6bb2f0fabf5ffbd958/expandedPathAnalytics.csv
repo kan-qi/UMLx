@@ -1,0 +1,118 @@
+id,path,transactional,path_length,diagram,useCase
+1,User->login page->pre-check if input is empty->query authentication info->user info,CTRL,5,Login,Login
+2,User->login page->pre-check if input is empty->query authentication info->user info,DM,5,Login,Login
+3,User->login page->pre-check if input is empty->query authentication info->user info,EI,5,Login,Login
+4,User->login page->pre-check if input is empty->invalid input error message,CTRL,4,Login,Login
+5,User->login page->pre-check if input is empty->invalid input error message,INT,4,Login,Login
+6,User->login page->pre-check if input is empty->error message for empty input,CTRL,4,Login,Login
+7,User->login page->pre-check if input is empty->error message for empty input,INT,4,Login,Login
+8,User->logout button->clear session->Session,CTRL,4,Logout,Logout
+9,User->logout button->clear session->Session,DM,4,Logout,Logout
+10,User->logout button->clear session->Session,EI,4,Logout,Logout
+11,User->Create Profile Page->pre-check if input is empty->error message for empty input,CTRL,4,Create profile,Create profile
+12,User->Create Profile Page->pre-check if input is empty->error message for empty input,INT,4,Create profile,Create profile
+13,User->Create Profile Page->pre-check if input is empty->existing profile error message,CTRL,4,Create profile,Create profile
+14,User->Create Profile Page->pre-check if input is empty->existing profile error message,INT,4,Create profile,Create profile
+15,User->Create Profile Page->pre-check if input is empty->successful information for creation,CTRL,4,Create profile,Create profile
+16,User->Create Profile Page->pre-check if input is empty->successful information for creation,INT,4,Create profile,Create profile
+17,User->Create Profile Page->pre-check if input is empty->send information in db->user info,CTRL,5,Create profile,Create profile
+18,User->Create Profile Page->pre-check if input is empty->send information in db->user info,DM,5,Create profile,Create profile
+19,User->Create Profile Page->pre-check if input is empty->send information in db->user info,EI,5,Create profile,Create profile
+20,User->profile edit page->pre-check required fields->invalid information error message,CTRL,4,Manage Profile,Manage Profile
+21,User->profile edit page->pre-check required fields->invalid information error message,INT,4,Manage Profile,Manage Profile
+22,User->profile edit page->pre-check required fields->update profile entry->user info,CTRL,5,Manage Profile,Manage Profile
+23,User->profile edit page->pre-check required fields->update profile entry->user info,DM,5,Manage Profile,Manage Profile
+24,User->profile edit page->pre-check required fields->update profile entry->user info,EI,5,Manage Profile,Manage Profile
+25,User->profile edit page->pre-check required fields->update profile entry->successful change message,CTRL,5,Manage Profile,Manage Profile
+26,User->profile edit page->pre-check required fields->update profile entry->successful change message,INT,5,Manage Profile,Manage Profile
+27,User->Edit profile button->display profile edit page,TRAN_NA,3,Manage Profile,Manage Profile
+28,User->product search page->query product by criteria->No product error message,CTRL,4,Search Product,Search Product
+29,User->product search page->query product by criteria->No product error message,INT,4,Search Product,Search Product
+30,User->product search page->query product by criteria->product page,CTRL,4,Search Product,Search Product
+31,User->product search page->query product by criteria->product page,INT,4,Search Product,Search Product
+32,User->product search page->query product by criteria->product,CTRL,4,Search Product,Search Product
+33,User->product search page->query product by criteria->product,DM,4,Search Product,Search Product
+34,User->product search page->query product by criteria->product,EI,4,Search Product,Search Product
+35,User->add to cart button->check db if available->not available error message,CTRL,4,Add to cart,Add to cart
+36,User->add to cart button->check db if available->not available error message,INT,4,Add to cart,Add to cart
+37,User->add to cart button->check db if available->add to cart->cart,CTRL,5,Add to cart,Add to cart
+38,User->add to cart button->check db if available->add to cart->cart,DM,5,Add to cart,Add to cart
+39,User->add to cart button->check db if available->add to cart->cart,EI,5,Add to cart,Add to cart
+40,User->add to cart button->check db if available->product,CTRL,4,Add to cart,Add to cart
+41,User->add to cart button->check db if available->product,DM,4,Add to cart,Add to cart
+42,User->add to cart button->check db if available->product,EI,4,Add to cart,Add to cart
+43,User->payment information page->pre-check if required information is empty->verify payment information->thirdpart payment system,CTRL,5,Place Order,Place Order
+44,User->payment information page->pre-check if required information is empty->verify payment information->thirdpart payment system,EXTIVK,5,Place Order,Place Order
+45,User->payment information page->pre-check if required information is empty->missing information for payment message,CTRL,4,Place Order,Place Order
+46,User->payment information page->pre-check if required information is empty->missing information for payment message,INT,4,Place Order,Place Order
+47,thirdpart payment system->approve transaction and display successful message->payment successful message,CTRL,3,Place Order,Place Order
+48,thirdpart payment system->approve transaction and display successful message->payment successful message,EXTCLL,3,Place Order,Place Order
+49,thirdpart payment system->approve transaction and display successful message->payment successful message,INT,3,Place Order,Place Order
+50,thirdpart payment system->send error message for invalid payment information->invalid payment inforrmation,CTRL,3,Place Order,Place Order
+51,thirdpart payment system->send error message for invalid payment information->invalid payment inforrmation,EXTCLL,3,Place Order,Place Order
+52,thirdpart payment system->send error message for invalid payment information->invalid payment inforrmation,INT,3,Place Order,Place Order
+53,User->Order history button->retrieve order history->order,CTRL,4,View order history,View order history
+54,User->Order history button->retrieve order history->order,DM,4,View order history,View order history
+55,User->Order history button->retrieve order history->order,EI,4,View order history,View order history
+56,User->Order history button->retrieve order history->no order history page,CTRL,4,View order history,View order history
+57,User->Order history button->retrieve order history->no order history page,INT,4,View order history,View order history
+58,User->Order history button->retrieve order history->order history list,CTRL,4,View order history,View order history
+59,User->Order history button->retrieve order history->order history list,INT,4,View order history,View order history
+60,florist->Order history button->retrieve order history for a florist->order,CTRL,4,View Past Transactions,View Past Transactions
+61,florist->Order history button->retrieve order history for a florist->order,DM,4,View Past Transactions,View Past Transactions
+62,florist->Order history button->retrieve order history for a florist->order,EI,4,View Past Transactions,View Past Transactions
+63,florist->Order history button->retrieve order history for a florist->no order history page,CTRL,4,View Past Transactions,View Past Transactions
+64,florist->Order history button->retrieve order history for a florist->no order history page,INT,4,View Past Transactions,View Past Transactions
+65,florist->Order history button->retrieve order history for a florist->order history list,CTRL,4,View Past Transactions,View Past Transactions
+66,florist->Order history button->retrieve order history for a florist->order history list,INT,4,View Past Transactions,View Past Transactions
+67,user->Track order button->retrieve order status->order status,CTRL,4,Track Order,Track Order
+68,user->Track order button->retrieve order status->order status,INT,4,Track Order,Track Order
+69,user->Track order button->retrieve order status->order,CTRL,4,Track Order,Track Order
+70,user->Track order button->retrieve order status->order,DM,4,Track Order,Track Order
+71,user->Track order button->retrieve order status->order,EI,4,Track Order,Track Order
+72,florist->Order page->update order status information->order,CTRL,4,Provide tracking information,Provide tracking information
+73,florist->Order page->update order status information->order,DM,4,Provide tracking information,Provide tracking information
+74,florist->Order page->update order status information->order,EI,4,Provide tracking information,Provide tracking information
+75,florist->Order page->update order status information->update successful page,CTRL,4,Provide tracking information,Provide tracking information
+76,florist->Order page->update order status information->update successful page,INT,4,Provide tracking information,Provide tracking information
+77,customer->review button->display review penal->review panel,CTRL,4,Review and Rating,Review and Rating
+78,customer->review button->display review penal->review panel,INT,4,Review and Rating,Review and Rating
+79,customer->review panel->pre-check if length of review is legal->too short review error message,CTRL,4,Review and Rating,Review and Rating
+80,customer->review panel->pre-check if length of review is legal->too short review error message,INT,4,Review and Rating,Review and Rating
+81,customer->review panel->pre-check if length of review is legal->store review and rating information->review,CTRL,5,Review and Rating,Review and Rating
+82,customer->review panel->pre-check if length of review is legal->store review and rating information->review,DM,5,Review and Rating,Review and Rating
+83,customer->review panel->pre-check if length of review is legal->store review and rating information->review,EI,5,Review and Rating,Review and Rating
+84,florist->Upload page->pre-check if required information valid->information is invalid,CTRL,4,Upload catalog,Upload catalog
+85,florist->Upload page->pre-check if required information valid->information is invalid,INT,4,Upload catalog,Upload catalog
+86,florist->Upload page->pre-check if required information valid->save uploaded information to db->category,CTRL,5,Upload catalog,Upload catalog
+87,florist->Upload page->pre-check if required information valid->save uploaded information to db->category,DM,5,Upload catalog,Upload catalog
+88,florist->Upload page->pre-check if required information valid->save uploaded information to db->category,EI,5,Upload catalog,Upload catalog
+89,florist->Upload page->pre-check if required information valid->exceeded limit error message,CTRL,4,Upload catalog,Upload catalog
+90,florist->Upload page->pre-check if required information valid->exceeded limit error message,INT,4,Upload catalog,Upload catalog
+91,florist->catalog manage page->pre-check if required information valid->information is invalid,CTRL,4,Manage Catalog,Manage Catalog
+92,florist->catalog manage page->pre-check if required information valid->information is invalid,INT,4,Manage Catalog,Manage Catalog
+93,florist->catalog manage page->pre-check if required information valid->exceeded limit error message,CTRL,4,Manage Catalog,Manage Catalog
+94,florist->catalog manage page->pre-check if required information valid->exceeded limit error message,INT,4,Manage Catalog,Manage Catalog
+95,florist->catalog manage page->pre-check if required information valid->save uploaded information to db->category,CTRL,5,Manage Catalog,Manage Catalog
+96,florist->catalog manage page->pre-check if required information valid->save uploaded information to db->category,DM,5,Manage Catalog,Manage Catalog
+97,florist->catalog manage page->pre-check if required information valid->save uploaded information to db->category,EI,5,Manage Catalog,Manage Catalog
+98,customer->comment and concerns panel->save comments/concerns->successful communication message,CTRL,4,Private message,Private message
+99,customer->comment and concerns panel->save comments/concerns->successful communication message,INT,4,Private message,Private message
+100,customer->comment and concerns panel->save comments/concerns->message,CTRL,4,Private message,Private message
+101,customer->comment and concerns panel->save comments/concerns->message,DM,4,Private message,Private message
+102,customer->comment and concerns panel->save comments/concerns->message,EI,4,Private message,Private message
+103,customer->chat button->display chat panel->comment and concerns panel,CTRL,4,Private message,Private message
+104,customer->chat button->display chat panel->comment and concerns panel,INT,4,Private message,Private message
+105,customer->dashboard page->display unread message->unread message,CTRL,4,Private Message - Florist,Private Message - Florist
+106,customer->dashboard page->display unread message->unread message,INT,4,Private Message - Florist,Private Message - Florist
+107,customer->dashboard page->display unread message->message,CTRL,4,Private Message - Florist,Private Message - Florist
+108,customer->dashboard page->display unread message->message,DM,4,Private Message - Florist,Private Message - Florist
+109,customer->dashboard page->display unread message->message,EI,4,Private Message - Florist,Private Message - Florist
+110,customer->reply input panel->save replied message->message,CTRL,4,Private Message - Florist,Private Message - Florist
+111,customer->reply input panel->save replied message->message,DM,4,Private Message - Florist,Private Message - Florist
+112,customer->reply input panel->save replied message->message,EI,4,Private Message - Florist,Private Message - Florist
+113,customer->unread message->display comment input panel->reply input panel,CTRL,4,Private Message - Florist,Private Message - Florist
+114,customer->unread message->display comment input panel->reply input panel,INT,4,Private Message - Florist,Private Message - Florist
+115,customer->unread message->display comment input panel->message,CTRL,4,Private Message - Florist,Private Message - Florist
+116,customer->unread message->display comment input panel->message,DM,4,Private Message - Florist,Private Message - Florist
+117,customer->unread message->display comment input panel->message,EI,4,Private Message - Florist,Private Message - Florist

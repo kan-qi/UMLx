@@ -1,0 +1,12 @@
+id,element,type,outboundDegree,inboundDegree,diagram,useCase
+1,missing information for payment message,boundary,0,3,Place Order,Place Order,
+2,invalid payment inforrmation,boundary,1,1,Place Order,Place Order,
+3,send error message for invalid payment information,control,1,1,Place Order,Place Order,
+4,redirect to payment page,control,1,2,Place Order,Place Order,
+5,payment successful message,boundary,1,1,Place Order,Place Order,
+6,approve transaction and display successful message,control,1,1,Place Order,Place Order,
+7,thirdpart payment system,actor,2,1,Place Order,Place Order,
+8,verify payment information,control,1,1,Place Order,Place Order,
+9,pre-check if required information is empty,control,2,1,Place Order,Place Order,
+10,payment information page,boundary,1,1,Place Order,Place Order,
+11,User,actor,2,0,Place Order,Place Order,

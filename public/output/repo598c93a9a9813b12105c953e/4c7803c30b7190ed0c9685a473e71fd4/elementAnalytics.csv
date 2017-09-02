@@ -1,0 +1,79 @@
+id,element,type,outbound_degree,inbound_degree,diagram,useCase
+1,invalid input information,boundary,0,2,Create a new account,Create a new account
+2,account,entity,0,1,Create a new account,Create a new account
+3,user profile page,boundary,0,2,Create a new account,Create a new account
+4,save user account,control,2,1,Create a new account,Create a new account
+5,validate input information,control,2,1,Create a new account,Create a new account
+6,Account create page,boundary,1,1,Create a new account,Create a new account
+7,User,actor,3,0,Create a new account,Create a new account
+8,user profile and search page,boundary,0,2,Login,Login
+9,account,entity,0,2,Login,Login
+10,incorrect user information,boundary,0,3,Login,Login
+11,validate user information,control,4,1,Login,Login
+12,Login page,boundary,1,1,Login,Login
+13,User,actor,3,0,Login,Login
+14,save updated profile,control,1,1,Loginout,Loginout
+15,Profile Edit Page,boundary,1,2,Loginout,Loginout
+16,Profile,entity,0,2,Loginout,Loginout
+17,display edit profile page,control,3,1,Loginout,Loginout
+18,Edit profile button,boundary,1,1,Loginout,Loginout
+19,User,actor,4,0,Loginout,Loginout
+20,sign in error message,boundary,0,4,Sign in social media accounts,Sign in social media accounts
+21,query linkedin,control,1,1,Sign in social media accounts,Sign in social media accounts
+22,query google plus info,control,1,1,Sign in social media accounts,Sign in social media accounts
+23,query facebook info,control,1,1,Sign in social media accounts,Sign in social media accounts
+24,LinkedIn,actor,1,1,Sign in social media accounts,Sign in social media accounts
+25,Google plus,actor,1,1,Sign in social media accounts,Sign in social media accounts
+26,Facebook,actor,1,1,Sign in social media accounts,Sign in social media accounts
+27,query linkedin,control,1,1,Sign in social media accounts,Sign in social media accounts
+28,query google plus info,control,1,1,Sign in social media accounts,Sign in social media accounts
+29,query facebook info,control,2,1,Sign in social media accounts,Sign in social media accounts
+30,credential input page,boundary,3,2,Sign in social media accounts,Sign in social media accounts
+31,display crendential input page,control,1,1,Sign in social media accounts,Sign in social media accounts
+32,social media login buttons,boundary,1,1,Sign in social media accounts,Sign in social media accounts
+33,User,actor,3,0,Sign in social media accounts,Sign in social media accounts
+34,Invalid input data,boundary,0,2,Update user profile,Update user profile
+35,validate input data,control,2,1,Update user profile,Update user profile
+36,save updated profile,control,1,1,Update user profile,Update user profile
+37,Profile Edit Page,boundary,1,2,Update user profile,Update user profile
+38,Profile,entity,0,2,Update user profile,Update user profile
+39,display edit profile page,control,3,1,Update user profile,Update user profile
+40,Edit profile button,boundary,1,1,Update user profile,Update user profile
+41,User,actor,4,0,Update user profile,Update user profile
+42,invalid input information,boundary,0,2,Search for jobs,Search for jobs
+43,Sort search results,control,1,1,Search for jobs,Search for jobs
+44,Indeed.com,actor,1,1,Search for jobs,Search for jobs
+45,Invalid input data,boundary,0,2,Search for jobs,Search for jobs
+46,validate input data,control,1,1,Search for jobs,Search for jobs
+47,verify input information,control,3,1,Search for jobs,Search for jobs
+48,Job list page,boundary,1,2,Search for jobs,Search for jobs
+49,Search by input keywords from Indeed.com,control,2,1,Search for jobs,Search for jobs
+50,Job search page,boundary,1,1,Search for jobs,Search for jobs
+51,User,actor,4,0,Search for jobs,Search for jobs
+52,search saved unsuccessfully error message,boundary,0,2,Save search results,Save search results
+53,search saved successfully message,boundary,1,2,Save search results,Save search results
+54,search result,entity,0,2,Save search results,Save search results
+55,save filters and criteria,control,3,1,Save search results,Save search results
+56,Save search button,boundary,1,1,Save search results,Save search results
+57,User,actor,4,0,Save search results,Save search results
+58,saved unsuccessfully message,boundary,0,2,Mark favorite jobs,Mark favorite jobs
+59,saved successfully message,boundary,0,2,Mark favorite jobs,Mark favorite jobs
+60,Favorite Jobs,entity,0,1,Mark favorite jobs,Mark favorite jobs
+61,Save favorite jobs,control,4,1,Mark favorite jobs,Mark favorite jobs
+62,Save Favorite Job Button,boundary,1,1,Mark favorite jobs,Mark favorite jobs
+63,User,actor,4,0,Mark favorite jobs,Mark favorite jobs
+64,No fried found message,boundary,0,2,Send a referral request email,Send a referral request email
+65,Email Protocol,actor,0,1,Send a referral request email,Send a referral request email
+66,send email message,control,1,1,Send a referral request email,Send a referral request email
+67,display message edit page,control,1,1,Send a referral request email,Send a referral request email
+68,message edit page,boundary,1,2,Send a referral request email,Send a referral request email
+69,Friend selection page,boundary,1,2,Send a referral request email,Send a referral request email
+70,Friends,entity,0,1,Send a referral request email,Send a referral request email
+71,display friends by organization,control,3,1,Send a referral request email,Send a referral request email
+72,Request Referral Button,boundary,1,1,Send a referral request email,Send a referral request email
+73,User,actor,4,0,Send a referral request email,Send a referral request email
+74,invalid email address message,boundary,0,2,Email subscription,Email subscription
+75,account,entity,0,1,Email subscription,Email subscription
+76,save preferences for subscription,control,3,1,Email subscription,Email subscription
+77,subscribe for notification button,boundary,1,1,Email subscription,Email subscription
+78,User,actor,3,0,Email subscription,Email subscription

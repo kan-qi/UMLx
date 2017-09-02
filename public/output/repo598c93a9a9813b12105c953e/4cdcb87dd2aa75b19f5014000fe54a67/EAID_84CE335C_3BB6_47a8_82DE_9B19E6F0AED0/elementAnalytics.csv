@@ -1,0 +1,12 @@
+id,element,type,outboundDegree,inboundDegree,diagram,useCase
+1,redirect to home page,control,1,1,Login,Login,
+2,Email protocol,actor,0,1,Login,Login,
+3,send verification code,control,1,1,Login,Login,
+4,home page,boundary,0,4,Login,Login,
+5,user information,entity,0,2,Login,Login,
+6,validation failed message,boundary,1,3,Login,Login,
+7,verification code input field,boundary,1,2,Login,Login,
+8,validate password,control,4,1,Login,Login,
+9,validate input information,control,2,1,Login,Login,
+10,Login Page,boundary,1,2,Login,Login,
+11,User,actor,5,0,Login,Login,

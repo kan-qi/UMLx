@@ -1,0 +1,12 @@
+id,element,type,outboundDegree,inboundDegree,diagram,useCase
+1,answer phone call,control,1,1,Record calls and call details,Record calls and call details,
+2,answer phone call,control,2,1,Record calls and call details,Record calls and call details,
+3,caller number,boundary,2,1,Record calls and call details,Record calls and call details,
+4,popup income call and customer's number,control,1,1,Record calls and call details,Record calls and call details,
+5,customer,actor,0,1,Record calls and call details,Record calls and call details,
+6,popup income call and user agent number,control,1,1,Record calls and call details,Record calls and call details,
+7,Twilio API,actor,2,3,Record calls and call details,Record calls and call details,
+8,income call popup,boundary,1,3,Record calls and call details,Record calls and call details,
+9,dial with Twilio API,control,1,1,Record calls and call details,Record calls and call details,
+10,call/auto dialer button,boundary,1,1,Record calls and call details,Record calls and call details,
+11,User Agent,actor,2,0,Record calls and call details,Record calls and call details,

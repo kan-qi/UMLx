@@ -1,0 +1,121 @@
+div.block.panel.panel-default
+  div.block-title.panel-heading Model Analytics
+  div.panel-body(id="model-stats-chart")
+   div.model-info-content
+    ul.nav.nav-tabs
+     li.active
+      a(data-toggle='tab', href='#model-analytics') Analytics
+     li
+      a(data-toggle='tab', href='#model-distributions') Distributions
+     li
+      a(data-toggle='tab', href='#model-empirical') Empirical
+     li
+      a(data-toggle='tab', href='#model-evaluation') Evaluation 
+    div.tab-content
+     div.tab-pane.fade.in.active(id="model-analytics")
+      if modelAnalytics
+       h3 Calculated:
+       ul
+        li
+         span.statistical-item Number of Interface Management Transactions: #{modelAnalytics.INT}
+        li
+         span.statistical-item Number of Data Management Transactions: #{modelAnalytics.DM}
+        li
+         span.statistical-item Number of Control Transactions: #{modelAnalytics.CTRL}
+        li
+         span.statistical-item Number of External Inovations: #{modelAnalytics.EXTIVK}
+        li
+         span.statistical-item Number of External Calls: #{modelAnalytics.EXTCLL}
+        li
+         span.statistical-item Number of Not Matched Transactions: #{modelAnalytics.TRAN_NA}
+        li
+         span.statistical-item Number of EI: #{modelAnalytics.EI}
+        li
+         span.statistical-item Number of EO: #{modelAnalytics.EO}
+        li
+         span.statistical-item Number of EQ: #{modelAnalytics.EQ}
+        li
+         span.statistical-item Number of Not Matched Functions: #{modelAnalytics.FUNC_NA}
+        li
+         span.statistical-item Average Path Length: #{modelAnalytics.AvgPathLength}
+        li
+         span.statistical-item Average Element Degree: #{modelAnalytics.AvgDegree}
+        li
+         span.statistical-item Number of Paths: #{modelAnalytics.PathNum}
+        li
+         span.statistical-item Number of Elements: #{modelAnalytics.ElementNum}
+        li
+         span.statistical-item Number of Actors: #{modelAnalytics.ActorNum}
+        li
+         span.statistical-item Number of Boundary Elements: #{modelAnalytics.BoundaryNum}
+        li
+         span.statistical-item Number of Control Elements: #{modelAnalytics.ControlNum}
+        li
+         span.statistical-item Number of Entity Elements: #{modelAnalytics.EntityNum}
+        li
+         span.statistical-item Number of Attributes: #{modelAnalytics.AttributeNum}
+        li
+         span.statistical-item Number of Operations: #{modelAnalytics.OperationNum}
+        li
+         span.statistical-item Number of Use Cases: #{modelAnalytics.UseCaseNum}
+        li
+         span.statistical-item Number of Diagrams: #{modelAnalytics.DiagramNum}
+        li
+         span.statistical-item Number of Classes: #{modelAnalytics.ClassNum}
+        li
+         span.statistical-item ILF: #{modelAnalytics.ILF}
+        li
+         span.statistical-item EIF: #{modelAnalytics.EIF}
+       div.model-analytics-ops
+         div
+          a.dumpAnalyticsData(href='getUseCaseAnalyticsForModelCSV?model_id=#{modelAnalytics._id}') Dump Model Analytics
+         div
+          a.dumpAnalyticsData(href='evaluateModelForUseCases?model_id=#{modelAnalytics._id}') Dump Model Evaluation For Use Cases
+         div
+          a(id='reanalyse-model' href='reanalyseModel?model_id=#{modelAnalytics._id}') Re-analyse Model
+         div
+          a(href='deleteModel?model_id=#{modelAnalytics._id}') Delete Model
+     div.tab-pane.fade(id="model-distributions")
+      div.stats-chart
+       img(src="#{modelAnalytics.AccessDir}/control_operation_analysis_result.svg")
+      div.stats-chart
+       img(src="#{modelAnalytics.AccessDir}/data_operation_analysis_result.svg")
+      div.stats-chart
+       img(src="#{modelAnalytics.AccessDir}/interface_operation_analysis_result.svg")
+      div.stats-chart
+       img(src="#{modelAnalytics.AccessDir}/partial_match_analysis_result.svg")
+      div.stats-chart
+       img(src="#{modelAnalytics.AccessDir}/architecture_difficulty_analysis_result.svg")
+      div.stats-chart
+       img(src="#{modelAnalytics.AccessDir}/average_degree_analysis_result.svg")
+      div.stats-chart
+       img(src="#{modelAnalytics.AccessDir}/average_path_length_analysis_result.svg")
+      div.stats-chart
+       img(src="#{modelAnalytics.AccessDir}/path_number_analysis_result.svg")
+     div.tab-pane.fade(id="model-empirical")
+       div.model-evaluation
+        h3 Evaluation:
+        form(id="model-evaluation-form", onsubmit="return false;")
+         div
+          div Unadjusted Extended Use Case Weight (#{modelAnalytics.UEXUCW}):
+           input(type='text', name='uexucw', id='uexucw')
+          div Unadjusted Actor Weight (#{modelAnalytics.UAW}):
+           input(type='text', name='uaw', id='uaw')
+          div Technical Complexity Factor (#{modelAnalytics.TCF}):
+           input(type='text', name='tcf', id='tcf')
+          div Environmental Complexity Factor (#{modelAnalytics.ECF}):
+           input(type='text', name='ef', id='ef')
+          div Adjusted Function Point (#{modelAnalytics.AFP}):
+           input(type='text', name='afp', id='afp')
+          div Value Adjustment Factor (#{modelAnalytics.VAF}):
+           input(type='text', name='vaf', id='vaf')
+          div Effort (PH) (#{modelAnalytics.PH}):
+           input(type='text', name='ph', id='ph')
+           input(type='hidden', name='model-id', id='model-id' value='#{modelAnalytics._id}')
+          div
+           button(id='model-evaluation-form-submit-button') Submit
+     div.tab-pane.fade(id="model-evaluation")
+       div.model-evaluation-ops
+         div
+          a(id="dump-model-evaluation-for-use-cases-btn" href='evaluateModelForUseCases?model_id=#{modelAnalytics._id}') Dump Model Evaluation For Use Cases
+         div(id="model-evaluation-dump-display")

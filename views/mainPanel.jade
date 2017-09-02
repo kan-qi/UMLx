@@ -1,0 +1,45 @@
+div.one-column(id="operation-panel")
+   if repo
+    div.block.panel.panel-default(id="existing-models-panel")
+     div.block-title.panel-heading  Projects
+      div.btn-group.ops_menu
+        a.btn.btn-primary.request-repo-analytics(type="button" href='queryRepoAnalytics?repo_id=#{repo.RepoAnalytics._id}')
+         span.glyphicon.glyphicon-stats
+     div(id="existing-model-list")
+      div.list-block.panel-body.pre-scrollable
+        each model in repo.models
+         div.list-item.model-title(data-model-id=model._id)
+          a.model-title(href="requestModelInfo?model_id="+model._id) #{model.umlModelName}
+          div.btn-group.ops_menu
+           button.btn.btn-primary(type="button").model-analytics
+            span.glyphicon.glyphicon-stats
+    div.block.panel.panel-default
+     div.block-title.panel-heading Upload New Model
+     div.panel-body
+      form(id="model-file-submit-form", onsubmit="model_file_upload_fnc(); return false;")
+       div
+        input(type='file', name='uml-file', id='uml-file')
+       div Model Name
+        input(type='text', name='uml-model-name', id='uml-model-name')
+       div
+        input(type='hidden', id='uml-model-type', name='uml-model-type', value="uml")
+       div
+        input(type='hidden', id='repo-id', name='repo-id', value="#{repo._id}")
+       div
+        input(type='submit')
+     //div
+      //button(id="query_model", onclick="query_exist_models_fnc('f4e49520-5c80-47cb-9c3e-c6095bee')") Query Existing Model
+     //div
+      //a(href="setUpTestModelStorage") Setup Test Database
+  div.four-column(id="display-panel")
+    -var repoAnalytics = repo.RepoAnalytics
+    include repoAnalytics
+    //div.content(id="repo_stats_panel")
+     //<div id="container" style="min-width: 310px; height: 400px; max-width: 800px; margin: 0 auto"></div>
+     //div(id="repo_stats_chart")
+     //div.chart_block(id="early_use_case_point")
+      //span.block_title Early Use Case Point
+     //div.chart_block(id="extended_use_case_point")
+      //span.block_title Extended Use Case Point
+     //div.chart_block(id="function_use_case_point")
+      //span.block_title Function Point

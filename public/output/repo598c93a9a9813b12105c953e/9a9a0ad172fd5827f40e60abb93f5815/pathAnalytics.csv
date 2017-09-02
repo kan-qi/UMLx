@@ -1,0 +1,30 @@
+id,path,functional,transactional,path_length,diagram,useCase
+1,User->navigation instruction create panel->display the dragged and dropped navigation instructions->popup parameter change dialog->parameter set dialog,EQ,CTRL|INT,undefined,Create Navigation Instructions,Create Navigation Instructions
+2,User->parameter set dialog->change the parameters of the elements->save parameters->instructions,EI,CTRL|DM|EI,undefined,Create Navigation Instructions,Create Navigation Instructions
+3,User->parameter set dialog->change the parameters of the elements->save parameters->Program is updated message,EQ,CTRL|INT,undefined,Create Navigation Instructions,Create Navigation Instructions
+4,User->parameter set dialog->change the parameters of the elements->save parameters->Program is updated message,EQ,CTRL|INT,undefined,Create sensor instructions,Create sensor instructions
+5,User->parameter set dialog->change the parameters of the elements->save parameters->sensor,EI,CTRL|DM|EI,undefined,Create sensor instructions,Create sensor instructions
+6,User->sensor instruction create panel->display the dragged and dropped instructions->popup parameter change dialog->parameter set dialog,EQ,CTRL|INT,undefined,Create sensor instructions,Create sensor instructions
+7,User->parameter set dialog->change the parameters of the elements->save parameters->Program is updated message,EQ,CTRL|INT,undefined,Create light instructions,Create light instructions
+8,User->parameter set dialog->change the parameters of the elements->save parameters->light,EI,CTRL|DM|EI,undefined,Create light instructions,Create light instructions
+9,User->light instruction create panel->display the dragged and dropped instructions->popup parameter change dialog->parameter set dialog,EQ,CTRL|INT,undefined,Create light instructions,Create light instructions
+10,User->parameter set dialog->change the parameters of the elements->save parameters->Program is updated message,EQ,CTRL|INT,undefined,Create sound instructions,Create sound instructions
+11,User->parameter set dialog->change the parameters of the elements->save parameters->sound,EI,CTRL|DM|EI,undefined,Create sound instructions,Create sound instructions
+12,User->sound instruction create panel->display the dragged and dropped instructions->popup parameter change dialog->parameter set dialog,EQ,CTRL|INT,undefined,Create sound instructions,Create sound instructions
+13,User->open file button->display file selector->File selector,EQ,CTRL|INT,undefined,New/Open File,New/Open File
+14,User->File selector->open file->file,EI,CTRL|DM|EI,undefined,New/Open File,New/Open File
+15,User->New file button->create new file->file,EI,CTRL|DM|EI,undefined,New/Open File,New/Open File
+16,User->Save file button->popup file information save dialog->file information input page,EQ,CTRL|INT,undefined,Save File,Save File
+17,User->file information input page->validate filename->File save success,EQ,CTRL|INT,undefined,Save File,Save File
+18,User->file information input page->validate filename->save file->file,EI,CTRL|DM|EI,undefined,Save File,Save File
+19,User->Build button->compile with C++->C++ compiler,FUNC_NA,CTRL|EXTIVK,undefined,Translate to C,Translate to C
+20,User->Build button->compile with C++->compile success message,EQ,CTRL|INT,undefined,Translate to C,Translate to C
+21,User->Build button->compile C/C++->WinAVR,FUNC_NA,CTRL|EXTIVK,undefined,Compile,Compile
+22,User->Build button->compile C/C++->Compiling progress bar,EQ,CTRL|INT,undefined,Compile,Compile
+23,User->Build button->compile C/C++->Compiling success message,EQ,CTRL|INT,undefined,Compile,Compile
+24,User->Load button->display file selector->File selector,EQ,CTRL|INT,undefined,Loading the executable file,Loading the executable file
+25,User->File selector->File,FUNC_NA,TRAN_NA,undefined,Loading the executable file,Loading the executable file
+26,User->File selector->Load program to microcontroller->Display compiling message->Compiling success message,EQ,CTRL|INT,undefined,Loading the executable file,Loading the executable file
+27,User->demo selector->save demo instructions->demo,EI,CTRL|DM|EI,undefined,Demo,Demo
+28,User->demo selector->save demo instructions->demo is saved message,EQ,CTRL|INT,undefined,Demo,Demo
+29,User->demo instruction create panel->display the dragged and dropped demo instructions->popup demo change dialog->demo selector,EQ,CTRL|INT,undefined,Demo,Demo

@@ -1,0 +1,10 @@
+id,path,functional,transactional,path_length,diagram,useCase
+1,User->invite friend form->Check if input is valid->information input invalid message,EQ,CTRL|INT,undefined,Invite frieds through email,Invite frieds through email
+2,User->invite friend form->Check if input is valid->Check if friend already exists->fried already exist message,EQ,CTRL|INT,undefined,Invite frieds through email,Invite frieds through email
+3,User->invite friend form->Check if input is valid->Check if friend already exists->friend,EI,CTRL|DM|EI,undefined,Invite frieds through email,Invite frieds through email
+4,User->invite friend form->Check if input is valid->Check if friend already exists->Check if email already exists->email already exists,EQ,CTRL|INT,undefined,Invite frieds through email,Invite frieds through email
+5,User->invite friend form->Check if input is valid->Check if friend already exists->Check if email already exists->invitation,EI,CTRL|DM|EI,undefined,Invite frieds through email,Invite frieds through email
+6,User->invite friend form->Check if input is valid->Check if friend already exists->Check if email already exists->Send an invitation email->Email protocol,FUNC_NA,CTRL|EXTIVK,undefined,Invite frieds through email,Invite frieds through email
+7,User->invite friend form->Check if input is valid->Check if friend already exists->Check if email already exists->Invitation paage,EQ,CTRL|INT,undefined,Invite frieds through email,Invite frieds through email
+8,Email protocol->check email sent status->invitation,FUNC_NA,CTRL|EXTCLL|DM|EI,undefined,Invite frieds through email,Invite frieds through email
+9,Email protocol->check email sent status->show invitation page->Invitation paage,FUNC_NA,CTRL|EXTCLL|INT,undefined,Invite frieds through email,Invite frieds through email

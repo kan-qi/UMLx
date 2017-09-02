@@ -1,0 +1,9 @@
+id,element,type,outboundDegree,inboundDegree,diagram,useCase
+1,softphone screen,boundary,0,2,Monitor Agents,Monitor Agents,
+2,Twilio API,actor,0,1,Monitor Agents,Monitor Agents,
+3,connect to Twilio API for agent's call,control,2,1,Monitor Agents,Monitor Agents,
+4,agent,entity,0,1,Monitor Agents,Monitor Agents,
+5,list of agents with status,boundary,1,2,Monitor Agents,Monitor Agents,
+6,query agent,control,2,1,Monitor Agents,Monitor Agents,
+7,view agent activites button,boundary,1,1,Monitor Agents,Monitor Agents,
+8,Manager,actor,3,0,Monitor Agents,Monitor Agents,

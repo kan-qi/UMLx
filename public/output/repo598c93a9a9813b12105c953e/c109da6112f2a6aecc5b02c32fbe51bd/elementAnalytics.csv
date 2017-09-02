@@ -1,0 +1,78 @@
+id,element,type,outbound_degree,inbound_degree,diagram,useCase
+1,Email Protocol,actor,0,1,login,Login
+2,send email including credential,control,1,1,login,Login
+3,Forgotten username or password link,boundary,1,1,login,Login
+4,redirect to login page,control,1,1,login,Login
+5,Invalid information error message,boundary,1,2,login,Login
+6,My account page,boundary,0,2,login,Login
+7,user info,entity,0,1,login,Login
+8,verify user information,control,3,1,login,Login
+9,Login page,boundary,1,2,login,Login
+10,User,actor,4,0,login,Login
+11,update feature detail,control,1,2,View Dashboard Page,View Dashboard Page
+12,feature detail,boundary,1,2,View Dashboard Page,View Dashboard Page
+13,feature,entity,0,1,View Dashboard Page,View Dashboard Page
+14,redirect to feature page,control,2,1,View Dashboard Page,View Dashboard Page
+15,Feature List,boundary,1,1,View Dashboard Page,View Dashboard Page
+16,User,actor,4,0,View Dashboard Page,View Dashboard Page
+17,save udpated profile,control,1,1,Edit Consumer Profile,Edit Consumer Profile
+18,Error message for update failure,boundary,0,2,Edit Consumer Profile,Edit Consumer Profile
+19,profile,entity,0,1,Edit Consumer Profile,Edit Consumer Profile
+20,verify input message,control,2,1,Edit Consumer Profile,Edit Consumer Profile
+21,User profile page,boundary,1,1,Edit Consumer Profile,Edit Consumer Profile
+22,User,actor,2,0,Edit Consumer Profile,Edit Consumer Profile
+23,save input price information,control,1,1,Share Prices,Share Prices
+24,input information invalid error message,boundary,0,2,Share Prices,Share Prices
+25,verify input price information,control,2,1,Share Prices,Share Prices
+26,price detail input page,boundary,1,2,Share Prices,Share Prices
+27,profile,entity,0,1,Share Prices,Share Prices
+28,diplay price input page,control,1,1,Share Prices,Share Prices
+29,Share price button,boundary,1,1,Share Prices,Share Prices
+30,User,actor,3,0,Share Prices,Share Prices
+31,update the recognized information into database.,control,1,1,Share Price through OCR capture,Share Price through OCR capture
+32,unable to recoginize information from photo,boundary,0,2,Share Price through OCR capture,Share Price through OCR capture
+33,OCR read the medical information,control,2,1,Share Price through OCR capture,Share Price through OCR capture
+34,photo list,boundary,1,2,Share Price through OCR capture,Share Price through OCR capture
+35,Price,entity,0,1,Share Price through OCR capture,Share Price through OCR capture
+36,load photo from library,control,1,1,Share Price through OCR capture,Share Price through OCR capture
+37,Share price through picture capture button,boundary,1,1,Share Price through OCR capture,Share Price through OCR capture
+38,User,actor,3,0,Share Price through OCR capture,Share Price through OCR capture
+39,non matched doctor,boundary,0,3,Search Provider,Search Provider
+40,Invalid input message,boundary,1,2,Search Provider,Search Provider
+41,Doctor,entity,0,2,Search Provider,Search Provider
+42,retrieve matched doctors from db,control,3,1,Search Provider,Search Provider
+43,Search crieteria input page,boundary,1,1,Search Provider,Search Provider
+44,User,actor,3,0,Search Provider,Search Provider
+45,Redirect to search page,control,1,1,Follow/unfollow a provider,Follow/unfollow a provider
+46,Subscription,entity,0,1,Follow/unfollow a provider,Follow/unfollow a provider
+47,Update subscription information,control,1,1,Follow/unfollow a provider,Follow/unfollow a provider
+48,Popup confirm diagram,control,2,1,Follow/unfollow a provider,Follow/unfollow a provider
+49,Confirm dialog,boundary,1,2,Follow/unfollow a provider,Follow/unfollow a provider
+50,follow/unfollow button,boundary,1,2,Follow/unfollow a provider,Follow/unfollow a provider
+51,Provider,entity,0,1,Follow/unfollow a provider,Follow/unfollow a provider
+52,Display all provider based on criteria,control,2,1,Follow/unfollow a provider,Follow/unfollow a provider
+53,Search provide page,boundary,1,2,Follow/unfollow a provider,Follow/unfollow a provider
+54,User,actor,3,0,Follow/unfollow a provider,Follow/unfollow a provider
+55,Rating,entity,0,1,Rate a provider,Rate a provider
+56,Update provider rating information,control,1,1,Rate a provider,Rate a provider
+57,Display rating input page,control,2,1,Rate a provider,Rate a provider
+58,Rating input page,boundary,1,2,Rate a provider,Rate a provider
+59,rate button,boundary,1,2,Rate a provider,Rate a provider
+60,Provider,entity,0,1,Rate a provider,Rate a provider
+61,Display all provider based on criteria,control,2,1,Rate a provider,Rate a provider
+62,Search provider page,boundary,1,2,Rate a provider,Rate a provider
+63,User,actor,3,0,Rate a provider,Rate a provider
+64,create a new provider,control,2,1,Add New Provider,Add New Provider
+65,Provider created success message,boundary,1,2,Add New Provider,Add New Provider
+66,provider information input page,boundary,1,2,Add New Provider,Add New Provider
+67,Provider,entity,0,1,Add New Provider,Add New Provider
+68,Display provider add page,control,1,1,Add New Provider,Add New Provider
+69,Add provider button,boundary,1,1,Add New Provider,Add New Provider
+70,User,actor,3,0,Add New Provider,Add New Provider
+71,update status of requests,control,2,1,Maintain the system,Maintain the system
+72,request status is successfully updated.,boundary,0,2,Maintain the system,Maintain the system
+73,request list,boundary,1,2,Maintain the system,Maintain the system
+74,Request,entity,0,2,Maintain the system,Maintain the system
+75,load requests,control,2,1,Maintain the system,Maintain the system
+76,check requests button,boundary,1,1,Maintain the system,Maintain the system
+77,User,actor,3,0,Maintain the system,Maintain the system

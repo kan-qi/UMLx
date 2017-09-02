@@ -1,0 +1,10 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Customer->successfully save registration information->main page->main page,EQ,CTRL|INT,4,undefined,1,0,1,Register as Customer,Register as Customer
+2,Customer->registration page->validate registration information->duplicate registration information,EQ,CTRL|INT,4,undefined,1,0,1,Register as Customer,Register as Customer
+3,Customer->registration page->validate registration information->save customer information->successfully save registration information,EQ,CTRL|INT,5,undefined,2,0,1,Register as Customer,Register as Customer
+4,Customer->registration page->validate registration information->save customer information->system error when saving registration information,EQ,CTRL|INT,5,undefined,2,0,1,Register as Customer,Register as Customer
+5,Customer->registration page->validate registration information->save customer information->customer,EI,CTRL|DM|EI,5,undefined,2,1,1,Register as Customer,Register as Customer
+6,Customer->registration page->validate registration information->display spinner while saving information,EQ,CTRL|INT,4,undefined,1,0,1,Register as Customer,Register as Customer
+7,Customer->registration page->validate registration information->customer,EI,CTRL|DM|EI,4,undefined,1,1,1,Register as Customer,Register as Customer
+8,Customer->registration page->validate registration information->registration information invalid message,EQ,CTRL|INT,4,undefined,1,0,1,Register as Customer,Register as Customer
+9,Customer->register button->displays registration page->registration page,EQ,CTRL|INT,4,undefined,1,0,1,Register as Customer,Register as Customer

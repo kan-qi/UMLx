@@ -1,0 +1,187 @@
+id,path,transactional,path_length,diagram,useCase
+1,User->login page->query user info->user info,CTRL,4,Login,Login
+2,User->login page->query user info->user info,DM,4,Login,Login
+3,User->login page->query user info->user info,EI,4,Login,Login
+4,User->login page->query user info->main page,CTRL,4,Login,Login
+5,User->login page->query user info->main page,INT,4,Login,Login
+6,User->login page->query user info->login information invalid box,CTRL,4,Login,Login
+7,User->login page->query user info->login information invalid box,INT,4,Login,Login
+8,User->Logout button->Clear cache data->display a logout message->message box,CTRL,5,Logout,Logout
+9,User->Logout button->Clear cache data->display a logout message->message box,INT,5,Logout,Logout
+10,User->Logout button->Clear cache data->display a logout message->Logout error message,CTRL,5,Logout,Logout
+11,User->Logout button->Clear cache data->display a logout message->Logout error message,INT,5,Logout,Logout
+12,buyer->registration page->verify user info->add user info->user info,CTRL,5,Submit buyer registration,Submit buyer registration
+13,buyer->registration page->verify user info->add user info->user info,DM,5,Submit buyer registration,Submit buyer registration
+14,buyer->registration page->verify user info->add user info->user info,EI,5,Submit buyer registration,Submit buyer registration
+15,buyer->registration page->verify user info->add user info->main page,CTRL,5,Submit buyer registration,Submit buyer registration
+16,buyer->registration page->verify user info->add user info->main page,DM,5,Submit buyer registration,Submit buyer registration
+17,buyer->registration page->verify user info->add user info->main page,EI,5,Submit buyer registration,Submit buyer registration
+18,buyer->registration page->verify user info->invalid info message,CTRL,4,Submit buyer registration,Submit buyer registration
+19,buyer->registration page->verify user info->invalid info message,INT,4,Submit buyer registration,Submit buyer registration
+20,vendor->registration page->verify user info->invalid info message,CTRL,4,Submit vendor registration,Submit vendor registration
+21,vendor->registration page->verify user info->invalid info message,INT,4,Submit vendor registration,Submit vendor registration
+22,vendor->registration page->verify user info->add user info->user info,CTRL,5,Submit vendor registration,Submit vendor registration
+23,vendor->registration page->verify user info->add user info->user info,DM,5,Submit vendor registration,Submit vendor registration
+24,vendor->registration page->verify user info->add user info->user info,EI,5,Submit vendor registration,Submit vendor registration
+25,vendor->registration page->verify user info->add user info->main page,CTRL,5,Submit vendor registration,Submit vendor registration
+26,vendor->registration page->verify user info->add user info->main page,DM,5,Submit vendor registration,Submit vendor registration
+27,vendor->registration page->verify user info->add user info->main page,EI,5,Submit vendor registration,Submit vendor registration
+28,User->add to cart button->adding product in buying list->buying list,CTRL,4,Add item to cart,Add item to cart
+29,User->add to cart button->adding product in buying list->buying list,DM,4,Add item to cart,Add item to cart
+30,User->add to cart button->adding product in buying list->buying list,EI,4,Add item to cart,Add item to cart
+31,Buyer->payment info page->finish payment->third party payment,CTRL,4,Check out,Check out
+32,Buyer->payment info page->finish payment->third party payment,EXTIVK,4,Check out,Check out
+33,Buyer->payment method page->redirect to third party payment page->payment info page,CTRL,4,Check out,Check out
+34,Buyer->payment method page->redirect to third party payment page->payment info page,INT,4,Check out,Check out
+35,third party payment->receive receipt->generate orders->order detail,CTRL,4,Check out,Check out
+36,third party payment->receive receipt->generate orders->order detail,EXTCLL,4,Check out,Check out
+37,third party payment->receive receipt->generate orders->order detail,INT,4,Check out,Check out
+38,third party payment->receive receipt->generate orders->order,CTRL,4,Check out,Check out
+39,third party payment->receive receipt->generate orders->order,EXTCLL,4,Check out,Check out
+40,third party payment->receive receipt->generate orders->order,DM,4,Check out,Check out
+41,third party payment->receive receipt->generate orders->order,EI,4,Check out,Check out
+42,third party payment->receive receipt->generate orders->clear cart item->cart item,CTRL,5,Check out,Check out
+43,third party payment->receive receipt->generate orders->clear cart item->cart item,EXTCLL,5,Check out,Check out
+44,third party payment->receive receipt->generate orders->clear cart item->cart item,DM,5,Check out,Check out
+45,third party payment->receive receipt->generate orders->clear cart item->cart item,EI,5,Check out,Check out
+46,User->Item quantity field in cart->redirect to cart page->notify user->user info,CTRL,5,Edit cart,Edit cart
+47,User->Item quantity field in cart->redirect to cart page->notify user->user info,DM,5,Edit cart,Edit cart
+48,User->Item quantity field in cart->redirect to cart page->notify user->user info,EI,5,Edit cart,Edit cart
+49,User->Item quantity field in cart->redirect to cart page->notify user->user info,CTRL,5,Delete item in cart,Delete item in cart
+50,User->Item quantity field in cart->redirect to cart page->notify user->user info,DM,5,Delete item in cart,Delete item in cart
+51,User->Item quantity field in cart->redirect to cart page->notify user->user info,EI,5,Delete item in cart,Delete item in cart
+52,Vendor->product edit page->update product information->product,CTRL,4,Edit product,Edit product
+53,Vendor->product edit page->update product information->product,DM,4,Edit product,Edit product
+54,Vendor->product edit page->update product information->product,EI,4,Edit product,Edit product
+55,Vendor->product edit page->update product information->display invalid information->invalid information error,CTRL,5,Edit product,Edit product
+56,Vendor->product edit page->update product information->display invalid information->invalid information error,INT,5,Edit product,Edit product
+57,Vendor->product edit page->update product information->redirect vendor when back button clicked->change unsaved dialog,CTRL,5,Edit product,Edit product
+58,Vendor->product edit page->update product information->redirect vendor when back button clicked->change unsaved dialog,INT,5,Edit product,Edit product
+59,Vendor->edit button for specific product->redirect to product edit page->product edit page,CTRL,4,Edit product,Edit product
+60,Vendor->edit button for specific product->redirect to product edit page->product edit page,INT,4,Edit product,Edit product
+61,Vendor->product create page->update product->invalid information error,CTRL,4,Create product,Create product
+62,Vendor->product create page->update product->invalid information error,INT,4,Create product,Create product
+63,Vendor->product create page->update product->display "create success" dialog,CTRL,4,Create product,Create product
+64,Vendor->product create page->update product->display "create success" dialog,INT,4,Create product,Create product
+65,Vendor->product create page->update product->product,CTRL,4,Create product,Create product
+66,Vendor->product create page->update product->product,DM,4,Create product,Create product
+67,Vendor->product create page->update product->product,EI,4,Create product,Create product
+68,Vendor->product create page->update product->change unsaved dialog,CTRL,4,Create product,Create product
+69,Vendor->product create page->update product->change unsaved dialog,INT,4,Create product,Create product
+70,Vendor->Create product button->redirect vendor->product create page,CTRL,4,Create product,Create product
+71,Vendor->Create product button->redirect vendor->product create page,INT,4,Create product,Create product
+72,Vendor->Confirm dialog->delete product->delete failed dialog,CTRL,4,Delete product,Delete product
+73,Vendor->Confirm dialog->delete product->delete failed dialog,INT,4,Delete product,Delete product
+74,Vendor->Confirm dialog->delete product->delete success message,CTRL,4,Delete product,Delete product
+75,Vendor->Confirm dialog->delete product->delete success message,INT,4,Delete product,Delete product
+76,Vendor->Confirm dialog->delete product->product,CTRL,4,Delete product,Delete product
+77,Vendor->Confirm dialog->delete product->product,DM,4,Delete product,Delete product
+78,Vendor->Confirm dialog->delete product->product,EI,4,Delete product,Delete product
+79,Vendor->delete product button->open confirm dialog->Confirm dialog,CTRL,4,Delete product,Delete product
+80,Vendor->delete product button->open confirm dialog->Confirm dialog,INT,4,Delete product,Delete product
+81,User->blog page->save blog in db->blog,CTRL,4,Create blog,Create blog
+82,User->blog page->save blog in db->blog,DM,4,Create blog,Create blog
+83,User->blog page->save blog in db->blog,EI,4,Create blog,Create blog
+84,User->post blog button->redirect to blog page->blog page,CTRL,4,Create blog,Create blog
+85,User->post blog button->redirect to blog page->blog page,INT,4,Create blog,Create blog
+86,User->comment page->post->comment,CTRL,4,Write comment,Write comment
+87,User->comment page->post->comment,DM,4,Write comment,Write comment
+88,User->comment page->post->comment,EI,4,Write comment,Write comment
+89,User->comment page->post->post page,CTRL,4,Write comment,Write comment
+90,User->comment page->post->post page,INT,4,Write comment,Write comment
+91,User->comment page->post->invalid comment length,CTRL,4,Write comment,Write comment
+92,User->comment page->post->invalid comment length,INT,4,Write comment,Write comment
+93,User->Search page->search by criteria->product,CTRL,4,Search product,Search product
+94,User->Search page->search by criteria->product,DM,4,Search product,Search product
+95,User->Search page->search by criteria->product,EI,4,Search product,Search product
+96,User->Search page->search by criteria->No result is found,CTRL,4,Search product,Search product
+97,User->Search page->search by criteria->No result is found,INT,4,Search product,Search product
+98,User->Search page->search by criteria->list of product,CTRL,4,Search product,Search product
+99,User->Search page->search by criteria->list of product,INT,4,Search product,Search product
+100,Vendor->list of users->query user email->send email->Email protocol,CTRL,5,Vendor email customer,Vendor email customer
+101,Vendor->list of users->query user email->send email->Email protocol,EXTIVK,5,Vendor email customer,Vendor email customer
+102,Vendor->list of users->query user email->user,CTRL,4,Vendor email customer,Vendor email customer
+103,Vendor->list of users->query user email->user,DM,4,Vendor email customer,Vendor email customer
+104,Vendor->list of users->query user email->user,EI,4,Vendor email customer,Vendor email customer
+105,Admin->list of vendors->query vendor email->vendor,CTRL,4,Admin email vendor,Admin email vendor
+106,Admin->list of vendors->query vendor email->vendor,DM,4,Admin email vendor,Admin email vendor
+107,Admin->list of vendors->query vendor email->vendor,EI,4,Admin email vendor,Admin email vendor
+108,Admin->list of vendors->query vendor email->send email->Email protocol,CTRL,5,Admin email vendor,Admin email vendor
+109,Admin->list of vendors->query vendor email->send email->Email protocol,EXTIVK,5,Admin email vendor,Admin email vendor
+110,Admin->newsletter creating page->save newsletter information->send notification->notification,CTRL,5,Create and email newsletter,Create and email newsletter
+111,Admin->newsletter creating page->save newsletter information->send notification->notification,DM,5,Create and email newsletter,Create and email newsletter
+112,Admin->newsletter creating page->save newsletter information->send notification->notification,EI,5,Create and email newsletter,Create and email newsletter
+113,Admin->newsletter creating page->save newsletter information->newsletter,CTRL,4,Create and email newsletter,Create and email newsletter
+114,Admin->newsletter creating page->save newsletter information->newsletter,DM,4,Create and email newsletter,Create and email newsletter
+115,Admin->newsletter creating page->save newsletter information->newsletter,EI,4,Create and email newsletter,Create and email newsletter
+116,Admin->Newsletter tag->redirect to newsletter main page->newsletter main page,CTRL,4,Create and email newsletter,Create and email newsletter
+117,Admin->Newsletter tag->redirect to newsletter main page->newsletter main page,INT,4,Create and email newsletter,Create and email newsletter
+118,Admin->newsletter them page->redirect to newsletter creating page->newsletter creating page,CTRL,4,Create and email newsletter,Create and email newsletter
+119,Admin->newsletter them page->redirect to newsletter creating page->newsletter creating page,INT,4,Create and email newsletter,Create and email newsletter
+120,Admin->newsletter main page->redirect to select theme page->newsletter them page,CTRL,4,Create and email newsletter,Create and email newsletter
+121,Admin->newsletter main page->redirect to select theme page->newsletter them page,INT,4,Create and email newsletter,Create and email newsletter
+122,User->newsletter subscription page->add email address into newsletter sending list->send confirmation email->email protocol,CTRL,5,Signup for newsletter,Signup for newsletter
+123,User->newsletter subscription page->add email address into newsletter sending list->send confirmation email->email protocol,EXTIVK,5,Signup for newsletter,Signup for newsletter
+124,User->newsletter subscription page->add email address into newsletter sending list->newsletter sending list,CTRL,4,Signup for newsletter,Signup for newsletter
+125,User->newsletter subscription page->add email address into newsletter sending list->newsletter sending list,DM,4,Signup for newsletter,Signup for newsletter
+126,User->newsletter subscription page->add email address into newsletter sending list->newsletter sending list,EI,4,Signup for newsletter,Signup for newsletter
+127,Admin->unshipped orders button->query list of unshipped orders->orders,CTRL,4,Check order,Check order
+128,Admin->unshipped orders button->query list of unshipped orders->orders,DM,4,Check order,Check order
+129,Admin->unshipped orders button->query list of unshipped orders->orders,EI,4,Check order,Check order
+130,Admin->unshipped orders button->query list of unshipped orders->list of unshipped orders,CTRL,4,Check order,Check order
+131,Admin->unshipped orders button->query list of unshipped orders->list of unshipped orders,INT,4,Check order,Check order
+132,Admin->Vendor approve page->add vendor into list->send email with unique code->Email protocol,CTRL,5,Approve new vendors,Approve new vendors
+133,Admin->Vendor approve page->add vendor into list->send email with unique code->Email protocol,EXTIVK,5,Approve new vendors,Approve new vendors
+134,Admin->Vendor approve page->add vendor into list->vendor,CTRL,4,Approve new vendors,Approve new vendors
+135,Admin->Vendor approve page->add vendor into list->vendor,DM,4,Approve new vendors,Approve new vendors
+136,Admin->Vendor approve page->add vendor into list->vendor,EI,4,Approve new vendors,Approve new vendors
+137,Admin->Vendor approve page->add vendor into list->vendor already exists message,CTRL,4,Approve new vendors,Approve new vendors
+138,Admin->Vendor approve page->add vendor into list->vendor already exists message,INT,4,Approve new vendors,Approve new vendors
+139,Admin->Account information page->check input information->Invalid input information,CTRL,4,Manage account setting,Manage account setting
+140,Admin->Account information page->check input information->Invalid input information,INT,4,Manage account setting,Manage account setting
+141,Admin->Account information page->check input information->save setting changes->notify user->Notification,CTRL,6,Manage account setting,Manage account setting
+142,Admin->Account information page->check input information->save setting changes->notify user->Notification,DM,6,Manage account setting,Manage account setting
+143,Admin->Account information page->check input information->save setting changes->notify user->Notification,EI,6,Manage account setting,Manage account setting
+144,Admin->Account information page->check input information->save setting changes->setting,CTRL,5,Manage account setting,Manage account setting
+145,Admin->Account information page->check input information->save setting changes->setting,DM,5,Manage account setting,Manage account setting
+146,Admin->Account information page->check input information->save setting changes->setting,EI,5,Manage account setting,Manage account setting
+147,Admin->Edit setting button->redirect account information page->Account information page,CTRL,4,Manage account setting,Manage account setting
+148,Admin->Edit setting button->redirect account information page->Account information page,INT,4,Manage account setting,Manage account setting
+149,Admin->vendor side bar->redirect to vendor page->vendor page,CTRL,4,Display vendors,Display vendors
+150,Admin->vendor side bar->redirect to vendor page->vendor page,INT,4,Display vendors,Display vendors
+151,Admin->vendor side bar->redirect to vendor page->query vendors->vendor,CTRL,5,Display vendors,Display vendors
+152,Admin->vendor side bar->redirect to vendor page->query vendors->vendor,DM,5,Display vendors,Display vendors
+153,Admin->vendor side bar->redirect to vendor page->query vendors->vendor,EI,5,Display vendors,Display vendors
+154,Admin->All vendors tab->redirect vendors page->user list with edit and remove buttons,CTRL,4,Manage vendor,Manage vendor
+155,Admin->All vendors tab->redirect vendors page->user list with edit and remove buttons,INT,4,Manage vendor,Manage vendor
+156,Admin->All vendors tab->redirect vendors page->vendor,CTRL,4,Manage vendor,Manage vendor
+157,Admin->All vendors tab->redirect vendors page->vendor,DM,4,Manage vendor,Manage vendor
+158,Admin->All vendors tab->redirect vendors page->vendor,EI,4,Manage vendor,Manage vendor
+159,Admin->vendor detail page->update vendor info->notify amdin->User info updated message,CTRL,5,Manage vendor,Manage vendor
+160,Admin->vendor detail page->update vendor info->notify amdin->User info updated message,INT,5,Manage vendor,Manage vendor
+161,Admin->vendor detail page->update vendor info->vendor,CTRL,4,Manage vendor,Manage vendor
+162,Admin->vendor detail page->update vendor info->vendor,DM,4,Manage vendor,Manage vendor
+163,Admin->vendor detail page->update vendor info->vendor,EI,4,Manage vendor,Manage vendor
+164,Admin->user list with edit and remove buttons->redirect to vendor details page->query vendor detail->vendor,CTRL,5,Manage vendor,Manage vendor
+165,Admin->user list with edit and remove buttons->redirect to vendor details page->query vendor detail->vendor,DM,5,Manage vendor,Manage vendor
+166,Admin->user list with edit and remove buttons->redirect to vendor details page->query vendor detail->vendor,EI,5,Manage vendor,Manage vendor
+167,Admin->user list with edit and remove buttons->redirect to vendor details page->vendor detail page,CTRL,4,Manage vendor,Manage vendor
+168,Admin->user list with edit and remove buttons->redirect to vendor details page->vendor detail page,INT,4,Manage vendor,Manage vendor
+169,Admin->user list with edit and remove buttons->remove vendor->vendor,CTRL,4,Manage vendor,Manage vendor
+170,Admin->user list with edit and remove buttons->remove vendor->vendor,DM,4,Manage vendor,Manage vendor
+171,Admin->user list with edit and remove buttons->remove vendor->vendor,EI,4,Manage vendor,Manage vendor
+172,Admin->product detail->change product status->notify update of product->update of product message,CTRL,5,Approve pending product,Approve pending product
+173,Admin->product detail->change product status->notify update of product->update of product message,INT,5,Approve pending product,Approve pending product
+174,Admin->product detail->change product status->product,CTRL,4,Approve pending product,Approve pending product
+175,Admin->product detail->change product status->product,DM,4,Approve pending product,Approve pending product
+176,Admin->product detail->change product status->product,EI,4,Approve pending product,Approve pending product
+177,Admin->products tab->redirect to all product lists->product list,CTRL,4,Approve pending product,Approve pending product
+178,Admin->products tab->redirect to all product lists->product list,INT,4,Approve pending product,Approve pending product
+179,Admin->products tab->redirect to all product lists->product,CTRL,4,Approve pending product,Approve pending product
+180,Admin->products tab->redirect to all product lists->product,DM,4,Approve pending product,Approve pending product
+181,Admin->products tab->redirect to all product lists->product,EI,4,Approve pending product,Approve pending product
+182,Admin->product list->query product detail->product,CTRL,4,Approve pending product,Approve pending product
+183,Admin->product list->query product detail->product,DM,4,Approve pending product,Approve pending product
+184,Admin->product list->query product detail->product,EI,4,Approve pending product,Approve pending product
+185,Admin->product list->query product detail->product detail,CTRL,4,Approve pending product,Approve pending product
+186,Admin->product list->query product detail->product detail,INT,4,Approve pending product,Approve pending product

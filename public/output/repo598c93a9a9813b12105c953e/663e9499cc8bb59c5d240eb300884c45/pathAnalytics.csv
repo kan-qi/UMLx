@@ -1,0 +1,81 @@
+id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
+1,User->thread information input page->Check the input thread information->Invalid input thread information,EQ,CTRL|INT,4,2,1,0,1,3,start a thread,start a thread
+2,User->thread information input page->Check the input thread information->Check SQL injections->Potential security error,EQ,CTRL|INT,5,2,2,0,1,3,start a thread,start a thread
+3,User->thread information input page->Check the input thread information->Check SQL injections->save thread->thread,EI,CTRL|DM|EI,6,1,3,1,1,1,start a thread,start a thread
+4,User->thread information input page->Check the input thread information->Check SQL injections->save thread->Thread is posted successfully,EQ,CTRL|INT,6,2,3,0,1,3,start a thread,start a thread
+5,User->start a thread button->load thread information input page->thread information input page,EQ,CTRL|INT,4,2,1,0,1,3,start a thread,start a thread
+6,User->search forum button->load search form page->search form page,EQ,CTRL|INT,4,2,1,0,1,3,Search the forum,Search the forum
+7,User->search form page->validate search input->search forum by input information->No result matched message,EQ,CTRL|INT,5,2,2,0,1,3,Search the forum,Search the forum
+8,User->search form page->validate search input->search forum by input information->forum,EI,CTRL|DM|EI,5,1,2,1,1,1,Search the forum,Search the forum
+9,User->search form page->validate search input->Invalid search input,EQ,CTRL|INT,4,2,1,0,1,3,Search the forum,Search the forum
+10,User->like post button->save the like status->Like information,EI,CTRL|DM|EI,4,1,1,1,1,1,Like a thread or a post,Like a thread or a post
+11,User->like post button->save the like status->update like number of thread->thread,EI,CTRL|DM|EI,5,1,2,1,1,1,Like a thread or a post,Like a thread or a post
+12,User->like post button->save the like status->update like number of thread->calculate points of the owner->post is liked message,EQ,CTRL|INT,6,2,3,0,1,3,Like a thread or a post,Like a thread or a post
+13,User->like post button->save the like status->update like number of thread->calculate points of the owner->thread is liked message,EQ,CTRL|INT,6,2,3,0,1,3,Like a thread or a post,Like a thread or a post
+14,User->like post button->save the like status->update like number of thread->calculate points of the owner->point,EI,CTRL|DM|EI,6,1,3,1,1,1,Like a thread or a post,Like a thread or a post
+15,User->like post button->save the like status->update like number of thread->grayed out thread like button,EQ,CTRL|INT,5,2,2,0,1,3,Like a thread or a post,Like a thread or a post
+16,User->like post button->save the like status->update like number of the post->grayed out post like button,EQ,CTRL|INT,5,2,2,0,1,3,Like a thread or a post,Like a thread or a post
+17,User->like post button->save the like status->update like number of the post->calculate points of the owner->post is liked message,EQ,CTRL|INT,6,2,3,0,1,3,Like a thread or a post,Like a thread or a post
+18,User->like post button->save the like status->update like number of the post->calculate points of the owner->thread is liked message,EQ,CTRL|INT,6,2,3,0,1,3,Like a thread or a post,Like a thread or a post
+19,User->like post button->save the like status->update like number of the post->calculate points of the owner->point,EI,CTRL|DM|EI,6,1,3,1,1,1,Like a thread or a post,Like a thread or a post
+20,User->like post button->save the like status->update like number of the post->post,EI,CTRL|DM|EI,5,1,2,1,1,1,Like a thread or a post,Like a thread or a post
+21,User->like thread button->save the like status->Like information,EI,CTRL|DM|EI,4,1,1,1,1,1,Like a thread or a post,Like a thread or a post
+22,User->like thread button->save the like status->update like number of thread->thread,EI,CTRL|DM|EI,5,1,2,1,1,1,Like a thread or a post,Like a thread or a post
+23,User->like thread button->save the like status->update like number of thread->calculate points of the owner->post is liked message,EQ,CTRL|INT,6,2,3,0,1,3,Like a thread or a post,Like a thread or a post
+24,User->like thread button->save the like status->update like number of thread->calculate points of the owner->thread is liked message,EQ,CTRL|INT,6,2,3,0,1,3,Like a thread or a post,Like a thread or a post
+25,User->like thread button->save the like status->update like number of thread->calculate points of the owner->point,EI,CTRL|DM|EI,6,1,3,1,1,1,Like a thread or a post,Like a thread or a post
+26,User->like thread button->save the like status->update like number of thread->grayed out thread like button,EQ,CTRL|INT,5,2,2,0,1,3,Like a thread or a post,Like a thread or a post
+27,User->like thread button->save the like status->update like number of the post->grayed out post like button,EQ,CTRL|INT,5,2,2,0,1,3,Like a thread or a post,Like a thread or a post
+28,User->like thread button->save the like status->update like number of the post->calculate points of the owner->post is liked message,EQ,CTRL|INT,6,2,3,0,1,3,Like a thread or a post,Like a thread or a post
+29,User->like thread button->save the like status->update like number of the post->calculate points of the owner->thread is liked message,EQ,CTRL|INT,6,2,3,0,1,3,Like a thread or a post,Like a thread or a post
+30,User->like thread button->save the like status->update like number of the post->calculate points of the owner->point,EI,CTRL|DM|EI,6,1,3,1,1,1,Like a thread or a post,Like a thread or a post
+31,User->like thread button->save the like status->update like number of the post->post,EI,CTRL|DM|EI,5,1,2,1,1,1,Like a thread or a post,Like a thread or a post
+32,User->unlike post button->save the unlike status->Like information,EI,CTRL|DM|EI,4,1,1,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+33,User->unlike post button->save the unlike status->update like number of the post->post,EI,CTRL|DM|EI,5,1,2,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+34,User->unlike post button->save the unlike status->update like number of the post->calculate points of the owner->thread is unliked message,EQ,CTRL|INT,6,2,3,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+35,User->unlike post button->save the unlike status->update like number of the post->calculate points of the owner->post is unliked message,EQ,CTRL|INT,6,2,3,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+36,User->unlike post button->save the unlike status->update like number of the post->calculate points of the owner->point,EI,CTRL|DM|EI,6,1,3,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+37,User->unlike post button->save the unlike status->update like number of the post->grayed out post unlike button,EQ,CTRL|INT,5,2,2,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+38,User->unlike post button->save the unlike status->update like number of thread->calculate points of the owner->thread is unliked message,EQ,CTRL|INT,6,2,3,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+39,User->unlike post button->save the unlike status->update like number of thread->calculate points of the owner->post is unliked message,EQ,CTRL|INT,6,2,3,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+40,User->unlike post button->save the unlike status->update like number of thread->calculate points of the owner->point,EI,CTRL|DM|EI,6,1,3,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+41,User->unlike post button->save the unlike status->update like number of thread->thread,EI,CTRL|DM|EI,5,1,2,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+42,User->unlike post button->save the unlike status->update like number of thread->grayed out thread unlike button,EQ,CTRL|INT,5,2,2,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+43,User->unlike thread button->save the unlike status->Like information,EI,CTRL|DM|EI,4,1,1,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+44,User->unlike thread button->save the unlike status->update like number of the post->post,EI,CTRL|DM|EI,5,1,2,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+45,User->unlike thread button->save the unlike status->update like number of the post->calculate points of the owner->thread is unliked message,EQ,CTRL|INT,6,2,3,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+46,User->unlike thread button->save the unlike status->update like number of the post->calculate points of the owner->post is unliked message,EQ,CTRL|INT,6,2,3,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+47,User->unlike thread button->save the unlike status->update like number of the post->calculate points of the owner->point,EI,CTRL|DM|EI,6,1,3,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+48,User->unlike thread button->save the unlike status->update like number of the post->grayed out post unlike button,EQ,CTRL|INT,5,2,2,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+49,User->unlike thread button->save the unlike status->update like number of thread->calculate points of the owner->thread is unliked message,EQ,CTRL|INT,6,2,3,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+50,User->unlike thread button->save the unlike status->update like number of thread->calculate points of the owner->post is unliked message,EQ,CTRL|INT,6,2,3,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+51,User->unlike thread button->save the unlike status->update like number of thread->calculate points of the owner->point,EI,CTRL|DM|EI,6,1,3,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+52,User->unlike thread button->save the unlike status->update like number of thread->thread,EI,CTRL|DM|EI,5,1,2,1,1,1,Unlike a thread or a post,Unlike a thread or a post
+53,User->unlike thread button->save the unlike status->update like number of thread->grayed out thread unlike button,EQ,CTRL|INT,5,2,2,0,1,3,Unlike a thread or a post,Unlike a thread or a post
+54,User->forum page->load threads from db->sort by likes->like,EI,CTRL|DM|EI,5,1,2,1,1,1,View the forum,View the forum
+55,User->forum page->load threads from db->sort by likes->List of threads,EQ,CTRL|INT,5,2,2,0,1,3,View the forum,View the forum
+56,User->forum page->load threads from db->No threads available,EQ,CTRL|INT,4,2,1,0,1,3,View the forum,View the forum
+57,User->forum page->load threads from db->thread,EI,CTRL|DM|EI,4,1,1,1,1,1,View the forum,View the forum
+58,User->Post comment page->validate the posted comment->save comment->comment,EI,CTRL|DM|EI,5,1,2,1,1,1,Post to a specific thread on forum,Post to a specific thread on forum
+59,User->Post comment page->validate the posted comment->save comment->comment is posted successfully message,EQ,CTRL|INT,5,2,2,0,1,3,Post to a specific thread on forum,Post to a specific thread on forum
+60,User->Post comment page->validate the posted comment->save comment->error in the posted comment,EQ,CTRL|INT,5,2,2,0,1,3,Post to a specific thread on forum,Post to a specific thread on forum
+61,User->Forum page->query thread detail->thread,EI,CTRL|DM|EI,4,1,1,1,1,1,Post to a specific thread on forum,Post to a specific thread on forum
+62,User->Forum page->query thread detail->load comment input field->Post comment page,EQ,CTRL|INT,5,2,2,0,1,3,Post to a specific thread on forum,Post to a specific thread on forum
+63,User->Online store page->check if the user has enough points->decrease the points->user,EI,CTRL|DM|EI,5,1,2,1,1,1,Redeem gift items,Redeem gift items
+64,User->Online store page->check if the user has enough points->decrease the points->decrease the itme num in store->store,EI,CTRL|DM|EI,6,1,3,1,1,1,Redeem gift items,Redeem gift items
+65,User->Online store page->check if the user has enough points->decrease the points->decrease the itme num in store->redeem success message,EQ,CTRL|INT,6,2,3,0,1,3,Redeem gift items,Redeem gift items
+66,User->Online store page->check if the user has enough points->user,EI,CTRL|DM|EI,4,1,1,1,1,1,Redeem gift items,Redeem gift items
+67,User->Online store page->check if the user has enough points->Point is not enough message,EQ,CTRL|INT,4,2,1,0,1,3,Redeem gift items,Redeem gift items
+68,User->Redeem gift option->direct to online store page->load store details->store,EI,CTRL|DM|EI,5,1,2,1,1,1,Redeem gift items,Redeem gift items
+69,User->Redeem gift option->direct to online store page->load store details->Online store page,EQ,CTRL|INT,5,2,2,0,1,3,Redeem gift items,Redeem gift items
+70,User->url of leaderboard->redirect to the home page->load participants->No leaders error message,EQ,CTRL|INT,5,2,2,0,1,3,View the leaderboard,View the leaderboard
+71,User->url of leaderboard->redirect to the home page->load participants->Participant ranking and points page,EQ,CTRL|INT,5,2,2,0,1,3,View the leaderboard,View the leaderboard
+72,User->url of leaderboard->redirect to the home page->load participants->loading participants error,EQ,CTRL|INT,5,2,2,0,1,3,View the leaderboard,View the leaderboard
+73,User->url of leaderboard->redirect to the home page->load participants->partiticipants,EI,CTRL|DM|EI,5,1,2,1,1,1,View the leaderboard,View the leaderboard
+74,User->profile detail page->load user profile->profile,EI,CTRL|DM|EI,4,1,1,1,1,1,Update his/her profile,Update his/her profile
+75,User->profile detail page->redirect to edit page->profile edit page,EQ,CTRL|INT,4,2,1,0,1,3,Update his/her profile,Update his/her profile
+76,User->profile is updated feedback->redirect to profile page->profile detail page,EQ,CTRL|INT,4,2,1,0,1,3,Update his/her profile,Update his/her profile
+77,User->view profile button->load user profile->profile,EI,CTRL|DM|EI,4,1,1,1,1,1,Update his/her profile,Update his/her profile
+78,User->profile edit page->save edited profile->error when saving profile,EQ,CTRL|INT,4,2,1,0,1,3,Update his/her profile,Update his/her profile
+79,User->profile edit page->save edited profile->profile is updated feedback,EQ,CTRL|INT,4,2,1,0,1,3,Update his/her profile,Update his/her profile
+80,User->profile edit page->save edited profile->profile,EI,CTRL|DM|EI,4,1,1,1,1,1,Update his/her profile,Update his/her profile

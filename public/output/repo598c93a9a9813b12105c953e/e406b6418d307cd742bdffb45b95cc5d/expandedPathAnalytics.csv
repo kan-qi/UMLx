@@ -1,0 +1,86 @@
+id,path,transactional,path_length,diagram,useCase
+1,User->Account create page->validate input information->save user account->account,CTRL,5,Create a new account,Create a new account
+2,User->Account create page->validate input information->save user account->account,DM,5,Create a new account,Create a new account
+3,User->Account create page->validate input information->save user account->account,EI,5,Create a new account,Create a new account
+4,User->Account create page->validate input information->save user account->user profile page,CTRL,5,Create a new account,Create a new account
+5,User->Account create page->validate input information->save user account->user profile page,INT,5,Create a new account,Create a new account
+6,User->Account create page->validate input information->invalid input information,CTRL,4,Create a new account,Create a new account
+7,User->Account create page->validate input information->invalid input information,INT,4,Create a new account,Create a new account
+8,User->Login page->validate user information->incorrect user information,CTRL,4,Login,Login
+9,User->Login page->validate user information->incorrect user information,INT,4,Login,Login
+10,User->Login page->validate user information->account,CTRL,4,Login,Login
+11,User->Login page->validate user information->account,DM,4,Login,Login
+12,User->Login page->validate user information->account,EI,4,Login,Login
+13,User->Login page->validate user information->user profile and search page,CTRL,4,Login,Login
+14,User->Login page->validate user information->user profile and search page,INT,4,Login,Login
+15,User->Edit profile button->display edit profile page->Profile Edit Page,CTRL,4,Loginout,Loginout
+16,User->Edit profile button->display edit profile page->Profile Edit Page,INT,4,Loginout,Loginout
+17,User->Edit profile button->display edit profile page->Profile,CTRL,4,Loginout,Loginout
+18,User->Edit profile button->display edit profile page->Profile,DM,4,Loginout,Loginout
+19,User->Edit profile button->display edit profile page->Profile,EI,4,Loginout,Loginout
+20,User->credential input page->query linkedin->LinkedIn,CTRL,4,Sign in social media accounts,Sign in social media accounts
+21,User->credential input page->query linkedin->LinkedIn,EXTIVK,4,Sign in social media accounts,Sign in social media accounts
+22,User->credential input page->query facebook info->Facebook,CTRL,4,Sign in social media accounts,Sign in social media accounts
+23,User->credential input page->query facebook info->Facebook,EXTIVK,4,Sign in social media accounts,Sign in social media accounts
+24,User->credential input page->query google plus info->Google plus,CTRL,4,Sign in social media accounts,Sign in social media accounts
+25,User->credential input page->query google plus info->Google plus,EXTIVK,4,Sign in social media accounts,Sign in social media accounts
+26,User->social media login buttons->display crendential input page->credential input page,CTRL,4,Sign in social media accounts,Sign in social media accounts
+27,User->social media login buttons->display crendential input page->credential input page,INT,4,Sign in social media accounts,Sign in social media accounts
+28,Facebook->query facebook info->sign in error message,CTRL,3,Sign in social media accounts,Sign in social media accounts
+29,Facebook->query facebook info->sign in error message,EXTCLL,3,Sign in social media accounts,Sign in social media accounts
+30,Facebook->query facebook info->sign in error message,INT,3,Sign in social media accounts,Sign in social media accounts
+31,Google plus->query google plus info->sign in error message,CTRL,3,Sign in social media accounts,Sign in social media accounts
+32,Google plus->query google plus info->sign in error message,EXTCLL,3,Sign in social media accounts,Sign in social media accounts
+33,Google plus->query google plus info->sign in error message,INT,3,Sign in social media accounts,Sign in social media accounts
+34,LinkedIn->query linkedin->sign in error message,CTRL,3,Sign in social media accounts,Sign in social media accounts
+35,LinkedIn->query linkedin->sign in error message,EXTCLL,3,Sign in social media accounts,Sign in social media accounts
+36,LinkedIn->query linkedin->sign in error message,INT,3,Sign in social media accounts,Sign in social media accounts
+37,User->Edit profile button->display edit profile page->Profile Edit Page,CTRL,4,Update user profile,Update user profile
+38,User->Edit profile button->display edit profile page->Profile Edit Page,INT,4,Update user profile,Update user profile
+39,User->Edit profile button->display edit profile page->Profile,CTRL,4,Update user profile,Update user profile
+40,User->Edit profile button->display edit profile page->Profile,DM,4,Update user profile,Update user profile
+41,User->Edit profile button->display edit profile page->Profile,EI,4,Update user profile,Update user profile
+42,User->Profile Edit Page->validate input data->save updated profile->Profile,CTRL,5,Update user profile,Update user profile
+43,User->Profile Edit Page->validate input data->save updated profile->Profile,DM,5,Update user profile,Update user profile
+44,User->Profile Edit Page->validate input data->save updated profile->Profile,EI,5,Update user profile,Update user profile
+45,User->Profile Edit Page->validate input data->Invalid input data,CTRL,4,Update user profile,Update user profile
+46,User->Profile Edit Page->validate input data->Invalid input data,INT,4,Update user profile,Update user profile
+47,User->Job list page->validate input data->Invalid input data,CTRL,4,Search for jobs,Search for jobs
+48,User->Job list page->validate input data->Invalid input data,INT,4,Search for jobs,Search for jobs
+49,User->Job search page->verify input information->invalid input information,CTRL,4,Search for jobs,Search for jobs
+50,User->Job search page->verify input information->invalid input information,INT,4,Search for jobs,Search for jobs
+51,User->Job search page->verify input information->Search by input keywords from Indeed.com->Indeed.com,CTRL,5,Search for jobs,Search for jobs
+52,User->Job search page->verify input information->Search by input keywords from Indeed.com->Indeed.com,EXTIVK,5,Search for jobs,Search for jobs
+53,Indeed.com->Sort search results->Job list page,CTRL,3,Search for jobs,Search for jobs
+54,Indeed.com->Sort search results->Job list page,EXTCLL,3,Search for jobs,Search for jobs
+55,Indeed.com->Sort search results->Job list page,INT,3,Search for jobs,Search for jobs
+56,User->Save search button->save filters and criteria->search saved unsuccessfully error message,CTRL,4,Save search results,Save search results
+57,User->Save search button->save filters and criteria->search saved unsuccessfully error message,INT,4,Save search results,Save search results
+58,User->Save search button->save filters and criteria->search result,CTRL,4,Save search results,Save search results
+59,User->Save search button->save filters and criteria->search result,DM,4,Save search results,Save search results
+60,User->Save search button->save filters and criteria->search result,EI,4,Save search results,Save search results
+61,User->Save search button->save filters and criteria->search saved successfully message,CTRL,4,Save search results,Save search results
+62,User->Save search button->save filters and criteria->search saved successfully message,INT,4,Save search results,Save search results
+63,User->Save Favorite Job Button->Save favorite jobs->saved successfully message,CTRL,4,Mark favorite jobs,Mark favorite jobs
+64,User->Save Favorite Job Button->Save favorite jobs->saved successfully message,INT,4,Mark favorite jobs,Mark favorite jobs
+65,User->Save Favorite Job Button->Save favorite jobs->Favorite Jobs,CTRL,4,Mark favorite jobs,Mark favorite jobs
+66,User->Save Favorite Job Button->Save favorite jobs->Favorite Jobs,DM,4,Mark favorite jobs,Mark favorite jobs
+67,User->Save Favorite Job Button->Save favorite jobs->Favorite Jobs,EI,4,Mark favorite jobs,Mark favorite jobs
+68,User->Save Favorite Job Button->Save favorite jobs->saved unsuccessfully message,CTRL,4,Mark favorite jobs,Mark favorite jobs
+69,User->Save Favorite Job Button->Save favorite jobs->saved unsuccessfully message,INT,4,Mark favorite jobs,Mark favorite jobs
+70,User->Request Referral Button->display friends by organization->Friends,CTRL,4,Send a referral request email,Send a referral request email
+71,User->Request Referral Button->display friends by organization->Friends,DM,4,Send a referral request email,Send a referral request email
+72,User->Request Referral Button->display friends by organization->Friends,EI,4,Send a referral request email,Send a referral request email
+73,User->Request Referral Button->display friends by organization->Friend selection page,CTRL,4,Send a referral request email,Send a referral request email
+74,User->Request Referral Button->display friends by organization->Friend selection page,INT,4,Send a referral request email,Send a referral request email
+75,User->Request Referral Button->display friends by organization->No fried found message,CTRL,4,Send a referral request email,Send a referral request email
+76,User->Request Referral Button->display friends by organization->No fried found message,INT,4,Send a referral request email,Send a referral request email
+77,User->Friend selection page->display message edit page->message edit page,CTRL,4,Send a referral request email,Send a referral request email
+78,User->Friend selection page->display message edit page->message edit page,INT,4,Send a referral request email,Send a referral request email
+79,User->message edit page->send email message->Email Protocol,CTRL,4,Send a referral request email,Send a referral request email
+80,User->message edit page->send email message->Email Protocol,EXTIVK,4,Send a referral request email,Send a referral request email
+81,User->subscribe for notification button->save preferences for subscription->account,CTRL,4,Email subscription,Email subscription
+82,User->subscribe for notification button->save preferences for subscription->account,DM,4,Email subscription,Email subscription
+83,User->subscribe for notification button->save preferences for subscription->account,EI,4,Email subscription,Email subscription
+84,User->subscribe for notification button->save preferences for subscription->invalid email address message,CTRL,4,Email subscription,Email subscription
+85,User->subscribe for notification button->save preferences for subscription->invalid email address message,INT,4,Email subscription,Email subscription

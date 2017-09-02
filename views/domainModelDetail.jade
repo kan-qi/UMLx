@@ -1,0 +1,104 @@
+if domainModelInfo
+ div.domain-model-detail-content
+  ul.nav.nav-tabs
+   li.active
+    a(data-toggle='tab', href='#domain-model-info-pane') Domain Model Info
+   li
+    a(data-toggle='tab', href='#domain-model-analytics') Analytics
+   li
+    a(data-toggle='tab', href='#domain-model-distributions') Distributions
+   li
+    a(data-toggle='tab', href='#domain-model-evaluation') Evaluation
+ div.tab-content
+  div.tab-pane.fade.in.active(id="domain-model-info-pane")
+   div.domain-model-info
+    img.domain-model(src=domainModelInfo.accessDir+"/"+domainModelInfo.svgGraphFile)
+   div.domain-model-info-content
+    ul.nav.nav-tabs
+     li.active
+      a(data-toggle='tab', href='#domain-model-attributes') Attributes
+     li
+      a(data-toggle='tab', href='#domain-model-operations') Operations
+    div.tab-content
+     div.tab-pane.fade.in.active(id="domain-model-attributes")
+      table.table.table-striped.domain-model-info-tab
+       thead
+        tr
+         th ID
+         th Attribute
+         th TYPE
+       tbody
+        each diagram in domainModelInfo.DomainModelAnalytics.Diagrams
+         each element in diagram.DiagramAnalytics.Elements
+          if element.Attributes
+           each attribute,key in element.Attributes
+            tr
+             th #{key}
+             th
+              span.domain-model-attribute #{attribute.Name}
+             th
+              span.domain-model-attribute-type #{attribute.Type}
+     div.tab-pane.fade(id="domain-model-operations")
+      table.table.table-striped.domain-model-info-tab
+       thead
+        tr
+         th ID
+         th OPERATION
+         th TYPE
+       tbody
+        each diagram in domainModelInfo.DomainModelAnalytics.Diagrams
+         each element in diagram.DiagramAnalytics.Elements
+          if element.Operations
+           each operation,key in element.Operations
+            tr
+             th #{key}
+             th
+               span.domain-model-operation #{operation.Name}
+             th operation
+  div.tab-pane.fade(id="domain-model-analytics")
+     div.domain-model-analytics
+        h3 Calculated:
+        ul
+         li
+          span.statistical-item Number of Attributes: #{domainModelInfo.DomainModelAnalytics.AttributeNum}
+         li
+          span.statistical-item Number of Operations: #{domainModelInfo.DomainModelAnalytics.OperationNum}
+         li
+          span.statistical-item Number of Elements: #{domainModelInfo.DomainModelAnalytics.ElementNum}
+         li
+          span.statistical-item ILF: #{domainModelInfo.DomainModelAnalytics.ILF}
+         li
+          span.statistical-item EIF: #{domainModelInfo.DomainModelAnalytics.EIF}
+  div.tab-pane.fade(id="domain-model-distributions")
+    div.domain-model-distributions
+        div.stats-chart
+         img(src="#{domainModelInfo.DomainModelAnalytics.AccessDir}/attribute_num_analysis_result.svg")
+        div.stats-chart
+         img(src="#{domainModelInfo.DomainModelAnalytics.AccessDir}/operation_num_analysis_result.svg")
+  div.tab-pane.fade(id="domain-model-evaluation")
+     div.domain-model-evaluation
+        h3 Evaluation:
+        form(id="domain-model-evaluation-form", onsubmit="return false;")
+         div
+          div Cyclomatic coplexity of structured scenarios (#{domainModelInfo.DomainModelAnalytics.CCSS}):
+           input(type='text', name='ccss', id='ccss')
+          div Number of transactions (#{domainModelInfo.DomainModelAnalytics.IT}):
+           input(type='text', name='it', id='it')
+          div Internal logical files (#{domainModelInfo.DomainModelAnalytics.ILF}):
+           input(type='text', name='ilf', id='ilf')
+          div External logical files (#{domainModelInfo.DomainModelAnalytics.ELF}):
+           input(type='text', name='elf', id='elf')
+          div External input (#{domainModelInfo.DomainModelAnalytics.EI}):
+           input(type='text', name='ei', id='ei')
+          div External output (#{domainModelInfo.DomainModelAnalytics.EO}):
+           input(type='text', name='eo', id='eo')
+          div External query (#{domainModelInfo.DomainModelAnalytics.EQ}):
+           input(type='text', name='eq', id='eq')
+          div Effort (person-hours) (#{domainModelInfo.DomainModelAnalytics.PH}):
+           input(type='text', name='ph', id='ph')
+           input(type='hidden', name='model-id', value='#{modelId}')
+          div
+           button(id='domain-model-evaluation-form-submit-button') Submit
+        div
+          a(id='delete-domain-model-btn' href='deleteDomainModel?model_id=#{modelId}') Delete Model
+  div.clear

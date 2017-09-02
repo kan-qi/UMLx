@@ -1,0 +1,7 @@
+id,path,functional,transactional,path_length,diagram,useCase
+1,User->New message button->display new message page->retrive connections of a user->Connection,EI,CTRL|DM|EI,undefined,Send Message,Send Message
+2,User->New message button->display new message page->retrive connections of a user->Message edit page,EQ,CTRL|INT,undefined,Send Message,Send Message
+3,User->Message edit page->check input message->send message->message,EI,CTRL|DM|EI,undefined,Send Message,Send Message
+4,User->Message edit page->check input message->send message->redirect to message page->Message page,EQ,CTRL|INT,undefined,Send Message,Send Message
+5,User->Message edit page->check input message->invalid input warning message,EQ,CTRL|INT,undefined,Send Message,Send Message
+6,User->Message edit page->close new message page->Message page,EQ,CTRL|INT,undefined,Send Message,Send Message

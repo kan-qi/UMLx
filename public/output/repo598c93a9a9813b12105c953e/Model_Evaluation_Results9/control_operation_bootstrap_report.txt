@@ -1,0 +1,44 @@
+
+ORDINARY NONPARAMETRIC BOOTSTRAP
+
+
+Call:
+boot(data = ctrlData, statistic = rsq, R = 1000, formula = "")
+
+
+Bootstrap Statistics :
+     original        bias    std. error
+t1* 0.8571429 -0.0035000000  0.09477038
+t2* 0.9285714  0.0007857143  0.06983343
+t3* 1.0000000  0.0000000000  0.00000000
+[1] "All values of t* are equal to  1"
+[1] "Bootstrap Results:"
+[1] "Evaluation for pred(.15)"
+BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+Based on 1000 bootstrap replicates
+
+CALL : 
+boot.ci(boot.out = results, type = "bca", index = 1)
+
+Intervals : 
+Level       BCa          
+95%   ( 0.5000,  0.9286 )  
+Calculations and Intervals on Original Scale
+Warning : BCa Intervals used Extreme Quantiles
+Some BCa intervals may be unstable
+[1] "Evaluation for pred(.25)"
+BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+Based on 1000 bootstrap replicates
+
+CALL : 
+boot.ci(boot.out = results, type = "bca", index = 2)
+
+Intervals : 
+Level       BCa          
+95%   ( 0.6429,  1.0000 )  
+Calculations and Intervals on Original Scale
+Warning : BCa Intervals used Extreme Quantiles
+Some BCa intervals may be unstable
+[1] "Evaluation for pred(.50)"
+[1] "All values of t are equal to  1 \n Cannot calculate confidence intervals"
+NULL

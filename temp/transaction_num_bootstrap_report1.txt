@@ -1,0 +1,25 @@
+
+ORDINARY NONPARAMETRIC BOOTSTRAP
+
+
+Call:
+boot(data = tnData, statistic = rsq, R = 1000, formula = mpg ~ 
+    wt + disp)
+
+
+Bootstrap Statistics :
+     original        bias    std. error
+t1* 0.0000000  0.0000000000  0.00000000
+t2* 0.1578947 -0.0005789474  0.08280663
+t3* 0.5263158  0.0016842105  0.11480121
+BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+Based on 1000 bootstrap replicates
+
+CALL : 
+boot.ci(boot.out = results, type = "bca", index = 3)
+
+Intervals : 
+Level       BCa          
+95%   ( 0.2632,  0.6842 )  
+Calculations and Intervals on Original Scale
+Some BCa intervals may be unstable

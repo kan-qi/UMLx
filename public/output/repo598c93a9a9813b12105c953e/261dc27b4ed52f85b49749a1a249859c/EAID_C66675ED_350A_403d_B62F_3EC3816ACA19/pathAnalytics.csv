@@ -1,0 +1,7 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Valet->Invalid input address->redirect to addresss input page->address input dialog,EQ,CTRL|INT,4,undefined,1,0,1,Add location,Add location
+2,Valet->Add location button->displays a prompt for inputing address->address input dialog,EQ,CTRL|INT,4,undefined,1,0,1,Add location,Add location
+3,Valet->address input dialog->validate the address form->search for best match->Google Places API,FUNC_NA,CTRL|EXTIVK,5,undefined,2,0,2,Add location,Add location
+4,Valet->address input dialog->validate the address form->search for best match->matched results for locations,EQ,CTRL|INT,5,undefined,2,0,1,Add location,Add location
+5,Valet->address input dialog->validate the address form->search for best match->Error message when connecting,EQ,CTRL|INT,5,undefined,2,0,1,Add location,Add location
+6,Valet->address input dialog->validate the address form->Invalid input address,EQ,CTRL|INT,4,undefined,1,0,1,Add location,Add location

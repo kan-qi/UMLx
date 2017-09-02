@@ -1,0 +1,13 @@
+id,element,type,outboundDegree,inboundDegree,diagram,useCase
+1,conference cancel notification,boundary,0,2,Request Manager Conference,Request Manager Conference,
+2,notify cancel request,control,1,1,Request Manager Conference,Request Manager Conference,
+3,notify acceptance from manager,control,1,1,Request Manager Conference,Request Manager Conference,
+4,connect to ongoing call,control,1,1,Request Manager Conference,Request Manager Conference,
+5,popup with request detail of the agent,boundary,0,2,Request Manager Conference,Request Manager Conference,
+6,Manager,actor,2,0,Request Manager Conference,Request Manager Conference,
+7,Notify Manager,control,1,1,Request Manager Conference,Request Manager Conference,
+8,Twilio API,actor,3,2,Request Manager Conference,Request Manager Conference,
+9,Popup of manager's acceptance,boundary,1,2,Request Manager Conference,Request Manager Conference,
+10,send conference request,control,1,1,Request Manager Conference,Request Manager Conference,
+11,request manager conference button,boundary,1,1,Request Manager Conference,Request Manager Conference,
+12,Customer,actor,3,0,Request Manager Conference,Request Manager Conference,

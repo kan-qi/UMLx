@@ -1,0 +1,6 @@
+id,path,functional,transactional,path_length,diagram,useCase
+1,Customer->request manager conference button->send conference request->Twilio API,FUNC_NA,CTRL|EXTIVK,undefined,Request Manager Conference,Request Manager Conference
+2,Twilio API->notify acceptance from manager->Popup of manager's acceptance,FUNC_NA,CTRL|EXTCLL|INT,undefined,Request Manager Conference,Request Manager Conference
+3,Twilio API->notify cancel request->conference cancel notification,FUNC_NA,CTRL|EXTCLL|INT,undefined,Request Manager Conference,Request Manager Conference
+4,Twilio API->Notify Manager->popup with request detail of the agent,FUNC_NA,CTRL|EXTCLL|INT,undefined,Request Manager Conference,Request Manager Conference
+5,Manager->connect to ongoing call->Twilio API,FUNC_NA,CTRL|EXTIVK,undefined,Request Manager Conference,Request Manager Conference
