@@ -17,7 +17,7 @@
 	
 	var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
 	var umlFileManager = require("./UMLFileManager.js");
-	var umlModelAnalyzer = require("./umlModelAnalyzer.js");
+	var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
