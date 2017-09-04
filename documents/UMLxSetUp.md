@@ -50,24 +50,14 @@ Windows or Mac OS or Linux
 1.	Install [mongoDB](https://docs.mongodb.com/manual/installation/)
 2.	Start the mongodb and restore the backup data base, using: `mongorestore ./db_backup`
 3.	Install [nodejs](https://nodejs.org/en/download/)
-4.	Install nodejs packages using commands in terminal:
-
-```
-npm install express
-npm install multer
-npm install adm-zip
-npm install path
-npm install jade
-npm install mongodb
-npm install eval
-```
+4.	Install nodejs packages using commands in terminal:`npm install`
 
 5. Start mongodb:
     * Navigate to the database folder of MongoDB. The default folder for MongoDB installation is : `~/Documents/db`.
     * Using command to start mongoDB : `mongod –dbpath`
 6. Start web service:
     * Navigate to your project root folder.
-    * Using command to start UMLxServices: `node ./UMLxServices.js`
+    * Using command to start UMLxServices: `npm start`
 7.	Access: http://127.0.0.1:8081/ to load the home page.
 
 > Notes: sometimes you may mess up the database for some reason. You can delete the mongodb and restore the backup database. This tutorial is just the skeleton of the process of setting up the project. There might be some variations for different operation systems and environments, or some of the instructions may not be very accurate. In those cases, you may need to do some researches for those steps.
