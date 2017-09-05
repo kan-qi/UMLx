@@ -84,7 +84,7 @@
 			});
 	}
 	
-	function loadUseCaseEmpiricsForRepo(repoId, callbackfunc){
+	function loadUseCaseEmpiricsForRepo(repoInfo, callbackfunc){
 			var csvDataFilePath = repoInfo.outputDir+"/useCaseDataLoad.csv";
 			umlFileManager.loadCSVFile(csvDataFilePath, true, function(data){
 			var useCaseData = {};

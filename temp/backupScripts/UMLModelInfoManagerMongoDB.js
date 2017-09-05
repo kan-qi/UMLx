@@ -2,7 +2,7 @@
 	// Retrieve
 	var mongo = require('mongodb');
 	var MongoClient = mongo.MongoClient;
-	var umlModelAnalyzer = require("./umlModelAnalyzer.js");
+	var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
 	var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 	
 	function getModelQuery(repoId, modelId){
