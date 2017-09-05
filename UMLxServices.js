@@ -132,7 +132,8 @@ app.get('/requestDomainModelDetail', function (req, res){
 app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
 	console.log("/loadEmpiricalUsecaseDataForRepo");
 	var repoId = userInfo.repoId;
-	umlEvaluator.loadUseCaseEmpiricsForRepo(repoId, function(repo){
+	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+	umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
 		if(!repo){
 			res.end('load error!');
 			return;
@@ -149,12 +150,14 @@ app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
 		});
 		
 	});
+	});
 })
 
 app.get('/loadEmpiricalModelDataForRepo', function (req, res){
 	console.log("/loadEmpiricalModelDataForRepo");
 	var repoId = userInfo.repoId;
-	umlEvaluator.loadModelEmpiricsForRepo(repoId, function(repo){
+	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+	umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
 		if(!repo){
 			res.end('load error!');
 			return;
@@ -170,6 +173,7 @@ app.get('/loadEmpiricalModelDataForRepo', function (req, res){
 				res.redirect('/');
 		});
 		
+	});
 	});
 })
 
@@ -429,7 +433,8 @@ app.get('/reloadRepo', function(req, res){
 
 app.get('/queryEstimationModel', function(req, res){
 	var estimator = req.query.estimator;
-	var model = req.query.model;
+	var x = req.query.model+"_ALY";
+	var y = "Effort_Norm_UCP";
 	var repoId = req.query.repo_id;
 	var simulation = false;
 	if(req.query.simulation === 'true'){
@@ -440,17 +445,18 @@ app.get('/queryEstimationModel', function(req, res){
 	console.log(simulation);
 	if(estimator === "OLSR"){
 		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-		umlEvaluator.evaluateRepoForModels(repoInfo, simulation, function(repoEvaluationResult, repoAnalytics){
-			umlEstimator.runLinearRegression(repoAnalytics, repoEvaluationResult, model, function(calibrationResults){
+		umlEvaluator.evaluateRepoForModels(repoInfo, function(modelEvaluationStr, repoAnalytics){
+			var modelEvaluationData = umlFileManager.parseCSVData(modelEvaluationStr, true);
+			umlEstimator.runLinearRegression(repoAnalytics, modelEvaluationData, x, y, function(calibrationResults){
 				console.log(calibrationResults);
 				if(calibrationResults === false){
 					res.end("error");
 				}
 				else{
-					res.render('calibrationResult', {calibrationResult:calibrationResults[model], ver: new Date().getTime()});
+					res.render('calibrationResult', {calibrationResult:calibrationResults[x], ver: new Date().getTime()});
 				}
 			});
-		});
+		}, false);
 		});
 	}
 	else{

@@ -1,0 +1,16 @@
+id,path,transactional,path_length,diagram,useCase
+1,Buyer->payment info page->finish payment->third party payment,CTRL,4,Check out,Check out
+2,Buyer->payment info page->finish payment->third party payment,EXTIVK,4,Check out,Check out
+3,Buyer->payment method page->redirect to third party payment page->payment info page,CTRL,4,Check out,Check out
+4,Buyer->payment method page->redirect to third party payment page->payment info page,INT,4,Check out,Check out
+5,third party payment->receive receipt->generate orders->order detail,CTRL,4,Check out,Check out
+6,third party payment->receive receipt->generate orders->order detail,EXTCLL,4,Check out,Check out
+7,third party payment->receive receipt->generate orders->order detail,INT,4,Check out,Check out
+8,third party payment->receive receipt->generate orders->order,CTRL,4,Check out,Check out
+9,third party payment->receive receipt->generate orders->order,EXTCLL,4,Check out,Check out
+10,third party payment->receive receipt->generate orders->order,DM,4,Check out,Check out
+11,third party payment->receive receipt->generate orders->order,EI,4,Check out,Check out
+12,third party payment->receive receipt->generate orders->clear cart item->cart item,CTRL,5,Check out,Check out
+13,third party payment->receive receipt->generate orders->clear cart item->cart item,EXTCLL,5,Check out,Check out
+14,third party payment->receive receipt->generate orders->clear cart item->cart item,DM,5,Check out,Check out
+15,third party payment->receive receipt->generate orders->clear cart item->cart item,EI,5,Check out,Check out

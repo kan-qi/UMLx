@@ -1,0 +1,12 @@
+id,path,transactional,path_length,diagram,useCase
+1,User->thread information input page->Check the input thread information->Invalid input thread information,CTRL,4,start a thread,start a thread
+2,User->thread information input page->Check the input thread information->Invalid input thread information,INT,4,start a thread,start a thread
+3,User->thread information input page->Check the input thread information->Check SQL injections->Potential security error,CTRL,5,start a thread,start a thread
+4,User->thread information input page->Check the input thread information->Check SQL injections->Potential security error,INT,5,start a thread,start a thread
+5,User->thread information input page->Check the input thread information->Check SQL injections->save thread->thread,CTRL,6,start a thread,start a thread
+6,User->thread information input page->Check the input thread information->Check SQL injections->save thread->thread,DM,6,start a thread,start a thread
+7,User->thread information input page->Check the input thread information->Check SQL injections->save thread->thread,EI,6,start a thread,start a thread
+8,User->thread information input page->Check the input thread information->Check SQL injections->save thread->Thread is posted successfully,CTRL,6,start a thread,start a thread
+9,User->thread information input page->Check the input thread information->Check SQL injections->save thread->Thread is posted successfully,INT,6,start a thread,start a thread
+10,User->start a thread button->load thread information input page->thread information input page,CTRL,4,start a thread,start a thread
+11,User->start a thread button->load thread information input page->thread information input page,INT,4,start a thread,start a thread

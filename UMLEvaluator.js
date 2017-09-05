@@ -15,18 +15,17 @@
 	 * 
 	 */
 	
-	var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
 	var umlFileManager = require("./UMLFileManager.js");
-	var umlModelAnalyzer = require("./umlModelAnalyzer.js");
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
 	
 	// current available evaluators
-	var useCaseCalculator = require('./evaluators/UseCaseCalculator.js');
+	var useCasePointCalculator = require('./evaluators/UseCasePointCalculator.js');
 	var cocomoCalculator = require('./evaluators/COCOMOCalculator.js');
-	var umlModelEvaluator = require('./evaluators/UMLModelEvaluator.js');
-	var evaluators = [cocomoCalculator, useCaseCalculator, umlModelEvaluator];
+	var umlDiagramEvaluator = require('./evaluators/UMLDiagramEvaluator.js');
+	var functionPointCalculator = require('./evaluators/FunctionPointEvaluator.js');
+	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator];
 //	function setUp(){
 //		evaluators = [cocomoCalculator, useCaseCalculator, umlModelEvaluator];
 //		for(var i in evaluators){
@@ -34,8 +33,7 @@
 //		}
 //	}
 	
-	function loadModelEmpiricsForRepo(repoId, callbackfunction){
-		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+	function loadModelEmpiricsForRepo(repoInfo, callbackfunction){
 			var ModelDataFilePath = repoInfo.outputDir+"/ModelDataLoad.csv";
 			umlFileManager.loadCSVFile(ModelDataFilePath, true, function(data){
 				var modelDataArray = {};
@@ -84,11 +82,9 @@
 					callbackfunction(repoInfo);
 				}
 			});
-		});
 	}
 	
 	function loadUseCaseEmpiricsForRepo(repoId, callbackfunc){
-		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 			var csvDataFilePath = repoInfo.outputDir+"/useCaseDataLoad.csv";
 			umlFileManager.loadCSVFile(csvDataFilePath, true, function(data){
 			var useCaseData = {};
@@ -154,7 +150,6 @@
 				callbackfunc(repoInfo);
 			}
 			});
-		});
 	}
 	
 	//This well be called when there is a change in the analytical data
@@ -301,7 +296,7 @@
 			else{
 				useCaseEvaluationHeader = false;
 			}
-			useCaseEvaluationStr += toUseCaseEvaluationStr(modeInfo.UseCases[i], useCaseNum, useCaseEvaluationHeader);
+			useCaseEvaluationStr += toUseCaseEvaluationStr(modelInfo.UseCases[i], useCaseNum, useCaseEvaluationHeader);
 //			useCaseEmpiricss.push(useCaseEmpirics);
 			useCaseNum ++;
 		
@@ -328,6 +323,14 @@
 							}
 				        return; 
 				    }
+				 
+					for(i in evaluators){
+						var evaluator = evaluators[i];
+						if(evaluator.evaluateModelForUseCases)
+						{
+						evaluator.evaluateModelForUseCases(modelAnalytics);
+						}
+					}
 					 	
 					    console.log("Repo Evaluation were saved!");
 //					    generateModelStatisticalCharts(modelAnalytics, callbackfunc);
@@ -405,42 +408,21 @@
 				        return; 
 				    }
 				 
-				   repoAnalytics.repoModelEmpiricsResultsPath = repoAnalytics.OutputDir+"/Model_Evaluation_Results";
-				 
-					mkdirp(repoAnalytics.repoModelEmpiricsResultsPath, function(err) { 
-						if(err) {
-							console.log(err);
-							if(callbackfunc !== undefined){
-					    	callbackfunc(false);
-							}
-					        return;
-					    }
-						 var command1 = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/BootstrapForIdentificationRate.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForModelsFileName+'" "'+repoAnalytics.repoModelEmpiricsResultsPath+'"';
-							console.log('evaluate models with bootstrap');
-							console.log(command1);
-							var child = exec(command1, function(error, stdout, stderr) {
 
-								 var command2 = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/LinearRegressionForNT.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForModelsFileName+'" "'+repoAnalytics.repoModelEmpiricsResultsPath+'"';
-									console.log('evaluate models with bootstrap');
-									console.log(command2);
-									var child = exec(command2, function(error, stdout, stderr) {
+					for(i in evaluators){
+						var evaluator = evaluators[i];
+						if(evaluator.evaluateRepoForModels)
+						{
+						evaluator.evaluateRepoForModels(repoAnalytics);
+						}
+					}
+					
 
-										if (error !== null) {
-//											console.log('exec error: ' + error);
-											console.log('exec error: repo id=' + repoAnalytics._id)
-											if(callbackfunc !== undefined){
-												callbackfunc(false);
-											}
-										} 
-										console.log("Repo Evaluation were saved!");
-//									    generateModelStatisticalCharts(modelAnalytics, callbackfunc);
-									    if(callbackfunc !== undefined){
-//											console.log(modelEvaluationStr);
-									    	callbackfunc(modelEvaluationStr, repoAnalytics);
-										}
-									});
-							});
-					});
+//				    generateModelStatisticalCharts(modelAnalytics, callbackfunc);
+				    if(callbackfunc){
+//						console.log(modelEvaluationStr);
+				    	callbackfunc(modelEvaluationStr, repoAnalytics);
+					}
 				
 					
 			});
@@ -514,7 +496,14 @@
 							}
 				        return; 
 				    }
-					 	
+
+					for(i in evaluators){
+						var evaluator = evaluators[i];
+						if(evaluator.evaluateRepoForUseCases)
+						{
+						evaluator.evaluateRepoForUseCases(repoAnalytics);
+						}
+					}
 					    console.log("Repo Evaluation were saved!");
 //					    generateModelStatisticalCharts(modelAnalytics, callbackfunc);
 					    if(callbackfunc){
@@ -531,11 +520,14 @@
 		return useCaseEvaluationStr;
 	}
 	
+	
 	module.exports = {
-			loadUseCaseEmpiricsForRepo:loadUseCaseEmpiricsForRepo,
-			loadModelEmpiricsForRepo:loadModelEmpiricsForRepo,
-			evaluateModelForUseCases:evaluateModelForUseCases,
-			evaluateRepoForUseCases:evaluateRepoForUseCases,
-			evaluateRepoForModels:evaluateRepoForModels
+			loadUseCaseEmpiricsForRepo: loadUseCaseEmpiricsForRepo,
+			loadModelEmpiricsForRepo: loadModelEmpiricsForRepo,
+			evaluateModelForUseCases: evaluateModelForUseCases,
+			evaluateRepoForUseCases: evaluateRepoForUseCases,
+			evaluateRepoForModels: evaluateRepoForModels,
+			redoUseCaseEvaluation: redoUseCaseEvaluation,
+			redoModelEvaluation: redoModelEvaluation
 	}
-}())
+}());

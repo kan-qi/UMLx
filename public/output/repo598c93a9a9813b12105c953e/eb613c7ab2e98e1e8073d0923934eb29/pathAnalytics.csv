@@ -1,31 +1,31 @@
 id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
-1,User->Register Online Button->redirect to registration page->Registration Page,EQ,CTRL|INT,4,2,1,0,1,3,Online registration,Online registration
+1,User->Register Online Button->redirect to registration page->Registration Page,EQ,CTRL|INT,4,2,1,0,1,1,Online registration,Online registration
 2,User->Registration Page->Rest cal for inserting registration data->Validate registration information->Neon CRM,FUNC_NA,CTRL|EXTIVK,5,1,2,0,2,1,Online registration,Online registration
-3,User->Registration Page->Rest cal for inserting registration data->Validate registration information->Display an invalid error message->Invalid error message,EQ,CTRL|INT,6,2,3,0,1,3,Online registration,Online registration
+3,User->Registration Page->Rest cal for inserting registration data->Validate registration information->Display an invalid error message->Invalid error message,EQ,CTRL|INT,6,2,3,0,1,4,Online registration,Online registration
 4,User->Feedback form->Rest cal for inserting feedback->Validate feedback data->Neon CRM,FUNC_NA,CTRL|EXTIVK,5,1,2,0,2,1,Online Feedback Process,Online Feedback Process
-5,User->Feedback form->Rest cal for inserting feedback->Validate feedback data->Display an invalid feedback error message->Invalid error message,EQ,CTRL|INT,6,2,3,0,1,3,Online Feedback Process,Online Feedback Process
-6,User->Feedback page->display feedback form->Feedback form,EQ,CTRL|INT,4,2,1,0,1,3,Online Feedback Process,Online Feedback Process
+5,User->Feedback form->Rest cal for inserting feedback->Validate feedback data->Display an invalid feedback error message->Invalid error message,EQ,CTRL|INT,6,2,3,0,1,4,Online Feedback Process,Online Feedback Process
+6,User->Feedback page->display feedback form->Feedback form,EQ,CTRL|INT,4,2,1,0,1,1,Online Feedback Process,Online Feedback Process
 7,User->checkin page->Rest cal for validating checkin information->Neon CRM,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,Onsite user checkin,Onsite user checkin
 8,User->Invalid checkin information->save checkin information->Checkin information,EI,CTRL|DM|EI,4,1,1,1,1,1,Onsite user checkin,Onsite user checkin
-9,User->Checkin button->display checkin page->checkin page,EQ,CTRL|INT,4,2,1,0,1,3,Onsite user checkin,Onsite user checkin
-10,Neon CRM->Invalid checkin information->save checkin information->Checkin information,EI,CTRL|DM|EI,4,1,1,1,1,1,Onsite user checkin,Onsite user checkin
-11,User->document upload button->validate login information->document upload page,EQ,CTRL|INT,4,2,1,0,1,3,Secure Document Management,Secure Document Management
-12,User->document upload button->validate login information->login,EI,CTRL|DM|EI,4,1,1,1,1,1,Secure Document Management,Secure Document Management
-13,User->document upload page->store the document->document,EI,CTRL|DM|EI,4,1,1,1,1,1,Secure Document Management,Secure Document Management
-14,User->document upload page->store the document->Display an invalid store error message->Invalid store error message,EQ,CTRL|INT,5,2,2,0,1,3,Secure Document Management,Secure Document Management
+9,User->Checkin button->display checkin page->checkin page,EQ,CTRL|INT,4,2,1,0,1,1,Onsite user checkin,Onsite user checkin
+10,Neon CRM->Invalid checkin information->save checkin information->Checkin information,EI,CTRL|DM|EI,4,1,1,1,1,3,Onsite user checkin,Onsite user checkin
+11,User->document upload button->validate login information->document upload page,EQ,CTRL|INT,4,2,1,0,1,1,Secure Document Management,Secure Document Management
+12,User->document upload button->validate login information->login,EI,CTRL|DM|EI,4,1,1,1,1,0,Secure Document Management,Secure Document Management
+13,User->document upload page->store the document->document,EI,CTRL|DM|EI,4,1,1,1,1,0,Secure Document Management,Secure Document Management
+14,User->document upload page->store the document->Display an invalid store error message->Invalid store error message,EQ,CTRL|INT,5,2,2,0,1,4,Secure Document Management,Secure Document Management
 15,User->document view button->validate login information->load documents->document,EI,CTRL|DM|EI,5,1,2,1,1,1,Secure File Management View Process,Secure File Management View Process
-16,User->document view button->validate login information->load documents->document view page,EQ,CTRL|INT,5,2,2,0,1,3,Secure File Management View Process,Secure File Management View Process
-17,User->document view button->validate login information->login,EI,CTRL|DM|EI,4,1,1,1,1,1,Secure File Management View Process,Secure File Management View Process
+16,User->document view button->validate login information->load documents->document view page,EQ,CTRL|INT,5,2,2,0,1,2,Secure File Management View Process,Secure File Management View Process
+17,User->document view button->validate login information->login,EI,CTRL|DM|EI,4,1,1,1,1,0,Secure File Management View Process,Secure File Management View Process
 18,User->document view page->query document->document,EI,CTRL|DM|EI,4,1,1,1,1,1,Secure File Management View Process,Secure File Management View Process
-19,User->document view page->query document->Display error message->viewing document error message,EQ,CTRL|INT,5,2,2,0,1,3,Secure File Management View Process,Secure File Management View Process
-20,User->document view page->query document->document detail page,EQ,CTRL|INT,4,2,1,0,1,3,Secure File Management View Process,Secure File Management View Process
-21,User->report generation button->query report->report list,EQ,CTRL|INT,4,2,1,0,1,3,Report generation,Report generation
-22,User->report generation button->query report->report,EI,CTRL|DM|EI,4,1,1,1,1,1,Report generation,Report generation
-23,User->report list->dump report to Excel->Excel,EI,CTRL|DM|EI,4,1,1,1,1,1,Report generation,Report generation
-24,User->Article list->query article info->article,EI,CTRL|DM|EI,4,1,1,1,1,1,Sharing articles to social media,Sharing articles to social media
-25,User->Article list->query article info->article info,EQ,CTRL|INT,4,2,1,0,1,3,Sharing articles to social media,Sharing articles to social media
-26,User->article info->share to social network->Twitter,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,Sharing articles to social media,Sharing articles to social media
-27,User->article info->share to social network->Facebook,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,Sharing articles to social media,Sharing articles to social media
-28,User->article info->share to social network->Google plus,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,Sharing articles to social media,Sharing articles to social media
-29,Administrator->article add page->submit article to blog category->article,EI,CTRL|DM|EI,4,1,1,1,1,1,Add articles to blog,Add articles to blog
-30,Administrator->Admin interface->navigate article add page->article add page,EQ,CTRL|INT,4,2,1,0,1,3,Add articles to blog,Add articles to blog
+19,User->document view page->query document->Display error message->viewing document error message,EQ,CTRL|INT,5,2,2,0,1,2,Secure File Management View Process,Secure File Management View Process
+20,User->document view page->query document->document detail page,EQ,CTRL|INT,4,2,1,0,1,2,Secure File Management View Process,Secure File Management View Process
+21,User->report generation button->query report->report list,EQ,CTRL|INT,4,2,1,0,1,1,Report generation,Report generation
+22,User->report generation button->query report->report,EI,CTRL|DM|EI,4,1,1,1,1,0,Report generation,Report generation
+23,User->report list->dump report to Excel->Excel,EI,CTRL|DM|EI,4,1,1,1,1,0,Report generation,Report generation
+24,User->Article list->query article info->article,EI,CTRL|DM|EI,4,1,1,1,1,0,Sharing articles to social media,Sharing articles to social media
+25,User->Article list->query article info->article info,EQ,CTRL|INT,4,2,1,0,1,1,Sharing articles to social media,Sharing articles to social media
+26,User->article info->share to social network->Twitter,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,0,Sharing articles to social media,Sharing articles to social media
+27,User->article info->share to social network->Facebook,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,0,Sharing articles to social media,Sharing articles to social media
+28,User->article info->share to social network->Google plus,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,0,Sharing articles to social media,Sharing articles to social media
+29,Administrator->article add page->submit article to blog category->article,EI,CTRL|DM|EI,4,1,1,1,1,0,Add articles to blog,Add articles to blog
+30,Administrator->Admin interface->navigate article add page->article add page,EQ,CTRL|INT,4,2,1,0,1,1,Add articles to blog,Add articles to blog

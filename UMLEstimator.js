@@ -341,15 +341,15 @@
 				callbackfunc(chartPath);
 			});
 		},
-		runLinearRegression: function(repoAnalytics, repoEvaluationResult, model, callbackfunc){
+		runLinearRegression: function(repoAnalytics, modelEvaluations, x, y, callbackfunc){
 //			var command = 'java -classpath "'+classPath+'" "repo.component.utilities.EffortDataCalibrateV3" "'+projectDir+"/"+repoAnalytics.OutputDir+'"';
 			
-			var dataUrl = repoAnalytics.OutputDir + "/" + repoAnalytics.RepoEvaluationFileName;
-			var x = model;
-			var y = "Effort";
-			var svgFileName = "linear_regression_plot_"+model+".svg";
+//			console.log(modelEvaluationData);
+			
+			var dataUrl = repoAnalytics.OutputDir + "/" + repoAnalytics.RepoEvaluationForModelsFileName;
+			var svgFileName = "linear_regression_plot_"+x+".svg";
 			var svgFilePath = repoAnalytics.OutputDir+"/"+svgFileName;
-			var reportFileName = "linear_regression_report_"+model+".txt";
+			var reportFileName = "linear_regression_report_"+x+".txt";
 			var reportFilePath = repoAnalytics.OutputDir + "/" + reportFileName;
 			
 			var command = 'Rscript ./Rscript/LinearRegression.R "'+dataUrl+'" '+x+' '+y+' "'+reportFilePath+'" "'+svgFilePath+'"';
@@ -403,18 +403,16 @@
 					    	}
 					    	modelInfo.parameters.push(parameter);
 					    }
-					   
-					    
-					    var repoEvaluations = repoEvaluationResult.repoEvaluations;
+					  
 					    var pred25 = 0;
 					    var pred50 = 0;
 					    var tmre = 0;
-					    for(var i in repoEvaluations){
-					    	var repoEvaluation = repoEvaluations[i];
+					    for(var i in modelEvaluations){
+					    	var modelEvaluation = modelEvaluations[i];
 					    	var estimatedValue = 0;
 					    	for(var j in modelInfo.parameters){
 					    		var parameter = modelInfo.parameters[j];
-					    		var measure = repoEvaluation[parameter.name];
+					    		var measure = modelEvaluation[parameter.name];
 //					    		console.log('parameter name:'+parameter.name);
 					    		if(!measure){
 					    			measure = 1;
@@ -425,7 +423,7 @@
 					    		estimatedValue += measure*parameter.estimate;
 					    	}
 
-					    	var actualValue = parseFloat(repoEvaluation.Actual);
+					    	var actualValue = parseFloat(modelEvaluation[y]);
 					    	if(actualValue === 0){
 					    		continue;
 					    	}
@@ -444,14 +442,14 @@
 					    	tmre += rr;
 					    }
 					    
-					    if(repoEvaluations.length > 0){
-					    modelInfo.MMRE = parseFloat(tmre/repoEvaluations.length).toFixed(2);
-					    modelInfo.PRED25 = parseFloat(pred25/repoEvaluations.length).toFixed(2);
-					    modelInfo.PRED50 = parseFloat(pred50/repoEvaluations.length).toFixed(2);
+					    if(modelEvaluations.length > 0){
+					    modelInfo.MMRE = parseFloat(tmre/modelEvaluations.length).toFixed(2);
+					    modelInfo.PRED25 = parseFloat(pred25/modelEvaluations.length).toFixed(2);
+					    modelInfo.PRED50 = parseFloat(pred50/modelEvaluations.length).toFixed(2);
 					    }
 					    
 					    repoAnalytics.ModelCalibrationResults= {};
-						repoAnalytics.ModelCalibrationResults[model] = modelInfo;
+						repoAnalytics.ModelCalibrationResults[x] = modelInfo;
 						callbackfunc(repoAnalytics.ModelCalibrationResults);
 			    });
 				

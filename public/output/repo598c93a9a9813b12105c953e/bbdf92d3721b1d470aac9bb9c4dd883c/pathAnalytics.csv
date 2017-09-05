@@ -1,56 +1,56 @@
 id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
-1,User->operation selection panel->Query business by options->business list,EQ,CTRL|INT,4,2,1,0,1,3,Search Business,Search Business
+1,User->operation selection panel->Query business by options->business list,EQ,CTRL|INT,4,2,1,0,1,2,Search Business,Search Business
 2,User->operation selection panel->Query business by options->business,EI,CTRL|DM|EI,4,1,1,1,1,1,Search Business,Search Business
-3,User->operation selection panel->Query business by options->No result found message,EQ,CTRL|INT,4,2,1,0,1,3,Search Business,Search Business
+3,User->operation selection panel->Query business by options->No result found message,EQ,CTRL|INT,4,2,1,0,1,2,Search Business,Search Business
 4,User->business list->Query business information->business,EI,CTRL|DM|EI,4,1,1,1,1,1,Search Business,Search Business
-5,User->No result found message->redirect to search panel->operation selection panel,EQ,CTRL|INT,4,2,1,0,1,3,Search Business,Search Business
-6,User->Home page->display selection panel->operation selection panel,EQ,CTRL|INT,4,2,1,0,1,3,Search Business,Search Business
-7,User->Add a business button->display add business page->business input information,EQ,CTRL|INT,4,2,1,0,1,3,Add a new business,Add a new business
-8,User->business input information->save business information for verification->business,EI,CTRL|DM|EI,4,1,1,1,1,1,Add a new business,Add a new business
-9,Admin->business info->save the approval status of the business->business,EI,CTRL|DM|EI,4,1,1,1,1,1,Add a new business,Add a new business
-10,Admin->business list->query information for a specific business->business,EI,CTRL|DM|EI,4,1,1,1,1,1,Add a new business,Add a new business
-11,Admin->business list->query information for a specific business->business info,EQ,CTRL|INT,4,2,1,0,1,3,Add a new business,Add a new business
-12,display added business page->business list->query information for a specific business->business,FUNC_NA,TRAN_NA,4,1,2,1,0,1,Add a new business,Add a new business
-13,display added business page->business list->query information for a specific business->business info,FUNC_NA,TRAN_NA,4,2,2,0,0,3,Add a new business,Add a new business
-14,User->Register button->display registration page->registration page,EQ,CTRL|INT,4,2,1,0,1,3,Business Owner Registration,Business Owner Registration
-15,User->registration page->save information for verification->registration information,EI,CTRL|DM|EI,4,1,1,1,1,1,Business Owner Registration,Business Owner Registration
-16,Admin->list of registrations->Query registration detail->Registration Detail,EQ,CTRL|INT,4,2,1,0,1,3,Business Owner Registration,Business Owner Registration
-17,Admin->list of registrations->Query registration detail->registration information,EI,CTRL|DM|EI,4,1,1,1,1,1,Business Owner Registration,Business Owner Registration
+5,User->No result found message->redirect to search panel->operation selection panel,EQ,CTRL|INT,4,2,1,0,1,2,Search Business,Search Business
+6,User->Home page->display selection panel->operation selection panel,EQ,CTRL|INT,4,2,1,0,1,2,Search Business,Search Business
+7,User->Add a business button->display add business page->business input information,EQ,CTRL|INT,4,2,1,0,1,2,Add a new business,Add a new business
+8,User->business input information->save business information for verification->business,EI,CTRL|DM|EI,4,1,1,1,1,3,Add a new business,Add a new business
+9,Admin->business info->save the approval status of the business->business,EI,CTRL|DM|EI,4,1,1,1,1,3,Add a new business,Add a new business
+10,Admin->business list->query information for a specific business->business,EI,CTRL|DM|EI,4,1,1,1,1,3,Add a new business,Add a new business
+11,Admin->business list->query information for a specific business->business info,EQ,CTRL|INT,4,2,1,0,1,2,Add a new business,Add a new business
+12,display added business page->business list->query information for a specific business->business,FUNC_NA,TRAN_NA,4,1,2,1,0,3,Add a new business,Add a new business
+13,display added business page->business list->query information for a specific business->business info,FUNC_NA,TRAN_NA,4,2,2,0,0,2,Add a new business,Add a new business
+14,User->Register button->display registration page->registration page,EQ,CTRL|INT,4,2,1,0,1,2,Business Owner Registration,Business Owner Registration
+15,User->registration page->save information for verification->registration information,EI,CTRL|DM|EI,4,1,1,1,1,3,Business Owner Registration,Business Owner Registration
+16,Admin->list of registrations->Query registration detail->Registration Detail,EQ,CTRL|INT,4,2,1,0,1,2,Business Owner Registration,Business Owner Registration
+17,Admin->list of registrations->Query registration detail->registration information,EI,CTRL|DM|EI,4,1,1,1,1,3,Business Owner Registration,Business Owner Registration
 18,Admin->registration button->display registratiion requests->registration information,EI,CTRL|DM|EI,4,1,1,1,1,1,Business Owner Registration,Business Owner Registration
-19,Admin->registration button->display registratiion requests->list of registrations,EQ,CTRL|INT,4,2,1,0,1,3,Business Owner Registration,Business Owner Registration
-20,Admin->Registration Detail->save the approval status of registration->registration information,EI,CTRL|DM|EI,4,1,1,1,1,1,Business Owner Registration,Business Owner Registration
-21,User->claim page->save claim information for verification->claim information,EI,CTRL|DM|EI,4,1,1,1,1,1,Business Claim,Business Claim
-22,User->Claim button->display claim page->claim page,EQ,CTRL|INT,4,2,1,0,1,3,Business Claim,Business Claim
-23,Admin->load claims button->display claims requests->claim information,EI,CTRL|DM|EI,4,1,1,1,1,1,Business Claim,Business Claim
-24,Admin->load claims button->display claims requests->list of claims,EQ,CTRL|INT,4,2,1,0,1,3,Business Claim,Business Claim
-25,Admin->Claim Detail->save the approval status of claim->claim information,EI,CTRL|DM|EI,4,1,1,1,1,1,Business Claim,Business Claim
-26,Admin->Claim Detail->save the approval status of claim->remove claim information->claim information,EI,CTRL|DM|EI,5,1,2,1,1,1,Business Claim,Business Claim
-27,Admin->list of claims->Query claim detail->claim information,EI,CTRL|DM|EI,4,1,1,1,1,1,Business Claim,Business Claim
-28,Admin->list of claims->Query claim detail->Claim Detail,EQ,CTRL|INT,4,2,1,0,1,3,Business Claim,Business Claim
-29,User->traverl tipping guides button->display Tipping Guide Page->Tipping guide page,EQ,CTRL|INT,4,2,1,0,1,3,Travel Tipping Guides,Travel Tipping Guides
-30,User->Tipping guide page->search for relevant information online->Internet browser,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,Travel Tipping Guides,Travel Tipping Guides
+19,Admin->registration button->display registratiion requests->list of registrations,EQ,CTRL|INT,4,2,1,0,1,1,Business Owner Registration,Business Owner Registration
+20,Admin->Registration Detail->save the approval status of registration->registration information,EI,CTRL|DM|EI,4,1,1,1,1,3,Business Owner Registration,Business Owner Registration
+21,User->claim page->save claim information for verification->claim information,EI,CTRL|DM|EI,4,1,1,1,1,3,Business Claim,Business Claim
+22,User->Claim button->display claim page->claim page,EQ,CTRL|INT,4,2,1,0,1,1,Business Claim,Business Claim
+23,Admin->load claims button->display claims requests->claim information,EI,CTRL|DM|EI,4,1,1,1,1,3,Business Claim,Business Claim
+24,Admin->load claims button->display claims requests->list of claims,EQ,CTRL|INT,4,2,1,0,1,1,Business Claim,Business Claim
+25,Admin->Claim Detail->save the approval status of claim->claim information,EI,CTRL|DM|EI,4,1,1,1,1,3,Business Claim,Business Claim
+26,Admin->Claim Detail->save the approval status of claim->remove claim information->claim information,EI,CTRL|DM|EI,5,1,2,1,1,3,Business Claim,Business Claim
+27,Admin->list of claims->Query claim detail->claim information,EI,CTRL|DM|EI,4,1,1,1,1,3,Business Claim,Business Claim
+28,Admin->list of claims->Query claim detail->Claim Detail,EQ,CTRL|INT,4,2,1,0,1,2,Business Claim,Business Claim
+29,User->traverl tipping guides button->display Tipping Guide Page->Tipping guide page,EQ,CTRL|INT,4,2,1,0,1,1,Travel Tipping Guides,Travel Tipping Guides
+30,User->Tipping guide page->search for relevant information online->Internet browser,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,0,Travel Tipping Guides,Travel Tipping Guides
 31,User->Tipping guide page->search for relevant information online->display added business page->pdf file,EI,CTRL|DM|EI,5,1,2,1,1,1,Travel Tipping Guides,Travel Tipping Guides
-32,User->tip calculator  button->display tip calculator page->tip calculator page,EQ,CTRL|INT,4,2,1,0,1,3,Use Tip Calculator,Use Tip Calculator
-33,User->Ask a question button->display ask a question form->question form,EQ,CTRL|INT,4,2,1,0,1,3,Submit questions and responses,Submit questions and responses
+32,User->tip calculator  button->display tip calculator page->tip calculator page,EQ,CTRL|INT,4,2,1,0,1,1,Use Tip Calculator,Use Tip Calculator
+33,User->Ask a question button->display ask a question form->question form,EQ,CTRL|INT,4,2,1,0,1,1,Submit questions and responses,Submit questions and responses
 34,User->question form->save questions->questions,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit questions and responses,Submit questions and responses
-35,Client->load questions button->load questions->create a response button,EQ,CTRL|INT,4,2,1,0,1,3,Submit questions and responses,Submit questions and responses
+35,Client->load questions button->load questions->create a response button,EQ,CTRL|INT,4,2,1,0,1,2,Submit questions and responses,Submit questions and responses
 36,Client->load questions button->load questions->questions,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit questions and responses,Submit questions and responses
-37,Client->create a response button->check if the question is already answered->display create a response page->create a response page,EQ,CTRL|INT,5,2,2,0,1,3,Submit questions and responses,Submit questions and responses
+37,Client->create a response button->check if the question is already answered->display create a response page->create a response page,EQ,CTRL|INT,5,2,2,0,1,4,Submit questions and responses,Submit questions and responses
 38,Client->create a response button->check if the question is already answered->Send notification->notification,EI,CTRL|DM|EI,5,1,2,1,1,1,Submit questions and responses,Submit questions and responses
 39,Client->create a response button->check if the question is already answered->response,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit questions and responses,Submit questions and responses
 40,Client->create a response page->save the response to db->response,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit questions and responses,Submit questions and responses
-41,Admin->load questions button->load questions->create a response button,EQ,CTRL|INT,4,2,1,0,1,3,Submit questions and responses,Submit questions and responses
+41,Admin->load questions button->load questions->create a response button,EQ,CTRL|INT,4,2,1,0,1,2,Submit questions and responses,Submit questions and responses
 42,Admin->load questions button->load questions->questions,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit questions and responses,Submit questions and responses
 43,Admin->create a response page->save the response to db->response,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit questions and responses,Submit questions and responses
-44,Admin->create a response button->check if the question is already answered->display create a response page->create a response page,EQ,CTRL|INT,5,2,2,0,1,3,Submit questions and responses,Submit questions and responses
+44,Admin->create a response button->check if the question is already answered->display create a response page->create a response page,EQ,CTRL|INT,5,2,2,0,1,4,Submit questions and responses,Submit questions and responses
 45,Admin->create a response button->check if the question is already answered->Send notification->notification,EI,CTRL|DM|EI,5,1,2,1,1,1,Submit questions and responses,Submit questions and responses
 46,Admin->create a response button->check if the question is already answered->response,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit questions and responses,Submit questions and responses
-47,User->comment section button->display comment section->query business information->comment panel,EQ,CTRL|INT,5,2,2,0,1,3,User comments and moderation,User comments and moderation
-48,User->comment section button->display comment section->query business information->business information,EI,CTRL|DM|EI,5,1,2,1,1,1,User comments and moderation,User comments and moderation
-49,User->comment panel->save comment to db->comment,EI,CTRL|DM|EI,4,1,1,1,1,1,User comments and moderation,User comments and moderation
-50,Admin->comment detail->save approval status of comment->comment,EI,CTRL|DM|EI,4,1,1,1,1,1,User comments and moderation,User comments and moderation
-51,Admin->comment detail->save approval status of comment->remove comment->comment,EI,CTRL|DM|EI,5,1,2,1,1,1,User comments and moderation,User comments and moderation
-52,Admin->load comment button->load comments->comment list,EQ,CTRL|INT,4,2,1,0,1,3,User comments and moderation,User comments and moderation
-53,Admin->load comment button->load comments->comment,EI,CTRL|DM|EI,4,1,1,1,1,1,User comments and moderation,User comments and moderation
-54,Admin->comment list->display comment detail->comment,EI,CTRL|DM|EI,4,1,1,1,1,1,User comments and moderation,User comments and moderation
-55,Admin->comment list->display comment detail->comment detail,EQ,CTRL|INT,4,2,1,0,1,3,User comments and moderation,User comments and moderation
+47,User->comment section button->display comment section->query business information->comment panel,EQ,CTRL|INT,5,2,2,0,1,2,User comments and moderation,User comments and moderation
+48,User->comment section button->display comment section->query business information->business information,EI,CTRL|DM|EI,5,1,2,1,1,0,User comments and moderation,User comments and moderation
+49,User->comment panel->save comment to db->comment,EI,CTRL|DM|EI,4,1,1,1,1,3,User comments and moderation,User comments and moderation
+50,Admin->comment detail->save approval status of comment->comment,EI,CTRL|DM|EI,4,1,1,1,1,3,User comments and moderation,User comments and moderation
+51,Admin->comment detail->save approval status of comment->remove comment->comment,EI,CTRL|DM|EI,5,1,2,1,1,3,User comments and moderation,User comments and moderation
+52,Admin->load comment button->load comments->comment list,EQ,CTRL|INT,4,2,1,0,1,1,User comments and moderation,User comments and moderation
+53,Admin->load comment button->load comments->comment,EI,CTRL|DM|EI,4,1,1,1,1,3,User comments and moderation,User comments and moderation
+54,Admin->comment list->display comment detail->comment,EI,CTRL|DM|EI,4,1,1,1,1,3,User comments and moderation,User comments and moderation
+55,Admin->comment list->display comment detail->comment detail,EQ,CTRL|INT,4,2,1,0,1,2,User comments and moderation,User comments and moderation

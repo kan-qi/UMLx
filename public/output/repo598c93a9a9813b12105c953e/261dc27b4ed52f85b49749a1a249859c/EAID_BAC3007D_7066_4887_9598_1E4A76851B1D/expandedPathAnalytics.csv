@@ -1,0 +1,20 @@
+id,path,transactional,path_length,diagram,useCase
+1,Valet->venue list->check if active->inactive employee,CTRL,4,Check in as valet,Check in as valet
+2,Valet->venue list->check if active->inactive employee,INT,4,Check in as valet,Check in as valet
+3,Valet->venue list->check if active->valet,CTRL,4,Check in as valet,Check in as valet
+4,Valet->venue list->check if active->valet,DM,4,Check in as valet,Check in as valet
+5,Valet->venue list->check if active->valet,EI,4,Check in as valet,Check in as valet
+6,Valet->venue list->check if active->check if venue is checked in->checked in by another valet,CTRL,5,Check in as valet,Check in as valet
+7,Valet->venue list->check if active->check if venue is checked in->checked in by another valet,INT,5,Check in as valet,Check in as valet
+8,Valet->venue list->check if active->check if venue is checked in->venue,CTRL,5,Check in as valet,Check in as valet
+9,Valet->venue list->check if active->check if venue is checked in->venue,DM,5,Check in as valet,Check in as valet
+10,Valet->venue list->check if active->check if venue is checked in->venue,EI,5,Check in as valet,Check in as valet
+11,Valet->Confirmation request dialog->navigate to queue screen->Queue screen,CTRL,4,Check in as valet,Check in as valet
+12,Valet->Confirmation request dialog->navigate to queue screen->Queue screen,INT,4,Check in as valet,Check in as valet
+13,Valet->Confirmation request dialog->Save acceptance->display server error message->Server error message,CTRL,5,Check in as valet,Check in as valet
+14,Valet->Confirmation request dialog->Save acceptance->display server error message->Server error message,INT,5,Check in as valet,Check in as valet
+15,Valet->Confirmation request dialog->Save acceptance->venue,CTRL,4,Check in as valet,Check in as valet
+16,Valet->Confirmation request dialog->Save acceptance->venue,DM,4,Check in as valet,Check in as valet
+17,Valet->Confirmation request dialog->Save acceptance->venue,EI,4,Check in as valet,Check in as valet
+18,Valet->checked in by another valet->Redirect to venue list->venue list,CTRL,4,Check in as valet,Check in as valet
+19,Valet->checked in by another valet->Redirect to venue list->venue list,INT,4,Check in as valet,Check in as valet

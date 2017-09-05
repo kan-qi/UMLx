@@ -188,21 +188,31 @@
 	}
 	
 	function toModelEvaluationHeader(){
-//		return "Effort,Effort_ALY,Effort_Norm,Norm_Factor,KSLOC";
-		return "";
+		return "Effort,Effort_ALY,Effort_Norm,Norm_Factor,KSLOC";
+//		return "";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
-//		modelEmpirics = modelInfo.ModelEmpirics;
-//		modelAnalytics = modelInfo.ModelAnalytics;
-//		
-//		return modelEmpirics.Effort+"," +
-//		modelAnalytics.Effort+"," +
-//		modelEmpirics.COCOMOData.Effort_Norm+"," +
-//		modelEmpirics.COCOMOData.Norm_Factor+"," +
-//		modelEmpirics.KSLOC;
+		modelEmpirics = modelInfo.ModelEmpirics;
+		modelAnalytics = modelInfo.ModelAnalytics;
 		
-		return "";
+		var normEffort = 0;
+		var normFactor = 0;
+		var ksloc = 0;
+		//COCOMOData may not exist, if COCOMO data is not loaded
+		if(modelEmpirics.COCOMOData){
+			normEffort = modelEmpirics.COCOMOData.Effort_Norm;
+			normFactor = modelEmpirics.COCOMOData.Norm_Factor;
+			ksloc = modelEmpirics.COCOMOData.KSLOC;
+		}
+		
+		return modelEmpirics.Effort+"," +
+		modelAnalytics.Effort+"," +
+		normEffort.toFixed(2)+","+
+		normFactor.toFixed(2)+","+
+		ksloc;
+		
+//		return "";
 	}
 	
 	function normalizeEffort(cocomoData){

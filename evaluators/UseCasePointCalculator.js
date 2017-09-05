@@ -40,7 +40,7 @@
 		
 		if(modelEmpirics.COCOMOData){
 			var normalizedEffort = normalizeEffortForUseCasePoint(modelEmpirics.COCOMOData);
-			useCasePointData.COCOMONormalizedEffort = normalizedEffort;
+			useCasePointData.Effort_Norm_UCP = normalizedEffort;
 		}
 }
 	
@@ -85,12 +85,17 @@
 	}
 	
 	function toModelEvaluationHeader(){
-		return "UEUCW,UEUCW_ALY,UEXUCW,UEXUCW_ALY,UAW,UAW_ALY,TCF,TCF_ALY,EF,EF_ALY,EUCP,EUCP_ALY,EXUCP,EXUCP_ALY";
+		return "UEUCW,UEUCW_ALY,UEXUCW,UEXUCW_ALY,UAW,UAW_ALY,TCF,TCF_ALY,EF,EF_ALY,EUCP,EUCP_ALY,EXUCP,EXUCP_ALY,DUCP_ALY,Effort_Norm_UCP";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
 		var modelAnalytics = modelInfo.ModelAnalytics;
 		var modelEmpirics = modelInfo.ModelEmpirics;
+		
+		var useCaseNormEffort = 0;
+		if(modelEmpirics.UseCasePointData){
+			useCaseNormEffort = modelEmpirics.UseCasePointData.Effort_Norm_UCP;
+		}
 		
 //		console.log(modelAnalytics);
 		
@@ -105,9 +110,11 @@
 		modelEmpirics.EF+","+
 		modelAnalytics.EF+","+
 		modelEmpirics.EUCP+","+
-		modelAnalytics.UseCasePointData.EUCP+","+
+		modelAnalytics.UseCasePointData.EUCP.toFixed(2)+","+
 		modelEmpirics.EXUCP+","+
-		modelAnalytics.UseCasePointData.EXUCP;
+		modelAnalytics.UseCasePointData.EXUCP.toFixed(2)+","+
+		modelAnalytics.UseCasePointData.DUCP.toFixed(2)+","+ //replace DUCP
+		useCaseNormEffort.toFixed(2);
 	}
 	
 	function toUseCaseEvaluationHeader(){
@@ -278,7 +285,125 @@
 	}
 	
 	function calculateDUCP(modelInfo){
-		return 0;
+		var UDUCW = 0;
+		for(var i in modelInfo.UseCases){
+		var useCase = modelInfo.UseCases[i];
+		var useCaseAnalytics = useCase.UseCaseAnalytics;
+		useCaseAnalytics.UDUCW = 0;
+		// merge the analytics by the levels.
+		for(var j in useCaseAnalytics.Diagrams){
+			var diagramAnalytics = useCaseAnalytics.Diagrams[j].DiagramAnalytics;
+//			console.log(diagramAnalytics);
+			for(var k in diagramAnalytics.Paths){
+				var path = diagramAnalytics.Paths[k];
+				var utw = 0;
+				var doN = path.Elements.length;
+				var uieN = path.boundaryNum
+				//to evaluate the unadjusted transactional weight for each transaction for ducp
+				var operationalCharacteristics = path.Operations.transactional;
+				
+				if(doN <= 0){
+					utw = 0;
+				} else if (doN < 3){
+					if(uieN < 2){
+						utw = 1
+					} else if(uieN < 6){
+						utw = 1
+					} else{
+						utw = 2
+					}
+				} else if( doN < 8){
+					if(uieN < 2){
+						utw = 1
+					} else if(uieN < 6){
+						utw = 2
+					} else{
+						utw = 5
+					}
+				} else {
+					if(uieN < 2){
+						utw = 2
+					} else if(uieN < 6){
+						utw = 5
+					} else{
+						utw = 5
+					}
+				}
+				
+				var archDiff = path.archDiff;
+				if(archDiff < 5){
+					utw -= 1;
+				}
+				else if(archDiff > 6){
+					utw += 2;
+				}
+				
+				path.utw = utw;
+				
+				//check if it is a transaction
+				if(operationalCharacteristics.indexOf("TRAN_NA") > -1){
+					continue;
+				}
+
+				useCaseAnalytics.UDUCW += utw;
+			  }
+		 	}
+		   UDUCW += useCaseAnalytics.UDUCW;
+		}
+		
+		var modelAnalytics = modelInfo.ModelAnalytics;
+		var modelEmpirics = modelInfo.ModelEmpirics;
+		
+//		//currently using the data from evaluations to calculate the eucp.
+//		var TCF = modelAnalytics.TCF? modelAnalytics.TCF: modelEmpirics.UseCasePointData.TCF;
+//		var EF = modelAnalytics.EF? modelAnalytics.EF: modelEmpirics.UseCasePointData.EF;
+//		var UAW = modelAnalytics.UAW? modelAnalytics.UAW: modelEmpirics.UseCasePointData.UAW;
+//		var DUCP = (UDUCW+UAW)*TCF*EF;
+		
+		var TCF = Number(modelEmpirics.TCF);
+		var EF = Number(modelEmpirics.EF);
+		var UAW = Number(modelEmpirics.UAW);
+		
+		var DUCP = (UDUCW+UAW)*TCF*EF;
+		
+		var modelEmpirics = modelInfo.ModelEmpirics;
+		var modelAnalytics = modelInfo.ModelAnalytics;
+		
+		if(!modelAnalytics.UseCasePointData){
+			modelAnalytics.UseCasePointData = initUseCasePointData();
+//			modelAnalytics.UseCasePointData = {};
+		}
+		var useCasePointData = modelAnalytics.UseCasePointData;
+//		console.log(useCasePointData);
+
+		useCasePointData.TCF = TCF;
+		useCasePointData.EF = EF;
+		useCasePointData.UAW = UAW;
+		useCasePointData.UDUCW = UDUCW;
+		useCasePointData.DUCP = DUCP;
+		
+		return DUCP;
+	}
+	
+	function evaluateRepoForModels(repoAnalytics){
+		 repoAnalytics.repoModelEvaluationResultsPath = repoAnalytics.OutputDir+"/Model_Evaluation_Results";
+		 
+			mkdirp(repoAnalytics.repoModelEvaluationResultsPath, function(err) { 
+				if(err) {
+					console.log(err);
+			        return;
+			    }
+						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/LinearRegressionForUseCasePoints.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForModelsFileName+'" "'+repoAnalytics.repoModelEvaluationResultsPath+'"';
+							console.log(command);
+							var child = exec(command, function(error, stdout, stderr) {
+
+								if (error !== null) {
+//									console.log('exec error: ' + error);
+									console.log('exec error: repo id=' + repoAnalytics._id);
+								} 
+								console.log("Repo Evaluation were saved!");
+							});
+			});
 	}
 	
 
@@ -288,7 +413,8 @@
 		toUseCaseEvaluationHeader: toUseCaseEvaluationHeader,
 		toUseCaseEvaluationRow: toUseCaseEvaluationRow,
 		loadFromModelEmpirics: loadFromModelEmpirics,
-		evaluateModel: evaluateModel
+		evaluateModel: evaluateModel,
+		evaluateRepoForModels: evaluateRepoForModels
 	}
 	
 	

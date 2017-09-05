@@ -73,11 +73,17 @@ div.block.panel.panel-default
         div.stats-chart
          img(src="#{repoAnalytics.AccessDir}/control_operation_analysis_result.svg")
         div.stats-chart
-         img(src="#{repoAnalytics.AccessDir}/data_operation_analysis_result.svg")
+         img(src="#{repoAnalytics.AccessDir}/external_input_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/external_query_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/external_invocation_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoAnalytics.AccessDir}/external_call_operation_analysis_result.svg")
         div.stats-chart
          img(src="#{repoAnalytics.AccessDir}/interface_operation_analysis_result.svg")
         div.stats-chart
-         img(src="#{repoAnalytics.AccessDir}/partial_match_analysis_result.svg")
+         img(src="#{repoAnalytics.AccessDir}/not_matched_analysis_result.svg")
         div.stats-chart
          img(src="#{repoAnalytics.AccessDir}/architecture_difficulty_analysis_result.svg")
         div.stats-chart
@@ -111,7 +117,7 @@ div.block.panel.panel-default
             li
              a.estimator-selector(data-model='EXUCP') EXUCP
             li
-             a.estimator-selector(data-model='AFP') AFPC
+             a.estimator-selector(data-model='DUCP') DUCP
          div.checkbox.row-item
           label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
            input(type='checkbox' value='simulation-data')

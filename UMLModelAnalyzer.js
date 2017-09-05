@@ -2,7 +2,6 @@
 	/**
 	 *  Work as a test stub
 	 */
-
 	var modelXMLParser = require('./model_platforms/ea/XMI2.1Parser.js');
 	var diagramProfiler = require('./diagram_profilers/UMLDiagramProfiler.js');
 	var mkdirp = require('mkdirp');
@@ -13,6 +12,9 @@
 	var domainModelProcessor = require('./diagram_profilers/DomainModelProcessor.js');
 	var domainModelDrawer = require('./diagram_profilers/DomainModelDrawer.js');
 	var umlEvaluator = require('./UMLEvaluator.js');
+
+//	console.log(umlEvaluator);
+	
 //	var exec = require('child_process').exec;
 
 	function analyseRepo(repo, callbackfunc){
@@ -46,9 +48,9 @@
 			repoAnalytics.EQ += modelAnalytics.EQ;
 			repoAnalytics.EXTIVK += modelAnalytics.EXTIVK;
 			repoAnalytics.EXTCLL += modelAnalytics.EXTCLL;
-			repoAnalytics.TN += modelAnalytics.TN;
-			repoAnalytics.WTN += modelAnalytics.WTN;
-			repoAnalytics.DEWTN += modelAnalytics.DEWTN;
+			repoAnalytics.NT += modelAnalytics.NT;
+//			repoAnalytics.NWT += modelAnalytics.NWT;
+//			repoAnalytics.NWT_DE += modelAnalytics.NWT_DE;
 			repoAnalytics.CCSS += modelAnalytics.CCSS;
 			repoAnalytics.TotalLinks += modelAnalytics.TotalLinks;
 			repoAnalytics.ActorNum += modelAnalytics.ActorNum;
@@ -80,6 +82,8 @@
 
 		var pathAnalyticsStr = "id,path,functional,transactional,path_length,avg_degree,arch_diff,diagram,use_case,model\n";
 		var pathNum = 0;
+		var expandedPathAnalyticsStr = "id,path,transactional,path_length,diagram,useCase\n";
+		var expandedPathNum = 0;
 		var elementAnalyticsStr = "id,element,type,outboundDegree,inboundDegree,diagram,useCase,model\n";
 		var elementNum = 0;
 		var useCaseAnalyticsStr = "id,useCase,average_degree,average_path_length,architecture_difficulty,path_number\n";
@@ -109,6 +113,20 @@
 						useCaseAnalytics.Name.replace(/,/gi, "")+","+ 
 						modelAnalytics.Name.replace(/,/gi, "")+"\n";
 					}
+					
+					for(var m in diagramAnalytics.Paths){
+						for(var n in diagramAnalytics.Paths[m].Operations.transactional){
+						var transactionalOperation = diagramAnalytics.Paths[m].Operations.transactional[n];
+						expandedPathNum++;
+						expandedPathAnalyticsStr += expandedPathNum+","+
+						diagramAnalytics.Paths[m].PathStr.replace(/,/gi, "")+","+ 
+						transactionalOperation+","+ 
+						diagramAnalytics.Paths[m].Elements.length+","+ 
+						diagramAnalytics.Name+","+ 
+						useCaseAnalytics.Name+"\n";
+						}
+					}
+
 
 					for(var m in diagramAnalytics.Elements){
 						elementNum++;
@@ -156,6 +174,15 @@
 					}
 					return;
 				}
+				
+				fs.writeFile(repoAnalytics.OutputDir+"/expandedPathAnalytics.csv", expandedPathAnalyticsStr, function(err){
+					if(err) {
+						console.log(err);
+						if(callbackfunc !== undefined){
+							callbackfunc(false);
+						}
+						return; 
+					}
 
 //				console.log("Paths Analytics were saved!");
 
@@ -182,7 +209,7 @@
 						generateRepoStatisticalCharts(repoAnalytics, callbackfunc);
 
 					});
-
+				  });
 				});
 			});
 
@@ -192,7 +219,7 @@
 
 
 	function generateRepoStatisticalCharts(repoAnalytics, callbackfunc){
-		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/RepoAnalyticsScript.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.ElementAnalyticsFileName+'" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.PathAnalyticsFileName+'" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.UseCaseAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'" "."';
+		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/RepoAnalyticsScript.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.ElementAnalyticsFileName+'" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.PathAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.UseCaseAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'" "."';
 //		console.log('generate model Analytics');
 //		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
@@ -229,7 +256,7 @@
 			});
 			
 
-			var UEXUCW = 0;
+//			var UEXUCW = 0;
 		
 //			console.log(modelAnalytics);
 			modelAnalytics.TotalPathLength += useCaseAnalytics.TotalPathLength;
@@ -242,9 +269,9 @@
 			modelAnalytics.EXTIVK += useCaseAnalytics.EXTIVK;
 			modelAnalytics.EXTCLL += useCaseAnalytics.EXTCLL;
 			modelAnalytics.TRAN_NA += useCaseAnalytics.TRAN_NA;
-			modelAnalytics.TN += useCaseAnalytics.TN;
-			modelAnalytics.WTN += useCaseAnalytics.WTN;
-			modelAnalytics.DEWTN += useCaseAnalytics.DEWTN;
+			modelAnalytics.NT += useCaseAnalytics.NT;
+//			modelAnalytics.NWT += useCaseAnalytics.NWT;
+//			modelAnalytics.NWT_DE += useCaseAnalytics.NWT_DE;
 			
 //			console.log(useCaseAnalytics);
 
@@ -257,8 +284,8 @@
 			modelAnalytics.TotalDegree += useCaseAnalytics.TotalDegree;
 			modelAnalytics.ElementNum += useCaseAnalytics.ElementNum;
 
-			modelAnalytics.UEUCW += useCaseAnalytics.UEUCW;
-			modelAnalytics.UEXUCW += useCaseAnalytics.UEXUCW; //IT rerpesents Number of Transactions, replaced with IT.
+//			modelAnalytics.UEUCW += useCaseAnalytics.UEUCW;
+//			modelAnalytics.UEXUCW += useCaseAnalytics.UEXUCW; //IT rerpesents Number of Transactions, replaced with IT.
 			modelAnalytics.EI += useCaseAnalytics.EI;
 			modelAnalytics.EO += useCaseAnalytics.EO;
 			modelAnalytics.EQ += useCaseAnalytics.EQ;
@@ -275,20 +302,21 @@
 		domainModelAnalytics = analyseDomainModel(modelInfo.DomainModel, function(){
 				console.log('useCase analysis is complete');
 			});
-		modelAnalytics.ILF = domainModelAnalytics.ILF;
-		modelAnalytics.EIF = domainModelAnalytics.EIF;
+//		modelAnalytics.ILF = domainModelAnalytics.ILF;
+//		modelAnalytics.EIF = domainModelAnalytics.EIF;
 		modelAnalytics.AttributeNum = domainModelAnalytics.AttributeNum;
 		modelAnalytics.OperationNum = domainModelAnalytics.OperationNum;
 		modelAnalytics.ElementNum = domainModelAnalytics.ElementNum;
 		modelAnalytics.DiagramNum += domainModelAnalytics.DiagramNum;
 		modelAnalytics.ClassNum = domainModelAnalytics.ClassNum;
 
-		modelAnalytics.AFP += parseFloat(modelAnalytics.ILF)+parseFloat(modelAnalytics.EIF)+parseFloat(modelAnalytics.EI)+parseFloat(modelAnalytics.EO)+parseFloat(modelAnalytics.EQ);
+		// for everything related to AFP, for example, EIF and ILF, they are moved into evaluators/FunctionPointEvaluator.js
+//		modelAnalytics.AFP += parseFloat(modelAnalytics.ILF)+parseFloat(modelAnalytics.EIF)+parseFloat(modelAnalytics.EI)+parseFloat(modelAnalytics.EO)+parseFloat(modelAnalytics.EQ);
 
 //		modelInfo.ModelAnalytics = modelAnalytics;
 
 		//redo model evaluation.
-		modelEvaluation.redoModelEvaluation(modelInfo);
+		umlEvaluator.redoModelEvaluation(modelInfo);
 
 		if(callbackfunc !== undefined){
 			dumpModelAnalytics(modelInfo, callbackfunc)
@@ -309,7 +337,8 @@
 		var elementAnalyticsStr = "id,element,type,outbound_degree,inbound_degree,diagram,useCase\n";
 		var elementNum = 0;
 //		var useCaseAnalyticsStr = "NUM, UC, total_links, actor_num, boundary_num, control_num, entity_num, element_num, interface_operation_num, data_operation_num, control_operation_num, partial_matched_num, average_degree,average_path_length,architecture_difficulty,path_number\n";
-		var useCaseAnalyticsStr = "NUM, UC, total_links, actor_num, boundary_num, control_num, entity_num, element_num, DM, INT, CTRL, EXTIVK, EXTCLL, TRAN_NA, TN, EI, EO, EQ, FUNC_NA, FN, average_degree,average_path_length,ArchDiff,PathNum,EUCPW,EXUCPW\n";
+		var useCaseAnalyticsStr = "NUM, UC, total_links, actor_num, boundary_num, control_num, entity_num, element_num, DM, INT, CTRL, EXTIVK, EXTCLL, TRAN_NA, NT, EI, EO, EQ, FUNC_NA, FN, average_degree,average_path_length,ArchDiff,PathNum\n";
+//		var useCaseAnalyticsStr = "NUM, UC, total_links, actor_num, boundary_num, control_num, entity_num, element_num, DM, INT, CTRL, EXTIVK, EXTCLL, TRAN_NA, NT, EI, EO, EQ, FUNC_NA, FN, average_degree,average_path_length,ArchDiff,PathNum,EUCPW,EXUCPW\n";
 		var useCaseNum = 0;
 		var domainModelAnalyticsStr = "id, element_name, attribute_num,operation_num\n";
 		
@@ -337,7 +366,6 @@
 					path.utw+","+
 					diagramAnalytics.Name+","+ 
 					useCaseAnalytics.Name+"\n";
-					
 				}
 				
 				for(var k in diagramAnalytics.Paths){
@@ -383,7 +411,7 @@
 			useCaseAnalytics.EXTIVK+","+
 			useCaseAnalytics.EXTCLL+","+
 			useCaseAnalytics.TRAN_NA+","+
-			useCaseAnalytics.TN+","+
+			useCaseAnalytics.NT+","+
 			useCaseAnalytics.EI+","+
 			useCaseAnalytics.EO+","+
 			useCaseAnalytics.EQ+","+
@@ -392,9 +420,9 @@
 			useCaseAnalytics.AvgDegree+","+
 			useCaseAnalytics.AvgPathLength+","+
 			useCaseAnalytics.ArchDiff+","+
-			useCaseAnalytics.PathNum+","+
-			useCaseAnalytics.UEUCW+","+
-			useCaseAnalytics.UEXUCW+"\n";
+			useCaseAnalytics.PathNum+"\n";
+//			useCaseAnalytics.UEUCW+","+
+//			useCaseAnalytics.UEXUCW+"\n";
 		}
 
 		for(var i in model.DomainModel.Diagrams){
@@ -480,7 +508,7 @@
 
 
 	function generateModelStatisticalCharts(modelAnalytics, callbackfunc){
-		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/ModelAnalyticsScript.R "'+modelAnalytics.OutputDir+"/"+modelAnalytics.ElementAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.PathAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.UseCaseAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.DomainModelAnalyticsFileName+'" "'+modelAnalytics.OutputDir+'" "."';
+		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/ModelAnalyticsScript.R "'+modelAnalytics.OutputDir+"/"+modelAnalytics.ElementAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.PathAnalyticsFileName+'" "'+modelAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.UseCaseAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.DomainModelAnalyticsFileName+'" "'+modelAnalytics.OutputDir+'" "."';
 //		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
 
@@ -556,55 +584,13 @@
 			diagramAnalytics.OperationNum = operationNum;
 			diagramAnalytics.ElementNum = elementNum;
 
-			var DET = diagram.AttributeNum;
-			var RET = 1;
-			var ILF = 0;
-			var EIF = 0;
-			var ILFEvaluation = [
-				['', 'x>=1&&x<=19', 'x>=20&&x<=50', 'x>50'],
-				['y==1', '7', '7', '10'],
-				['y>=2&&y<=5', '7', '10', '15'],
-				['y>5', '10', '15', '15'],
-				];
-			var EIFEvaluation = [
-				['', 'x>=1&&x<=19', 'x>=20&&x<=50', 'x>50'],
-				['y==1', '5', '5', '7'],
-				['y>=2&&y<=5', '5', '7', '10'],
-				['y>5', '7', '10', '10'],
-				];
-
-			if(DET > 0 && RET > 0){
-				for(var j = 1; j<ILFEvaluation[0].length; j++){
-					var ILFCondition = ILFEvaluation[0][j];
-					var detEvaluationStr = "var x="+DET+";if("+ILFCondition+"){module.exports = true;}else{module.exports = false;}";
-					var detResult = eval(detEvaluationStr);
-					if(detResult){
-						for(var k= 1; k<ILFEvaluation.length; k++ ){
-							var EIFCondition = ILFEvaluation[k][j];
-							var retEvaluationStr = "var y="+RET+";if("+EIFCondition+"){module.exports = true;}else{module.exports = false;}";
-							var retResult = eval(retEvaluationStr);
-//							console.log(retResult);
-							if(retResult){
-								ILF = ILFEvaluation[j][k];
-								break;
-							}
-						}
-						break;
-					}
-				}
-			}
-
-			diagramAnalytics.DET = DET;
-			diagramAnalytics.RET = RET;
-			diagramAnalytics.ILF = ILF;
-			diagramAnalytics.EIF = EIF;
 
 
 			domainModelAnalytics.AttributeNum += diagramAnalytics.AttributeNum;
 			domainModelAnalytics.OperationNum += diagramAnalytics.OperationNum;
 			domainModelAnalytics.ElementNum += diagramAnalytics.ElementNum;
-			domainModelAnalytics.ILF += diagramAnalytics.ILF;
-			domainModelAnalytics.EIF += diagramAnalytics.EIF;
+//			domainModelAnalytics.ILF += diagramAnalytics.ILF;
+//			domainModelAnalytics.EIF += diagramAnalytics.EIF;
 			
 			domainModelAnalytics.DiagramNum ++;
 		}
@@ -821,9 +807,7 @@
 				var EXTIVK = 0;
 				var EXTCLL = 0;
 				var TRAN_NA = 0;
-				var TN = 0;
-				var WTN = 0;
-				var DEWTN = 0;
+				var NT = 0;
 				var EI = 0;
 				var EO = 0;
 				var EQ = 0;
@@ -882,60 +866,9 @@
 							TRAN_NA++;
 						}
 						else {
-							TN ++;
+							NT ++;
 						}
 						
-						// The rules to determine WTN
-						if(Path.archDiff < 5){
-							Path.archWeight=4;
-						}
-						else if(Path.archDiff <= 7){
-							Path.archWeight= 10;
-						}
-						else if(Path.archDiff > 7) {
-							Path.archWeight=15;
-						}
-						
-						WTN += Number(Path.archWeight);
-						
-						// The rules to determine DETN
-						if(Path.pathLength <= 3) {
-							// The rules to determine WTN
-							if(Path.archDiff < 5){
-								Path.implWeight=2;
-							}
-							else if(Path.archDiff <= 7){
-								Path.implWeight= 8;
-							}
-							else if(Path.archDiff > 7) {
-								Path.implWeight=12;
-							}
-						}
-						else if(Path.pathLength <= 5){
-							// The rules to determine WTN
-							if(Path.archDiff < 5){
-								Path.implWeight=4;
-							}
-							else if(Path.archDiff <= 7){
-								Path.implWeight= 10;
-							}
-							else if(Path.archDiff > 7) {
-								Path.implWeight=15;
-							}
-						} else if(Path.pathLength > 5 ){
-							// The rules to determine WTN
-							if(Path.archDiff < 5){
-								Path.implWeight=6;
-							}
-							else if(Path.archDiff <= 7){
-								Path.implWeight= 14;
-							}
-							else if(Path.archDiff > 7) {
-								Path.implWeight=18;
-							}
-						}
-						
-						DEWTN += Number(Path.implWeight);
 					}
 				}
 			
@@ -947,9 +880,9 @@
 				diagramAnalytics.EXTIVK = EXTIVK;
 				diagramAnalytics.EXTCLL = EXTCLL;
 				diagramAnalytics.TRAN_NA = TRAN_NA;
-				diagramAnalytics.TN = TN;
-				diagramAnalytics.WTN = WTN;
-				diagramAnalytics.DEWTN = DEWTN;
+				diagramAnalytics.NT = NT;
+//				diagramAnalytics.NWT = NWT;
+//				diagramAnalytics.NWT_DE = NWT_DE;
 				diagramAnalytics.EI = EI;
 				diagramAnalytics.EO = EO;
 				diagramAnalytics.EQ = EQ;
@@ -977,9 +910,9 @@
 				useCaseAnalytics.EXTIVK += diagramAnalytics.EXTIVK;
 				useCaseAnalytics.EXTCLL += diagramAnalytics.EXTCLL;
 				useCaseAnalytics.TRAN_NA += diagramAnalytics.TRAN_NA;
-				useCaseAnalytics.TN += diagramAnalytics.TN;
-				useCaseAnalytics.DEWTN += diagramAnalytics.DEWTN;
-				useCaseAnalytics.WTN += diagramAnalytics.WTN;
+				useCaseAnalytics.NT += diagramAnalytics.NT;
+//				useCaseAnalytics.NWT_DE += diagramAnalytics.NWT_DE;
+//				useCaseAnalytics.NWT += diagramAnalytics.NWT;
 				useCaseAnalytics.EI += diagramAnalytics.EI;
 				useCaseAnalytics.EO += diagramAnalytics.EO;
 				useCaseAnalytics.EQ += diagramAnalytics.EQ;
@@ -994,7 +927,8 @@
 		useCaseAnalytics.AvgPathLength = useCaseAnalytics.PathNum == 0? 0: useCaseAnalytics.TotalPathLength/useCaseAnalytics.PathNum;
 		useCaseAnalytics.ArchDiff = useCaseAnalytics.AvgDegree*useCaseAnalytics.AvgPathLength;
 		
-		modelEvaluator.redoUseCaseEvaluation(useCaseInfo);
+//		console.log(modelXMLParser);
+		umlEvaluator.redoUseCaseEvaluation(useCaseInfo);
 
 //		useCaseInfo.UseCaseAnalytics = useCaseAnalytics;
 
@@ -1012,6 +946,8 @@
 		var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
 		var pathAnalyticsStr = "id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase\n";
 		var pathNum = 0;
+		var expandedPathAnalyticsStr = "id,path,transactional,path_length,diagram,useCase\n";
+		var expandedPathNum = 0;
 		var elementAnalyticsStr = "id,element,type,outboundDegree,inboundDegree,diagram,useCase\n";
 		var elementNum = 0;
 		var diagramAnalyticsStr = "id,diagram,path_num,interface_operation_num,data_operation_num,control_operation_num,partial_matched_num,EI,EO,EQ\n";
@@ -1033,6 +969,19 @@
 				path.actorNum+","+
 				diagramAnalytics.Name+","+
 				useCaseAnalytics.Name+"\n";
+			}
+			
+			for(var j in diagramAnalytics.Paths){
+				for(var k in diagramAnalytics.Paths[j].Operations.transactional){
+				var transactionalOperation = diagramAnalytics.Paths[j].Operations.transactional[k];
+				expandedPathNum++;
+				expandedPathAnalyticsStr += expandedPathNum+","+
+				diagramAnalytics.Paths[j].PathStr.replace(/,/gi, "")+","+ 
+				transactionalOperation+","+ 
+				diagramAnalytics.Paths[j].Elements.length+","+ 
+				diagramAnalytics.Name+","+ 
+				useCaseAnalytics.Name+"\n";
+				}
 			}
 
 			for(var j in diagramAnalytics.Elements){
@@ -1085,6 +1034,15 @@
 						}
 						return;
 					}
+					
+					fs.writeFile(useCaseAnalytics.OutputDir+"/expandedPathAnalytics.csv", expandedPathAnalyticsStr, function(err) {
+						if(err) {
+							console.log(err);
+							if(callbackfunc !== undefined){
+								callbackfunc(false);
+							}
+							return;
+						}
 
 					console.log("Paths Analytics were saved!");
 //					console.log(useCaseAnalytics.OutputDir+"/"+useCaseAnalytics.PathAnalyticsFileName);
@@ -1102,6 +1060,7 @@
 						generateUseCaseStatisticalCharts(useCaseAnalytics, callbackfunc);
 
 					});
+					});
 				});
 			});
 
@@ -1110,7 +1069,7 @@
 
 
 	function generateUseCaseStatisticalCharts(useCaseAnalytics, callbackfunc){
-		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/UseCaseAnalyticsScript.R "'+useCaseAnalytics.OutputDir+"/"+useCaseAnalytics.ElementAnalyticsFileName+'" "'+useCaseAnalytics.OutputDir+"/"+useCaseAnalytics.PathAnalyticsFileName+'" "'+useCaseAnalytics.OutputDir+'" "."';
+		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/UseCaseAnalyticsScript.R "'+useCaseAnalytics.OutputDir+"/"+useCaseAnalytics.ElementAnalyticsFileName+'" "'+useCaseAnalytics.OutputDir+"/"+useCaseAnalytics.PathAnalyticsFileName+'" "'+useCaseAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+useCaseAnalytics.OutputDir+'" "."';
 //		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
 
@@ -1154,23 +1113,23 @@
 			EXTIVK: 0,
 			EXTCLL: 0,
 			TRAN_NA: 0,
-			TN: 0,
-			WTN: 0,
-			DEWTN: 0,
-			UEUCW:0,
-			UEXUCW:0,
-			UAW:0,
+			NT: 0,
+//			NWT: 0,
+//			NWT_DE: 0,
+//			UEUCW:0,
+//			UEXUCW:0,
+//			UAW:0,	//These attributes are not set, added by the specific evaluators
 			EI: 0,
 			EO: 0,
 			EQ: 0,
 			FUNC_NA: 0,
 			FN: 0,
-			ILF: 0,
-			EIF: 0,
+//			ILF: 0,
+//			EIF: 0,
 			TCF:0,
 			EF:0,
-			AFP:0,
-			VAF:0,
+//			AFP:0,
+//			VAF:0,
 			Effort:0,
 			PathAnalyticsFileName:"pathAnalytics.csv",
 			ElementAnalyticsFileName:"elementAnalytics.csv",
@@ -1184,8 +1143,8 @@
 		return {
 			OutputDir:domainModel.outputDir,
 			AccessDir:domainModel.accessDir,
-			ILF: 0,
-			EIF: 0,
+//			ILF: 0,
+//			EIF: 0,
 			AttributeNum: 0,
 			OperationNum: 0,
 			ElementNum: 0,
@@ -1218,17 +1177,17 @@
 			AvgDegree: 0,
 			UseCaseNum: 0,
 			DiagramNum: 0,
-			UEUCW:0,
-			UEXUCW:0,
+//			UEUCW:0,
+//			UEXUCW:0,
 			INT : 0,
 			DM: 0,
 			CTRL: 0,
 			EXTIVK: 0,
 			EXTCLL: 0,
 			TRAN_NA: 0,
-			TN:0,
-			WTN:0,
-			DEWTN:0,
+			NT:0,
+//			NWT:0,
+//			NWT_DE:0,
 			CCSS: 0,
 //			IT: 0,
 			ArchDiff:0,
@@ -1293,7 +1252,7 @@
 			TRAN_NA: 0,
 			EXTIVK: 0,
 			EXTCLL: 0,
-			TN:0,
+			NT:0,
 			CCSS: 0,
 			AvgPathLength:0,
 			AvgDegree:0,

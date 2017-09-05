@@ -15,7 +15,7 @@
 	var mkdirp = require('mkdirp');
 	
 	function toModelEvaluationHeader(){
-		return "Path_Num,UseCase_Num,Diagram_Num,INT,INT_ALY,DM,DM_ALY,CTRL,CTRL_ALY,EXTIVK,EXTIVK_ALY,EXTCLL,EXTCLL_ALY,TN,TN_ALY,WTN_ALY,WTNDC_ALY";
+		return "Path_Num,UseCase_Num,Diagram_Num,INT,INT_ALY,DM,DM_ALY,CTRL,CTRL_ALY,EXTIVK,EXTIVK_ALY,EXTCLL,EXTCLL_ALY,NT,NT_ALY,NWT_ALY,NWT_DE_ALY";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
@@ -35,14 +35,14 @@
 		modelAnalytics.EXTIVK+","+
 		modelEmpirics.EXTCLL+","+
 		modelAnalytics.EXTCLL+","+
-		modelEmpirics.TN+","+
-		modelAnalytics.TN+","+
-		modelAnalytics.WTN+","+
-		modelAnalytics.WTNDC;
+		modelEmpirics.NT+","+
+		modelAnalytics.NT+","+
+		modelAnalytics.NWT+","+
+		modelAnalytics.NWT_DE;
 	}
 	
 	function toUseCaseEvaluationHeader(){
-		return "CCSS_EMP,CCSS_ALY, EI_EMP,EI_ALY,EO_EMP,EO_ALY,EQ,EQ_ALY,FN,FN_ALY,DM, DM_ALY,INT,INT_ALY,CTRL,CTRL_ALY,EXTIVK,EXTIVK_ALY,EXTCLL,EXTCLL_ALY,TN,TN_ALY";
+		return "CCSS_EMP,CCSS_ALY, EI_EMP,EI_ALY,EO_EMP,EO_ALY,EQ,EQ_ALY,FN,FN_ALY,DM, DM_ALY,INT,INT_ALY,CTRL,CTRL_ALY,EXTIVK,EXTIVK_ALY,EXTCLL,EXTCLL_ALY,NT,NT_ALY";
 		
 	}
 	
@@ -70,8 +70,8 @@
 			useCaseAnalytics.EXTIVK+","+
 			useCaseEmpirics.EXTCLL+","+
 			useCaseAnalytics.EXTCLL+","+
-			useCaseEmpirics.TN+","+
-			useCaseAnalytics.TN;
+			useCaseEmpirics.NT+","+
+			useCaseAnalytics.NT;
 	}
 	
 //	function loadFromModelEmpirics(modelEmpirics, modelInfo, modelIndex){
@@ -88,8 +88,95 @@
 //		modelEmpirics.CTRL = 0;
 //		modelEmpirics.EXTIVK = 0;
 //		modelEmpirics.EXTCLL = 0;
-//		modelEmpirics.TN = 0;
+//		modelEmpirics.NT = 0;
 //	}
+	
+	function evaluateModel(modelInfo){
+		var NWT = 0;
+		var NWT_DE = 0;
+		for(var i in modelInfo.UseCases){
+			var useCaseInfo = modelInfo.UseCases[i];
+			var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
+			NWT += useCaseAnalytics.NWT;
+			NWT_DE += useCaseAnalytics.NWT_DE;
+		}
+		
+		var modelAnalytics = modelInfo.ModelAnalytics;
+		modelAnalytics.NWT = NWT;
+		modelAnalytics.NWT_DE = NWT_DE;
+	}
+	
+	function evaluateUseCase(useCaseInfo){
+		var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
+
+		var NWT = 0;
+		var NWT_DE = 0;
+		
+		for(var i in useCaseAnalytics.Diagrams){
+			
+		var diagram = useCaseAnalytics.Diagrams[i];
+		var diagramAnalytics = diagram.DiagramAnalytics;
+		
+		for(var j in diagramAnalytics.Paths){
+		var Path = diagramAnalytics.Paths[j];
+		// The rules to determine NWT
+		if(Path.archDiff < 5){
+			Path.archWeight=4;
+		}
+		else if(Path.archDiff <= 7){
+			Path.archWeight= 10;
+		}
+		else if(Path.archDiff > 7) {
+			Path.archWeight=15;
+		}
+		
+		NWT += Number(Path.archWeight);
+		
+		// The rules to determine DENT
+		if(Path.pathLength <= 3) {
+			// The rules to determine NWT
+			if(Path.archDiff < 5){
+				Path.implWeight=2;
+			}
+			else if(Path.archDiff <= 7){
+				Path.implWeight= 8;
+			}
+			else if(Path.archDiff > 7) {
+				Path.implWeight=12;
+			}
+		}
+		else if(Path.pathLength <= 5){
+			// The rules to determine NWT
+			if(Path.archDiff < 5){
+				Path.implWeight=4;
+			}
+			else if(Path.archDiff <= 7){
+				Path.implWeight= 10;
+			}
+			else if(Path.archDiff > 7) {
+				Path.implWeight=15;
+			}
+		} else if(Path.pathLength > 5 ){
+			// The rules to determine NWT
+			if(Path.archDiff < 5){
+				Path.implWeight=6;
+			}
+			else if(Path.archDiff <= 7){
+				Path.implWeight= 14;
+			}
+			else if(Path.archDiff > 7) {
+				Path.implWeight=18;
+			}
+		}
+		
+		NWT_DE += Number(Path.implWeight);
+
+		}
+		}
+		
+		useCaseAnalytics.NWT = NWT;
+		useCaseAnalytics.NWT_DE = NWT_DE;
+	}
 	
 	function initModelEmpirics(modelEmpirics){
 	modelEmpirics.CCSS = 0;
@@ -104,7 +191,7 @@
 	modelEmpirics.CTRL = 0;
 	modelEmpirics.EXTIVK = 0;
 	modelEmpirics.EXTCLL = 0;
-	modelEmpirics.TN = 0;
+	modelEmpirics.NT = 0;
 	}
 	
 
@@ -123,7 +210,7 @@
 		useCaseEmpirics.CTRL = Number(useCaseEmpirics.CTRL);
 		useCaseEmpirics.EXTIVK = Number(useCaseEmpirics.EXTIVK);
 		useCaseEmpirics.EXTCLL = Number(useCaseEmpirics.EXTCLL);
-		useCaseEmpirics.TN = Number(useCaseEmpirics.TN);
+		useCaseEmpirics.NT = Number(useCaseEmpirics.NT);
 		
 		if(!modelInfo.ModelEmpirics){
 			modelInfo.ModelEmpirics = {};
@@ -147,11 +234,39 @@
 	 	modelEmpirics.CTRL += useCaseEmpirics.CTRL;
 	 	modelEmpirics.EXTIVK += useCaseEmpirics.EXTIVK;
 	 	modelEmpirics.EXTCLL += useCaseEmpirics.EXTCLL;
-	 	modelEmpirics.TN += useCaseEmpirics.TN;
+	 	modelEmpirics.NT += useCaseEmpirics.NT;
 	 	
 	 	console.log(modelEmpirics);
 	}
 	
+
+	function evaluateRepoForModels(repoAnalytics){
+		 repoAnalytics.repoModelEvaluationResultsPath = repoAnalytics.OutputDir+"/Model_Evaluation_Results";
+		 
+			mkdirp(repoAnalytics.repoModelEvaluationResultsPath, function(err) { 
+				if(err) {
+					console.log(err);
+			        return;
+			    }
+				 var command1 = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/BootstrapForIdentificationRate.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForModelsFileName+'" "'+repoAnalytics.repoModelEvaluationResultsPath+'"';
+					console.log('evaluate models with bootstrap');
+					console.log(command1);
+					var child = exec(command1, function(error, stdout, stderr) {
+
+						 var command2 = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/LinearRegressionForNT.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForModelsFileName+'" "'+repoAnalytics.repoModelEvaluationResultsPath+'"';
+							console.log('evaluate models with bootstrap');
+							console.log(command2);
+							var child = exec(command2, function(error, stdout, stderr) {
+
+								if (error !== null) {
+//									console.log('exec error: ' + error);
+									console.log('exec error: repo id=' + repoAnalytics._id);
+								} 
+								console.log("Repo Evaluation were saved!");
+							});
+					});
+			});
+	}
 	
 	module.exports = {
 			toModelEvaluationHeader: toModelEvaluationHeader,
@@ -159,7 +274,10 @@
 			toUseCaseEvaluationHeader: toUseCaseEvaluationHeader,
 			toUseCaseEvaluationRow: toUseCaseEvaluationRow,
 //			loadFromModelEmpirics: loadFromModelEmpirics,
-			loadFromUseCaseEmpirics: loadFromUseCaseEmpirics
+			loadFromUseCaseEmpirics: loadFromUseCaseEmpirics,
+			evaluateRepoForModels: evaluateRepoForModels,
+			evaluateUseCase: evaluateUseCase,
+			evaluateModel:evaluateModel
 	}
 	
 	

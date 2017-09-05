@@ -8,9 +8,9 @@ boot(data = dmData, statistic = rsq, R = 1000, formula = "")
 
 Bootstrap Statistics :
      original       bias    std. error
-t1* 0.5000000 -0.005222222   0.1168727
-t2* 0.6666667 -0.004944444   0.1111817
-t3* 0.6666667 -0.004944444   0.1111817
+t1* 0.5000000 -0.003277778   0.1185831
+t2* 0.6666667 -0.005555556   0.1128493
+t3* 0.6666667 -0.005555556   0.1128493
 [1] "Bootstrap Results:"
 [1] "Evaluation for pred(.15)"
 BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
@@ -21,8 +21,9 @@ boot.ci(boot.out = results, type = "bca", index = 1)
 
 Intervals : 
 Level       BCa          
-95%   ( 0.2222,  0.7222 )  
+95%   ( 0.2222,  0.6667 )  
 Calculations and Intervals on Original Scale
+Some BCa intervals may be unstable
 [1] "Evaluation for pred(.25)"
 BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
 Based on 1000 bootstrap replicates
