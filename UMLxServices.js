@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var fs = require("fs");
 var admZip = require('adm-zip');
+var exec = require('child_process').exec;
 var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
 var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
@@ -456,6 +457,7 @@ app.get('/queryEstimationModel', function(req, res){
 					res.render('calibrationResult', {calibrationResult:calibrationResults[x], ver: new Date().getTime()});
 				}
 			});
+			
 		}, false);
 		});
 	}
@@ -484,6 +486,39 @@ app.get('/evaluateRepoForModels', function(req, res){
 //				console.log(repoEvaluationResult.repoEvaluationStr);
 				res.end(modelEvaluationStr);
 				}
+			}, refresh);
+		});
+})
+
+app.get('/dumpRepoDescriptiveDistributions', function(req, res){
+	var repoId = req.query.repo_id;
+	var refresh = false;
+	
+	if(req.query.refresh === 'true'){
+	refresh = true;
+	}
+	
+//	var repoId = "595b50d4aebbbd2c4c4c6b58";
+	console.log(repoId);
+//	var repoId = req.query.repo_id;
+	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+			umlEvaluator.evaluateRepoForModels(repoInfo, function(modelEvaluationStr, repoAnalytics){
+				umlEvaluator.evaluateRepoForUseCases(repoInfo, function(useCaseEvaluationStr, repoAnalytics){
+					
+					var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/RepoDiscriptiveAnalysis.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForUseCasesFileName+'" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForModelsFileName+'" "'+repoAnalytics.OutputDir+'" "."';
+//					console.log('generate model Analytics');
+					console.log(command);
+					var child = exec(command, function(error, stdout, stderr) {
+
+						if (error !== null) {
+//							console.log('exec error: ' + error);
+							console.log('exec error: repo id=' + repoAnalytics._id)
+							res.end('exec error: repo id=' + repoAnalytics._id);
+						} 
+						res.end('success');
+					});
+					
+				}, refresh);
 			}, refresh);
 		});
 })
