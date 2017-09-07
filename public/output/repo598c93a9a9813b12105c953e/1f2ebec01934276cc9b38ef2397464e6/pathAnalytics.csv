@@ -1,0 +1,51 @@
+id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
+1,Actor1->b1->c1->e1->c2->e2->b2,FUNC_NA,TRAN_NA,7,2,2,2,1,4,Experiment Use Case,Experiment Use Case
+2,Actor1->b1->c1->b2,EQ,CTRL|INT,4,2,1,0,1,4,Experiment Use Case,Experiment Use Case
+3,Actor1->b2->b1,FUNC_NA,TRAN_NA,3,2,0,0,1,4,Experiment Use Case,Experiment Use Case
+4,Actor2->b2->b1,FUNC_NA,TRAN_NA,3,2,0,0,1,4,Experiment Use Case,Experiment Use Case
+5,e3->c2->e2->b2,FUNC_NA,TRAN_NA,4,1,1,2,0,3,Experiment Use Case,Experiment Use Case
+6,e3->c2->e2->b1,FUNC_NA,TRAN_NA,4,1,1,2,0,3,Experiment Use Case,Experiment Use Case
+7,c3->e2->b2,FUNC_NA,TRAN_NA,3,1,1,1,0,1,Experiment Use Case,Experiment Use Case
+8,c3->e2->b1,FUNC_NA,TRAN_NA,3,1,1,1,0,1,Experiment Use Case,Experiment Use Case
+9,Actor1->b1->c1->e1,EI,CTRL|DM|EI,4,1,1,1,1,1,Experiment Model 2,TestAlgorithm1
+10,Actor2->Object1->b1,FUNC_NA,TRAN_NA,3,2,0,0,1,1,Experiment Model 2,TestAlgorithm1
+11,Actor2->Object1->Object2->c1->e1,EI,CTRL|DM|EI,5,1,2,1,1,1,Experiment Model 2,TestAlgorithm1
+12,Actor1->b1->c1->e1,EI,CTRL|DM|EI,4,1,1,1,1,1,Experiment Model 2,Test use case
+13,Actor2->Object1->b1,FUNC_NA,TRAN_NA,3,2,0,0,1,1,Experiment Model 2,Test use case
+14,Actor2->Object1->Object2->c1->e1,EI,CTRL|DM|EI,5,1,2,1,1,1,Experiment Model 2,Test use case
+15,FTSR->Offers Page->Edit Offer->Modify offer page,EQ,CTRL|INT,4,2,1,0,1,1,Modify Offer,Modify Offer
+16,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,FUNC_NA,TRAN_NA,7,1,4,1,1,3,Partner Login,Partner Login
+17,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,FUNC_NA,CTRL|DM|EQ|INT,7,2,3,1,1,4,Partner Login,Partner Login
+18,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,FUNC_NA,TRAN_NA,7,1,5,1,0,3,Partner Login,Partner Login
+19,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,FUNC_NA,TRAN_NA,7,2,4,1,0,4,Partner Login,Partner Login
+20,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),EQ,CTRL|INT,4,2,1,0,1,1,Buy Partner Subscription,Buy Partner Subscription
+21,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,EQ,CTRL|INT,4,2,1,0,1,2,Buy Partner Subscription,Buy Partner Subscription
+22,Business Parter->Buy Success Page->Display Home Page(Designed by other part),FUNC_NA,TRAN_NA,3,1,1,0,1,0,Buy Partner Subscription,Buy Partner Subscription
+23,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,4,Buy Partner Subscription,Buy Partner Subscription
+24,FTSR->offer details->Check validate->Display modify error,FUNC_NA,TRAN_NA,4,1,2,0,1,1,Publish Offer,Publish Offer
+25,FTSR->offer details->Check validate->Publish offer,FUNC_NA,TRAN_NA,4,1,2,0,1,1,Publish Offer,Publish Offer
+26,FTSR->offers pages->Display offer->offer details,EQ,CTRL|INT,4,2,1,0,1,2,Publish Offer,Publish Offer
+27,FTSR->offers pages->Display offer->Retrieve offers->Dispaly Error Msg,FUNC_NA,TRAN_NA,5,1,3,0,1,1,Publish Offer,Publish Offer
+28,Offers->Retrieve offers->Dispaly Error Msg,FUNC_NA,TRAN_NA,3,0,2,1,0,0,Publish Offer,Publish Offer
+29,Auto publish reschedule->offer details->Check validate->Display modify error,FUNC_NA,TRAN_NA,4,1,3,0,0,1,Publish Offer,Publish Offer
+30,Auto publish reschedule->offer details->Check validate->Publish offer,FUNC_NA,TRAN_NA,4,1,3,0,0,1,Publish Offer,Publish Offer
+31,Test Coupon->Generate Test Coupon->Partner's Mobile->Open Coupon Page,FUNC_NA,TRAN_NA,4,0,2,2,0,0,Test Coupon,Test Coupon
+32,FT->Coupon Page->Redeem Coupon->Coupon Database,EI,CTRL|DM|EI,4,1,1,1,1,0,Test Coupon,Test Coupon
+33,FT->Coupon Page->Save coupon for later->Partner's Mobile->Open Coupon Page,FUNC_NA,TRAN_NA,5,1,2,1,1,1,Test Coupon,Test Coupon
+34,FT->Coupon Redeemed->Coupon Validator->Coupon Database,EI,CTRL|DM|EI,4,1,1,1,1,1,Test Coupon,Test Coupon
+35,FT->Coupon Invalid->Coupon Validator->Coupon Database,EI,CTRL|DM|EI,4,1,1,1,1,1,Test Coupon,Test Coupon
+36,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,EI,CTRL|DM|EI,4,1,1,1,1,0,Cancel Partner Subscription,Cancel Partner Subscription
+37,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,EQ,CTRL|INT,5,2,2,0,1,2,Cancel Partner Subscription,Cancel Partner Subscription
+38,Business Partner->Cancel Subscription Comfirmation Page->Display Cancel Sub page,FUNC_NA,TRAN_NA,3,1,1,0,1,0,Cancel Partner Subscription,Cancel Partner Subscription
+39,Business Partner->Cancel Subscription Success Page->Display Home Page,FUNC_NA,TRAN_NA,3,1,1,0,1,0,Cancel Partner Subscription,Cancel Partner Subscription
+40,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,EQ,CTRL|INT,4,2,1,0,1,1,Cancel Partner Subscription,Cancel Partner Subscription
+41,User->Upload Image button->File Chooser Windows->Cancel Button,EQ,CTRL|INT,4,2,1,0,1,1,Upload Image,Upload Image
+42,User->Upload Image button->File Chooser Windows->Select the Image file,EQ,CTRL|INT,4,2,1,0,1,1,Upload Image,Upload Image
+43,User->Open Button->Display Image in Coupon Image->Design Coupon screen,EQ,CTRL|INT,4,2,1,0,1,1,Upload Image,Upload Image
+44,Business Partner->Coupon Designer->Upload Image->External Image Service,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,0,Design Coupon,Design Coupon
+45,Business Partner->Coupon Designer->Test,FUNC_NA,TRAN_NA,3,1,1,0,1,0,Design Coupon,Design Coupon
+46,Business Partner->Coupon Designer->Retrieves->Error Message,EQ,CTRL|INT,4,2,1,0,1,1,Design Coupon,Design Coupon
+47,Business Partner->Coupon Designer->Save->Coupon,EI,CTRL|DM|EI,4,1,1,1,1,0,Design Coupon,Design Coupon
+48,Business Partner->Coupon Designer->Edit->Coupon Templates,EI,CTRL|DM|EI,4,1,1,1,1,0,Design Coupon,Design Coupon
+49,Offers->Retrieves->Error Message,FUNC_NA,TRAN_NA,3,1,1,1,0,0,Design Coupon,Design Coupon
+50,Third Party Client->access->Coupon,FUNC_NA,CTRL|EXTCLL|DM|EI,3,0,1,1,1,0,Design Coupon,Design Coupon

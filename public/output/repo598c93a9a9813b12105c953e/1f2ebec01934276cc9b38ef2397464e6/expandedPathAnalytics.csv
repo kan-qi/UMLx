@@ -1,0 +1,92 @@
+id,path,transactional,path_length,diagram,useCase
+1,Actor1->b1->c1->e1->c2->e2->b2,TRAN_NA,7,Experiment Use Case,Experiment Use Case
+2,Actor1->b1->c1->b2,CTRL,4,Experiment Use Case,Experiment Use Case
+3,Actor1->b1->c1->b2,INT,4,Experiment Use Case,Experiment Use Case
+4,Actor1->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
+5,Actor2->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
+6,e3->c2->e2->b2,TRAN_NA,4,Experiment Use Case,Experiment Use Case
+7,e3->c2->e2->b1,TRAN_NA,4,Experiment Use Case,Experiment Use Case
+8,c3->e2->b2,TRAN_NA,3,Experiment Use Case,Experiment Use Case
+9,c3->e2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
+10,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,TestAlgorithm1
+11,Actor1->b1->c1->e1,DM,4,Experiment Model 2,TestAlgorithm1
+12,Actor1->b1->c1->e1,EI,4,Experiment Model 2,TestAlgorithm1
+13,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,TestAlgorithm1
+14,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,TestAlgorithm1
+15,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,TestAlgorithm1
+16,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,TestAlgorithm1
+17,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,Test use case
+18,Actor1->b1->c1->e1,DM,4,Experiment Model 2,Test use case
+19,Actor1->b1->c1->e1,EI,4,Experiment Model 2,Test use case
+20,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,Test use case
+21,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,Test use case
+22,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,Test use case
+23,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,Test use case
+24,FTSR->Offers Page->Edit Offer->Modify offer page,CTRL,4,Modify Offer,Modify Offer
+25,FTSR->Offers Page->Edit Offer->Modify offer page,INT,4,Modify Offer,Modify Offer
+26,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
+27,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,CTRL,7,Partner Login,Partner Login
+28,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,DM,7,Partner Login,Partner Login
+29,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,EQ,7,Partner Login,Partner Login
+30,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,INT,7,Partner Login,Partner Login
+31,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
+32,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,TRAN_NA,7,Partner Login,Partner Login
+33,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),CTRL,4,Buy Partner Subscription,Buy Partner Subscription
+34,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),INT,4,Buy Partner Subscription,Buy Partner Subscription
+35,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,CTRL,4,Buy Partner Subscription,Buy Partner Subscription
+36,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,INT,4,Buy Partner Subscription,Buy Partner Subscription
+37,Business Parter->Buy Success Page->Display Home Page(Designed by other part),TRAN_NA,3,Buy Partner Subscription,Buy Partner Subscription
+38,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,CTRL,6,Buy Partner Subscription,Buy Partner Subscription
+39,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,DM,6,Buy Partner Subscription,Buy Partner Subscription
+40,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,EQ,6,Buy Partner Subscription,Buy Partner Subscription
+41,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,INT,6,Buy Partner Subscription,Buy Partner Subscription
+42,FTSR->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
+43,FTSR->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
+44,FTSR->offers pages->Display offer->offer details,CTRL,4,Publish Offer,Publish Offer
+45,FTSR->offers pages->Display offer->offer details,INT,4,Publish Offer,Publish Offer
+46,FTSR->offers pages->Display offer->Retrieve offers->Dispaly Error Msg,TRAN_NA,5,Publish Offer,Publish Offer
+47,Offers->Retrieve offers->Dispaly Error Msg,TRAN_NA,3,Publish Offer,Publish Offer
+48,Auto publish reschedule->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
+49,Auto publish reschedule->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
+50,Test Coupon->Generate Test Coupon->Partner's Mobile->Open Coupon Page,TRAN_NA,4,Test Coupon,Test Coupon
+51,FT->Coupon Page->Redeem Coupon->Coupon Database,CTRL,4,Test Coupon,Test Coupon
+52,FT->Coupon Page->Redeem Coupon->Coupon Database,DM,4,Test Coupon,Test Coupon
+53,FT->Coupon Page->Redeem Coupon->Coupon Database,EI,4,Test Coupon,Test Coupon
+54,FT->Coupon Page->Save coupon for later->Partner's Mobile->Open Coupon Page,TRAN_NA,5,Test Coupon,Test Coupon
+55,FT->Coupon Redeemed->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
+56,FT->Coupon Redeemed->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
+57,FT->Coupon Redeemed->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
+58,FT->Coupon Invalid->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
+59,FT->Coupon Invalid->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
+60,FT->Coupon Invalid->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
+61,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
+62,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,DM,4,Cancel Partner Subscription,Cancel Partner Subscription
+63,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,EI,4,Cancel Partner Subscription,Cancel Partner Subscription
+64,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,CTRL,5,Cancel Partner Subscription,Cancel Partner Subscription
+65,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,INT,5,Cancel Partner Subscription,Cancel Partner Subscription
+66,Business Partner->Cancel Subscription Comfirmation Page->Display Cancel Sub page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
+67,Business Partner->Cancel Subscription Success Page->Display Home Page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
+68,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
+69,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,INT,4,Cancel Partner Subscription,Cancel Partner Subscription
+70,User->Upload Image button->File Chooser Windows->Cancel Button,CTRL,4,Upload Image,Upload Image
+71,User->Upload Image button->File Chooser Windows->Cancel Button,INT,4,Upload Image,Upload Image
+72,User->Upload Image button->File Chooser Windows->Select the Image file,CTRL,4,Upload Image,Upload Image
+73,User->Upload Image button->File Chooser Windows->Select the Image file,INT,4,Upload Image,Upload Image
+74,User->Open Button->Display Image in Coupon Image->Design Coupon screen,CTRL,4,Upload Image,Upload Image
+75,User->Open Button->Display Image in Coupon Image->Design Coupon screen,INT,4,Upload Image,Upload Image
+76,Business Partner->Coupon Designer->Upload Image->External Image Service,CTRL,4,Design Coupon,Design Coupon
+77,Business Partner->Coupon Designer->Upload Image->External Image Service,EXTIVK,4,Design Coupon,Design Coupon
+78,Business Partner->Coupon Designer->Test,TRAN_NA,3,Design Coupon,Design Coupon
+79,Business Partner->Coupon Designer->Retrieves->Error Message,CTRL,4,Design Coupon,Design Coupon
+80,Business Partner->Coupon Designer->Retrieves->Error Message,INT,4,Design Coupon,Design Coupon
+81,Business Partner->Coupon Designer->Save->Coupon,CTRL,4,Design Coupon,Design Coupon
+82,Business Partner->Coupon Designer->Save->Coupon,DM,4,Design Coupon,Design Coupon
+83,Business Partner->Coupon Designer->Save->Coupon,EI,4,Design Coupon,Design Coupon
+84,Business Partner->Coupon Designer->Edit->Coupon Templates,CTRL,4,Design Coupon,Design Coupon
+85,Business Partner->Coupon Designer->Edit->Coupon Templates,DM,4,Design Coupon,Design Coupon
+86,Business Partner->Coupon Designer->Edit->Coupon Templates,EI,4,Design Coupon,Design Coupon
+87,Offers->Retrieves->Error Message,TRAN_NA,3,Design Coupon,Design Coupon
+88,Third Party Client->access->Coupon,CTRL,3,Design Coupon,Design Coupon
+89,Third Party Client->access->Coupon,EXTCLL,3,Design Coupon,Design Coupon
+90,Third Party Client->access->Coupon,DM,3,Design Coupon,Design Coupon
+91,Third Party Client->access->Coupon,EI,3,Design Coupon,Design Coupon
