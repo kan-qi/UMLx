@@ -25,7 +25,9 @@
 	var cocomoCalculator = require('./evaluators/COCOMOCalculator.js');
 	var umlDiagramEvaluator = require('./evaluators/UMLDiagramEvaluator.js');
 	var functionPointCalculator = require('./evaluators/FunctionPointEvaluator.js');
-	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator];
+	var projectEvaluator = require('./evaluators/ProjectEvaluator.js');
+	
+	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator];
 //	function setUp(){
 //		evaluators = [cocomoCalculator, useCaseCalculator, umlModelEvaluator];
 //		for(var i in evaluators){

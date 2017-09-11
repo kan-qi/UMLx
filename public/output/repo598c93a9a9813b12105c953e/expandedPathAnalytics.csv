@@ -2499,185 +2499,84 @@ id,path,transactional,path_length,diagram,useCase
 2498,Traveler->Select images screen->walgreens->display->Walgreens checkout,CTRL,5,Print photo books,Print photo books
 2499,Traveler->Select images screen->walgreens->display->Walgreens checkout,INT,5,Print photo books,Print photo books
 2500,Traveler->Select images screen->Place screen,TRAN_NA,3,Print photo books,Print photo books
-2501,Actor1->b1->c1->e1->c2->e2->b2,TRAN_NA,7,Experiment Use Case,Experiment Use Case
-2502,Actor1->b1->c1->b2,CTRL,4,Experiment Use Case,Experiment Use Case
-2503,Actor1->b1->c1->b2,INT,4,Experiment Use Case,Experiment Use Case
-2504,Actor1->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2505,Actor2->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2506,e3->c2->e2->b2,TRAN_NA,4,Experiment Use Case,Experiment Use Case
-2507,e3->c2->e2->b1,TRAN_NA,4,Experiment Use Case,Experiment Use Case
-2508,c3->e2->b2,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2509,c3->e2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2510,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,TestAlgorithm1
-2511,Actor1->b1->c1->e1,DM,4,Experiment Model 2,TestAlgorithm1
-2512,Actor1->b1->c1->e1,EI,4,Experiment Model 2,TestAlgorithm1
-2513,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,TestAlgorithm1
-2514,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,TestAlgorithm1
-2515,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,TestAlgorithm1
-2516,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,TestAlgorithm1
-2517,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,Test use case
-2518,Actor1->b1->c1->e1,DM,4,Experiment Model 2,Test use case
-2519,Actor1->b1->c1->e1,EI,4,Experiment Model 2,Test use case
-2520,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,Test use case
-2521,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,Test use case
-2522,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,Test use case
-2523,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,Test use case
-2524,FTSR->Offers Page->Edit Offer->Modify offer page,CTRL,4,Modify Offer,Modify Offer
-2525,FTSR->Offers Page->Edit Offer->Modify offer page,INT,4,Modify Offer,Modify Offer
-2526,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
-2527,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,CTRL,7,Partner Login,Partner Login
-2528,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,DM,7,Partner Login,Partner Login
-2529,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,EQ,7,Partner Login,Partner Login
-2530,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,INT,7,Partner Login,Partner Login
-2531,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
-2532,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,TRAN_NA,7,Partner Login,Partner Login
-2533,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),CTRL,4,Buy Partner Subscription,Buy Partner Subscription
-2534,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),INT,4,Buy Partner Subscription,Buy Partner Subscription
-2535,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,CTRL,4,Buy Partner Subscription,Buy Partner Subscription
-2536,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,INT,4,Buy Partner Subscription,Buy Partner Subscription
-2537,Business Parter->Buy Success Page->Display Home Page(Designed by other part),TRAN_NA,3,Buy Partner Subscription,Buy Partner Subscription
-2538,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,CTRL,6,Buy Partner Subscription,Buy Partner Subscription
-2539,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,DM,6,Buy Partner Subscription,Buy Partner Subscription
-2540,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,EQ,6,Buy Partner Subscription,Buy Partner Subscription
-2541,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,INT,6,Buy Partner Subscription,Buy Partner Subscription
-2542,FTSR->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
-2543,FTSR->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
-2544,FTSR->offers pages->Display offer->offer details,CTRL,4,Publish Offer,Publish Offer
-2545,FTSR->offers pages->Display offer->offer details,INT,4,Publish Offer,Publish Offer
-2546,FTSR->offers pages->Display offer->Retrieve offers->Dispaly Error Msg,TRAN_NA,5,Publish Offer,Publish Offer
-2547,Offers->Retrieve offers->Dispaly Error Msg,TRAN_NA,3,Publish Offer,Publish Offer
-2548,Auto publish reschedule->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
-2549,Auto publish reschedule->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
-2550,Test Coupon->Generate Test Coupon->Partner's Mobile->Open Coupon Page,TRAN_NA,4,Test Coupon,Test Coupon
-2551,FT->Coupon Page->Redeem Coupon->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2552,FT->Coupon Page->Redeem Coupon->Coupon Database,DM,4,Test Coupon,Test Coupon
-2553,FT->Coupon Page->Redeem Coupon->Coupon Database,EI,4,Test Coupon,Test Coupon
-2554,FT->Coupon Page->Save coupon for later->Partner's Mobile->Open Coupon Page,TRAN_NA,5,Test Coupon,Test Coupon
-2555,FT->Coupon Redeemed->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2556,FT->Coupon Redeemed->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
-2557,FT->Coupon Redeemed->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
-2558,FT->Coupon Invalid->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2559,FT->Coupon Invalid->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
-2560,FT->Coupon Invalid->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
-2561,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
-2562,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,DM,4,Cancel Partner Subscription,Cancel Partner Subscription
-2563,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,EI,4,Cancel Partner Subscription,Cancel Partner Subscription
-2564,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,CTRL,5,Cancel Partner Subscription,Cancel Partner Subscription
-2565,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,INT,5,Cancel Partner Subscription,Cancel Partner Subscription
-2566,Business Partner->Cancel Subscription Comfirmation Page->Display Cancel Sub page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
-2567,Business Partner->Cancel Subscription Success Page->Display Home Page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
-2568,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
-2569,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,INT,4,Cancel Partner Subscription,Cancel Partner Subscription
-2570,User->Upload Image button->File Chooser Windows->Cancel Button,CTRL,4,Upload Image,Upload Image
-2571,User->Upload Image button->File Chooser Windows->Cancel Button,INT,4,Upload Image,Upload Image
-2572,User->Upload Image button->File Chooser Windows->Select the Image file,CTRL,4,Upload Image,Upload Image
-2573,User->Upload Image button->File Chooser Windows->Select the Image file,INT,4,Upload Image,Upload Image
-2574,User->Open Button->Display Image in Coupon Image->Design Coupon screen,CTRL,4,Upload Image,Upload Image
-2575,User->Open Button->Display Image in Coupon Image->Design Coupon screen,INT,4,Upload Image,Upload Image
-2576,Business Partner->Coupon Designer->Upload Image->External Image Service,CTRL,4,Design Coupon,Design Coupon
-2577,Business Partner->Coupon Designer->Upload Image->External Image Service,EXTIVK,4,Design Coupon,Design Coupon
-2578,Business Partner->Coupon Designer->Test,TRAN_NA,3,Design Coupon,Design Coupon
-2579,Business Partner->Coupon Designer->Retrieves->Error Message,CTRL,4,Design Coupon,Design Coupon
-2580,Business Partner->Coupon Designer->Retrieves->Error Message,INT,4,Design Coupon,Design Coupon
-2581,Business Partner->Coupon Designer->Save->Coupon,CTRL,4,Design Coupon,Design Coupon
-2582,Business Partner->Coupon Designer->Save->Coupon,DM,4,Design Coupon,Design Coupon
-2583,Business Partner->Coupon Designer->Save->Coupon,EI,4,Design Coupon,Design Coupon
-2584,Business Partner->Coupon Designer->Edit->Coupon Templates,CTRL,4,Design Coupon,Design Coupon
-2585,Business Partner->Coupon Designer->Edit->Coupon Templates,DM,4,Design Coupon,Design Coupon
-2586,Business Partner->Coupon Designer->Edit->Coupon Templates,EI,4,Design Coupon,Design Coupon
-2587,Offers->Retrieves->Error Message,TRAN_NA,3,Design Coupon,Design Coupon
-2588,Third Party Client->access->Coupon,CTRL,3,Design Coupon,Design Coupon
-2589,Third Party Client->access->Coupon,EXTCLL,3,Design Coupon,Design Coupon
-2590,Third Party Client->access->Coupon,DM,3,Design Coupon,Design Coupon
-2591,Third Party Client->access->Coupon,EI,3,Design Coupon,Design Coupon
-2592,Actor1->b1->c1->e1->c2->e2->b2,TRAN_NA,7,Experiment Use Case,Experiment Use Case
-2593,Actor1->b1->c1->b2,CTRL,4,Experiment Use Case,Experiment Use Case
-2594,Actor1->b1->c1->b2,INT,4,Experiment Use Case,Experiment Use Case
-2595,Actor1->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2596,Actor2->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2597,e3->c2->e2->b2,TRAN_NA,4,Experiment Use Case,Experiment Use Case
-2598,e3->c2->e2->b1,TRAN_NA,4,Experiment Use Case,Experiment Use Case
-2599,c3->e2->b2,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2600,c3->e2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2601,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,TestAlgorithm1
-2602,Actor1->b1->c1->e1,DM,4,Experiment Model 2,TestAlgorithm1
-2603,Actor1->b1->c1->e1,EI,4,Experiment Model 2,TestAlgorithm1
-2604,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,TestAlgorithm1
-2605,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,TestAlgorithm1
-2606,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,TestAlgorithm1
-2607,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,TestAlgorithm1
-2608,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,Test use case
-2609,Actor1->b1->c1->e1,DM,4,Experiment Model 2,Test use case
-2610,Actor1->b1->c1->e1,EI,4,Experiment Model 2,Test use case
-2611,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,Test use case
-2612,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,Test use case
-2613,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,Test use case
-2614,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,Test use case
-2615,FTSR->Offers Page->Edit Offer->Modify offer page,CTRL,4,Modify Offer,Modify Offer
-2616,FTSR->Offers Page->Edit Offer->Modify offer page,INT,4,Modify Offer,Modify Offer
-2617,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
-2618,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,CTRL,7,Partner Login,Partner Login
-2619,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,DM,7,Partner Login,Partner Login
-2620,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,EQ,7,Partner Login,Partner Login
-2621,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,INT,7,Partner Login,Partner Login
-2622,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
-2623,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,TRAN_NA,7,Partner Login,Partner Login
-2624,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),CTRL,4,Buy Partner Subscription,Buy Partner Subscription
-2625,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),INT,4,Buy Partner Subscription,Buy Partner Subscription
-2626,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,CTRL,4,Buy Partner Subscription,Buy Partner Subscription
-2627,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,INT,4,Buy Partner Subscription,Buy Partner Subscription
-2628,Business Parter->Buy Success Page->Display Home Page(Designed by other part),TRAN_NA,3,Buy Partner Subscription,Buy Partner Subscription
-2629,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,CTRL,6,Buy Partner Subscription,Buy Partner Subscription
-2630,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,DM,6,Buy Partner Subscription,Buy Partner Subscription
-2631,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,EQ,6,Buy Partner Subscription,Buy Partner Subscription
-2632,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,INT,6,Buy Partner Subscription,Buy Partner Subscription
-2633,FTSR->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
-2634,FTSR->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
-2635,FTSR->offers pages->Display offer->offer details,CTRL,4,Publish Offer,Publish Offer
-2636,FTSR->offers pages->Display offer->offer details,INT,4,Publish Offer,Publish Offer
-2637,FTSR->offers pages->Display offer->Retrieve offers->Dispaly Error Msg,TRAN_NA,5,Publish Offer,Publish Offer
-2638,Offers->Retrieve offers->Dispaly Error Msg,TRAN_NA,3,Publish Offer,Publish Offer
-2639,Auto publish reschedule->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
-2640,Auto publish reschedule->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
-2641,Test Coupon->Generate Test Coupon->Partner's Mobile->Open Coupon Page,TRAN_NA,4,Test Coupon,Test Coupon
-2642,FT->Coupon Page->Redeem Coupon->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2643,FT->Coupon Page->Redeem Coupon->Coupon Database,DM,4,Test Coupon,Test Coupon
-2644,FT->Coupon Page->Redeem Coupon->Coupon Database,EI,4,Test Coupon,Test Coupon
-2645,FT->Coupon Page->Save coupon for later->Partner's Mobile->Open Coupon Page,TRAN_NA,5,Test Coupon,Test Coupon
-2646,FT->Coupon Redeemed->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2647,FT->Coupon Redeemed->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
-2648,FT->Coupon Redeemed->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
-2649,FT->Coupon Invalid->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2650,FT->Coupon Invalid->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
-2651,FT->Coupon Invalid->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
-2652,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
-2653,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,DM,4,Cancel Partner Subscription,Cancel Partner Subscription
-2654,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,EI,4,Cancel Partner Subscription,Cancel Partner Subscription
-2655,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,CTRL,5,Cancel Partner Subscription,Cancel Partner Subscription
-2656,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,INT,5,Cancel Partner Subscription,Cancel Partner Subscription
-2657,Business Partner->Cancel Subscription Comfirmation Page->Display Cancel Sub page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
-2658,Business Partner->Cancel Subscription Success Page->Display Home Page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
-2659,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
-2660,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,INT,4,Cancel Partner Subscription,Cancel Partner Subscription
-2661,User->Upload Image button->File Chooser Windows->Cancel Button,CTRL,4,Upload Image,Upload Image
-2662,User->Upload Image button->File Chooser Windows->Cancel Button,INT,4,Upload Image,Upload Image
-2663,User->Upload Image button->File Chooser Windows->Select the Image file,CTRL,4,Upload Image,Upload Image
-2664,User->Upload Image button->File Chooser Windows->Select the Image file,INT,4,Upload Image,Upload Image
-2665,User->Open Button->Display Image in Coupon Image->Design Coupon screen,CTRL,4,Upload Image,Upload Image
-2666,User->Open Button->Display Image in Coupon Image->Design Coupon screen,INT,4,Upload Image,Upload Image
-2667,Business Partner->Coupon Designer->Upload Image->External Image Service,CTRL,4,Design Coupon,Design Coupon
-2668,Business Partner->Coupon Designer->Upload Image->External Image Service,EXTIVK,4,Design Coupon,Design Coupon
-2669,Business Partner->Coupon Designer->Test,TRAN_NA,3,Design Coupon,Design Coupon
-2670,Business Partner->Coupon Designer->Retrieves->Error Message,CTRL,4,Design Coupon,Design Coupon
-2671,Business Partner->Coupon Designer->Retrieves->Error Message,INT,4,Design Coupon,Design Coupon
-2672,Business Partner->Coupon Designer->Save->Coupon,CTRL,4,Design Coupon,Design Coupon
-2673,Business Partner->Coupon Designer->Save->Coupon,DM,4,Design Coupon,Design Coupon
-2674,Business Partner->Coupon Designer->Save->Coupon,EI,4,Design Coupon,Design Coupon
-2675,Business Partner->Coupon Designer->Edit->Coupon Templates,CTRL,4,Design Coupon,Design Coupon
-2676,Business Partner->Coupon Designer->Edit->Coupon Templates,DM,4,Design Coupon,Design Coupon
-2677,Business Partner->Coupon Designer->Edit->Coupon Templates,EI,4,Design Coupon,Design Coupon
-2678,Offers->Retrieves->Error Message,TRAN_NA,3,Design Coupon,Design Coupon
-2679,Third Party Client->access->Coupon,CTRL,3,Design Coupon,Design Coupon
-2680,Third Party Client->access->Coupon,EXTCLL,3,Design Coupon,Design Coupon
-2681,Third Party Client->access->Coupon,DM,3,Design Coupon,Design Coupon
-2682,Third Party Client->access->Coupon,EI,3,Design Coupon,Design Coupon
+2501,Contractor->Website detail input page->verify input information->save website info->websites,CTRL,5,Add a new website,Add a new website
+2502,Contractor->Website detail input page->verify input information->save website info->websites,DM,5,Add a new website,Add a new website
+2503,Contractor->Website detail input page->verify input information->save website info->websites,EI,5,Add a new website,Add a new website
+2504,Contractor->Website detail input page->verify input information->Invalid website information,CTRL,4,Add a new website,Add a new website
+2505,Contractor->Website detail input page->verify input information->Invalid website information,INT,4,Add a new website,Add a new website
+2506,Contractor->websites tab->query crawling list of websites->List of websites,CTRL,4,Show the website,Show the website
+2507,Contractor->websites tab->query crawling list of websites->List of websites,INT,4,Show the website,Show the website
+2508,Contractor->websites tab->query crawling list of websites->websites,CTRL,4,Show the website,Show the website
+2509,Contractor->websites tab->query crawling list of websites->websites,DM,4,Show the website,Show the website
+2510,Contractor->websites tab->query crawling list of websites->websites,EI,4,Show the website,Show the website
+2511,Contractor->List of websites->display confirm tab->confirm dialog,CTRL,4,Show the website,Show the website
+2512,Contractor->List of websites->display confirm tab->confirm dialog,INT,4,Show the website,Show the website
+2513,Contractor->show crawling list->query crawling list of websites->List of websites,CTRL,4,Edit website details,Edit website details
+2514,Contractor->show crawling list->query crawling list of websites->List of websites,INT,4,Edit website details,Edit website details
+2515,Contractor->show crawling list->query crawling list of websites->websites,CTRL,4,Edit website details,Edit website details
+2516,Contractor->show crawling list->query crawling list of websites->websites,DM,4,Edit website details,Edit website details
+2517,Contractor->show crawling list->query crawling list of websites->websites,EI,4,Edit website details,Edit website details
+2518,Contractor->Attribute list of website->add attributes->websites,CTRL,4,Edit website details,Edit website details
+2519,Contractor->Attribute list of website->add attributes->websites,DM,4,Edit website details,Edit website details
+2520,Contractor->Attribute list of website->add attributes->websites,EI,4,Edit website details,Edit website details
+2521,Contractor->List of websites->query attributes of webbiste->websites,CTRL,4,Edit website details,Edit website details
+2522,Contractor->List of websites->query attributes of webbiste->websites,DM,4,Edit website details,Edit website details
+2523,Contractor->List of websites->query attributes of webbiste->websites,EI,4,Edit website details,Edit website details
+2524,Contractor->List of websites->query attributes of webbiste->Attribute list of website,CTRL,4,Edit website details,Edit website details
+2525,Contractor->List of websites->query attributes of webbiste->Attribute list of website,INT,4,Edit website details,Edit website details
+2526,contractor->player detail page->add player->player,CTRL,4,Add a new player,Add a new player
+2527,contractor->player detail page->add player->player,DM,4,Add a new player,Add a new player
+2528,contractor->player detail page->add player->player,EI,4,Add a new player,Add a new player
+2529,contractor->players tab->query crawling list of players->all players list,CTRL,4,Add a new player,Add a new player
+2530,contractor->players tab->query crawling list of players->all players list,INT,4,Add a new player,Add a new player
+2531,contractor->players tab->query crawling list of players->player,CTRL,4,Add a new player,Add a new player
+2532,contractor->players tab->query crawling list of players->player,DM,4,Add a new player,Add a new player
+2533,contractor->players tab->query crawling list of players->player,EI,4,Add a new player,Add a new player
+2534,contractor->all players list->query attribute list of a player->player detail page,CTRL,4,Add a new player,Add a new player
+2535,contractor->all players list->query attribute list of a player->player detail page,INT,4,Add a new player,Add a new player
+2536,contractor->all players list->query attribute list of a player->player,CTRL,4,Add a new player,Add a new player
+2537,contractor->all players list->query attribute list of a player->player,DM,4,Add a new player,Add a new player
+2538,contractor->all players list->query attribute list of a player->player,EI,4,Add a new player,Add a new player
+2539,contractor->players tab->query crawling list of players->all players list,CTRL,4,Show the player,Show the player
+2540,contractor->players tab->query crawling list of players->all players list,INT,4,Show the player,Show the player
+2541,contractor->players tab->query crawling list of players->player,CTRL,4,Show the player,Show the player
+2542,contractor->players tab->query crawling list of players->player,DM,4,Show the player,Show the player
+2543,contractor->players tab->query crawling list of players->player,EI,4,Show the player,Show the player
+2544,contractor->all players list->query player info->player,CTRL,4,Show the player,Show the player
+2545,contractor->all players list->query player info->player,DM,4,Show the player,Show the player
+2546,contractor->all players list->query player info->player,EI,4,Show the player,Show the player
+2547,contractor->all players list->query player info->player detail page,CTRL,4,Show the player,Show the player
+2548,contractor->all players list->query player info->player detail page,INT,4,Show the player,Show the player
+2549,contractor->all players list->query attribute list of a player->player,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2550,contractor->all players list->query attribute list of a player->player,DM,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2551,contractor->all players list->query attribute list of a player->player,EI,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2552,contractor->all players list->query attribute list of a player->player detail page,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2553,contractor->all players list->query attribute list of a player->player detail page,INT,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2554,contractor->players tab->query crawling list of players->player,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2555,contractor->players tab->query crawling list of players->player,DM,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2556,contractor->players tab->query crawling list of players->player,EI,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2557,contractor->players tab->query crawling list of players->all players list,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2558,contractor->players tab->query crawling list of players->all players list,INT,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2559,contractor->player detail page->update player attributes->player,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2560,contractor->player detail page->update player attributes->player,DM,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2561,contractor->player detail page->update player attributes->player,EI,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2562,Contractor->websites tab->query crawling list of websites->List of websites,CTRL,4,Delete a website,Delete a website
+2563,Contractor->websites tab->query crawling list of websites->List of websites,INT,4,Delete a website,Delete a website
+2564,Contractor->websites tab->query crawling list of websites->websites,CTRL,4,Delete a website,Delete a website
+2565,Contractor->websites tab->query crawling list of websites->websites,DM,4,Delete a website,Delete a website
+2566,Contractor->websites tab->query crawling list of websites->websites,EI,4,Delete a website,Delete a website
+2567,Contractor->List of websites->display confirm tab->confirm dialog,CTRL,4,Delete a website,Delete a website
+2568,Contractor->List of websites->display confirm tab->confirm dialog,INT,4,Delete a website,Delete a website
+2569,Contractor->confirm dialog->delete website->websites,CTRL,4,Delete a website,Delete a website
+2570,Contractor->confirm dialog->delete website->websites,DM,4,Delete a website,Delete a website
+2571,Contractor->confirm dialog->delete website->websites,EI,4,Delete a website,Delete a website
+2572,contractor->players tab->query crawling list of players->all players list,CTRL,4,Schedule player crawl,Schedule player crawl
+2573,contractor->players tab->query crawling list of players->all players list,INT,4,Schedule player crawl,Schedule player crawl
+2574,contractor->players tab->query crawling list of players->player,CTRL,4,Schedule player crawl,Schedule player crawl
+2575,contractor->players tab->query crawling list of players->player,DM,4,Schedule player crawl,Schedule player crawl
+2576,contractor->players tab->query crawling list of players->player,EI,4,Schedule player crawl,Schedule player crawl
+2577,contractor->all players list->add player to scheduling list->schedule,CTRL,4,Schedule player crawl,Schedule player crawl
+2578,contractor->all players list->add player to scheduling list->schedule,DM,4,Schedule player crawl,Schedule player crawl
+2579,contractor->all players list->add player to scheduling list->schedule,EI,4,Schedule player crawl,Schedule player crawl
+2580,contractor->all players list->add player to scheduling list->schedule success message,CTRL,4,Schedule player crawl,Schedule player crawl
+2581,contractor->all players list->add player to scheduling list->schedule success message,INT,4,Schedule player crawl,Schedule player crawl

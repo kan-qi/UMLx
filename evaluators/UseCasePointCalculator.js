@@ -85,7 +85,7 @@
 	}
 	
 	function toModelEvaluationHeader(){
-		return "UEUCW,UEUCW_ALY,UEXUCW,UEXUCW_ALY,UAW,UAW_ALY,TCF,TCF_ALY,EF,EF_ALY,EUCP,EUCP_ALY,EXUCP,EXUCP_ALY,DUCP_ALY,Effort_Norm_UCP";
+		return "UEUCW,UEUCW_ALY,UEXUCW,UEXUCW_ALY,UDUCW,UDUCW_ALY,UAW,UAW_ALY,TCF,TCF_ALY,EF,EF_ALY,EUCP,EUCP_ALY,EXUCP,EXUCP_ALY,DUCP_ALY,Effort_Norm_UCP";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
@@ -103,6 +103,8 @@
 		modelAnalytics.UseCasePointData.UEUCW+","+
 		modelEmpirics.UEXUCW+","+
 		modelAnalytics.UseCasePointData.UEXUCW+","+
+		modelEmpirics.UDUCW+","+
+		modelAnalytics.UseCasePointData.UDUCW+","+
 		modelEmpirics.UAW+","+
 		modelAnalytics.UAW+","+
 		modelEmpirics.TCF+","+
@@ -213,27 +215,27 @@
 					utw = 0;
 				} else if (doN < 3){
 					if(uieN < 2){
-						utw = 1
+						utw = 2
 					} else if(uieN < 6){
-						utw = 1
+						utw = 2
 					} else{
-						utw = 3
+						utw = 5
 					}
 				} else if( doN < 8){
 					if(uieN < 2){
-						utw = 1
+						utw = 2
 					} else if(uieN < 6){
-						utw = 3
+						utw = 5
 					} else{
-						utw = 9
+						utw = 13
 					}
 				} else {
 					if(uieN < 2){
-						utw = 3
+						utw = 5
 					} else if(uieN < 6){
-						utw = 9
+						utw = 13
 					} else{
-						utw = 9
+						utw = 13
 					}
 				}
 				
@@ -306,27 +308,27 @@
 					utw = 0;
 				} else if (doN < 3){
 					if(uieN < 2){
-						utw = 1
-					} else if(uieN < 6){
-						utw = 1
-					} else{
 						utw = 2
+					} else if(uieN < 6){
+						utw = 2
+					} else{
+						utw = 5
 					}
 				} else if( doN < 8){
 					if(uieN < 2){
-						utw = 1
-					} else if(uieN < 6){
 						utw = 2
-					} else{
+					} else if(uieN < 6){
 						utw = 5
+					} else{
+						utw = 13
 					}
 				} else {
 					if(uieN < 2){
-						utw = 2
+						utw = 5
 					} else if(uieN < 6){
-						utw = 5
+						utw = 13
 					} else{
-						utw = 5
+						utw = 13
 					}
 				}
 				

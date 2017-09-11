@@ -41,7 +41,7 @@ sink(reportPath)
 useCaseEvaluationData <- read.csv(useCaseEvaluationPath , header=TRUE)
 modelEvaluationData <- read.csv(modelEvaluationPath, header=TRUE)
 
-projectDescriptiveData <- modelEvaluationData[c("NUM", "Effort", "KSLOC")]
+projectDescriptiveData <- modelEvaluationData[c("NUM", "Effort", "KSLOC", "UseCase_Num")]
 
 #transactionalDataMelt <- gather(transactionalData, key=variable, value=value, EUCP_ALY, EXUCP_ALY, DUCP_ALY)
 projectDescriptiveDataMelt <- melt(projectDescriptiveData, id=c("NUM"))
@@ -52,13 +52,14 @@ print(projectDescriptiveDataMelt)
 png(filename=paste(outputDir,"project_discriptive_statistics.png", sep="/"),
 		units="in",
 		width=4*2, 
-		height=4*1, 
+		height=4*2, 
 		pointsize=12,
 		res=96)
 projectHist = histogram(~ value | variable,
 		main="Project Descriptive Statistics", 
 		ylab="Frequency",
 		xlab="",
+		strip =strip.custom(factor.levels = c("Effort(PH)","KSLOC","Number of Use Cases")),
 		freq=TRUE,
 		breaks=15,
 		scales=list(x=list(relation="free")),
@@ -67,7 +68,7 @@ print(projectHist)
 
 
 # dump distributions of the project analytical data
-projectAnalyticalData <- modelEvaluationData[c("NUM", "UEUCW_ALY", "UEXUCW_ALY", "UAW", "TCF", "EF",  "EUCP_ALY", "EXUCP_ALY", "DUCP_ALY", "Effort_Norm_UCP")]
+projectAnalyticalData <- modelEvaluationData[c("NUM", "UEUCW_ALY", "UEXUCW_ALY", "UDUCW_ALY", "UAW", "TCF", "EF",  "EUCP_ALY", "EXUCP_ALY", "DUCP_ALY", "Effort_Norm_UCP")]
 
 #transactionalDataMelt <- gather(transactionalData, key=variable, value=value, EUCP_ALY, EXUCP_ALY, DUCP_ALY)
 projectAnalyticalDataMelt <- melt(projectAnalyticalData, id=c("NUM"))
@@ -77,16 +78,18 @@ print(projectAnalyticalDataMelt)
 #svg(paste(outputDir,"project_discriptive_statistics.svg", sep="/"))
 png(filename=paste(outputDir,"project_analytical_data_discriptive_statistics.png", sep="/"),
 		units="in",
-		width=4*3, 
-		height=4*3, 
+		width=4*5, 
+		height=4*2, 
 		pointsize=12,
 		res=96)
 projectAnalyticHist = histogram(~ value | variable,
-		main="Project Descriptive Statistics", 
+		main="Project Analytical Statistics", 
 		ylab="Frequency",
 		xlab="",
+		strip =strip.custom(factor.levels = c("UEUCW",  "UEXUCW", "UDCW", "UAW", "TCF", "EF", "EUCP", "EXUCP", "DUCP", "Effort Norm")),
 		freq=TRUE,
 		breaks=15,
+		cex=1.5,
 		scales=list(x=list(relation="free")),
 		data=projectAnalyticalDataMelt)
 print(projectAnalyticHist)

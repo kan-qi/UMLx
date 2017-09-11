@@ -1112,103 +1112,35 @@ id,path,functional,transactional,path_length,avg_degree,arch_diff,diagram,use_ca
 1111,Traveler->Walgreens checkout->Select images screen,FUNC_NA,TRAN_NA,3,2.3333333333333335,7,Print photo books,Print photo books,s14b_location_based_ad
 1112,Traveler->Select images screen->walgreens->display->Walgreens checkout,EQ,CTRL|INT,5,2,10,Print photo books,Print photo books,s14b_location_based_ad
 1113,Traveler->Select images screen->Place screen,FUNC_NA,TRAN_NA,3,2.6666666666666665,8,Print photo books,Print photo books,s14b_location_based_ad
-1114,Actor1->b1->c1->e1->c2->e2->b2,FUNC_NA,TRAN_NA,7,1.8571428571428572,13,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1115,Actor1->b1->c1->b2,EQ,CTRL|INT,4,2,8,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1116,Actor1->b2->b1,FUNC_NA,TRAN_NA,3,2.3333333333333335,7,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1117,Actor2->b2->b1,FUNC_NA,TRAN_NA,3,2.3333333333333335,7,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1118,e3->c2->e2->b2,FUNC_NA,TRAN_NA,4,2,8,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1119,e3->c2->e2->b1,FUNC_NA,TRAN_NA,4,1.75,7,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1120,c3->e2->b2,FUNC_NA,TRAN_NA,3,2,6,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1121,c3->e2->b1,FUNC_NA,TRAN_NA,3,1.6666666666666667,5,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1122,Actor1->b1->c1->e1,EI,CTRL|DM|EI,4,1.25,5,Experiment Model 2,TestAlgorithm1,2014_spring_577b_use_case_model_uml2.1
-1123,Actor2->Object1->b1,FUNC_NA,TRAN_NA,3,1,3,Experiment Model 2,TestAlgorithm1,2014_spring_577b_use_case_model_uml2.1
-1124,Actor2->Object1->Object2->c1->e1,EI,CTRL|DM|EI,5,1,5,Experiment Model 2,TestAlgorithm1,2014_spring_577b_use_case_model_uml2.1
-1125,Actor1->b1->c1->e1,EI,CTRL|DM|EI,4,1.25,5,Experiment Model 2,Test use case,2014_spring_577b_use_case_model_uml2.1
-1126,Actor2->Object1->b1,FUNC_NA,TRAN_NA,3,1,3,Experiment Model 2,Test use case,2014_spring_577b_use_case_model_uml2.1
-1127,Actor2->Object1->Object2->c1->e1,EI,CTRL|DM|EI,5,1,5,Experiment Model 2,Test use case,2014_spring_577b_use_case_model_uml2.1
-1128,FTSR->Offers Page->Edit Offer->Modify offer page,EQ,CTRL|INT,4,0.75,3,Modify Offer,Modify Offer,2014_spring_577b_use_case_model_uml2.1
-1129,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,FUNC_NA,TRAN_NA,7,1,7,Partner Login,Partner Login,2014_spring_577b_use_case_model_uml2.1
-1130,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,FUNC_NA,CTRL|DM|EQ|INT,7,1.1428571428571428,8,Partner Login,Partner Login,2014_spring_577b_use_case_model_uml2.1
-1131,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,FUNC_NA,TRAN_NA,7,1,7,Partner Login,Partner Login,2014_spring_577b_use_case_model_uml2.1
-1132,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,FUNC_NA,TRAN_NA,7,1.1428571428571428,8,Partner Login,Partner Login,2014_spring_577b_use_case_model_uml2.1
-1133,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),EQ,CTRL|INT,4,1,4,Buy Partner Subscription,Buy Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1134,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,EQ,CTRL|INT,4,1.25,5,Buy Partner Subscription,Buy Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1135,Business Parter->Buy Success Page->Display Home Page(Designed by other part),FUNC_NA,TRAN_NA,3,1,3,Buy Partner Subscription,Buy Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1136,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,FUNC_NA,CTRL|DM|EQ|INT,6,1.1666666666666667,7,Buy Partner Subscription,Buy Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1137,FTSR->offer details->Check validate->Display modify error,FUNC_NA,TRAN_NA,4,1.25,5,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1138,FTSR->offer details->Check validate->Publish offer,FUNC_NA,TRAN_NA,4,1.5,6,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1139,FTSR->offers pages->Display offer->offer details,EQ,CTRL|INT,4,1.25,5,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1140,FTSR->offers pages->Display offer->Retrieve offers->Dispaly Error Msg,FUNC_NA,TRAN_NA,5,1,5,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1141,Offers->Retrieve offers->Dispaly Error Msg,FUNC_NA,TRAN_NA,3,1,3,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1142,Auto publish reschedule->offer details->Check validate->Display modify error,FUNC_NA,TRAN_NA,4,1.25,5,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1143,Auto publish reschedule->offer details->Check validate->Publish offer,FUNC_NA,TRAN_NA,4,1.5,6,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1144,Test Coupon->Generate Test Coupon->Partner's Mobile->Open Coupon Page,FUNC_NA,TRAN_NA,4,1,4,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1145,FT->Coupon Page->Redeem Coupon->Coupon Database,EI,CTRL|DM|EI,4,1,4,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1146,FT->Coupon Page->Save coupon for later->Partner's Mobile->Open Coupon Page,FUNC_NA,TRAN_NA,5,1,5,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1147,FT->Coupon Redeemed->Coupon Validator->Coupon Database,EI,CTRL|DM|EI,4,1.25,5,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1148,FT->Coupon Invalid->Coupon Validator->Coupon Database,EI,CTRL|DM|EI,4,1.25,5,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1149,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,EI,CTRL|DM|EI,4,1,4,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1150,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,EQ,CTRL|INT,5,1.2,6,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1151,Business Partner->Cancel Subscription Comfirmation Page->Display Cancel Sub page,FUNC_NA,TRAN_NA,3,1,3,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1152,Business Partner->Cancel Subscription Success Page->Display Home Page,FUNC_NA,TRAN_NA,3,1,3,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1153,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,EQ,CTRL|INT,4,1,4,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1154,User->Upload Image button->File Chooser Windows->Cancel Button,EQ,CTRL|INT,4,1,4,Upload Image,Upload Image,2014_spring_577b_use_case_model_uml2.1
-1155,User->Upload Image button->File Chooser Windows->Select the Image file,EQ,CTRL|INT,4,1,4,Upload Image,Upload Image,2014_spring_577b_use_case_model_uml2.1
-1156,User->Open Button->Display Image in Coupon Image->Design Coupon screen,EQ,CTRL|INT,4,1,4,Upload Image,Upload Image,2014_spring_577b_use_case_model_uml2.1
-1157,Business Partner->Coupon Designer->Upload Image->External Image Service,FUNC_NA,CTRL|EXTIVK,4,0.75,3,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1158,Business Partner->Coupon Designer->Test,FUNC_NA,TRAN_NA,3,0.6666666666666666,2,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1159,Business Partner->Coupon Designer->Retrieves->Error Message,EQ,CTRL|INT,4,1,4,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1160,Business Partner->Coupon Designer->Save->Coupon,EI,CTRL|DM|EI,4,1,4,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1161,Business Partner->Coupon Designer->Edit->Coupon Templates,EI,CTRL|DM|EI,4,0.75,3,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1162,Offers->Retrieves->Error Message,FUNC_NA,TRAN_NA,3,1,3,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1163,Third Party Client->access->Coupon,FUNC_NA,CTRL|EXTCLL|DM|EI,3,1,3,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1164,Actor1->b1->c1->e1->c2->e2->b2,FUNC_NA,TRAN_NA,7,1.8571428571428572,13,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1165,Actor1->b1->c1->b2,EQ,CTRL|INT,4,2,8,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1166,Actor1->b2->b1,FUNC_NA,TRAN_NA,3,2.3333333333333335,7,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1167,Actor2->b2->b1,FUNC_NA,TRAN_NA,3,2.3333333333333335,7,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1168,e3->c2->e2->b2,FUNC_NA,TRAN_NA,4,2,8,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1169,e3->c2->e2->b1,FUNC_NA,TRAN_NA,4,1.75,7,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1170,c3->e2->b2,FUNC_NA,TRAN_NA,3,2,6,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1171,c3->e2->b1,FUNC_NA,TRAN_NA,3,1.6666666666666667,5,Experiment Use Case,Experiment Use Case,2014_spring_577b_use_case_model_uml2.1
-1172,Actor1->b1->c1->e1,EI,CTRL|DM|EI,4,1.25,5,Experiment Model 2,TestAlgorithm1,2014_spring_577b_use_case_model_uml2.1
-1173,Actor2->Object1->b1,FUNC_NA,TRAN_NA,3,1,3,Experiment Model 2,TestAlgorithm1,2014_spring_577b_use_case_model_uml2.1
-1174,Actor2->Object1->Object2->c1->e1,EI,CTRL|DM|EI,5,1,5,Experiment Model 2,TestAlgorithm1,2014_spring_577b_use_case_model_uml2.1
-1175,Actor1->b1->c1->e1,EI,CTRL|DM|EI,4,1.25,5,Experiment Model 2,Test use case,2014_spring_577b_use_case_model_uml2.1
-1176,Actor2->Object1->b1,FUNC_NA,TRAN_NA,3,1,3,Experiment Model 2,Test use case,2014_spring_577b_use_case_model_uml2.1
-1177,Actor2->Object1->Object2->c1->e1,EI,CTRL|DM|EI,5,1,5,Experiment Model 2,Test use case,2014_spring_577b_use_case_model_uml2.1
-1178,FTSR->Offers Page->Edit Offer->Modify offer page,EQ,CTRL|INT,4,0.75,3,Modify Offer,Modify Offer,2014_spring_577b_use_case_model_uml2.1
-1179,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,FUNC_NA,TRAN_NA,7,1,7,Partner Login,Partner Login,2014_spring_577b_use_case_model_uml2.1
-1180,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,FUNC_NA,CTRL|DM|EQ|INT,7,1.1428571428571428,8,Partner Login,Partner Login,2014_spring_577b_use_case_model_uml2.1
-1181,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,FUNC_NA,TRAN_NA,7,1,7,Partner Login,Partner Login,2014_spring_577b_use_case_model_uml2.1
-1182,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,FUNC_NA,TRAN_NA,7,1.1428571428571428,8,Partner Login,Partner Login,2014_spring_577b_use_case_model_uml2.1
-1183,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),EQ,CTRL|INT,4,1,4,Buy Partner Subscription,Buy Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1184,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,EQ,CTRL|INT,4,1.25,5,Buy Partner Subscription,Buy Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1185,Business Parter->Buy Success Page->Display Home Page(Designed by other part),FUNC_NA,TRAN_NA,3,1,3,Buy Partner Subscription,Buy Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1186,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,FUNC_NA,CTRL|DM|EQ|INT,6,1.1666666666666667,7,Buy Partner Subscription,Buy Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1187,FTSR->offer details->Check validate->Display modify error,FUNC_NA,TRAN_NA,4,1.25,5,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1188,FTSR->offer details->Check validate->Publish offer,FUNC_NA,TRAN_NA,4,1.5,6,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1189,FTSR->offers pages->Display offer->offer details,EQ,CTRL|INT,4,1.25,5,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1190,FTSR->offers pages->Display offer->Retrieve offers->Dispaly Error Msg,FUNC_NA,TRAN_NA,5,1,5,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1191,Offers->Retrieve offers->Dispaly Error Msg,FUNC_NA,TRAN_NA,3,1,3,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1192,Auto publish reschedule->offer details->Check validate->Display modify error,FUNC_NA,TRAN_NA,4,1.25,5,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1193,Auto publish reschedule->offer details->Check validate->Publish offer,FUNC_NA,TRAN_NA,4,1.5,6,Publish Offer,Publish Offer,2014_spring_577b_use_case_model_uml2.1
-1194,Test Coupon->Generate Test Coupon->Partner's Mobile->Open Coupon Page,FUNC_NA,TRAN_NA,4,1,4,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1195,FT->Coupon Page->Redeem Coupon->Coupon Database,EI,CTRL|DM|EI,4,1,4,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1196,FT->Coupon Page->Save coupon for later->Partner's Mobile->Open Coupon Page,FUNC_NA,TRAN_NA,5,1,5,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1197,FT->Coupon Redeemed->Coupon Validator->Coupon Database,EI,CTRL|DM|EI,4,1.25,5,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1198,FT->Coupon Invalid->Coupon Validator->Coupon Database,EI,CTRL|DM|EI,4,1.25,5,Test Coupon,Test Coupon,2014_spring_577b_use_case_model_uml2.1
-1199,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,EI,CTRL|DM|EI,4,1,4,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1200,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,EQ,CTRL|INT,5,1.2,6,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1201,Business Partner->Cancel Subscription Comfirmation Page->Display Cancel Sub page,FUNC_NA,TRAN_NA,3,1,3,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1202,Business Partner->Cancel Subscription Success Page->Display Home Page,FUNC_NA,TRAN_NA,3,1,3,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1203,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,EQ,CTRL|INT,4,1,4,Cancel Partner Subscription,Cancel Partner Subscription,2014_spring_577b_use_case_model_uml2.1
-1204,User->Upload Image button->File Chooser Windows->Cancel Button,EQ,CTRL|INT,4,1,4,Upload Image,Upload Image,2014_spring_577b_use_case_model_uml2.1
-1205,User->Upload Image button->File Chooser Windows->Select the Image file,EQ,CTRL|INT,4,1,4,Upload Image,Upload Image,2014_spring_577b_use_case_model_uml2.1
-1206,User->Open Button->Display Image in Coupon Image->Design Coupon screen,EQ,CTRL|INT,4,1,4,Upload Image,Upload Image,2014_spring_577b_use_case_model_uml2.1
-1207,Business Partner->Coupon Designer->Upload Image->External Image Service,FUNC_NA,CTRL|EXTIVK,4,0.75,3,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1208,Business Partner->Coupon Designer->Test,FUNC_NA,TRAN_NA,3,0.6666666666666666,2,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1209,Business Partner->Coupon Designer->Retrieves->Error Message,EQ,CTRL|INT,4,1,4,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1210,Business Partner->Coupon Designer->Save->Coupon,EI,CTRL|DM|EI,4,1,4,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1211,Business Partner->Coupon Designer->Edit->Coupon Templates,EI,CTRL|DM|EI,4,0.75,3,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1212,Offers->Retrieves->Error Message,FUNC_NA,TRAN_NA,3,1,3,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
-1213,Third Party Client->access->Coupon,FUNC_NA,CTRL|EXTCLL|DM|EI,3,1,3,Design Coupon,Design Coupon,2014_spring_577b_use_case_model_uml2.1
+1114,Contractor->Website detail input page->verify input information->save website info->websites,EI,CTRL|DM|EI,5,1.2,6,Add a new website,Add a new website,F14a_soccer_data_web_crawler
+1115,Contractor->Website detail input page->verify input information->Invalid website information,EQ,CTRL|INT,4,1,4,Add a new website,Add a new website,F14a_soccer_data_web_crawler
+1116,Contractor->websites tab->query crawling list of websites->List of websites,EQ,CTRL|INT,4,1.25,5,Show the website,Show the website,F14a_soccer_data_web_crawler
+1117,Contractor->websites tab->query crawling list of websites->websites,EI,CTRL|DM|EI,4,1.25,5,Show the website,Show the website,F14a_soccer_data_web_crawler
+1118,Contractor->List of websites->display confirm tab->confirm dialog,EQ,CTRL|INT,4,1.5,6,Show the website,Show the website,F14a_soccer_data_web_crawler
+1119,Contractor->show crawling list->query crawling list of websites->List of websites,EQ,CTRL|INT,4,1,4,Edit website details,Edit website details,F14a_soccer_data_web_crawler
+1120,Contractor->show crawling list->query crawling list of websites->websites,EI,CTRL|DM|EI,4,1.25,5,Edit website details,Edit website details,F14a_soccer_data_web_crawler
+1121,Contractor->Attribute list of website->add attributes->websites,EI,CTRL|DM|EI,4,1.5,6,Edit website details,Edit website details,F14a_soccer_data_web_crawler
+1122,Contractor->List of websites->query attributes of webbiste->websites,EI,CTRL|DM|EI,4,1.5,6,Edit website details,Edit website details,F14a_soccer_data_web_crawler
+1123,Contractor->List of websites->query attributes of webbiste->Attribute list of website,EQ,CTRL|INT,4,1.25,5,Edit website details,Edit website details,F14a_soccer_data_web_crawler
+1124,contractor->player detail page->add player->player,EI,CTRL|DM|EI,4,1.5,6,Add a new player,Add a new player,F14a_soccer_data_web_crawler
+1125,contractor->players tab->query crawling list of players->all players list,EQ,CTRL|INT,4,1,4,Add a new player,Add a new player,F14a_soccer_data_web_crawler
+1126,contractor->players tab->query crawling list of players->player,EI,CTRL|DM|EI,4,1.25,5,Add a new player,Add a new player,F14a_soccer_data_web_crawler
+1127,contractor->all players list->query attribute list of a player->player detail page,EQ,CTRL|INT,4,1.25,5,Add a new player,Add a new player,F14a_soccer_data_web_crawler
+1128,contractor->all players list->query attribute list of a player->player,EI,CTRL|DM|EI,4,1.5,6,Add a new player,Add a new player,F14a_soccer_data_web_crawler
+1129,contractor->players tab->query crawling list of players->all players list,EQ,CTRL|INT,4,1,4,Show the player,Show the player,F14a_soccer_data_web_crawler
+1130,contractor->players tab->query crawling list of players->player,EI,CTRL|DM|EI,4,1.25,5,Show the player,Show the player,F14a_soccer_data_web_crawler
+1131,contractor->all players list->query player info->player,EI,CTRL|DM|EI,4,1.5,6,Show the player,Show the player,F14a_soccer_data_web_crawler
+1132,contractor->all players list->query player info->player detail page,EQ,CTRL|INT,4,1.25,5,Show the player,Show the player,F14a_soccer_data_web_crawler
+1133,contractor->all players list->query attribute list of a player->player,EI,CTRL|DM|EI,4,1.5,6,Edit the crawling attributes of a player,Edit the crawling attributes of a player,F14a_soccer_data_web_crawler
+1134,contractor->all players list->query attribute list of a player->player detail page,EQ,CTRL|INT,4,1.25,5,Edit the crawling attributes of a player,Edit the crawling attributes of a player,F14a_soccer_data_web_crawler
+1135,contractor->players tab->query crawling list of players->player,EI,CTRL|DM|EI,4,1.25,5,Edit the crawling attributes of a player,Edit the crawling attributes of a player,F14a_soccer_data_web_crawler
+1136,contractor->players tab->query crawling list of players->all players list,EQ,CTRL|INT,4,1,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player,F14a_soccer_data_web_crawler
+1137,contractor->player detail page->update player attributes->player,EI,CTRL|DM|EI,4,1.5,6,Edit the crawling attributes of a player,Edit the crawling attributes of a player,F14a_soccer_data_web_crawler
+1138,Contractor->websites tab->query crawling list of websites->List of websites,EQ,CTRL|INT,4,1.25,5,Delete a website,Delete a website,F14a_soccer_data_web_crawler
+1139,Contractor->websites tab->query crawling list of websites->websites,EI,CTRL|DM|EI,4,1.25,5,Delete a website,Delete a website,F14a_soccer_data_web_crawler
+1140,Contractor->List of websites->display confirm tab->confirm dialog,EQ,CTRL|INT,4,1.5,6,Delete a website,Delete a website,F14a_soccer_data_web_crawler
+1141,Contractor->confirm dialog->delete website->websites,EI,CTRL|DM|EI,4,1.5,6,Delete a website,Delete a website,F14a_soccer_data_web_crawler
+1142,contractor->players tab->query crawling list of players->all players list,EQ,CTRL|INT,4,1,4,Schedule player crawl,Schedule player crawl,F14a_soccer_data_web_crawler
+1143,contractor->players tab->query crawling list of players->player,EI,CTRL|DM|EI,4,1,4,Schedule player crawl,Schedule player crawl,F14a_soccer_data_web_crawler
+1144,contractor->all players list->add player to scheduling list->schedule,EI,CTRL|DM|EI,4,1,4,Schedule player crawl,Schedule player crawl,F14a_soccer_data_web_crawler
+1145,contractor->all players list->add player to scheduling list->schedule success message,EQ,CTRL|INT,4,1.25,5,Schedule player crawl,Schedule player crawl,F14a_soccer_data_web_crawler

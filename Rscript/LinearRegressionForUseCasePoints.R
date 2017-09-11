@@ -45,11 +45,11 @@ sink(reportPath)
 
 
 data <- read.csv(dataUrl, header=TRUE)
-transactionalData <- data[c("Effort_Norm_UCP", "EUCP_ALY", "EXUCP_ALY", "DUCP_ALY")]
-#transactionalDataMelt <- gather(transactionalData, key=variable, value=value, EUCP_ALY, EXUCP_ALY, DUCP_ALY)
-transactionalDataMelt <- melt(transactionalData, id=c("Effort_Norm_UCP"))
+useCaseData <- data[c("Effort_Norm_UCP", "EUCP_ALY", "EXUCP_ALY", "DUCP_ALY")]
+#useCaseDataMelt <- gather(useCaseData, key=variable, value=value, EUCP_ALY, EXUCP_ALY, DUCP_ALY)
+useCaseDataMelt <- melt(useCaseData, id=c("Effort_Norm_UCP"))
 
-print(transactionalDataMelt)
+print(useCaseDataMelt)
 
 #print(plot1)
 
@@ -100,13 +100,13 @@ mArray = c(m1, m2, m3)
 coeffs = list(coeff1, coeff2, coeff3)
 preds = list(pred1, pred2, pred3)
 newxArray = list(newx1, newx2,newx3)
-xPosArray = c(77, 725, 800)
+xPosArray = c(777+100, 770+100, 850+100)
 
-plot = xyplot(Effort_Norm_UCP~ value | variable, data=transactionalDataMelt,
+plot = xyplot(Effort_Norm_UCP~ value | variable, data=useCaseDataMelt,
 		# scales = list(x = list(log = 10, equispaced.log = FALSE)),
 		xlab=list(label="Transactional Complexity", fontsize=10),
 		ylab=list(label="Normalized Effort (PH)", fontsize=10),
-		strip =strip.custom(factor.levels = c("NT","NWT - I","NWT - II")),
+		strip =strip.custom(factor.levels = c("EUCP","EXUCP","DUCP")),
 		#upper=data$upper,
 		#lower=data$lower,
 		scales=list(x=list(relation="free")),
@@ -128,23 +128,39 @@ plot = xyplot(Effort_Norm_UCP~ value | variable, data=transactionalDataMelt,
 		
 			eq = bquote(paste("y=", beta[0],"+",beta[1],"x"))
 			xPos = xPosArray[panel.number()]
-			panel.text(xPos, 2620, eq, cex=0.8)
+			panel.text(xPos, 2620+650-2600, eq, cex=0.8)
 			coefficients = coeffs[[panel.number()]]
 			#p0 <- sprintf("%s: %.2f SE:%.2f", "\beta_0)", coefficients[1, 1], coefficients[1, 2])
 			p0.v = sprintf("%.2f",coefficients[1, 1])
 			p0.se = sprintf("%.2f",coefficients[1, 2])
 			p0 <- bquote(paste(beta[0],": ", .(p0.v)," SE: ",.(p0.se)))
-			panel.text(xPos, 2450, p0, cex=0.8)
+			panel.text(xPos, 2450+650-2600, p0, cex=0.8)
 			#p1 <- expression(paste(beta[1],sprintf(": %.2f SE:%.2f", coefficients[2, 1], coefficients[2, 2])))
 			p1.v = sprintf("%.2f",coefficients[2, 1])
 			p1.se = sprintf("%.2f",coefficients[2, 2])
 			p1 <- bquote(paste(beta[1],": ", .(p1.v)," SE: ",.(p1.se)))
-			panel.text(xPos, 2290, p1, cex=0.8)
+			panel.text(xPos, 2290+650-2600, p1, cex=0.8)
 			r2 = bquote(paste(r, ": ", .(sprintf("%.2f",corArray[panel.number()]))))
-			panel.text(xPos, 2150, r2, cex=0.7)
+			panel.text(xPos, 2150+650-2600, r2, cex=0.7)
 		},
 		auto.key = TRUE,
 		type = c("p", "r"))
+		
+# with cross validation
+#Randomly shuffle the data
+useCaseData<-useCaseData[sample(nrow(useCaseData)),]
+
+#Create 10 equally size folds
+folds <- cut(seq(1,nrow(useCaseData)),breaks=10,labels=FALSE)
+
+#Perform 10 fold cross validation
+for(i in 1:10){
+	#Segement your data by fold using the which() function 
+	testIndexes <- which(folds==i,arr.ind=TRUE)
+	testData <- useCaseData[testIndexes, ]
+	trainData <- useCaseData[-testIndexes, ]
+	#Use the test and train data partitions however you desire...
+}
 
 # print(grid.arrange(plot1, plot2, plot3))
 # dev.off()
