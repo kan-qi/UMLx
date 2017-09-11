@@ -151,17 +151,100 @@ plot = xyplot(Effort_Norm_UCP~ value | variable, data=useCaseDataMelt,
 useCaseData<-useCaseData[sample(nrow(useCaseData)),]
 
 #Create 10 equally size folds
-folds <- cut(seq(1,nrow(useCaseData)),breaks=10,labels=FALSE)
+nfold = 10
+folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 
+#function
+#calculatePreds <- function(mre)
+#{
+#	pred15 = 0;
+#	if (mre <= 0.15){
+#		pred15 = 1;
+#	}
+#	pred25 = 0;
+#	if (mre <= 0.25){
+#		pred25 = 1;
+#	}
+#	pred50 = 0;
+#	if (mre <= 0.50){
+#		pred50 = 1;
+#	}
+#	return(c(pred15, pred25, pred50))
+#}
+
+#data structure to hold the data for 10 fold cross validation
+foldResults <- matrix(,nrow=nfold,ncol=12)
+colnames(foldResults) <- c('eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50','exucp_mmre','exucp_pred15','exucp_pred25','exucp_pred50','ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50')
 #Perform 10 fold cross validation
-for(i in 1:10){
+for(i in 1:nfold){
 	#Segement your data by fold using the which() function 
 	testIndexes <- which(folds==i,arr.ind=TRUE)
 	testData <- useCaseData[testIndexes, ]
 	trainData <- useCaseData[-testIndexes, ]
-	#Use the test and train data partitions however you desire...
+	
+	print('eucp testing set predication')
+	eucp.m = lm(Effort_Norm_UCP~EUCP_ALY, data=trainData)
+	#eucp.mre = apply(testData, 1, function(x))
+	eucp.predict = cbind(predicted=predict(eucp.m, testData), actual=testData$Effort_Norm_UCP)
+	print(eucp.predict)
+	eucp.mre = apply(eucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	eucp.mmre = mean(eucp.mre)
+	print(eucp.mmre)
+	#eucp.preds = sapply(eucp.mre, function(x) calculatePreds(x))
+	eucp.pred15 = length(eucp.mre[eucp.mre<=0.15])/length(eucp.mre)
+	eucp.pred25 = length(eucp.mre[eucp.mre<=0.25])/length(eucp.mre)
+	eucp.pred50 = length(eucp.mre[eucp.mre<=0.50])/length(eucp.mre)
+	print(c(eucp.pred15, eucp.pred25, eucp.pred50))
+	
+	print('exucp testing set predication')
+	exucp.m = lm(Effort_Norm_UCP~EXUCP_ALY, data=trainData)
+	exucp.predict = cbind(predicted=predict(exucp.m, testData), actual=testData$Effort_Norm_UCP)
+	print(exucp.predict)
+	exucp.mre = apply(exucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	exucp.mmre = mean(exucp.mre)
+	print(exucp.mmre)
+	#exucp.preds = sapply(exucp.mre, function(x) calculatePreds(x))
+	exucp.pred15 = length(exucp.mre[exucp.mre<=0.15])/length(exucp.mre)
+	exucp.pred25 = length(exucp.mre[exucp.mre<=0.25])/length(exucp.mre)
+	exucp.pred50 = length(exucp.mre[exucp.mre<=0.50])/length(exucp.mre)
+	print(c(exucp.pred15, exucp.pred25, exucp.pred50))
+	
+	print('ducp testing set predication')
+	ducp.m = lm(Effort_Norm_UCP~DUCP_ALY, data=trainData)
+	ducp.predict = cbind(predicted=predict(ducp.m, testData), actual=testData$Effort_Norm_UCP)
+	print(ducp.predict)
+	ducp.mre = apply(ducp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	ducp.mmre = mean(ducp.mre)
+	print(ducp.mmre)
+	#ducp.preds = sapply(ducp.mre, function(x) calculatePreds(x))
+	ducp.pred15 = length(ducp.mre[ducp.mre<=0.15])/length(ducp.mre)
+	ducp.pred25 = length(ducp.mre[ducp.mre<=0.25])/length(ducp.mre)
+	ducp.pred50 = length(ducp.mre[ducp.mre<=0.50])/length(ducp.mre)
+	print(c(ducp.pred15, ducp.pred25, ducp.pred50))
+	
+	foldResults[i,] = c(eucp.mmre,eucp.pred15,eucp.pred25,eucp.pred50,exucp.mmre,exucp.pred15,exucp.pred25,exucp.pred50,ducp.mmre,ducp.pred15,ducp.pred25,ducp.pred50)
 }
 
+#average out the folds.
+print('10 cross validation results')
+print(foldResults);
+cvResults <- c(
+		mean(foldResults[, 'eucp_mmre']),
+		mean(foldResults[, 'eucp_pred15']),
+		mean(foldResults[, 'eucp_pred25']),
+		mean(foldResults[, 'eucp_pred50']),
+		mean(foldResults[, 'exucp_mmre']),
+		mean(foldResults[, 'exucp_pred15']),
+		mean(foldResults[, 'exucp_pred25']),
+		mean(foldResults[, 'exucp_pred50']),
+		mean(foldResults[, 'ducp_mmre']),
+		mean(foldResults[, 'ducp_pred15']),
+		mean(foldResults[, 'ducp_pred25']),
+		mean(foldResults[, 'ducp_pred50'])
+		);
+
+names(cvResults) <- c('eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50','exucp_mmre','exucp_pred15','exucp_pred25','exucp_pred50','ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50')
+print(cvResults)
 # print(grid.arrange(plot1, plot2, plot3))
 # dev.off()
 png(filename=pngPath,

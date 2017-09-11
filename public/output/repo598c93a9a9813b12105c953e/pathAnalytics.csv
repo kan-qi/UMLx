@@ -1144,3 +1144,109 @@ id,path,functional,transactional,path_length,avg_degree,arch_diff,diagram,use_ca
 1143,contractor->players tab->query crawling list of players->player,EI,CTRL|DM|EI,4,1,4,Schedule player crawl,Schedule player crawl,F14a_soccer_data_web_crawler
 1144,contractor->all players list->add player to scheduling list->schedule,EI,CTRL|DM|EI,4,1,4,Schedule player crawl,Schedule player crawl,F14a_soccer_data_web_crawler
 1145,contractor->all players list->add player to scheduling list->schedule success message,EQ,CTRL|INT,4,1.25,5,Schedule player crawl,Schedule player crawl,F14a_soccer_data_web_crawler
+1146,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display search screen->search screen,EQ,CTRL|INT,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1147,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display event screen->event screen,EQ,CTRL|INT,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1148,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display  log in screen->Log in screen,EQ,CTRL|INT,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1149,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display photo screen->Photo screen,EQ,CTRL|INT,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1150,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display profile screen->profile screen,EQ,CTRL|INT,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1151,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display search screen->search screen,FUNC_NA,TRAN_NA,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1152,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display event screen->event screen,FUNC_NA,TRAN_NA,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1153,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display  log in screen->Log in screen,FUNC_NA,TRAN_NA,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1154,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display photo screen->Photo screen,FUNC_NA,TRAN_NA,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1155,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display profile screen->profile screen,FUNC_NA,TRAN_NA,6,1,6,Use Case Model,Navigation,s16b_Picshare_RA
+1156,Actor->Delete expired events automatically->event,FUNC_NA,CTRL|EXTCLL|DM|EI,3,1,3,Use Case Model,Automatic deletion,s16b_Picshare_RA
+1157,Actor->delete photos related to expired events automatically->photo,FUNC_NA,CTRL|EXTCLL|DM|EI,3,1.3333333333333333,4,Use Case Model,Automatic deletion,s16b_Picshare_RA
+1158,Actor->delete expired location photos automatically->photo,FUNC_NA,CTRL|EXTCLL|DM|EI,3,1.3333333333333333,4,Use Case Model,Automatic deletion,s16b_Picshare_RA
+1159,change mode->photo list->pop up photo connection error->photo,FUNC_NA,TRAN_NA,4,1.5,6,Use Case Model,Admin deletes photo,s16b_Picshare_RA
+1160,change mode->photo list->cancel deletion->select photos->confirm delete photos->photo,FUNC_NA,TRAN_NA,6,1.5,9,Use Case Model,Admin deletes photo,s16b_Picshare_RA
+1161,change mode->photo list->select photos->confirm delete photos->photo,FUNC_NA,TRAN_NA,5,1.6,8,Use Case Model,Admin deletes photo,s16b_Picshare_RA
+1162,Actor->photo list->pop up photo connection error->photo,EI,CTRL|DM|EI,4,1.5,6,Use Case Model,Admin deletes photo,s16b_Picshare_RA
+1163,Actor->photo list->cancel deletion->select photos->confirm delete photos->photo,EI,CTRL|DM|EI,6,1.5,9,Use Case Model,Admin deletes photo,s16b_Picshare_RA
+1164,Actor->photo list->select photos->confirm delete photos->photo,EI,CTRL|DM|EI,5,1.6,8,Use Case Model,Admin deletes photo,s16b_Picshare_RA
+1165,pop up event connection error->event->Get event list->Search box,FUNC_NA,TRAN_NA,4,1.5,6,Use Case Model,Admin searches for photo by event,s16b_Picshare_RA
+1166,pop up event connection error->event->Get event list->Display event list->Event list,FUNC_NA,TRAN_NA,5,1.4,7,Use Case Model,Admin searches for photo by event,s16b_Picshare_RA
+1167,pop up event connection error->event->Get event list->Admin page,FUNC_NA,TRAN_NA,4,1.25,5,Use Case Model,Admin searches for photo by event,s16b_Picshare_RA
+1168,Actor->Event list->Get photo list->display photo list->Photo list,EQ,CTRL|INT,5,1.4,7,Use Case Model,Admin searches for photo by event,s16b_Picshare_RA
+1169,pop up event connection error->Account->Get user list->Search box,FUNC_NA,TRAN_NA,4,1.25,5,Use Case Model,Admin searches for photo by user,s16b_Picshare_RA
+1170,pop up event connection error->Account->Get user list->Admin page,FUNC_NA,TRAN_NA,4,1.5,6,Use Case Model,Admin searches for photo by user,s16b_Picshare_RA
+1171,pop up event connection error->Account->Get user list->Display user list->User list,FUNC_NA,TRAN_NA,5,1.4,7,Use Case Model,Admin searches for photo by user,s16b_Picshare_RA
+1172,Actor->User list->Get photo list->display photo list->Photo list,EQ,CTRL|INT,5,1.4,7,Use Case Model,Admin searches for photo by user,s16b_Picshare_RA
+1173,Display pop-up "Password do not match" on Sign up Screen->Sign up Screen->verify email->verify username->verify password->verify confirm password,FUNC_NA,TRAN_NA,6,1.6666666666666667,10,Use Case Model,Create Account,s16b_Picshare_RA
+1174,Display pop-up "Password do not match" on Sign up Screen->Sign up Screen->verify email->verify username->User Collection,FUNC_NA,TRAN_NA,5,1.8,9,Use Case Model,Create Account,s16b_Picshare_RA
+1175,Actor->Sign up Screen->verify email->verify username->verify password->verify confirm password,FUNC_NA,TRAN_NA,6,1.6666666666666667,10,Use Case Model,Create Account,s16b_Picshare_RA
+1176,Actor->Sign up Screen->verify email->verify username->User Collection,EI,CTRL|DM|EI,5,1.8,9,Use Case Model,Create Account,s16b_Picshare_RA
+1177,Display pop-up "Password do not match" on Sign up Screen->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,FUNC_NA,TRAN_NA,4,2,8,Use Case Model,Create Profile,s16b_Picshare_RA
+1178,Display pop-up "Password do not match" on Sign up Screen->Profile Photo Screen->Save Profile Photo->Profile,FUNC_NA,TRAN_NA,4,1.75,7,Use Case Model,Create Profile,s16b_Picshare_RA
+1179,Display photo on  Profile photo screen->Display available photos on Photos Screen->Photos Screen,FUNC_NA,TRAN_NA,3,1,3,Use Case Model,Create Profile,s16b_Picshare_RA
+1180,Display photo on  Profile photo screen->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,FUNC_NA,TRAN_NA,4,2,8,Use Case Model,Create Profile,s16b_Picshare_RA
+1181,Display photo on  Profile photo screen->Profile Photo Screen->Save Profile Photo->Profile,FUNC_NA,TRAN_NA,4,1.75,7,Use Case Model,Create Profile,s16b_Picshare_RA
+1182,Actor->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,EQ,CTRL|INT,4,2,8,Use Case Model,Create Profile,s16b_Picshare_RA
+1183,Actor->Profile Photo Screen->Save Profile Photo->Profile,EI,CTRL|DM|EI,4,1.75,7,Use Case Model,Create Profile,s16b_Picshare_RA
+1184,Actor->Create Event Screen->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,4,1.75,7,Use Case Model,Create a Private Event,s16b_Picshare_RA
+1185,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,5,1.6,8,Use Case Model,Create a Private Event,s16b_Picshare_RA
+1186,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,6,1.5,9,Use Case Model,Create a Private Event,s16b_Picshare_RA
+1187,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,EI,CTRL|DM|EI,5,1.2,6,Use Case Model,Create a Private Event,s16b_Picshare_RA
+1188,Actor->Create Event Screen->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,4,1.75,7,Use Case Model,Create a Public Event,s16b_Picshare_RA
+1189,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,6,1.5,9,Use Case Model,Create a Public Event,s16b_Picshare_RA
+1190,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,EI,CTRL|DM|EI,5,1.2,6,Use Case Model,Create a Public Event,s16b_Picshare_RA
+1191,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,5,1.6,8,Use Case Model,Create a Public Event,s16b_Picshare_RA
+1192,Toggle Off Delete Mode->Event Screen->Dismiss Delete Photo Model,FUNC_NA,TRAN_NA,3,1.6666666666666667,5,Use Case Model,Delete Photos in Event if Owner,s16b_Picshare_RA
+1193,Toggle Off Delete Mode->Event Screen->Toggle Delete Mode->Display Deelete Photo Model->Delete Photo Model,FUNC_NA,TRAN_NA,5,1.8,9,Use Case Model,Delete Photos in Event if Owner,s16b_Picshare_RA
+1194,Actor->Delete Photo Model->Dismiss Delete Photo Model,FUNC_NA,TRAN_NA,3,2,6,Use Case Model,Delete Photos in Event if Owner,s16b_Picshare_RA
+1195,Actor->Delete Photo Model->Handle Photo Deletion->Event,EI,CTRL|DM|EI,4,1.5,6,Use Case Model,Delete Photos in Event if Owner,s16b_Picshare_RA
+1196,Actor->Delete Photo Model->Handle Photo Deletion->Photo Collection,EI,CTRL|DM|EI,4,1.5,6,Use Case Model,Delete Photos in Event if Owner,s16b_Picshare_RA
+1197,Actor->Event Screen->Dismiss Delete Photo Model,FUNC_NA,TRAN_NA,3,1.6666666666666667,5,Use Case Model,Delete Photos in Event if Owner,s16b_Picshare_RA
+1198,Actor->Event Screen->Toggle Delete Mode->Display Deelete Photo Model->Delete Photo Model,EQ,CTRL|INT,5,1.8,9,Use Case Model,Delete Photos in Event if Owner,s16b_Picshare_RA
+1199,Actor->view photo->Delete->Confirm page,EQ,CTRL|INT,4,1.75,7,Use Case Model,Delete uploaded photos,s16b_Picshare_RA
+1200,Actor->My photos screen->get my upload,FUNC_NA,TRAN_NA,3,1.6666666666666667,5,Use Case Model,Delete uploaded photos,s16b_Picshare_RA
+1201,Actor->My photos screen->Prepare photos->Photo Collection,EQ,CTRL|INT,4,1.75,7,Use Case Model,Delete uploaded photos,s16b_Picshare_RA
+1202,Actor->Confirm page->Confirmed delete->my upload->Delete finished->Result,FUNC_NA,CTRL|DM|EQ|INT,6,1.6666666666666667,10,Use Case Model,Delete uploaded photos,s16b_Picshare_RA
+1203,Actor->Confirm page->Confirmed delete->my upload->get my upload,FUNC_NA,TRAN_NA,5,1.4,7,Use Case Model,Delete uploaded photos,s16b_Picshare_RA
+1204,Actor->Confirm page->Confirmed delete->my upload->failed to delete->Result,FUNC_NA,CTRL|DM|EQ|INT,6,1.6666666666666667,10,Use Case Model,Delete uploaded photos,s16b_Picshare_RA
+1205,Actor->Confirm page->Confirmed delete->my upload->Can't access server->My photos screen,FUNC_NA,CTRL|DM|EQ|INT,6,1.5,9,Use Case Model,Delete uploaded photos,s16b_Picshare_RA
+1206,Actor->Photo Collection->Select a photo->view photo,EQ,CTRL|INT,4,1.75,7,Use Case Model,Delete uploaded photos,s16b_Picshare_RA
+1207,Actor->Photo Selected Screen->Download photo to Device->Server,EI,CTRL|DM|EI,4,1.5,6,Use Case Model,Downoad Photos to Device,s16b_Picshare_RA
+1208,Actor->Log In Screen->Verify Username->Verify Password->User Collection,EI,CTRL|DM|EI,5,1.4,7,Use Case Model,Log In to Account,s16b_Picshare_RA
+1209,Actor->Log In Screen->Verify Username->Verify Password->Account,EI,CTRL|DM|EI,5,1.2,6,Use Case Model,Log In to Account,s16b_Picshare_RA
+1210,Actor->Log In Screen->Verify Username->User Collection,EI,CTRL|DM|EI,4,1.5,6,Use Case Model,Log In to Account,s16b_Picshare_RA
+1211,Actor->Create Event Screen->Handle Creation Error->Set Password Screen,EQ,CTRL|INT,4,1.75,7,Use Case Model,Reserve a Hashtag,s16b_Picshare_RA
+1212,Actor->Create Event Screen->Create new event with hashtag->Handle Creation Error->Set Password Screen,EQ,CTRL|INT,5,1.8,9,Use Case Model,Reserve a Hashtag,s16b_Picshare_RA
+1213,Actor->Create Event Screen->Create new event with hashtag->Event Collection,EI,CTRL|DM|EI,4,1.25,5,Use Case Model,Reserve a Hashtag,s16b_Picshare_RA
+1214,Actor->Create Event Screen->Create new event with hashtag->Event,EI,CTRL|DM|EI,4,1.25,5,Use Case Model,Reserve a Hashtag,s16b_Picshare_RA
+1215,Actor->Set Password Screen->Create new event with hashtag->Event Collection,EI,CTRL|DM|EI,4,1.5,6,Use Case Model,Reserve a Hashtag,s16b_Picshare_RA
+1216,Actor->Set Password Screen->Create new event with hashtag->Event,EI,CTRL|DM|EI,4,1.5,6,Use Case Model,Reserve a Hashtag,s16b_Picshare_RA
+1217,Actor->Photo View->User Directed to View Photo Use Case,FUNC_NA,TRAN_NA,3,1,3,Use Case Model,Search by Location,s16b_Picshare_RA
+1218,Actor->Photo Search Result List View->List Mutator->Photo Search Result List,EI,CTRL|DM|EI,4,1.5,6,Use Case Model,Search by Location,s16b_Picshare_RA
+1219,Actor->Location Screen->Perform Default Search->Photo Database,EI,CTRL|DM|EI,4,1,4,Use Case Model,Search by Location,s16b_Picshare_RA
+1220,Actor->Location Screen->Perform Default Search->List Mutator->Photo Search Result List,EI,CTRL|DM|EI,5,1.4,7,Use Case Model,Search by Location,s16b_Picshare_RA
+1221,Actor->Range Buttons(Default myhome)->Perform Select Range Search->Photo Database,EI,CTRL|DM|EI,4,1,4,Use Case Model,Search by Location,s16b_Picshare_RA
+1222,Actor->Range Buttons(Default myhome)->Perform Select Range Search->List Mutator->Photo Search Result List,EI,CTRL|DM|EI,5,1.4,7,Use Case Model,Search by Location,s16b_Picshare_RA
+1223,Actor->Show Empty Result Page->Event Collection->Search Result Page,FUNC_NA,TRAN_NA,4,1.75,7,Use Case Model,Search by event,s16b_Picshare_RA
+1224,Actor->Show Empty Result Page->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,FUNC_NA,TRAN_NA,6,1.8333333333333333,11,Use Case Model,Search by event,s16b_Picshare_RA
+1225,Actor->Search Result Page->Search API->Valid Input Text->Perform Default Search->Search Event Homepage,EQ,CTRL|INT,6,2,12,Use Case Model,Search by event,s16b_Picshare_RA
+1226,Actor->Search Result Page->Search API->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,FUNC_NA,CTRL|DM|EQ|INT,7,1.8571428571428572,13,Use Case Model,Search by event,s16b_Picshare_RA
+1227,Actor->Search Result Page->Search API->Pop up Server Error Message->Search Event Homepage,EQ,CTRL|INT,5,1.8,9,Use Case Model,Search by event,s16b_Picshare_RA
+1228,search & upload->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,FUNC_NA,TRAN_NA,7,1.7142857142857142,12,Use Case Model,Search event and upload photo,s16b_Picshare_RA
+1229,can't access server->Search(back-end)->Event Collection->prepare resullt->Search Result Page,FUNC_NA,TRAN_NA,5,1.4,7,Use Case Model,Search event and upload photo,s16b_Picshare_RA
+1230,can't access server->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,FUNC_NA,TRAN_NA,6,1.5,9,Use Case Model,Search event and upload photo,s16b_Picshare_RA
+1231,Actor->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,FUNC_NA,CTRL|DM|EQ|INT,7,1.7142857142857142,12,Use Case Model,Search event and upload photo,s16b_Picshare_RA
+1232,Actor->confirm->confirm upload->Photos in the event->failed to upload->result,FUNC_NA,CTRL|DM|EQ|INT,6,1.3333333333333333,8,Use Case Model,Search event and upload photo,s16b_Picshare_RA
+1233,Actor->confirm->confirm upload->Photos in the event->Upload finished->result,FUNC_NA,CTRL|DM|EQ|INT,6,1.3333333333333333,8,Use Case Model,Search event and upload photo,s16b_Picshare_RA
+1234,Actor->Search Result Page->Select an event->confirm,EQ,CTRL|INT,4,1.75,7,Use Case Model,Search event and upload photo,s16b_Picshare_RA
+1235,Actor->view photo->prepare resullt->camera->can't access camera->my photo screen,FUNC_NA,CTRL|DM|EQ|INT,6,1.6666666666666667,10,Use Case Model,Take a photo,s16b_Picshare_RA
+1236,Actor->view photo->Upload->upload choice,EQ,CTRL|INT,4,1.75,7,Use Case Model,Take a photo,s16b_Picshare_RA
+1237,Actor->my photo screen->prepare resullt->camera->take the photo successfully->view photo,FUNC_NA,CTRL|DM|EQ|INT,6,1.6666666666666667,10,Use Case Model,Take a photo,s16b_Picshare_RA
+1238,Actor->upload choice->upload to current location->camera->get location successfully->current location,FUNC_NA,CTRL|DM|EQ|INT,6,1.5,9,Use Case Model,Take photo for location,s16b_Picshare_RA
+1239,Actor->current location->upload->my upload->failed to upload->upload choice,FUNC_NA,CTRL|DM|EQ|INT,6,1.6666666666666667,10,Use Case Model,Take photo for location,s16b_Picshare_RA
+1240,Actor->current location->upload->my upload->Upload finished->upload choice,FUNC_NA,CTRL|DM|EQ|INT,6,1.6666666666666667,10,Use Case Model,Take photo for location,s16b_Picshare_RA
+1241,Actor->confirm->confirm upload->photos in the event->failed to upload->result,FUNC_NA,CTRL|DM|EQ|INT,6,1.8333333333333333,11,Use Case Model,Upload photo to my event,s16b_Picshare_RA
+1242,Actor->my events->select an event->confirm,EQ,CTRL|INT,4,1.75,7,Use Case Model,Upload photo to my event,s16b_Picshare_RA
+1243,Actor->upload choice->upload to my event->my event->display my events->my events,FUNC_NA,CTRL|DM|EQ|INT,6,1.5,9,Use Case Model,Upload photo to my event,s16b_Picshare_RA
+1244,Actor->Event Screen->Determine if user is event owner->Event,EI,CTRL|DM|EI,4,1.75,7,Use Case Model,View photos of event/View photos of private event with password,s16b_Picshare_RA
+1245,Actor->Event Screen->Navigate to Photo Selected Screen,FUNC_NA,TRAN_NA,3,1.6666666666666667,5,Use Case Model,View photos of event/View photos of private event with password,s16b_Picshare_RA
+1246,Actor->Event Screen->Retrieve Photos for Event->Photo Collection,EI,CTRL|DM|EI,4,1.75,7,Use Case Model,View photos of event/View photos of private event with password,s16b_Picshare_RA
+1247,Actor->Event Screen->Display Remaining Event Time->Event,EI,CTRL|DM|EI,4,1.75,7,Use Case Model,View photos of event/View photos of private event with password,s16b_Picshare_RA
+1248,Actor->Event Screen->Photo Collection,FUNC_NA,TRAN_NA,3,2,6,Use Case Model,View photos of event/View photos of private event with password,s16b_Picshare_RA
+1249,Actor->view photo->upload->upload choice,EQ,CTRL|INT,4,1.75,7,Use Case Model,View photos on device,s16b_Picshare_RA
+1250,Actor->camera roll->choose a photo->view photo,EQ,CTRL|INT,4,1.75,7,Use Case Model,View photos on device,s16b_Picshare_RA
+1251,Actor->my photos screen->process request->local photos->get photos successfully->camera roll,FUNC_NA,CTRL|DM|EQ|INT,6,1.3333333333333333,8,Use Case Model,View photos on device,s16b_Picshare_RA
