@@ -16,10 +16,8 @@ if (length(args) < 1) {
 dataUrl <- args[1]
 outputPath <- args[2]
 reportPath <- paste(outputPath,'use-case-point-linear-regression-report.txt', sep='/')
-pngPath <- paste(outputPath,'use-case-point-linear-regression-plot.png', sep='/')
-
-
-
+linearRegressionPlotPath <- paste(outputPath,'use-case-point-linear-regression-plot.png', sep='/')
+independentVariablesScatterPlotPath <- paste(outputPath,'use-case-point-independent-variable-scatter-plot.png', sep='/')
 
 # store the current directory
 # initial.dir<-getwd()
@@ -45,7 +43,38 @@ sink(reportPath)
 
 
 data <- read.csv(dataUrl, header=TRUE)
+
+
+#analysis for the variables and independent variables to detect correlations.
+useCaseVariables <- data[c("Effort_Norm_UCP", "UAW", "TCF", "EF", "UEUCW_ALY", "UEXUCW_ALY", "UDUCW_ALY")]
+useCaseVariablesMelt <- melt(useCaseVariables, id=c("Effort_Norm_UCP"))
+
+independentVariablesScatterPlot = xyplot(Effort_Norm_UCP~ value | variable, data=useCaseVariablesMelt,
+		# scales = list(x = list(log = 10, equispaced.log = FALSE)),
+		xlab=list(label="Indepedent Variables", fontsize=10),
+		ylab=list(label="Normalized Effort (PH)", fontsize=10),
+		strip =strip.custom(factor.levels = c("UAW","TCF","EF", "UEUCW", "UEXUCW", "UDUCW")),
+		#upper=data$upper,
+		#lower=data$lower,
+		scales=list(x=list(relation="free")),
+		auto.key = TRUE,
+		type = c("p"))
+
+png(filename=independentVariablesScatterPlotPath,
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*3,
+		res=96)
+
+print(independentVariablesScatterPlot)
+
+#print correlation matrix for the variables and independent variables
+print("correlation matrix:")
+print(round(cor(useCaseVariables), 2))
+
 useCaseData <- data[c("Effort_Norm_UCP", "EUCP_ALY", "EXUCP_ALY", "DUCP_ALY")]
+#running OLS linear regression and output the diagrams for the linear regressions
 #useCaseDataMelt <- gather(useCaseData, key=variable, value=value, EUCP_ALY, EXUCP_ALY, DUCP_ALY)
 useCaseDataMelt <- melt(useCaseData, id=c("Effort_Norm_UCP"))
 
@@ -57,43 +86,58 @@ print(useCaseDataMelt)
 
 #correlation between effort and EUCP
 print("correlation between effort and EUCP_ALY")
-cor1 = cor(data$Effort_Norm_UCP, data$EUCP_ALY)
+cor1 = cor.test(data$Effort_Norm_UCP, data$EUCP_ALY)
+print(cor1)
+print(round(cor1$p.value,3))
 print("linear regression of effort on EUCP_ALY")
 m1 = lm(Effort_Norm_UCP~EUCP_ALY, data=data)
+print("confidence interval for the parameters")
+print(confint(m1))
 #summary(m1.lm)$test[c("coefficients", "sigma", "tstat", "pvalues")]
 coeff1 = summary(m1)$coefficients
+print("R-squared")
 summary(m1)$r.squared
 newx1 <- seq(-100, max(data$EUCP_ALY)+100, length.out=100)
 pred1 = predict(m1,data.frame(EUCP_ALY=newx1), interval='confidence')
-print(coeff1)
+print(round(coeff1,3))
 
 #correlation between effort and EXUCP
 print("correlation between effort and EXUCP")
-cor2 = cor(data$Effort_Norm_UCP, data$EXUCP_ALY)
+cor2 = cor.test(data$Effort_Norm_UCP, data$EXUCP_ALY)
+print(cor2)
+print(round(cor2$p.value,3))
 print("linear regression of effort on EXUCP_ALY")
 #print(axis1)
 m2 = lm(Effort_Norm_UCP~EXUCP_ALY, data=data)
+print("confidence interval for the parameters")
+print(confint(m2))
 #summary(m1.lm)$test[c("coefficients", "sigma", "tstat", "pvalues")]
 coeff2 = summary(m2)$coefficients
+print("R-squared")
 summary(m2)$r.squared
 newx2 <- seq(-100, max(data$EXUCP_ALY)+100, length.out=100)
 pred2 = predict(m2,data.frame(EXUCP_ALY=newx2), interval='confidence')
-print(coeff2)
+print(round(coeff2,3))
 
 #correlation between effort and DUCP
 print("correlation between effort and DUCP")
-cor3 = cor(data$Effort_Norm_UCP, data$DUCP_ALY)
+cor3 = cor.test(data$Effort_Norm_UCP, data$DUCP_ALY)
+print(cor3)
+print(round(cor3$p.value,3))
 print("linear regression of effort on DUCP_ALY")
 #print(axis1)
 m3 = lm(Effort_Norm_UCP~DUCP_ALY, data=data)
+print("confidence interval for the parameters")
+print(confint(m3))
 #summary(m1.lm)$test[c("coefficients", "sigma", "tstat", "pvalues")]
 coeff3 = summary(m3)$coefficients
+print("R-squared")
 summary(m3)$r.squared
 newx3 <- seq(-100, max(data$DUCP_ALY)+100, length.out=100)
-print(newx3)
+#print(newx3)
 pred3 = predict(m3, data.frame(DUCP_ALY=newx3), interval='confidence')
-print(pred3)
-print(coeff3)
+#print(pred3)
+print(round(coeff3,3))
 
 corArray = c(cor1, cor2, cor3)
 mArray = c(m1, m2, m3)
@@ -104,7 +148,7 @@ xPosArray = c(777+100, 770+100, 850+100)
 
 plot = xyplot(Effort_Norm_UCP~ value | variable, data=useCaseDataMelt,
 		# scales = list(x = list(log = 10, equispaced.log = FALSE)),
-		xlab=list(label="Transactional Complexity", fontsize=10),
+		xlab=list(label="Software Size Metrics", fontsize=10),
 		ylab=list(label="Normalized Effort (PH)", fontsize=10),
 		strip =strip.custom(factor.levels = c("EUCP","EXUCP","DUCP")),
 		#upper=data$upper,
@@ -126,32 +170,31 @@ plot = xyplot(Effort_Norm_UCP~ value | variable, data=useCaseDataMelt,
 					type = c("p", "r"),
 					col.line = "black")
 		
-			eq = bquote(paste("y=", beta[0],"+",beta[1],"x"))
-			xPos = xPosArray[panel.number()]
-			panel.text(xPos, 2620+650-2600, eq, cex=0.8)
-			coefficients = coeffs[[panel.number()]]
+			#eq = bquote(paste("y=", beta[0],"+",beta[1],"x"))
+			#xPos = xPosArray[panel.number()]
+			#panel.text(xPos, 2620+650-2600, eq, cex=0.8)
+			#coefficients = coeffs[[panel.number()]]
 			#p0 <- sprintf("%s: %.2f SE:%.2f", "\beta_0)", coefficients[1, 1], coefficients[1, 2])
-			p0.v = sprintf("%.2f",coefficients[1, 1])
-			p0.se = sprintf("%.2f",coefficients[1, 2])
-			p0 <- bquote(paste(beta[0],": ", .(p0.v)," SE: ",.(p0.se)))
-			panel.text(xPos, 2450+650-2600, p0, cex=0.8)
+			#p0.v = sprintf("%.2f",coefficients[1, 1])
+			#p0.se = sprintf("%.2f",coefficients[1, 2])
+			#p0 <- bquote(paste(beta[0],": ", .(p0.v)," SE: ",.(p0.se)))
+			#panel.text(xPos, 2450+650-2600, p0, cex=0.8)
 			#p1 <- expression(paste(beta[1],sprintf(": %.2f SE:%.2f", coefficients[2, 1], coefficients[2, 2])))
-			p1.v = sprintf("%.2f",coefficients[2, 1])
-			p1.se = sprintf("%.2f",coefficients[2, 2])
-			p1 <- bquote(paste(beta[1],": ", .(p1.v)," SE: ",.(p1.se)))
-			panel.text(xPos, 2290+650-2600, p1, cex=0.8)
-			r2 = bquote(paste(r, ": ", .(sprintf("%.2f",corArray[panel.number()]))))
-			panel.text(xPos, 2150+650-2600, r2, cex=0.7)
+			#p1.v = sprintf("%.2f",coefficients[2, 1])
+			#p1.se = sprintf("%.2f",coefficients[2, 2])
+			#p1 <- bquote(paste(beta[1],": ", .(p1.v)," SE: ",.(p1.se)))
+			#panel.text(xPos, 2290+650-2600, p1, cex=0.8)
+			#r2 = bquote(paste(r, ": ", .(sprintf("%.2f",corArray[panel.number()]))))
+			#panel.text(xPos, 2150+650-2600, r2, cex=0.7)
 		},
 		auto.key = TRUE,
 		type = c("p", "r"))
 		
-# with cross validation
+# estimate the predication accuracy by n fold cross validation.
 #Randomly shuffle the data
 useCaseData<-useCaseData[sample(nrow(useCaseData)),]
-
 #Create 10 equally size folds
-nfold = 10
+nfold = 5
 folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 
 #function
@@ -247,7 +290,7 @@ names(cvResults) <- c('eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50','exu
 print(cvResults)
 # print(grid.arrange(plot1, plot2, plot3))
 # dev.off()
-png(filename=pngPath,
+png(filename=linearRegressionPlotPath,
 		type="cairo",
 		units="in", 
 		width=4*3, 
