@@ -581,6 +581,11 @@ app.get('/evaluateModelForUseCases', function(req, res){
 		}, true);
 })
 
+app.get('/uploadProject', function(req, res){
+	res.render('uploadProject');	
+});
+
+
 app.get('/', function(req, res){
 	var message = req.query.e;
 	umlModelInfoManager.queryRepoInfo(userInfo.repoId, function(repoInfo){
@@ -588,6 +593,8 @@ app.get('/', function(req, res){
 		res.render('index', {repo:repoInfo, message:message});
 	});
 })
+
+
 
 var server = app.listen(8081,'127.0.0.1', function () {
 

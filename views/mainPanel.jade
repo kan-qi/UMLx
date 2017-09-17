@@ -16,17 +16,19 @@ div.one-column(id="operation-panel")
     div.block.panel.panel-default
      div.block-title.panel-heading Upload New Model
      div.panel-body
-      form(id="model-file-submit-form", onsubmit="model_file_upload_fnc(); return false;")
-       div
-        input(type='file', name='uml-file', id='uml-file')
-       div Model Name
-        input(type='text', name='uml-model-name', id='uml-model-name')
-       div
-        input(type='hidden', id='uml-model-type', name='uml-model-type', value="uml")
-       div
-        input(type='hidden', id='repo-id', name='repo-id', value="#{repo._id}")
-       div
-        input(type='submit')
+       a(href="./uploadProject") Upload Project
+     
+      //form(id="model-file-submit-form", onsubmit="model_file_upload_fnc(); return false;")
+      // div
+        //input(type='file', name='uml-file', id='uml-file')
+       //div Model Name
+        //input(type='text', name='uml-model-name', id='uml-model-name')
+       //div
+        //input(type='hidden', id='uml-model-type', name='uml-model-type', value="uml")
+       //div
+        //input(type='hidden', id='repo-id', name='repo-id', value="#{repo._id}")
+       //div
+        //input(type='submit')
      //div
       //button(id="query_model", onclick="query_exist_models_fnc('f4e49520-5c80-47cb-9c3e-c6095bee')") Query Existing Model
      //div
