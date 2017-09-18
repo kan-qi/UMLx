@@ -1,5 +1,25 @@
 div.block.panel.panel-default
-  div.block-title.panel-heading Model Analytics
+  div.panel-heading
+   h3.panel-title.analytics-title.pull-left Model Analytics
+   if modelAnalytics
+    div.model-analytics-ops.pull-right
+     div.dropdown
+      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Model
+        span.caret
+      ul.dropdown-menu
+        li
+          a.dumpAnalyticsData.dropdown-item(href='getUseCaseAnalyticsForModelCSV?model_id=#{modelAnalytics._id}') Analytics
+        li
+          a.dumpAnalyticsData.dropdown-item(href='evaluateModelForUseCases?model_id=#{modelAnalytics._id}') Evaluation For Use Cases
+     div.dropdown
+      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
+        span.caret
+      ul.dropdown-menu
+        li
+          a.dropdown-item(id='reanalyse-model' href='reanalyseModel?model_id=#{modelAnalytics._id}') Re-analyse Model
+        li
+          a.dropdown-item(href='deleteModel?model_id=#{modelAnalytics._id}') Delete Model
+    div.clearFix
   div.panel-body(id="model-stats-chart")
    div.model-info-content
     ul.nav.nav-tabs
@@ -10,7 +30,7 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#model-empirical') Empirical
      li
-      a(data-toggle='tab', href='#model-evaluation') Evaluation 
+      a(data-toggle='tab', href='#model-evaluation') Evaluation
     div.tab-content
      div.tab-pane.fade.in.active(id="model-analytics")
       if modelAnalytics
@@ -66,15 +86,6 @@ div.block.panel.panel-default
          span.statistical-item ILF: #{modelAnalytics.ILF}
         li
          span.statistical-item EIF: #{modelAnalytics.EIF}
-       div.model-analytics-ops
-         div
-          a.dumpAnalyticsData(href='getUseCaseAnalyticsForModelCSV?model_id=#{modelAnalytics._id}') Dump Model Analytics
-         div
-          a.dumpAnalyticsData(href='evaluateModelForUseCases?model_id=#{modelAnalytics._id}') Dump Model Evaluation For Use Cases
-         div
-          a(id='reanalyse-model' href='reanalyseModel?model_id=#{modelAnalytics._id}') Re-analyse Model
-         div
-          a(href='deleteModel?model_id=#{modelAnalytics._id}') Delete Model
      div.tab-pane.fade(id="model-distributions")
       div.stats-chart
        img(src="#{modelAnalytics.AccessDir}/control_operation_analysis_result.svg")
