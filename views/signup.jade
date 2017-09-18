@@ -1,0 +1,31 @@
+html
+  head
+    title UMLx SignUp
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+    link(href='css/style.css', rel='stylesheet')
+    script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js")
+    script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+    script(type='text/javascript', src="js/scripts.js")
+    
+  body.signUp
+   div.clear
+   div#mainDiv
+    div.panel.panel-default
+     div.panel-body
+      form(id='sign-up')
+       label.formLabel Email
+       br
+       input.signUp(type='text', name='email', id='email', place)
+       label.formLabel Username
+       br
+       input.signUp(type='text', name='username', id='username')
+       label.formLabel Password
+       br
+       input.signUp(type='password', name='password', id='password')
+       br
+       input.btn.btn-primary.signUpButton(type='submit',value='Sign Up')
+       hr
+       p.toggleLoginSignUp Already have an account? 
+        a(href='/login') Login.
+       
+       

@@ -317,6 +317,60 @@ function query_estimation_models_func(){
 	return false;
 }
 
+function signUpFormSubmit (e){
+	e.preventDefault();
+	var formData = new FormData($('#sign-up')[0]);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$.ajax({
+		type : 'POST',
+		url : "signup",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log('successsss');
+			console.log(response);
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error signing up");
+		}
+	});
+
+	return false;
+}
+
+function loginFormSubmit (e){
+	e.preventDefault();
+	var formData = new FormData($('#login-form')[0]);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$.ajax({
+		type : 'POST',
+		url : "login",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log('successsss');
+			console.log(response);
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error logging in");
+		}
+	});
+
+	return false;
+}
+
 
 
 function drawChartBySVG(){
@@ -505,5 +559,8 @@ $(document).ready(function() {
 	   });
 	
 	 $('.nav.nav-tabs').tab();
+	 
+	 $('form#sign-up').submit(signUpFormSubmit);
+	 $('form#login-form').submit(loginFormSubmit);
 //	drawChartBySVG();
 });

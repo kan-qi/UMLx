@@ -589,6 +589,39 @@ app.get('/', function(req, res){
 	});
 })
 
+app.get('/signup',function(req,res){
+	res.render('signup');
+});
+
+app.get('/login',function(req,res){
+	res.render('login');
+});
+
+
+app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+	
+	var email = req.body['email'];
+	var username = req.body['username'];
+	var pwd = req.body['password'];
+	console.log('signing up...');
+	console.log('email '+email +'username '+username +'pwd '+pwd);
+	res.json({status:'success'})
+	
+	//res.json({status:'success');
+})
+
+app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+	
+	var username = req.body['username'];
+	var pwd = req.body['password'];
+	console.log('logging in...');
+	console.log('username '+username +'pwd '+pwd);
+	res.json({status:'success'})
+	//res.json({status:'success');
+})
+
+
+
 var server = app.listen(8081,'127.0.0.1', function () {
 
   var host = server.address().address
