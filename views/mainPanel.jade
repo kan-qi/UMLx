@@ -8,8 +8,9 @@ div.one-column(id="operation-panel")
      div(id="existing-model-list")
       div.list-block.panel-body.pre-scrollable
         each model in repo.models
-         div.list-item.model-title(data-model-id=model._id)
-          a.model-title(href="requestModelInfo?model_id="+model._id) #{model.umlModelName}
+         div.list-item.col-md-12(data-model-id=model._id)
+          div.col-md-9.model-name(title= model.umlModelName)
+            a.model-title(href="requestModelInfo?model_id="+model._id) #{model.umlModelName}
           div.btn-group.ops_menu
            button.btn.btn-primary(type="button").model-analytics
             span.glyphicon.glyphicon-stats
