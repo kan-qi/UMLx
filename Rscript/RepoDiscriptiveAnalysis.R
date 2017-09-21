@@ -10,25 +10,22 @@ if (length(args) < 2) {
 	stop("At least two argument must be supplied (input file).", call.=FALSE)
 } else if (length(args)==2) {
 	# default output file
-	args[3] = "."
-	args[4] = '.'
-} else if (length(args) == 3){
-	args[4] = '.'
+	args[3] = "./temp"
 }
 
 useCaseEvaluationPath = args[1]
 modelEvaluationPath = args[2]
 outputDir <- args[3]
-workDir <- args[4]
+#workDir <- args[4]
 # store the current directory
-initial.dir<-getwd()
-setwd(workDir)
+#initial.dir<-getwd()
+#setwd(workDir)
 
 reportPath <- paste(outputDir,'repo_discriptive_analysis_report.txt', sep='/')
 
 # cat(initial.dir)
 # change to the new directory
-cat(getwd())
+#cat(getwd())
 # load the necessary libraries
 library(lattice)
 library(latticeExtra)
@@ -103,4 +100,4 @@ sink()
 # unload the libraries
 # detach("package:nlme")
 # change back to the original directory
-setwd(initial.dir)
+#setwd(initial.dir)
