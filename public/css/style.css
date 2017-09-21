@@ -35,7 +35,6 @@
 	float:left;
 	position:relative;
 	width: 780px;
-	min-height: 840px;
 }
 
 #use-case-analytics-submit-form{
@@ -73,7 +72,6 @@
 	float:left;
 	position:relative;
 	width: 1040px;
-	min-height: 840px;
 }
 
 .list-block {
@@ -84,7 +82,6 @@
 	float:left;
 	position:relative;
 	width: 1300px;
-	min-height: 840px;
 }
 
 .use-case-info-tab{
@@ -139,7 +136,7 @@
 	height:190px;
 }
 
-#estimation-models-panel .caret {
+.dropdown-toggle .caret {
 	margin-left:24px;
 }
 
@@ -191,13 +188,10 @@
 }
 
 .model-title {
-	display: block;
     color: black;
     font-style: normal;
     font-size: 1.09em;
-    margin: 2px;
     text-decoration: none;
-    float:left;
 }
 
 .block-title {
@@ -257,6 +251,10 @@
 .list-item {
 	width:100%;
 	font-size:12px;
+	padding-left: 0;
+	padding-right: 0;
+	margin-bottom: 5px;
+	line-height: 2;
 }
 
 .repo-info-content .tab-pane {
@@ -329,4 +327,25 @@
 #model-evaluation-dump-display td{
 	border: 1px black solid;
 	font-size: 9px;
+}
+
+.repo-analytics-ops, .model-analytics-ops {
+	display: inline-flex;
+	margin-right: 3%;
+}
+.repo-analytics-ops .dropdown, .model-analytics-ops .dropdown  {
+	margin-right: 2%;
+}
+
+.analytics-title {
+	line-height: 2;
+}
+.model-name {
+	padding: 0;
+}
+.model-name {
+	text-overflow: ellipsis;
+	display: block;
+	overflow: hidden;
+	text-decoration: none;
 }
