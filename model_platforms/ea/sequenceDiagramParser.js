@@ -45,54 +45,89 @@ class Graph{
 var http = require('http');
 var fs = require('fs');
 var parser = require('xml2js').Parser();
+var _ = require('lodash');
 
 var xmlParser = require('xml2js').Parser();
 var fileSystem = require('fs');
 var graph = new Graph();
 
 
+
 // read a file.
-function readFile(callback) {
-	fs.readFile('project.xml', function(err, data) {
+function readFile(fileName, dataCallback) {
+	fs.readFile(fileName, function(err, data) {
 		if (err) {
 			console.log('Parser : the file entered is not read.');
-			callback()
+			dataCallback(err);
 		} else {
 			console.log ('Parser: The file was read');
-			callback(data);
+			parseData(data, dataCallback);
 		}
 	});
 }
 
 
 // Parse the xml data of the sequence diagram.
-function parseData (data){
+function parseData (data,dataCallback){
 	xmlParser.parseString(data, function (err, result) {
 		if (err)
 			console.log ("error in parsing", err);
 		extractNodes(result);
 		extractEdges(result);
+		dataCallback(graph);
 	});
 }
 
+
+
 // Function to extract the nodes suchs as InteractionLifeLine, from the parsed
 // JSON.
-function extractNodes(sequenceDiagramJSON){	
+function extractNodes(sequenceDiagramJSON){
 	// TODO: is an array.
 	var models = sequenceDiagramJSON.Project.Models;
 	
 	var model = models[0];
 	var modelChildren = model.Frame[0].ModelChildren;
-	var interactionLifeLines = modelChildren[0];
+	var diagramChildren = modelChildren[0];
 		
-	for (var index = 0; index < interactionLifeLines.InteractionLifeLine.length; index++){
+	extractInteractionActors(diagramChildren);
+	
+	extractInteractionLifeLine(diagramChildren);
+
+}
+
+function extractInteractionLifeLine(diagramChildren){
+	var interactionLifeLines = _.get(diagramChildren,'InteractionLifeLine',[]);
+
+	for (var index = 0; index < interactionLifeLines.length; index++){
 		
-		var interactionLifeLine = interactionLifeLines.InteractionLifeLine[index];
-		
-		//extract the interactionlifeline id and name.
+		var interactionLifeLine = interactionLifeLines[index];
+		// extract the interactionlifeline id and name.
 		var interactionLifeLineAttributes = interactionLifeLine.$;
 		var id = interactionLifeLineAttributes.Id;
 		var name = interactionLifeLineAttributes.Name;
+		
+		// create a new node with the interaction Life Line information.
+		var node = new Node(id, name);
+		graph.addNode(node);
+	}
+}
+
+
+
+function extractInteractionActors(diagramChildren){
+// extract if models are present
+	
+	var modelActors = _.get(diagramChildren, 'InteractionActor', []);
+	
+	console.log ('the interactionLifeLines ', JSON.stringify(diagramChildren));
+	
+	for (var index = 0; index < modelActors.length; index++){
+		
+		var modelActor = modelActors[index];
+		var modelActorAttributes = modelActor.$;
+		var id = modelActorAttributes.Id;
+		var name = modelActorAttributes.Name;
 		
 		// create a new node with the interaction Life Line information.
 		var node = new Node(id, name);
@@ -134,9 +169,12 @@ function extractEdges (sequenceDiagramJSON){
 			var messageToInfo = messageTo.MessageEnd[0];
 			var toElementId = messageToInfo.$.EndModelElement;
 			
-			//add Edge to the graph.
+			// add Edge to the graph.
 			var edge = new Edge(endElementId, toElementId, messageId, messageName);
 			graph.addEdge(edge);
 		}
 	}	
 }
+
+module.exports = { readFile , parseData } ;
+
