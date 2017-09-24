@@ -12,10 +12,43 @@ html
     script(type='text/javascript', src="http://d3js.org/d3.v4.min.js")
     script(type='text/javascript', src="js/scripts.js")
     
-  body
+  body(id="upload-body")
     form(id="model-file-submit-form", onsubmit="model_file_upload_fnc(); return false;")
        div
+        label Project Name
+        input(type='text', name="project-name")
+       div
+        label Description
+        textarea(name="project-desc")
+       div
+        label Technical Complexity Factor
+        select(name="tech-complex-factor")
+         option(value='2') Distributed System
+         option(value='1') Response time or throughput performance objectives
+       div
+        label Distributed System
+         input(type='text' name="Distributed System")
+        label End user efficiency
+         input(type='text' name="End user efficiency")
+       div
+        label Environmrntal Factors
+        select(name="evn-factor")
+         option option1
+         option option2
+       div
+        label Familiar with the project model that is used
+        input(type='text' name="familiar-project-model")
+       div
+        label Model File
         input(type='file', name='uml-file', id='uml-file')
+        label file types: xml are supported
+       div
+        label Other Documents
+        input(type='file', name='uml-file', id='uml-file')
+        label file types: zip, rar, tar are supported
+        
+        
+        
        div Model Name
         input(type='text', name='uml-model-name', id='uml-model-name')
        div
