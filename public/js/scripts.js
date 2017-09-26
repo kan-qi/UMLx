@@ -507,3 +507,41 @@ $(document).ready(function() {
 	 $('.nav.nav-tabs').tab();
 //	drawChartBySVG();
 });
+
+function openDialogueBox(repoId) {
+	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	$('#overlay-frame').modal();
+	$("#overlay-frame .modal-title").html("Upload File");
+	$("#overlay-frame .modal-body").html("");
+	$("#overlay-frame .modal-body").html(form);  	
+}
+
+function usecase_file_upload_fnc() {
+	if (!($('#usecase-file')[0].value)) {
+		alert("No files selected");
+		return;
+	}
+	var formData = new FormData($('#usecase-file-submit-form')[0]);
+	//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$('.modal-footer .btn-default').click();
+	$.ajax({
+		type : 'POST',
+		url : "uploadUseCaseFile",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#main-panel").html("");
+			$("#main-panel").append(response);
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error submitting comment");
+		}
+	});
+}
