@@ -26,8 +26,9 @@
 	var umlDiagramEvaluator = require('./evaluators/UMLDiagramEvaluator.js');
 	var functionPointCalculator = require('./evaluators/FunctionPointEvaluator.js');
 	var projectEvaluator = require('./evaluators/ProjectEvaluator.js');
+	var useCasePointWeightEvaluator = require('./evaluators/UseCasePointWeightEvaluator.js');
 	
-	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator];
+	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
 //	function setUp(){
 //		evaluators = [cocomoCalculator, useCaseCalculator, umlModelEvaluator];
 //		for(var i in evaluators){
