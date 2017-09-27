@@ -376,7 +376,7 @@ app.get('/requestUseCaseDetail', function(req, res){
 
 app.get('/queryExistingModels', function(req, res){
 	var projectId = req.query.project_id;
-	umlModelInfoManager.queryRepoInfo(0, function(repoInfo){
+	umlModelInfoManager.queryRepoInfo(0,function(repoInfo){
 		res.render('modelList', {repoInfo:repoInfo});
 	});
 })
@@ -603,24 +603,35 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 	var email = req.body['email'];
 	var username = req.body['username'];
 	var pwd = req.body['password'];
-	console.log('signing up...');
-	console.log('email '+email +'username '+username +'pwd '+pwd);
-	res.json({status:'success'})
 	
-	//res.json({status:'success');
+    umlModelInfoManager.newUserSignUp(email,username,pwd,function(status,message){
+        if(status == 1){
+            console.log('success');
+            console.log('message'+message);
+            res.json({status:'success',message:message});
+            
+        } else {
+             console.log('failed');
+             console.log('message'+message);
+             res.json({status:'failure',message:message});
+        }
+    });
+
 })
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
 	
 	var username = req.body['username'];
 	var pwd = req.body['password'];
-	console.log('logging in...');
-	console.log('username '+username +'pwd '+pwd);
-	res.json({status:'success'})
-	//res.json({status:'success');
+	 umlModelInfoManager.validateUserLogin(username,pwd,function(status,message){
+        if(status == 1){
+        	res.json({status:'success',message:message});
+        } else {
+        	res.json({status:'failure',message:message});
+        }
+    });
+	
 })
-
-
 
 var server = app.listen(8081,'127.0.0.1', function () {
 
