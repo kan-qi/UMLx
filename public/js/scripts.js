@@ -535,7 +535,7 @@ function usecase_file_upload_fnc() {
 		success : function(response) {
 			console.log(response);
 			$("#main-panel").html("");
-			$("#main-panel").append(response);
+			$("#main-panel").append($(response).children());
 		},
 		error : function() {
 			// $("#commentList").append($("#name").val() + "<br/>" +
