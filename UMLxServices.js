@@ -76,9 +76,9 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 
 //This funtion is same as loadEmpiricalUsecaseDataForRepo, except we just take file from user input and pass it down.
 app.post('/uploadUseCaseFile',
+upload.fields([{name:'usecase-file',maxCount:1}, {name:'repo-id', maxCount:1}]),
+function(req, res) {
 	console.log('/uploadUseCaseFile');
-	upload.fields([{name:'usecase-file',maxCount:1}, {name:'repo-id', maxCount:1}]),
-	function(req, res) {
 	var usecaseFilePath = req.files['usecase-file'][0].path;
 	var repoId = req.body['repo-id'];
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
