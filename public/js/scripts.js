@@ -509,11 +509,12 @@ $(document).ready(function() {
 });
 
 function openDialogueBox(repoId) {
-	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
-	$('#overlay-frame').modal();
-	$("#overlay-frame .modal-title").html("Upload File");
-	$("#overlay-frame .modal-body").html("");
-	$("#overlay-frame .modal-body").html(form);  	
+	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	//$('#overlay-frame').addClass('upload');
+	$('#dialog-frame').modal();
+	$("#dialog-frame .modal-title").html("Upload File");
+	$("#dialog-frame .modal-body").html("");
+	$("#dialog-frame .modal-body").html(form);  	
 }
 
 function usecase_file_upload_fnc() {
@@ -523,7 +524,8 @@ function usecase_file_upload_fnc() {
 	}
 	var formData = new FormData($('#usecase-file-submit-form')[0]);
 	//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
-	$('.modal-footer .btn-default').click();
+	$('#dialog-frame .modal-footer .btn-default').click();
+	//$('#overlay-frame').removeClass('upload')
 	$.ajax({
 		type : 'POST',
 		url : "uploadUseCaseFile",
