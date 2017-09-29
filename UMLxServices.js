@@ -78,6 +78,27 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 	});
 })
 
+//This funtion is same as loadEmpiricalUsecaseDataForRepo, except we just take file from user input and pass it down.
+app.post('/uploadUseCaseFile',
+upload.fields([{name:'usecase-file',maxCount:1}, {name:'repo-id', maxCount:1}]),
+function(req, res) {
+	console.log('/uploadUseCaseFile');
+	var usecaseFilePath = req.files['usecase-file'][0].path;
+	var repoId = req.body['repo-id'];
+	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+		umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
+			if(!repo){
+				res.end('load error!');
+				return;
+			}
+			umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
+					res.redirect('/');
+			});
+		}, usecaseFilePath);
+	});
+
+})
+
 
 app.get('/deleteModel', function (req, res){
 	console.log("/deleteModel");
@@ -380,7 +401,7 @@ app.get('/requestUseCaseDetail', function(req, res){
 
 app.get('/queryExistingModels', function(req, res){
 	var projectId = req.query.project_id;
-	umlModelInfoManager.queryRepoInfo(0, function(repoInfo){
+	umlModelInfoManager.queryRepoInfo(0,function(repoInfo){
 		res.render('modelList', {repoInfo:repoInfo});
 	});
 })
@@ -598,7 +619,49 @@ app.get('/', function(req, res){
 	});
 })
 
+app.get('/signup',function(req,res){
+	res.render('signup');
+});
 
+app.get('/login',function(req,res){
+	res.render('login');
+});
+
+
+app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+	
+	var email = req.body['email'];
+	var username = req.body['username'];
+	var pwd = req.body['password'];
+	
+    umlModelInfoManager.newUserSignUp(email,username,pwd,function(status,message){
+        if(status == 1){
+            console.log('success');
+            console.log('message'+message);
+            res.json({status:'success',message:message});
+            
+        } else {
+             console.log('failed');
+             console.log('message'+message);
+             res.json({status:'failure',message:message});
+        }
+    });
+
+})
+
+app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+	
+	var username = req.body['username'];
+	var pwd = req.body['password'];
+	 umlModelInfoManager.validateUserLogin(username,pwd,function(status,message){
+        if(status == 1){
+        	res.json({status:'success',message:message});
+        } else {
+        	res.json({status:'failure',message:message});
+        }
+    });
+	
+})
 
 var server = app.listen(8081,'127.0.0.1', function () {
 

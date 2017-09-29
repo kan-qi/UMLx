@@ -320,7 +320,82 @@
 			    });
 			});
 	}
+    
+    function newUserSignUp(email,username,pwd,callback){
+        
+        MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+            
+            // check if a user exists with same email or username --> in such a case throw an error
+            var queryCheckExisting = { 
+                                        $or:[
+                                            {"username":username},
+                                            {"email":email}
+                                        ]
+                                      }
+            
+            var existingUsers  = db.collection("users").findOne(queryCheckExisting,function(err,data){
+                if (err) throw err;
+                
+                if(data){
+                    // found an existing user 
+                    console.log('User already exists');
+                    db.close();
+                    callback(0,"Username or email already exists");
+                    return;
+                    
+                } else{
+                    
+                     var userInfo = {"username" : username , "email" :email , "password" :pwd}
+                     db.collection("users").insertOne(userInfo, function(err, result) {
+                            if (err) throw err;
+                            console.log("1 record inserted");
+                            db.close();	
+                            callback(1,"Successfully signed up");
+                     });
+                
+                }
+                
+            });
+             
+        });
+    }
 	
+    function validateUserLogin(username,pwd,callback){
+        
+      //  if(email && email.lenght() > 0 && username && username.length()>0 && pwd && pwd.lenght()>0){}
+        MongoClient.connect(url, function(err, db) {
+			  	if (err) throw err;
+			  
+            // check if a user exists with same email or username --> in such a case throw an error
+            	var queryCheckExisting = { 
+                                            "username":username,
+                                            "password":pwd
+                                        
+                                      }
+            
+            var existingUsers  = db.collection("users").findOne(queryCheckExisting,function(err,data){
+                if (err) throw err;
+                
+                if(data){
+                    // found an existing user 
+                    console.log('User exists');
+                    db.close();
+                    callback(1,"Successful Authentication");
+                
+                } else{
+                    console.log('Invalid Username and password combination');
+                    db.close();
+                    callback(0,"Invalid Username and password combination ")
+                    
+                }
+                
+            });
+             
+        });
+    }
+    
+    
 	module.exports = {
 		setupRepoStorage : function(callbackfunc) {
 			// Connect to the db
@@ -422,6 +497,9 @@
 				    callbackfunc(modelInfo.DomainModel);
 				 	}
 			 });
-		}
+		},
+        newUserSignUp : newUserSignUp,
+        validateUserLogin : validateUserLogin
+        
 	}
 }())

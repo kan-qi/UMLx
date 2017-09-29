@@ -20,7 +20,7 @@ div.block.panel.panel-default
           span.caret
         ul.dropdown-menu
           li
-            a.dropdown-item(href='loadEmpiricalUsecaseDataForRepo?repo_id=#{repoAnalytics._id}') Empirical Data For Use Cases
+            a.dropdown-item(id="open_btn" onclick="openDialogueBox('#{repoAnalytics._id}');" href="javaScript:void(0);") Empirical Data For Use Cases
           li
             a.dropdown-item(href='loadEmpiricalModelDataForRepo?repo_id=#{repoAnalytics._id}') Empirical Data For Models
           li

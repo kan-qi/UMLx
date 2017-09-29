@@ -318,6 +318,141 @@ function query_estimation_models_func(){
 }
 
 
+function validateEmail(email) {
+	//var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	var filter =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (!filter.test(email.value)) {
+    return false;
+    }
+    
+    return true;
+}
+
+function signUpFormSubmit (e){
+	e.preventDefault();
+	var formData = new FormData($('#sign-up')[0]);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	var usernameMissing  = $('#sign-up #username').val().length>0 ? false : true;
+	var emailMissing  = $('#sign-up #email').val().length>0 ? false : true;
+	var pwdMissing = $('#sign-up #password').val().length > 0 ? false : true;
+	
+	var successDiv = '<div class="alert alert-success alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+   
+    var alertDiv = '<div class="alert alert-danger alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+	
+	if(emailMissing){
+		alertDiv+='Please enter your email </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	} 
+	
+	if(!validateEmail(email)){
+		alertDiv+='Please enter a valid email </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+	
+	if(usernameMissing){
+		alertDiv+='Please choose a username </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+	if(pwdMissing){
+		alertDiv+='Please enter your password </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+
+	$.ajax({
+		type : 'POST',
+		url : "signup",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			
+			if(response.status=='success'){
+				console.log('successs');
+				successDiv+=response.message+' </div>';
+				$('#messageDiv').html(successDiv);
+				return false;
+				
+			} else {
+				
+				console.log('failure');
+				alertDiv+=response.message+' </div>';
+				$('#messageDiv').html(alertDiv);
+				return false;
+				
+			}
+		},
+		error : function() {
+			console.log("fail");
+			alert("There was an error signing up");
+		}
+	});
+
+	return false;
+}
+
+function loginFormSubmit (e){
+	e.preventDefault();
+	var formData = new FormData($('#login-form')[0]);
+	
+	var usernameMissing  = $('#login-form #username').val().length>0 ? false : true;
+	var pwdMissing = $('#login-form #password').val().length > 0 ? false : true;
+	
+	var successDiv = '<div class="alert alert-success alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+    
+    var alertDiv = '<div class="alert alert-danger alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+	
+	if(usernameMissing && pwdMissing){
+		alertDiv+='Please enter the Username and Password </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	} else if(usernameMissing){
+		alertDiv+='Please enter the Username </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	} else if(pwdMissing){
+		alertDiv+='Please enter the Password </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+
+	$.ajax({
+		type : 'POST',
+		url : "login",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			if(response.status=='success'){				
+				successDiv+=response.message+' </div>';
+				$('#messageDiv').html(successDiv);
+			} else {
+				alertDiv+=response.message+' </div>';
+				$('#messageDiv').html(alertDiv);
+			}
+		},
+		error : function() {
+			console.log("fail");
+			alert("There was an error logging in");
+		}
+	});
+
+	return false;
+}
+
+
 
 function drawChartBySVG(){
 	// set the dimensions and margins of the use case
@@ -505,5 +640,48 @@ $(document).ready(function() {
 	   });
 	
 	 $('.nav.nav-tabs').tab();
+	 
+	 $('form#sign-up').submit(signUpFormSubmit);
+	 $('form#login-form').submit(loginFormSubmit);
 //	drawChartBySVG();
 });
+
+function openDialogueBox(repoId) {
+	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	//$('#overlay-frame').addClass('upload');
+	$('#dialog-frame').modal();
+	$("#dialog-frame .modal-title").html("Upload File");
+	$("#dialog-frame .modal-body").html("");
+	$("#dialog-frame .modal-body").html(form);  	
+}
+
+function usecase_file_upload_fnc() {
+	if (!($('#usecase-file')[0].value)) {
+		alert("No files selected");
+		return;
+	}
+	var formData = new FormData($('#usecase-file-submit-form')[0]);
+	//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$('#dialog-frame .modal-footer .btn-default').click();
+	//$('#overlay-frame').removeClass('upload')
+	$.ajax({
+		type : 'POST',
+		url : "uploadUseCaseFile",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#main-panel").html("");
+			$("#main-panel").append($(response).children());
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error submitting comment");
+		}
+	});
+}
