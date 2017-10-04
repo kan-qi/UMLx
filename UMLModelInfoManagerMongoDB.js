@@ -5,6 +5,8 @@
 	var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
 	var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 	var umlFileManager = require("./UMLFileManager.js");
+	var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+	var config = require('./config'); // get our config file
 	
 	function getModelQuery(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
@@ -320,8 +322,62 @@
 			    });
 			});
 	}
+	
+	function createRepo(username,pwd,callbackfunc){
+		MongoClient.connect(url, function(err, db) {
+			 if (err) throw err;
+			  
+			// check if a user exists with same email or username --> in such a case throw an error
+            var queryCheckExisting = { 
+                                            "username":username,
+                                            "password":pwd
+                                        
+            }
+            
+            var existingUsers  = db.collection("users").findOne(queryCheckExisting,function(err,user){
+                if (err) throw err;
+                
+                if(user){
+                    // found an existing user 
+                    var userId = user._id;
+                    
+                    var repoInfo = {};
+  				    db.collection("repo_collection").insertOne(repoInfo, function(err, result) {
+  				    if (err) throw err;
+  				    console.log("1 record inserted");
+  				   
+  				    var repoId = repoInfo._id;
+  				    repoInfo.models = [];
+  					repoInfo.outputDir = "public/output/repo"+repoId;
+  					repoInfo.accessDir = "output/repo"+repoId;
+  					repoInfo.RepoAnalytics = umlModelAnalyzer.initRepoAnalytics(repoInfo);
+  				    var o_id = new mongo.ObjectID(repoId);
+  				    
+  	   			  	db.collection("repo_collection").update({_id:o_id}, repoInfo, function(){
+  	   			  		
+  	   			  		var user_o_id = new mongo.ObjectID(userId)
+  	   			  		user.repoId = repoId;
+  	   			  		// when u create a repo assign it to the specified user
+  	   			  		db.collection("users").update({_id: user_o_id}, user , function(){
+  	   			  			db.close();
+  	   			  			callbackfunc(repoInfo);
+  	   			  		})
+  					    
+  	   			  	});
+  	   			  	
+  				  });
+                
+                } else{
+                    console.log('Invalid Username and password combination');
+                    db.close();
+                }
+                
+            });
+ 
+			});
+	}
     
-    function newUserSignUp(email,username,pwd,callback){
+    function newUserSignUp(email,username,pwd,isEnterprise ,callback){
         
         MongoClient.connect(url, function(err, db) {
 			  if (err) throw err;
@@ -339,19 +395,46 @@
                 
                 if(data){
                     // found an existing user 
-                    console.log('User already exists');
                     db.close();
-                    callback(0,"Username or email already exists");
+                    var result = {
+              	          success: false,
+              	          message: 'Username or email already exists',
+                    	};
+                    callback(result);
+                   
                     return;
                     
                 } else{
-                    
-                     var userInfo = {"username" : username , "email" :email , "password" :pwd}
+                	
+                     var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise }
                      db.collection("users").insertOne(userInfo, function(err, result) {
                             if (err) throw err;
-                            console.log("1 record inserted");
-                            db.close();	
-                            callback(1,"Successfully signed up");
+              				db.close();	
+                            
+                            // since the user successfully signed up create a repo for this user
+                            if(userInfo.isEnterprise){
+                            	createRepo(username,pwd,function(repo){
+                            		console.log('created a new repo '+repo._id);
+                            	});
+                            } 
+                            
+                            const payload = {
+		                    		userId : userInfo._id,
+		                    		userName : userInfo.username,
+		                    		userEmail : userInfo.email
+		                    };
+		                    	        
+		                    var token = jwt.sign(payload, config.secret, {
+		                    	expiresIn : 60*60*24 // expires in 24 hours
+		                    });
+		
+		                   // return the information including token as JSON
+		                    var result = {
+		                    	          success: true,
+		                    	          message: 'Successfully signed up',
+		                    	          token: token
+		                    };
+		                    callback(result);
                      });
                 
                 }
@@ -362,35 +445,54 @@
     }
 	
     function validateUserLogin(username,pwd,callback){
-        
-      //  if(email && email.lenght() > 0 && username && username.length()>0 && pwd && pwd.lenght()>0){}
-        MongoClient.connect(url, function(err, db) {
+
+    	MongoClient.connect(url, function(err, db) {
 			  	if (err) throw err;
 			  
-            // check if a user exists with same email or username --> in such a case throw an error
+			  	// check if a user exists with same email or username --> in such a case throw an error
             	var queryCheckExisting = { 
                                             "username":username,
                                             "password":pwd
-                                        
-                                      }
+            							 }
             
-            var existingUsers  = db.collection("users").findOne(queryCheckExisting,function(err,data){
-                if (err) throw err;
+            	var existingUsers  = db.collection("users").findOne(queryCheckExisting,function(err,data){
+            			
+            							if (err) throw err;
+            							if(data){
+            								
+								                    // found an existing user 
+								                    db.close();
+								                  
+								                    // generate a token and pass it as response
+								                    const payload = {
+								                    		userId : data._id,
+								                    		userName : data.username,
+								                    		userEmail : data.email
+								                    };
+								                    	        
+								                    var token = jwt.sign(payload, config.secret, {
+								                    	expiresIn : 60*60*24 // expires in 24 hours
+								                    });
+								
+								                   // return the information including token as JSON
+								                    const result = {
+								                    	          success: true,
+								                    	          message: 'Successful Authentication',
+								                    	          token: token
+								                    };
+								                    callback(result);
                 
-                if(data){
-                    // found an existing user 
-                    console.log('User exists');
-                    db.close();
-                    callback(1,"Successful Authentication");
-                
-                } else{
-                    console.log('Invalid Username and password combination');
-                    db.close();
-                    callback(0,"Invalid Username and password combination ")
-                    
-                }
-                
-            });
+            							} else{
+								                    console.log('Invalid Username and password combination');
+								                    db.close();
+								                    const result = {
+								                    	  success: false,
+								              	          message: 'Invalid Username and password combination ',
+								                    }
+								                    callback(result);
+								                    
+								        }
+            	});
              
         });
     }
@@ -409,28 +511,8 @@
 
 			});
 		},
-		createRepo: function(callbackfunc){
-			MongoClient.connect(url, function(err, db) {
-				  if (err) throw err;
-				  var repoInfo = {};
-				  db.collection("repo_collection").insertOne(repoInfo, function(err, result) {
-				    if (err) throw err;
-				    console.log("1 record inserted");
-//				    console.log(repoInfo);
-				    var repoId = repoInfo._id;
-				    repoInfo.models = [];
-					repoInfo.outputDir = "public/output/repo"+repoId;
-					repoInfo.accessDir = "output/repo"+repoId;
-					repoInfo.RepoAnalytics = umlModelAnalyzer.initRepoAnalytics(repoInfo);
-				    var o_id = new mongo.ObjectID(repoId);
-	   			  	db.collection("repo_collection").update({_id:o_id}, repoInfo, function(){
-					    db.close();
-					    callbackfunc(repoInfo);
-	   			  	});
-	   			  	
-				  });
-				});
-		},
+		createRepo: createRepo,
+		
 		queryModelAnalytics: queryModelAnalytics,
 		queryModelInfo: queryModelInfo,
 		deleteModelInfo : function(repoId, modelInfo) {
