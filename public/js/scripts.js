@@ -658,3 +658,43 @@ $(document).ready(function() {
 	 $('form#login-form').submit(loginFormSubmit);
 //	drawChartBySVG();
 });
+
+function openDialogueBox(repoId) {
+	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	//$('#overlay-frame').addClass('upload');
+	$('#dialog-frame').modal();
+	$("#dialog-frame .modal-title").html("Upload File");
+	$("#dialog-frame .modal-body").html("");
+	$("#dialog-frame .modal-body").html(form);  	
+}
+
+function usecase_file_upload_fnc() {
+	if (!($('#usecase-file')[0].value)) {
+		alert("No files selected");
+		return;
+	}
+	var formData = new FormData($('#usecase-file-submit-form')[0]);
+	//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$('#dialog-frame .modal-footer .btn-default').click();
+	//$('#overlay-frame').removeClass('upload')
+	$.ajax({
+		type : 'POST',
+		url : "uploadUseCaseFile",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#main-panel").html("");
+			$("#main-panel").append($(response).children());
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error submitting comment");
+		}
+	});
+}

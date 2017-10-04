@@ -1,90 +1,90 @@
 id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
-1,User->Login Page->open sign up page->sign up page,EQ,CTRL|INT,4,2,1,0,1,1,Signup,Signup
-2,User->sign up page->save user info for admin->User info already created,EQ,CTRL|INT,4,2,1,0,1,2,Signup,Signup
-3,User->sign up page->save user info for admin->user info,EI,CTRL|DM|EI,4,1,1,1,1,1,Signup,Signup
-4,User->sign up page->save user info for admin->Display error message->Invalid information,EQ,CTRL|INT,5,2,2,0,1,4,Signup,Signup
-5,User->sign up page->save user info for admin->View user registration info,EQ,CTRL|INT,4,2,1,0,1,2,Signup,Signup
-6,User->sign up page->save user info for admin->Notification of unsuccessful registration,EQ,CTRL|INT,4,2,1,0,1,2,Signup,Signup
-7,User->sign up page->save user info for admin->notification of successful registration,EQ,CTRL|INT,4,2,1,0,1,2,Signup,Signup
-8,User->sign up page->select admin option->save user info for admin->User info already created,EQ,CTRL|INT,5,2,2,0,1,4,Signup,Signup
-9,User->sign up page->select admin option->save user info for admin->user info,EI,CTRL|DM|EI,5,1,2,1,1,3,Signup,Signup
-10,User->sign up page->select admin option->save user info for admin->Display error message->Invalid information,EQ,CTRL|INT,6,2,3,0,1,4,Signup,Signup
-11,User->sign up page->select admin option->save user info for admin->View user registration info,EQ,CTRL|INT,5,2,2,0,1,4,Signup,Signup
-12,User->sign up page->select admin option->save user info for admin->Notification of unsuccessful registration,EQ,CTRL|INT,5,2,2,0,1,4,Signup,Signup
-13,User->sign up page->select admin option->save user info for admin->notification of successful registration,EQ,CTRL|INT,5,2,2,0,1,4,Signup,Signup
-14,Admin->View user registration info->approve user registration->user info,EI,CTRL|DM|EI,4,1,1,1,1,1,Signup,Signup
-15,User->Select project page->retrieve project information->project info,EI,CTRL|DM|EI,4,1,1,1,1,0,Login,Login
-16,User->Select project page->retrieve project information->Administrator dashboard,EQ,CTRL|INT,4,2,1,0,1,2,Login,Login
-17,User->Login page->verify login information->Login Error Page,EQ,CTRL|INT,4,2,1,0,1,1,Login,Login
-18,User->Login page->verify login information->Select project page,EQ,CTRL|INT,4,2,1,0,1,1,Login,Login
-19,User->Login page->verify login information->general user dashboard,EQ,CTRL|INT,4,2,1,0,1,1,Login,Login
-20,User->Login page->verify login information->user info,EI,CTRL|DM|EI,4,1,1,1,1,0,Login,Login
-21,User->Edit Profile Page->verify input information->update user account information->account information,EI,CTRL|DM|EI,5,1,2,1,1,0,Edit Profile,Edit Profile
-22,User->Edit Profile Page->verify input information->Error Information,EQ,CTRL|INT,4,2,1,0,1,1,Edit Profile,Edit Profile
-23,Administrator->signup request details->update user info->user info,EI,CTRL|DM|EI,4,1,1,1,1,0,Approve Signup,Approve Signup
-24,Administrator->approve sign up screen->retrieve signup requests->signup request,EI,CTRL|DM|EI,4,1,1,1,1,1,Approve Signup,Approve Signup
-25,Administrator->approve sign up screen->retrieve request detail->signup request details,EQ,CTRL|INT,4,2,1,0,1,2,Approve Signup,Approve Signup
-26,Administrator->approve sign up screen->retrieve request detail->signup request,EI,CTRL|DM|EI,4,1,1,1,1,1,Approve Signup,Approve Signup
-27,Administrator->Edit default attendee list->verify attendee information->Attendee is not available,EQ,CTRL|INT,4,2,1,0,1,2,Create New Project,Create New Project
-28,Administrator->Edit default attendee list->verify attendee information->attendee information list,EI,CTRL|DM|EI,4,1,1,1,1,0,Create New Project,Create New Project
-29,Administrator->Create a project screen->Verify project information->Project information error,EQ,CTRL|INT,4,2,1,0,1,1,Create New Project,Create New Project
-30,Administrator->Create a project screen->Verify project information->Edit default attendee list,EQ,CTRL|INT,4,2,1,0,1,1,Create New Project,Create New Project
-31,Administrator->Create a project screen->Verify project information->Project,EI,CTRL|DM|EI,4,1,1,1,1,0,Create New Project,Create New Project
-32,Administrator->Comment View->Update acceptance status->Comments,EI,CTRL|DM|EI,4,1,1,1,1,1,Accept/Reject Comment,Accept/Reject Comment
-33,Administrator->Comment View->Update acceptance status->Change the status of the task->Task,EI,CTRL|DM|EI,5,1,2,1,1,1,Accept/Reject Comment,Accept/Reject Comment
-34,Administrator->Comment View->Update acceptance status->pend the task->Task,EI,CTRL|DM|EI,5,1,2,1,1,1,Accept/Reject Comment,Accept/Reject Comment
-35,Administrator->submitted comments  screen->Retrieve comment and user info->User Info,EI,CTRL|DM|EI,4,1,1,1,1,0,Accept/Reject Comment,Accept/Reject Comment
-36,Administrator->submitted comments  screen->Retrieve comment and user info->Comments,EI,CTRL|DM|EI,4,1,1,1,1,1,Accept/Reject Comment,Accept/Reject Comment
-37,Administrator->Administrator's dashboard->Display the submitted comments screen->Comments,EI,CTRL|DM|EI,4,1,1,1,1,1,Accept/Reject Comment,Accept/Reject Comment
-38,Administrator->Administrator's dashboard->Display the submitted comments screen->submitted comments  screen,EQ,CTRL|INT,4,2,1,0,1,1,Accept/Reject Comment,Accept/Reject Comment
-39,Administrator->Display pending tasks button->Query task list->Task,EI,CTRL|DM|EI,4,1,1,1,1,0,View Pending Tasks,View Pending Tasks
-40,Administrator->Display pending tasks button->Query task list->Empty task screen,EQ,CTRL|INT,4,2,1,0,1,1,View Pending Tasks,View Pending Tasks
-41,Administrator->Display pending tasks button->Query task list->pending tasks screen,EQ,CTRL|INT,4,2,1,0,1,1,View Pending Tasks,View Pending Tasks
-42,Administrator->pending tasks screen->query detail of task and assignee.->Assignee,EI,CTRL|DM|EI,4,1,1,1,1,0,View Pending Tasks,View Pending Tasks
-43,Administrator->pending tasks screen->query detail of task and assignee.->Task,EI,CTRL|DM|EI,4,1,1,1,1,1,View Pending Tasks,View Pending Tasks
-44,Actor->dropdown settings menu->query projects->Project,EI,CTRL|DM|EI,4,1,1,1,1,1,Change Project,Change Project
-45,Actor->dropdown settings menu->query projects->Projects list screen,EQ,CTRL|INT,4,2,1,0,1,2,Change Project,Change Project
-46,Actor->Projects list screen->Query project detail->Project detail,EQ,CTRL|INT,4,2,1,0,1,2,Change Project,Change Project
-47,Actor->Projects list screen->Query project detail->Project,EI,CTRL|DM|EI,4,1,1,1,1,1,Change Project,Change Project
-48,Actor->Selecting settings button->Display dropdown settings menu->dropdown settings menu,EQ,CTRL|INT,4,2,1,0,1,1,Change Project,Change Project
-49,Administrator->Administrator's dashboard->display publish meetings screen->meeting list and push lish options,EQ,CTRL|INT,4,2,1,0,1,1,Publish Meeting,Publish Meeting
-50,Administrator->Administrator's dashboard->display publish meetings screen->Meetings,EI,CTRL|DM|EI,4,1,1,1,1,0,Publish Meeting,Publish Meeting
-51,Administrator->meeting list and push lish options->Update meetings status->attendee list,EI,CTRL|DM|EI,4,1,1,1,1,1,Publish Meeting,Publish Meeting
-52,Administrator->meeting list and push lish options->Update meetings status->send messages to attendees list->attendee list,EI,CTRL|DM|EI,5,1,2,1,1,1,Publish Meeting,Publish Meeting
-53,Administrator->meeting list and push lish options->Update meetings status->empty publish meeting screen,EQ,CTRL|INT,4,2,1,0,1,2,Publish Meeting,Publish Meeting
-54,Administrator->meeting list and push lish options->Update meetings status->Meetings,EI,CTRL|DM|EI,4,1,1,1,1,1,Publish Meeting,Publish Meeting
-55,Administrator->Create meeting screen->Verifies attendee list->user already exists toasts,EQ,CTRL|INT,4,2,1,0,1,2,Create meeting,Create meeting
-56,Administrator->Create meeting screen->Verifies attendee list->create a meeting->meeting,EI,CTRL|DM|EI,5,1,2,1,1,1,Create meeting,Create meeting
-57,Administrator->create meeting option->display the create meeting screen->Attendee Info,EI,CTRL|DM|EI,4,1,1,1,1,0,Create meeting,Create meeting
-58,Administrator->create meeting option->display the create meeting screen->Tasks,EI,CTRL|DM|EI,4,1,1,1,1,0,Create meeting,Create meeting
-59,Administrator->create meeting option->display the create meeting screen->Create meeting screen,EQ,CTRL|INT,4,2,1,0,1,1,Create meeting,Create meeting
-60,Administrator->Meeting list->export meeting->pdf,EI,CTRL|DM|EI,4,1,1,1,1,0,Generate log,Generate log
-61,Administrator->Meeting list->export meeting->meetings,EI,CTRL|DM|EI,4,1,1,1,1,1,Generate log,Generate log
-62,Administrator->generate meeting log->query meetings by project->meetings,EI,CTRL|DM|EI,4,1,1,1,1,0,Generate log,Generate log
-63,Administrator->generate meeting log->query meetings by project->Meeting list,EQ,CTRL|INT,4,2,1,0,1,1,Generate log,Generate log
-64,Administrator->generate meeting log->query meetings by project->no meeting error page,EQ,CTRL|INT,4,2,1,0,1,1,Generate log,Generate log
-65,Administrator->meeting information screen->verify attendee list->save user info->meeting info,EI,CTRL|DM|EI,5,1,2,1,1,1,Edit meeting,Edit meeting
-66,Administrator->meeting information screen->verify attendee list->Information invalid,EQ,CTRL|INT,4,2,1,0,1,2,Edit meeting,Edit meeting
-67,Administrator->Edit meeting option->display meetings screen->meeting information screen,EQ,CTRL|INT,4,2,1,0,1,1,Edit meeting,Edit meeting
-68,Administrator->Edit meeting option->display meetings screen->meeting,EI,CTRL|DM|EI,4,1,1,1,1,0,Edit meeting,Edit meeting
-69,Administrator->Edit project screen->Verify default user list->invalid user info toast,EQ,CTRL|INT,4,2,1,0,1,2,Edit project,Edit project
-70,Administrator->Edit project screen->Verify default user list->save project info->project,EI,CTRL|DM|EI,5,1,2,1,1,1,Edit project,Edit project
-71,Administrator->Edit project option->display edit project screen->Edit project screen,EQ,CTRL|INT,4,2,1,0,1,1,Edit project,Edit project
-72,Administrator->Edit project option->display edit project screen->meeting,EI,CTRL|DM|EI,4,1,1,1,1,0,Edit project,Edit project
-73,User->view meeting option->Query meetings by user->meeting view,EQ,CTRL|INT,4,2,1,0,1,1,View meeting,View meeting
-74,User->view meeting option->Query meetings by user->meeting,EI,CTRL|DM|EI,4,1,1,1,1,0,View meeting,View meeting
-75,User->view meeting option->Query meetings by user->list with no meetings,EQ,CTRL|INT,4,2,1,0,1,1,View meeting,View meeting
-76,user->view assigned tasks option->query meeting minutes by project and user->meeting minutes,EI,CTRL|DM|EI,4,1,1,1,1,0,View assigned tasks,View assigned tasks
-77,user->view assigned tasks option->query meeting minutes by project and user->no assigned tasks message,EQ,CTRL|INT,4,2,1,0,1,1,View assigned tasks,View assigned tasks
-78,user->view assigned tasks option->query meeting minutes by project and user->meeting minutes,EQ,CTRL|INT,4,2,1,0,1,1,View assigned tasks,View assigned tasks
-79,User->asigned task list->open comment input page->comment input page,EQ,CTRL|INT,4,2,1,0,1,1,Submit comments to assigned task,Submit comments to assigned task
-80,User->comment input page->submit comment->comment,EI,CTRL|DM|EI,4,1,1,1,1,0,Submit comments to assigned task,Submit comments to assigned task
-81,User->comment input page->submit comment->error for too long comment,EQ,CTRL|INT,4,2,1,0,1,2,Submit comments to assigned task,Submit comments to assigned task
-82,User->comment input page->submit comment->notification,EI,CTRL|DM|EI,4,1,1,1,1,0,Submit comments to assigned task,Submit comments to assigned task
-83,User->view status of submitted comments button->query comments->no available comments,EQ,CTRL|INT,4,2,1,0,1,1,View Status of Submitted Comment,View Status of Submitted Comment
-84,User->view status of submitted comments button->query comments->comment status view,EQ,CTRL|INT,4,2,1,0,1,1,View Status of Submitted Comment,View Status of Submitted Comment
-85,User->view status of submitted comments button->query comments->comment,EI,CTRL|DM|EI,4,1,1,1,1,0,View Status of Submitted Comment,View Status of Submitted Comment
-86,Administrator->meeting publish button->publish meeting->meeting,EI,CTRL|DM|EI,4,1,1,1,1,0,Send notification,Send notification
-87,Administrator->meeting publish button->publish meeting->send notification->notification,EI,CTRL|DM|EI,5,1,2,1,1,1,Send notification,Send notification
-88,User->Task list with comment box->add comment->send notification->notification,EI,CTRL|DM|EI,5,1,2,1,1,1,Send notification,Send notification
-89,User->Task list with comment box->add comment->comment,EI,CTRL|DM|EI,4,1,1,1,1,0,Send notification,Send notification
+1,User->Login Page->open sign up page->sign up page,EQ,CTRL|INT,4,2,1,0,1,4,Signup,Signup
+2,User->sign up page->save user info for admin->User info already created,EQ,CTRL|INT,4,2,1,0,1,5,Signup,Signup
+3,User->sign up page->save user info for admin->user info,EI,CTRL|DM|EI,4,1,1,1,1,2,Signup,Signup
+4,User->sign up page->save user info for admin->Display error message->Invalid information,EQ,CTRL|INT,5,2,2,0,1,7,Signup,Signup
+5,User->sign up page->save user info for admin->View user registration info,EQ,CTRL|INT,4,2,1,0,1,5,Signup,Signup
+6,User->sign up page->save user info for admin->Notification of unsuccessful registration,EQ,CTRL|INT,4,2,1,0,1,5,Signup,Signup
+7,User->sign up page->save user info for admin->notification of successful registration,EQ,CTRL|INT,4,2,1,0,1,5,Signup,Signup
+8,User->sign up page->select admin option->save user info for admin->User info already created,EQ,CTRL|INT,5,2,2,0,1,7,Signup,Signup
+9,User->sign up page->select admin option->save user info for admin->user info,EI,CTRL|DM|EI,5,1,2,1,1,4,Signup,Signup
+10,User->sign up page->select admin option->save user info for admin->Display error message->Invalid information,EQ,CTRL|INT,6,2,3,0,1,7,Signup,Signup
+11,User->sign up page->select admin option->save user info for admin->View user registration info,EQ,CTRL|INT,5,2,2,0,1,7,Signup,Signup
+12,User->sign up page->select admin option->save user info for admin->Notification of unsuccessful registration,EQ,CTRL|INT,5,2,2,0,1,7,Signup,Signup
+13,User->sign up page->select admin option->save user info for admin->notification of successful registration,EQ,CTRL|INT,5,2,2,0,1,7,Signup,Signup
+14,Admin->View user registration info->approve user registration->user info,EI,CTRL|DM|EI,4,1,1,1,1,2,Signup,Signup
+15,User->Select project page->retrieve project information->project info,EI,CTRL|DM|EI,4,1,1,1,1,1,Login,Login
+16,User->Select project page->retrieve project information->Administrator dashboard,EQ,CTRL|INT,4,2,1,0,1,5,Login,Login
+17,User->Login page->verify login information->Login Error Page,EQ,CTRL|INT,4,2,1,0,1,4,Login,Login
+18,User->Login page->verify login information->Select project page,EQ,CTRL|INT,4,2,1,0,1,4,Login,Login
+19,User->Login page->verify login information->general user dashboard,EQ,CTRL|INT,4,2,1,0,1,4,Login,Login
+20,User->Login page->verify login information->user info,EI,CTRL|DM|EI,4,1,1,1,1,1,Login,Login
+21,User->Edit Profile Page->verify input information->update user account information->account information,EI,CTRL|DM|EI,5,1,2,1,1,1,Edit Profile,Edit Profile
+22,User->Edit Profile Page->verify input information->Error Information,EQ,CTRL|INT,4,2,1,0,1,4,Edit Profile,Edit Profile
+23,Administrator->signup request details->update user info->user info,EI,CTRL|DM|EI,4,1,1,1,1,1,Approve Signup,Approve Signup
+24,Administrator->approve sign up screen->retrieve signup requests->signup request,EI,CTRL|DM|EI,4,1,1,1,1,2,Approve Signup,Approve Signup
+25,Administrator->approve sign up screen->retrieve request detail->signup request details,EQ,CTRL|INT,4,2,1,0,1,5,Approve Signup,Approve Signup
+26,Administrator->approve sign up screen->retrieve request detail->signup request,EI,CTRL|DM|EI,4,1,1,1,1,2,Approve Signup,Approve Signup
+27,Administrator->Edit default attendee list->verify attendee information->Attendee is not available,EQ,CTRL|INT,4,2,1,0,1,5,Create New Project,Create New Project
+28,Administrator->Edit default attendee list->verify attendee information->attendee information list,EI,CTRL|DM|EI,4,1,1,1,1,1,Create New Project,Create New Project
+29,Administrator->Create a project screen->Verify project information->Project information error,EQ,CTRL|INT,4,2,1,0,1,4,Create New Project,Create New Project
+30,Administrator->Create a project screen->Verify project information->Edit default attendee list,EQ,CTRL|INT,4,2,1,0,1,4,Create New Project,Create New Project
+31,Administrator->Create a project screen->Verify project information->Project,EI,CTRL|DM|EI,4,1,1,1,1,1,Create New Project,Create New Project
+32,Administrator->Comment View->Update acceptance status->Comments,EI,CTRL|DM|EI,4,1,1,1,1,2,Accept/Reject Comment,Accept/Reject Comment
+33,Administrator->Comment View->Update acceptance status->Change the status of the task->Task,EI,CTRL|DM|EI,5,1,2,1,1,2,Accept/Reject Comment,Accept/Reject Comment
+34,Administrator->Comment View->Update acceptance status->pend the task->Task,EI,CTRL|DM|EI,5,1,2,1,1,2,Accept/Reject Comment,Accept/Reject Comment
+35,Administrator->submitted comments  screen->Retrieve comment and user info->User Info,EI,CTRL|DM|EI,4,1,1,1,1,1,Accept/Reject Comment,Accept/Reject Comment
+36,Administrator->submitted comments  screen->Retrieve comment and user info->Comments,EI,CTRL|DM|EI,4,1,1,1,1,2,Accept/Reject Comment,Accept/Reject Comment
+37,Administrator->Administrator's dashboard->Display the submitted comments screen->Comments,EI,CTRL|DM|EI,4,1,1,1,1,2,Accept/Reject Comment,Accept/Reject Comment
+38,Administrator->Administrator's dashboard->Display the submitted comments screen->submitted comments  screen,EQ,CTRL|INT,4,2,1,0,1,4,Accept/Reject Comment,Accept/Reject Comment
+39,Administrator->Display pending tasks button->Query task list->Task,EI,CTRL|DM|EI,4,1,1,1,1,1,View Pending Tasks,View Pending Tasks
+40,Administrator->Display pending tasks button->Query task list->Empty task screen,EQ,CTRL|INT,4,2,1,0,1,4,View Pending Tasks,View Pending Tasks
+41,Administrator->Display pending tasks button->Query task list->pending tasks screen,EQ,CTRL|INT,4,2,1,0,1,4,View Pending Tasks,View Pending Tasks
+42,Administrator->pending tasks screen->query detail of task and assignee.->Assignee,EI,CTRL|DM|EI,4,1,1,1,1,1,View Pending Tasks,View Pending Tasks
+43,Administrator->pending tasks screen->query detail of task and assignee.->Task,EI,CTRL|DM|EI,4,1,1,1,1,2,View Pending Tasks,View Pending Tasks
+44,Actor->dropdown settings menu->query projects->Project,EI,CTRL|DM|EI,4,1,1,1,1,2,Change Project,Change Project
+45,Actor->dropdown settings menu->query projects->Projects list screen,EQ,CTRL|INT,4,2,1,0,1,5,Change Project,Change Project
+46,Actor->Projects list screen->Query project detail->Project detail,EQ,CTRL|INT,4,2,1,0,1,5,Change Project,Change Project
+47,Actor->Projects list screen->Query project detail->Project,EI,CTRL|DM|EI,4,1,1,1,1,2,Change Project,Change Project
+48,Actor->Selecting settings button->Display dropdown settings menu->dropdown settings menu,EQ,CTRL|INT,4,2,1,0,1,4,Change Project,Change Project
+49,Administrator->Administrator's dashboard->display publish meetings screen->meeting list and push lish options,EQ,CTRL|INT,4,2,1,0,1,4,Publish Meeting,Publish Meeting
+50,Administrator->Administrator's dashboard->display publish meetings screen->Meetings,EI,CTRL|DM|EI,4,1,1,1,1,1,Publish Meeting,Publish Meeting
+51,Administrator->meeting list and push lish options->Update meetings status->attendee list,EI,CTRL|DM|EI,4,1,1,1,1,2,Publish Meeting,Publish Meeting
+52,Administrator->meeting list and push lish options->Update meetings status->send messages to attendees list->attendee list,EI,CTRL|DM|EI,5,1,2,1,1,2,Publish Meeting,Publish Meeting
+53,Administrator->meeting list and push lish options->Update meetings status->empty publish meeting screen,EQ,CTRL|INT,4,2,1,0,1,5,Publish Meeting,Publish Meeting
+54,Administrator->meeting list and push lish options->Update meetings status->Meetings,EI,CTRL|DM|EI,4,1,1,1,1,2,Publish Meeting,Publish Meeting
+55,Administrator->Create meeting screen->Verifies attendee list->user already exists toasts,EQ,CTRL|INT,4,2,1,0,1,5,Create meeting,Create meeting
+56,Administrator->Create meeting screen->Verifies attendee list->create a meeting->meeting,EI,CTRL|DM|EI,5,1,2,1,1,2,Create meeting,Create meeting
+57,Administrator->create meeting option->display the create meeting screen->Attendee Info,EI,CTRL|DM|EI,4,1,1,1,1,1,Create meeting,Create meeting
+58,Administrator->create meeting option->display the create meeting screen->Tasks,EI,CTRL|DM|EI,4,1,1,1,1,1,Create meeting,Create meeting
+59,Administrator->create meeting option->display the create meeting screen->Create meeting screen,EQ,CTRL|INT,4,2,1,0,1,4,Create meeting,Create meeting
+60,Administrator->Meeting list->export meeting->pdf,EI,CTRL|DM|EI,4,1,1,1,1,1,Generate log,Generate log
+61,Administrator->Meeting list->export meeting->meetings,EI,CTRL|DM|EI,4,1,1,1,1,2,Generate log,Generate log
+62,Administrator->generate meeting log->query meetings by project->meetings,EI,CTRL|DM|EI,4,1,1,1,1,1,Generate log,Generate log
+63,Administrator->generate meeting log->query meetings by project->Meeting list,EQ,CTRL|INT,4,2,1,0,1,4,Generate log,Generate log
+64,Administrator->generate meeting log->query meetings by project->no meeting error page,EQ,CTRL|INT,4,2,1,0,1,4,Generate log,Generate log
+65,Administrator->meeting information screen->verify attendee list->save user info->meeting info,EI,CTRL|DM|EI,5,1,2,1,1,2,Edit meeting,Edit meeting
+66,Administrator->meeting information screen->verify attendee list->Information invalid,EQ,CTRL|INT,4,2,1,0,1,5,Edit meeting,Edit meeting
+67,Administrator->Edit meeting option->display meetings screen->meeting information screen,EQ,CTRL|INT,4,2,1,0,1,4,Edit meeting,Edit meeting
+68,Administrator->Edit meeting option->display meetings screen->meeting,EI,CTRL|DM|EI,4,1,1,1,1,1,Edit meeting,Edit meeting
+69,Administrator->Edit project screen->Verify default user list->invalid user info toast,EQ,CTRL|INT,4,2,1,0,1,5,Edit project,Edit project
+70,Administrator->Edit project screen->Verify default user list->save project info->project,EI,CTRL|DM|EI,5,1,2,1,1,2,Edit project,Edit project
+71,Administrator->Edit project option->display edit project screen->Edit project screen,EQ,CTRL|INT,4,2,1,0,1,4,Edit project,Edit project
+72,Administrator->Edit project option->display edit project screen->meeting,EI,CTRL|DM|EI,4,1,1,1,1,1,Edit project,Edit project
+73,User->view meeting option->Query meetings by user->meeting view,EQ,CTRL|INT,4,2,1,0,1,4,View meeting,View meeting
+74,User->view meeting option->Query meetings by user->meeting,EI,CTRL|DM|EI,4,1,1,1,1,1,View meeting,View meeting
+75,User->view meeting option->Query meetings by user->list with no meetings,EQ,CTRL|INT,4,2,1,0,1,4,View meeting,View meeting
+76,user->view assigned tasks option->query meeting minutes by project and user->meeting minutes,EI,CTRL|DM|EI,4,1,1,1,1,1,View assigned tasks,View assigned tasks
+77,user->view assigned tasks option->query meeting minutes by project and user->no assigned tasks message,EQ,CTRL|INT,4,2,1,0,1,4,View assigned tasks,View assigned tasks
+78,user->view assigned tasks option->query meeting minutes by project and user->meeting minutes,EQ,CTRL|INT,4,2,1,0,1,4,View assigned tasks,View assigned tasks
+79,User->asigned task list->open comment input page->comment input page,EQ,CTRL|INT,4,2,1,0,1,4,Submit comments to assigned task,Submit comments to assigned task
+80,User->comment input page->submit comment->comment,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit comments to assigned task,Submit comments to assigned task
+81,User->comment input page->submit comment->error for too long comment,EQ,CTRL|INT,4,2,1,0,1,5,Submit comments to assigned task,Submit comments to assigned task
+82,User->comment input page->submit comment->notification,EI,CTRL|DM|EI,4,1,1,1,1,1,Submit comments to assigned task,Submit comments to assigned task
+83,User->view status of submitted comments button->query comments->no available comments,EQ,CTRL|INT,4,2,1,0,1,4,View Status of Submitted Comment,View Status of Submitted Comment
+84,User->view status of submitted comments button->query comments->comment status view,EQ,CTRL|INT,4,2,1,0,1,4,View Status of Submitted Comment,View Status of Submitted Comment
+85,User->view status of submitted comments button->query comments->comment,EI,CTRL|DM|EI,4,1,1,1,1,1,View Status of Submitted Comment,View Status of Submitted Comment
+86,Administrator->meeting publish button->publish meeting->meeting,EI,CTRL|DM|EI,4,1,1,1,1,1,Send notification,Send notification
+87,Administrator->meeting publish button->publish meeting->send notification->notification,EI,CTRL|DM|EI,5,1,2,1,1,2,Send notification,Send notification
+88,User->Task list with comment box->add comment->send notification->notification,EI,CTRL|DM|EI,5,1,2,1,1,2,Send notification,Send notification
+89,User->Task list with comment box->add comment->comment,EI,CTRL|DM|EI,4,1,1,1,1,1,Send notification,Send notification

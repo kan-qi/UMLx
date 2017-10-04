@@ -1,0 +1,107 @@
+id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
+1,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display search screen->search screen,EQ,CTRL|INT,6,2,3,0,1,5,Use Case Model,Navigation
+2,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display event screen->event screen,EQ,CTRL|INT,6,2,3,0,1,5,Use Case Model,Navigation
+3,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display  log in screen->Log in screen,EQ,CTRL|INT,6,2,3,0,1,5,Use Case Model,Navigation
+4,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display photo screen->Photo screen,EQ,CTRL|INT,6,2,3,0,1,5,Use Case Model,Navigation
+5,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display profile screen->profile screen,EQ,CTRL|INT,6,2,3,0,1,5,Use Case Model,Navigation
+6,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display search screen->search screen,FUNC_NA,TRAN_NA,6,2,4,0,0,5,Use Case Model,Navigation
+7,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display event screen->event screen,FUNC_NA,TRAN_NA,6,2,4,0,0,5,Use Case Model,Navigation
+8,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display  log in screen->Log in screen,FUNC_NA,TRAN_NA,6,2,4,0,0,5,Use Case Model,Navigation
+9,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display photo screen->Photo screen,FUNC_NA,TRAN_NA,6,2,4,0,0,5,Use Case Model,Navigation
+10,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display profile screen->profile screen,FUNC_NA,TRAN_NA,6,2,4,0,0,5,Use Case Model,Navigation
+11,Actor->Delete expired events automatically->event,FUNC_NA,CTRL|EXTCLL|DM|EI,3,0,1,1,1,1,Use Case Model,Automatic deletion
+12,Actor->delete photos related to expired events automatically->photo,FUNC_NA,CTRL|EXTCLL|DM|EI,3,0,1,1,1,1,Use Case Model,Automatic deletion
+13,Actor->delete expired location photos automatically->photo,FUNC_NA,CTRL|EXTCLL|DM|EI,3,0,1,1,1,1,Use Case Model,Automatic deletion
+14,change mode->photo list->pop up photo connection error->photo,FUNC_NA,TRAN_NA,4,1,2,1,0,2,Use Case Model,Admin deletes photo
+15,change mode->photo list->cancel deletion->select photos->confirm delete photos->photo,FUNC_NA,TRAN_NA,6,1,4,1,0,4,Use Case Model,Admin deletes photo
+16,change mode->photo list->select photos->confirm delete photos->photo,FUNC_NA,TRAN_NA,5,1,3,1,0,4,Use Case Model,Admin deletes photo
+17,Actor->photo list->pop up photo connection error->photo,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Admin deletes photo
+18,Actor->photo list->cancel deletion->select photos->confirm delete photos->photo,EI,CTRL|DM|EI,6,1,3,1,1,4,Use Case Model,Admin deletes photo
+19,Actor->photo list->select photos->confirm delete photos->photo,EI,CTRL|DM|EI,5,1,2,1,1,4,Use Case Model,Admin deletes photo
+20,pop up event connection error->event->Get event list->Search box,FUNC_NA,TRAN_NA,4,1,2,1,0,2,Use Case Model,Admin searches for photo by event
+21,pop up event connection error->event->Get event list->Display event list->Event list,FUNC_NA,TRAN_NA,5,1,3,1,0,4,Use Case Model,Admin searches for photo by event
+22,pop up event connection error->event->Get event list->Admin page,FUNC_NA,TRAN_NA,4,1,2,1,0,2,Use Case Model,Admin searches for photo by event
+23,Actor->Event list->Get photo list->display photo list->Photo list,EQ,CTRL|INT,5,2,2,0,1,7,Use Case Model,Admin searches for photo by event
+24,pop up event connection error->Account->Get user list->Search box,FUNC_NA,TRAN_NA,4,1,2,1,0,2,Use Case Model,Admin searches for photo by user
+25,pop up event connection error->Account->Get user list->Admin page,FUNC_NA,TRAN_NA,4,1,2,1,0,2,Use Case Model,Admin searches for photo by user
+26,pop up event connection error->Account->Get user list->Display user list->User list,FUNC_NA,TRAN_NA,5,1,3,1,0,4,Use Case Model,Admin searches for photo by user
+27,Actor->User list->Get photo list->display photo list->Photo list,EQ,CTRL|INT,5,2,2,0,1,7,Use Case Model,Admin searches for photo by user
+28,Display pop-up "Password do not match" on Sign up Screen->Sign up Screen->verify email->verify username->verify password->verify confirm password,FUNC_NA,TRAN_NA,6,1,5,0,0,4,Use Case Model,Create Account
+29,Display pop-up "Password do not match" on Sign up Screen->Sign up Screen->verify email->verify username->User Collection,FUNC_NA,TRAN_NA,5,1,3,1,0,4,Use Case Model,Create Account
+30,Actor->Sign up Screen->verify email->verify username->verify password->verify confirm password,FUNC_NA,TRAN_NA,6,1,4,0,1,4,Use Case Model,Create Account
+31,Actor->Sign up Screen->verify email->verify username->User Collection,EI,CTRL|DM|EI,5,1,2,1,1,4,Use Case Model,Create Account
+32,Display pop-up "Password do not match" on Sign up Screen->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,FUNC_NA,TRAN_NA,4,2,2,0,0,7,Use Case Model,Create Profile
+33,Display pop-up "Password do not match" on Sign up Screen->Profile Photo Screen->Save Profile Photo->Profile,FUNC_NA,TRAN_NA,4,1,2,1,0,4,Use Case Model,Create Profile
+34,Display photo on  Profile photo screen->Display available photos on Photos Screen->Photos Screen,FUNC_NA,TRAN_NA,3,1,2,0,0,1,Use Case Model,Create Profile
+35,Display photo on  Profile photo screen->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,FUNC_NA,TRAN_NA,4,2,2,0,0,7,Use Case Model,Create Profile
+36,Display photo on  Profile photo screen->Profile Photo Screen->Save Profile Photo->Profile,FUNC_NA,TRAN_NA,4,1,2,1,0,4,Use Case Model,Create Profile
+37,Actor->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,Create Profile
+38,Actor->Profile Photo Screen->Save Profile Photo->Profile,EI,CTRL|DM|EI,4,1,1,1,1,4,Use Case Model,Create Profile
+39,Actor->Create Event Screen->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,4,1,1,1,1,4,Use Case Model,Create a Private Event
+40,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,5,1,2,1,1,4,Use Case Model,Create a Private Event
+41,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,6,1,3,1,1,4,Use Case Model,Create a Private Event
+42,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,EI,CTRL|DM|EI,5,1,2,1,1,2,Use Case Model,Create a Private Event
+43,Actor->Create Event Screen->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,4,1,1,1,1,4,Use Case Model,Create a Public Event
+44,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,6,1,3,1,1,4,Use Case Model,Create a Public Event
+45,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,EI,CTRL|DM|EI,5,1,2,1,1,2,Use Case Model,Create a Public Event
+46,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,EI,CTRL|DM|EI,5,1,2,1,1,4,Use Case Model,Create a Public Event
+47,Toggle Off Delete Mode->Event Screen->Dismiss Delete Photo Model,FUNC_NA,TRAN_NA,3,1,2,0,0,2,Use Case Model,Delete Photos in Event if Owner
+48,Toggle Off Delete Mode->Event Screen->Toggle Delete Mode->Display Deelete Photo Model->Delete Photo Model,FUNC_NA,TRAN_NA,5,2,3,0,0,7,Use Case Model,Delete Photos in Event if Owner
+49,Actor->Delete Photo Model->Dismiss Delete Photo Model,FUNC_NA,TRAN_NA,3,1,1,0,1,2,Use Case Model,Delete Photos in Event if Owner
+50,Actor->Delete Photo Model->Handle Photo Deletion->Event,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Delete Photos in Event if Owner
+51,Actor->Delete Photo Model->Handle Photo Deletion->Photo Collection,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Delete Photos in Event if Owner
+52,Actor->Event Screen->Dismiss Delete Photo Model,FUNC_NA,TRAN_NA,3,1,1,0,1,2,Use Case Model,Delete Photos in Event if Owner
+53,Actor->Event Screen->Toggle Delete Mode->Display Deelete Photo Model->Delete Photo Model,EQ,CTRL|INT,5,2,2,0,1,7,Use Case Model,Delete Photos in Event if Owner
+54,Actor->view photo->Delete->Confirm page,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,Delete uploaded photos
+55,Actor->My photos screen->get my upload,FUNC_NA,TRAN_NA,3,1,1,0,1,2,Use Case Model,Delete uploaded photos
+56,Actor->My photos screen->Prepare photos->Photo Collection,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,Delete uploaded photos
+57,Actor->Confirm page->Confirmed delete->my upload->Delete finished->Result,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Delete uploaded photos
+58,Actor->Confirm page->Confirmed delete->my upload->get my upload,FUNC_NA,TRAN_NA,5,1,2,1,1,4,Use Case Model,Delete uploaded photos
+59,Actor->Confirm page->Confirmed delete->my upload->failed to delete->Result,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Delete uploaded photos
+60,Actor->Confirm page->Confirmed delete->my upload->Can't access server->My photos screen,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Delete uploaded photos
+61,Actor->Photo Collection->Select a photo->view photo,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,Delete uploaded photos
+62,Actor->Photo Selected Screen->Download photo to Device->Server,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Downoad Photos to Device
+63,Actor->Log In Screen->Verify Username->Verify Password->User Collection,EI,CTRL|DM|EI,5,1,2,1,1,4,Use Case Model,Log In to Account
+64,Actor->Log In Screen->Verify Username->Verify Password->Account,EI,CTRL|DM|EI,5,1,2,1,1,2,Use Case Model,Log In to Account
+65,Actor->Log In Screen->Verify Username->User Collection,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Log In to Account
+66,Actor->Create Event Screen->Handle Creation Error->Set Password Screen,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,Reserve a Hashtag
+67,Actor->Create Event Screen->Create new event with hashtag->Handle Creation Error->Set Password Screen,EQ,CTRL|INT,5,2,2,0,1,7,Use Case Model,Reserve a Hashtag
+68,Actor->Create Event Screen->Create new event with hashtag->Event Collection,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Reserve a Hashtag
+69,Actor->Create Event Screen->Create new event with hashtag->Event,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Reserve a Hashtag
+70,Actor->Set Password Screen->Create new event with hashtag->Event Collection,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Reserve a Hashtag
+71,Actor->Set Password Screen->Create new event with hashtag->Event,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Reserve a Hashtag
+72,Actor->Photo View->User Directed to View Photo Use Case,FUNC_NA,TRAN_NA,3,1,1,0,1,1,Use Case Model,Search by Location
+73,Actor->Photo Search Result List View->List Mutator->Photo Search Result List,EI,CTRL|DM|EI,4,1,1,1,1,2,Use Case Model,Search by Location
+74,Actor->Location Screen->Perform Default Search->Photo Database,EI,CTRL|DM|EI,4,1,1,1,1,1,Use Case Model,Search by Location
+75,Actor->Location Screen->Perform Default Search->List Mutator->Photo Search Result List,EI,CTRL|DM|EI,5,1,2,1,1,4,Use Case Model,Search by Location
+76,Actor->Range Buttons(Default myhome)->Perform Select Range Search->Photo Database,EI,CTRL|DM|EI,4,1,1,1,1,1,Use Case Model,Search by Location
+77,Actor->Range Buttons(Default myhome)->Perform Select Range Search->List Mutator->Photo Search Result List,EI,CTRL|DM|EI,5,1,2,1,1,4,Use Case Model,Search by Location
+78,Actor->Show Empty Result Page->Event Collection->Search Result Page,FUNC_NA,TRAN_NA,4,2,0,1,1,7,Use Case Model,Search by event
+79,Actor->Show Empty Result Page->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,FUNC_NA,TRAN_NA,6,2,2,1,1,7,Use Case Model,Search by event
+80,Actor->Search Result Page->Search API->Valid Input Text->Perform Default Search->Search Event Homepage,EQ,CTRL|INT,6,2,3,0,1,7,Use Case Model,Search by event
+81,Actor->Search Result Page->Search API->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,FUNC_NA,CTRL|DM|EQ|INT,7,2,3,1,1,7,Use Case Model,Search by event
+82,Actor->Search Result Page->Search API->Pop up Server Error Message->Search Event Homepage,EQ,CTRL|INT,5,2,2,0,1,7,Use Case Model,Search by event
+83,search & upload->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,FUNC_NA,TRAN_NA,7,2,4,1,0,7,Use Case Model,Search event and upload photo
+84,can't access server->Search(back-end)->Event Collection->prepare resullt->Search Result Page,FUNC_NA,TRAN_NA,5,1,3,1,0,4,Use Case Model,Search event and upload photo
+85,can't access server->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,FUNC_NA,TRAN_NA,6,1,4,1,0,4,Use Case Model,Search event and upload photo
+86,Actor->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,FUNC_NA,CTRL|DM|EQ|INT,7,2,3,1,1,7,Use Case Model,Search event and upload photo
+87,Actor->confirm->confirm upload->Photos in the event->failed to upload->result,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Search event and upload photo
+88,Actor->confirm->confirm upload->Photos in the event->Upload finished->result,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Search event and upload photo
+89,Actor->Search Result Page->Select an event->confirm,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,Search event and upload photo
+90,Actor->view photo->prepare resullt->camera->can't access camera->my photo screen,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Take a photo
+91,Actor->view photo->Upload->upload choice,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,Take a photo
+92,Actor->my photo screen->prepare resullt->camera->take the photo successfully->view photo,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Take a photo
+93,Actor->upload choice->upload to current location->camera->get location successfully->current location,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Take photo for location
+94,Actor->current location->upload->my upload->failed to upload->upload choice,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Take photo for location
+95,Actor->current location->upload->my upload->Upload finished->upload choice,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Take photo for location
+96,Actor->confirm->confirm upload->photos in the event->failed to upload->result,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Upload photo to my event
+97,Actor->my events->select an event->confirm,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,Upload photo to my event
+98,Actor->upload choice->upload to my event->my event->display my events->my events,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,Upload photo to my event
+99,Actor->Event Screen->Determine if user is event owner->Event,EI,CTRL|DM|EI,4,1,1,1,1,4,Use Case Model,View photos of event/View photos of private event with password
+100,Actor->Event Screen->Navigate to Photo Selected Screen,FUNC_NA,TRAN_NA,3,1,1,0,1,2,Use Case Model,View photos of event/View photos of private event with password
+101,Actor->Event Screen->Retrieve Photos for Event->Photo Collection,EI,CTRL|DM|EI,4,1,1,1,1,4,Use Case Model,View photos of event/View photos of private event with password
+102,Actor->Event Screen->Display Remaining Event Time->Event,EI,CTRL|DM|EI,4,1,1,1,1,4,Use Case Model,View photos of event/View photos of private event with password
+103,Actor->Event Screen->Photo Collection,FUNC_NA,TRAN_NA,3,1,0,1,1,2,Use Case Model,View photos of event/View photos of private event with password
+104,Actor->view photo->upload->upload choice,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,View photos on device
+105,Actor->camera roll->choose a photo->view photo,EQ,CTRL|INT,4,2,1,0,1,7,Use Case Model,View photos on device
+106,Actor->my photos screen->process request->local photos->get photos successfully->camera roll,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Use Case Model,View photos on device

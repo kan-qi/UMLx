@@ -25,7 +25,9 @@
 	var cocomoCalculator = require('./evaluators/COCOMOCalculator.js');
 	var umlDiagramEvaluator = require('./evaluators/UMLDiagramEvaluator.js');
 	var functionPointCalculator = require('./evaluators/FunctionPointEvaluator.js');
-	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator];
+	var projectEvaluator = require('./evaluators/ProjectEvaluator.js');
+	
+	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator];
 //	function setUp(){
 //		evaluators = [cocomoCalculator, useCaseCalculator, umlModelEvaluator];
 //		for(var i in evaluators){
@@ -84,8 +86,10 @@
 			});
 	}
 	
-	function loadUseCaseEmpiricsForRepo(repoInfo, callbackfunc){
-			var csvDataFilePath = repoInfo.outputDir+"/useCaseDataLoad.csv";
+	function loadUseCaseEmpiricsForRepo(repoInfo, callbackfunc, dataFilePath){
+			// dataFilePath is optional argument if don't get this we take csv file from repo itself.
+			var csvDataFilePath = dataFilePath ? dataFilePath : repoInfo.outputDir+"/useCaseDataLoad.csv";
+			console.log('usecaseFilePath:', csvDataFilePath);
 			umlFileManager.loadCSVFile(csvDataFilePath, true, function(data){
 			var useCaseData = {};
 			for(var i in data){

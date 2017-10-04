@@ -2499,185 +2499,327 @@ id,path,transactional,path_length,diagram,useCase
 2498,Traveler->Select images screen->walgreens->display->Walgreens checkout,CTRL,5,Print photo books,Print photo books
 2499,Traveler->Select images screen->walgreens->display->Walgreens checkout,INT,5,Print photo books,Print photo books
 2500,Traveler->Select images screen->Place screen,TRAN_NA,3,Print photo books,Print photo books
-2501,Actor1->b1->c1->e1->c2->e2->b2,TRAN_NA,7,Experiment Use Case,Experiment Use Case
-2502,Actor1->b1->c1->b2,CTRL,4,Experiment Use Case,Experiment Use Case
-2503,Actor1->b1->c1->b2,INT,4,Experiment Use Case,Experiment Use Case
-2504,Actor1->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2505,Actor2->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2506,e3->c2->e2->b2,TRAN_NA,4,Experiment Use Case,Experiment Use Case
-2507,e3->c2->e2->b1,TRAN_NA,4,Experiment Use Case,Experiment Use Case
-2508,c3->e2->b2,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2509,c3->e2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2510,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,TestAlgorithm1
-2511,Actor1->b1->c1->e1,DM,4,Experiment Model 2,TestAlgorithm1
-2512,Actor1->b1->c1->e1,EI,4,Experiment Model 2,TestAlgorithm1
-2513,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,TestAlgorithm1
-2514,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,TestAlgorithm1
-2515,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,TestAlgorithm1
-2516,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,TestAlgorithm1
-2517,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,Test use case
-2518,Actor1->b1->c1->e1,DM,4,Experiment Model 2,Test use case
-2519,Actor1->b1->c1->e1,EI,4,Experiment Model 2,Test use case
-2520,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,Test use case
-2521,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,Test use case
-2522,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,Test use case
-2523,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,Test use case
-2524,FTSR->Offers Page->Edit Offer->Modify offer page,CTRL,4,Modify Offer,Modify Offer
-2525,FTSR->Offers Page->Edit Offer->Modify offer page,INT,4,Modify Offer,Modify Offer
-2526,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
-2527,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,CTRL,7,Partner Login,Partner Login
-2528,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,DM,7,Partner Login,Partner Login
-2529,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,EQ,7,Partner Login,Partner Login
-2530,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,INT,7,Partner Login,Partner Login
-2531,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
-2532,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,TRAN_NA,7,Partner Login,Partner Login
-2533,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),CTRL,4,Buy Partner Subscription,Buy Partner Subscription
-2534,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),INT,4,Buy Partner Subscription,Buy Partner Subscription
-2535,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,CTRL,4,Buy Partner Subscription,Buy Partner Subscription
-2536,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,INT,4,Buy Partner Subscription,Buy Partner Subscription
-2537,Business Parter->Buy Success Page->Display Home Page(Designed by other part),TRAN_NA,3,Buy Partner Subscription,Buy Partner Subscription
-2538,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,CTRL,6,Buy Partner Subscription,Buy Partner Subscription
-2539,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,DM,6,Buy Partner Subscription,Buy Partner Subscription
-2540,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,EQ,6,Buy Partner Subscription,Buy Partner Subscription
-2541,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,INT,6,Buy Partner Subscription,Buy Partner Subscription
-2542,FTSR->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
-2543,FTSR->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
-2544,FTSR->offers pages->Display offer->offer details,CTRL,4,Publish Offer,Publish Offer
-2545,FTSR->offers pages->Display offer->offer details,INT,4,Publish Offer,Publish Offer
-2546,FTSR->offers pages->Display offer->Retrieve offers->Dispaly Error Msg,TRAN_NA,5,Publish Offer,Publish Offer
-2547,Offers->Retrieve offers->Dispaly Error Msg,TRAN_NA,3,Publish Offer,Publish Offer
-2548,Auto publish reschedule->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
-2549,Auto publish reschedule->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
-2550,Test Coupon->Generate Test Coupon->Partner's Mobile->Open Coupon Page,TRAN_NA,4,Test Coupon,Test Coupon
-2551,FT->Coupon Page->Redeem Coupon->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2552,FT->Coupon Page->Redeem Coupon->Coupon Database,DM,4,Test Coupon,Test Coupon
-2553,FT->Coupon Page->Redeem Coupon->Coupon Database,EI,4,Test Coupon,Test Coupon
-2554,FT->Coupon Page->Save coupon for later->Partner's Mobile->Open Coupon Page,TRAN_NA,5,Test Coupon,Test Coupon
-2555,FT->Coupon Redeemed->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2556,FT->Coupon Redeemed->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
-2557,FT->Coupon Redeemed->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
-2558,FT->Coupon Invalid->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2559,FT->Coupon Invalid->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
-2560,FT->Coupon Invalid->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
-2561,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
-2562,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,DM,4,Cancel Partner Subscription,Cancel Partner Subscription
-2563,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,EI,4,Cancel Partner Subscription,Cancel Partner Subscription
-2564,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,CTRL,5,Cancel Partner Subscription,Cancel Partner Subscription
-2565,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,INT,5,Cancel Partner Subscription,Cancel Partner Subscription
-2566,Business Partner->Cancel Subscription Comfirmation Page->Display Cancel Sub page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
-2567,Business Partner->Cancel Subscription Success Page->Display Home Page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
-2568,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
-2569,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,INT,4,Cancel Partner Subscription,Cancel Partner Subscription
-2570,User->Upload Image button->File Chooser Windows->Cancel Button,CTRL,4,Upload Image,Upload Image
-2571,User->Upload Image button->File Chooser Windows->Cancel Button,INT,4,Upload Image,Upload Image
-2572,User->Upload Image button->File Chooser Windows->Select the Image file,CTRL,4,Upload Image,Upload Image
-2573,User->Upload Image button->File Chooser Windows->Select the Image file,INT,4,Upload Image,Upload Image
-2574,User->Open Button->Display Image in Coupon Image->Design Coupon screen,CTRL,4,Upload Image,Upload Image
-2575,User->Open Button->Display Image in Coupon Image->Design Coupon screen,INT,4,Upload Image,Upload Image
-2576,Business Partner->Coupon Designer->Upload Image->External Image Service,CTRL,4,Design Coupon,Design Coupon
-2577,Business Partner->Coupon Designer->Upload Image->External Image Service,EXTIVK,4,Design Coupon,Design Coupon
-2578,Business Partner->Coupon Designer->Test,TRAN_NA,3,Design Coupon,Design Coupon
-2579,Business Partner->Coupon Designer->Retrieves->Error Message,CTRL,4,Design Coupon,Design Coupon
-2580,Business Partner->Coupon Designer->Retrieves->Error Message,INT,4,Design Coupon,Design Coupon
-2581,Business Partner->Coupon Designer->Save->Coupon,CTRL,4,Design Coupon,Design Coupon
-2582,Business Partner->Coupon Designer->Save->Coupon,DM,4,Design Coupon,Design Coupon
-2583,Business Partner->Coupon Designer->Save->Coupon,EI,4,Design Coupon,Design Coupon
-2584,Business Partner->Coupon Designer->Edit->Coupon Templates,CTRL,4,Design Coupon,Design Coupon
-2585,Business Partner->Coupon Designer->Edit->Coupon Templates,DM,4,Design Coupon,Design Coupon
-2586,Business Partner->Coupon Designer->Edit->Coupon Templates,EI,4,Design Coupon,Design Coupon
-2587,Offers->Retrieves->Error Message,TRAN_NA,3,Design Coupon,Design Coupon
-2588,Third Party Client->access->Coupon,CTRL,3,Design Coupon,Design Coupon
-2589,Third Party Client->access->Coupon,EXTCLL,3,Design Coupon,Design Coupon
-2590,Third Party Client->access->Coupon,DM,3,Design Coupon,Design Coupon
-2591,Third Party Client->access->Coupon,EI,3,Design Coupon,Design Coupon
-2592,Actor1->b1->c1->e1->c2->e2->b2,TRAN_NA,7,Experiment Use Case,Experiment Use Case
-2593,Actor1->b1->c1->b2,CTRL,4,Experiment Use Case,Experiment Use Case
-2594,Actor1->b1->c1->b2,INT,4,Experiment Use Case,Experiment Use Case
-2595,Actor1->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2596,Actor2->b2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2597,e3->c2->e2->b2,TRAN_NA,4,Experiment Use Case,Experiment Use Case
-2598,e3->c2->e2->b1,TRAN_NA,4,Experiment Use Case,Experiment Use Case
-2599,c3->e2->b2,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2600,c3->e2->b1,TRAN_NA,3,Experiment Use Case,Experiment Use Case
-2601,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,TestAlgorithm1
-2602,Actor1->b1->c1->e1,DM,4,Experiment Model 2,TestAlgorithm1
-2603,Actor1->b1->c1->e1,EI,4,Experiment Model 2,TestAlgorithm1
-2604,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,TestAlgorithm1
-2605,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,TestAlgorithm1
-2606,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,TestAlgorithm1
-2607,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,TestAlgorithm1
-2608,Actor1->b1->c1->e1,CTRL,4,Experiment Model 2,Test use case
-2609,Actor1->b1->c1->e1,DM,4,Experiment Model 2,Test use case
-2610,Actor1->b1->c1->e1,EI,4,Experiment Model 2,Test use case
-2611,Actor2->Object1->b1,TRAN_NA,3,Experiment Model 2,Test use case
-2612,Actor2->Object1->Object2->c1->e1,CTRL,5,Experiment Model 2,Test use case
-2613,Actor2->Object1->Object2->c1->e1,DM,5,Experiment Model 2,Test use case
-2614,Actor2->Object1->Object2->c1->e1,EI,5,Experiment Model 2,Test use case
-2615,FTSR->Offers Page->Edit Offer->Modify offer page,CTRL,4,Modify Offer,Modify Offer
-2616,FTSR->Offers Page->Edit Offer->Modify offer page,INT,4,Modify Offer,Modify Offer
-2617,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
-2618,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,CTRL,7,Partner Login,Partner Login
-2619,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,DM,7,Partner Login,Partner Login
-2620,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,EQ,7,Partner Login,Partner Login
-2621,User->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,INT,7,Partner Login,Partner Login
-2622,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Display error message,TRAN_NA,7,Partner Login,Partner Login
-2623,Display Partner Login->Partner Login->Enter username and password->Query database with username and password->System Database->Is a match found?->Partner Portal,TRAN_NA,7,Partner Login,Partner Login
-2624,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),CTRL,4,Buy Partner Subscription,Buy Partner Subscription
-2625,Business Parter->Buy Subscription Page(1)->Display Subscription Page(2)->Buy Subscription Page(1),INT,4,Buy Partner Subscription,Buy Partner Subscription
-2626,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,CTRL,4,Buy Partner Subscription,Buy Partner Subscription
-2627,Business Parter->Buy Subscription Page(1)->Display Subscription Comfirmation Page->Buy Subscription Comfirmation Page,INT,4,Buy Partner Subscription,Buy Partner Subscription
-2628,Business Parter->Buy Success Page->Display Home Page(Designed by other part),TRAN_NA,3,Buy Partner Subscription,Buy Partner Subscription
-2629,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,CTRL,6,Buy Partner Subscription,Buy Partner Subscription
-2630,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,DM,6,Buy Partner Subscription,Buy Partner Subscription
-2631,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,EQ,6,Buy Partner Subscription,Buy Partner Subscription
-2632,Business Parter->Buy Subscription Comfirmation Page->Marked as Subscirpted->Subscription->Display Buy My Subscription Success Page->Buy Success Page,INT,6,Buy Partner Subscription,Buy Partner Subscription
-2633,FTSR->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
-2634,FTSR->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
-2635,FTSR->offers pages->Display offer->offer details,CTRL,4,Publish Offer,Publish Offer
-2636,FTSR->offers pages->Display offer->offer details,INT,4,Publish Offer,Publish Offer
-2637,FTSR->offers pages->Display offer->Retrieve offers->Dispaly Error Msg,TRAN_NA,5,Publish Offer,Publish Offer
-2638,Offers->Retrieve offers->Dispaly Error Msg,TRAN_NA,3,Publish Offer,Publish Offer
-2639,Auto publish reschedule->offer details->Check validate->Display modify error,TRAN_NA,4,Publish Offer,Publish Offer
-2640,Auto publish reschedule->offer details->Check validate->Publish offer,TRAN_NA,4,Publish Offer,Publish Offer
-2641,Test Coupon->Generate Test Coupon->Partner's Mobile->Open Coupon Page,TRAN_NA,4,Test Coupon,Test Coupon
-2642,FT->Coupon Page->Redeem Coupon->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2643,FT->Coupon Page->Redeem Coupon->Coupon Database,DM,4,Test Coupon,Test Coupon
-2644,FT->Coupon Page->Redeem Coupon->Coupon Database,EI,4,Test Coupon,Test Coupon
-2645,FT->Coupon Page->Save coupon for later->Partner's Mobile->Open Coupon Page,TRAN_NA,5,Test Coupon,Test Coupon
-2646,FT->Coupon Redeemed->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2647,FT->Coupon Redeemed->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
-2648,FT->Coupon Redeemed->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
-2649,FT->Coupon Invalid->Coupon Validator->Coupon Database,CTRL,4,Test Coupon,Test Coupon
-2650,FT->Coupon Invalid->Coupon Validator->Coupon Database,DM,4,Test Coupon,Test Coupon
-2651,FT->Coupon Invalid->Coupon Validator->Coupon Database,EI,4,Test Coupon,Test Coupon
-2652,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
-2653,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,DM,4,Cancel Partner Subscription,Cancel Partner Subscription
-2654,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Subscription,EI,4,Cancel Partner Subscription,Cancel Partner Subscription
-2655,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,CTRL,5,Cancel Partner Subscription,Cancel Partner Subscription
-2656,Business Partner->Cancel Subscription Comfirmation Page->Marked as Canceled->Display Success Page->Cancel Subscription Success Page,INT,5,Cancel Partner Subscription,Cancel Partner Subscription
-2657,Business Partner->Cancel Subscription Comfirmation Page->Display Cancel Sub page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
-2658,Business Partner->Cancel Subscription Success Page->Display Home Page,TRAN_NA,3,Cancel Partner Subscription,Cancel Partner Subscription
-2659,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,CTRL,4,Cancel Partner Subscription,Cancel Partner Subscription
-2660,Business Partner->Cancel Subscription Page->Display Comfirmation Page->Cancel Subscription Comfirmation Page,INT,4,Cancel Partner Subscription,Cancel Partner Subscription
-2661,User->Upload Image button->File Chooser Windows->Cancel Button,CTRL,4,Upload Image,Upload Image
-2662,User->Upload Image button->File Chooser Windows->Cancel Button,INT,4,Upload Image,Upload Image
-2663,User->Upload Image button->File Chooser Windows->Select the Image file,CTRL,4,Upload Image,Upload Image
-2664,User->Upload Image button->File Chooser Windows->Select the Image file,INT,4,Upload Image,Upload Image
-2665,User->Open Button->Display Image in Coupon Image->Design Coupon screen,CTRL,4,Upload Image,Upload Image
-2666,User->Open Button->Display Image in Coupon Image->Design Coupon screen,INT,4,Upload Image,Upload Image
-2667,Business Partner->Coupon Designer->Upload Image->External Image Service,CTRL,4,Design Coupon,Design Coupon
-2668,Business Partner->Coupon Designer->Upload Image->External Image Service,EXTIVK,4,Design Coupon,Design Coupon
-2669,Business Partner->Coupon Designer->Test,TRAN_NA,3,Design Coupon,Design Coupon
-2670,Business Partner->Coupon Designer->Retrieves->Error Message,CTRL,4,Design Coupon,Design Coupon
-2671,Business Partner->Coupon Designer->Retrieves->Error Message,INT,4,Design Coupon,Design Coupon
-2672,Business Partner->Coupon Designer->Save->Coupon,CTRL,4,Design Coupon,Design Coupon
-2673,Business Partner->Coupon Designer->Save->Coupon,DM,4,Design Coupon,Design Coupon
-2674,Business Partner->Coupon Designer->Save->Coupon,EI,4,Design Coupon,Design Coupon
-2675,Business Partner->Coupon Designer->Edit->Coupon Templates,CTRL,4,Design Coupon,Design Coupon
-2676,Business Partner->Coupon Designer->Edit->Coupon Templates,DM,4,Design Coupon,Design Coupon
-2677,Business Partner->Coupon Designer->Edit->Coupon Templates,EI,4,Design Coupon,Design Coupon
-2678,Offers->Retrieves->Error Message,TRAN_NA,3,Design Coupon,Design Coupon
-2679,Third Party Client->access->Coupon,CTRL,3,Design Coupon,Design Coupon
-2680,Third Party Client->access->Coupon,EXTCLL,3,Design Coupon,Design Coupon
-2681,Third Party Client->access->Coupon,DM,3,Design Coupon,Design Coupon
-2682,Third Party Client->access->Coupon,EI,3,Design Coupon,Design Coupon
+2501,Contractor->Website detail input page->verify input information->save website info->websites,CTRL,5,Add a new website,Add a new website
+2502,Contractor->Website detail input page->verify input information->save website info->websites,DM,5,Add a new website,Add a new website
+2503,Contractor->Website detail input page->verify input information->save website info->websites,EI,5,Add a new website,Add a new website
+2504,Contractor->Website detail input page->verify input information->Invalid website information,CTRL,4,Add a new website,Add a new website
+2505,Contractor->Website detail input page->verify input information->Invalid website information,INT,4,Add a new website,Add a new website
+2506,Contractor->websites tab->query crawling list of websites->List of websites,CTRL,4,Show the website,Show the website
+2507,Contractor->websites tab->query crawling list of websites->List of websites,INT,4,Show the website,Show the website
+2508,Contractor->websites tab->query crawling list of websites->websites,CTRL,4,Show the website,Show the website
+2509,Contractor->websites tab->query crawling list of websites->websites,DM,4,Show the website,Show the website
+2510,Contractor->websites tab->query crawling list of websites->websites,EI,4,Show the website,Show the website
+2511,Contractor->List of websites->display confirm tab->confirm dialog,CTRL,4,Show the website,Show the website
+2512,Contractor->List of websites->display confirm tab->confirm dialog,INT,4,Show the website,Show the website
+2513,Contractor->show crawling list->query crawling list of websites->List of websites,CTRL,4,Edit website details,Edit website details
+2514,Contractor->show crawling list->query crawling list of websites->List of websites,INT,4,Edit website details,Edit website details
+2515,Contractor->show crawling list->query crawling list of websites->websites,CTRL,4,Edit website details,Edit website details
+2516,Contractor->show crawling list->query crawling list of websites->websites,DM,4,Edit website details,Edit website details
+2517,Contractor->show crawling list->query crawling list of websites->websites,EI,4,Edit website details,Edit website details
+2518,Contractor->Attribute list of website->add attributes->websites,CTRL,4,Edit website details,Edit website details
+2519,Contractor->Attribute list of website->add attributes->websites,DM,4,Edit website details,Edit website details
+2520,Contractor->Attribute list of website->add attributes->websites,EI,4,Edit website details,Edit website details
+2521,Contractor->List of websites->query attributes of webbiste->websites,CTRL,4,Edit website details,Edit website details
+2522,Contractor->List of websites->query attributes of webbiste->websites,DM,4,Edit website details,Edit website details
+2523,Contractor->List of websites->query attributes of webbiste->websites,EI,4,Edit website details,Edit website details
+2524,Contractor->List of websites->query attributes of webbiste->Attribute list of website,CTRL,4,Edit website details,Edit website details
+2525,Contractor->List of websites->query attributes of webbiste->Attribute list of website,INT,4,Edit website details,Edit website details
+2526,contractor->player detail page->add player->player,CTRL,4,Add a new player,Add a new player
+2527,contractor->player detail page->add player->player,DM,4,Add a new player,Add a new player
+2528,contractor->player detail page->add player->player,EI,4,Add a new player,Add a new player
+2529,contractor->players tab->query crawling list of players->all players list,CTRL,4,Add a new player,Add a new player
+2530,contractor->players tab->query crawling list of players->all players list,INT,4,Add a new player,Add a new player
+2531,contractor->players tab->query crawling list of players->player,CTRL,4,Add a new player,Add a new player
+2532,contractor->players tab->query crawling list of players->player,DM,4,Add a new player,Add a new player
+2533,contractor->players tab->query crawling list of players->player,EI,4,Add a new player,Add a new player
+2534,contractor->all players list->query attribute list of a player->player detail page,CTRL,4,Add a new player,Add a new player
+2535,contractor->all players list->query attribute list of a player->player detail page,INT,4,Add a new player,Add a new player
+2536,contractor->all players list->query attribute list of a player->player,CTRL,4,Add a new player,Add a new player
+2537,contractor->all players list->query attribute list of a player->player,DM,4,Add a new player,Add a new player
+2538,contractor->all players list->query attribute list of a player->player,EI,4,Add a new player,Add a new player
+2539,contractor->players tab->query crawling list of players->all players list,CTRL,4,Show the player,Show the player
+2540,contractor->players tab->query crawling list of players->all players list,INT,4,Show the player,Show the player
+2541,contractor->players tab->query crawling list of players->player,CTRL,4,Show the player,Show the player
+2542,contractor->players tab->query crawling list of players->player,DM,4,Show the player,Show the player
+2543,contractor->players tab->query crawling list of players->player,EI,4,Show the player,Show the player
+2544,contractor->all players list->query player info->player,CTRL,4,Show the player,Show the player
+2545,contractor->all players list->query player info->player,DM,4,Show the player,Show the player
+2546,contractor->all players list->query player info->player,EI,4,Show the player,Show the player
+2547,contractor->all players list->query player info->player detail page,CTRL,4,Show the player,Show the player
+2548,contractor->all players list->query player info->player detail page,INT,4,Show the player,Show the player
+2549,contractor->all players list->query attribute list of a player->player,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2550,contractor->all players list->query attribute list of a player->player,DM,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2551,contractor->all players list->query attribute list of a player->player,EI,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2552,contractor->all players list->query attribute list of a player->player detail page,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2553,contractor->all players list->query attribute list of a player->player detail page,INT,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2554,contractor->players tab->query crawling list of players->player,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2555,contractor->players tab->query crawling list of players->player,DM,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2556,contractor->players tab->query crawling list of players->player,EI,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2557,contractor->players tab->query crawling list of players->all players list,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2558,contractor->players tab->query crawling list of players->all players list,INT,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2559,contractor->player detail page->update player attributes->player,CTRL,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2560,contractor->player detail page->update player attributes->player,DM,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2561,contractor->player detail page->update player attributes->player,EI,4,Edit the crawling attributes of a player,Edit the crawling attributes of a player
+2562,Contractor->websites tab->query crawling list of websites->List of websites,CTRL,4,Delete a website,Delete a website
+2563,Contractor->websites tab->query crawling list of websites->List of websites,INT,4,Delete a website,Delete a website
+2564,Contractor->websites tab->query crawling list of websites->websites,CTRL,4,Delete a website,Delete a website
+2565,Contractor->websites tab->query crawling list of websites->websites,DM,4,Delete a website,Delete a website
+2566,Contractor->websites tab->query crawling list of websites->websites,EI,4,Delete a website,Delete a website
+2567,Contractor->List of websites->display confirm tab->confirm dialog,CTRL,4,Delete a website,Delete a website
+2568,Contractor->List of websites->display confirm tab->confirm dialog,INT,4,Delete a website,Delete a website
+2569,Contractor->confirm dialog->delete website->websites,CTRL,4,Delete a website,Delete a website
+2570,Contractor->confirm dialog->delete website->websites,DM,4,Delete a website,Delete a website
+2571,Contractor->confirm dialog->delete website->websites,EI,4,Delete a website,Delete a website
+2572,contractor->players tab->query crawling list of players->all players list,CTRL,4,Schedule player crawl,Schedule player crawl
+2573,contractor->players tab->query crawling list of players->all players list,INT,4,Schedule player crawl,Schedule player crawl
+2574,contractor->players tab->query crawling list of players->player,CTRL,4,Schedule player crawl,Schedule player crawl
+2575,contractor->players tab->query crawling list of players->player,DM,4,Schedule player crawl,Schedule player crawl
+2576,contractor->players tab->query crawling list of players->player,EI,4,Schedule player crawl,Schedule player crawl
+2577,contractor->all players list->add player to scheduling list->schedule,CTRL,4,Schedule player crawl,Schedule player crawl
+2578,contractor->all players list->add player to scheduling list->schedule,DM,4,Schedule player crawl,Schedule player crawl
+2579,contractor->all players list->add player to scheduling list->schedule,EI,4,Schedule player crawl,Schedule player crawl
+2580,contractor->all players list->add player to scheduling list->schedule success message,CTRL,4,Schedule player crawl,Schedule player crawl
+2581,contractor->all players list->add player to scheduling list->schedule success message,INT,4,Schedule player crawl,Schedule player crawl
+2582,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display search screen->search screen,CTRL,6,Use Case Model,Navigation
+2583,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display search screen->search screen,INT,6,Use Case Model,Navigation
+2584,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display event screen->event screen,CTRL,6,Use Case Model,Navigation
+2585,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display event screen->event screen,INT,6,Use Case Model,Navigation
+2586,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display  log in screen->Log in screen,CTRL,6,Use Case Model,Navigation
+2587,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display  log in screen->Log in screen,INT,6,Use Case Model,Navigation
+2588,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display photo screen->Photo screen,CTRL,6,Use Case Model,Navigation
+2589,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display photo screen->Photo screen,INT,6,Use Case Model,Navigation
+2590,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display profile screen->profile screen,CTRL,6,Use Case Model,Navigation
+2591,User->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display profile screen->profile screen,INT,6,Use Case Model,Navigation
+2592,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display search screen->search screen,TRAN_NA,6,Use Case Model,Navigation
+2593,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display event screen->event screen,TRAN_NA,6,Use Case Model,Navigation
+2594,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display  log in screen->Log in screen,TRAN_NA,6,Use Case Model,Navigation
+2595,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display photo screen->Photo screen,TRAN_NA,6,Use Case Model,Navigation
+2596,Display navigation bar->Navigation bar->Tap a icon on navigation bar->is  user logged in?->display profile screen->profile screen,TRAN_NA,6,Use Case Model,Navigation
+2597,Actor->Delete expired events automatically->event,CTRL,3,Use Case Model,Automatic deletion
+2598,Actor->Delete expired events automatically->event,EXTCLL,3,Use Case Model,Automatic deletion
+2599,Actor->Delete expired events automatically->event,DM,3,Use Case Model,Automatic deletion
+2600,Actor->Delete expired events automatically->event,EI,3,Use Case Model,Automatic deletion
+2601,Actor->delete photos related to expired events automatically->photo,CTRL,3,Use Case Model,Automatic deletion
+2602,Actor->delete photos related to expired events automatically->photo,EXTCLL,3,Use Case Model,Automatic deletion
+2603,Actor->delete photos related to expired events automatically->photo,DM,3,Use Case Model,Automatic deletion
+2604,Actor->delete photos related to expired events automatically->photo,EI,3,Use Case Model,Automatic deletion
+2605,Actor->delete expired location photos automatically->photo,CTRL,3,Use Case Model,Automatic deletion
+2606,Actor->delete expired location photos automatically->photo,EXTCLL,3,Use Case Model,Automatic deletion
+2607,Actor->delete expired location photos automatically->photo,DM,3,Use Case Model,Automatic deletion
+2608,Actor->delete expired location photos automatically->photo,EI,3,Use Case Model,Automatic deletion
+2609,change mode->photo list->pop up photo connection error->photo,TRAN_NA,4,Use Case Model,Admin deletes photo
+2610,change mode->photo list->cancel deletion->select photos->confirm delete photos->photo,TRAN_NA,6,Use Case Model,Admin deletes photo
+2611,change mode->photo list->select photos->confirm delete photos->photo,TRAN_NA,5,Use Case Model,Admin deletes photo
+2612,Actor->photo list->pop up photo connection error->photo,CTRL,4,Use Case Model,Admin deletes photo
+2613,Actor->photo list->pop up photo connection error->photo,DM,4,Use Case Model,Admin deletes photo
+2614,Actor->photo list->pop up photo connection error->photo,EI,4,Use Case Model,Admin deletes photo
+2615,Actor->photo list->cancel deletion->select photos->confirm delete photos->photo,CTRL,6,Use Case Model,Admin deletes photo
+2616,Actor->photo list->cancel deletion->select photos->confirm delete photos->photo,DM,6,Use Case Model,Admin deletes photo
+2617,Actor->photo list->cancel deletion->select photos->confirm delete photos->photo,EI,6,Use Case Model,Admin deletes photo
+2618,Actor->photo list->select photos->confirm delete photos->photo,CTRL,5,Use Case Model,Admin deletes photo
+2619,Actor->photo list->select photos->confirm delete photos->photo,DM,5,Use Case Model,Admin deletes photo
+2620,Actor->photo list->select photos->confirm delete photos->photo,EI,5,Use Case Model,Admin deletes photo
+2621,pop up event connection error->event->Get event list->Search box,TRAN_NA,4,Use Case Model,Admin searches for photo by event
+2622,pop up event connection error->event->Get event list->Display event list->Event list,TRAN_NA,5,Use Case Model,Admin searches for photo by event
+2623,pop up event connection error->event->Get event list->Admin page,TRAN_NA,4,Use Case Model,Admin searches for photo by event
+2624,Actor->Event list->Get photo list->display photo list->Photo list,CTRL,5,Use Case Model,Admin searches for photo by event
+2625,Actor->Event list->Get photo list->display photo list->Photo list,INT,5,Use Case Model,Admin searches for photo by event
+2626,pop up event connection error->Account->Get user list->Search box,TRAN_NA,4,Use Case Model,Admin searches for photo by user
+2627,pop up event connection error->Account->Get user list->Admin page,TRAN_NA,4,Use Case Model,Admin searches for photo by user
+2628,pop up event connection error->Account->Get user list->Display user list->User list,TRAN_NA,5,Use Case Model,Admin searches for photo by user
+2629,Actor->User list->Get photo list->display photo list->Photo list,CTRL,5,Use Case Model,Admin searches for photo by user
+2630,Actor->User list->Get photo list->display photo list->Photo list,INT,5,Use Case Model,Admin searches for photo by user
+2631,Display pop-up "Password do not match" on Sign up Screen->Sign up Screen->verify email->verify username->verify password->verify confirm password,TRAN_NA,6,Use Case Model,Create Account
+2632,Display pop-up "Password do not match" on Sign up Screen->Sign up Screen->verify email->verify username->User Collection,TRAN_NA,5,Use Case Model,Create Account
+2633,Actor->Sign up Screen->verify email->verify username->verify password->verify confirm password,TRAN_NA,6,Use Case Model,Create Account
+2634,Actor->Sign up Screen->verify email->verify username->User Collection,CTRL,5,Use Case Model,Create Account
+2635,Actor->Sign up Screen->verify email->verify username->User Collection,DM,5,Use Case Model,Create Account
+2636,Actor->Sign up Screen->verify email->verify username->User Collection,EI,5,Use Case Model,Create Account
+2637,Display pop-up "Password do not match" on Sign up Screen->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,TRAN_NA,4,Use Case Model,Create Profile
+2638,Display pop-up "Password do not match" on Sign up Screen->Profile Photo Screen->Save Profile Photo->Profile,TRAN_NA,4,Use Case Model,Create Profile
+2639,Display photo on  Profile photo screen->Display available photos on Photos Screen->Photos Screen,TRAN_NA,3,Use Case Model,Create Profile
+2640,Display photo on  Profile photo screen->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,TRAN_NA,4,Use Case Model,Create Profile
+2641,Display photo on  Profile photo screen->Profile Photo Screen->Save Profile Photo->Profile,TRAN_NA,4,Use Case Model,Create Profile
+2642,Actor->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,CTRL,4,Use Case Model,Create Profile
+2643,Actor->Profile Photo Screen->Display available photos on Photos Screen->Photos Screen,INT,4,Use Case Model,Create Profile
+2644,Actor->Profile Photo Screen->Save Profile Photo->Profile,CTRL,4,Use Case Model,Create Profile
+2645,Actor->Profile Photo Screen->Save Profile Photo->Profile,DM,4,Use Case Model,Create Profile
+2646,Actor->Profile Photo Screen->Save Profile Photo->Profile,EI,4,Use Case Model,Create Profile
+2647,Actor->Create Event Screen->Handle Validate Error->Event Collection,CTRL,4,Use Case Model,Create a Private Event
+2648,Actor->Create Event Screen->Handle Validate Error->Event Collection,DM,4,Use Case Model,Create a Private Event
+2649,Actor->Create Event Screen->Handle Validate Error->Event Collection,EI,4,Use Case Model,Create a Private Event
+2650,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,CTRL,5,Use Case Model,Create a Private Event
+2651,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,DM,5,Use Case Model,Create a Private Event
+2652,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,EI,5,Use Case Model,Create a Private Event
+2653,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,CTRL,6,Use Case Model,Create a Private Event
+2654,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,DM,6,Use Case Model,Create a Private Event
+2655,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,EI,6,Use Case Model,Create a Private Event
+2656,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,CTRL,5,Use Case Model,Create a Private Event
+2657,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,DM,5,Use Case Model,Create a Private Event
+2658,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,EI,5,Use Case Model,Create a Private Event
+2659,Actor->Create Event Screen->Handle Validate Error->Event Collection,CTRL,4,Use Case Model,Create a Public Event
+2660,Actor->Create Event Screen->Handle Validate Error->Event Collection,DM,4,Use Case Model,Create a Public Event
+2661,Actor->Create Event Screen->Handle Validate Error->Event Collection,EI,4,Use Case Model,Create a Public Event
+2662,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,CTRL,6,Use Case Model,Create a Public Event
+2663,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,DM,6,Use Case Model,Create a Public Event
+2664,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Handle Validate Error->Event Collection,EI,6,Use Case Model,Create a Public Event
+2665,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,CTRL,5,Use Case Model,Create a Public Event
+2666,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,DM,5,Use Case Model,Create a Public Event
+2667,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Validate hashtag uniqueness->Event Collection,EI,5,Use Case Model,Create a Public Event
+2668,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,CTRL,5,Use Case Model,Create a Public Event
+2669,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,DM,5,Use Case Model,Create a Public Event
+2670,Actor->Create Event Screen->Validate hashtag containts alphanume dash underscore->Handle Validate Error->Event Collection,EI,5,Use Case Model,Create a Public Event
+2671,Toggle Off Delete Mode->Event Screen->Dismiss Delete Photo Model,TRAN_NA,3,Use Case Model,Delete Photos in Event if Owner
+2672,Toggle Off Delete Mode->Event Screen->Toggle Delete Mode->Display Deelete Photo Model->Delete Photo Model,TRAN_NA,5,Use Case Model,Delete Photos in Event if Owner
+2673,Actor->Delete Photo Model->Dismiss Delete Photo Model,TRAN_NA,3,Use Case Model,Delete Photos in Event if Owner
+2674,Actor->Delete Photo Model->Handle Photo Deletion->Event,CTRL,4,Use Case Model,Delete Photos in Event if Owner
+2675,Actor->Delete Photo Model->Handle Photo Deletion->Event,DM,4,Use Case Model,Delete Photos in Event if Owner
+2676,Actor->Delete Photo Model->Handle Photo Deletion->Event,EI,4,Use Case Model,Delete Photos in Event if Owner
+2677,Actor->Delete Photo Model->Handle Photo Deletion->Photo Collection,CTRL,4,Use Case Model,Delete Photos in Event if Owner
+2678,Actor->Delete Photo Model->Handle Photo Deletion->Photo Collection,DM,4,Use Case Model,Delete Photos in Event if Owner
+2679,Actor->Delete Photo Model->Handle Photo Deletion->Photo Collection,EI,4,Use Case Model,Delete Photos in Event if Owner
+2680,Actor->Event Screen->Dismiss Delete Photo Model,TRAN_NA,3,Use Case Model,Delete Photos in Event if Owner
+2681,Actor->Event Screen->Toggle Delete Mode->Display Deelete Photo Model->Delete Photo Model,CTRL,5,Use Case Model,Delete Photos in Event if Owner
+2682,Actor->Event Screen->Toggle Delete Mode->Display Deelete Photo Model->Delete Photo Model,INT,5,Use Case Model,Delete Photos in Event if Owner
+2683,Actor->view photo->Delete->Confirm page,CTRL,4,Use Case Model,Delete uploaded photos
+2684,Actor->view photo->Delete->Confirm page,INT,4,Use Case Model,Delete uploaded photos
+2685,Actor->My photos screen->get my upload,TRAN_NA,3,Use Case Model,Delete uploaded photos
+2686,Actor->My photos screen->Prepare photos->Photo Collection,CTRL,4,Use Case Model,Delete uploaded photos
+2687,Actor->My photos screen->Prepare photos->Photo Collection,INT,4,Use Case Model,Delete uploaded photos
+2688,Actor->Confirm page->Confirmed delete->my upload->Delete finished->Result,CTRL,6,Use Case Model,Delete uploaded photos
+2689,Actor->Confirm page->Confirmed delete->my upload->Delete finished->Result,DM,6,Use Case Model,Delete uploaded photos
+2690,Actor->Confirm page->Confirmed delete->my upload->Delete finished->Result,EQ,6,Use Case Model,Delete uploaded photos
+2691,Actor->Confirm page->Confirmed delete->my upload->Delete finished->Result,INT,6,Use Case Model,Delete uploaded photos
+2692,Actor->Confirm page->Confirmed delete->my upload->get my upload,TRAN_NA,5,Use Case Model,Delete uploaded photos
+2693,Actor->Confirm page->Confirmed delete->my upload->failed to delete->Result,CTRL,6,Use Case Model,Delete uploaded photos
+2694,Actor->Confirm page->Confirmed delete->my upload->failed to delete->Result,DM,6,Use Case Model,Delete uploaded photos
+2695,Actor->Confirm page->Confirmed delete->my upload->failed to delete->Result,EQ,6,Use Case Model,Delete uploaded photos
+2696,Actor->Confirm page->Confirmed delete->my upload->failed to delete->Result,INT,6,Use Case Model,Delete uploaded photos
+2697,Actor->Confirm page->Confirmed delete->my upload->Can't access server->My photos screen,CTRL,6,Use Case Model,Delete uploaded photos
+2698,Actor->Confirm page->Confirmed delete->my upload->Can't access server->My photos screen,DM,6,Use Case Model,Delete uploaded photos
+2699,Actor->Confirm page->Confirmed delete->my upload->Can't access server->My photos screen,EQ,6,Use Case Model,Delete uploaded photos
+2700,Actor->Confirm page->Confirmed delete->my upload->Can't access server->My photos screen,INT,6,Use Case Model,Delete uploaded photos
+2701,Actor->Photo Collection->Select a photo->view photo,CTRL,4,Use Case Model,Delete uploaded photos
+2702,Actor->Photo Collection->Select a photo->view photo,INT,4,Use Case Model,Delete uploaded photos
+2703,Actor->Photo Selected Screen->Download photo to Device->Server,CTRL,4,Use Case Model,Downoad Photos to Device
+2704,Actor->Photo Selected Screen->Download photo to Device->Server,DM,4,Use Case Model,Downoad Photos to Device
+2705,Actor->Photo Selected Screen->Download photo to Device->Server,EI,4,Use Case Model,Downoad Photos to Device
+2706,Actor->Log In Screen->Verify Username->Verify Password->User Collection,CTRL,5,Use Case Model,Log In to Account
+2707,Actor->Log In Screen->Verify Username->Verify Password->User Collection,DM,5,Use Case Model,Log In to Account
+2708,Actor->Log In Screen->Verify Username->Verify Password->User Collection,EI,5,Use Case Model,Log In to Account
+2709,Actor->Log In Screen->Verify Username->Verify Password->Account,CTRL,5,Use Case Model,Log In to Account
+2710,Actor->Log In Screen->Verify Username->Verify Password->Account,DM,5,Use Case Model,Log In to Account
+2711,Actor->Log In Screen->Verify Username->Verify Password->Account,EI,5,Use Case Model,Log In to Account
+2712,Actor->Log In Screen->Verify Username->User Collection,CTRL,4,Use Case Model,Log In to Account
+2713,Actor->Log In Screen->Verify Username->User Collection,DM,4,Use Case Model,Log In to Account
+2714,Actor->Log In Screen->Verify Username->User Collection,EI,4,Use Case Model,Log In to Account
+2715,Actor->Create Event Screen->Handle Creation Error->Set Password Screen,CTRL,4,Use Case Model,Reserve a Hashtag
+2716,Actor->Create Event Screen->Handle Creation Error->Set Password Screen,INT,4,Use Case Model,Reserve a Hashtag
+2717,Actor->Create Event Screen->Create new event with hashtag->Handle Creation Error->Set Password Screen,CTRL,5,Use Case Model,Reserve a Hashtag
+2718,Actor->Create Event Screen->Create new event with hashtag->Handle Creation Error->Set Password Screen,INT,5,Use Case Model,Reserve a Hashtag
+2719,Actor->Create Event Screen->Create new event with hashtag->Event Collection,CTRL,4,Use Case Model,Reserve a Hashtag
+2720,Actor->Create Event Screen->Create new event with hashtag->Event Collection,DM,4,Use Case Model,Reserve a Hashtag
+2721,Actor->Create Event Screen->Create new event with hashtag->Event Collection,EI,4,Use Case Model,Reserve a Hashtag
+2722,Actor->Create Event Screen->Create new event with hashtag->Event,CTRL,4,Use Case Model,Reserve a Hashtag
+2723,Actor->Create Event Screen->Create new event with hashtag->Event,DM,4,Use Case Model,Reserve a Hashtag
+2724,Actor->Create Event Screen->Create new event with hashtag->Event,EI,4,Use Case Model,Reserve a Hashtag
+2725,Actor->Set Password Screen->Create new event with hashtag->Event Collection,CTRL,4,Use Case Model,Reserve a Hashtag
+2726,Actor->Set Password Screen->Create new event with hashtag->Event Collection,DM,4,Use Case Model,Reserve a Hashtag
+2727,Actor->Set Password Screen->Create new event with hashtag->Event Collection,EI,4,Use Case Model,Reserve a Hashtag
+2728,Actor->Set Password Screen->Create new event with hashtag->Event,CTRL,4,Use Case Model,Reserve a Hashtag
+2729,Actor->Set Password Screen->Create new event with hashtag->Event,DM,4,Use Case Model,Reserve a Hashtag
+2730,Actor->Set Password Screen->Create new event with hashtag->Event,EI,4,Use Case Model,Reserve a Hashtag
+2731,Actor->Photo View->User Directed to View Photo Use Case,TRAN_NA,3,Use Case Model,Search by Location
+2732,Actor->Photo Search Result List View->List Mutator->Photo Search Result List,CTRL,4,Use Case Model,Search by Location
+2733,Actor->Photo Search Result List View->List Mutator->Photo Search Result List,DM,4,Use Case Model,Search by Location
+2734,Actor->Photo Search Result List View->List Mutator->Photo Search Result List,EI,4,Use Case Model,Search by Location
+2735,Actor->Location Screen->Perform Default Search->Photo Database,CTRL,4,Use Case Model,Search by Location
+2736,Actor->Location Screen->Perform Default Search->Photo Database,DM,4,Use Case Model,Search by Location
+2737,Actor->Location Screen->Perform Default Search->Photo Database,EI,4,Use Case Model,Search by Location
+2738,Actor->Location Screen->Perform Default Search->List Mutator->Photo Search Result List,CTRL,5,Use Case Model,Search by Location
+2739,Actor->Location Screen->Perform Default Search->List Mutator->Photo Search Result List,DM,5,Use Case Model,Search by Location
+2740,Actor->Location Screen->Perform Default Search->List Mutator->Photo Search Result List,EI,5,Use Case Model,Search by Location
+2741,Actor->Range Buttons(Default myhome)->Perform Select Range Search->Photo Database,CTRL,4,Use Case Model,Search by Location
+2742,Actor->Range Buttons(Default myhome)->Perform Select Range Search->Photo Database,DM,4,Use Case Model,Search by Location
+2743,Actor->Range Buttons(Default myhome)->Perform Select Range Search->Photo Database,EI,4,Use Case Model,Search by Location
+2744,Actor->Range Buttons(Default myhome)->Perform Select Range Search->List Mutator->Photo Search Result List,CTRL,5,Use Case Model,Search by Location
+2745,Actor->Range Buttons(Default myhome)->Perform Select Range Search->List Mutator->Photo Search Result List,DM,5,Use Case Model,Search by Location
+2746,Actor->Range Buttons(Default myhome)->Perform Select Range Search->List Mutator->Photo Search Result List,EI,5,Use Case Model,Search by Location
+2747,Actor->Show Empty Result Page->Event Collection->Search Result Page,TRAN_NA,4,Use Case Model,Search by event
+2748,Actor->Show Empty Result Page->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,TRAN_NA,6,Use Case Model,Search by event
+2749,Actor->Search Result Page->Search API->Valid Input Text->Perform Default Search->Search Event Homepage,CTRL,6,Use Case Model,Search by event
+2750,Actor->Search Result Page->Search API->Valid Input Text->Perform Default Search->Search Event Homepage,INT,6,Use Case Model,Search by event
+2751,Actor->Search Result Page->Search API->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,CTRL,7,Use Case Model,Search by event
+2752,Actor->Search Result Page->Search API->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,DM,7,Use Case Model,Search by event
+2753,Actor->Search Result Page->Search API->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,EQ,7,Use Case Model,Search by event
+2754,Actor->Search Result Page->Search API->Event Collection->Pop up daabase Error Message->Perform Default Search->Search Event Homepage,INT,7,Use Case Model,Search by event
+2755,Actor->Search Result Page->Search API->Pop up Server Error Message->Search Event Homepage,CTRL,5,Use Case Model,Search by event
+2756,Actor->Search Result Page->Search API->Pop up Server Error Message->Search Event Homepage,INT,5,Use Case Model,Search by event
+2757,search & upload->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,TRAN_NA,7,Use Case Model,Search event and upload photo
+2758,can't access server->Search(back-end)->Event Collection->prepare resullt->Search Result Page,TRAN_NA,5,Use Case Model,Search event and upload photo
+2759,can't access server->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,TRAN_NA,6,Use Case Model,Search event and upload photo
+2760,Actor->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,CTRL,7,Use Case Model,Search event and upload photo
+2761,Actor->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,DM,7,Use Case Model,Search event and upload photo
+2762,Actor->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,EQ,7,Use Case Model,Search event and upload photo
+2763,Actor->Search Event->enter search item and search->Search(back-end)->Event Collection->prepare resullt->Search Result Page,INT,7,Use Case Model,Search event and upload photo
+2764,Actor->confirm->confirm upload->Photos in the event->failed to upload->result,CTRL,6,Use Case Model,Search event and upload photo
+2765,Actor->confirm->confirm upload->Photos in the event->failed to upload->result,DM,6,Use Case Model,Search event and upload photo
+2766,Actor->confirm->confirm upload->Photos in the event->failed to upload->result,EQ,6,Use Case Model,Search event and upload photo
+2767,Actor->confirm->confirm upload->Photos in the event->failed to upload->result,INT,6,Use Case Model,Search event and upload photo
+2768,Actor->confirm->confirm upload->Photos in the event->Upload finished->result,CTRL,6,Use Case Model,Search event and upload photo
+2769,Actor->confirm->confirm upload->Photos in the event->Upload finished->result,DM,6,Use Case Model,Search event and upload photo
+2770,Actor->confirm->confirm upload->Photos in the event->Upload finished->result,EQ,6,Use Case Model,Search event and upload photo
+2771,Actor->confirm->confirm upload->Photos in the event->Upload finished->result,INT,6,Use Case Model,Search event and upload photo
+2772,Actor->Search Result Page->Select an event->confirm,CTRL,4,Use Case Model,Search event and upload photo
+2773,Actor->Search Result Page->Select an event->confirm,INT,4,Use Case Model,Search event and upload photo
+2774,Actor->view photo->prepare resullt->camera->can't access camera->my photo screen,CTRL,6,Use Case Model,Take a photo
+2775,Actor->view photo->prepare resullt->camera->can't access camera->my photo screen,DM,6,Use Case Model,Take a photo
+2776,Actor->view photo->prepare resullt->camera->can't access camera->my photo screen,EQ,6,Use Case Model,Take a photo
+2777,Actor->view photo->prepare resullt->camera->can't access camera->my photo screen,INT,6,Use Case Model,Take a photo
+2778,Actor->view photo->Upload->upload choice,CTRL,4,Use Case Model,Take a photo
+2779,Actor->view photo->Upload->upload choice,INT,4,Use Case Model,Take a photo
+2780,Actor->my photo screen->prepare resullt->camera->take the photo successfully->view photo,CTRL,6,Use Case Model,Take a photo
+2781,Actor->my photo screen->prepare resullt->camera->take the photo successfully->view photo,DM,6,Use Case Model,Take a photo
+2782,Actor->my photo screen->prepare resullt->camera->take the photo successfully->view photo,EQ,6,Use Case Model,Take a photo
+2783,Actor->my photo screen->prepare resullt->camera->take the photo successfully->view photo,INT,6,Use Case Model,Take a photo
+2784,Actor->upload choice->upload to current location->camera->get location successfully->current location,CTRL,6,Use Case Model,Take photo for location
+2785,Actor->upload choice->upload to current location->camera->get location successfully->current location,DM,6,Use Case Model,Take photo for location
+2786,Actor->upload choice->upload to current location->camera->get location successfully->current location,EQ,6,Use Case Model,Take photo for location
+2787,Actor->upload choice->upload to current location->camera->get location successfully->current location,INT,6,Use Case Model,Take photo for location
+2788,Actor->current location->upload->my upload->failed to upload->upload choice,CTRL,6,Use Case Model,Take photo for location
+2789,Actor->current location->upload->my upload->failed to upload->upload choice,DM,6,Use Case Model,Take photo for location
+2790,Actor->current location->upload->my upload->failed to upload->upload choice,EQ,6,Use Case Model,Take photo for location
+2791,Actor->current location->upload->my upload->failed to upload->upload choice,INT,6,Use Case Model,Take photo for location
+2792,Actor->current location->upload->my upload->Upload finished->upload choice,CTRL,6,Use Case Model,Take photo for location
+2793,Actor->current location->upload->my upload->Upload finished->upload choice,DM,6,Use Case Model,Take photo for location
+2794,Actor->current location->upload->my upload->Upload finished->upload choice,EQ,6,Use Case Model,Take photo for location
+2795,Actor->current location->upload->my upload->Upload finished->upload choice,INT,6,Use Case Model,Take photo for location
+2796,Actor->confirm->confirm upload->photos in the event->failed to upload->result,CTRL,6,Use Case Model,Upload photo to my event
+2797,Actor->confirm->confirm upload->photos in the event->failed to upload->result,DM,6,Use Case Model,Upload photo to my event
+2798,Actor->confirm->confirm upload->photos in the event->failed to upload->result,EQ,6,Use Case Model,Upload photo to my event
+2799,Actor->confirm->confirm upload->photos in the event->failed to upload->result,INT,6,Use Case Model,Upload photo to my event
+2800,Actor->my events->select an event->confirm,CTRL,4,Use Case Model,Upload photo to my event
+2801,Actor->my events->select an event->confirm,INT,4,Use Case Model,Upload photo to my event
+2802,Actor->upload choice->upload to my event->my event->display my events->my events,CTRL,6,Use Case Model,Upload photo to my event
+2803,Actor->upload choice->upload to my event->my event->display my events->my events,DM,6,Use Case Model,Upload photo to my event
+2804,Actor->upload choice->upload to my event->my event->display my events->my events,EQ,6,Use Case Model,Upload photo to my event
+2805,Actor->upload choice->upload to my event->my event->display my events->my events,INT,6,Use Case Model,Upload photo to my event
+2806,Actor->Event Screen->Determine if user is event owner->Event,CTRL,4,Use Case Model,View photos of event/View photos of private event with password
+2807,Actor->Event Screen->Determine if user is event owner->Event,DM,4,Use Case Model,View photos of event/View photos of private event with password
+2808,Actor->Event Screen->Determine if user is event owner->Event,EI,4,Use Case Model,View photos of event/View photos of private event with password
+2809,Actor->Event Screen->Navigate to Photo Selected Screen,TRAN_NA,3,Use Case Model,View photos of event/View photos of private event with password
+2810,Actor->Event Screen->Retrieve Photos for Event->Photo Collection,CTRL,4,Use Case Model,View photos of event/View photos of private event with password
+2811,Actor->Event Screen->Retrieve Photos for Event->Photo Collection,DM,4,Use Case Model,View photos of event/View photos of private event with password
+2812,Actor->Event Screen->Retrieve Photos for Event->Photo Collection,EI,4,Use Case Model,View photos of event/View photos of private event with password
+2813,Actor->Event Screen->Display Remaining Event Time->Event,CTRL,4,Use Case Model,View photos of event/View photos of private event with password
+2814,Actor->Event Screen->Display Remaining Event Time->Event,DM,4,Use Case Model,View photos of event/View photos of private event with password
+2815,Actor->Event Screen->Display Remaining Event Time->Event,EI,4,Use Case Model,View photos of event/View photos of private event with password
+2816,Actor->Event Screen->Photo Collection,TRAN_NA,3,Use Case Model,View photos of event/View photos of private event with password
+2817,Actor->view photo->upload->upload choice,CTRL,4,Use Case Model,View photos on device
+2818,Actor->view photo->upload->upload choice,INT,4,Use Case Model,View photos on device
+2819,Actor->camera roll->choose a photo->view photo,CTRL,4,Use Case Model,View photos on device
+2820,Actor->camera roll->choose a photo->view photo,INT,4,Use Case Model,View photos on device
+2821,Actor->my photos screen->process request->local photos->get photos successfully->camera roll,CTRL,6,Use Case Model,View photos on device
+2822,Actor->my photos screen->process request->local photos->get photos successfully->camera roll,DM,6,Use Case Model,View photos on device
+2823,Actor->my photos screen->process request->local photos->get photos successfully->camera roll,EQ,6,Use Case Model,View photos on device
+2824,Actor->my photos screen->process request->local photos->get photos successfully->camera roll,INT,6,Use Case Model,View photos on device
