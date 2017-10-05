@@ -36,9 +36,16 @@ library(reshape)
 sink(reportPath)
 
 useCaseEvaluationData <- read.csv(useCaseEvaluationPath , header=TRUE)
-modelEvaluationData <- read.csv(modelEvaluationPath, header=TRUE)
 
-projectDescriptiveData <- modelEvaluationData[c("NUM", "Effort", "KSLOC", "UseCase_Num")]
+modelEvaluationData <- read.csv(modelEvaluationPath, header=TRUE)
+projectDescriptiveData <- modelEvaluationData[c("NUM", "Effort", "KSLOC", "UseCase_Num","Type")]
+
+#projectDescriptiveData$Type[projectDescriptiveData$Type == "Mobile App"] = '1'
+#projectDescriptiveData$Type[projectDescriptiveData$Type == "web App"] = '2'
+#projectDescriptiveData$Type[projectDescriptiveData$Type == "Mobile Game"] = '3'
+#projectDescriptiveData$Type[projectDescriptiveData$Type == "Mobile&Web App"] = '4'
+
+#print(projectDescriptiveData)
 
 #transactionalDataMelt <- gather(transactionalData, key=variable, value=value, EUCP_ALY, EXUCP_ALY, DUCP_ALY)
 projectDescriptiveDataMelt <- melt(projectDescriptiveData, id=c("NUM"))
@@ -52,13 +59,30 @@ png(filename=paste(outputDir,"project_discriptive_statistics.png", sep="/"),
 		height=4*2, 
 		pointsize=12,
 		res=96)
-projectHist = histogram(~ value | variable,
+projectHist = xyplot(NUM ~ value | variable,
 		main="Project Descriptive Statistics", 
 		ylab="Frequency",
 		xlab="",
-		strip =strip.custom(factor.levels = c("Effort(PH)","KSLOC","Number of Use Cases")),
-		freq=TRUE,
-		breaks=15,
+		panel = function(x, y) {
+			x <- as.numeric(x)
+			
+			if(panel.number() == 4){
+				panel.histogram(x,
+						breaks=15,
+						nint= max(as.numeric(x))-min(as.numeric(x)),
+						type = "count")
+				panel.text(2.5, 20.5, "1-Mobile App;2-Web App;3-Mobile&Web App;4-Mobile Game", cex=0.7)
+			}
+			else{
+			panel.histogram(x,
+					breaks=15,
+					type = "count")
+		}
+			
+			
+			#xlab="1-Mobile App   2- Web App   3-Mobile Game  4-Mobile & Web App"
+		},
+		strip =strip.custom(factor.levels = c("Effort(PH)","KSLOC","Number of Use Cases","App Type")),
 		scales=list(x=list(relation="free")),
 		data=projectDescriptiveDataMelt)
 print(projectHist)

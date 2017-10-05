@@ -96,7 +96,7 @@ function delete_use_case_func(){
 }
 
 function query_model_analytics_func(){
-	var modelId = $(this).closest('.list-item').data('model-id');
+	var modelId = $(this).closest('.card').data('model-id');
 //	console.log(modelId);
 //	var url = $(this).attr("href");
 //	console.log(url);
@@ -656,6 +656,7 @@ $(document).ready(function() {
 	 
 	 $('form#sign-up').submit(signUpFormSubmit);
 	 $('form#login-form').submit(loginFormSubmit);
+	 $('[data-toggle="popover"]').popover({'html':true});
 //	drawChartBySVG();
 });
 

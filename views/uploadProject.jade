@@ -1,0 +1,295 @@
+html
+  head
+    title UMLx
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+    //link(href='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css', rel='stylesheet')
+    link(href='css/style.css', rel='stylesheet')
+    script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js")
+    script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
+    //script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js")
+    //script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js")
+    script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
+    script(type='text/javascript', src="http://d3js.org/d3.v4.min.js")
+    script(type='text/javascript', src="js/scripts.js")
+    
+  body(id="upload-body")
+    form(id="model-file-submit-form", onsubmit="model_file_upload_fnc(); return false;")
+      div.container
+       
+       div.row
+        div.col-sm-4.title
+         label Project Name
+        div.col-sm-4
+         input(type='text', name="uml-model-name")
+       div
+         input(type='hidden', id='uml-model-type', name='uml-model-type', value="uml")
+        div
+         input(type='hidden', id='repo-id', name='repo-id', value="")
+         //input(type='hidden', id='repo-id', name='repo-id', value="#{repo._id}")
+
+
+       div.row
+        div.col-sm-4.title
+         label Description
+        div.col-sm-4
+         textarea(name="project-desc")
+       
+       div.container
+        label Technical Complexity Factor
+       
+        div.row
+         div.col-sm-4.title
+          label Distributed System
+         div.col-sm-4 
+          select(name="Distributed System")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+           
+        div.row
+         div.col-sm-4.title
+          label Response time or throughput performance objectives
+         div.col-sm-4        
+          select(name="Response time or throughput performance objectives")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label End user efficiency
+         div.col-sm-4        
+          select(name="End user efficiency")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        div.row
+         div.col-sm-4.title
+          label Complex internal processing
+         div.col-sm-4        
+          select(name="Complex internal processing")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        div.row
+         div.col-sm-4.title
+          label Code must be reusable
+         div.col-sm-4        
+          select(name="Code must be reusable")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label Easy to install
+         div.col-sm-4        
+          select(name="Easy to install")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label Easy to use
+         div.col-sm-4        
+          select(name="Easy to use")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+          
+        div.row
+         div.col-sm-4.title
+          label Portable
+         div.col-sm-4        
+          select(name="Portable")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label Easy to change
+         div.col-sm-4        
+          select(name="Easy to change")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label Concurrent
+         div.col-sm-4        
+          select(name="Concurrent")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+       
+        div.row
+         div.col-sm-4.title
+          label Includes special security objectives
+         div.col-sm-4        
+          select(name="Includes special security objectives")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label Provides direct access for third parties
+         div.col-sm-4        
+          select(name="Provides direct access for third parties")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label Special user training facilities are required
+         div.col-sm-4        
+          select(name="Special user training facilities are required")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+       
+        
+       
+       div.container
+        label Environmental Factors
+        
+        div.row
+         div.col-sm-4.title
+          label Familiar with the project model that is used
+         div.col-sm-4        
+          select(name="Familiar with the project model that is used")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+           
+        div.row
+         div.col-sm-4.title
+          label Application experience
+         div.col-sm-4        
+          select(name="Application experience")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+       
+        div.row
+         div.col-sm-4.title
+          label Object-oriented experience
+         div.col-sm-4        
+          select(name="Object-oriented experience")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+       
+        div.row
+         div.col-sm-4.title
+          label Lead analyst capability
+         div.col-sm-4        
+          select(name="Lead analyst capability")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+       
+        div.row
+         div.col-sm-4.title
+          label Motivation
+         div.col-sm-4        
+          select(name="Motivation")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+       
+        div.row
+         div.col-sm-4.title
+          label Stable requirements
+         div.col-sm-4        
+          select(name="Stable requirements")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label Part-time staff
+         div.col-sm-4        
+          select(name="Part-time staff")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+        
+        div.row
+         div.col-sm-4.title
+          label Difficult programming language
+         div.col-sm-4        
+          select(name="Difficult programming language")
+           option 1
+           option 2
+           option 3
+           option 4
+           option 5
+       
+       
+       div.row
+        div.col-sm-4.title
+         label Familiar with the project model that is used
+        div.col-sm-4.title
+         input(type='text' name="familiar-project-model")
+       
+       div.row
+        div.col-sm-4.title
+         label Model File (file types: xml are supported)
+        div.col-sm-4
+         input(type='file', name='uml-file', id='uml-file', accept="text/xml")
+        
+       
+       div.row
+        div.col-sm-4.title
+         label Other Documents (file types: zip, rar, tar are supported)
+        div.col-sm-4
+         input(type='file', name='uml-other', id='uml-file')
+      
+      div.row
+       input(type='submit')
