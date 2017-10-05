@@ -1,3 +1,15 @@
+function setCookie(cname, cvalue, exdays) {
+	
+	var expires="";
+	if(exdays > 0){
+	    var d = new Date();
+	    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	    expires = "expires="+d.toUTCString();
+	} 
+    
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 function model_file_upload_fnc() {
 	var formData = new FormData($('#model-file-submit-form')[0]);
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
@@ -375,10 +387,10 @@ function signUpFormSubmit (e){
 		enctype : 'multipart/form-data',
 		success : function(response) {
 			
-			if(response.status=='success'){
-				console.log('successs');
-				successDiv+=response.message+' </div>';
-				$('#messageDiv').html(successDiv);
+			if(response.success==true){
+				setCookie("appToken",response.token,0);
+				// redirect to home url with this token set
+				window.location ="/";
 				return false;
 				
 			} else {
@@ -435,9 +447,10 @@ function loginFormSubmit (e){
 		data : formData,
 		enctype : 'multipart/form-data',
 		success : function(response) {
-			if(response.status=='success'){				
-				successDiv+=response.message+' </div>';
-				$('#messageDiv').html(successDiv);
+			if(response.success==true){				
+				setCookie("appToken",response.token,0);
+				// redirect to home url with this token set
+				window.location ="/";
 			} else {
 				alertDiv+=response.message+' </div>';
 				$('#messageDiv').html(alertDiv);

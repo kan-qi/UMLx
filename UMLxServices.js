@@ -11,6 +11,10 @@ var umlEstimator = require("./UMLEstimator.js");
 //var COCOMOCalculator = require("./COCOMOCalculator.js");
 var multer = require('multer');
 var jade = require('jade');
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('./config'); // get our config file
+var cookieParser = require('cookie-parser');
+
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -33,6 +37,8 @@ var storage = multer.diskStorage({
 var upload = multer({ storage: storage })
 
 app.use(express.static('public'));
+app.use(cookieParser());
+
 
 app.set('views', './views');
 app.set('view engine', 'jade');
@@ -45,6 +51,71 @@ var userInfo = {
 }
 
 var modelInfo = {};
+
+app.get('/signup',function(req,res){
+	res.render('signup');
+});
+
+app.get('/login',function(req,res){
+	res.render('login');
+});
+
+app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+	
+	var username = req.body['username'];
+	var pwd = req.body['password'];
+	umlModelInfoManager.validateUserLogin(username,pwd,function(result,message){
+        res.json(result);
+    });
+	
+})
+
+app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1}]),  function (req, res){
+	
+	var email = req.body['email'];
+	var username = req.body['username'];
+	var pwd = req.body['password'];
+	var isEnterpriseUser = req.body['enterpriseUser']=="on"? true : false;
+	
+	console.log('isEnterpriseUser '+isEnterpriseUser);
+	
+    umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,function(result,message){
+        res.json(result)
+    });
+
+})
+
+
+//route middleware to verify a token
+app.use(function(req, res, next) {
+
+	var token =undefined ;
+	if(req.cookies){
+		token = req.cookies.appToken;
+	}
+
+	if (token) {
+	 // verifies secret and checks exp
+		 jwt.verify(token, config.secret, function(err, decoded) {      
+		   if (err) {
+			   console.log('Failed to authenticate token.');
+			   res.redirect('/login');
+			   //return res.json({ success: false, message: 'Failed to authenticate token.' });    
+		   } else {
+		     // if everything is good, save to request for use in other routes
+		     req.decoded = decoded;    
+		     next();
+		   }
+		 });
+		
+	} else {
+		
+	 // if there is no token
+		res.redirect('/login');
+	}
+
+});
+
 
 app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
 	console.log("/uploadUMLFile");
@@ -377,7 +448,7 @@ app.get('/addRepo', function(req, res){
 	var userId = req.query.user_id;
 	var password = req.query.password;
 	if(userId === "flyqk" && password === "123456"){
-	umlModelInfoManager.createRepo(function(repo){
+	umlModelInfoManager.createRepo(userId,password,function(repo){
 		console.log(repo);
 		res.end('database is set up');
 	    });
@@ -612,56 +683,13 @@ app.get('/uploadProject', function(req, res){
 
 
 app.get('/', function(req, res){
-	var message = req.query.e;
-	umlModelInfoManager.queryRepoInfo(userInfo.repoId, function(repoInfo){
-//		console.log(repoInfo);
+		var message = req.query.e;
+		umlModelInfoManager.queryRepoInfo(userInfo.repoId, function(repoInfo){
 		res.render('index', {repo:repoInfo, message:message});
 	});
 })
 
-app.get('/signup',function(req,res){
-	res.render('signup');
-});
 
-app.get('/login',function(req,res){
-	res.render('login');
-});
-
-
-app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
-	
-	var email = req.body['email'];
-	var username = req.body['username'];
-	var pwd = req.body['password'];
-	
-    umlModelInfoManager.newUserSignUp(email,username,pwd,function(status,message){
-        if(status == 1){
-            console.log('success');
-            console.log('message'+message);
-            res.json({status:'success',message:message});
-            
-        } else {
-             console.log('failed');
-             console.log('message'+message);
-             res.json({status:'failure',message:message});
-        }
-    });
-
-})
-
-app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
-	
-	var username = req.body['username'];
-	var pwd = req.body['password'];
-	 umlModelInfoManager.validateUserLogin(username,pwd,function(status,message){
-        if(status == 1){
-        	res.json({status:'success',message:message});
-        } else {
-        	res.json({status:'failure',message:message});
-        }
-    });
-	
-})
 
 var server = app.listen(8081,'127.0.0.1', function () {
 
