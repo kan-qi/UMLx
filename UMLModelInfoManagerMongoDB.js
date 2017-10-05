@@ -418,7 +418,7 @@
                             	});
                             } 
                             
-                            const payload = {
+                            var payload = {
 		                    		userId : userInfo._id,
 		                    		userName : userInfo.username,
 		                    		userEmail : userInfo.email
@@ -464,7 +464,7 @@
 								                    db.close();
 								                  
 								                    // generate a token and pass it as response
-								                    const payload = {
+								                    var payload = {
 								                    		userId : data._id,
 								                    		userName : data.username,
 								                    		userEmail : data.email
@@ -475,7 +475,7 @@
 								                    });
 								
 								                   // return the information including token as JSON
-								                    const result = {
+								                    var result = {
 								                    	          success: true,
 								                    	          message: 'Successful Authentication',
 								                    	          token: token
@@ -485,7 +485,7 @@
             							} else{
 								                    console.log('Invalid Username and password combination');
 								                    db.close();
-								                    const result = {
+								                    var result = {
 								                    	  success: false,
 								              	          message: 'Invalid Username and password combination ',
 								                    }
