@@ -30,16 +30,24 @@ library(lattice)
 #library(reshape)
 #library(dplyr)
 
+#for draw the density plots
+
+library(ggplot2)
+
 sink(reportPath)
 
 useCaseData <- read.csv(dataUrl, header=TRUE)
 aprioriData <- read.csv(apriori, header=TRUE)
-aprioriData <- aprioriData[c("Simple_UC","Average_UC", "Complex_UC", "Simple_Actors", "Average_Actors", "Complex_Actors")]
-aprioriMeans <- cbind(mean(aprioriData[,"Simple_UC"]), mean(aprioriData[,"Average_UC"]), mean(aprioriData[,"Complex_UC"]), mean(aprioriData[,'Simple_Actors']), mean(aprioriData[,'Average_Actors']), mean(aprioriData[,"Complex_Actors"]))
-
+aprioriData <- aprioriData[c("Simple_UC","Average_UC", "Complex_UC")]
+aprioriMeans <- cbind(mean(aprioriData[,"Simple_UC"]), mean(aprioriData[,"Average_UC"]), mean(aprioriData[,"Complex_UC"]))
+colnames(aprioriMeans) <- c("Simple_UC", "Average_UC", "Complex_UC")
 print('apriori means')
 print(aprioriMeans)
-print(cor(aprioriData))
+
+aprioriVariance = cbind(var(aprioriData[,'Simple_UC']),var(aprioriData[,'Average_UC']),var(aprioriData[,'Complex_UC']))
+colnames(aprioriVariance) = c('Simple_UC', 'Average_UC', 'Complex_UC')
+print('apriori variance')
+print(aprioriVariance)
 
 # clibrate between the UCP and effort to get the normalizing factor
 ucpFit <- lm(Real_Effort_Person_Hours ~ UCP, data=useCaseData)
@@ -51,30 +59,46 @@ print(normEffort)
 useCaseData$norm_effort = normEffort
 
 #print(useCaseData)
-
-w1 <- solve(cor(aprioriData))
+print('covariance matrix for apriori data')
+print(cor(aprioriData))
+print('variance-covariance matrix for apriori data')
+print(var(aprioriData))
+w1 <- solve(var(aprioriData))
 # calculate the precision matrix for the apriori information
 c1 <- w1 %*% as.matrix(t(aprioriMeans))
+print('weighted apriori calibrated parameters')
+print(c1)
 
-fit <- lm(norm_effort ~ Simple_Actors + Average_Actors + Complex_Actors + Simple_UC + Average_UC + Complex_UC - 1, data=useCaseData)
+fit <- lm(norm_effort ~ Simple_UC + Average_UC + Complex_UC - 1, data=useCaseData)
 resVariance <- var(resid(fit))
-useCaseDataX <- useCaseData[c("Simple_UC","Average_UC", "Complex_UC", "Simple_Actors", "Average_Actors", "Complex_Actors")]
-w2 <- t(useCaseDataX) %*% as.matrix(useCaseDataX) / resVariance^2
+print("residual variance")
+print(resVariance)
+useCaseDataX <- useCaseData[c("Simple_UC","Average_UC", "Complex_UC")]
+w2 <- t(useCaseDataX) %*% as.matrix(useCaseDataX) / resVariance
+#regressionVariance <- solve(w2)
+regVariance <- resVariance * solve(t(useCaseDataX) %*% as.matrix(useCaseDataX))
 print(w2)
+print(regVariance)
 coefs <- coef(fit)
 #bias <- coefs[c("(Intercept)")]
+print('regression calibrated parameters')
 print(coefs)
-coefs <- coefs[c("Simple_UC","Average_UC", "Complex_UC", "Simple_Actors", "Average_Actors", "Complex_Actors")]
-print("calibrated coefficients")
-print(t(coefs))
+coefs <- coefs[c("Simple_UC","Average_UC", "Complex_UC")]
 c2 <- w2 %*% as.matrix(coefs)
+print('weighted regression calibrated parameters')
+print(c2)
+
+
 
 averageCoefs = solve(w1+w2) %*% (c1 + c2)
+bayesianVariance = solve(w1+w2)
 print('bayesian averaged coefficients')
 print(averageCoefs)
+print('bayesian variance')
+print(bayesianVariance)
 #print(bias)
 
-#bayesianModel <- as.formula("norm_effort ~ 5*Simple_Actors + 10*Average_Actors + 15*Complex_Actors + 1*Simple_UC + 2*Average_UC + 3*Complex_UC")
+#bayesianModel <- as.formula("norm_effort ~ 5*Simple_UC + 10*Average_UC + 15*Complex_UC")
 #print(predict(eval(bayesianModel), useCaseDataX))
 
 #print(by(useCaseDataX, 1:nrow(useCaseDataX), function(row) row * averageCoefs))
@@ -89,6 +113,16 @@ print(mean(residual))
 print(mean(abs(residuals(fit))))
 
 print(summary(fit))
+
+#draw the density flots
+
+#Sample data
+dat <- data.frame(dens = c(rnorm(100, aprioriMeans[,'Simple_UC'], aprioriVariance[,'Simple_UC']), rnorm(100, coefs['Simple_UC'], regVariance['Simple_UC', 'Simple_UC']),rnorm(100, averageCoefs['Simple_UC',1], bayesianVariance['Simple_UC', 'Simple_UC']))
+		, lines = rep(c("apriori", "regression", "bayesian"), each = 100))
+svg(paste(outputPath,"bayesian_average_plot.svg", sep="/"))
+#Plot.
+print(ggplot(dat, aes(x = dens, fill = lines)) + geom_density(alpha = 0.5))
+
 
 # 10 fold cross validation of mmre, pred(.25), pred(.50)
 # estimate the predication accuracy by n fold cross validation.
@@ -126,17 +160,17 @@ for(i in 1:nfold){
 	testData <- useCaseData[testIndexes, ]
 	trainData <- useCaseData[-testIndexes, ]
 	
-	testDataX <- testData[c("Simple_UC","Average_UC", "Complex_UC", "Simple_Actors", "Average_Actors", "Complex_Actors")]
-	trainDataX <- trainData[c("Simple_UC","Average_UC", "Complex_UC", "Simple_Actors", "Average_Actors", "Complex_Actors")]
+	testDataX <- testData[c("Simple_UC","Average_UC", "Complex_UC")]
+	trainDataX <- trainData[c("Simple_UC","Average_UC", "Complex_UC")]
 	
 	print('bayesian testing set predication')
 	
-	foldFit <- lm(norm_effort ~ Simple_Actors + Average_Actors + Complex_Actors + Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
+	foldFit <- lm(norm_effort ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
 	foldResVariance <- var(resid(foldFit))
-	foldW2 <- t(trainDataX) %*% as.matrix(trainDataX) / foldResVariance^2
+	foldW2 <- t(trainDataX) %*% as.matrix(trainDataX) / foldResVariance
 	print(foldW2)
 	foldCoefs <- coef(foldFit)
-	foldCoefs <- foldCoefs[c("Simple_UC","Average_UC", "Complex_UC", "Simple_Actors", "Average_Actors", "Complex_Actors")]
+	foldCoefs <- foldCoefs[c("Simple_UC","Average_UC", "Complex_UC")]
 	foldC2 <- foldW2 %*% as.matrix(foldCoefs)
 	print(foldC2)
 	foldAverageCoefs = solve(w1+foldW2) %*% (c1 + foldC2)
@@ -155,7 +189,7 @@ for(i in 1:nfold){
 	print(c(bayesian.pred15, bayesian.pred25, bayesian.pred50))
 	
 	print('apriori testing set predication')
-	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC", "Simple_Actors", "Average_Actors", "Complex_Actors")]
+	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
 	apriori.predict = cbind(as.matrix(testDataX) %*% t(aprioriMeans), testData$norm_effort)
 	colnames(apriori.predict) = c('predicted', "actual")
 	print(apriori.predict)
@@ -169,7 +203,7 @@ for(i in 1:nfold){
 	print(c(apriori.pred15, apriori.pred25, apriori.pred50))
 	
 	print('regression testing set predication')
-	regression.m = lm(norm_effort ~ Simple_Actors + Average_Actors + Complex_Actors + Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
+	regression.m = lm(norm_effort ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
 	regression.predict = cbind(predicted=predict(regression.m, testData), actual=testData$norm_effort)
 	print(regression.predict)
 	regression.mre = apply(regression.predict, 1, function(x) abs(x[1] - x[2])/x[2])
