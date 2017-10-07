@@ -79,7 +79,7 @@
 		deleteUMLFileInfo: function(umlFileInfo) {
 			fs.unlinkSync(umlFileInfo.umlFilePath);
 		},
-		getUMLFileInfo: function(repoInfo, umlFilePath, umlModelType, umlModelName){
+		getUMLFileInfo: function(repoInfo, umlFilePath, umlModelType, umlModelName, formInfo){
 			 var stats = fs.statSync(umlFilePath);
 			 var fileSizeInBytes = stats["size"];
 			 //Convert the file size to megabytes (optional)
@@ -99,6 +99,7 @@
 			 // should put in the repo dir.
 			 umlFileInfo.outputDir = repoInfo.outputDir+"/"+umlFileInfo.fileId;
 			 umlFileInfo.accessDir = repoInfo.accessDir+"/" + umlFileInfo.fileId;
+			 umlFileInfo.formInfo = formInfo;
 			 return umlFileInfo;
 		}
 	}

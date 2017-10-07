@@ -53,10 +53,10 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 	var umlModelType = req.body['uml-model-type'];
 	var repoId = req.body['repo-id'];
 	var uuidVal = req.body['uuid'];
-//	return;
+	var formInfo = req.body;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, umlModelName);
-//		console.log('umlFileInfo');
+		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, umlModelName, formInfo);
+//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 		umlModelAnalyzer.extractModelInfo(umlFileInfo, function(modelInfo){
 			//update model analytics.
 //			console.log(modelInfo);
