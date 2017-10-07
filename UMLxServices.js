@@ -47,15 +47,12 @@ var userInfo = {
 var modelInfo = {};
 
 app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
-	console.log("/uploadUMLFile");
-	console.log(req.files['uml-file'][0].path);
-	console.log(req.body['uml-model-name']);
-	console.log(req.body['uml-model-type']);
-	console.log(req.body['repo-id']);
+	console.log(req.body);
 	var umlFilePath = req.files['uml-file'][0].path;
 	var umlModelName = req.body['uml-model-name'];
 	var umlModelType = req.body['uml-model-type'];
 	var repoId = req.body['repo-id'];
+	return;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, umlModelName);
 //		console.log('umlFileInfo');
