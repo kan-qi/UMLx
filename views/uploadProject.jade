@@ -11,9 +11,11 @@ html
     script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
     script(type='text/javascript', src="http://d3js.org/d3.v4.min.js")
     script(type='text/javascript', src="js/scripts.js")
+    script(type='text/javascript', src="http://wzrd.in/standalone/uuid%2Fv1@latest")
+    
     
   body(id="upload-body")
-    form(id="model-file-submit-form", onsubmit="model_file_upload_fnc(); return false;")
+    form(id="model-file-submit-form", onsubmit="model_file_upload_fnc()", action="/")
       div.container
        
        div.row
@@ -26,6 +28,8 @@ html
         div
          input(type='hidden', id='repo-id', name='repo-id', value="598c93a9a9813b12105c953e")
          //input(type='hidden', id='repo-id', name='repo-id', value="#{repo._id}")
+        div
+         input(type='hidden', id='uuid', name='uuid', value="")
 
 
        div.row
@@ -293,3 +297,7 @@ html
       
       div.row
        input(type='submit')
+       
+  script(type='text/javascript').
+    uuidVal = uuidv1();
+    document.getElementById("uuid").value = uuidVal;
