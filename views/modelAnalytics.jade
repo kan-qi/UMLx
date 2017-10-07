@@ -33,6 +33,8 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#model-empirical') Empirical
      li
       a(data-toggle='tab', href='#model-evaluation') Evaluation
+     li
+      a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelAnalytics._id}');") Use cases
     div.tab-content
      div.tab-pane.fade.in.active(id="model-analytics")
       if modelAnalytics
@@ -138,3 +140,6 @@ div.block.panel.panel-default
          div
           a(id="dump-model-evaluation-for-use-cases-btn" href='evaluateModelForUseCases?model_id=#{modelAnalytics._id}') Dump Model Evaluation For Use Cases
          div(id="model-evaluation-dump-display")
+     div.tab-pane.fade(id="usecase-analysis")
+      div(id="model-usecase-analysis")
+       h3 loading...
