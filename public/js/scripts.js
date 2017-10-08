@@ -241,11 +241,11 @@ function dump_model_evaluation_for_use_cases_func(){
 		success : function(response) {
 //			console.log(response);
 	                var parsedCSV = d3.csvParseRows(response);
-	                
+	                $('.modal-title')[0].innerHTML = "Report";
 	                $("#model-evaluation-dump-display").html("");
 	                var container = d3.select("#model-evaluation-dump-display")
-	                    .append("table")
-
+	                    .append("table").attr('class', 'table table-striped table-bordered table-hover')
+						.append("tbody")
 	                    .selectAll("tr")
 	                        .data(parsedCSV).enter()
 	                        .append("tr")
@@ -253,7 +253,7 @@ function dump_model_evaluation_for_use_cases_func(){
 	                    .selectAll("td")
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
-	                        .text(function(d) { return d; });
+	                        .text(function(d) { return d == "undefined" ? "-" : d; });
 			
 		},
 		error : function() {
@@ -277,11 +277,12 @@ function request_display_data(){
 		success : function(response) {
 //			console.log(response);
 					
-	                var parsedCSV = d3.csvParseRows(response);
+					var parsedCSV = d3.csvParseRows(response);
+					$('.modal-title')[0].innerHTML = "Report";
 	                $("#overlay-frame .modal-body").html("");
 	                var container = d3.select("#overlay-frame .modal-body")
-	                    .append("table")
-
+	                    .append("table").attr('class', 'table table-striped table-bordered table-hover')
+						.append("tbody")
 	                    .selectAll("tr")
 	                        .data(parsedCSV).enter()
 	                        .append("tr")
@@ -289,7 +290,7 @@ function request_display_data(){
 	                    .selectAll("td")
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
-	                        .text(function(d) { return d; });
+	                        .text(function(d) { return d == "undefined" ? "-" : d; });
 			
 		},
 		error : function() {
