@@ -202,7 +202,7 @@ app.get('/reanalyseModel', function (req, res){
 				umlModelInfoManager.queryModelAnalytics(modelId, repoId, function(modelAnalytics, modelInfo){
 					console.log("=============repoAnalytics==========");
 //					console.log(repoAnalytics);
-					res.render('modelAnalytics', {modelAnalytics:modelAnalytics});
+					res.render('modelAnalytics', {modelAnalytics:modelAnalytics, repo_id: repoId});
 				});
 			});
 		});
@@ -369,7 +369,7 @@ app.post('/uploadModelEvaluation', upload.fields([{name:'ueucw',maxCount:1},{nam
 		modelInfo.ModelAnalytics = modelAnalytics;
 		umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
 //			console.log(modelInfo.ModelAnalytics);
-			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics});
+			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id: repoId});
 		});
 	});
 	
@@ -391,9 +391,8 @@ app.get('/queryModelAnalytics', function(req, res){
 	umlModelInfoManager.queryModelAnalytics(modelId, userInfo.repoId, function(modelAnalytics){
 		//console.log('model Analytics');
 		//console.log(modelAnalytics);
-		
-		res.render('modelAnalytics', {modelAnalytics:modelAnalytics});
-	    });
+		res.render('modelAnalytics', {modelAnalytics:modelAnalytics, repo_id:userInfo.repoId});
+	});
 //	var useCase = modelInfo.useCases[modelInfoId];
 
 })
