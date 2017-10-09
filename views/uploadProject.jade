@@ -2,294 +2,272 @@ html
   head
     title UMLx
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
-    //link(href='//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css', rel='stylesheet')
     link(href='css/style.css', rel='stylesheet')
-    script(type='text/javascript', src="http://code.jquery.com/jquery-1.9.1.min.js")
-    script(type='text/javascript', src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js")
-    //script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js")
-    //script(type='text/javascript', src="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.min.js")
-    script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
-    script(type='text/javascript', src="http://d3js.org/d3.v4.min.js")
-    script(type='text/javascript', src="js/scripts.js")
-    
-  body(id="upload-body")
-    form(id="model-file-submit-form", onsubmit="model_file_upload_fnc(); return false;")
-      div.container
-       
-       div.row
-        div.col-sm-4.title
-         label Project Name
-        div.col-sm-4
-         input(type='text', name="uml-model-name")
-       div
-         input(type='hidden', id='uml-model-type', name='uml-model-type', value="uml")
-        div
-         input(type='hidden', id='repo-id', name='repo-id', value="")
-         //input(type='hidden', id='repo-id', name='repo-id', value="#{repo._id}")
-
-
-       div.row
-        div.col-sm-4.title
-         label Description
-        div.col-sm-4
-         textarea(name="project-desc")
-       
-       div.container
-        label Technical Complexity Factor
-       
-        div.row
-         div.col-sm-4.title
-          label Distributed System
-         div.col-sm-4 
-          select(name="Distributed System")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-           
-        div.row
-         div.col-sm-4.title
-          label Response time or throughput performance objectives
-         div.col-sm-4        
-          select(name="Response time or throughput performance objectives")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label End user efficiency
-         div.col-sm-4        
-          select(name="End user efficiency")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        div.row
-         div.col-sm-4.title
-          label Complex internal processing
-         div.col-sm-4        
-          select(name="Complex internal processing")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        div.row
-         div.col-sm-4.title
-          label Code must be reusable
-         div.col-sm-4        
-          select(name="Code must be reusable")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label Easy to install
-         div.col-sm-4        
-          select(name="Easy to install")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label Easy to use
-         div.col-sm-4        
-          select(name="Easy to use")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-          
-        div.row
-         div.col-sm-4.title
-          label Portable
-         div.col-sm-4        
-          select(name="Portable")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label Easy to change
-         div.col-sm-4        
-          select(name="Easy to change")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label Concurrent
-         div.col-sm-4        
-          select(name="Concurrent")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-       
-        div.row
-         div.col-sm-4.title
-          label Includes special security objectives
-         div.col-sm-4        
-          select(name="Includes special security objectives")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label Provides direct access for third parties
-         div.col-sm-4        
-          select(name="Provides direct access for third parties")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label Special user training facilities are required
-         div.col-sm-4        
-          select(name="Special user training facilities are required")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-       
-        
-       
-       div.container
-        label Environmental Factors
-        
-        div.row
-         div.col-sm-4.title
-          label Familiar with the project model that is used
-         div.col-sm-4        
-          select(name="Familiar with the project model that is used")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-           
-        div.row
-         div.col-sm-4.title
-          label Application experience
-         div.col-sm-4        
-          select(name="Application experience")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-       
-        div.row
-         div.col-sm-4.title
-          label Object-oriented experience
-         div.col-sm-4        
-          select(name="Object-oriented experience")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-       
-        div.row
-         div.col-sm-4.title
-          label Lead analyst capability
-         div.col-sm-4        
-          select(name="Lead analyst capability")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-       
-        div.row
-         div.col-sm-4.title
-          label Motivation
-         div.col-sm-4        
-          select(name="Motivation")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-       
-        div.row
-         div.col-sm-4.title
-          label Stable requirements
-         div.col-sm-4        
-          select(name="Stable requirements")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label Part-time staff
-         div.col-sm-4        
-          select(name="Part-time staff")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-        
-        div.row
-         div.col-sm-4.title
-          label Difficult programming language
-         div.col-sm-4        
-          select(name="Difficult programming language")
-           option 1
-           option 2
-           option 3
-           option 4
-           option 5
-       
-       
-       div.row
-        div.col-sm-4.title
-         label Familiar with the project model that is used
-        div.col-sm-4.title
-         input(type='text' name="familiar-project-model")
-       
-       div.row
-        div.col-sm-4.title
-         label Model File (file types: xml are supported)
-        div.col-sm-4
-         input(type='file', name='uml-file', id='uml-file', accept="text/xml")
-        
-       
-       div.row
-        div.col-sm-4.title
-         label Other Documents (file types: zip, rar, tar are supported)
-        div.col-sm-4
-         input(type='file', name='uml-other', id='uml-file')
-      
-      div.row
-       input(type='submit')
+    script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    script(type='text/javascript', src='https://code.highcharts.com/highcharts.src.js')
+    script(type='text/javascript', src='http://d3js.org/d3.v4.min.js')
+    script(type='text/javascript', src='js/scripts.js')
+    script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv1@latest')
+    script.
+      function showPage(pageNumer) {
+      for (var i = 1; i <= 4; i++) {
+      var classList = document.getElementById("page" + i).classList;
+      if (i != pageNumer) {
+      classList.add("hidden");
+      } else {
+      classList.remove("hidden");
+      }
+      }
+      }
+  body#upload-body
+    .container
+      h2  Project Details 
+      form#model-file-submit-form.form-horizontal(novalidate='', onsubmit='model_file_upload_fnc()', action='/')
+        // Page1
+        #page1
+          .alert.alert-info
+            | Project Information
+          .form-group
+            label.control-label.col-xs-4(for='uml-model-name') Project Name
+            .col-xs-8
+              input#uml-model-name.form-control(type='text', placeholder='Project Name', name='uml-model-name')
+          input#uml-model-type(type='hidden', name='uml-model-type', value='uml')
+          input#repo-id(type='hidden', name='repo-id', value='598c93a9a9813b12105c953e')
+          .form-group
+            label.control-label.col-xs-4(for='project-desc') Project Description
+            .col-xs-8
+              textarea#project-desc.form-control(rows='5', name='project-desc', placeholder='Project description')
+          .form-group
+            label.control-label.col-xs-4(for='project-effort') Effort
+            .col-xs-8
+              input#project-effort.form-control(type='text', placeholder='Effort', name='project-effort')
+          .form-group
+            label.control-label.col-xs-4(for='project-duration') Duration
+            .col-xs-8
+              input#project-duration.form-control(type='text', placeholder='Duration', name='project-duration')
+          .form-group
+            label.control-label.col-xs-4(for='organization-name') Organization/Personal Name
+            .col-xs-8
+              input#organization-name.form-control(type='text', placeholder='Organization Name or Personal Name', name='organization-name')
+          .form-group
+            label.control-label.col-xs-4(for='email') Contact Email
+            .col-xs-8
+              input#email.form-control(type='text', placeholder='Contact Email', name='email')
+          input#uuid-page1(type='hidden', name='uuid-page1', value='')
+          .form-group
+            .col-sm-offset-2.col-xs-8
+              button.btn.btn-default.disabled.pull-left(type='button') < Previous
+              button.btn.btn-success.pull-right(type='button', onclick='showPage(2)') Next > 
+        // Page 2
+        #page2.hidden
+          .alert.alert-info
+            | Technical Complexity Factor
+          .form-group
+            label.control-label(for='distributed-system') Distributed System
+            select#distributed-system.form-control(name='distributed-system')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='response-time') Response time or throughput performance objectives
+            select#response-time.form-control(name='response-time')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='end-user-efficiency') End user efficiency
+            select#end-user-efficiency.form-control(name='end-user-efficiency')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='alert alert-infoternal-processing') Complex internal processing
+            select.form-control(id='alert alert-infoternal-processing', name='alert alert-infoternal-processing')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='code-must-be-resuable') Code must be reusable
+            select#code-must-be-resuable.form-control(name='code-must-be-resuable')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='easy-to-install') Easy to install
+            select#easy-to-install.form-control(name='easy-to-install')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='easy-to-use') Easy to use
+            select#easy-to-use.form-control(name='easy-to-use')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='portable') Portable
+            select#portable.form-control(name='portable')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='easy-to-change') Easy to change
+            select#easy-to-change.form-control(name='easy-to-change')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='concurrent') Concurrent
+            select#concurrent.form-control(name='concurrent')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='includes-special-security-objectives') Includes special security objectives
+            select#includes-special-security-objectives.form-control(name='includes-special-security-objectives')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='provides-direct-access-for-third-parties') Provides direct access for third parties
+            select#provides-direct-access-for-third-parties.form-control(name='provides-direct-access-for-third-parties')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='special-user-training-facilities-are-required') Special user training facilities are required
+            select#special-user-training-facilities-are-required.form-control(name='special-user-training-facilities-are-required')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          input#uuid-page2(type='hidden', name='uuid-page2', value='')
+          .form-group
+            .col-sm-offset-2.col-xs-8
+              button.btn.btn-default.pull-left(type='button', onclick='showPage(1)') < Previous
+              button.btn.btn-success.pull-right(type='button', onclick='showPage(3)') Next > 
+        // Page 3
+        #page3.hidden
+          .alert.alert-info
+            | Environmental Factors
+          .form-group
+            label.control-label(for='familiar-with-the-project-model-that-is-used') Familiar with the project model that is used
+            select#familiar-with-the-project-model-that-is-used.form-control(name='familiar-with-the-project-model-that-is-used')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='application-experience') Application experience
+            select#application-experience.form-control(name='application-experience')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='object-oriented-experience') Object-oriented experience
+            select#object-oriented-experience.form-control(name='object-oriented-experience')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='lead-analyst-capability') Lead analyst capability
+            select#lead-analyst-capability.form-control(name='lead-analyst-capability')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='motivation') Motivation
+            select#motivation.form-control(name='motivation')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='stable-requirements') Stable requirements
+            select#stable-requirements.form-control(name='stable-requirements')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='part-time-staff') Part-time staff
+            select#part-time-staff.form-control(name='part-time-staff')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          .form-group
+            label.control-label(for='difficult-programming-language') Difficult programming language
+            select#difficult-programming-language.form-control(name='difficult-programming-language')
+              option 1
+              option 2
+              option 3
+              option 4
+              option 5
+          input#uuid-page3(type='hidden', name='uuid-page3', value='')
+          .form-group
+            .col-sm-offset-2.col-xs-8
+              button.btn.btn-default.pull-left(type='button', onclick='showPage(2)') < Previous
+              button.btn.btn-success.pull-right(type='button', onclick='showPage(4)') Next > 
+        // Page4
+        #page4.hidden
+          .alert.alert-info
+            | Project model file and documents
+          .form-group
+            label.control-label.col-xs-4(for='familiar-with-project') Familiar with the project model that is used
+            .col-xs-8
+              input#familiar-with-project.form-control(type='text', placeholder='Familiar with the project model that is used', name='familiar-with-project')
+          .form-group
+            label.control-label.col-xs-4(for='uml-file') Model File (file types: xml are supported)
+            .col-xs-8
+              input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
+          .form-group
+            label.control-label.col-xs-4(for='uml-other') Other Documents (file types: zip, rar, tar are supported)
+            .col-xs-8
+              input#uml-other.form-control(type='file', name='uml-other')
+          input#uuid-page4(type='hidden', name='uuid-page4', value='')
+          .form-group
+            .col-sm-offset-2.col-xs-8
+              button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
+              button.btn.btn-success.pull-right(type='submit') Submit
+    script(type='text/javascript').
+      document.getElementById("uuid-page1").value = uuidv1();
+      document.getElementById("uuid-page2").value = uuidv1();
+      document.getElementById("uuid-page3").value = uuidv1();
+      document.getElementById("uuid-page4").value = uuidv1();
