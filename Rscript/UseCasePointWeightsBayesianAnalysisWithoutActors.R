@@ -116,11 +116,22 @@ print(summary(fit))
 
 #draw the density flots
 
-#Sample data
+#Simple use case bayesian averaging plot
 dat <- data.frame(dens = c(rnorm(100, aprioriMeans[,'Simple_UC'], aprioriVariance[,'Simple_UC']), rnorm(100, coefs['Simple_UC'], regVariance['Simple_UC', 'Simple_UC']),rnorm(100, averageCoefs['Simple_UC',1], bayesianVariance['Simple_UC', 'Simple_UC']))
 		, lines = rep(c("apriori", "regression", "bayesian"), each = 100))
-svg(paste(outputPath,"bayesian_average_plot.svg", sep="/"))
-#Plot.
+svg(paste(outputPath,"simple_use_case_bayesian_average_plot.svg", sep="/"), width=12, height=4)
+print(ggplot(dat, aes(x = dens, fill = lines)) + geom_density(alpha = 0.5)+labs(x="Simple Use Case Weight", fill="Methods"))
+
+#Average use case bayesian averaging plot
+dat <- data.frame(dens = c(rnorm(100, aprioriMeans[,'Average_UC'], aprioriVariance[,'Average_UC']), rnorm(100, coefs['Average_UC'], regVariance['Average_UC', 'Average_UC']),rnorm(100, averageCoefs['Average_UC',1], bayesianVariance['Average_UC', 'Average_UC']))
+		, lines = rep(c("apriori", "regression", "bayesian"), each = 100))
+svg(paste(outputPath,"average_use_case_bayesian_average_plot.svg", sep="/"), width=12, height=4)
+print(ggplot(dat, aes(x = dens, fill = lines)) + geom_density(alpha = 0.5))
+
+#Complex use case bayesian averaging plot
+dat <- data.frame(dens = c(rnorm(100, aprioriMeans[,'Complex_UC'], aprioriVariance[,'Complex_UC']), rnorm(100, coefs['Complex_UC'], regVariance['Complex_UC', 'Complex_UC']),rnorm(100, averageCoefs['Complex_UC',1], bayesianVariance['Complex_UC', 'Complex_UC']))
+		, lines = rep(c("apriori", "regression", "bayesian"), each = 100))
+svg(paste(outputPath,"complex_use_case_bayesian_average_plot.svg", sep="/"), width=12, height=4)
 print(ggplot(dat, aes(x = dens, fill = lines)) + geom_density(alpha = 0.5))
 
 
