@@ -1,3 +1,5 @@
+-var repoID = repoAnalytics._id
+include breadcrumb
 div.block.panel.panel-default
   div.panel-heading
    h3.panel-title.analytics-title.pull-left Repo Analytics
@@ -151,7 +153,4 @@ div.block.panel.panel-default
         div.card.col-md-2(data-model-id=model._id)
           div(class="card-block")
             div.card-title.model-name(title= model.umlModelName)
-              a.model-title(href="requestModelInfo?model_id="+model._id) #{model.umlModelName}
-            div.btn-group.ops_menu
-              button.btn.btn-primary(type="button").model-analytics
-                span.glyphicon.glyphicon-stats
+              a.model-title(href="queryModelAnalytics?model_id="+model._id) #{model.umlModelName}

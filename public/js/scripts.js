@@ -95,19 +95,18 @@ function delete_use_case_func(){
 	return false;
 }
 
-function query_model_analytics_func(){
-	var modelId = $(this).closest('.card').data('model-id');
+function query_model_usecase_func(modelId) {
 //	console.log(modelId);
 //	var url = $(this).attr("href");
 //	console.log(url);
-	console.log('query_model_analytics_func');
+	console.log('query_model_usecase_func');
 	$.ajax({
 		type : 'GET',
-		url : 'queryModelAnalytics?model_id='+modelId,
+		url : 'requestModelInfo?model_id='+modelId,
 		success : function(response) {
 //			console.log(response);
-			$("#display-panel").html("");
-			$("#display-panel").append(response);
+			$("#model-usecase-analysis").html("");
+			$("#model-usecase-analysis").append(response);
 		},
 		error : function() {
 			console.log("fail");
@@ -242,11 +241,11 @@ function dump_model_evaluation_for_use_cases_func(){
 		success : function(response) {
 //			console.log(response);
 	                var parsedCSV = d3.csvParseRows(response);
-	                
+	                $('.modal-title')[0].innerHTML = "Report";
 	                $("#model-evaluation-dump-display").html("");
 	                var container = d3.select("#model-evaluation-dump-display")
-	                    .append("table")
-
+	                    .append("table").attr('class', 'table table-striped table-bordered table-hover')
+						.append("tbody")
 	                    .selectAll("tr")
 	                        .data(parsedCSV).enter()
 	                        .append("tr")
@@ -254,7 +253,7 @@ function dump_model_evaluation_for_use_cases_func(){
 	                    .selectAll("td")
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
-	                        .text(function(d) { return d; });
+	                        .text(function(d) { return d == "undefined" ? "-" : d; });
 			
 		},
 		error : function() {
@@ -278,11 +277,12 @@ function request_display_data(){
 		success : function(response) {
 //			console.log(response);
 					
-	                var parsedCSV = d3.csvParseRows(response);
+					var parsedCSV = d3.csvParseRows(response);
+					$('.modal-title')[0].innerHTML = "Report";
 	                $("#overlay-frame .modal-body").html("");
 	                var container = d3.select("#overlay-frame .modal-body")
-	                    .append("table")
-
+	                    .append("table").attr('class', 'table table-striped table-bordered table-hover')
+						.append("tbody")
 	                    .selectAll("tr")
 	                        .data(parsedCSV).enter()
 	                        .append("tr")
@@ -290,7 +290,7 @@ function request_display_data(){
 	                    .selectAll("td")
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
-	                        .text(function(d) { return d; });
+	                        .text(function(d) { return d == "undefined" ? "-" : d; });
 			
 		},
 		error : function() {
@@ -629,7 +629,6 @@ $(document).ready(function() {
 //	$(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
 	$(document).on('click','a.model-title', query_model_detail_func);
 	$(document).on('click','.request-repo-analytics', query_repo_analytics_func);
-	$(document).on('click','.btn.model-analytics', query_model_analytics_func);
 	$(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
 	$(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);
 	$(document).on('click','#query-model-btn', query_estimation_models_func);
