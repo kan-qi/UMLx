@@ -1,3 +1,5 @@
+-var repoID = repoAnalytics._id
+include breadcrumb
 div.block.panel.panel-default
   div.panel-heading
    h3.panel-title.analytics-title.pull-left Repo Analytics
@@ -20,7 +22,7 @@ div.block.panel.panel-default
           span.caret
         ul.dropdown-menu
           li
-            a.dropdown-item(href='loadEmpiricalUsecaseDataForRepo?repo_id=#{repoAnalytics._id}') Empirical Data For Use Cases
+            a.dropdown-item(id="open_btn" onclick="openDialogueBox('#{repoAnalytics._id}');" href="javaScript:void(0);") Empirical Data For Use Cases
           li
             a.dropdown-item(href='loadEmpiricalModelDataForRepo?repo_id=#{repoAnalytics._id}') Empirical Data For Models
           li
@@ -43,6 +45,9 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#repo_distributions') Distributions
      li
       a(data-toggle='tab', href='#repo_estimation') Estimation
+     li
+      a(data-toggle='tab', href='#project_list') Projects 
+        span(class="badge") #{repo.models.length}
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
       if repoAnalytics
@@ -142,4 +147,10 @@ div.block.panel.panel-default
          img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
          div.clear
        div(id='estimation-model-detail')
-       
+     div.tab-pane.fade(id="project_list")
+      div.card-deck
+       each model in repo.models
+        div.card.col-md-2(data-model-id=model._id)
+          div(class="card-block")
+            div.card-title.model-name(title= model.umlModelName)
+              a.model-title(href="queryModelAnalytics?model_id="+model._id) #{model.umlModelName}

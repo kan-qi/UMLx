@@ -1,0 +1,7 @@
+ol(class="breadcrumb", style="background: white;")
+    if repoID
+        li(class="breadcrumb-item")
+            a(href="/") #{repoID}
+    if modelName && model_id
+        li(class="breadcrumb-item")
+            a(class="model-title", href="/queryModelAnalytics?model_id="+model_id) #{modelName}

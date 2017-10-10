@@ -1,3 +1,15 @@
+function setCookie(cname, cvalue, exdays) {
+	
+	var expires="";
+	if(exdays > 0){
+	    var d = new Date();
+	    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
+	    expires = "expires="+d.toUTCString();
+	} 
+    
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+
 function model_file_upload_fnc() {
 	var formData = new FormData($('#model-file-submit-form')[0]);
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
@@ -83,19 +95,18 @@ function delete_use_case_func(){
 	return false;
 }
 
-function query_model_analytics_func(){
-	var modelId = $(this).closest('.list-item').data('model-id');
+function query_model_usecase_func(modelId) {
 //	console.log(modelId);
 //	var url = $(this).attr("href");
 //	console.log(url);
-	console.log('query_model_analytics_func');
+	console.log('query_model_usecase_func');
 	$.ajax({
 		type : 'GET',
-		url : 'queryModelAnalytics?model_id='+modelId,
+		url : 'requestModelInfo?model_id='+modelId,
 		success : function(response) {
 //			console.log(response);
-			$("#display-panel").html("");
-			$("#display-panel").append(response);
+			$("#model-usecase-analysis").html("");
+			$("#model-usecase-analysis").append(response);
 		},
 		error : function() {
 			console.log("fail");
@@ -230,11 +241,11 @@ function dump_model_evaluation_for_use_cases_func(){
 		success : function(response) {
 //			console.log(response);
 	                var parsedCSV = d3.csvParseRows(response);
-	                
+	                $('.modal-title')[0].innerHTML = "Report";
 	                $("#model-evaluation-dump-display").html("");
 	                var container = d3.select("#model-evaluation-dump-display")
-	                    .append("table")
-
+	                    .append("table").attr('class', 'table table-striped table-bordered table-hover')
+						.append("tbody")
 	                    .selectAll("tr")
 	                        .data(parsedCSV).enter()
 	                        .append("tr")
@@ -242,7 +253,7 @@ function dump_model_evaluation_for_use_cases_func(){
 	                    .selectAll("td")
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
-	                        .text(function(d) { return d; });
+	                        .text(function(d) { return d == "undefined" ? "-" : d; });
 			
 		},
 		error : function() {
@@ -266,11 +277,12 @@ function request_display_data(){
 		success : function(response) {
 //			console.log(response);
 					
-	                var parsedCSV = d3.csvParseRows(response);
+					var parsedCSV = d3.csvParseRows(response);
+					$('.modal-title')[0].innerHTML = "Report";
 	                $("#overlay-frame .modal-body").html("");
 	                var container = d3.select("#overlay-frame .modal-body")
-	                    .append("table")
-
+	                    .append("table").attr('class', 'table table-striped table-bordered table-hover')
+						.append("tbody")
 	                    .selectAll("tr")
 	                        .data(parsedCSV).enter()
 	                        .append("tr")
@@ -278,7 +290,7 @@ function request_display_data(){
 	                    .selectAll("td")
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
-	                        .text(function(d) { return d; });
+	                        .text(function(d) { return d == "undefined" ? "-" : d; });
 			
 		},
 		error : function() {
@@ -311,6 +323,142 @@ function query_estimation_models_func(){
 			console.log("fail");
 			$('#model-query-progressing').removeClass('shown').addClass('hidden');
 			alert("There was an error");
+		}
+	});
+
+	return false;
+}
+
+
+function validateEmail(email) {
+	//var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	var filter =  /^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (!filter.test(email.value)) {
+    return false;
+    }
+    
+    return true;
+}
+
+function signUpFormSubmit (e){
+	e.preventDefault();
+	var formData = new FormData($('#sign-up')[0]);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	var usernameMissing  = $('#sign-up #username').val().length>0 ? false : true;
+	var emailMissing  = $('#sign-up #email').val().length>0 ? false : true;
+	var pwdMissing = $('#sign-up #password').val().length > 0 ? false : true;
+	
+	var successDiv = '<div class="alert alert-success alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+   
+    var alertDiv = '<div class="alert alert-danger alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+	
+	if(emailMissing){
+		alertDiv+='Please enter your email </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	} 
+	
+	if(!validateEmail(email)){
+		alertDiv+='Please enter a valid email </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+	
+	if(usernameMissing){
+		alertDiv+='Please choose a username </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+	if(pwdMissing){
+		alertDiv+='Please enter your password </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+
+	$.ajax({
+		type : 'POST',
+		url : "signup",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			
+			if(response.success==true){
+				setCookie("appToken",response.token,0);
+				// redirect to home url with this token set
+				window.location ="/";
+				return false;
+				
+			} else {
+				
+				console.log('failure');
+				alertDiv+=response.message+' </div>';
+				$('#messageDiv').html(alertDiv);
+				return false;
+				
+			}
+		},
+		error : function() {
+			console.log("fail");
+			alert("There was an error signing up");
+		}
+	});
+
+	return false;
+}
+
+function loginFormSubmit (e){
+	e.preventDefault();
+	var formData = new FormData($('#login-form')[0]);
+	
+	var usernameMissing  = $('#login-form #username').val().length>0 ? false : true;
+	var pwdMissing = $('#login-form #password').val().length > 0 ? false : true;
+	
+	var successDiv = '<div class="alert alert-success alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+    
+    var alertDiv = '<div class="alert alert-danger alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+	
+	if(usernameMissing && pwdMissing){
+		alertDiv+='Please enter the Username and Password </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	} else if(usernameMissing){
+		alertDiv+='Please enter the Username </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	} else if(pwdMissing){
+		alertDiv+='Please enter the Password </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+
+	$.ajax({
+		type : 'POST',
+		url : "login",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			if(response.success==true){				
+				setCookie("appToken",response.token,0);
+				// redirect to home url with this token set
+				window.location ="/";
+			} else {
+				alertDiv+=response.message+' </div>';
+				$('#messageDiv').html(alertDiv);
+			}
+		},
+		error : function() {
+			console.log("fail");
+			alert("There was an error logging in");
 		}
 	});
 
@@ -481,7 +629,6 @@ $(document).ready(function() {
 //	$(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
 	$(document).on('click','a.model-title', query_model_detail_func);
 	$(document).on('click','.request-repo-analytics', query_repo_analytics_func);
-	$(document).on('click','.btn.model-analytics', query_model_analytics_func);
 	$(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
 	$(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);
 	$(document).on('click','#query-model-btn', query_estimation_models_func);
@@ -505,5 +652,49 @@ $(document).ready(function() {
 	   });
 	
 	 $('.nav.nav-tabs').tab();
+	 
+	 $('form#sign-up').submit(signUpFormSubmit);
+	 $('form#login-form').submit(loginFormSubmit);
+	 $('[data-toggle="popover"]').popover({'html':true});
 //	drawChartBySVG();
 });
+
+function openDialogueBox(repoId) {
+	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	//$('#overlay-frame').addClass('upload');
+	$('#dialog-frame').modal();
+	$("#dialog-frame .modal-title").html("Upload File");
+	$("#dialog-frame .modal-body").html("");
+	$("#dialog-frame .modal-body").html(form);  	
+}
+
+function usecase_file_upload_fnc() {
+	if (!($('#usecase-file')[0].value)) {
+		alert("No files selected");
+		return;
+	}
+	var formData = new FormData($('#usecase-file-submit-form')[0]);
+	//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$('#dialog-frame .modal-footer .btn-default').click();
+	//$('#overlay-frame').removeClass('upload')
+	$.ajax({
+		type : 'POST',
+		url : "uploadUseCaseFile",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#main-panel").html("");
+			$("#main-panel").append($(response).children());
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error submitting comment");
+		}
+	});
+}
