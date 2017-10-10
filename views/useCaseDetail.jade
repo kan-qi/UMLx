@@ -76,40 +76,68 @@ if useCaseInfo
   div.tab-pane.fade(id="use-case-evaluation")
      div.use-case-evaluation
         h3 Evaluation:
-        form(id="use-case-evaluation-form", onsubmit="return false;")
-         div
-          div Number of transactions (#{useCaseAnalytics.PathNum}):
-           input(type='text', name='path_num', id='path_num')
-          div Number of Data Management Transactions (#{useCaseAnalytics.DM}):
-           input(type='text', name='dm', id='dm')
-          div Number of Interface Management Transactions (#{useCaseAnalytics.IM}):
-           input(type='text', name='im', id='im')
-          div Number of Control Transactions (#{useCaseAnalytics.CT}):
-           input(type='text', name='ct', id='ct')
-          div Number of external invocations (#{useCaseAnalytics.EIVK}):
-           input(type='text', name='eivk', id='eivk')
-          div Number of external calls (#{useCaseAnalytics.ECLL}):
-           input(type='text', name='ecll', id='ecll')
-          div Cyclomatic coplexity of structured scenarios (#{useCaseAnalytics.CCSS}):
-           input(type='text', name='ccss', id='ccss')
-          div Number of transactions (#{useCaseAnalytics.IT}):
-           input(type='text', name='it', id='it')
-          div Internal logical files (#{useCaseAnalytics.ILF}):
-           input(type='text', name='ilf', id='ilf')
-          div External logical files (#{useCaseAnalytics.ELF}):
-           input(type='text', name='elf', id='elf')
-          div External inputs (#{useCaseAnalytics.EI}):
-           input(type='text', name='ei', id='ei')
-          div External outputs(#{useCaseAnalytics.EO}):
-           input(type='text', name='eo', id='eo')
-          div External inquiries (#{useCaseAnalytics.EQ}):
-           input(type='text', name='eq', id='eq')
-          div Effort (person-hours) (#{useCaseAnalytics.PH}):
-           input(type='text', name='ph', id='ph')
+        form.form-horizontal(id="use-case-evaluation-form", onsubmit="return false;")
+         div.form-group
+          label(for="path_num" class="col-sm-6 control-label") Number of transactions (#{useCaseAnalytics.PathNum}):
+          div.col-sm-6
+           input(type='text', name='path_num', id='path_num', class="form-control")
+         div.form-group
+          label(for="dm" class="col-sm-6 control-label") Number of Data Management Transactions (#{useCaseAnalytics.DM}):
+          div.col-sm-6
+           input(type='text', name='dm', id='dm', class="form-control")
+         div.form-group
+          label(for="im" class="col-sm-6 control-label") Number of Interface Management Transactions (#{useCaseAnalytics.IM}):
+          div.col-sm-6
+           input(type='text', name='im', id='im', class="form-control")
+         div.form-group
+          label(for="ct" class="col-sm-6 control-label") Number of Control Transactions (#{useCaseAnalytics.CT}):
+          div.col-sm-6
+           input(type='text', name='ct', id='ct', class="form-control")
+         div.form-group
+          label(for="eivk" class="col-sm-6 control-label") Number of external invocations (#{useCaseAnalytics.EIVK}):
+          div.col-sm-6
+           input(type='text', name='eivk', id='eivk', class="form-control")
+         div.form-group
+          label(for="ecll" class="col-sm-6 control-label") Number of external calls (#{useCaseAnalytics.ECLL}):
+          div.col-sm-6
+           input(type='text', name='ecll', id='ecll', class="form-control")
+         div.form-group
+          label(for="ccss" class="col-sm-6 control-label") Cyclomatic coplexity of structured scenarios (#{useCaseAnalytics.CCSS}):
+          div.col-sm-6
+           input(type='text', name='ccss', id='ccss', class="form-control")
+         div.form-group
+          label(for="it" class="col-sm-6 control-label") Number of transactions (#{useCaseAnalytics.IT}):
+          div.col-sm-6
+           input(type='text', name='it', id='it', class="form-control")
+         div.form-group
+          label(for="ilf" class="col-sm-6 control-label") Internal logical files (#{useCaseAnalytics.ILF}):
+          div.col-sm-6
+           input(type='text', name='ilf', id='ilf', class="form-control")
+         div.form-group
+          label(for="elf" class="col-sm-6 control-label") External logical files (#{useCaseAnalytics.ELF}):
+          div.col-sm-6
+           input(type='text', name='elf', id='elf', class="form-control")
+         div.form-group
+          label(for="ei" class="col-sm-6 control-label") External inputs (#{useCaseAnalytics.EI}):
+          div.col-sm-6
+           input(type='text', name='ei', id='ei', class="form-control")
+         div.form-group
+          label(for="eo" class="col-sm-6 control-label") External outputs(#{useCaseAnalytics.EO}):
+          div.col-sm-6
+           input(type='text', name='eo', id='eo', class="form-control")
+         div.form-group
+          label(for="eq" class="col-sm-6 control-label") External inquiries (#{useCaseAnalytics.EQ}):
+          div.col-sm-6
+           input(type='text', name='eq', id='eq', class="form-control")
+         div.form-group
+          label(for="ph" class="col-sm-6 control-label") Effort (person-hours) (#{useCaseAnalytics.PH}):
+          div.col-sm-6
+           input(type='text', name='ph', id='ph', class="form-control")
            input(type='hidden', name='use-case-id', value='#{useCaseAnalytics._id}')
            input(type='hidden', name='model-id', value='#{modelId}')
-          div
-           button(id='use-case-evaluation-form-submit-button') Submit
+         div.form-group
+          div.col-sm-6.col-sm-offset-6
+           button.btn.btn-primary(id='use-case-evaluation-form-submit-button') Submit
         div
           a(id='delete-use-case-btn' href='deleteUseCase?useCase_id=#{useCaseAnalytics._id}&model_id=#{modelId}') Delete Model
   div.clear
