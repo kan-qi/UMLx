@@ -193,6 +193,12 @@ function model_evaluation_upload_fnc(){
 
 function query_sub_model_detail_func(){
 	var url = $(this).attr("href");
+	var breadCrumb = $('ol.breadcrumb')[0];
+	if (breadCrumb.children.length == 3) {
+		breadCrumb.children[2].innerText = this.innerText;
+	} else {
+		breadCrumb.innerHTML += "<li class='breadcrumb-item active'>"+ this.innerText +"</li>"
+	}
 	console.log(url);
 	$.ajax({
 		type : 'GET',
