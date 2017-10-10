@@ -1,10 +1,10 @@
 -var model_id = modelAnalytics._id
 -var modelName = modelAnalytics.Name
 -var repoID = repo_id
-include breadcrumb
 div.block.panel.panel-default
   div.panel-heading
-   h3.panel-title.analytics-title.pull-left Model Analytics
+   div.panel-title.analytics-title.pull-left
+    include breadcrumb
    if modelAnalytics
     div.model-analytics-ops.pull-right
      div.dropdown

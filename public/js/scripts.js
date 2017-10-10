@@ -64,6 +64,13 @@ function query_model_detail_func(){
 			console.log(response);
 			$("#display-panel").html("");
 			$("#display-panel").append(response);
+			$('.model-info-content a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				var breadCrumb = $('ol.breadcrumb')[0];
+				if (breadCrumb.children.length == 3) {
+					breadCrumb.removeChild(breadCrumb.children[2]);
+				}
+				console.dir(e);
+			});
 		},
 		error : function() {
 			console.log("fail");
@@ -99,6 +106,9 @@ function query_model_usecase_func(modelId) {
 //	console.log(modelId);
 //	var url = $(this).attr("href");
 //	console.log(url);
+	if ($('.model-info-content a[href="#usecase-analysis"]').parent()[0].classList.contains('active')) {
+		return;
+	}
 	console.log('query_model_usecase_func');
 	$.ajax({
 		type : 'GET',
@@ -201,7 +211,12 @@ function query_sub_model_detail_func(){
 //			console.log(response);
 			$("#use-case-detail-panel").html("");
 			$("#use-case-detail-panel").append(response);
-			$('#use-case-title').html('-'+$(response).data('use-case-title'));
+			var breadCrumb = $('ol.breadcrumb')[0];
+			if (breadCrumb.children.length == 3) {
+				breadCrumb.children[2].innerText = $(response).data('use-case-title');
+			} else {
+				breadCrumb.innerHTML += "<li class='breadcrumb-item active'>"+ $(response).data('use-case-title') +"</li>"
+			}
 		},
 		error : function() {
 			console.log("fail");
@@ -638,24 +653,24 @@ $(document).ready(function() {
 	$(document).on('click','.dumpEvaluationData', request_display_data);
 	$(document).on('click','.dumpAnalyticsData', request_display_data);
 	
-	 $(document).on('click', '#estimator-selector-box .dropdown-menu li a', function(){
+	$(document).on('click', '#estimator-selector-box .dropdown-menu li a', function(){
 //		 alert($(this).closest('.dropdown').find('.btn').text());
-	      $(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
-	      $('#estimator-selector-box').data('estimator', $(this).data('estimator'));
-	   });
-	 
-	 $(document).on('click', '#model-selector-box .dropdown-menu li a', function(){
-//		  alert($(this).closest('.dropdown').find('.btn').text());
-		  $(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
-		  $('#model-selector-box').data('model', $(this).data('model'));
-	      
-	   });
+		$(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
+		$('#estimator-selector-box').data('estimator', $(this).data('estimator'));
+	});
 	
-	 $('.nav.nav-tabs').tab();
-	 
-	 $('form#sign-up').submit(signUpFormSubmit);
-	 $('form#login-form').submit(loginFormSubmit);
-	 $('[data-toggle="popover"]').popover({'html':true});
+	$(document).on('click', '#model-selector-box .dropdown-menu li a', function(){
+//		  alert($(this).closest('.dropdown').find('.btn').text());
+		$(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
+		$('#model-selector-box').data('model', $(this).data('model'));
+		
+	});
+
+	$('.nav.nav-tabs').tab();
+	
+	$('form#sign-up').submit(signUpFormSubmit);
+	$('form#login-form').submit(loginFormSubmit);
+	$('[data-toggle="popover"]').popover({'html':true});
 //	drawChartBySVG();
 });
 
