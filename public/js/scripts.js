@@ -37,6 +37,34 @@ function model_file_upload_fnc() {
 	return false;
 }
 
+function model_file_update_fnc(){
+	var formData = new FormData($('#model-file-update-submit-form')[0]);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$.ajax({
+		type : 'POST',
+		url : "uploadUMLFileVersion",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#main-panel").html("");
+			$("#main-panel").append(response);
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error submitting comment");
+		}
+	});
+
+	return false;
+	
+}
+
 function query_exist_models_fnc(projectId) {
 	$.ajax({
 		type : 'GET',
@@ -661,6 +689,15 @@ $(document).ready(function() {
 
 function openDialogueBox(repoId) {
 	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	//$('#overlay-frame').addClass('upload');
+	$('#dialog-frame').modal();
+	$("#dialog-frame .modal-title").html("Upload File");
+	$("#dialog-frame .modal-body").html("");
+	$("#dialog-frame .modal-body").html(form);  	
+}
+
+function openDialogueBoxForModelFileUpdate(repoId, modelId) {
+	var form = '<form id="model-file-update-submit-form" onsubmit="model_file_update_fnc(); return false;"><div class="form-group"><input type="file" name="uml-file" id="uml-file" class="form-control"></div><div> <p>The supported file type: .xml </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"><input type="hidden" id="model-id" name="model-id" value="'+modelId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
 	//$('#overlay-frame').addClass('upload');
 	$('#dialog-frame').modal();
 	$("#dialog-frame .modal-title").html("Upload File");
