@@ -16,6 +16,12 @@ div.block.panel.panel-default
         li
           a.dumpAnalyticsData.dropdown-item(href='evaluateModelForUseCases?model_id=#{modelAnalytics._id}') Evaluation For Use Cases
      div.dropdown
+      button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
+        span.caret
+      ul.dropdown-menu
+        li
+          a.dropdown-item(id='update-model' onclick="openDialogueBoxForModelFileUpdate('#{repoID}','#{model_id}');" href="javaScript:void(0);") Model Version
+     div.dropdown
       button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
         span.caret
       ul.dropdown-menu
