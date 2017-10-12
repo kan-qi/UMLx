@@ -5,6 +5,8 @@
 	var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
 	var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 	var umlFileManager = require("./UMLFileManager.js");
+	var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
+	var config = require('./config'); // get our config file
 	
 	function getModelQuery(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
@@ -320,8 +322,62 @@
 			    });
 			});
 	}
+	
+	function createRepo(username,pwd,callbackfunc){
+		MongoClient.connect(url, function(err, db) {
+			 if (err) throw err;
+			  
+			// check if a user exists with same email or username --> in such a case throw an error
+            var queryCheckExisting = { 
+                                            "username":username,
+                                            "password":pwd
+                                        
+            }
+            
+            var existingUsers  = db.collection("users").findOne(queryCheckExisting,function(err,user){
+                if (err) throw err;
+                
+                if(user){
+                    // found an existing user 
+                    var userId = user._id;
+                    
+                    var repoInfo = {};
+  				    db.collection("repo_collection").insertOne(repoInfo, function(err, result) {
+  				    if (err) throw err;
+  				    console.log("1 record inserted");
+  				   
+  				    var repoId = repoInfo._id;
+  				    repoInfo.models = [];
+  					repoInfo.outputDir = "public/output/repo"+repoId;
+  					repoInfo.accessDir = "output/repo"+repoId;
+  					repoInfo.RepoAnalytics = umlModelAnalyzer.initRepoAnalytics(repoInfo);
+  				    var o_id = new mongo.ObjectID(repoId);
+  				    
+  	   			  	db.collection("repo_collection").update({_id:o_id}, repoInfo, function(){
+  	   			  		
+  	   			  		var user_o_id = new mongo.ObjectID(userId)
+  	   			  		user.repoId = repoId;
+  	   			  		// when u create a repo assign it to the specified user
+  	   			  		db.collection("users").update({_id: user_o_id}, user , function(){
+  	   			  			db.close();
+  	   			  			callbackfunc(repoInfo);
+  	   			  		})
+  					    
+  	   			  	});
+  	   			  	
+  				  });
+                
+                } else{
+                    console.log('Invalid Username and password combination');
+                    db.close();
+                }
+                
+            });
+ 
+			});
+	}
     
-    function newUserSignUp(email,username,pwd,callback){
+    function newUserSignUp(email,username,pwd,isEnterprise ,callback){
         
         MongoClient.connect(url, function(err, db) {
 			  if (err) throw err;
@@ -339,19 +395,46 @@
                 
                 if(data){
                     // found an existing user 
-                    console.log('User already exists');
                     db.close();
-                    callback(0,"Username or email already exists");
+                    var result = {
+              	          success: false,
+              	          message: 'Username or email already exists',
+                    	};
+                    callback(result);
+                   
                     return;
                     
                 } else{
-                    
-                     var userInfo = {"username" : username , "email" :email , "password" :pwd}
+                	
+                     var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise }
                      db.collection("users").insertOne(userInfo, function(err, result) {
                             if (err) throw err;
-                            console.log("1 record inserted");
-                            db.close();	
-                            callback(1,"Successfully signed up");
+              				db.close();	
+                            
+                            // since the user successfully signed up create a repo for this user
+                            if(userInfo.isEnterprise){
+                            	createRepo(username,pwd,function(repo){
+                            		console.log('created a new repo '+repo._id);
+                            	});
+                            } 
+                            
+                            var payload = {
+		                    		userId : userInfo._id,
+		                    		userName : userInfo.username,
+		                    		userEmail : userInfo.email
+		                    };
+		                    	        
+		                    var token = jwt.sign(payload, config.secret, {
+		                    	expiresIn : 60*60*24 // expires in 24 hours
+		                    });
+		
+		                   // return the information including token as JSON
+		                    var result = {
+		                    	          success: true,
+		                    	          message: 'Successfully signed up',
+		                    	          token: token
+		                    };
+		                    callback(result);
                      });
                 
                 }
@@ -362,38 +445,131 @@
     }
 	
     function validateUserLogin(username,pwd,callback){
-        
-      //  if(email && email.lenght() > 0 && username && username.length()>0 && pwd && pwd.lenght()>0){}
-        MongoClient.connect(url, function(err, db) {
+
+    	MongoClient.connect(url, function(err, db) {
 			  	if (err) throw err;
 			  
-            // check if a user exists with same email or username --> in such a case throw an error
+			  	// check if a user exists with same email or username --> in such a case throw an error
             	var queryCheckExisting = { 
                                             "username":username,
                                             "password":pwd
-                                        
-                                      }
+            							 }
             
-            var existingUsers  = db.collection("users").findOne(queryCheckExisting,function(err,data){
-                if (err) throw err;
+            	var existingUsers  = db.collection("users").findOne(queryCheckExisting,function(err,data){
+            			
+            							if (err) throw err;
+            							if(data){
+            								
+								                    // found an existing user 
+								                    db.close();
+								                  
+								                    // generate a token and pass it as response
+								                    var payload = {
+								                    		userId : data._id,
+								                    		userName : data.username,
+								                    		userEmail : data.email
+								                    };
+								                    	        
+								                    var token = jwt.sign(payload, config.secret, {
+								                    	expiresIn : 60*60*24 // expires in 24 hours
+								                    });
+								
+								                   // return the information including token as JSON
+								                    var result = {
+								                    	          success: true,
+								                    	          message: 'Successful Authentication',
+								                    	          token: token
+								                    };
+								                    callback(result);
                 
-                if(data){
-                    // found an existing user 
-                    console.log('User exists');
-                    db.close();
-                    callback(1,"Successful Authentication");
-                
-                } else{
-                    console.log('Invalid Username and password combination');
-                    db.close();
-                    callback(0,"Invalid Username and password combination ")
-                    
-                }
-                
-            });
+            							} else{
+								                    console.log('Invalid Username and password combination');
+								                    db.close();
+								                    var result = {
+								                    	  success: false,
+								              	          message: 'Invalid Username and password combination ',
+								                    }
+								                    callback(result);
+								                    
+								        }
+            	});
              
         });
     }
+    
+    function pushModelInfoVersion(modelId, repoId, modelInfoVersion, callbackfunc){
+    	queryModelInfo(modelId, repoId, function(modelInfo){
+			//to update the current version to the newly uploaded model file, and put the older versions into the arrays of versions.
+			if(!modelInfo){
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+				return;
+			}
+			modelInfoVersion._id = modelInfo._id;
+			modelInfoVersion.umlModelName = modelInfo.umlModelName;//copy the model identifier from the original model Info into the new model version, to be the new model info, which is the head of the model versions.
+			modelInfoVersion.ModelEmpirics = JSON.parse(JSON.stringify(modelInfo.ModelEmpirics)); //copy the model empirics from the older model version. User can update later.
+			var oldVersions = modelInfo.Versions; //include the previous versions for the model file.
+			if(!oldVersions){
+				oldVersions = [];
+			}
+			delete modelInfo.Versions;
+			delete modelInfo._id;
+			delete modelInfo.umlModelName;
+			oldVersions.push(modelInfo);
+			//remove the versions property for the old version. to avoid nesting problem.
+			modelInfoVersion.Versions = oldVersions;
+			console.log(modelInfoVersion);
+			updateModelInfo(modelInfoVersion, repoId, function(modelInfoVersion){
+				if(callbackfunc){
+					callbackfunc(modelInfoVersion);
+				}
+			});
+		});
+    }
+    
+	function popModelInfoVersion(modelId, repoId, callbackfunc){
+		queryModelInfo(modelId, repoId, function(modelInfo){
+			//to update the current version to the newly uploaded model file, and put the older versions into the arrays of versions.
+			if(!modelInfo && !modelInfo.Versions){
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+				return;
+			}
+			
+			var olderVersion = modelInfo.Versions.pop(); //include the previous versions for the model file.
+			olderVersion.Versions = modelInfo.Versions;
+			olderVersion._id = modelInfo._id;
+			olderVersion.umlModelName = modelInfo.umlModelName;
+			console.log(olderVersion);
+//			console.log(modelInfo);
+			updateModelInfo(olderVersion, repoId, function(olderVersion){
+				if(callbackfunc){
+					callbackfunc(olderVersion);
+				}
+			});
+		});
+	}
+	
+	/*
+	 * if modelInfo is not null, create an model info with the id and name in modelInfo, so as to create an version of the model Info
+	 */
+	function initModelInfo(umlModelInfo, umlModelName, umlModelInfoBase){
+		if(umlModelInfoBase){
+			umlModelInfo._id = umlModelInfoBase._id;
+			umlModelInfo.umlModelName = umlModelInfoBase.umlModelName;
+			return umlModelInfo;
+		}
+		 umlModelInfo._id = umlModelInfo.fileId + Date.now();
+		 if(!umlModelName || umlModelName === ''){
+			 umlModelName = umlModelInfo.fileId;
+		 }
+
+		 umlModelInfo.umlModelName = umlModelName;
+		 
+		 return umlModelInfo;
+	}
     
     
 	module.exports = {
@@ -409,28 +585,8 @@
 
 			});
 		},
-		createRepo: function(callbackfunc){
-			MongoClient.connect(url, function(err, db) {
-				  if (err) throw err;
-				  var repoInfo = {};
-				  db.collection("repo_collection").insertOne(repoInfo, function(err, result) {
-				    if (err) throw err;
-				    console.log("1 record inserted");
-//				    console.log(repoInfo);
-				    var repoId = repoInfo._id;
-				    repoInfo.models = [];
-					repoInfo.outputDir = "public/output/repo"+repoId;
-					repoInfo.accessDir = "output/repo"+repoId;
-					repoInfo.RepoAnalytics = umlModelAnalyzer.initRepoAnalytics(repoInfo);
-				    var o_id = new mongo.ObjectID(repoId);
-	   			  	db.collection("repo_collection").update({_id:o_id}, repoInfo, function(){
-					    db.close();
-					    callbackfunc(repoInfo);
-	   			  	});
-	   			  	
-				  });
-				});
-		},
+		createRepo: createRepo,
+		
 		queryModelAnalytics: queryModelAnalytics,
 		queryModelInfo: queryModelInfo,
 		deleteModelInfo : function(repoId, modelInfo) {
@@ -498,8 +654,11 @@
 				 	}
 			 });
 		},
+		pushModelInfoVersion:pushModelInfoVersion,
+		popModelInfoVersion:popModelInfoVersion,
         newUserSignUp : newUserSignUp,
-        validateUserLogin : validateUserLogin
+        validateUserLogin : validateUserLogin,
+        initModelInfo: initModelInfo, //create model info
         
 	}
 }())

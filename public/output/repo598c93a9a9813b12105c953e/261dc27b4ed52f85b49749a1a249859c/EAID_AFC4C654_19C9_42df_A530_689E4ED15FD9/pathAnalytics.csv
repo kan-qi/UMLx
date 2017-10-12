@@ -1,8 +1,0 @@
-id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
-1,Customer->ticket input page->vidate ticket->invalid ticket number,EQ,CTRL|INT,4,undefined,1,0,1,Request and Pay,Request and Pay
-2,Customer->ticket input page->vidate ticket->error when submitting,EQ,CTRL|INT,4,undefined,1,0,1,Request and Pay,Request and Pay
-3,Customer->ticket input page->vidate ticket->payment page,EQ,CTRL|INT,4,undefined,1,0,1,Request and Pay,Request and Pay
-4,Customer->ticket input page->vidate ticket->ticket,EI,CTRL|DM|EI,4,undefined,1,1,1,Request and Pay,Request and Pay
-5,Customer->payment page->make payment->Thirdparty payment,FUNC_NA,CTRL|EXTIVK,4,undefined,1,0,2,Request and Pay,Request and Pay
-6,Thirdparty payment->update request queue->alert successful in submission->successful payment alert,FUNC_NA,CTRL|EXTCLL|INT,4,undefined,2,0,1,Request and Pay,Request and Pay
-7,Thirdparty payment->update request queue->request queue,FUNC_NA,CTRL|EXTCLL|DM|EI,3,undefined,1,1,1,Request and Pay,Request and Pay
