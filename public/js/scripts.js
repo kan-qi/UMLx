@@ -37,6 +37,34 @@ function model_file_upload_fnc() {
 	return false;
 }
 
+function model_file_update_fnc(){
+	var formData = new FormData($('#model-file-update-submit-form')[0]);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$.ajax({
+		type : 'POST',
+		url : "uploadUMLFileVersion",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#main-panel").html("");
+			$("#main-panel").append(response);
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error submitting comment");
+		}
+	});
+
+	return false;
+	
+}
+
 function query_exist_models_fnc(projectId) {
 	$.ajax({
 		type : 'GET',
@@ -64,6 +92,13 @@ function query_model_detail_func(){
 			console.log(response);
 			$("#display-panel").html("");
 			$("#display-panel").append(response);
+			$('.model-info-content a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+				var breadCrumb = $('ol.breadcrumb')[0];
+				if (breadCrumb.children.length == 3) {
+					breadCrumb.removeChild(breadCrumb.children[2]);
+				}
+				console.dir(e);
+			});
 		},
 		error : function() {
 			console.log("fail");
@@ -95,19 +130,21 @@ function delete_use_case_func(){
 	return false;
 }
 
-function query_model_analytics_func(){
-	var modelId = $(this).closest('.card').data('model-id');
+function query_model_usecase_func(modelId) {
 //	console.log(modelId);
 //	var url = $(this).attr("href");
 //	console.log(url);
-	console.log('query_model_analytics_func');
+	if ($('.model-info-content a[href="#usecase-analysis"]').parent()[0].classList.contains('active')) {
+		return;
+	}
+	console.log('query_model_usecase_func');
 	$.ajax({
 		type : 'GET',
-		url : 'queryModelAnalytics?model_id='+modelId,
+		url : 'requestModelInfo?model_id='+modelId,
 		success : function(response) {
 //			console.log(response);
-			$("#display-panel").html("");
-			$("#display-panel").append(response);
+			$("#model-usecase-analysis").html("");
+			$("#model-usecase-analysis").append(response);
 		},
 		error : function() {
 			console.log("fail");
@@ -202,7 +239,12 @@ function query_sub_model_detail_func(){
 //			console.log(response);
 			$("#use-case-detail-panel").html("");
 			$("#use-case-detail-panel").append(response);
-			$('#use-case-title').html('-'+$(response).data('use-case-title'));
+			var breadCrumb = $('ol.breadcrumb')[0];
+			if (breadCrumb.children.length == 3) {
+				breadCrumb.children[2].innerText = $(response).data('use-case-title');
+			} else {
+				breadCrumb.innerHTML += "<li class='breadcrumb-item active'>"+ $(response).data('use-case-title') +"</li>"
+			}
 		},
 		error : function() {
 			console.log("fail");
@@ -242,11 +284,11 @@ function dump_model_evaluation_for_use_cases_func(){
 		success : function(response) {
 //			console.log(response);
 	                var parsedCSV = d3.csvParseRows(response);
-	                
+	                $('.modal-title')[0].innerHTML = "Report";
 	                $("#model-evaluation-dump-display").html("");
 	                var container = d3.select("#model-evaluation-dump-display")
-	                    .append("table")
-
+	                    .append("table").attr('class', 'table table-striped table-bordered table-hover')
+						.append("tbody")
 	                    .selectAll("tr")
 	                        .data(parsedCSV).enter()
 	                        .append("tr")
@@ -254,7 +296,7 @@ function dump_model_evaluation_for_use_cases_func(){
 	                    .selectAll("td")
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
-	                        .text(function(d) { return d; });
+	                        .text(function(d) { return d == "undefined" ? "-" : d; });
 			
 		},
 		error : function() {
@@ -278,11 +320,12 @@ function request_display_data(){
 		success : function(response) {
 //			console.log(response);
 					
-	                var parsedCSV = d3.csvParseRows(response);
+					var parsedCSV = d3.csvParseRows(response);
+					$('.modal-title')[0].innerHTML = "Report";
 	                $("#overlay-frame .modal-body").html("");
 	                var container = d3.select("#overlay-frame .modal-body")
-	                    .append("table")
-
+	                    .append("table").attr('class', 'table table-striped table-bordered table-hover')
+						.append("tbody")
 	                    .selectAll("tr")
 	                        .data(parsedCSV).enter()
 	                        .append("tr")
@@ -290,7 +333,7 @@ function request_display_data(){
 	                    .selectAll("td")
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
-	                        .text(function(d) { return d; });
+	                        .text(function(d) { return d == "undefined" ? "-" : d; });
 			
 		},
 		error : function() {
@@ -629,7 +672,6 @@ $(document).ready(function() {
 //	$(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
 	$(document).on('click','a.model-title', query_model_detail_func);
 	$(document).on('click','.request-repo-analytics', query_repo_analytics_func);
-	$(document).on('click','.btn.model-analytics', query_model_analytics_func);
 	$(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
 	$(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);
 	$(document).on('click','#query-model-btn', query_estimation_models_func);
@@ -639,29 +681,38 @@ $(document).ready(function() {
 	$(document).on('click','.dumpEvaluationData', request_display_data);
 	$(document).on('click','.dumpAnalyticsData', request_display_data);
 	
-	 $(document).on('click', '#estimator-selector-box .dropdown-menu li a', function(){
+	$(document).on('click', '#estimator-selector-box .dropdown-menu li a', function(){
 //		 alert($(this).closest('.dropdown').find('.btn').text());
-	      $(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
-	      $('#estimator-selector-box').data('estimator', $(this).data('estimator'));
-	   });
-	 
-	 $(document).on('click', '#model-selector-box .dropdown-menu li a', function(){
-//		  alert($(this).closest('.dropdown').find('.btn').text());
-		  $(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
-		  $('#model-selector-box').data('model', $(this).data('model'));
-	      
-	   });
+		$(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
+		$('#estimator-selector-box').data('estimator', $(this).data('estimator'));
+	});
 	
-	 $('.nav.nav-tabs').tab();
-	 
-	 $('form#sign-up').submit(signUpFormSubmit);
-	 $('form#login-form').submit(loginFormSubmit);
-	 $('[data-toggle="popover"]').popover({'html':true});
+	$(document).on('click', '#model-selector-box .dropdown-menu li a', function(){
+//		  alert($(this).closest('.dropdown').find('.btn').text());
+		$(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
+		$('#model-selector-box').data('model', $(this).data('model'));
+		
+	});
+
+	$('.nav.nav-tabs').tab();
+	
+	$('form#sign-up').submit(signUpFormSubmit);
+	$('form#login-form').submit(loginFormSubmit);
+	$('[data-toggle="popover"]').popover({'html':true});
 //	drawChartBySVG();
 });
 
 function openDialogueBox(repoId) {
 	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	//$('#overlay-frame').addClass('upload');
+	$('#dialog-frame').modal();
+	$("#dialog-frame .modal-title").html("Upload File");
+	$("#dialog-frame .modal-body").html("");
+	$("#dialog-frame .modal-body").html(form);  	
+}
+
+function openDialogueBoxForModelFileUpdate(repoId, modelId) {
+	var form = '<form id="model-file-update-submit-form" onsubmit="model_file_update_fnc(); return false;"><div class="form-group"><input type="file" name="uml-file" id="uml-file" class="form-control"></div><div> <p>The supported file type: .xml </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"><input type="hidden" id="model-id" name="model-id" value="'+modelId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
 	//$('#overlay-frame').addClass('upload');
 	$('#dialog-frame').modal();
 	$("#dialog-frame .modal-title").html("Upload File");

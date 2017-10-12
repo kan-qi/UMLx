@@ -1,8 +1,0 @@
-id,path,functional,transactional,path_length,diagram,useCase
-1,Manager->view agent activities link->query agent activies->list of agents with status,EQ,CTRL|INT,undefined,View call los and listen to call recordings,View call los and listen to call recordings
-2,Manager->view agent activities link->query agent activies->agent,EI,CTRL|DM|EI,undefined,View call los and listen to call recordings,View call los and listen to call recordings
-3,Manager->list of agents with status->connect to Twilio API for agent's call records->Twilio API,FUNC_NA,CTRL|EXTIVK,undefined,View call los and listen to call recordings,View call los and listen to call recordings
-4,Manager->list of agents with status->connect to Twilio API for call's info->Twilio API,FUNC_NA,CTRL|EXTIVK,undefined,View call los and listen to call recordings,View call los and listen to call recordings
-5,Twilio API->receive call information->call detailed information,FUNC_NA,CTRL|EXTCLL|INT,undefined,View call los and listen to call recordings,View call los and listen to call recordings
-6,Twilio API->download call records->call records,FUNC_NA,CTRL|EXTCLL|DM|EI,undefined,View call los and listen to call recordings,View call los and listen to call recordings
-7,Twilio API->download call records->call record downloaded message,FUNC_NA,CTRL|EXTCLL|INT,undefined,View call los and listen to call recordings,View call los and listen to call recordings

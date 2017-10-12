@@ -14,6 +14,7 @@ var jade = require('jade');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
+var sleep = require('sleep');
 
 
 var storage = multer.diskStorage({
@@ -153,19 +154,20 @@ app.use(function(req, res, next) {
 
 
 app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
-	console.log("/uploadUMLFile");
-	console.log(req.files['uml-file'][0].path);
-	console.log(req.body['uml-model-name']);
-	console.log(req.body['uml-model-type']);
-	console.log(req.body['repo-id']);
+	console.log(req.body);
 	var umlFilePath = req.files['uml-file'][0].path;
 	var umlModelName = req.body['uml-model-name'];
 	var umlModelType = req.body['uml-model-type'];
 	var repoId = req.body['repo-id'];
+	var uuidVal = req.body['uuid'];
+	var formInfo = req.body;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, umlModelName);
-//		console.log('umlFileInfo');
-		umlModelAnalyzer.extractModelInfo(umlFileInfo, function(modelInfo){
+		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
+//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName);
+		console.log('updated model info');
+		console.log(modelInfo);
+		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 //			console.log(modelInfo);
 			umlModelAnalyzer.analyseModel(modelInfo, function(){
@@ -183,6 +185,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		});
 	});
 })
+
 
 //This funtion is same as loadEmpiricalUsecaseDataForRepo, except we just take file from user input and pass it down.
 app.post('/uploadUseCaseFile',
@@ -202,7 +205,40 @@ function(req, res) {
 			});
 		}, usecaseFilePath);
 	});
+})
 
+/*
+ * To integrate the model version control system, to reflect the evolution of the architecture for certain process.
+ */
+app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}, {name:'model-id', maxCount:1}]), function (req, res){
+	console.log("/uploadUMLFileVersion");
+	var umlFilePath = req.files['uml-file'][0].path;
+	var umlModelType = req.body['uml-model-type'];
+	var modelId = req.body['model-id'];
+	var repoId = req.body['repo-id'];
+	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType);
+//		console.log('umlFileInfo');
+		umlModelInfoManager.queryModelInfo(modelId, userInfo.repoId, function(modelInfo){
+			var modelInfoVersion = umlModelInfoManager.initModelInfo(umlFileInfo, modelInfo.umlModelName, modelInfo)
+			umlModelAnalyzer.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
+			//update model analytics.
+//			console.log(modelInfo);
+			umlModelAnalyzer.analyseModel(modelInfoVersion, function(){
+				console.log("model analysis complete");
+			});
+			
+			umlModelInfoManager.pushModelInfoVersion(modelId, repoId, modelInfoVersion, function(modelInfo){
+//				console.log(modelInfo);
+				if(!modelInfo){
+					res.end('model doesn\'t exist!');
+				}
+				res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:userInfo.repoId});
+			});
+			
+		});
+		});
+	});
 })
 
 
@@ -237,7 +273,7 @@ app.get('/reanalyseModel', function (req, res){
 				umlModelInfoManager.queryModelAnalytics(modelId, repoId, function(modelAnalytics, modelInfo){
 					console.log("=============repoAnalytics==========");
 //					console.log(repoAnalytics);
-					res.render('modelAnalytics', {modelAnalytics:modelAnalytics});
+					res.render('modelAnalytics', {modelAnalytics:modelAnalytics, repo_id: repoId});
 				});
 			});
 		});
@@ -404,7 +440,7 @@ app.post('/uploadModelEvaluation', upload.fields([{name:'ueucw',maxCount:1},{nam
 		modelInfo.ModelAnalytics = modelAnalytics;
 		umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
 //			console.log(modelInfo.ModelAnalytics);
-			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics});
+			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id: repoId});
 		});
 	});
 	
@@ -423,12 +459,13 @@ app.get('/queryExistingModelsTest', function(req, res){
 
 app.get('/queryModelAnalytics', function(req, res){
 	var modelId = req.query.model_id;
-	umlModelInfoManager.queryModelAnalytics(modelId, req.userInfo.repoId, function(modelAnalytics){
-		//console.log('model Analytics');
+	umlModelInfoManager.queryModelAnalytics(modelId, userInfo.repoId, function(modelAnalytics, modelInfo){
+//		console.log('model Analytics');
+
 		//console.log(modelAnalytics);
-		
-		res.render('modelAnalytics', {modelAnalytics:modelAnalytics});
-	    });
+		console.log(modelInfo);
+		res.render('modelAnalytics', {modelAnalytics:modelAnalytics, repo_id:userInfo.repoId});
+	});
 //	var useCase = modelInfo.useCases[modelInfoId];
 
 })

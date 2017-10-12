@@ -498,6 +498,7 @@
         });
     }
     
+
     function queryUserInfo(userId, callbackfunc){
 		MongoClient.connect(url, function(err, db) {
 			  if (err) throw err;
@@ -516,6 +517,82 @@
 			});
 			
     }
+
+    function pushModelInfoVersion(modelId, repoId, modelInfoVersion, callbackfunc){
+    	queryModelInfo(modelId, repoId, function(modelInfo){
+			//to update the current version to the newly uploaded model file, and put the older versions into the arrays of versions.
+			if(!modelInfo){
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+				return;
+			}
+			modelInfoVersion._id = modelInfo._id;
+			modelInfoVersion.umlModelName = modelInfo.umlModelName;//copy the model identifier from the original model Info into the new model version, to be the new model info, which is the head of the model versions.
+			modelInfoVersion.ModelEmpirics = JSON.parse(JSON.stringify(modelInfo.ModelEmpirics)); //copy the model empirics from the older model version. User can update later.
+			var oldVersions = modelInfo.Versions; //include the previous versions for the model file.
+			if(!oldVersions){
+				oldVersions = [];
+			}
+			delete modelInfo.Versions;
+			delete modelInfo._id;
+			delete modelInfo.umlModelName;
+			oldVersions.push(modelInfo);
+			//remove the versions property for the old version. to avoid nesting problem.
+			modelInfoVersion.Versions = oldVersions;
+			console.log(modelInfoVersion);
+			updateModelInfo(modelInfoVersion, repoId, function(modelInfoVersion){
+				if(callbackfunc){
+					callbackfunc(modelInfoVersion);
+				}
+			});
+		});
+    }
+    
+	function popModelInfoVersion(modelId, repoId, callbackfunc){
+		queryModelInfo(modelId, repoId, function(modelInfo){
+			//to update the current version to the newly uploaded model file, and put the older versions into the arrays of versions.
+			if(!modelInfo && !modelInfo.Versions){
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+				return;
+			}
+			
+			var olderVersion = modelInfo.Versions.pop(); //include the previous versions for the model file.
+			olderVersion.Versions = modelInfo.Versions;
+			olderVersion._id = modelInfo._id;
+			olderVersion.umlModelName = modelInfo.umlModelName;
+			console.log(olderVersion);
+//			console.log(modelInfo);
+			updateModelInfo(olderVersion, repoId, function(olderVersion){
+				if(callbackfunc){
+					callbackfunc(olderVersion);
+				}
+			});
+		});
+	}
+	
+	/*
+	 * if modelInfo is not null, create an model info with the id and name in modelInfo, so as to create an version of the model Info
+	 */
+	function initModelInfo(umlModelInfo, umlModelName, umlModelInfoBase){
+		if(umlModelInfoBase){
+			umlModelInfo._id = umlModelInfoBase._id;
+			umlModelInfo.umlModelName = umlModelInfoBase.umlModelName;
+			return umlModelInfo;
+		}
+		 umlModelInfo._id = umlModelInfo.fileId + Date.now();
+		 if(!umlModelName || umlModelName === ''){
+			 umlModelName = umlModelInfo.fileId;
+		 }
+
+		 umlModelInfo.umlModelName = umlModelName;
+		 
+		 return umlModelInfo;
+	}
+    
+
     
 	module.exports = {
 		setupRepoStorage : function(callbackfunc) {
@@ -599,9 +676,13 @@
 				 	}
 			 });
 		},
+		pushModelInfoVersion:pushModelInfoVersion,
+		popModelInfoVersion:popModelInfoVersion,
+		initModelInfo: initModelInfo, //create model info
         newUserSignUp : newUserSignUp,
         validateUserLogin : validateUserLogin,
         queryUserInfo: queryUserInfo
+        
         
 	}
 }())
