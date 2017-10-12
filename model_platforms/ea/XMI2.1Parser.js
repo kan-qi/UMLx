@@ -5,7 +5,6 @@
 	var fs = require('fs');
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
-	var sequenceDiagramParser = require('./sequenceDiagramParser.js');
 
 	function extractModelComponents(parsedResult) {
 		var components = {};
@@ -319,13 +318,6 @@
 	}
 
 	module.exports = {
-		parseSequenceDiagram : function(file, callback) {
-
-			sequenceDiagramParser.readFile(sequenceDiagramParser.parseData,
-					function(data) {
-						console.log('the data of the graph', data);
-					});
-		},
 		extractClassDiagrams : function(file, func) {
 			fs
 					.readFile(
@@ -343,7 +335,6 @@
 							});
 		},
 		extractSequenceDiagrams : function(file, func) {
-
 		},
 		extractRobustnessDiagrams : function(file, func) {
 			fs
