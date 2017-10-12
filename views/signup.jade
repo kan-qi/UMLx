@@ -24,12 +24,16 @@ html
        br
        input.signUp(type='password', name='password', id='password')
        br
-       input(type='checkbox', name='enterpriseUser', id='enterpriseUser')
-       label.formLabel Enterprise user
-       br
+       if !uid
+        input(type='checkbox', name='enterpriseUser', id='enterpriseUser')
+        label.formLabel Enterprise user
+        br
+       else 
+        input(type='hidden', name='enterpriseUserId', id='enterpriseUserId', value=uid)
        input.btn.btn-primary.signUpButton(type='submit',value='Sign Up')
-       hr
-       p.toggleLoginSignUp Already have an account? 
-        a(href='/login') Login.
+       if !uid
+        hr
+        p.toggleLoginSignUp Already have an account? 
+         a(href='/login') Login.
        
        

@@ -377,7 +377,7 @@
 			});
 	}
     
-    function newUserSignUp(email,username,pwd,isEnterprise ,callback){
+    function newUserSignUp(email,username,pwd,isEnterprise ,enterpriseUserId, callback){
         
         MongoClient.connect(url, function(err, db) {
 			  if (err) throw err;
@@ -401,40 +401,41 @@
               	          message: 'Username or email already exists',
                     	};
                     callback(result);
-                   
                     return;
                     
                 } else{
                 	
                      var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise }
+                     if(enterpriseUserId!=''){
+                    			 userInfo.enterpriseUserId= enterpriseUserId;
+                     } 
+                     
                      db.collection("users").insertOne(userInfo, function(err, result) {
                             if (err) throw err;
               				db.close();	
                             
                             // since the user successfully signed up create a repo for this user
-                            if(userInfo.isEnterprise){
                             	createRepo(username,pwd,function(repo){
                             		console.log('created a new repo '+repo._id);
+                            		var payload = {
+        		                    		userId : userInfo._id,
+        		                    		userName : userInfo.username,
+        		                    		userEmail : userInfo.email
+        		                    };
+        		                    	        
+        		                    var token = jwt.sign(payload, config.secret, {
+        		                    	expiresIn : 60*60*24 // expires in 24 hours
+        		                    });
+        		
+        		                   // return the information including token as JSON
+        		                    var result = {
+        		                    	          success: true,
+        		                    	          message: 'Successfully signed up',
+        		                    	          token: token
+        		                    };
+        		                    callback(result);
                             	});
-                            } 
-                            
-                            var payload = {
-		                    		userId : userInfo._id,
-		                    		userName : userInfo.username,
-		                    		userEmail : userInfo.email
-		                    };
-		                    	        
-		                    var token = jwt.sign(payload, config.secret, {
-		                    	expiresIn : 60*60*24 // expires in 24 hours
-		                    });
-		
-		                   // return the information including token as JSON
-		                    var result = {
-		                    	          success: true,
-		                    	          message: 'Successfully signed up',
-		                    	          token: token
-		                    };
-		                    callback(result);
+                             
                      });
                 
                 }
@@ -497,6 +498,24 @@
         });
     }
     
+    function queryUserInfo(userId, callbackfunc){
+		MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+			  
+			  if(!mongo.ObjectId.isValid(userId)){
+				  	callbackfunc(null);
+			  }  else {
+				  var o_id = new mongo.ObjectID(userId);
+				  db.collection("users").findOne({_id:o_id}, {}, function(err, user) {
+					if (err) throw err;
+				    db.close();
+				    	callbackfunc(user);
+				  });  
+			  }
+			  
+			});
+			
+    }
     
 	module.exports = {
 		setupRepoStorage : function(callbackfunc) {
@@ -581,7 +600,8 @@
 			 });
 		},
         newUserSignUp : newUserSignUp,
-        validateUserLogin : validateUserLogin
+        validateUserLogin : validateUserLogin,
+        queryUserInfo: queryUserInfo
         
 	}
 }())
