@@ -240,6 +240,10 @@ html
               option 3
               option 4
               option 5
+          .form-group
+            label.control-label.col-xs-4(for='familiar-with-project') Familiar with the project model that is used
+            .col-xs-8
+              input#familiar-with-project.form-control(type='text', placeholder='Familiar with the project model that is used', name='familiar-with-project')
           input#uuid-page3(type='hidden', name='uuid-page3', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
@@ -249,10 +253,6 @@ html
         #page4.hidden
           .alert.alert-info
             | Project model file and documents
-          .form-group
-            label.control-label.col-xs-4(for='familiar-with-project') Familiar with the project model that is used
-            .col-xs-8
-              input#familiar-with-project.form-control(type='text', placeholder='Familiar with the project model that is used', name='familiar-with-project')
           .form-group
             label.control-label.col-xs-4(for='uml-file') Model File (file types: xml are supported)
             .col-xs-8
