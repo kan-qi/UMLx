@@ -702,12 +702,21 @@ $(document).ready(function() {
 //	drawChartBySVG();
 });
 
-function openDialogueBox(repoId) {
-	var form = '<form id="usecase-file-submit-form" onsubmit="usecase_file_upload_fnc(); return false;"><div class="form-group"><input type="file" name="usecase-file" id="usecase-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+function openDialogueBox(repoId, type) {
+	var formUseCase = '<form id="load-file-submit-form" onsubmit="load_file_upload_fnc('+type+'); return false;"><div class="form-group"><input type="file" name="usecase-file" id="upload-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	var formModel = '<form id="load-file-submit-form" onsubmit="load_file_upload_fnc('+type+'); return false;"><div class="form-group"><input type="file" name="model-file" id="upload-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
+	var formCOCOMO = '<form id="load-file-submit-form" onsubmit="load_file_upload_fnc('+type+'); return false;"><div class="form-group"><input type="file" name="COCOMO-file" id="upload-file" class="form-control"></div><div> <p>The supported file type: .csv </p><input type="hidden" id="repo-id" name="repo-id" value="'+repoId+'"></div><div><input type="submit" class="btn btn-primary"></div></form>';
 	//$('#overlay-frame').addClass('upload');
 	$('#dialog-frame').modal();
 	$("#dialog-frame .modal-title").html("Upload File");
 	$("#dialog-frame .modal-body").html("");
+	if (type == "1") {
+		form = formUseCase;
+	} else if( type == "2") {
+		form = formModel;
+	} else {
+		form = formCOCOMO;
+	}
 	$("#dialog-frame .modal-body").html(form);  	
 }
 
@@ -720,18 +729,26 @@ function openDialogueBoxForModelFileUpdate(repoId, modelId) {
 	$("#dialog-frame .modal-body").html(form);  	
 }
 
-function usecase_file_upload_fnc() {
-	if (!($('#usecase-file')[0].value)) {
+function load_file_upload_fnc(type) {
+	if (!($('#upload-file')[0].value)) {
 		alert("No files selected");
 		return;
 	}
-	var formData = new FormData($('#usecase-file-submit-form')[0]);
+	var formData = new FormData($('#load-file-submit-form')[0]);
 	//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
 	$('#dialog-frame .modal-footer .btn-default').click();
 	//$('#overlay-frame').removeClass('upload')
+	if (type == "1") {
+		url = "uploadUseCaseFile"
+	} else if( type == "2") {
+		url = "uploadModelFile";
+	} else {
+		url = "uploadCOCOMOFile";
+	}
+
 	$.ajax({
 		type : 'POST',
-		url : "uploadUseCaseFile",
+		url : url,
 		cache : false,
 		processData : false, // Don't process the files
 		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
@@ -740,7 +757,7 @@ function usecase_file_upload_fnc() {
 		success : function(response) {
 			console.log(response);
 			$("#main-panel").html("");
-			$("#main-panel").append($(response).children());
+			$("#main-panel").append($(response).children().splice(1,$(response).children().length));
 		},
 		error : function() {
 			// $("#commentList").append($("#name").val() + "<br/>" +

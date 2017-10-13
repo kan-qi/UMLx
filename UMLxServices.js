@@ -171,6 +171,41 @@ function(req, res) {
 	});
 })
 
+app.post('/uploadModelFile',
+upload.fields([{name:'model-file',maxCount:1}, {name:'repo-id', maxCount:1}]),
+function(req, res) {
+	console.log('/uploadModelFile');
+	var modelFilePath = req.files['model-file'][0].path;
+	var repoId = req.body['repo-id'];
+	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+		umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
+			if(!repo){
+				res.end('load error!');
+				return;
+			}
+			umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
+					res.redirect('/');
+			});
+			
+		}, modelFilePath);
+	});
+})
+
+app.post('/uploadCOCOMOFile',
+upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]),
+function(req, res) {
+	console.log('/uploadCOCOMOFile');
+	var COCOMOFilePath = req.files['COCOMO-file'][0].path;
+	var repoId = req.body['repo-id'];
+	res.end('<h1>function is not implemented');
+	// COCOMOCalculator.loadCOCOMOData(repoId, function(repoInfo){
+	// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
+	// 		console.log(modelInfo);
+	// 		res.redirect('/');
+	// 	});
+	// }, COCOMOFilePath);
+})
+
 /*
  * To integrate the model version control system, to reflect the evolution of the architecture for certain process.
  */
