@@ -36,8 +36,9 @@
 //		}
 //	}
 	
-	function loadModelEmpiricsForRepo(repoInfo, callbackfunction){
-			var ModelDataFilePath = repoInfo.outputDir+"/ModelDataLoad.csv";
+	function loadModelEmpiricsForRepo(repoInfo, callbackfunction, modelFile){
+			var ModelDataFilePath = modelFile ? modelFile :repoInfo.outputDir+"/ModelDataLoad.csv";
+			console.log('loadModelEmpiricsForRepo:', ModelDataFilePath);
 			umlFileManager.loadCSVFile(ModelDataFilePath, true, function(data){
 				var modelDataArray = {};
 				for(var i in data){
