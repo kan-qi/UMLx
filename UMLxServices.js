@@ -120,13 +120,7 @@ app.use(function(req, res, next) {
 
 app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
 	console.log(req.body);
-	var umlFilePath = req.files['uml-file'][0].path;
-	var umlModelName = req.body['uml-model-name'];
-	var umlModelType = req.body['uml-model-type'];
-	var repoId = req.body['repo-id'];
 	var formInfo = req.body;
-	var modelName = "UML_model_submission";
-	
 	umlModelInfoManager.saveSurveyData(formInfo);
 	return true;
 });
