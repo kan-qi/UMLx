@@ -22,8 +22,8 @@ html
       }
   body#upload-body
     .container
-      h2  Project Details 
-      form#model-file-submit-form.form-horizontal(novalidate='', onsubmit='model_file_upload_fnc()', action='/')
+      h2  Project Survey
+      form#model-file-submit-form.form-horizontal(novalidate='', onsubmit='model_survey_file_upload_fnc()', action='/')
         // Page1
         #page1
           .alert.alert-info
@@ -46,6 +46,14 @@ html
             label.control-label.col-xs-4(for='project-duration') Duration
             .col-xs-8
               input#project-duration.form-control(type='text', placeholder='Duration', name='project-duration')
+          .form-group
+            label.control-label.col-xs-4(for='organization-name') Organization/Personal Name
+            .col-xs-8
+              input#organization-name.form-control(type='text', placeholder='Organization Name or Personal Name', name='organization-name')
+          .form-group
+            label.control-label.col-xs-4(for='email') Contact Email
+            .col-xs-8
+              input#email.form-control(type='text', placeholder='Contact Email', name='email')
           input#uuid-page1(type='hidden', name='uuid-page1', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
