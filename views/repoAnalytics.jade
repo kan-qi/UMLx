@@ -50,7 +50,7 @@ div.block.panel.panel-default
         span(class="badge") #{repo.models.length}
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
-      if repoAnalytics
+      if false
        h3 Calculated:
        ul
         li
@@ -89,6 +89,43 @@ div.block.panel.panel-default
          span.statistical-item Number of External Outputs: #{repoAnalytics.EO}
         li
          span.statistical-item Number of Transactions: #{repoAnalytics.TN}
+      if repoAnalytics
+        div.col-sm-12.status-row
+          div.col-sm-3
+            div.blue-card.analytics-card
+              .col-sm-4.image-box
+                img(src="img/project.png", alt="")
+              .col-sm-8.text-box
+                h2 #{repo.models.length}
+                span Projects
+          div.col-sm-3
+            div.red-card.analytics-card
+              .col-sm-4.image-box
+                img(src="img/project.png", alt="")
+              .col-sm-8.text-box
+                h2 #{repo.models.length}
+                span Use Cases
+          div.col-sm-3
+            div.green-card.analytics-card
+              .col-sm-4.image-box
+                img(src="img/project.png", alt="")
+              .col-sm-8.text-box
+                h2 #{repo.models.length}
+                span Transactions
+          div.col-sm-3 
+            div.purple-card.analytics-card
+              .col-sm-4.image-box
+                img(src="img/project.png", alt="")
+              .col-sm-8.text-box
+                h2 #{repo.models.length}
+                span Classes
+        div.col-sm-12.scatter-plot-row
+          img(src="#{repoAnalytics.AccessDir}/charts/tendingplot.PNG" style="width:100%;")  
+        div.col-sm-12.chart-row  
+          .col-sm-6
+            img(src="#{repoAnalytics.AccessDir}/charts/project_distributions.png" style="width:100%;")
+          .col-sm-6 
+            img(src="#{repoAnalytics.AccessDir}/charts/piechart.svg" style="width:100%;")                        
      div.tab-pane.fade(id="repo_distributions")
       if repoAnalytics
        div(id="repo-stats-chart")
