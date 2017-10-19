@@ -113,6 +113,10 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 
 })
 
+app.get('/surveyProject', function(req, res){
+	res.render('surveyProject');	
+});
+
 
 //route middleware to verify a token
 app.use(function(req, res, next) {
@@ -157,6 +161,14 @@ app.use(function(req, res, next) {
 });
 
 
+app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
+	console.log(req.body);
+	var formInfo = req.body;
+	umlModelInfoManager.saveSurveyData(formInfo);
+	return true;
+});
+
+
 app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
 	console.log(req.body);
 	var umlFilePath = req.files['uml-file'][0].path;
@@ -173,7 +185,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		console.log(modelInfo);
 		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
-//			console.log(modelInfo);
+			console.log(modelInfo);
 			umlModelAnalyzer.analyseModel(modelInfo, function(){
 				console.log("model analysis complete");
 			});
@@ -790,6 +802,7 @@ app.get('/evaluateModelForUseCases', function(req, res){
 app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');	
 });
+
 
 
 app.get('/', function(req, res){

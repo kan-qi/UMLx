@@ -516,6 +516,17 @@
         });
     }
     
+    function saveSurveyData(surveyData){
+		MongoClient.connect(url, function(err, db) {
+			if (err) throw err;
+			databaseCollectionName = "UML_model_submission";
+			db.collection(databaseCollectionName).insertOne(surveyData, function(err, result) {
+				if (err) throw err;
+				console.log("1 record inserted");
+			});
+
+		});
+	}
 
     function queryUserInfo(userId, callbackfunc){
 		MongoClient.connect(url, function(err, db) {
@@ -720,8 +731,8 @@
         validateUserLogin : validateUserLogin,
         queryUserInfo: queryUserInfo,
         queryRepoIdsForAdmin:queryRepoIdsForAdmin,
-        queryRepoInfoForAdmin:queryRepoInfoForAdmin
-        
+        queryRepoInfoForAdmin:queryRepoInfoForAdmin,
+		saveSurveyData: saveSurveyData
         
 	}
 }())
