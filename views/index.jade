@@ -13,6 +13,7 @@ html
     script(type='text/javascript', src="js/scripts.js")
     
   body
+   include banner
    if message
     div.message-box
      p.message-text message:#{message}
@@ -25,7 +26,18 @@ html
         // Modal content
         .modal-content
             .modal-header
-                button.close(type='button', data-dismiss='modal') x
+                button.close(type='button', data-dismiss='modal') &#x2715;
+                h4.modal-title Modal Header
+            .modal-body
+                p Some text in the modal.
+            .modal-footer
+                button.btn.btn-default(type='button', data-dismiss='modal') Close
+    #dialog-frame.modal.fade(role='dialog')
+     .modal-dialog
+        // Modal content
+        .modal-content
+            .modal-header
+                button.close(type='button', data-dismiss='modal') &#x2715;
                 h4.modal-title Modal Header
             .modal-body
                 p Some text in the modal.

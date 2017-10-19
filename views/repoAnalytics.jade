@@ -1,5 +1,41 @@
+-var repoID = repoAnalytics._id
 div.block.panel.panel-default
-  div.block-title.panel-heading Repo Analytics
+  div.panel-heading
+   div.panel-title.analytics-title.pull-left
+    include breadcrumb
+   if repoAnalytics
+    div.repo-analytics-ops.pull-right
+      div.dropdown
+        button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Repo
+          span.caret
+        ul.dropdown-menu
+          li
+            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoAnalytics._id}&simulation=false&refresh=true') Evaluation For Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoAnalytics._id}&simulation=true&refresh=true') Evaluation For Models (simulation)
+          li
+            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForUseCases?repo_id=#{repoAnalytics._id}&simulation=false') Evaluation For Use Cases
+          li
+            a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoAnalytics._id}') Descriptive Distributions
+      div.dropdown
+        button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
+          span.caret
+        ul.dropdown-menu
+          li
+            a.dropdown-item(id="open_btn" onclick="openDialogueBox('#{repoAnalytics._id}', '1');" href="javaScript:void(0);") Empirical Data For Use Cases
+          li
+            a.dropdown-item(onclick="openDialogueBox('#{repoAnalytics._id}', '2');" href="javaScript:void(0);") Empirical Data For Models
+          li
+            a.dropdown-item(onclick="openDialogueBox('#{repoAnalytics._id}', '3');" href="javaScript:void(0);") COCOMO Data
+      div.dropdown
+          button.btn.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
+            span.caret
+          ul.dropdown-menu
+            li
+              a.request-repo-analytics.dropdown-item(href='queryRepoAnalytics?repo_id=#{repoAnalytics._id}&refresh=true') Reanalyse Repo
+            li
+              a.dropdown-item(href='reloadRepo?repo_id=#{repoAnalytics._id}') Reload Repo
+   div.clearFix
   div.panel-body(id="repo-stats-chart")
    div.repo-info-content
     ul.nav.nav-tabs
@@ -9,6 +45,9 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#repo_distributions') Distributions
      li
       a(data-toggle='tab', href='#repo_estimation') Estimation
+     li
+      a(data-toggle='tab', href='#project_list') Projects 
+        span(class="badge") #{repo.models.length}
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
       if repoAnalytics
@@ -50,25 +89,6 @@ div.block.panel.panel-default
          span.statistical-item Number of External Outputs: #{repoAnalytics.EO}
         li
          span.statistical-item Number of Transactions: #{repoAnalytics.TN}
-       div.repo-analytics-ops
-         div
-          a.dumpEvaluationData(href='evaluateRepoForModels?repo_id=#{repoAnalytics._id}&simulation=false&refresh=true') Dump Repo Evaluation For Models
-         div
-          a.dumpEvaluationData(href='evaluateRepoForModels?repo_id=#{repoAnalytics._id}&simulation=true&refresh=true') Dump Repo Evaluation For Models (simulation)
-         div
-          a.dumpEvaluationData(href='dumpRepoDescriptiveDistributions?repo_id=#{repoAnalytics._id}') Dump Repo Descriptive Distributions
-         div
-          a.dumpEvaluationData(href='evaluateRepoForUseCases?repo_id=#{repoAnalytics._id}&simulation=false') Dump Repo Evaluation For Use Cases
-         div
-          a(href='loadEmpiricalUsecaseDataForRepo?repo_id=#{repoAnalytics._id}') Load Empirical Data For Use Cases
-         div
-          a(href='loadEmpiricalModelDataForRepo?repo_id=#{repoAnalytics._id}') Load Empirical Data For Models
-         div
-          a.request-repo-analytics(href='queryRepoAnalytics?repo_id=#{repoAnalytics._id}&refresh=true') Reanalyse Repo
-         div
-          a(href='reloadRepo?repo_id=#{repoAnalytics._id}') Reload Repo
-         div
-          a(href='loadCOCOMOData?repo_id=#{repoAnalytics._id}') Load COCOMO Data
      div.tab-pane.fade(id="repo_distributions")
       if repoAnalytics
        div(id="repo-stats-chart")
@@ -127,4 +147,10 @@ div.block.panel.panel-default
          img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
          div.clear
        div(id='estimation-model-detail')
-       
+     div.tab-pane.fade(id="project_list")
+      div.card-deck
+       each model in repo.models
+        div.card.col-md-2(data-model-id=model._id)
+          div(class="card-block")
+            div.card-title.model-name(title= model.umlModelName)
+              a.model-title(href="queryModelAnalytics?model_id="+model._id) #{model.umlModelName}

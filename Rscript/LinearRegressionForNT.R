@@ -7,7 +7,7 @@
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args) < 1) {
-	stop("At least 1 argument must be supplied (input file).n", call.=FALSE)
+	stop("At least 1 argument must be supplied (input file).", call.=FALSE)
 } else if (length(args)==1) {
 	# default output file
 	args[2] = "./temp"

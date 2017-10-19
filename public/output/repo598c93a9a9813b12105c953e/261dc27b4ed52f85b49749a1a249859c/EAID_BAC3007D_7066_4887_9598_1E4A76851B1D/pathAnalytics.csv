@@ -1,9 +1,0 @@
-id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
-1,Valet->venue list->check if active->inactive employee,EQ,CTRL|INT,4,undefined,1,0,1,Check in as valet,Check in as valet
-2,Valet->venue list->check if active->valet,EI,CTRL|DM|EI,4,undefined,1,1,1,Check in as valet,Check in as valet
-3,Valet->venue list->check if active->check if venue is checked in->checked in by another valet,EQ,CTRL|INT,5,undefined,2,0,1,Check in as valet,Check in as valet
-4,Valet->venue list->check if active->check if venue is checked in->venue,EI,CTRL|DM|EI,5,undefined,2,1,1,Check in as valet,Check in as valet
-5,Valet->Confirmation request dialog->navigate to queue screen->Queue screen,EQ,CTRL|INT,4,undefined,1,0,1,Check in as valet,Check in as valet
-6,Valet->Confirmation request dialog->Save acceptance->display server error message->Server error message,EQ,CTRL|INT,5,undefined,2,0,1,Check in as valet,Check in as valet
-7,Valet->Confirmation request dialog->Save acceptance->venue,EI,CTRL|DM|EI,4,undefined,1,1,1,Check in as valet,Check in as valet
-8,Valet->checked in by another valet->Redirect to venue list->venue list,EQ,CTRL|INT,4,undefined,1,0,1,Check in as valet,Check in as valet

@@ -209,6 +209,24 @@
 				  });
 				});
 	}
+
+	function queryRepoInfoForAdmin(repoIds, callbackfunc){
+			MongoClient.connect(url, function(err, db) {
+				  if (err) throw err;
+				  var obj_ids = repoIds.map(function(repoid) { return new mongo.ObjectID(repoid); });
+				 
+			      db.collection("repo_collection").find({_id: {$in : obj_ids}}, {models :1 ,_id :0}).toArray(function(err, repos) {
+					if (err) throw err;
+				    db.close();
+				    var modelArray = repos.map(function(repo){
+				    	return repo.models;
+				    });
+	  
+				    	callbackfunc(modelArray);
+				  
+				  });
+				});
+	}
 	
 	function queryRepoAnalytics(repoId, callbackfunc, update){
 		if(update !== true){
@@ -377,7 +395,7 @@
 			});
 	}
     
-    function newUserSignUp(email,username,pwd,isEnterprise ,callback){
+    function newUserSignUp(email,username,pwd,isEnterprise ,enterpriseUserId, callback){
         
         MongoClient.connect(url, function(err, db) {
 			  if (err) throw err;
@@ -401,40 +419,41 @@
               	          message: 'Username or email already exists',
                     	};
                     callback(result);
-                   
                     return;
                     
                 } else{
                 	
                      var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise }
+                     if(enterpriseUserId!=''){
+                    			 userInfo.enterpriseUserId=  new mongo.ObjectID(enterpriseUserId);
+                     } 
+                     
                      db.collection("users").insertOne(userInfo, function(err, result) {
                             if (err) throw err;
               				db.close();	
                             
                             // since the user successfully signed up create a repo for this user
-                            if(userInfo.isEnterprise){
                             	createRepo(username,pwd,function(repo){
                             		console.log('created a new repo '+repo._id);
+                            		var payload = {
+        		                    		userId : userInfo._id,
+        		                    		userName : userInfo.username,
+        		                    		userEmail : userInfo.email
+        		                    };
+        		                    	        
+        		                    var token = jwt.sign(payload, config.secret, {
+        		                    	expiresIn : 60*60*24 // expires in 24 hours
+        		                    });
+        		
+        		                   // return the information including token as JSON
+        		                    var result = {
+        		                    	          success: true,
+        		                    	          message: 'Successfully signed up',
+        		                    	          token: token
+        		                    };
+        		                    callback(result);
                             	});
-                            } 
-                            
-                            const payload = {
-		                    		userId : userInfo._id,
-		                    		userName : userInfo.username,
-		                    		userEmail : userInfo.email
-		                    };
-		                    	        
-		                    var token = jwt.sign(payload, config.secret, {
-		                    	expiresIn : 60*60*24 // expires in 24 hours
-		                    });
-		
-		                   // return the information including token as JSON
-		                    var result = {
-		                    	          success: true,
-		                    	          message: 'Successfully signed up',
-		                    	          token: token
-		                    };
-		                    callback(result);
+                             
                      });
                 
                 }
@@ -464,7 +483,7 @@
 								                    db.close();
 								                  
 								                    // generate a token and pass it as response
-								                    const payload = {
+								                    var payload = {
 								                    		userId : data._id,
 								                    		userName : data.username,
 								                    		userEmail : data.email
@@ -475,7 +494,7 @@
 								                    });
 								
 								                   // return the information including token as JSON
-								                    const result = {
+								                    var result = {
 								                    	          success: true,
 								                    	          message: 'Successful Authentication',
 								                    	          token: token
@@ -485,7 +504,7 @@
             							} else{
 								                    console.log('Invalid Username and password combination');
 								                    db.close();
-								                    const result = {
+								                    var result = {
 								                    	  success: false,
 								              	          message: 'Invalid Username and password combination ',
 								                    }
@@ -497,6 +516,120 @@
         });
     }
     
+
+    function queryUserInfo(userId, callbackfunc){
+		MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+			  
+			  if(!mongo.ObjectId.isValid(userId)){
+				  	callbackfunc(null);
+			  }  else {
+				  var o_id = new mongo.ObjectID(userId);
+				  db.collection("users").findOne({_id:o_id}, {}, function(err, user) {
+					if (err) throw err;
+				    db.close();
+				    	callbackfunc(user);
+				  });  
+			  }
+			  
+			});
+			
+    }
+    
+    function queryRepoIdsForAdmin(userId, callbackfunc){
+		MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+
+			  var o_id = new mongo.ObjectID(userId);
+				  db.collection("users").find(
+						   { enterpriseUserId:o_id }, { repoId: 1 , _id :0}).toArray( function (err,repoIds){
+							   if (err) throw err;
+							    db.close();
+							    var repoIdArray = repoIds.map(function(repo){
+							    	return repo.repoId;
+							    });
+				  
+							    	callbackfunc(repoIdArray);
+						   });
+			});
+			
+    }
+
+    function pushModelInfoVersion(modelId, repoId, modelInfoVersion, callbackfunc){
+    	queryModelInfo(modelId, repoId, function(modelInfo){
+			//to update the current version to the newly uploaded model file, and put the older versions into the arrays of versions.
+			if(!modelInfo){
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+				return;
+			}
+			modelInfoVersion._id = modelInfo._id;
+			modelInfoVersion.umlModelName = modelInfo.umlModelName;//copy the model identifier from the original model Info into the new model version, to be the new model info, which is the head of the model versions.
+			modelInfoVersion.ModelEmpirics = JSON.parse(JSON.stringify(modelInfo.ModelEmpirics)); //copy the model empirics from the older model version. User can update later.
+			var oldVersions = modelInfo.Versions; //include the previous versions for the model file.
+			if(!oldVersions){
+				oldVersions = [];
+			}
+			delete modelInfo.Versions;
+			delete modelInfo._id;
+			delete modelInfo.umlModelName;
+			oldVersions.push(modelInfo);
+			//remove the versions property for the old version. to avoid nesting problem.
+			modelInfoVersion.Versions = oldVersions;
+			console.log(modelInfoVersion);
+			updateModelInfo(modelInfoVersion, repoId, function(modelInfoVersion){
+				if(callbackfunc){
+					callbackfunc(modelInfoVersion);
+				}
+			});
+		});
+    }
+    
+	function popModelInfoVersion(modelId, repoId, callbackfunc){
+		queryModelInfo(modelId, repoId, function(modelInfo){
+			//to update the current version to the newly uploaded model file, and put the older versions into the arrays of versions.
+			if(!modelInfo && !modelInfo.Versions){
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+				return;
+			}
+			
+			var olderVersion = modelInfo.Versions.pop(); //include the previous versions for the model file.
+			olderVersion.Versions = modelInfo.Versions;
+			olderVersion._id = modelInfo._id;
+			olderVersion.umlModelName = modelInfo.umlModelName;
+			console.log(olderVersion);
+//			console.log(modelInfo);
+			updateModelInfo(olderVersion, repoId, function(olderVersion){
+				if(callbackfunc){
+					callbackfunc(olderVersion);
+				}
+			});
+		});
+	}
+	
+	/*
+	 * if modelInfo is not null, create an model info with the id and name in modelInfo, so as to create an version of the model Info
+	 */
+	function initModelInfo(umlModelInfo, umlModelName, umlModelInfoBase){
+		if(umlModelInfoBase){
+			umlModelInfo._id = umlModelInfoBase._id;
+			umlModelInfo.umlModelName = umlModelInfoBase.umlModelName;
+			return umlModelInfo;
+		}
+		 umlModelInfo._id = umlModelInfo.fileId + Date.now();
+		 if(!umlModelName || umlModelName === ''){
+			 umlModelName = umlModelInfo.fileId;
+		 }
+
+		 umlModelInfo.umlModelName = umlModelName;
+		 
+		 return umlModelInfo;
+	}
+    
+
     
 	module.exports = {
 		setupRepoStorage : function(callbackfunc) {
@@ -580,8 +713,15 @@
 				 	}
 			 });
 		},
+		pushModelInfoVersion:pushModelInfoVersion,
+		popModelInfoVersion:popModelInfoVersion,
+		initModelInfo: initModelInfo, //create model info
         newUserSignUp : newUserSignUp,
-        validateUserLogin : validateUserLogin
+        validateUserLogin : validateUserLogin,
+        queryUserInfo: queryUserInfo,
+        queryRepoIdsForAdmin:queryRepoIdsForAdmin,
+        queryRepoInfoForAdmin:queryRepoInfoForAdmin
+        
         
 	}
 }())
