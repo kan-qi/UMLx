@@ -209,6 +209,24 @@
 				  });
 				});
 	}
+
+	function queryRepoInfoForAdmin(repoIds, callbackfunc){
+			MongoClient.connect(url, function(err, db) {
+				  if (err) throw err;
+				  var obj_ids = repoIds.map(function(repoid) { return new mongo.ObjectID(repoid); });
+				 
+			      db.collection("repo_collection").find({_id: {$in : obj_ids}}, {models :1 ,_id :0}).toArray(function(err, repos) {
+					if (err) throw err;
+				    db.close();
+				    var modelArray = repos.map(function(repo){
+				    	return repo.models;
+				    });
+	  
+				    	callbackfunc(modelArray);
+				  
+				  });
+				});
+	}
 	
 	function queryRepoAnalytics(repoId, callbackfunc, update){
 		if(update !== true){
@@ -407,7 +425,7 @@
                 	
                      var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise }
                      if(enterpriseUserId!=''){
-                    			 userInfo.enterpriseUserId= enterpriseUserId;
+                    			 userInfo.enterpriseUserId=  new mongo.ObjectID(enterpriseUserId);
                      } 
                      
                      db.collection("users").insertOne(userInfo, function(err, result) {
@@ -514,6 +532,25 @@
 				  });  
 			  }
 			  
+			});
+			
+    }
+    
+    function queryRepoIdsForAdmin(userId, callbackfunc){
+		MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+
+			  var o_id = new mongo.ObjectID(userId);
+				  db.collection("users").find(
+						   { enterpriseUserId:o_id }, { repoId: 1 , _id :0}).toArray( function (err,repoIds){
+							   if (err) throw err;
+							    db.close();
+							    var repoIdArray = repoIds.map(function(repo){
+							    	return repo.repoId;
+							    });
+				  
+							    	callbackfunc(repoIdArray);
+						   });
 			});
 			
     }
@@ -681,7 +718,9 @@
 		initModelInfo: initModelInfo, //create model info
         newUserSignUp : newUserSignUp,
         validateUserLogin : validateUserLogin,
-        queryUserInfo: queryUserInfo
+        queryUserInfo: queryUserInfo,
+        queryRepoIdsForAdmin:queryRepoIdsForAdmin,
+        queryRepoInfoForAdmin:queryRepoInfoForAdmin
         
         
 	}

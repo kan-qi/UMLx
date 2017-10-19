@@ -81,7 +81,15 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 	var email = req.body['email'];
 	var username = req.body['username'];
 	var pwd = req.body['password'];
-	var isEnterpriseUser = req.body['enterpriseUser']=="on"? true : false;
+	var isEnterpriseUser= false;
+	if(req.body['enterpriseUser']){
+		isEnterpriseUser= req.body['enterpriseUser']=="on"? true : false;
+	}
+	var enterpriseUserId = '';
+	if(req.body['enterpriseUserId']){
+		 enterpriseUserId = req.body['enterpriseUserId'];
+		 // check if this is a valid one 
+		 umlModelInfoManager.queryUserInfo(enterpriseUserId, function(user){
 	
 			 if(!user || !user.isEnterprise){
 				 console.log('Not a valid enterprise userId');
@@ -96,6 +104,14 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 				    });
 			 }
 		 });
+
+	} else {
+    umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
+        res.json(result)
+    });
+	}
+
+})
 
 
 //route middleware to verify a token
@@ -120,6 +136,11 @@ app.use(function(req, res, next) {
 		    	req.userInfo ={};
 		    	req.userInfo.userName = user.username;
 		    	req.userInfo.repoId = user.repoId;
+		    	req.userInfo._id = user._id;
+		    	req.userInfo.isEnterprise = (user.isEnterprise?true:false);
+		    	if(req.userInfo.isEnterprise){
+		    		req.userInfo.enterpriseUserId = user.enterpriseUserId;
+		    	}
 		    		
 		     next();
 		    	
@@ -773,8 +794,34 @@ app.get('/uploadProject', function(req, res){
 
 app.get('/', function(req, res){
 		var message = req.query.e;
+		
 		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
-		res.render('index', {repo:repoInfo, message:message});
+			
+			if(req.userInfo.isEnterprise){
+				// get the repoinfo for all the repo that are part of this enterprise account
+				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
+					repoIds.push(req.userInfo.repoId);
+					//console.log(repoIds);
+					umlModelInfoManager.queryRepoInfoForAdmin(repoIds, function(modelArray){
+						
+						for(var i in modelArray ){
+							var model = modelArray[i];
+							for(var j in model ){
+							repoInfo.models.push(model[j]);
+							}
+							
+						}
+						
+						res.render('index', {repo:repoInfo, message:message});
+						
+					});
+				});
+				
+			} else {
+				res.render('index', {repo:repoInfo, message:message});
+			}
+			
+		
 	});
 })
 
@@ -788,3 +835,4 @@ var server = app.listen(8081,'127.0.0.1', function () {
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
+
