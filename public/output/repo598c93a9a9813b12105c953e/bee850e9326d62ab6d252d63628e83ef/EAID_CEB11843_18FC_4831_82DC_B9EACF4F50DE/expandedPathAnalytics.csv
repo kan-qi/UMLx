@@ -1,0 +1,14 @@
+id,path,transactional,path_length,diagram,useCase
+1,Attendee->Course detail page->Redirect to home page->Home page,CTRL,4,Register course,Register course
+2,Attendee->Course detail page->Redirect to home page->Home page,INT,4,Register course,Register course
+3,Attendee->Course detail page->setupPayment->EventBrite,CTRL,4,Register course,Register course
+4,Attendee->Course detail page->setupPayment->EventBrite,EXTIVK,4,Register course,Register course
+5,Attendee->Payment page->make payment,TRAN_NA,3,Register course,Register course
+6,EventBrite->bring up payment page->Payment page,CTRL,3,Register course,Register course
+7,EventBrite->bring up payment page->Payment page,EXTCLL,3,Register course,Register course
+8,EventBrite->bring up payment page->Payment page,INT,3,Register course,Register course
+9,EventBrite->receive payment result->Send out confirmation email->Email protocol,CTRL,4,Register course,Register course
+10,EventBrite->receive payment result->Send out confirmation email->Email protocol,EXTIVK,4,Register course,Register course
+11,EventBrite->receive payment result->Send out confirmation email->registration success,CTRL,4,Register course,Register course
+12,EventBrite->receive payment result->Send out confirmation email->registration success,EXTCLL,4,Register course,Register course
+13,EventBrite->receive payment result->Send out confirmation email->registration success,INT,4,Register course,Register course

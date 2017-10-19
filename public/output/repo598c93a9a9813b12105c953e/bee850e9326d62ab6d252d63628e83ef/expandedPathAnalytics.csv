@@ -1,0 +1,122 @@
+id,path,transactional,path_length,diagram,useCase
+1,Admin->Manage course page->redirect to home page->home page,CTRL,4,Add course,Add course
+2,Admin->Manage course page->redirect to home page->home page,INT,4,Add course,Add course
+3,Admin->Manage course page->Process course information->Invalid entered information,CTRL,4,Add course,Add course
+4,Admin->Manage course page->Process course information->Invalid entered information,INT,4,Add course,Add course
+5,Admin->Manage course page->Process course information->save course information into database->course,CTRL,5,Add course,Add course
+6,Admin->Manage course page->Process course information->save course information into database->course,DM,5,Add course,Add course
+7,Admin->Manage course page->Process course information->save course information into database->course,EI,5,Add course,Add course
+8,Admin->Delete confirmation dialog->delete course->send email to attendees->Email protocol,CTRL,5,Delete course,Delete course
+9,Admin->Delete confirmation dialog->delete course->send email to attendees->Email protocol,EXTIVK,5,Delete course,Delete course
+10,Admin->Delete confirmation dialog->delete course->send email to attendees->delete success message,CTRL,5,Delete course,Delete course
+11,Admin->Delete confirmation dialog->delete course->send email to attendees->delete success message,INT,5,Delete course,Delete course
+12,Admin->Delete confirmation dialog->delete course->course,CTRL,4,Delete course,Delete course
+13,Admin->Delete confirmation dialog->delete course->course,DM,4,Delete course,Delete course
+14,Admin->Delete confirmation dialog->delete course->course,EI,4,Delete course,Delete course
+15,Admin->delete course button->show delete confirmation box->Delete confirmation dialog,CTRL,4,Delete course,Delete course
+16,Admin->delete course button->show delete confirmation box->Delete confirmation dialog,INT,4,Delete course,Delete course
+17,Admin->Course management page->verify course information->save course info->course,CTRL,5,Modify course,Modify course
+18,Admin->Course management page->verify course information->save course info->course,DM,5,Modify course,Modify course
+19,Admin->Course management page->verify course information->save course info->course,EI,5,Modify course,Modify course
+20,Admin->Course management page->verify course information->Invalid course information,CTRL,4,Modify course,Modify course
+21,Admin->Course management page->verify course information->Invalid course information,INT,4,Modify course,Modify course
+22,Admin->Course management page->Redirect to home page->home page,CTRL,4,Modify course,Modify course
+23,Admin->Course management page->Redirect to home page->home page,INT,4,Modify course,Modify course
+24,Admin->course informaton->save the acceptance information->course information is no t valid message,CTRL,4,Verify new course,Verify new course
+25,Admin->course informaton->save the acceptance information->course information is no t valid message,INT,4,Verify new course,Verify new course
+26,Admin->course informaton->save the acceptance information->acceptance,CTRL,4,Verify new course,Verify new course
+27,Admin->course informaton->save the acceptance information->acceptance,DM,4,Verify new course,Verify new course
+28,Admin->course informaton->save the acceptance information->acceptance,EI,4,Verify new course,Verify new course
+29,Admin->course informaton->save the acceptance information->send email to trianer->Email protocol,CTRL,5,Verify new course,Verify new course
+30,Admin->course informaton->save the acceptance information->send email to trianer->Email protocol,EXTIVK,5,Verify new course,Verify new course
+31,Admin->course list->load course information->course informaton,CTRL,4,Verify new course,Verify new course
+32,Admin->course list->load course information->course informaton,INT,4,Verify new course,Verify new course
+33,Admin->course list->load course information->course,CTRL,4,Verify new course,Verify new course
+34,Admin->course list->load course information->course,DM,4,Verify new course,Verify new course
+35,Admin->course list->load course information->course,EI,4,Verify new course,Verify new course
+36,User->Log out button->clear local cache->home page,CTRL,4,Request new course,Request new course
+37,User->Log out button->clear local cache->home page,INT,4,Request new course,Request new course
+38,User->Log out button->clear local cache->cache,CTRL,4,Request new course,Request new course
+39,User->Log out button->clear local cache->cache,DM,4,Request new course,Request new course
+40,User->Log out button->clear local cache->cache,EI,4,Request new course,Request new course
+41,User->home page->save course information for review->course information is no t valid message,CTRL,4,Request new course,Request new course
+42,User->home page->save course information for review->course information is no t valid message,INT,4,Request new course,Request new course
+43,Trainer->load schedule button->query schedule info->schedule,CTRL,4,Update schedule,Update schedule
+44,Trainer->load schedule button->query schedule info->schedule,DM,4,Update schedule,Update schedule
+45,Trainer->load schedule button->query schedule info->schedule,EI,4,Update schedule,Update schedule
+46,Trainer->load schedule button->query schedule info->schedule info page,CTRL,4,Update schedule,Update schedule
+47,Trainer->load schedule button->query schedule info->schedule info page,INT,4,Update schedule,Update schedule
+48,Trainer->schedule info page->display update schedule page->schedule update page,CTRL,4,Update schedule,Update schedule
+49,Trainer->schedule info page->display update schedule page->schedule update page,INT,4,Update schedule,Update schedule
+50,Trainer->schedule update page->validate updated schedule info->save updated schedule->schedule,CTRL,5,Update schedule,Update schedule
+51,Trainer->schedule update page->validate updated schedule info->save updated schedule->schedule,DM,5,Update schedule,Update schedule
+52,Trainer->schedule update page->validate updated schedule info->save updated schedule->schedule,EI,5,Update schedule,Update schedule
+53,Trainer->schedule update page->validate updated schedule info->Invalid input schedule info,CTRL,4,Update schedule,Update schedule
+54,Trainer->schedule update page->validate updated schedule info->Invalid input schedule info,INT,4,Update schedule,Update schedule
+55,User->Login page->Redirect to home page->Home page,CTRL,4,Login,Login
+56,User->Login page->Redirect to home page->Home page,INT,4,Login,Login
+57,User->Login page->verify login information->Login invalid message,CTRL,4,Login,Login
+58,User->Login page->verify login information->Login invalid message,INT,4,Login,Login
+59,User->Login page->verify login information->update role->cache,CTRL,5,Login,Login
+60,User->Login page->verify login information->update role->cache,DM,5,Login,Login
+61,User->Login page->verify login information->update role->cache,EI,5,Login,Login
+62,User->Login page->verify login information->update role->Login success information,CTRL,5,Login,Login
+63,User->Login page->verify login information->update role->Login success information,INT,5,Login,Login
+64,User->Login page->verify login information->user,CTRL,4,Login,Login
+65,User->Login page->verify login information->user,DM,4,Login,Login
+66,User->Login page->verify login information->user,EI,4,Login,Login
+67,User->Log out button->clear local cache->home page,CTRL,4,Logout,Logout
+68,User->Log out button->clear local cache->home page,INT,4,Logout,Logout
+69,User->Log out button->clear local cache->cache,CTRL,4,Logout,Logout
+70,User->Log out button->clear local cache->cache,DM,4,Logout,Logout
+71,User->Log out button->clear local cache->cache,EI,4,Logout,Logout
+72,User->Sign up page->verify sign up information->Save sign up information->user,CTRL,5,Setup account,Setup account
+73,User->Sign up page->verify sign up information->Save sign up information->user,DM,5,Setup account,Setup account
+74,User->Sign up page->verify sign up information->Save sign up information->user,EI,5,Setup account,Setup account
+75,User->Sign up page->verify sign up information->Save sign up information->home page,CTRL,5,Setup account,Setup account
+76,User->Sign up page->verify sign up information->Save sign up information->home page,INT,5,Setup account,Setup account
+77,User->Sign up page->verify sign up information->invalid sign up informatin,CTRL,4,Setup account,Setup account
+78,User->Sign up page->verify sign up information->invalid sign up informatin,INT,4,Setup account,Setup account
+79,User->course list button->load course list->Course list,CTRL,4,Share course,Share course
+80,User->course list button->load course list->Course list,INT,4,Share course,Share course
+81,User->course list button->load course list->user,CTRL,4,Share course,Share course
+82,User->course list button->load course list->user,DM,4,Share course,Share course
+83,User->course list button->load course list->user,EI,4,Share course,Share course
+84,User->Share menu->send course information to users->Notification,CTRL,4,Share course,Share course
+85,User->Share menu->send course information to users->Notification,DM,4,Share course,Share course
+86,User->Share menu->send course information to users->Notification,EI,4,Share course,Share course
+87,User->Share menu->Redirect to login page->Login page,CTRL,4,Share course,Share course
+88,User->Share menu->Redirect to login page->Login page,INT,4,Share course,Share course
+89,User->Course list->Open course share menu->Share menu,CTRL,4,Share course,Share course
+90,User->Course list->Open course share menu->Share menu,INT,4,Share course,Share course
+91,User->Search page->Search course by keywords->course,CTRL,4,Search course,Search course
+92,User->Search page->Search course by keywords->course,DM,4,Search course,Search course
+93,User->Search page->Search course by keywords->course,EI,4,Search course,Search course
+94,User->Search page->Search course by keywords->course list,CTRL,4,Search course,Search course
+95,User->Search page->Search course by keywords->course list,INT,4,Search course,Search course
+96,User->Search page->Search course by keywords->No matched results,CTRL,4,Search course,Search course
+97,User->Search page->Search course by keywords->No matched results,INT,4,Search course,Search course
+98,User->Search page->redirect to home page->home page,CTRL,4,Search course,Search course
+99,User->Search page->redirect to home page->home page,INT,4,Search course,Search course
+100,Attendee->Course detail page->Redirect to home page->Home page,CTRL,4,Register course,Register course
+101,Attendee->Course detail page->Redirect to home page->Home page,INT,4,Register course,Register course
+102,Attendee->Course detail page->setupPayment->EventBrite,CTRL,4,Register course,Register course
+103,Attendee->Course detail page->setupPayment->EventBrite,EXTIVK,4,Register course,Register course
+104,Attendee->Payment page->make payment,TRAN_NA,3,Register course,Register course
+105,EventBrite->bring up payment page->Payment page,CTRL,3,Register course,Register course
+106,EventBrite->bring up payment page->Payment page,EXTCLL,3,Register course,Register course
+107,EventBrite->bring up payment page->Payment page,INT,3,Register course,Register course
+108,EventBrite->receive payment result->Send out confirmation email->Email protocol,CTRL,4,Register course,Register course
+109,EventBrite->receive payment result->Send out confirmation email->Email protocol,EXTIVK,4,Register course,Register course
+110,EventBrite->receive payment result->Send out confirmation email->registration success,CTRL,4,Register course,Register course
+111,EventBrite->receive payment result->Send out confirmation email->registration success,EXTCLL,4,Register course,Register course
+112,EventBrite->receive payment result->Send out confirmation email->registration success,INT,4,Register course,Register course
+113,Attendee->Course detail page->Display review page->Review page,CTRL,4,Review course,Review course
+114,Attendee->Course detail page->Display review page->Review page,INT,4,Review course,Review course
+115,Attendee->Review page->Redirect to home page->Home page,CTRL,4,Review course,Review course
+116,Attendee->Review page->Redirect to home page->Home page,INT,4,Review course,Review course
+117,Attendee->Review page->Update cours information in db->Cours information update success message,CTRL,4,Review course,Review course
+118,Attendee->Review page->Update cours information in db->Cours information update success message,INT,4,Review course,Review course
+119,Attendee->Review page->Update cours information in db->Course,CTRL,4,Review course,Review course
+120,Attendee->Review page->Update cours information in db->Course,DM,4,Review course,Review course
+121,Attendee->Review page->Update cours information in db->Course,EI,4,Review course,Review course

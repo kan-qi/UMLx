@@ -1,0 +1,6 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Trainer->load schedule button->query schedule info->schedule,EI,CTRL|DM|EI,4,undefined,1,1,1,Update schedule,Update schedule
+2,Trainer->load schedule button->query schedule info->schedule info page,EQ,CTRL|INT,4,undefined,1,0,1,Update schedule,Update schedule
+3,Trainer->schedule info page->display update schedule page->schedule update page,EQ,CTRL|INT,4,undefined,1,0,1,Update schedule,Update schedule
+4,Trainer->schedule update page->validate updated schedule info->save updated schedule->schedule,EI,CTRL|DM|EI,5,undefined,2,1,1,Update schedule,Update schedule
+5,Trainer->schedule update page->validate updated schedule info->Invalid input schedule info,EQ,CTRL|INT,4,undefined,1,0,1,Update schedule,Update schedule

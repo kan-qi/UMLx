@@ -1,0 +1,62 @@
+id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
+1,User->Logout Button->Remove session->session,EI,CTRL|DM|EI,4,1,1,1,1,1,Login/Logout,Login/Logout
+2,User->Login Page->check login information->Login success message,EQ,CTRL|INT,4,2,1,0,1,4,Login/Logout,Login/Logout
+3,User->Login Page->check login information->Log failture message,EQ,CTRL|INT,4,2,1,0,1,4,Login/Logout,Login/Logout
+4,User->Login Page->check login information->Login Info,EI,CTRL|DM|EI,4,1,1,1,1,1,Login/Logout,Login/Logout
+5,User->forget password button->display forgot password page->forgot password page,EQ,CTRL|INT,4,2,1,0,1,4,Forgets password,Forgets password
+6,User->forgot password page->send reset link by email->Email Protocol,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,Forgets password,Forgets password
+7,User->forgot password page->reset password->password reset success message,EQ,CTRL|INT,4,2,1,0,1,5,Forgets password,Forgets password
+8,User->forgot password page->reset password->Login Info,EI,CTRL|DM|EI,4,1,1,1,1,1,Forgets password,Forgets password
+9,User->User add button->display user add page->User add page,EQ,CTRL|INT,4,2,1,0,1,4,Add users,Add users
+10,User->User add page->save user information->User info,EI,CTRL|DM|EI,4,1,1,1,1,1,Add users,Add users
+11,User->User add page->save user information->save user information success message,EQ,CTRL|INT,4,2,1,0,1,5,Add users,Add users
+12,User->User info page->Delete user info->User info,EI,CTRL|DM|EI,4,1,1,1,1,2,Delete users,Delete users
+13,User->User info page->Delete user info->Delete user info success,EQ,CTRL|INT,4,2,1,0,1,5,Delete users,Delete users
+14,User->User List->query user info->User info page,EQ,CTRL|INT,4,2,1,0,1,4,Delete users,Delete users
+15,User->User List->query user info->User info,EI,CTRL|DM|EI,4,1,1,1,1,1,Delete users,Delete users
+16,User->User info page->Save modified user info->Save user info success message,EQ,CTRL|INT,4,2,1,0,1,5,Modify user information,Modify user information
+17,User->User info page->Save modified user info->Invalid input user information,EQ,CTRL|INT,4,2,1,0,1,5,Modify user information,Modify user information
+18,User->User info page->Save modified user info->User info,EI,CTRL|DM|EI,4,1,1,1,1,2,Modify user information,Modify user information
+19,User->Modify User Info->query user info->User info,EI,CTRL|DM|EI,4,1,1,1,1,1,Modify user information,Modify user information
+20,User->Modify User Info->query user info->User info page,EQ,CTRL|INT,4,2,1,0,1,4,Modify user information,Modify user information
+21,User->manage girls/teams/volunteers page->query girl info->query teams info->Teams,EI,CTRL|DM|EI,5,1,2,1,1,2,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+22,User->manage girls/teams/volunteers page->query girl info->query teams info->query volunteers info->Girls/Teams/Volunteers manage page,EQ,CTRL|INT,6,2,3,0,1,5,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+23,User->manage girls/teams/volunteers page->query girl info->query teams info->query volunteers info->Volunteers,EI,CTRL|DM|EI,6,1,3,1,1,4,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+24,User->manage girls/teams/volunteers page->query girl info->Girl,EI,CTRL|DM|EI,4,1,1,1,1,2,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+25,User->Girls/Teams/Volunteers manage page->process input information for girs/teams/volunteers->Invalid modified information,EQ,CTRL|INT,4,2,1,0,1,5,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+26,User->Girls/Teams/Volunteers manage page->process input information for girs/teams/volunteers->Save modified information->Volunteers,EI,CTRL|DM|EI,5,1,2,1,1,4,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+27,User->Girls/Teams/Volunteers manage page->process input information for girs/teams/volunteers->Save modified information->Teams,EI,CTRL|DM|EI,5,1,2,1,1,4,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+28,User->Girls/Teams/Volunteers manage page->process input information for girs/teams/volunteers->Save modified information->Girl,EI,CTRL|DM|EI,5,1,2,1,1,4,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+29,User->Girls/Teams/Volunteers manage page->process input information for girs/teams/volunteers->Save modified information->Save modified information success message,EQ,CTRL|INT,5,2,2,0,1,5,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+30,User->Girls/Teams/Volunteers manage page->process input information for girs/teams/volunteers->Required information missing error message,EQ,CTRL|INT,4,2,1,0,1,4,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+31,User->Girls/Teams/Volunteers manage page->Delete girls/volunteers/teams->Delete information successfully,EQ,CTRL|INT,4,2,1,0,1,5,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+32,User->Girls/Teams/Volunteers manage page->Delete girls/volunteers/teams->Volunteers,EI,CTRL|DM|EI,4,1,1,1,1,2,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+33,User->Girls/Teams/Volunteers manage page->Delete girls/volunteers/teams->Girl,EI,CTRL|DM|EI,4,1,1,1,1,2,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+34,User->Girls/Teams/Volunteers manage page->Delete girls/volunteers/teams->Teams,EI,CTRL|DM|EI,4,1,1,1,1,2,Manage teams/volunteers/girls,Manage teams/volunteers/girls
+35,User->Data import page->Process data->Data format error message,EQ,CTRL|INT,4,2,1,0,1,5,Import data from csv,Import data from csv
+36,User->Data import page->Process data->Save girls data->Invalid input user information,EQ,CTRL|INT,5,2,2,0,1,7,Import data from csv,Import data from csv
+37,User->Data import page->Process data->Save girls data->User info,EI,CTRL|DM|EI,5,1,2,1,1,4,Import data from csv,Import data from csv
+38,User->Data import page->Process data->Save Volunteers data->User info,EI,CTRL|DM|EI,5,1,2,1,1,4,Import data from csv,Import data from csv
+39,User->Data import page->Process data->Save Volunteers data->Invalid input user information,EQ,CTRL|INT,5,2,2,0,1,7,Import data from csv,Import data from csv
+40,User->Data import page->Process data->Save teams data->User info,EI,CTRL|DM|EI,5,1,2,1,1,4,Import data from csv,Import data from csv
+41,User->Data import page->Process data->Save teams data->Invalid input user information,EQ,CTRL|INT,5,2,2,0,1,7,Import data from csv,Import data from csv
+42,User->Date import button->Display data import page->Data import page,EQ,CTRL|INT,4,2,1,0,1,4,Import data from csv,Import data from csv
+43,Admin->Select attendance button->Display attendance page->attendance,EI,CTRL|DM|EI,4,1,1,1,1,1,Export attendance,Export attendance
+44,Admin->Select attendance button->Display attendance page->Attendance page,EQ,CTRL|INT,4,2,1,0,1,5,Export attendance,Export attendance
+45,Admin->Attendance page->display type of attendance for export->attendance,EI,CTRL|DM|EI,4,1,1,1,1,2,Export attendance,Export attendance
+46,Admin->Attendance page->display type of attendance for export->Types of attendance,EQ,CTRL|INT,4,2,1,0,1,7,Export attendance,Export attendance
+47,Admin->Types of attendance->export data to csv file->Select file location to save->csv files,EI,CTRL|DM|EI,5,1,2,1,1,2,Export attendance,Export attendance
+48,Admin->Types of attendance->export data to csv file->Select file location to save->Data export success message,EQ,CTRL|INT,5,2,2,0,1,7,Export attendance,Export attendance
+49,Staff->Attendance page->display type of attendance for export->attendance,EI,CTRL|DM|EI,4,1,1,1,1,2,Export attendance,Export attendance
+50,Staff->Attendance page->display type of attendance for export->Types of attendance,EQ,CTRL|INT,4,2,1,0,1,7,Export attendance,Export attendance
+51,Staff->Types of attendance->export data to csv file->Select file location to save->csv files,EI,CTRL|DM|EI,5,1,2,1,1,2,Export attendance,Export attendance
+52,Staff->Types of attendance->export data to csv file->Select file location to save->Data export success message,EQ,CTRL|INT,5,2,2,0,1,7,Export attendance,Export attendance
+53,User->Attendance information page->query attendance detail information->Attendance information,EI,CTRL|DM|EI,4,1,1,1,1,2,Monitor attendance,Monitor attendance
+54,User->Attendance information page->query attendance detail information->Attendance detail information,EQ,CTRL|INT,4,2,1,0,1,5,Monitor attendance,Monitor attendance
+55,User->View girls/volunteers attendance button->query attendance information->Attendance information,EI,CTRL|DM|EI,4,1,1,1,1,1,Monitor attendance,Monitor attendance
+56,User->View girls/volunteers attendance button->query attendance information->Attendance information page,EQ,CTRL|INT,4,2,1,0,1,4,Monitor attendance,Monitor attendance
+57,Volunteer coach->Enter attendance detail page->validate input attendance info->save attendance detail->Duplicate attendance information,EQ,CTRL|INT,5,2,2,0,1,5,Record attendance,Record attendance
+58,Volunteer coach->Enter attendance detail page->validate input attendance info->save attendance detail->Attendance Detail,EI,CTRL|DM|EI,5,1,2,1,1,2,Record attendance,Record attendance
+59,Volunteer coach->Enter attendance detail page->validate input attendance info->Invalid input attendance information,EQ,CTRL|INT,4,2,1,0,1,5,Record attendance,Record attendance
+60,Volunteer coach->Login page->validate login information->Login,EI,CTRL|DM|EI,4,1,1,1,1,1,Record attendance,Record attendance
+61,Volunteer coach->Login page->validate login information->Enter attendance detail page,EQ,CTRL|INT,4,2,1,0,1,4,Record attendance,Record attendance

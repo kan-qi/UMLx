@@ -1,0 +1,152 @@
+id,element,type,outbound_degree,inbound_degree,diagram,useCase
+1,text box for user to input name,boundary,1,1,Post Picture,Post Picture
+2,show a text box for user to input event name,control,1,1,Post Picture,Post Picture
+3,Picture,entity,0,1,Post Picture,Post Picture
+4,store picture in the event,control,1,2,Post Picture,Post Picture
+5,Event and caption Input,boundary,2,2,Post Picture,Post Picture
+6,shows the picture and text box for caption,control,1,1,Post Picture,Post Picture
+7,gallery application,boundary,1,2,Post Picture,Post Picture
+8,opens up the gallery application,control,1,1,Post Picture,Post Picture
+9,Picture,entity,0,1,Post Picture,Post Picture
+10,retrive user's location and posts the picture at location,control,1,1,Post Picture,Post Picture
+11,Options to post,boundary,1,2,Post Picture,Post Picture
+12,show picture and options to post nearby or to an event,control,1,1,Post Picture,Post Picture
+13,Camera App,boundary,3,2,Post Picture,Post Picture
+14,Launch Camera Application,control,1,1,Post Picture,Post Picture
+15,Camera Icon,boundary,1,1,Post Picture,Post Picture
+16,User,actor,4,0,Post Picture,Post Picture
+17,Picture,entity,0,1,Delete Picture,Delete Picture
+18,close the prompt and delete the picture,control,2,1,Delete Picture,Delete Picture
+19,Confirm Box,boundary,1,3,Delete Picture,Delete Picture
+20,Shows confirm prompt,control,1,1,Delete Picture,Delete Picture
+21,Delete Button,boundary,1,1,Delete Picture,Delete Picture
+22,User,actor,2,0,Delete Picture,Delete Picture
+23,Picture,entity,0,1,View Specific Picture,View Specific Picture
+24,retrieve picture details,control,1,1,View Specific Picture,View Specific Picture
+25,Picture Gallery,boundary,1,1,View Specific Picture,View Specific Picture
+26,User,actor,1,0,View Specific Picture,View Specific Picture
+27,The total number of likes,boundary,0,2,Like Picture,Like Picture
+28,Like Information,entity,0,1,Like Picture,Like Picture
+29,Store the like information,control,2,1,Like Picture,Like Picture
+30,Heart Icon on a picture,boundary,1,1,Like Picture,Like Picture
+31,User,actor,2,0,Like Picture,Like Picture
+32,Total Number of Likes,boundary,0,2,Unlike Picture,Unlike Picture
+33,Like Information,entity,0,1,Unlike Picture,Unlike Picture
+34,remove the user liking information,control,2,1,Unlike Picture,Unlike Picture
+35,The heart icon on picture,boundary,1,1,Unlike Picture,Unlike Picture
+36,User,actor,2,0,Unlike Picture,Unlike Picture
+37,prompot confirm,control,2,1,Report Picture - Submit,Report Picture - Submit
+38,report confirm dialog,boundary,1,2,Report Picture - Submit,Report Picture - Submit
+39,report information,entity,0,1,Report Picture - Submit,Report Picture - Submit
+40,store report information,control,1,1,Report Picture - Submit,Report Picture - Submit
+41,Report icon on the picture,boundary,1,2,Report Picture - Submit,Report Picture - Submit
+42,User,actor,2,0,Report Picture - Submit,Report Picture - Submit
+43,Local Storage,entity,0,1,Save Picture to Device,Save Picture to Device
+44,Picture,entity,1,1,Save Picture to Device,Save Picture to Device
+45,download to phone,control,2,2,Save Picture to Device,Save Picture to Device
+46,Download button,boundary,1,1,Save Picture to Device,Save Picture to Device
+47,User,actor,1,0,Save Picture to Device,Save Picture to Device
+48,Picture Display,boundary,0,2,Browse Event Pictures,Browse Event Pictures
+49,shows the search result,control,1,1,Browse Event Pictures,Browse Event Pictures
+50,picture,entity,1,1,Browse Event Pictures,Browse Event Pictures
+51,shows the  pictures clicked,control,1,1,Browse Event Pictures,Browse Event Pictures
+52,Search Result,boundary,1,2,Browse Event Pictures,Browse Event Pictures
+53,Search,control,1,1,Browse Event Pictures,Browse Event Pictures
+54,Hashtag input box,boundary,1,2,Browse Event Pictures,Browse Event Pictures
+55,Show hashtag text input,control,1,1,Browse Event Pictures,Browse Event Pictures
+56,Hashtag icon,boundary,1,1,Browse Event Pictures,Browse Event Pictures
+57,User,actor,4,0,Browse Event Pictures,Browse Event Pictures
+58,Sorted List of Pictures,boundary,0,2,Sort Pictures,Sort Pictures
+59,sort the picture,control,1,1,Sort Pictures,Sort Pictures
+60,Sorting options,boundary,1,2,Sort Pictures,Sort Pictures
+61,Display sorting options,control,2,1,Sort Pictures,Sort Pictures
+62,Filter Icon,boundary,1,1,Sort Pictures,Sort Pictures
+63,User,actor,4,0,Sort Pictures,Sort Pictures
+64,event,entity,1,2,Create Private Event,Create Private Event
+65,Create the private event,control,1,1,Create Private Event,Create Private Event
+66,Warning information of duplicate,boundary,0,2,Create Private Event,Create Private Event
+67,Check the presence of the event,control,3,2,Create Private Event,Create Private Event
+68,Private Event Name and Password Input,boundary,1,1,Create Private Event,Create Private Event
+69,User,actor,2,0,Create Private Event,Create Private Event
+70,Event,entity,0,1,Delete Event,Delete Event
+71,Delete Picture,control,1,1,Delete Event,Delete Event
+72,Picture,entity,0,1,Delete Event,Delete Event
+73,Close warning and delete event,control,2,1,Delete Event,Delete Event
+74,Confirm Box,boundary,1,2,Delete Event,Delete Event
+75,Show warning of deletion,control,2,1,Delete Event,Delete Event
+76,Delete Event Button,boundary,1,2,Delete Event,Delete Event
+77,User,actor,2,0,Delete Event,Delete Event
+78,List of Events,boundary,0,2,Search Events,Search Events
+79,Event,entity,0,1,Search Events,Search Events
+80,Search events by name,control,2,1,Search Events,Search Events
+81,Search box of events,boundary,1,1,Search Events,Search Events
+82,User,actor,2,0,Search Events,Search Events
+83,Public Event,entity,0,1,Create Public Events,Create Public Events
+84,Create the public event,control,1,1,Create Public Events,Create Public Events
+85,Warning Information of Duplicate,boundary,0,2,Create Public Events,Create Public Events
+86,Check presence of the event,control,1,1,Create Public Events,Create Public Events
+87,Public Event Name Field,boundary,2,1,Create Public Events,Create Public Events
+88,User,actor,2,0,Create Public Events,Create Public Events
+89,Filtered List of Users,boundary,0,2,Browse Users,Browse Users
+90,Filter users,control,1,1,Browse Users,Browse Users
+91,user list filter box,boundary,1,2,Browse Users,Browse Users
+92,query user list,control,2,1,Browse Users,Browse Users
+93,Query Users List Button,boundary,1,1,Browse Users,Browse Users
+94,User,entity,0,1,Browse Users,Browse Users
+95,User,actor,3,0,Browse Users,Browse Users
+96,User List,boundary,0,2,Suspend User - Confirm,Suspend User - Confirm
+97,Suspend User,control,2,1,Suspend User - Confirm,Suspend User - Confirm
+98,Confirm Dialog,boundary,1,2,Suspend User - Confirm,Suspend User - Confirm
+99,Prompt confirm dialog,control,1,1,Suspend User - Confirm,Suspend User - Confirm
+100,Click user suspend button,boundary,1,1,Suspend User - Confirm,Suspend User - Confirm
+101,User,entity,0,1,Suspend User - Confirm,Suspend User - Confirm
+102,User,actor,3,0,Suspend User - Confirm,Suspend User - Confirm
+103,Update Event Information,control,2,1,Update Event,Update Event
+104,Event Information Update Page,boundary,1,3,Update Event,Update Event
+105,Prompt Event Update Dialog,control,1,1,Update Event,Update Event
+106,Event List,boundary,1,2,Update Event,Update Event
+107,Event,entity,0,2,Update Event,Update Event
+108,retrieve events,control,2,1,Update Event,Update Event
+109,Event Update Button,boundary,1,1,Update Event,Update Event
+110,Admin,actor,3,0,Update Event,Update Event
+111,List of pictures,boundary,0,2,Search Pictures,Search Pictures
+112,Filter Pictures,control,1,1,Search Pictures,Search Pictures
+113,Image Filter Box,boundary,1,2,Search Pictures,Search Pictures
+114,Picture,entity,0,1,Search Pictures,Search Pictures
+115,retrive the list of picture,control,2,1,Search Pictures,Search Pictures
+116,Query Picture List,boundary,1,1,Search Pictures,Search Pictures
+117,User,actor,3,0,Search Pictures,Search Pictures
+118,Report,entity,0,1,Restore Reported Picture,Restore Reported Picture
+119,Restore reported picture,control,1,1,Restore Reported Picture,Restore Reported Picture
+120,Picture restore button,boundary,1,1,Restore Reported Picture,Restore Reported Picture
+121,User,actor,1,0,Restore Reported Picture,Restore Reported Picture
+122,System Settings,entity,0,1,Change App Settings,Change App Settings
+123,Store System Settings,control,1,1,Change App Settings,Change App Settings
+124,System Setting Page,boundary,1,2,Change App Settings,Change App Settings
+125,Load system setting page,control,1,1,Change App Settings,Change App Settings
+126,Click system setting button,boundary,1,1,Change App Settings,Change App Settings
+127,Admin,actor,2,0,Change App Settings,Change App Settings
+128,The number of pictures per month,boundary,0,2,Generate Statistics Report,Generate Statistics Report
+129,Pictures,entity,0,1,Generate Statistics Report,Generate Statistics Report
+130,Search pictures posted in the month,control,2,1,Generate Statistics Report,Generate Statistics Report
+131,Click the number of pictures posted per month,boundary,1,1,Generate Statistics Report,Generate Statistics Report
+132,Admin,actor,2,0,Generate Statistics Report,Generate Statistics Report
+133,Facebook Service,actor,0,1,Login,Login
+134,App Main Page,boundary,0,2,Login,Login
+135,User,entity,0,1,Login,Login
+136,Check username and password,control,4,1,Login,Login
+137,Login Page,boundary,1,2,Login,Login
+138,User,actor,2,0,Login,Login
+139,Warning Invalid Information,boundary,0,2,Register,Register
+140,User,entity,0,1,Register,Register
+141,Check User Information,control,2,1,Register,Register
+142,Register Page,boundary,1,1,Register,Register
+143,User,actor,2,0,Register,Register
+144,Local Storage,entity,0,1,Logout,Logout
+145,Clear Local Storage and Exit,control,1,1,Logout,Logout
+146,Logout Button,boundary,1,1,Logout,Logout
+147,User,actor,1,0,Logout,Logout
+148,Pictures,entity,0,1,View Nearby Pictures,View Nearby Pictures
+149,Search pictures by radius,control,1,1,View Nearby Pictures,View Nearby Pictures
+150,Radius Setting Button,boundary,1,1,View Nearby Pictures,View Nearby Pictures
+151,User,actor,1,0,View Nearby Pictures,View Nearby Pictures

@@ -1,0 +1,55 @@
+id,path,functional,transactional,path_length, boundary_num, control_num, entity_num, actor_num, utw, diagram,useCase
+1,User->Camera App->show picture and options to post nearby or to an event->Options to post,EQ,CTRL|INT,4,2,1,0,1,5,Post Picture,Post Picture
+2,User->Camera App->Event and caption Input,FUNC_NA,TRAN_NA,3,2,0,0,1,4,Post Picture,Post Picture
+3,User->Camera App->opens up the gallery application->gallery application,EQ,CTRL|INT,4,2,1,0,1,5,Post Picture,Post Picture
+4,User->gallery application->shows the picture and text box for caption->Event and caption Input,EQ,CTRL|INT,4,2,1,0,1,5,Post Picture,Post Picture
+5,User->Camera Icon->Launch Camera Application->Camera App,EQ,CTRL|INT,4,2,1,0,1,4,Post Picture,Post Picture
+6,User->Options to post->retrive user's location and posts the picture at location->Picture,EI,CTRL|DM|EI,4,1,1,1,1,1,Post Picture,Post Picture
+7,User->Delete Button->Shows confirm prompt->Confirm Box,EQ,CTRL|INT,4,2,1,0,1,5,Delete Picture,Delete Picture
+8,User->Confirm Box->close the prompt and delete the picture->Picture,EI,CTRL|DM|EI,4,1,1,1,1,2,Delete Picture,Delete Picture
+9,User->Picture Gallery->retrieve picture details->Picture,EI,CTRL|DM|EI,4,1,1,1,1,1,View Specific Picture,View Specific Picture
+10,User->Heart Icon on a picture->Store the like information->Like Information,EI,CTRL|DM|EI,4,1,1,1,1,1,Like Picture,Like Picture
+11,User->Heart Icon on a picture->Store the like information->The total number of likes,EQ,CTRL|INT,4,2,1,0,1,4,Like Picture,Like Picture
+12,User->The heart icon on picture->remove the user liking information->Like Information,EI,CTRL|DM|EI,4,1,1,1,1,1,Unlike Picture,Unlike Picture
+13,User->The heart icon on picture->remove the user liking information->Total Number of Likes,EQ,CTRL|INT,4,2,1,0,1,4,Unlike Picture,Unlike Picture
+14,User->report confirm dialog->store report information->report information,EI,CTRL|DM|EI,4,1,1,1,1,1,Report Picture - Submit,Report Picture - Submit
+15,User->Report icon on the picture->prompot confirm->report confirm dialog,EQ,CTRL|INT,4,2,1,0,1,5,Report Picture - Submit,Report Picture - Submit
+16,User->Download button->download to phone->Local Storage,EI,CTRL|DM|EI,4,1,1,1,1,1,Save Picture to Device,Save Picture to Device
+17,User->Hashtag input box->Search->picture->shows the search result->Search Result,FUNC_NA,CTRL|DM|EQ|INT,6,2,2,1,1,7,Browse Event Pictures,Browse Event Pictures
+18,User->Search Result->shows the  pictures clicked->Picture Display,EQ,CTRL|INT,4,2,1,0,1,5,Browse Event Pictures,Browse Event Pictures
+19,User->Hashtag icon->Show hashtag text input->Hashtag input box,EQ,CTRL|INT,4,2,1,0,1,4,Browse Event Pictures,Browse Event Pictures
+20,User->Filter Icon->Display sorting options->Sorting options,EQ,CTRL|INT,4,2,1,0,1,4,Sort Pictures,Sort Pictures
+21,User->Sorting options->sort the picture->Sorted List of Pictures,EQ,CTRL|INT,4,2,1,0,1,5,Sort Pictures,Sort Pictures
+22,User->Private Event Name and Password Input->Check the presence of the event->Warning information of duplicate,EQ,CTRL|INT,4,2,1,0,1,5,Create Private Event,Create Private Event
+23,User->Delete Event Button->Show warning of deletion->Confirm Box,EQ,CTRL|INT,4,2,1,0,1,5,Delete Event,Delete Event
+24,User->Confirm Box->Close warning and delete event->Delete Picture->Picture,EI,CTRL|DM|EI,5,1,2,1,1,2,Delete Event,Delete Event
+25,User->Confirm Box->Close warning and delete event->Event,EI,CTRL|DM|EI,4,1,1,1,1,1,Delete Event,Delete Event
+26,User->Search box of events->Search events by name->List of Events,EQ,CTRL|INT,4,2,1,0,1,4,Search Events,Search Events
+27,User->Search box of events->Search events by name->Event,EI,CTRL|DM|EI,4,1,1,1,1,1,Search Events,Search Events
+28,User->Public Event Name Field->Create the public event->Public Event,EI,CTRL|DM|EI,4,1,1,1,1,1,Create Public Events,Create Public Events
+29,User->Public Event Name Field->Check presence of the event->Warning Information of Duplicate,EQ,CTRL|INT,4,2,1,0,1,4,Create Public Events,Create Public Events
+30,User->Query Users List Button->query user list->user list filter box,EQ,CTRL|INT,4,2,1,0,1,4,Browse Users,Browse Users
+31,User->Query Users List Button->query user list->User,EI,CTRL|DM|EI,4,1,1,1,1,1,Browse Users,Browse Users
+32,User->user list filter box->Filter users->Filtered List of Users,EQ,CTRL|INT,4,2,1,0,1,5,Browse Users,Browse Users
+33,User->Click user suspend button->Prompt confirm dialog->Confirm Dialog,EQ,CTRL|INT,4,2,1,0,1,4,Suspend User - Confirm,Suspend User - Confirm
+34,User->Confirm Dialog->Suspend User->User List,EQ,CTRL|INT,4,2,1,0,1,5,Suspend User - Confirm,Suspend User - Confirm
+35,User->Confirm Dialog->Suspend User->User,EI,CTRL|DM|EI,4,1,1,1,1,1,Suspend User - Confirm,Suspend User - Confirm
+36,Admin->Event Update Button->retrieve events->Event List,EQ,CTRL|INT,4,2,1,0,1,4,Update Event,Update Event
+37,Admin->Event Update Button->retrieve events->Event,EI,CTRL|DM|EI,4,1,1,1,1,1,Update Event,Update Event
+38,Admin->Event List->Prompt Event Update Dialog->Event Information Update Page,EQ,CTRL|INT,4,2,1,0,1,5,Update Event,Update Event
+39,Admin->Event Information Update Page->Update Event Information->Event,EI,CTRL|DM|EI,4,1,1,1,1,2,Update Event,Update Event
+40,User->Query Picture List->retrive the list of picture->Image Filter Box,EQ,CTRL|INT,4,2,1,0,1,4,Search Pictures,Search Pictures
+41,User->Query Picture List->retrive the list of picture->Picture,EI,CTRL|DM|EI,4,1,1,1,1,1,Search Pictures,Search Pictures
+42,User->Image Filter Box->Filter Pictures->List of pictures,EQ,CTRL|INT,4,2,1,0,1,5,Search Pictures,Search Pictures
+43,User->Picture restore button->Restore reported picture->Report,EI,CTRL|DM|EI,4,1,1,1,1,1,Restore Reported Picture,Restore Reported Picture
+44,Admin->Click system setting button->Load system setting page->System Setting Page,EQ,CTRL|INT,4,2,1,0,1,4,Change App Settings,Change App Settings
+45,Admin->System Setting Page->Store System Settings->System Settings,EI,CTRL|DM|EI,4,1,1,1,1,1,Change App Settings,Change App Settings
+46,Admin->Click the number of pictures posted per month->Search pictures posted in the month->Pictures,EI,CTRL|DM|EI,4,1,1,1,1,1,Generate Statistics Report,Generate Statistics Report
+47,Admin->Click the number of pictures posted per month->Search pictures posted in the month->The number of pictures per month,EQ,CTRL|INT,4,2,1,0,1,4,Generate Statistics Report,Generate Statistics Report
+48,User->Login Page->Check username and password->Facebook Service,FUNC_NA,CTRL|EXTIVK,4,1,1,0,2,1,Login,Login
+49,User->Login Page->Check username and password->App Main Page,EQ,CTRL|INT,4,2,1,0,1,5,Login,Login
+50,User->Login Page->Check username and password->User,EI,CTRL|DM|EI,4,1,1,1,1,1,Login,Login
+51,User->Register Page->Check User Information->User,EI,CTRL|DM|EI,4,1,1,1,1,1,Register,Register
+52,User->Register Page->Check User Information->Warning Invalid Information,EQ,CTRL|INT,4,2,1,0,1,4,Register,Register
+53,User->Logout Button->Clear Local Storage and Exit->Local Storage,EI,CTRL|DM|EI,4,1,1,1,1,1,Logout,Logout
+54,User->Radius Setting Button->Search pictures by radius->Pictures,EI,CTRL|DM|EI,4,1,1,1,1,1,View Nearby Pictures,View Nearby Pictures
