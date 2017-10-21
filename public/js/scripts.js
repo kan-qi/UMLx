@@ -12,6 +12,8 @@ function setCookie(cname, cvalue, exdays) {
 
 function model_file_upload_fnc() {
 	var formData = new FormData($('#model-file-submit-form')[0]);
+	console.log("starting the ajax call to some where")
+	console.log(formData);
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
 	$.ajax({
 		type : 'POST',
@@ -30,11 +32,11 @@ function model_file_upload_fnc() {
 			// $("#commentList").append($("#name").val() + "<br/>" +
 			// $("#body").val());
 			console.log("fail");
-			alert("There was an error submitting comment");
+			console.log(err);
+			alert("There was an error submitting commentA");
 		}
 	});
 
-	return false;
 }
 
 
@@ -58,7 +60,7 @@ function model_survey_file_upload_fnc() {
 			// $("#commentList").append($("#name").val() + "<br/>" +
 			// $("#body").val());
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentB");
 		}
 	});
 }
@@ -84,7 +86,7 @@ function model_file_update_fnc(){
 			// $("#commentList").append($("#name").val() + "<br/>" +
 			// $("#body").val());
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentC");
 		}
 	});
 
@@ -102,7 +104,7 @@ function query_exist_models_fnc(projectId) {
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentD");
 		}
 	});
 
@@ -129,7 +131,7 @@ function query_model_detail_func(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentE");
 		}
 	});
 
@@ -150,7 +152,7 @@ function delete_use_case_func(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentF");
 		}
 	});
 
@@ -175,7 +177,7 @@ function query_model_usecase_func(modelId) {
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentG");
 		}
 	});
 
@@ -199,7 +201,7 @@ function reanalyse_model_func(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentH");
 		}
 	});
 
@@ -224,7 +226,7 @@ function use_case_evaluation_upload_fnc(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentI");
 		}
 	});
 
@@ -249,7 +251,7 @@ function model_evaluation_upload_fnc(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentJ");
 		}
 	});
 
@@ -275,7 +277,7 @@ function query_sub_model_detail_func(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentK");
 		}
 	});
 
@@ -295,7 +297,7 @@ function query_repo_analytics_func(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentL");
 		}
 	});
 
@@ -328,7 +330,7 @@ function dump_model_evaluation_for_use_cases_func(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentM");
 		}
 	});
 
@@ -365,7 +367,7 @@ function request_display_data(){
 		},
 		error : function() {
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentN");
 		}
 	});
 
@@ -790,7 +792,7 @@ function load_file_upload_fnc(type) {
 			// $("#commentList").append($("#name").val() + "<br/>" +
 			// $("#body").val());
 			console.log("fail");
-			alert("There was an error submitting comment");
+			alert("There was an error submitting commentO");
 		}
 	});
 }
