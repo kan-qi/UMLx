@@ -237,6 +237,23 @@
 		});
 	}
 
+	/*
+	shekhars: on model update, we see this error intermittently, not fixed yet,
+
+	
+	D:\git\UMLx\node_modules\mongodb\lib\utils.js:123
+    process.nextTick(function() { throw err; });
+                                  ^
+	MongoError: Resulting document after update is larger than 16777216
+		at Function.MongoError.create (D:\git\UMLx\node_modules\mongodb-core\lib\error.js:31:11)
+		at toError (D:\git\UMLx\node_modules\mongodb\lib\utils.js:139:22)
+		at D:\git\UMLx\node_modules\mongodb\lib\collection.js:1059:67
+		at D:\git\UMLx\node_modules\mongodb-core\lib\connection\pool.js:469:18
+		at _combinedTickCallback (internal/process/next_tick.js:67:7)
+		at process._tickCallback (internal/process/next_tick.js:98:9)
+
+	*/
+
 	function saveModelInfo(modelInfo, repoId, callbackfunc) {
 		MongoClient.connect(url, function(err, db) {
 			if (err) throw err;
