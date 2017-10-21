@@ -179,7 +179,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 	var formInfo = req.body;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName);
 		console.log('updated model info');
 		console.log(modelInfo);
@@ -189,18 +189,18 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 			umlModelAnalyzer.analyseModel(modelInfo, function(){
 				console.log("model analysis complete");
 			});
-//			console.log(modelInfo);
+			console.log(modelInfo);
 			umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
-//				console.log(modelInfo);
+				console.log(modelInfo);
 				umlModelInfoManager.queryRepoAnalytics(repoId, function(repoAnalytics, repoInfo){
 					console.log("=============repoAnalytics==========");
-//					console.log(repoAnalytics);
+					console.log(repoAnalytics);
 					res.render('mainPanel', {repo:repoInfo});
 				}, true);
 			});
 		});
 	});
-})
+});
 
 
 //This funtion is same as loadEmpiricalUsecaseDataForRepo, except we just take file from user input and pass it down.
@@ -793,11 +793,9 @@ app.get('/evaluateModelForUseCases', function(req, res){
 				    useCaseEvaluationStr += res.end(useCaseEvaluationStr);
 					}
 				});
-				
-				
 			});
 		}, true);
-})
+});
 
 app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');	
@@ -836,15 +834,24 @@ app.get('/', function(req, res){
 			
 		
 	});
-})
+});
+
+app.get('/thankYou', function(req, res){
+	console.log(req.body);
+	if(req.body!== undefined){
+		var formInfo = req.body;
+		umlModelInfoManager.saveSurveyData(formInfo);
+	}else{
+		console.log("No data found to save, skipping it");
+	}
+	res.render('thankYou');
+});
 
 
 
 var server = app.listen(8081,'127.0.0.1', function () {
-
   var host = server.address().address
   var port = server.address().port
-
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
