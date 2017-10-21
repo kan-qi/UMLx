@@ -37,6 +37,35 @@ function model_file_upload_fnc() {
 	return false;
 }
 
+
+function model_survey_file_upload_fnc() {
+	var formData = new FormData($('#model-file-submit-form')[0]);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$.ajax({
+		type : 'POST',
+		url : "uploadSurveyData",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#main-panel").html("");
+			$("#main-panel").append(response);
+		},
+		error : function() {
+			// $("#commentList").append($("#name").val() + "<br/>" +
+			// $("#body").val());
+			console.log("fail");
+			alert("There was an error submitting comment");
+		}
+	});
+
+	return false;
+}
+
+
 function model_file_update_fnc(){
 	var formData = new FormData($('#model-file-update-submit-form')[0]);
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
