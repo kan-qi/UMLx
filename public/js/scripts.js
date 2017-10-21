@@ -61,8 +61,6 @@ function model_survey_file_upload_fnc() {
 			alert("There was an error submitting comment");
 		}
 	});
-
-	return false;
 }
 
 
