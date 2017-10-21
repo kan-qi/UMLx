@@ -122,7 +122,6 @@ app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:
 	console.log(req.body);
 	var formInfo = req.body;
 	umlModelInfoManager.saveSurveyData(formInfo);
-	return true;
 });
 
 
@@ -770,13 +769,6 @@ app.get('/', function(req, res){
 });
 
 app.get('/thankYou', function(req, res){
-	console.log(req.body);
-	if(req.body!== undefined){
-		var formInfo = req.body;
-		umlModelInfoManager.saveSurveyData(formInfo);
-	}else{
-		console.log("No data found to save, skipping it");
-	}
 	res.render('thankYou');
 });
 

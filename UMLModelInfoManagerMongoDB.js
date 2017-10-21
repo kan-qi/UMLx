@@ -82,11 +82,11 @@
 	function queryModelAnalytics(modelId, repoId, callbackfunc, update){
 		/*
 		 * query Analytics
-		 * 
+		 *
 		 * 1. first search for the field of model: model_Analytics
 		 * 2. calculate based on useCase Analytics, if exists
 		 * 3. if useCase Analytics, doesn't exist, calculate useCase Analytics
-		 * 
+		 *
 		 */
 
 		if(update !== true){
@@ -272,7 +272,7 @@
 //			console.log(modelInfo);
 			var o_id = new mongo.ObjectID(repoId);
 			db.collection("repo_collection").update({_id:o_id}, {$pull: {'models': {'_id': modelId}}}, function(err){
-				if (err) { 
+				if (err) {
 					console.log(err);
 					callbackfunc(false);
 					return;
@@ -303,7 +303,7 @@
 			var modelQuery = getModelQuery(modelId, repoId);
 			db.collection("repo_collection").update(modelQuery, {$pull: {'models.$.useCases':{'_id':useCaseId}}}, function(err){
 				console.log("delete useCase");
-				if (err) { 
+				if (err) {
 					console.log(err);
 					callbackfunc(false);
 					return;
@@ -328,7 +328,7 @@
 			if (err) throw err;
 
 			// check if a user exists with same email or username --> in such a case throw an error
-			var queryCheckExisting = { 
+			var queryCheckExisting = {
 					"username":username,
 					"password":pwd
 
@@ -338,7 +338,7 @@
 				if (err) throw err;
 
 				if(user){
-					// found an existing user 
+					// found an existing user
 					var userId = user._id;
 
 					var repoInfo = {};
@@ -383,7 +383,7 @@
 			if (err) throw err;
 
 			// check if a user exists with same email or username --> in such a case throw an error
-			var queryCheckExisting = { 
+			var queryCheckExisting = {
 					$or:[
 					     {"username":username},
 					     {"email":email}
@@ -394,7 +394,7 @@
 				if (err) throw err;
 
 				if(data){
-					// found an existing user 
+					// found an existing user
 					db.close();
 					var result = {
 							success: false,
@@ -409,14 +409,14 @@
 					var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise }
 					db.collection("users").insertOne(userInfo, function(err, result) {
 						if (err) throw err;
-						db.close();	
+						db.close();
 
 						// since the user successfully signed up create a repo for this user
 						if(userInfo.isEnterprise){
 							createRepo(username,pwd,function(repo){
 								console.log('created a new repo '+repo._id);
 							});
-						} 
+						}
 
 						var payload = {
 								userId : userInfo._id,
@@ -450,7 +450,7 @@
 			if (err) throw err;
 
 			// check if a user exists with same email or username --> in such a case throw an error
-			var queryCheckExisting = { 
+			var queryCheckExisting = {
 					"username":username,
 					"password":pwd
 			}
@@ -460,7 +460,7 @@
 				if (err) throw err;
 				if(data){
 
-					// found an existing user 
+					// found an existing user
 					db.close();
 
 					// generate a token and pass it as response
