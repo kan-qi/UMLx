@@ -120,12 +120,12 @@ div.block.panel.panel-default
                 h2 #{repo.models.length}
                 span Classes
         div.col-sm-12.scatter-plot-row
-          img(src="#{repoAnalytics.AccessDir}/charts/tendingplot.PNG" style="width:100%;")  
+          img(src="#{repoAnalytics.AccessDir}/trending_lines.svg" style="width:100%;")  
         div.col-sm-12.chart-row  
           .col-sm-6
-            img(src="#{repoAnalytics.AccessDir}/charts/project_distributions.png" style="width:100%;")
+            img(src="#{repoAnalytics.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
           .col-sm-6 
-            img(src="#{repoAnalytics.AccessDir}/charts/piechart.svg" style="width:100%;")                        
+            img(src="#{repoAnalytics.AccessDir}/transaction_type_percentage_plot.svg" style="width:100%;")                        
      div.tab-pane.fade(id="repo_distributions")
       if repoAnalytics
        div(id="repo-stats-chart")

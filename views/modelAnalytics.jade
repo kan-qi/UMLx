@@ -129,12 +129,12 @@ div.block.panel.panel-default
                 h2 #{modelAnalytics.ActorNum}
                 span Actors
         div.col-sm-12.scatter-plot-row
-          img(src="#{modelAnalytics.AccessDir}/../charts/tendingplot.PNG" style="width:100%;")  
+          img(src="#{modelAnalytics.AccessDir}/trending_lines.svg" style="width:100%;")  
         div.col-sm-12.chart-row  
           .col-sm-6
-            img(src="#{modelAnalytics.AccessDir}/../charts/densityplot.svg" style="width:100%;")
+            img(src="#{modelAnalytics.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
           .col-sm-6 
-            img(src="#{modelAnalytics.AccessDir}/../charts/piechart.svg" style="width:100%;")
+            img(src="#{modelAnalytics.AccessDir}/transaction_type_percentage_plot.svg" style="width:100%;")
      div.tab-pane.fade(id="model-distributions")
       div.stats-chart
        img(src="#{modelAnalytics.AccessDir}/control_operation_analysis_result.svg")

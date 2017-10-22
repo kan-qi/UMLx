@@ -6,17 +6,18 @@ args = commandArgs(trailingOnly=TRUE)
 # arg3: expanded path statistics file path
 # arg4: use case statistics file path
 # arg5: domain model statistics file path
-# arg6: output dir
-# arg7: working directory
+# arg6: model version info file path
+# arg7: output dir
+# arg8: working directory
 
-if (length(args) < 5) {
-	stop("At least five argument must be supplied (input file).", call.=FALSE)
-} else if (length(args)==5) {
+if (length(args) < 6) {
+	stop("At least six argument must be supplied (input file).", call.=FALSE)
+} else if (length(args)==6) {
 	# default output file
-	args[6] = "."
-	args[7] = '.'
-} else if (length(args) == 6){
-	args[6] = '.'
+	args[7] = "."
+	args[8] = '.'
+} else if (length(args) == 7){
+	args[8] = '.'
 }
 
 elementStatisticsPath = args[1]
@@ -24,8 +25,10 @@ pathStatisticsPath = args[2]
 expandedPathStatisticsPath = args[3]
 usecaseStatisticsPath = args[4]
 domainModelStatisticsPath = args[5]
-outputDir <- args[6]
-workDir <- args[7]
+modelVersionInfoPath = args[6]
+outputDir <- args[7]
+workDir <- args[8]
+reportPath <- paste(outputDir,'model_analysis_report.txt', sep='/')
 # store the current directory
 initial.dir<-getwd()
 setwd(workDir)
@@ -35,15 +38,18 @@ setwd(workDir)
 cat(getwd())
 # load the necessary libraries
 library(lattice)
+sink(reportPath)
 # set the output file
 # cat(paste(args[3],"repo_analysis_result.svg", sep="/"))
 # load the dataset
-
+library(ggplot2)
+library(data.table)
 elementData <- read.csv(elementStatisticsPath, header=TRUE)
 pathData <- read.csv(pathStatisticsPath, header=TRUE)
 expandedPathData <- read.csv(expandedPathStatisticsPath, header=TRUE)
 usecaseData <- read.csv(usecaseStatisticsPath, header=TRUE)
 domainModelData <- read.csv(domainModelStatisticsPath, header=TRUE)
+modelVersionInfo=read.csv(modelVersionInfoPath,header=TRUE)
 # cat(slocEffortData[0])
 # result <- str(slocEffortData)
 # cat(result)
@@ -100,6 +106,7 @@ if(length(naPathData) == 0 || is.na(naPathData)){
 }
 naPathData = as.numeric(naPathData)
 
+
 svg(paste(outputDir,"interface_operation_analysis_result.svg", sep="/"))
 print(hist(intPathData, main="Inteface Operation Num", xlab="Path Length", breaks=15))
 svg(paste(outputDir,"control_operation_analysis_result.svg", sep="/"))
@@ -115,6 +122,58 @@ print(hist(extcllPathData, main="External Call Operation Num", xlab="Path Length
 svg(paste(outputDir,"not_matched_analysis_result.svg", sep="/"))
 print(hist(naPathData, main="Not Matched Operation Num", xlab="Path Length", breaks=15))
 
+
+#Added the smoothing distributions for the number of transactions for different types.
+#converting the numeric vectors into data frames
+DataFrame_Interface_Operation=as.data.frame(intPathData)
+DataFrame_Control_Operation=as.data.frame(ctrlPathData)
+DataFrame_External_Input_Operation=as.data.frame(eiPathData)
+DataFrame_External_Query_Operation=as.data.frame(eqPathData)
+DataFrame_External_Invocation_Operation=as.data.frame(extivkPathData)
+DataFrame_Not_Matched_Operation=as.data.frame(naPathData)
+# adding a column called col for each document for visualizing each dataframe through a color
+DataFrame_Interface_Operation$col="Interface_Operation"
+DataFrame_Control_Operation$col="Control_Operation"
+DataFrame_External_Input_Operation$col="External_Input_Operation"
+DataFrame_External_Query_Operation$col="External_Query_Operation"
+DataFrame_External_Invocation_Operation$col="External_Invocation_Operation"
+DataFrame_Not_Matched_Operation$col="Not_Matched_Operation"
+
+#combine all the 6 data frames
+DataFrame_Combined=data.frame(mapply(c,DataFrame_Interface_Operation,DataFrame_Control_Operation,
+				DataFrame_External_Input_Operation,DataFrame_External_Query_Operation,DataFrame_External_Invocation_Operation,
+				DataFrame_Not_Matched_Operation,SIMPLIFY=FALSE))
+print(DataFrame_Combined)
+svg(paste(outputDir,"merged_distributions_for_transactions.svg",sep="/"), width=8, height=4)
+print(ggplot(DataFrame_Combined, aes(x = intPathData,fill=col)) + geom_density(alpha = 0.5)+xlab("Number of Paths"))
+## end of the smoothing distributions.
+
+
+
+#draw trending line based on version info
+svg(paste(outputDir,"trending_lines.svg",sep="/"), width=12, height=3)
+print("model version info")
+print(modelVersionInfo)
+print(ggplot(modelVersionInfo,aes(x=update_time,group=1))+geom_line(aes(y=number_of_paths))+ggtitle("Number of Transactions"))
+
+
+#draw the piechart for the types of operations
+transactionalData <- factor(expandedPathData[expandedPathData$transactional != 'TRAN_NA' & expandedPathData$transactional != 'EQ' & expandedPathData$transactional != 'EI', 'transactional'])
+#transactionalData <- data[, 'transactional']
+svg(paste(outputDir, "transaction_type_percentage_plot.svg", sep="/"), width=5, height=5)
+# Pie Chart from data frame with Appended Sample Sizes
+#percentlabels<- round(100*transactionalData/sum(transactionalData), 1)
+mytable <- table(transactionalData)
+print(mytable)
+#mytable$TRAN_NA= NULL
+#colors = c("red", "yellow", "green", "violet", "orange", "blue", "pink", "cyan") 
+#colors = c("cyan", "white", "cornsilk", "purple", "violetred1", "green3")
+colors=c("#332288", "#88CCEE", "#44AA99", "#117733", "#999933", "#DDCC77", "#CC6677","#AA4499")
+percentageLbls = paste(round(100*mytable/sum(mytable), 1),"%", sep="")
+lbls <- names(mytable) 
+pieChart <- pie(mytable, labels = percentageLbls, main="Distribution of Types of Operations", col=colors)
+print(pieChart)
+legend("topright", lbls, cex=0.8, fill=colors)
 
 
 #usecase statistics
