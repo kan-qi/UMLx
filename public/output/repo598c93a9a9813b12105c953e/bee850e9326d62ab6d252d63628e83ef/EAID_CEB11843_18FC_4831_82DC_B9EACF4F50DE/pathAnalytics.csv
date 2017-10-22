@@ -1,0 +1,7 @@
+id,path,functional,transactional,path_length, boundry_num, control_num, entity_num, actor_num, diagram,useCase
+1,Attendee->Course detail page->Redirect to home page->Home page,EQ,CTRL|INT,4,undefined,1,0,1,Register course,Register course
+2,Attendee->Course detail page->setupPayment->EventBrite,FUNC_NA,CTRL|EXTIVK,4,undefined,1,0,2,Register course,Register course
+3,Attendee->Payment page->make payment,FUNC_NA,TRAN_NA,3,undefined,0,0,1,Register course,Register course
+4,EventBrite->bring up payment page->Payment page,FUNC_NA,CTRL|EXTCLL|INT,3,undefined,1,0,1,Register course,Register course
+5,EventBrite->receive payment result->Send out confirmation email->Email protocol,FUNC_NA,CTRL|EXTIVK,4,undefined,2,0,2,Register course,Register course
+6,EventBrite->receive payment result->Send out confirmation email->registration success,FUNC_NA,CTRL|EXTCLL|INT,4,undefined,2,0,1,Register course,Register course

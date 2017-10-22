@@ -1,0 +1,22 @@
+
+Call:
+lm(formula = Normalized_UC_Effort ~ Simple_UC + Average_UC + 
+    Complex_UC, data = useCaseData)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-48.28 -28.87 -13.96  12.67 109.56 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)  
+(Intercept)   14.367     21.684   0.663   0.5170  
+Simple_UC      2.066      1.157   1.786   0.0931 .
+Average_UC     4.710      4.147   1.136   0.2728  
+Complex_UC     1.726      3.899   0.443   0.6639  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 44.91 on 16 degrees of freedom
+Multiple R-squared:  0.2499,	Adjusted R-squared:  0.1092 
+F-statistic: 1.777 on 3 and 16 DF,  p-value: 0.1921
+
