@@ -239,9 +239,9 @@
 
 
 	function generateRepoStatisticalCharts(repoAnalytics, callbackfunc){
-		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/RepoAnalyticsScript.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.ElementAnalyticsFileName+'" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.PathAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.UseCaseAnalyticsFileName+'" "'+modelAnalytics.OutputDir+'/model_version_info.csv" "'+repoAnalytics.OutputDir+'" "."';
+		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/RepoAnalyticsScript.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.ElementAnalyticsFileName+'" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.PathAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.UseCaseAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'/model_version_info.csv" "'+repoAnalytics.OutputDir+'" "."';
 //		console.log('generate model Analytics');
-//		console.log(command);
+		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
 
 			if (error !== null) {

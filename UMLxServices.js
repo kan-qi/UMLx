@@ -44,12 +44,12 @@ app.use(cookieParser());
 app.set('views', './views');
 app.set('view engine', 'jade');
 
-var userInfo = {
-		userName: "kqi",
-		password: "123456",
-//		repoId:"59739373e190cc204c5ffeb1" // for resilient agile
-		repoId:"598c93a9a9813b12105c953e"
-}
+//var userInfo = {
+//		userName: "kqi",
+//		password: "123456",
+////		repoId:"59739373e190cc204c5ffeb1" // for resilient agile
+//		repoId:"598c93a9a9813b12105c953e"
+//}
 
 var modelInfo = {};
 
@@ -173,7 +173,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 	var umlFilePath = req.files['uml-file'][0].path;
 	var umlModelName = req.body['uml-model-name'];
 	var umlModelType = req.body['uml-model-type'];
-	var repoId = req.body['repo-id'];
+	var repoId = req.userInfo.repoId;
 	var uuidVal = req.body['uuid'];
 	var formInfo = req.body;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
@@ -184,13 +184,14 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		console.log(modelInfo);
 		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
-			console.log(modelInfo);
+//			console.log(modelInfo);
 			umlModelAnalyzer.analyseModel(modelInfo, function(){
 				console.log("model analysis complete");
 			});
-			console.log(modelInfo);
+//			console.log(modelInfo);
+			
 			umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
-				console.log(modelInfo);
+//				console.log(modelInfo);
 				umlModelInfoManager.queryRepoAnalytics(repoId, function(repoAnalytics, repoInfo){
 					console.log("=============repoAnalytics==========");
 					console.log(repoAnalytics);
@@ -203,12 +204,10 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 
 
 //This funtion is same as loadEmpiricalUsecaseDataForRepo, except we just take file from user input and pass it down.
-app.post('/uploadUseCaseFile',
-upload.fields([{name:'usecase-file',maxCount:1}, {name:'repo-id', maxCount:1}]),
-function(req, res) {
+app.post('/uploadUseCaseFile', upload.fields([{name:'usecase-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
 	console.log('/uploadUseCaseFile');
 	var usecaseFilePath = req.files['usecase-file'][0].path;
-	var repoId = req.body['repo-id'];
+	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
 			if(!repo){
@@ -222,12 +221,10 @@ function(req, res) {
 	});
 })
 
-app.post('/uploadModelFile',
-upload.fields([{name:'model-file',maxCount:1}, {name:'repo-id', maxCount:1}]),
-function(req, res) {
+app.post('/uploadModelFile', upload.fields([{name:'model-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
 	console.log('/uploadModelFile');
 	var modelFilePath = req.files['model-file'][0].path;
-	var repoId = req.body['repo-id'];
+	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
 			if(!repo){
@@ -242,12 +239,10 @@ function(req, res) {
 	});
 })
 
-app.post('/uploadCOCOMOFile',
-upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]),
-function(req, res) {
+app.post('/uploadCOCOMOFile', upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
 	console.log('/uploadCOCOMOFile');
 	var COCOMOFilePath = req.files['COCOMO-file'][0].path;
-	var repoId = req.body['repo-id'];
+	var repoId = req.userInfo.repoId;
 	res.end('<h1>function is not implemented');
 	// COCOMOCalculator.loadCOCOMOData(repoId, function(repoInfo){
 	// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
@@ -265,11 +260,11 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 	var umlFilePath = req.files['uml-file'][0].path;
 	var umlModelType = req.body['uml-model-type'];
 	var modelId = req.body['model-id'];
-	var repoId = req.body['repo-id'];
+	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType);
 //		console.log('umlFileInfo');
-		umlModelInfoManager.queryModelInfo(modelId, userInfo.repoId, function(modelInfo){
+		umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 			var modelInfoVersion = umlModelInfoManager.initModelInfo(umlFileInfo, modelInfo.umlModelName, modelInfo)
 			umlModelAnalyzer.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
 			//update model analytics.
@@ -283,7 +278,7 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 				if(!modelInfo){
 					res.end('model doesn\'t exist!');
 				}
-				res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:userInfo.repoId});
+				res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:repoId});
 			});
 			
 		});
@@ -296,13 +291,33 @@ app.get('/deleteModel', function (req, res){
 	console.log("/deleteModel");
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
+	var reanalyzeRepo = req.query['reanalyse_repo'];
+	var reanalyseRepo = false;
 	umlModelInfoManager.deleteModel(repoId, modelId, function(result){
 		if(!result){
 			res.end('delete error!');
 			return;
 		}
 		
+		if(reanalyseRepo){
+		 queryRepoInfo(repoId, function(repoInfo){
+		      console.log(repoInfo);
+		      umlModelAnalyzer.analyseRepo(repoInfo, function(){
+					console.log("model analysis is complete");
+				});
+				updateRepoAnalytics(repoInfo.RepoAnalytics, function(){
+//					umlFileManager.deleteDir(function(result){
+					
+//					});
+					
+					res.redirect('/');
+
+				})
+			});
+		}
+		else{
 		res.redirect('/');
+		}
 	});
 })
 
@@ -509,11 +524,12 @@ app.get('/queryExistingModelsTest', function(req, res){
 
 app.get('/queryModelAnalytics', function(req, res){
 	var modelId = req.query.model_id;
-	umlModelInfoManager.queryModelAnalytics(modelId, userInfo.repoId, function(modelAnalytics, modelInfo){
+	var repoId = req.userInfo.repoId;
+	umlModelInfoManager.queryModelAnalytics(modelId, repoId, function(modelAnalytics, modelInfo){
 //		console.log('model Analytics');
 		//console.log(modelAnalytics);
 		console.log(modelInfo);
-		res.render('modelAnalytics', {modelAnalytics:modelAnalytics, repo_id:userInfo.repoId});
+		res.render('modelAnalytics', {modelAnalytics:modelAnalytics, repo_id:repoId});
 	});
 //	var useCase = modelInfo.useCases[modelInfoId];
 
@@ -565,16 +581,16 @@ app.get('/setupRepoStorage', function(req, res){
 })
 
 
-app.get('/addRepo', function(req, res){
-	var userId = req.query.user_id;
-	var password = req.query.password;
-	if(userId === "flyqk" && password === "123456"){
-	umlModelInfoManager.createRepo(userId,password,function(repo){
-		console.log(repo);
-		res.end('database is set up');
-	    });
-	}
-})
+//app.get('/addRepo', function(req, res){
+//	var userId = req.query.user_id;
+//	var password = req.query.password;
+//	if(userId === "flyqk" && password === "123456"){
+//	umlModelInfoManager.createRepo(userId,password,function(repo){
+//		console.log(repo);
+//		res.end('database is set up');
+//	    });
+//	}
+//})
 
 
 app.get('/requestUseCaseDetail', function(req, res){
@@ -806,6 +822,7 @@ app.get('/', function(req, res){
 		var message = req.query.e;
 		
 		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
+//			console.log(req.userInfo);
 			
 			if(req.userInfo.isEnterprise){
 				// get the repoinfo for all the repo that are part of this enterprise account
