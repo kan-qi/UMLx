@@ -54,12 +54,7 @@ var userInfo = {
 var modelInfo = {};
 
 app.get('/signup',function(req,res){
-	
-	if(req.query.uid!=null && req.query.uid!=undefined){
-		res.render('signup', {uid:req.query.uid});
-	} else {
 	res.render('signup');
-	}
 });
 
 app.get('/login',function(req,res){
@@ -76,46 +71,20 @@ app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password'
 	
 })
 
-app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'enterpriseUserId',maxCount : 1}]),  function (req, res){
+app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1}]),  function (req, res){
 	
 	var email = req.body['email'];
 	var username = req.body['username'];
 	var pwd = req.body['password'];
-	var isEnterpriseUser= false;
-	if(req.body['enterpriseUser']){
-		isEnterpriseUser= req.body['enterpriseUser']=="on"? true : false;
-	}
-	var enterpriseUserId = '';
-	if(req.body['enterpriseUserId']){
-		 enterpriseUserId = req.body['enterpriseUserId'];
-		 // check if this is a valid one 
-		 umlModelInfoManager.queryUserInfo(enterpriseUserId, function(user){
+	var isEnterpriseUser = req.body['enterpriseUser']=="on"? true : false;
 	
-			 if(!user || !user.isEnterprise){
-				 console.log('Not a valid enterprise userId');
-				 var result = {
-            	          success: false,
-            	          message: 'Invalid Enterprise User Id',
-                 };
-				 res.json(result);
-			 }  else {
-				 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
-				        res.json(result)
-				    });
-			 }
-		 });
-
-	} else {
-    umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
+	console.log('isEnterpriseUser '+isEnterpriseUser);
+	
+    umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,function(result,message){
         res.json(result)
     });
-	}
 
 })
-
-app.get('/surveyProject', function(req, res){
-	res.render('surveyProject');	
-});
 
 
 //route middleware to verify a token
@@ -128,27 +97,15 @@ app.use(function(req, res, next) {
 
 	if (token) {
 	 // verifies secret and checks exp
-		 jwt.verify(token, config.secret, function(err, user) {      
+		 jwt.verify(token, config.secret, function(err, decoded) {      
 		   if (err) {
 			   console.log('Failed to authenticate token.');
 			   res.redirect('/login');
 			   //return res.json({ success: false, message: 'Failed to authenticate token.' });    
 		   } else {
 		     // if everything is good, save to request for use in other routes
-		     umlModelInfoManager.queryUserInfo(user.userId,function(user){
-		    	 
-		    	req.userInfo ={};
-		    	req.userInfo.userName = user.username;
-		    	req.userInfo.repoId = user.repoId;
-		    	req.userInfo._id = user._id;
-		    	req.userInfo.isEnterprise = (user.isEnterprise?true:false);
-		    	if(req.userInfo.isEnterprise){
-		    		req.userInfo.enterpriseUserId = user.enterpriseUserId;
-		    	}
-		    		
+		     req.decoded = decoded;    
 		     next();
-		    	
-		 	  });
 		   }
 		 });
 		
@@ -174,7 +131,6 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 	var umlModelName = req.body['uml-model-name'];
 	var umlModelType = req.body['uml-model-type'];
 	var repoId = req.body['repo-id'];
-	var uuidVal = req.body['uuid'];
 	var formInfo = req.body;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
@@ -295,7 +251,7 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 app.get('/deleteModel', function (req, res){
 	console.log("/deleteModel");
 	var modelId = req.query['model_id'];
-	var repoId = req.userInfo.repoId;
+	var repoId = userInfo.repoId;
 	umlModelInfoManager.deleteModel(repoId, modelId, function(result){
 		if(!result){
 			res.end('delete error!');
@@ -310,8 +266,8 @@ app.get('/deleteModel', function (req, res){
 app.get('/reanalyseModel', function (req, res){
 	console.log("/reanalyseModel");
 	var modelId = req.query['model_id'];
-	var repoId = req.userInfo.repoId;
-	umlModelInfoManager.queryModelInfo(modelId, req.userInfo.repoId, function(modelInfo){
+	var repoId = userInfo.repoId;
+	umlModelInfoManager.queryModelInfo(modelId, userInfo.repoId, function(modelInfo){
 		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 			umlModelAnalyzer.analyseModel(modelInfo, function(){
@@ -334,7 +290,7 @@ app.get('/reanalyseModel', function (req, res){
 app.get('/requestDomainModelDetail', function (req, res){
 	console.log("/requestDomainModelDetail");
 	var modelId = req.query['model_id'];
-	var repoId = req.userInfo.repoId;
+	var repoId = userInfo.repoId;
 //	console.log(modelId);
 	umlModelInfoManager.queryDomainModelDetail(modelId, repoId, function(domainModel){
 		if(!domainModel){
@@ -349,7 +305,7 @@ app.get('/requestDomainModelDetail', function (req, res){
 
 app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
 	console.log("/loadEmpiricalUsecaseDataForRepo");
-	var repoId = req.userInfo.repoId
+	var repoId = userInfo.repoId;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 	umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
 		if(!repo){
@@ -373,7 +329,7 @@ app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
 
 app.get('/loadEmpiricalModelDataForRepo', function (req, res){
 	console.log("/loadEmpiricalModelDataForRepo");
-	var repoId = req.userInfo.repoId
+	var repoId = userInfo.repoId;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 	umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
 		if(!repo){
@@ -399,7 +355,7 @@ app.get('/deleteUseCase', function (req, res){
 	console.log("/deleteUseCase");
 	var modelId = req.query['model_id'];
 	var useCaseId = req.query['useCase_id'];
-	var repoId = req.userInfo.repoId;
+	var repoId = userInfo.repoId;
 	umlModelInfoManager.deleteUseCase(repoId, modelId, useCaseId, function(result){
 		if(!result){
 			res.end('delete error!');
@@ -417,7 +373,7 @@ app.get('/deleteUseCase', function (req, res){
 app.get('/getUseCaseAnalyticsForModelCSV', function (req, res){
 	console.log("/getUseCaseAnalyticsForModelCSV");
 	var modelId = req.query['model_id'];
-	var repoId = req.userInfo.repoId;
+	var repoId = userInfo.repoId;
 		
 		umlModelInfoManager.queryModelAnalytics(modelId, repoId, function(modelAnalytics){
 			umlFileManager.loadCSVFileAsString(modelAnalytics.OutputDir+"/"+modelAnalytics.UseCaseAnalyticsFileName, function(csvData){
@@ -440,7 +396,7 @@ app.post('/uploadUseCaseEvaluation', upload.fields([{name:'ccss',maxCount:1},{na
 	var Effort = req.body['ph'];
 	var useCaseId = req.body['useCase-id'];
 	var modelId = req.body['model-id'];
-	var repoId = req.userInfo.repoId;
+	var repoId = userInfo.repoId;
 	
 	umlModelInfoManager.queryUseCaseAnalytics(repoId, modelId, useCaseId, function(useCaseAnalytics, useCaseInfo){
 		console.log("useCase analytics name");
@@ -476,7 +432,7 @@ app.post('/uploadModelEvaluation', upload.fields([{name:'ueucw',maxCount:1},{nam
 	}
 	
 	modelId = req.body['model-id'];
-	repoId = req.userInfo.repoId;
+	repoId = userInfo.repoId;
 	
 	console.log("model-id:"+modelId);
 	
@@ -539,7 +495,7 @@ app.get('/addModelTest', function(req, res){
 
 app.get('/requestModelInfo', function(req, res){
 	var modelId = req.query.model_id;
-	umlModelInfoManager.queryModelInfo(modelId, req.userInfo.repoId, function(modelInfo){
+	umlModelInfoManager.queryModelInfo(modelId, userInfo.repoId, function(modelInfo){
 //		console.log(modelInfo);
 		res.render('modelDetail', {modelInfo:modelInfo});
 	    });
@@ -580,7 +536,7 @@ app.get('/addRepo', function(req, res){
 app.get('/requestUseCaseDetail', function(req, res){
 	var useCaseId = req.query.useCase_id;
 	var modelId = req.query.model_id;
-	var repoId = req.userInfo.repoId;
+	var repoId = userInfo.repoId;
 	umlModelInfoManager.queryUseCaseAnalytics(repoId, modelId, useCaseId, function(useCaseAnalytics, useCaseInfo){
 //				console.log('use case detail');
 //				console.log(useCaseInfo);
@@ -611,7 +567,7 @@ app.get('/queryRepoAnalytics', function(req, res){
 	}
 	
 //	console.log(refresh);
-	umlModelInfoManager.queryRepoAnalytics(req.userInfo.repoId, function(repoAnalytics){
+	umlModelInfoManager.queryRepoAnalytics(userInfo.repoId, function(repoAnalytics){
 //		console.log(repoAnalytics);
 		res.render('repoAnalytics', {repoAnalytics:repoAnalytics});
 	}, refresh);
@@ -759,7 +715,7 @@ app.get('/evaluateRepoForUseCases', function(req, res){
 app.get('/evaluateModelForUseCases', function(req, res){
 	var modelId = req.query.model_id;
 //	var modelId = "a08440f186a8d13192784845c7301f981499148138239";
-	var repoId = req.userInfo.repoId;
+	var repoId = userInfo.repoId;
 	var simulation = false;
 	umlModelInfoManager.queryModelAnalytics(modelId, repoId, function(modelAnalytics, modelInfo){
 			umlEvaluator.evaluateModelForUseCases(modelInfo, function(useCaseEvaluationStr, modelInfo){
@@ -800,38 +756,16 @@ app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');	
 });
 
+app.get('/surveyProject', function(req, res){
+	res.render('surveyProject');	
+});
 
 
 app.get('/', function(req, res){
 		var message = req.query.e;
-		
-		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
-			
-			if(req.userInfo.isEnterprise){
-				// get the repoinfo for all the repo that are part of this enterprise account
-				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
-					repoIds.push(req.userInfo.repoId);
-					//console.log(repoIds);
-					umlModelInfoManager.queryRepoInfoForAdmin(repoIds, function(modelArray){
-						
-						for(var i in modelArray ){
-							var model = modelArray[i];
-							for(var j in model ){
-							repoInfo.models.push(model[j]);
-							}
-							
-						}
-						
-						res.render('index', {repo:repoInfo, message:message});
-						
-					});
-				});
-				
-			} else {
-				res.render('index', {repo:repoInfo, message:message});
-			}
-			
-		
+		umlModelInfoManager.queryRepoInfo(userInfo.repoId, function(repoInfo){
+		console.log(repoInfo);
+		res.render('index', {repo:repoInfo, message:message});
 	});
 });
 
@@ -847,4 +781,3 @@ var server = app.listen(8081,'127.0.0.1', function () {
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
-
