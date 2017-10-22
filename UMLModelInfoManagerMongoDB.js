@@ -276,6 +276,9 @@
 		MongoClient.connect(url, function(err, db) {
 			if (err) throw err;
 //			console.log(modelInfo);
+			var fs = require("fs");
+			fs.writeFile('./temp/modelInfo1.json', JSON.stringify(modelInfo, null, 2) , 'utf-8');
+			console.log(repoId);
 			var o_id = new mongo.ObjectID(repoId);
 			db.collection("repo_collection").update({_id:o_id}, {$push: {models: modelInfo}}, function(err, res) {
 				if (err) throw err;
@@ -309,23 +312,16 @@
 			  db.collection("repo_collection").update({_id:o_id}, {$pull: {'models': {'_id': modelId}}}, function(err){
 			      if (err) {
 			    	  console.log(err);
+			    	  if(callbackfunc){
 			    	  callbackfunc(false);
+			    	  }
 			    	  return;
 			      }
-			      queryRepoInfo(repoId, function(repoInfo){
-			      console.log(repoInfo);
-			      umlModelAnalyzer.analyseRepo(repoInfo, function(){
-						console.log("model analysis is complete");
-					});
-					updateRepoAnalytics(repoInfo.RepoAnalytics, function(){
-//						umlFileManager.deleteDir(function(result){
-						if(callbackfunc){
-							callbackfunc(modelId, repoId);
-						}
-//						});
-
-					})
-				});
+			      
+			      if(callbackfunc){
+						callbackfunc(modelId, repoId);
+				  }
+			     
 			});
 		});
 	}
