@@ -796,3 +796,20 @@ function load_file_upload_fnc(type) {
 		}
 	});
 }
+
+var activatedItem; 
+function colorUseCaseElementAndPath(name, type) {
+	var svg = $('.use-case')[0].getSVGDocument();
+	var list = svg.getElementsByTagName('g');
+	for (var item of list) {
+		if(item.getElementsByTagName("title")[0].innerHTML == name && type == "element") {
+			if(activatedItem) {
+				activatedItem.fill = "white";
+			}
+			item.getElementsByTagName('ellipse')[0].style.fill = "red";
+			activatedItem = item.getElementsByTagName('ellipse')[0].style;
+		} else {
+
+		}
+	}
+}
