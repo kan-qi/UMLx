@@ -35,10 +35,10 @@ if diagram
       tbody
        -var pathId = 1;
        each path in diagram.Paths
-        tr
-         th #{pathId}
-         th
+        tr(onclick="colorUseCaseElementAndPath('#{path.PathStr}', 'path')", class="usecase-tr")
+         td #{pathId}
+         td
           span.use-case-path #{path.PathStr}
-         th
+         td
           span.use-case-path-type #{path.Tag}
         - pathId++;

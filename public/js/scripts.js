@@ -797,19 +797,42 @@ function load_file_upload_fnc(type) {
 	});
 }
 
-var activatedItem; 
+var activatedItem, activatedPath = []; 
 function colorUseCaseElementAndPath(name, type) {
+	clearSelectedPathAndEdge();
 	var svg = $('.use-case')[0].getSVGDocument();
 	var list = svg.getElementsByTagName('g');
-	for (var item of list) {
-		if(item.getElementsByTagName("title")[0].innerHTML == name && type == "element") {
-			if(activatedItem) {
-				activatedItem.fill = "white";
+	if(type == "element") {
+		for (var item of list) {
+			if(item.getElementsByTagName("title")[0].innerHTML == name) {
+				item.getElementsByTagName('ellipse')[0].style.fill = "red";
+				activatedItem = item.getElementsByTagName('ellipse')[0].style;
 			}
-			item.getElementsByTagName('ellipse')[0].style.fill = "red";
-			activatedItem = item.getElementsByTagName('ellipse')[0].style;
-		} else {
-
 		}
+	} else {
+		var pathArray = name.split('->');
+		for(var i=0; i<pathArray.length-1; i++) {
+			for (var item of list) {
+				if(item.getElementsByTagName("title")[0].innerHTML == pathArray[i]+'-&gt;'+pathArray[i+1]) {
+					item.getElementsByTagName('polygon')[0].style.stroke = "green";
+					item.getElementsByTagName('polygon')[0].style.fill = "green";
+					item.getElementsByTagName('path')[0].style.stroke = "green";
+					activatedPath.push(item);
+				}
+			}
+		}
+	}
+}
+
+function clearSelectedPathAndEdge() {
+	if(activatedPath.length) {
+		for(var path of activatedPath) {
+			path.getElementsByTagName('polygon')[0].style.stroke = "black";
+			path.getElementsByTagName('polygon')[0].style.fill = "black";
+			path.getElementsByTagName('path')[0].style.stroke = "black";
+		}
+	}
+	if(activatedItem) {
+		activatedItem.fill = "white";
 	}
 }
