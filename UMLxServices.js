@@ -15,6 +15,8 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
 var sleep = require('sleep');
+var nodemailer = require('nodemailer');
+
 
 
 var storage = multer.diskStorage({
@@ -55,8 +57,8 @@ var modelInfo = {};
 
 app.get('/signup',function(req,res){
 	
-	if(req.query.uid!=null && req.query.uid!=undefined){
-		res.render('signup', {uid:req.query.uid});
+	if(req.query.tk!=null && req.query.tk!=undefined){
+		res.render('signup', {tk:req.query.tk});
 	} else {
 	res.render('signup');
 	}
@@ -76,7 +78,7 @@ app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password'
 	
 })
 
-app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'enterpriseUserId',maxCount : 1}]),  function (req, res){
+app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'token',maxCount : 1}]),  function (req, res){
 	
 	var email = req.body['email'];
 	var username = req.body['username'];
@@ -85,25 +87,41 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 	if(req.body['enterpriseUser']){
 		isEnterpriseUser= req.body['enterpriseUser']=="on"? true : false;
 	}
-	var enterpriseUserId = '';
-	if(req.body['enterpriseUserId']){
-		 enterpriseUserId = req.body['enterpriseUserId'];
-		 // check if this is a valid one 
-		 umlModelInfoManager.queryUserInfo(enterpriseUserId, function(user){
-	
-			 if(!user || !user.isEnterprise){
-				 console.log('Not a valid enterprise userId');
-				 var result = {
-            	          success: false,
-            	          message: 'Invalid Enterprise User Id',
-                 };
-				 res.json(result);
-			 }  else {
-				 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
-				        res.json(result)
-				    });
-			 }
-		 });
+	var token = '';
+	var enterpriseUserId ='';
+	if(req.body['token']){
+		 token = req.body['token'];
+			 // verifies secret and checks exp
+				 jwt.verify(token, config.secretUserInvite, function(err, payload) {      
+				   if (err) {
+					   console.log('Failed to authenticate token. Token is not Valid');
+					   
+						 var result = {
+		            	          success: false,
+		            	          message: 'Link is no longer valid.',
+		                 };
+						 res.json(result);
+					   //return res.json({ success: false, message: 'Failed to authenticate token.' });    
+				   } else {
+				     // if everything is good, save to request for use in other routes
+					   umlModelInfoManager.queryUserInfo(payload.enterpriseUserId, function(user){
+							
+							 if(!user || !user.isEnterprise){
+								 console.log('Not a valid enterprise userId');
+								 var result = {
+				            	          success: false,
+				            	          message: 'Invalid Enterprise User Id',
+				                 };
+								 res.json(result);
+							 }  else {
+								 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
+								        res.json(result)
+								    });
+							 }
+						 });
+				   }
+				 });
+		
 
 	} else {
     umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
@@ -160,6 +178,51 @@ app.use(function(req, res, next) {
 
 });
 
+app.get('/inviteUser',function(req,res){
+	res.render('invite');
+});
+
+app.post('/inviteUser', upload.fields([{name:'email',maxCount:1}]),  function (req, res){
+	
+	var email = req.body['email'];
+	var enterpriseUserId = req.userInfo._id;
+	var smtpTransport = nodemailer.createTransport({
+	    service: "gmail",
+	    host: "smtp.gmail.com",
+	    auth: {
+	        user: "kritikavaid123@gmail.com",
+	        pass: "Strong123"
+	    }
+	});
+	
+	var payload = {
+    		enterpriseUserId : enterpriseUserId,
+    		invitedUserEmail : email
+    };
+
+    var token = jwt.sign(payload, config.secretUserInvite, {
+    	expiresIn : 60*60*24 // expires in 24 hours
+    });
+	
+	var mailOptions = {
+		        from: '"Kritika Vaid" <kritikavaid123@gmail.com>', // sender address
+		        to: email, // list of receivers
+		        subject: 'Umlx Invitation Link', // Subject line
+		        html: 'Please sign up using this '+ '<a href="http://localhost:8081/signup?tk='+token+'">link</a>' // html body
+		    };
+	
+	smtpTransport.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+    });
+	var result = {
+	          success: true,
+	          message: 'User Invited',
+   };
+	res.json(result);
+
+})
 
 app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
 	console.log(req.body);
@@ -822,13 +885,13 @@ app.get('/', function(req, res){
 							
 						}
 						
-						res.render('index', {repo:repoInfo, message:message});
+						res.render('index', {repo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
 						
 					});
 				});
 				
 			} else {
-				res.render('index', {repo:repoInfo, message:message});
+				res.render('index', {repo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
 			}
 			
 		
