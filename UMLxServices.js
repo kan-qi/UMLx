@@ -180,12 +180,14 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 	//check the impl to find the client and no the server
 	console.log(req.headers.origin);
 	console.log(req.headers.host);
+	var ipAddress = req.headers.host;
 	var umlFilePath = req.files['uml-file'][0].path;
 	var umlModelName = req.body['uml-model-name'];
 	var umlModelType = req.body['uml-model-type'];
 	var repoId = req.userInfo.repoId;
 	var uuidVal = req.body['uuid'];
 	var formInfo = req.body;
+	formInfo.ipAddress = ipAddress;
 //	return;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
