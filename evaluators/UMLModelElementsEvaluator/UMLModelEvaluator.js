@@ -16,83 +16,6 @@
 	var umlFileManager = require('../../UMLFileManager');
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
-	// function loadFromModelEmpirics(modelEmpirics, modelInfo, modelIndex){
-
-	// modelEmpirics.CCSS = 0;
-	// // modelEmpirics.IT = 0;
-	// modelEmpirics.ILF = 0;
-	// modelEmpirics.ELF = 0;
-	// modelEmpirics.EI = 0;
-	// modelEmpirics.EO = 0;
-	// modelEmpirics.EQ = 0;
-	// modelEmpirics.DM = 0;
-	// modelEmpirics.INT = 0;
-	// modelEmpirics.CTRL = 0;
-	// modelEmpirics.EXTIVK = 0;
-	// modelEmpirics.EXTCLL = 0;
-	// modelEmpirics.NT = 0;
-	// }
-	
-
-	function initModelEmpirics(modelEmpirics) {
-		modelEmpirics.CCSS = 0;
-		// modelEmpirics.IT = 0;
-		modelEmpirics.ILF = 0;
-		modelEmpirics.ELF = 0;
-		modelEmpirics.EI = 0;
-		modelEmpirics.EO = 0;
-		modelEmpirics.EQ = 0;
-		modelEmpirics.DM = 0;
-		modelEmpirics.INT = 0;
-		modelEmpirics.CTRL = 0;
-		modelEmpirics.EXTIVK = 0;
-		modelEmpirics.EXTCLL = 0;
-		modelEmpirics.NT = 0;
-	}
-
-	function loadFromUseCaseEmpirics(useCaseEmpirics, useCaseInfo,
-			useCaseIndex, modelInfo, modelIndex) {
-
-		useCaseEmpirics.CCSS = Number(useCaseEmpirics.CCSS);
-		// useCaseEmpirics.IT = Number(useCaseEmpirics.IT);
-		useCaseEmpirics.ILF = Number(useCaseEmpirics.ILF);
-		useCaseEmpirics.ELF = Number(useCaseEmpirics.ELF);
-		useCaseEmpirics.EI = Number(useCaseEmpirics.EI);
-		useCaseEmpirics.EO = Number(useCaseEmpirics.EO);
-		useCaseEmpirics.EQ = Number(useCaseEmpirics.EQ);
-		useCaseEmpirics.DM = Number(useCaseEmpirics.DM);
-		useCaseEmpirics.INT = Number(useCaseEmpirics.INT);
-		useCaseEmpirics.CTRL = Number(useCaseEmpirics.CTRL);
-		useCaseEmpirics.EXTIVK = Number(useCaseEmpirics.EXTIVK);
-		useCaseEmpirics.EXTCLL = Number(useCaseEmpirics.EXTCLL);
-		useCaseEmpirics.NT = Number(useCaseEmpirics.NT);
-
-		if (!modelInfo.ModelEmpirics) {
-			modelInfo.ModelEmpirics = {};
-			initModelEmpirics(modelInfo.ModelEmpirics);
-		} else if (useCaseIndex == 0) {
-			initModelEmpirics(modelInfo.ModelEmpirics);
-		}
-
-		var modelEmpirics = modelInfo.ModelEmpirics;
-
-		modelEmpirics.CCSS += useCaseEmpirics.CCSS;
-		// modelEmpirics.IT += useCaseEmpirics.IT;
-		modelEmpirics.ILF += useCaseEmpirics.ILF;
-		modelEmpirics.ELF += useCaseEmpirics.ELF;
-		modelEmpirics.EI += useCaseEmpirics.EI;
-		modelEmpirics.EO += useCaseEmpirics.EO;
-		modelEmpirics.EQ += useCaseEmpirics.EQ;
-		modelEmpirics.DM += useCaseEmpirics.DM;
-		modelEmpirics.INT += useCaseEmpirics.INT;
-		modelEmpirics.CTRL += useCaseEmpirics.CTRL;
-		modelEmpirics.EXTIVK += useCaseEmpirics.EXTIVK;
-		modelEmpirics.EXTCLL += useCaseEmpirics.EXTCLL;
-		modelEmpirics.NT += useCaseEmpirics.NT;
-
-		console.log(modelEmpirics);
-	}
-
 	function toModelEvaluationHeader() {
 		return "Path_Num,UseCase_Num,Diagram_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Boundary_Num,ControlNum,Entity_Num";
 	}
@@ -893,7 +816,7 @@
 		toDomainModelEvaluationHeader: toDomainModelEvaluationHeader,
 		toDomainModelEvaluationRow: toDomainModelEvaluationRow,
 		// loadFromModelEmpirics: loadFromModelEmpirics,
-		loadFromUseCaseEmpirics : loadFromUseCaseEmpirics,
+//		loadFromUseCaseEmpirics : loadFromUseCaseEmpirics,
 		evaluateRepo : evaluateRepo,
 		evaluateUseCase : evaluateUseCase,
 		evaluateModel : evaluateModel,

@@ -15,42 +15,138 @@
 	var umlFileManager = require('../../UMLFileManager');
 	var transactionProcessor = require('./TransactionProcessor.js');
 	
+	
+
+	function initModelEmpirics() {
+		return {
+		EI : 0,
+		EQ : 0,
+		DM : 0,
+		INT : 0,
+		CTRL : 0,
+		EXTIVK : 0,
+		EXTCLL : 0,
+		NT : 0
+		}
+	}
+	
+	function initUseCaseEmpirics(){
+		return {
+			EI : 0,
+			EQ : 0,
+			DM : 0,
+			INT : 0,
+			CTRL : 0,
+			EXTIVK : 0,
+			EXTCLL : 0,
+			NT : 0
+			}
+	}
+
+	function loadUseCaseEmpirics(useCaseInfo, useCaseIndex, modelInfo, modelIndex) {
+		if(!useCaseInfo.UseCaseEmpirics){
+			useCaseInfo.UseCaseEmpirics = initUseCaseEmpirics();
+		}
+		
+		useCaseEmpirics.EI = Number(useCaseEmpirics.EI);
+		useCaseEmpirics.EQ = Number(useCaseEmpirics.EQ);
+		useCaseEmpirics.DM = Number(useCaseEmpirics.DM);
+		useCaseEmpirics.INT = Number(useCaseEmpirics.INT);
+		useCaseEmpirics.CTRL = Number(useCaseEmpirics.CTRL);
+		useCaseEmpirics.EXTIVK = Number(useCaseEmpirics.EXTIVK);
+		useCaseEmpirics.EXTCLL = Number(useCaseEmpirics.EXTCLL);
+		useCaseEmpirics.NT = Number(useCaseEmpirics.NT);
+
+		if (!modelInfo.ModelEmpirics || useCaseIndex == 0) {
+			modelInfo.ModelEmpirics = initModelEmpirics();
+		}
+		
+		var modelEmpirics = modelInfo.ModelEmpirics;
+
+//		modelEmpirics.CCSS += useCaseEmpirics.CCSS;
+		// modelEmpirics.IT += useCaseEmpirics.IT;
+		modelEmpirics.EI += useCaseEmpirics.EI;
+		modelEmpirics.EQ += useCaseEmpirics.EQ;
+		modelEmpirics.DM += useCaseEmpirics.DM;
+		modelEmpirics.INT += useCaseEmpirics.INT;
+		modelEmpirics.CTRL += useCaseEmpirics.CTRL;
+		modelEmpirics.EXTIVK += useCaseEmpirics.EXTIVK;
+		modelEmpirics.EXTCLL += useCaseEmpirics.EXTCLL;
+		modelEmpirics.NT += useCaseEmpirics.NT;
+
+//		console.log(modelEmpirics);
+	}
+	
 	function toModelEvaluationHeader(){
-		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Tran_Length,Arch_Diff";
+		return "EI,EI_EMP,EQ,EQ_EMP,INT,INT_EMP,DM,DM_EMP,CTRL,CTRL_EMP,EXTIVK,EXTIVK_EMP,EXTCLL,EXTCLL_EMP,TRAN_NA,NT,NT_EMP,Tran_Length,Arch_Diff";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
 		var modelAnalytics = modelInfo.ModelAnalytics;
-//		var modelEmpirics = modelInfo.ModelEmpirics;
+		
+		if(!modelInfo.ModelEmpirics){
+			modelInfo.ModelEmpirics = initModelEmpirics();
+		}
+		
+		var modelEmpirics = modelInfo.ModelEmpirics;
 
 		return modelAnalytics.EI + ","
+				+ modelEmpirics.EI + ","
 				+ modelAnalytics.EQ + ","
+				+ modelEmpirics.EQ + ","
 				+ modelAnalytics.INT + ","
+				+ modelEmpirics.INT + ","
 				+ modelAnalytics.DM + ","
+				+ modelEmpirics.DM + ","
 				+ modelAnalytics.CTRL + ","
+				+ modelEmpirics.CTRL + ","
 				+ modelAnalytics.EXTIVK + ","
+				+ modelEmpirics.EXTIVK + ","
 				+ modelAnalytics.EXTCLL + ","
+				+ modelEmpirics.EXTCLL + ","
 				+ modelAnalytics.TRAN_NA + ","
-				+ modelAnalytics.NT;
+				+ modelAnalytics.NT+ ","
+				+ modelEmpirics.NT_EMP + ","
+				+ modelAnalytics.Tran_Length+ ","
+				+ modelAnalytics.Arch_Diff;
+				;
 	}
 	
 	function toUseCaseEvaluationHeader() {
-		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Tran_Length,Arch_Diff";
+		return "EI,EI_EMP,EQ,EQ_EMP,INT,INT_EMP,DM,DM_EMP,CTRL,CTRL_EMP,EXTIVK,EXTIVK_EMP,EXTCLL,EXTCLL_EMP,TRAN_NA,NT,NT_EMP,Tran_Length,Arch_Diff";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
 		var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
-//		var modelEmpirics = useCaseInfo.ModelEmpirics;
+		
+		console.log("test for use case empirics");
+		console.log(useCaseInfo);
+		if(!useCaseInfo.UseCaseEmpirics){
+			useCaseInfo.UseCaseEmpirics = initUseCaseEmpirics();
+		}
+		
+		var useCaseEmpirics = useCaseInfo.UseCaseEmpirics;
 
 		return useCaseAnalytics.EI + ","
-				+ useCaseAnalytics.EQ + ","
-				+ useCaseAnalytics.INT + ","
-				+ useCaseAnalytics.DM + ","
-				+ useCaseAnalytics.CTRL + ","
-				+ useCaseAnalytics.EXTIVK + ","
-				+ useCaseAnalytics.EXTCLL + ","
-				+ useCaseAnalytics.TRAN_NA + ","
-				+ useCaseAnalytics.NT;
+		+ useCaseEmpirics.EI + ","
+		+ useCaseAnalytics.EQ + ","
+		+ useCaseEmpirics.EQ + ","
+		+ useCaseAnalytics.INT + ","
+		+ useCaseEmpirics.INT + ","
+		+ useCaseAnalytics.DM + ","
+		+ useCaseEmpirics.DM + ","
+		+ useCaseAnalytics.CTRL + ","
+		+ useCaseEmpirics.CTRL + ","
+		+ useCaseAnalytics.EXTIVK + ","
+		+ useCaseEmpirics.EXTIVK + ","
+		+ useCaseAnalytics.EXTCLL + ","
+		+ useCaseEmpirics.EXTCLL + ","
+		+ useCaseAnalytics.TRAN_NA + ","
+		+ useCaseAnalytics.NT+ ","
+		+ useCaseEmpirics.NT_EMP + ","
+		+ useCaseAnalytics.Tran_Length+ ","
+		+ useCaseAnalytics.Arch_Diff;
+		;
 	}
 
 	
@@ -180,6 +276,8 @@
 		modelAnalytics.EXTCLL = 0;
 		modelAnalytics.TRAN_NA = 0;
 		modelAnalytics.NT = 0;
+		modelAnalytics.Tran_Length = 0;
+		modelAnalytics.Arch_Diff = 0;
 		
 //		var modelEmpirics = modelInfo.ModelEmpirics;
 		
@@ -198,6 +296,8 @@
 			modelAnalytics.EXTCLL += useCaseAnalytics.EXTCLL;
 			modelAnalytics.TRAN_NA += useCaseAnalytics.TRAN_NA;
 			modelAnalytics.NT += useCaseAnalytics.NT;
+			modelAnalytics.Tran_Length = useCaseAnalytics.Tran_Length;
+			modelAnalytics.Arch_Diff = useCaseAnalytics.Arch_Diff;
 			
 		}
 		
@@ -430,6 +530,7 @@
 		evaluateModel: evaluateModel,
 		evaluateRepo: evaluateRepo,
 		evaluateUseCase: evaluateUseCase,
+		loadUseCaseEmpirics: loadUseCaseEmpirics
 	}
 	
 	

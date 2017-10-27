@@ -39,9 +39,9 @@
 //		}
 //	}
 	
-	function loadModelEmpiricsForRepo(repoInfo, callbackfunction, modelFile){
+	function loadModelEmpirics(repoInfo, callbackfunction, modelFile){
 			var ModelDataFilePath = modelFile ? modelFile :repoInfo.outputDir+"/ModelDataLoad.csv";
-			console.log('loadModelEmpiricsForRepo:', ModelDataFilePath);
+			console.log('loadModelEmpirics:', ModelDataFilePath);
 			umlFileManager.loadCSVFile(ModelDataFilePath, true, function(data){
 				var modelDataArray = {};
 				for(var i in data){
@@ -78,8 +78,8 @@
 					
 					for (var m in evaluators){
 						var evaluator = evaluators[m];
-						if(evaluator.loadFromModelEmpirics){
-							evaluator.loadFromModelEmpirics(model.ModelEmpirics, model, modelIndex);
+						if(evaluator.loadModelEmpirics){
+							evaluator.loadModelEmpirics(model, modelIndex);
 						}
 					}
 					modelIndex++;
@@ -91,7 +91,7 @@
 			});
 	}
 	
-	function loadUseCaseEmpiricsForRepo(repoInfo, callbackfunc, dataFilePath){
+	function loadUseCaseEmpirics(repoInfo, callbackfunc, dataFilePath){
 			// dataFilePath is optional argument if don't get this we take csv file from repo itself.
 			var csvDataFilePath = dataFilePath ? dataFilePath : repoInfo.outputDir+"/useCaseDataLoad.csv";
 			console.log('usecaseFilePath:', csvDataFilePath);
@@ -145,8 +145,8 @@
 					 // to distribute the use case data to the evaluators.
 					 
 					 for (var k in evaluators){
-						 if(evaluators[k].loadFromUseCaseEmpirics){
-							 evaluators[k].loadFromUseCaseEmpirics(useCaseEmpirics, useCaseInfo, useCaseIndex, model, modelIndex);
+						 if(evaluators[k].loadUseCaseEmpirics){
+							 evaluators[k].loadUseCaseEmpirics(useCaseInfo, useCaseIndex, model, modelIndex);
 						 }
 					 }
 					 
@@ -477,6 +477,10 @@
 		
 	}
 	
+	/*
+	 * Thinking about get rid of the analytics part totally.
+	 * The specfic analytics will be embedded from the evaluator plugins.
+	 */
 	
 	function initModelAnalytics(umlModelInfo){
 		return {
@@ -540,8 +544,8 @@
 	
 	
 	module.exports = {
-			loadUseCaseEmpiricsForRepo: loadUseCaseEmpiricsForRepo,
-			loadModelEmpiricsForRepo: loadModelEmpiricsForRepo,
+			loadUseCaseEmpirics: loadUseCaseEmpirics,
+			loadModelEmpirics: loadModelEmpirics,
 			evaluateUseCase: evaluateUseCase,
 			evaluateDomainModel: evaluateDomainModel,
 			evaluateModel: evaluateModel,

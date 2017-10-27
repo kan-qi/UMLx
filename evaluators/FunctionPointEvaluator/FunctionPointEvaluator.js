@@ -16,52 +16,171 @@
 	var umlFileManager = require('../../UMLFileManager');
 	var functionPointProcessor = require('./FunctionPointProcessor.js');
 	
+	function initModelEmpirics() {
+		return {
+		EI : 0,
+		EQ : 0,
+		ILF : 0,
+		ELF: 0,
+		EO : 0,
+		DET : 0,
+		RET : 0
+		}
+	}
+	
+	function initUseCaseEmpirics(){
+		return {
+			EI : 0,
+			EQ : 0,
+			EO : 0,
+			}
+	}
+
+	function loadUseCaseEmpirics(useCaseInfo, useCaseIndex, modelInfo, modelIndex) {
+
+		if(!useCaseInfo.UseCaseEmpirics){
+			useCaseInfo.UseCaseEmpirics = initUseCaseEmpirics();
+		}
+		
+		useCaseEmpirics.EI = Number(useCaseEmpirics.EI);
+		useCaseEmpirics.EQ = Number(useCaseEmpirics.EQ);
+//		useCaseEmpirics.CCSS = Number(useCaseEmpirics.CCSS);
+//		useCaseEmpirics.IT = Number(useCaseEmpirics.IT);
+//		useCaseEmpirics.ILF = Number(useCaseEmpirics.ILF);
+//		useCaseEmpirics.ELF = Number(useCaseEmpirics.ELF);
+		useCaseEmpirics.EO = Number(useCaseEmpirics.EO);
+
+		if (!modelInfo.ModelEmpirics) {
+			modelInfo.ModelEmpirics = initModelEmpirics();
+		}
+		
+		var modelEmpirics = modelInfo.ModelEmpirics;
+
+//		modelEmpirics.CCSS += useCaseEmpirics.CCSS;
+		// modelEmpirics.IT += useCaseEmpirics.IT;
+//		modelEmpirics.ILF += useCaseEmpirics.ILF;
+//		modelEmpirics.ELF += useCaseEmpirics.ELF;
+		modelEmpirics.EI += useCaseEmpirics.EI;
+		modelEmpirics.EO += useCaseEmpirics.EO;
+		modelEmpirics.EQ += useCaseEmpirics.EQ;
+
+//		console.log(modelEmpirics);
+	}
+	
+	function initDomainModelEmpirics(){
+		return {
+			ILF : 0,
+			ELF: 0,
+			DET : 0,
+			RET : 0
+			}
+	}
+	
+	function loadDomainModelEmpirics(domainModel, domainModelIndex, modelInfo, modelIndex) {
+
+		if(!domainModelInfo.DomainModelEmpirics){
+			domainModelInfo.DomainModelEmpirics = initDomainModelEmpirics();
+		}
+		
+		domainModelEmpirics.ILF = Number(domainModelEmpirics.ILF);
+		domainModelEmpirics.ELF = Number(domainModelEmpirics.ELF);
+		domainModelEmpirics.DET = Number(domainModelEmpirics.DET);
+		domainModelEmpirics.RET = Number(domainModelEmpirics.RET);
+
+		if (!modelInfo.ModelEmpirics) {
+			modelInfo.ModelEmpirics = initModelEmpirics();
+		}
+		
+		var modelEmpirics = modelInfo.ModelEmpirics;
+
+//		modelEmpirics.CCSS += domainModelEmpirics.CCSS;
+		// modelEmpirics.IT += domainModelEmpirics.IT;
+		modelEmpirics.ILF += domainModelEmpirics.ILF;
+		modelEmpirics.ELF += domainModelEmpirics.ELF;
+		modelEmpirics.DET += domainModelEmpirics.DET;
+		modelEmpirics.RET += domainModelEmpirics.RET;
+
+//		console.log(modelEmpirics);
+	}
+	
+	
 	function toModelEvaluationHeader() {
-		return "DET,RET,ILF,EIF,EI,EO,EQ,FN,FUNC_NA";
+		return "DET,DET_EMP,RET,RET_EMP,ILF,ILF_EMP,EIF,EIF_EMP,EO,EO_EMP,EQ,EQ_EMP,FN,FN_EMP,FUNC_NA";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
 		var modelAnalytics = modelInfo.ModelAnalytics;
-//		var modelEmpirics = modelInfo.ModelEmpirics;
+		
+		if(!modelInfo.ModelEmpirics){
+			modelInfo.ModelEmpirics = initModelEmpirics();
+		}
+		
+		var modelEmpirics = modelInfo.ModelEmpirics;
 
 		return modelAnalytics.DET + ","
-				+ modelAnalytics.RET + ","
-				+ modelAnalytics.ILF + ","
-				+ modelAnalytics.EIF + ","
-				+ modelAnalytics.EI + ","
-				+ modelAnalytics.EO + ","
-				+ modelAnalytics.EQ + ","
-				+ modelAnalytics.FN + ","
-				+ modelAnalytics.FUNC_NA;
+		+ modelEmpirics.DET + ","
+		+ modelAnalytics.RET + ","
+		+ modelEmpirics.RET + ","
+		+ modelAnalytics.ILF + ","
+		+ modelEmpirics.ILF + ","
+		+ modelAnalytics.EIF + ","
+		+ modelEmpirics.EIF + ","
+		+ modelAnalytics.EI + ","
+		+ modelEmpirics.EI + ","
+		+ modelAnalytics.EO + ","
+		+ modelEmpirics.EO + ","
+		+ modelAnalytics.EQ + ","
+		+ modelEmpirics.EQ + ","
+		+ modelAnalytics.FN + ","
+		+ modelEmpirics.FN + ","
+		+ modelAnalytics.FUNC_NA;
 	}
 	
 	function toUseCaseEvaluationHeader() {
-		return "EI,EO,EQ,FN,FUNC_NA";
+		return "EI,EI_EMP,EO,EO_EMP,EQ,EQ_EMP,FN,FN_EMP,FUNC_NA";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
 		var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
-//		var modelEmpirics = useCaseInfo.ModelEmpirics;
+		
+		if(!useCaseInfo.UseCaseEmpirics){
+			useCaseInfo.UseCaseEmpirics = initUseCaseEmpirics();
+		}
+		
+		var useCaseEmpirics = useCaseInfo.UseCaseEmpirics;
 
 		return useCaseAnalytics.EI + ","
-				+useCaseAnalytics.EO + ","
+				+ useCaseEmpirics.EI + ","
+				+ useCaseAnalytics.EO + ","
+				+ useCaseEmpirics.EO + ","
 				+ useCaseAnalytics.EQ + ","
+				+ useCaseEmpirics.EQ + ","
 				+ useCaseAnalytics.FN + ","
+				+ useCaseEmpirics.FN + ","
 				+ useCaseAnalytics.FUNC_NA;
 	}
 	
 	function toDomainModelEvaluationHeader() {
-		return "DET,RET,ILF,EIF";
+		return "DET,DET_EMP,RET,RET_EMP,ILF,ILF_EMP,EIF,EIF_EMP";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
 		var domainModelAnalytics = domainModelInfo.DomainModelAnalytics;
-//		var modelEmpirics = domainModelInfo.ModelEmpirics;
+		
+		if(!domainModelInfo.DomainModelEmpirics){
+			domainModelInfo.DomainModelEmpirics = initDomainModelEmpirics();
+		}
+		
+		var domainModelEmpirics = domainModelInfo.DomainModelEmpirics;
 
 		return domainModelAnalytics.DET + ","
+				+ domainModelEmpirics.DET + ","
 				+ domainModelAnalytics.RET + ","
+				+ domainModelEmpirics.RET + ","
 				+ domainModelAnalytics.ILF + ","
-				+ domainModelAnalytics.EIF;
+				+ domainModelEmpirics.ILF + ","
+				+ domainModelAnalytics.EIF + ","
+				+ domainModelEmpirics.EIF;
 	}
 
 	function evaluateUseCase(useCaseInfo) {
@@ -277,7 +396,8 @@
 		toDomainModelEvaluationRow:toDomainModelEvaluationRow,
 		evaluateUseCase : evaluateUseCase,
 		evaluateModel : evaluateModel,
-		evaluateRepo : evaluateRepo
+		evaluateRepo : evaluateRepo,
+		loadUseCaseEmpirics: loadUseCaseEmpirics
 	}
 
 }())

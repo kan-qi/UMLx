@@ -34,7 +34,7 @@
 						accessDir: umlModelInfo.accessDir+"/domainModel",
 						dotGraphFile: 'domainModel.dotty',
 						svgGraphFile: 'domainModel.svg',
-//						Diagrams: [],
+						Diagrams: [],
 //						DomainModelAnalytics: initDomainModelAnalytics(umlModelInfo)
 				};
 //				umlModelInfo.ModelAnalytics = initModelAnalytics(umlModelInfo);
