@@ -1,6 +1,7 @@
 (function() {
 	var fs = require('fs');
 	var path = require('path');
+	var mkdirp = require('mkdirp');
 	
 	function parseCSVData(csvData, header){
 			 var data = [];
@@ -75,6 +76,49 @@
 			if(callbackfunc){
 			callbackfunc(url);
 			}
+		},
+		writeFiles: function(dir, files, callbackfunc){
+			function writeFile(path, content){
+				return new Promise((resolve, reject) => {
+					fs.writeFile(path, content, function(err){
+						if(err){
+							reject(err);
+							return;
+						}
+						resolve();
+					});
+				  });
+			}
+			
+			
+			
+			let chain = Promise.resolve();
+			
+			mkdirp(dir, function(err) { 
+				if(err) {
+					console.log(err);
+					if(!callbackfunc){
+						callbackfunc(err);
+					}
+					return;
+				}
+			for(var i in files){
+				var file = files[i];
+				chain = chain.then(writeFile(dir+"/"+file.fileName, file.content));
+			}
+			
+			chain.then(function(){
+				if(callbackfunc){
+					callbackfunc();
+				}
+			}).catch(function(err){
+				console.log(err);
+				if(callbackfunc){
+					callbackfunc(err);
+				}
+			})
+			});
+			
 		},
 		deleteUMLFileInfo: function(umlFileInfo) {
 			fs.unlinkSync(umlFileInfo.umlFilePath);

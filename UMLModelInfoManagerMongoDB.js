@@ -3,6 +3,7 @@
 	var mongo = require('mongodb');
 	var MongoClient = mongo.MongoClient;
 	var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
+	var umlEvaluator = require("./UMLEvaluator.js");
 	var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 	var umlFileManager = require("./UMLFileManager.js");
 	var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -103,7 +104,7 @@
 				    }
 				    else{
 				    	 console.log('model Analytics doesn\'t exist');
-				    	 	 umlModelAnalyzer.analyseModel(modelInfo, function(){
+				    	 	 umlEvaluator.evaluateModel(modelInfo, function(){
 				    	 		 console.log('model analysis is complete');
 				    	 	 });
 //				    		 console.log("queryModelInfo");
@@ -129,7 +130,7 @@
 				}
 			}
 
-			umlModelAnalyzer.analyseModel(modelInfo, function(){
+			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis is complete");
 			});
 
@@ -242,8 +243,8 @@
 			} else
 			{
 				console.log('Repo Analytics doesn\'t exist');
-				umlModelAnalyzer.analyseRepo(repo, function(){
-					console.log("analyse repo finished");
+				umlEvaluator.evaluateRepo(repo, function(){
+					console.log("evaluate repo finished");
 				});
 //				repo.RepoAnalytics = repoAnalytics;
 				updateRepoInfo(repo, function(repoInfo){
@@ -340,7 +341,7 @@
 			    	  return;
 			      }
 				  queryModelInfo(modelId, repoId, function(modelInfo){
-				 	 umlModelAnalyzer.analyseModel(modelInfo, function(){
+				 	 umlEvaluator.evaluateModel(modelInfo, function(){
 		    	 		 console.log('model analysis is complete');
 		    	 	 });
 //		    		 console.log("queryModelInfo");
@@ -381,7 +382,7 @@
   				    repoInfo.models = [];
   					repoInfo.outputDir = "public/output/repo"+repoId;
   					repoInfo.accessDir = "output/repo"+repoId;
-  					repoInfo.RepoAnalytics = umlModelAnalyzer.initRepoAnalytics(repoInfo);
+  					repoInfo.RepoAnalytics = umlEvaluator.initRepoAnalytics(repoInfo);
   				    var o_id = new mongo.ObjectID(repoId);
 
   	   			  	db.collection("repo_collection").update({_id:o_id}, repoInfo, function(){
@@ -691,7 +692,7 @@
 				else{
 					console.log("useCase analytics undefined");
 
-					useCaseAnalytics = umlModelAnalyzer.analyseUseCase(useCaseInfo, function(){
+					useCaseAnalytics = umlEvaluator.evaluateUseCase(useCaseInfo, function(){
 						console.log("useCase analysis is finished");
 					});
 					useCaseInfo.UseCaseAnalytics = useCaseAnalytics;

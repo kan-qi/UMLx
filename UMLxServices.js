@@ -185,7 +185,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 //			console.log(modelInfo);
-			umlModelAnalyzer.analyseModel(modelInfo, function(){
+			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
 			});
 //			console.log(modelInfo);

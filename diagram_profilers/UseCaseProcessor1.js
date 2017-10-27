@@ -41,25 +41,42 @@
 //	 ['actor', 'control[+]', 'entity','pattern#5', 'Invocation of services provided by external system', 'transactional']
 //	 ];
 //	 
-//	 var transactionalPatterns = [
-//		 ['actor', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'transactional','Data management'],
-//		 ['actor', 'boundary', 'control[+]', 'entity', 'control[+]', 'boundary','pattern#2','EQ,INT', 'transactional', 'Data management with feedback or inquiry'],
-//		 ['actor', 'boundary', 'control[+]', 'boundary', 'pattern#3', 'INT', 'transactional', 'validation or interface management'],
-//		 ['actor', 'boundary', 'control[+]', 'actor', 'pattern#4', 'EXTIVK', 'transactional','Invocation from external system'],
-//		 ['actor', 'control[+]', 'actor', 'pattern#5', 'EXTIVK', 'transactional','Invocation from external system'],
-//		 ['actor', 'boundary', 'control[+]', 'entity', 'control[+]', 'actor', 'pattern#6', 'EXTIVK,EQ', 'transactional','Invocation from external system'],
-//		 ['actor', 'control[+]', 'entity','pattern#7', 'EXTCLL,EI', 'transactional', 'Invocation of services provided by external system'],
-//		 ['actor', 'control[+]', 'boundary','pattern#8', 'EXTCLL,INT', 'transactional', 'Invocation of services provided by external system'],
-//		 ['actor', 'control[+]', 'pattern#9', 'CTRL', 'transactional','Control flow without operating on any entities or interfaces'],
-//	];
+	 var transactionalPatterns = [
+		 ['actor', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'transactional','Data management'],
+		 ['actor', 'boundary', 'control[+]', 'entity', 'control[+]', 'boundary','pattern#2','EQ,INT', 'transactional', 'Data management with feedback or inquiry'],
+		 ['actor', 'boundary', 'control[+]', 'boundary', 'pattern#3', 'INT', 'transactional', 'validation or interface management'],
+		 ['actor', 'boundary', 'control[+]', 'actor', 'pattern#4', 'EXTIVK', 'transactional','Invocation from external system'],
+		 ['actor', 'control[+]', 'actor', 'pattern#5', 'EXTIVK', 'transactional','Invocation from external system'],
+		 ['actor', 'boundary', 'control[+]', 'entity', 'control[+]', 'actor', 'pattern#6', 'EXTIVK,EQ', 'transactional','Invocation from external system'],
+		 ['actor', 'control[+]', 'entity','pattern#7', 'EXTCLL,EI', 'transactional', 'Invocation of services provided by external system'],
+		 ['actor', 'control[+]', 'boundary','pattern#8', 'EXTCLL,INT', 'transactional', 'Invocation of services provided by external system'],
+		 ['actor', 'control[+]', 'pattern#9', 'CTRL', 'transactional','Control flow without operating on any entities or interfaces'],
+	];
 	 
-
+	 // the wild card pattern should be further designed. Adding more wildcard types.
+//	 var functionalPatterns = [
+//	 ['actor[-]', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI'],
+//	 ['entity', 'control[+]', 'boundary', 'actor[-]', 'pattern#2', 'EO'],
+//	 ['actor', 'boundary', 'control[+]', 'boundary', 'pattern#3', 'EQ'],
+//	 ['actor[#1]', 'boundary', 'control[+]', 'boundary','actor[#2]', 'pattern#4', 'EI+EQ'],
+//	 ['actor[#1]', 'boundary', 'control[+]', 'entity', 'control[+]', 'boundary', 'actor[#2]', 'pattern#5', 'EQ']
+//	 ]
 	
 	//[] represents the similarity across the patterns.
 	//# represents tags for the elements within the same pattern. To distinguish an element in the pattern.
 	//Building patterns with exact representation, but parsing the condition when matching
 	 
-	
+	 var functionalPatterns = [
+	 ['actor', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'functional', 'External input'],
+	 ['entity', 'control[+]', 'boundary', 'actor', 'pattern#2', 'EO', 'functional', 'External output'],
+	 ['entity', 'boundary', 'actor', 'pattern#2', 'EO', 'functional', 'External Output'],
+	 ['actor', 'boundary', 'control[+]', 'boundary', 'pattern#3', 'EQ', 'functional', 'External inquiry'],
+	 ['actor', 'boundary', 'control[+]', 'boundary','actor', 'pattern#4', 'EI,EQ', 'functional', 'External input and inquiry'],
+	 ['boundary', 'entity', 'boundary','actor', 'pattern#4', 'EI,EQ', 'functional', 'External input and inquiry'],
+	 ['actor', 'boundary', 'control[+]', 'entity', 'control[+]', 'boundary', 'actor[!E]', 'pattern#5', 'EQ', 'functional', 'External input and inquiry'],
+	 ['actor', 'boundary', 'control[+]', 'entity', 'boundary', 'actor[!E]', 'pattern#5', 'EQ', 'functional', 'External input and inquiry']
+	 ];
+	 
 	 
 	 function establishPatternParseTree(patterns)
 	 {
@@ -189,8 +206,8 @@
 			return matchedPatterns;
 		}
 	 
-//	var functionalPatternTreeRoot = establishPatternParseTree(functionalPatterns);
-//	var transactionalPatternTreeRoot = establishPatternParseTree(transactionalPatterns);
+	var functionalPatternTreeRoot = establishPatternParseTree(functionalPatterns);
+	var transactionalPatternTreeRoot = establishPatternParseTree(transactionalPatterns);
 	
 	function matchCategories(categories, characteristic){
 //		console.log(categories);
