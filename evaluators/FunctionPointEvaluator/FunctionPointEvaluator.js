@@ -28,10 +28,6 @@
 		
 		useCaseInfo["FPEmpirics"].EI = Number(useCaseLoad["FPEmpirics"].EI);
 		useCaseInfo["FPEmpirics"].EQ = Number(useCaseLoad["FPEmpirics"].EQ);
-//		useCaseInfo["FPEmpirics"].CCSS = Number(useCaseLoad["FPEmpirics"].CCSS);
-//		useCaseInfo["FPEmpirics"].IT = Number(useCaseLoad["FPEmpirics"].IT);
-//		useCaseInfo["FPEmpirics"].ILF = Number(useCaseLoad["FPEmpirics"].ILF);
-//		useCaseInfo["FPEmpirics"].ELF = Number(useCaseLoad["FPEmpirics"].ELF);
 		useCaseInfo["FPEmpirics"].EO = Number(useCaseLoad["FPEmpirics"].EO);
 
 		if (!modelInfo["FPEmpirics"]) {
@@ -48,10 +44,6 @@
 		
 //		var modelInfo["FPEmpirics"] = modelInfo["FPEmpirics"];
 
-//		modelInfo["FPEmpirics"].CCSS += useCaseInfo["FPEmpirics"].CCSS;
-		// modelInfo["FPEmpirics"].IT += useCaseInfo["FPEmpirics"].IT;
-//		modelInfo["FPEmpirics"].ILF += useCaseInfo["FPEmpirics"].ILF;
-//		modelInfo["FPEmpirics"].ELF += useCaseInfo["FPEmpirics"].ELF;
 		modelInfo["FPEmpirics"].EI += useCaseInfo["FPEmpirics"].EI;
 		modelInfo["FPEmpirics"].EO += useCaseInfo["FPEmpirics"].EO;
 		modelInfo["FPEmpirics"].EQ += useCaseInfo["FPEmpirics"].EQ;
@@ -102,87 +94,45 @@
 	
 	
 	function toModelEvaluationHeader() {
-//		return "DET,DET_EMP,RET,RET_EMP,ILF,ILF_EMP,EIF,EIF_EMP,EO,EO_EMP,EQ,EQ_EMP,FN,FN_EMP,FUNC_NA";
-
 		return "DET,RET,ILF,EIF,EO,EQ,FN,FUNC_NA";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
-//		var modelInfo["FPAnalytics"] = modelInfo.ModelAnalytics;
-//		
-//		if(!modelInfo["FPEmpirics"]){
-//			modelInfo["FPEmpirics"] = initModelEmpirics();
-//		}
-//		
-//		var modelInfo["FPEmpirics"] = modelInfo["FPEmpirics"];
 
 		return modelInfo["FPAnalytics"].DET + ","
-//		+ modelInfo["FPEmpirics"].DET + ","
 		+ modelInfo["FPAnalytics"].RET + ","
-//		+ modelInfo["FPEmpirics"].RET + ","
 		+ modelInfo["FPAnalytics"].ILF + ","
-//		+ modelInfo["FPEmpirics"].ILF + ","
 		+ modelInfo["FPAnalytics"].EIF + ","
-//		+ modelInfo["FPEmpirics"].EIF + ","
 		+ modelInfo["FPAnalytics"].EI + ","
-//		+ modelInfo["FPEmpirics"].EI + ","
 		+ modelInfo["FPAnalytics"].EO + ","
-//		+ modelInfo["FPEmpirics"].EO + ","
 		+ modelInfo["FPAnalytics"].EQ + ","
-//		+ modelInfo["FPEmpirics"].EQ + ","
 		+ modelInfo["FPAnalytics"].FN + ","
-//		+ modelInfo["FPEmpirics"].FN + ","
 		+ modelInfo["FPAnalytics"].FUNC_NA;
 	}
 	
 	function toUseCaseEvaluationHeader() {
 		return "EI,EO,EQ,FN,FUNC_NA";
-//		return "EI,EI_EMP,EO,EO_EMP,EQ,EQ_EMP,FN,FN_EMP,FUNC_NA";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
-//		var useCaseInfo["FPAnalytics"] = useCaseInfo.UseCaseAnalytics;
-//		
-//		if(!useCaseInfo["FPEmpirics"]){
-//			useCaseInfo["FPEmpirics"] = initUseCaseEmpirics();
-//		}
-//		
-//		var useCaseInfo["FPEmpirics"] = useCaseInfo["FPEmpirics"];
 
 		return useCaseInfo["FPAnalytics"].EI + ","
-//				+ useCaseInfo["FPEmpirics"].EI + ","
 				+ useCaseInfo["FPAnalytics"].EO + ","
-//				+ useCaseInfo["FPEmpirics"].EO + ","
 				+ useCaseInfo["FPAnalytics"].EQ + ","
-//				+ useCaseInfo["FPEmpirics"].EQ + ","
 				+ useCaseInfo["FPAnalytics"].FN + ","
-//				+ useCaseInfo["FPEmpirics"].FN + ","
 				+ useCaseInfo["FPAnalytics"].FUNC_NA;
 	}
 	
 	function toDomainModelEvaluationHeader() {
 		return "DET,RET,ILF,EIF";
-
-//		return "DET,DET_EMP,RET,RET_EMP,ILF,ILF_EMP,EIF,EIF_EMP";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
-//		var domainModelInfo["FPAnalytics"] = domainModelInfo.DomainModelAnalytics;
-//		
-//		if(!domainModelInfo['FPEmpirics']){
-//			domainModelInfo['FPEmpirics'] = initDomainModelEmpirics();
-//		}
-		
-//		var domainModelInfo["FPEmpirics"] = domainModelInfo['FPEmpirics'];
 
 		return domainModelInfo["FPAnalytics"].DET + ","
-//				+ domainModelInfo["FPEmpirics"].DET + ","
 				+ domainModelInfo["FPAnalytics"].RET + ","
-//				+ domainModelInfo["FPEmpirics"].RET + ","
 				+ domainModelInfo["FPAnalytics"].ILF + ","
-//				+ domainModelInfo["FPEmpirics"].ILF + ","
 				+ domainModelInfo["FPAnalytics"].EIF;
-//				+ domainModelInfo["FPEmpirics"].EIF;
 	}
 
 	function evaluateUseCase(useCaseInfo) {
@@ -209,19 +159,12 @@
 			var EI = 0;
 			var EO = 0;
 			var EQ = 0;
-
-
-//			diagram.DiagramAnalytics.Paths = [];
-//			diagram["FPEmpirics"].PathAnalyticsFileName = 'pathsAnalytics.csv';
-//			useCaseInfo["FPAnalytics"].Diagrams.push(diagram);
-
+			
 			for ( var j in diagram.Paths) {
 				var path = diagram.Paths[j];
 				// console.log('--------Process Path-------');
 				
 				functionPointProcessor.processPath(path, diagram, useCaseInfo);
-				
-//				console.log(path);
 				
 				var functionalOperations = path.Functional;
 				
@@ -373,15 +316,6 @@
 				EIF :0,
 		}
 		// initiate the fields in repo analytics;
-//		repoInfo["FPAnalytics"].DET = 0;
-//		repoInfo["FPAnalytics"].RET = 0;
-//		repoInfo["FPAnalytics"].ILF = 0;
-//		repoInfo["FPAnalytics"].EIF = 0;
-//		repoInfo["FPAnalytics"].EI = 0;
-//		repoInfo["FPAnalytics"].EO = 0;
-//		repoInfo["FPAnalytics"].EQ = 0;
-//		repoInfo["FPAnalytics"].FUNC_NA = 0;
-//		repoInfo["FPAnalytics"].FN = 0;
 
 		for ( var i in repoInfo.models) {
 			var modelInfo = repoInfo.models[i];

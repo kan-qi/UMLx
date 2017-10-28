@@ -178,13 +178,6 @@
 				modelInfo.COCOMOData = COCOMOData;
 				normalizeEffort(modelInfo.COCOMOData);
 				
-//				if(cocomoData){
-//					modelEmprics.Effort = cocomoData.Effort;
-//					modelEmprics.Effort_Norm = cocomoData.Effort_Norm;
-//					modelEmprics.Norm_Factor = cocomoData.Norm_Factor;
-//					modelEmprics.KSLOC = cocomoData.KSLOC;
-//				}
-			
 	}
 	
 	function toModelEvaluationHeader(){

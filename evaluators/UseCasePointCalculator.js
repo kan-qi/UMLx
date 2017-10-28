@@ -30,10 +30,6 @@
 			Effort_Norm_UCP : 0
 		};
 		
-//		if(!modelInfo['UseCasePointData'].UseCasePoinData){
-//			modelInfo['UseCasePointData'].UseCasePointData = initUseCasePointData();
-//		}
-//		var useCasePointData = modelInfo['UseCasePointData'].UseCasePointData;
 		
 		for(var i in modelInfo['UseCasePointData']){
 			if(modelLoad[i]){
@@ -49,7 +45,6 @@
 		//normalize effort with the equation in use case driven paper
 		var effort_actual = cocomoData.Effort;
 		var ksloc = cocomoData.KSLOC;
-//		var cocomoData = modelInfo.COCOMOData;
 		var sf_delta = (cocomoData.SF.PREC - cocomoCalculator.COCOMO.SF.PREC.N) + 
 		(cocomoData.SF.FLEX - cocomoCalculator.COCOMO.SF.FLEX.N) + 
 		(cocomoData.SF.RESL - cocomoCalculator.COCOMO.SF.RESL.N);
@@ -74,15 +69,6 @@
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
-//		var modelAnalytics = modelInfo.ModelAnalytics;
-//		var modelInfo['UseCasePointData'] = modelInfo.ModelEmpirics;
-		
-//		var useCaseNormEffort = 0;
-//		if(modelInfo['UseCasePointData'].UseCasePointData){
-//			useCaseNormEffort = modelInfo['UseCasePointData'].UseCasePointData.Effort_Norm_UCP;
-//		}
-		
-//		console.log(modelAnalytics);
 		
 		return modelInfo['UseCasePointData'].UEUCW+","+
 		modelInfo['UseCasePointData'].UEXUCW+","+
@@ -102,9 +88,6 @@
 	}
 	
 	function toUseCaseEvaluationRow(useCaseInfo, index){
-//		var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
-//		var useCaseEmpirics = useCaseInfo.UseCaseEmpirics;
-
 			return useCaseInfo['UseCasePointData'].UEUCW+","+
 			useCaseInfo['UseCasePointData'].UEXUCW+","+
 //			useCaseEmpirics.IT+","+
@@ -286,17 +269,9 @@
 		
 		var useCaseInfo = modelInfo.UseCases[i];
 		
-//		var useCaseAnalytics = useCase.UseCaseAnalytics;
 		
 		UEUCW += useCaseInfo['UseCasePointData'].UEUCW;
 		}
-//
-//		var modelInfo['UseCasePointData'] = modelInfo.ModelEmpirics;
-//		var modelAnalytics = modelInfo.ModelAnalytics;
-		
-//		var TCF = modelAnalytics.TCF? modelAnalytics.TCF : modelInfo['UseCasePointData'].UseCasePointData.TCF;
-//		var EF = modelAnalytics.EF? modelAnalytics.EF : modelInfo['UseCasePointData'].UseCasePointData.EF;
-//		var UAW = modelAnalytics.UAW? modelAnalytics.UAW : modelInfo['UseCasePointData'].UseCasePoint.UAW;
 		
 		var TCF = Number(modelInfo['UseCasePointData'].TCF);
 		var EF = Number(modelInfo['UseCasePointData'].EF);
@@ -304,22 +279,9 @@
 		
 		var EUCP = (UEUCW+UAW)*TCF*EF;
 
-//		if(!modelInfo['UseCasePointData']){
-//			modelInfo['UseCasePointData'] = initUseCasePointData();
-//		}
-		
-//		var useCasePointData = modelInfo['UseCasePointData'];
-
-//		console.log(useCasePointData);
-
-//		useCasePointData.TCF = TCF;
-//		useCasePointData.EF = EF;
-//		useCasePointData.UAW = UAW;
 		modelInfo['UseCasePointData'].UEUCW = UEUCW;
 		modelInfo['UseCasePointData'].EUCP = EUCP;
-		
-//		console.log(useCasePointData);
-		
+
 		return EUCP;
 		
 	}
@@ -332,34 +294,15 @@
 		UEXUCW += useCaseInfo['UseCasePointData'].UEXUCW;
 		}
 		
-//		var modelAnalytics = modelInfo.ModelAnalytics;
-//		var modelInfo['UseCasePointData'] = modelInfo.ModelEmpirics;
-		
-//		//currently using the data from evaluations to calculate the eucp.
-//		var TCF = modelAnalytics.TCF? modelAnalytics.TCF: modelInfo['UseCasePointData'].UseCasePointData.TCF;
-//		var EF = modelAnalytics.EF? modelAnalytics.EF: modelInfo['UseCasePointData'].UseCasePointData.EF;
-//		var UAW = modelAnalytics.UAW? modelAnalytics.UAW: modelInfo['UseCasePointData'].UseCasePointData.UAW;
-//		var EXUCP = (UEXUCW+UAW)*TCF*EF;
-		
 		var TCF = Number(modelInfo['UseCasePointData'].TCF);
 		var EF = Number(modelInfo['UseCasePointData'].EF);
 		var UAW = Number(modelInfo['UseCasePointData'].UAW);
 		
 		var EXUCP = (UEXUCW+UAW)*TCF*EF;
-		
-//		var modelInfo['UseCasePointData'] = modelInfo.ModelEmpirics;
-//		var modelAnalytics = modelInfo.ModelAnalytics;
-		
-//		if(!modelInfo['UseCasePointData']){
-//			modelInfo['UseCasePointData'] = initUseCasePointData();
-////			modelInfo['UseCasePointData'] = {};
-//		}
+
 		var useCasePointData = modelInfo['UseCasePointData'];
 //		console.log(useCasePointData);
 
-//		useCasePointData.TCF = TCF;
-//		useCasePointData.EF = EF;
-//		useCasePointData.UAW = UAW;
 		modelInfo['UseCasePointData'].UEXUCW = UEXUCW;
 		modelInfo['UseCasePointData'].EXUCP = EXUCP;
 		
@@ -374,34 +317,12 @@
 		UDUCW += useCaseInfo['UseCasePointData'].UDUCW;
 		}
 		
-//		var modelAnalytics = modelInfo.ModelAnalytics;
-//		var modelInfo['UseCasePointData'] = modelInfo.ModelEmpirics;
-		
-//		//currently using the data from evaluations to calculate the eucp.
-//		var TCF = modelAnalytics.TCF? modelAnalytics.TCF: modelInfo['UseCasePointData'].UseCasePointData.TCF;
-//		var EF = modelAnalytics.EF? modelAnalytics.EF: modelInfo['UseCasePointData'].UseCasePointData.EF;
-//		var UAW = modelAnalytics.UAW? modelAnalytics.UAW: modelInfo['UseCasePointData'].UseCasePointData.UAW;
-//		var DUCP = (UDUCW+UAW)*TCF*EF;
-		
 		var TCF = Number(modelInfo['UseCasePointData'].TCF);
 		var EF = Number(modelInfo['UseCasePointData'].EF);
 		var UAW = Number(modelInfo['UseCasePointData'].UAW);
 		
 		var DUCP = (UDUCW+UAW)*TCF*EF;
-//		
-//		var modelInfo['UseCasePointData'] = modelInfo.ModelEmpirics;
-//		var modelAnalytics = modelInfo.ModelAnalytics;
-		
-//		if(!modelInfo['UseCasePointData']){
-//			modelInfo['UseCasePointData'] = initUseCasePointData();
-////			modelInfo['UseCasePointData'] = {};
-//		}
-//		var useCasePointData = modelInfo['UseCasePointData'];
-//		console.log(useCasePointData);
 
-//		useCasePointData.TCF = TCF;
-//		useCasePointData.EF = EF;
-//		useCasePointData.UAW = UAW;
 		modelInfo['UseCasePointData'].UDUCW = UDUCW;
 		modelInfo['UseCasePointData'].DUCP = DUCP;
 		

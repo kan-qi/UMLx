@@ -17,9 +17,6 @@
 	
 
 	function loadUseCaseEmpirics(useCaseInfo, useCaseIndex, modelInfo, modelIndex) {
-//		if(!useCaseInfo['TransactionEmpirics']){
-//			useCaseInfo['TransactionEmpirics'] = initTransactionEmpirics();
-//		}
 		
 		useCaseInfo['TransactionEmpirics'] = {
 				EI : 0,
@@ -54,12 +51,6 @@
 					};
 		}
 		
-		
-		
-//		var modelInfo['TransactionEmpirics'] = modelInfo['TransactionEmpirics'];
-
-//		modelInfo['TransactionEmpirics'].CCSS += useCaseInfo['TransactionEmpirics'].CCSS;
-		// modelInfo['TransactionEmpirics'].IT += useCaseInfo['TransactionEmpirics'].IT;
 		modelInfo['TransactionEmpirics'].EI += useCaseInfo['TransactionEmpirics'].EI;
 		modelInfo['TransactionEmpirics'].EQ += useCaseInfo['TransactionEmpirics'].EQ;
 		modelInfo['TransactionEmpirics'].DM += useCaseInfo['TransactionEmpirics'].DM;
@@ -68,79 +59,43 @@
 		modelInfo['TransactionEmpirics'].EXTIVK += useCaseInfo['TransactionEmpirics'].EXTIVK;
 		modelInfo['TransactionEmpirics'].EXTCLL += useCaseInfo['TransactionEmpirics'].EXTCLL;
 		modelInfo['TransactionEmpirics'].NT += useCaseInfo['TransactionEmpirics'].NT;
-
-//		console.log(modelInfo['TransactionEmpirics']);
 	}
 	
 	function toModelEvaluationHeader(){
 		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Tran_Length,Arch_Diff";
-//		return "EI,EI_EMP,EQ,EQ_EMP,INT,INT_EMP,DM,DM_EMP,CTRL,CTRL_EMP,EXTIVK,EXTIVK_EMP,EXTCLL,EXTCLL_EMP,TRAN_NA,NT,NT_EMP,Tran_Length,Arch_Diff";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
-//		var modelInfo['TransactionAnalytics'] = modelInfo.ModelAnalytics;
-		
-//		if(!modelInfo['TransactionEmpirics']){
-//			modelInfo['TransactionEmpirics'] = initModelEmpirics();
-//		}
-		
-//		var modelInfo['TransactionEmpirics'] = modelInfo['TransactionEmpirics'];
 
 		return modelInfo['TransactionAnalytics'].EI + ","
-//				+ modelInfo['TransactionEmpirics'].EI + ","
 				+ modelInfo['TransactionAnalytics'].EQ + ","
-//				+ modelInfo['TransactionEmpirics'].EQ + ","
 				+ modelInfo['TransactionAnalytics'].INT + ","
-//				+ modelInfo['TransactionEmpirics'].INT + ","
 				+ modelInfo['TransactionAnalytics'].DM + ","
-//				+ modelInfo['TransactionEmpirics'].DM + ","
 				+ modelInfo['TransactionAnalytics'].CTRL + ","
-//				+ modelInfo['TransactionEmpirics'].CTRL + ","
 				+ modelInfo['TransactionAnalytics'].EXTIVK + ","
-//				+ modelInfo['TransactionEmpirics'].EXTIVK + ","
 				+ modelInfo['TransactionAnalytics'].EXTCLL + ","
-//				+ modelInfo['TransactionEmpirics'].EXTCLL + ","
 				+ modelInfo['TransactionAnalytics'].TRAN_NA + ","
 				+ modelInfo['TransactionAnalytics'].NT+ ","
-//				+ modelInfo['TransactionEmpirics'].NT_EMP + ","
 				+ modelInfo['TransactionAnalytics'].Tran_Length+ ","
 				+ modelInfo['TransactionAnalytics'].Arch_Diff;
 				;
 	}
 	
 	function toUseCaseEvaluationHeader() {
-//		return "EI,EI_EMP,EQ,EQ_EMP,INT,INT_EMP,DM,DM_EMP,CTRL,CTRL_EMP,EXTIVK,EXTIVK_EMP,EXTCLL,EXTCLL_EMP,TRAN_NA,NT,NT_EMP,Tran_Length,Arch_Diff";
 		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Avg_Tran_Length,Arch_Diff";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
-//		var useCaseInfo['TransactionAnalytics'] = useCaseInfo.UseCaseAnalytics;
-//		
-//		console.log("test for use case empirics");
-//		console.log(useCaseInfo);
-//		if(!useCaseInfo['TransactionEmpirics']){
-//			useCaseInfo['TransactionEmpirics'] = initTransactionEmpirics();
-//		}
-		
-//		var useCaseInfo['TransactionEmpirics'] = useCaseInfo['TransactionEmpirics'];
 
 		return useCaseInfo['TransactionAnalytics'].EI + ","
-//		+ useCaseInfo['TransactionEmpirics'].EI + ","
 		+ useCaseInfo['TransactionAnalytics'].EQ + ","
-//		+ useCaseInfo['TransactionEmpirics'].EQ + ","
 		+ useCaseInfo['TransactionAnalytics'].INT + ","
-//		+ useCaseInfo['TransactionEmpirics'].INT + ","
 		+ useCaseInfo['TransactionAnalytics'].DM + ","
-//		+ useCaseInfo['TransactionEmpirics'].DM + ","
 		+ useCaseInfo['TransactionAnalytics'].CTRL + ","
-//		+ useCaseInfo['TransactionEmpirics'].CTRL + ","
 		+ useCaseInfo['TransactionAnalytics'].EXTIVK + ","
-//		+ useCaseInfo['TransactionEmpirics'].EXTIVK + ","
 		+ useCaseInfo['TransactionAnalytics'].EXTCLL + ","
-//		+ useCaseInfo['TransactionEmpirics'].EXTCLL + ","
 		+ useCaseInfo['TransactionAnalytics'].TRAN_NA + ","
 		+ useCaseInfo['TransactionAnalytics'].NT+ ","
-//		+ useCaseInfo['TransactionEmpirics'].NT_EMP + ","
 		+ useCaseInfo['TransactionAnalytics'].AvgTranLength+ ","
 		+ useCaseInfo['TransactionAnalytics'].ArchDiff;
 		;
@@ -148,7 +103,6 @@
 
 	
 	function evaluateUseCase(useCaseInfo, callbackfunc){
-//		var useCaseInfo['TransactionAnalytics'] = initUseCaseAnalytics(useCaseInfo);
 		useCaseInfo['TransactionAnalytics'] = {
 				EI : 0,
 				EQ : 0,
@@ -169,9 +123,6 @@
 		for ( var i in useCaseInfo.Diagrams) {
 			var diagram = useCaseInfo.Diagrams[i];
 			
-//			if (!diagram.DiagramAnalytics) {
-//				diagram.DiagramAnalytics = {};
-//			}
 			var EI = 0;
 			var EQ = 0;
 			var INT = 0;
@@ -183,10 +134,6 @@
 			var NT = 0;
 			var TranLength = 0;
 
-//			diagram.DiagramAnalytics.Paths = [];
-//			diagram.DiagramAnalytics.PathAnalyticsFileName = 'pathsAnalytics.csv';
-//			useCaseInfo['TransactionAnalytics'].Diagrams.push(diagram);
-		
 			for ( var j in diagram.Paths) {
 				
 				var path = diagram.Paths[j];
@@ -302,12 +249,6 @@
 				AVgTranLength:0,
 				ArchDiff:0
 		};
-		
-		
-//		var modelInfo['TransactionEmpirics'] = modelInfo['TransactionEmpirics'];
-		
-//		var modelInfo['TransactionAnalytics'] = initModelAnalytics(modelInfo);
-//		modelInfo.ModelAnalytics = modelInfo['TransactionAnalytics'];
 
 		//analyse use cases
 		for(var i in modelInfo.UseCases){
@@ -373,28 +314,8 @@
 				Arch_Diff:0
 		};
 		
-//		
-//		repoInfo['TransactionAnalytics'].INT = 0;
-//		repoInfo['TransactionAnalytics'].DM = 0;
-//		repoInfo['TransactionAnalytics'].CTRL = 0;
-//		repoInfo['TransactionAnalytics'].EXTIVK = 0;
-//		repoInfo['TransactionAnalytics'].EXTCLL = 0;
-//		repoInfo['TransactionAnalytics'].TRAN_NA = 0;
-//		repoInfo['TransactionAnalytics'].NT = 0;
-		
 		for(var i in repoInfo.models){
 			var modelInfo = repoInfo.models[i];
-
-//			modelInfo.ModelAnalytics = analyseModel(modelInfo, function(){
-//					console.log("model analysis complete");
-//				});
-
-//			var modelInfo['TransactionAnalytics'] = modelInfo.ModelAnalytics;
-			
-
-//			repoInfo['TransactionAnalytics'].TotalPathLength += modelInfo['TransactionAnalytics'].TotalPathLength;
-//			repoInfo['TransactionAnalytics'].PathNum += modelInfo['TransactionAnalytics'].PathNum;
-			
 
 			repoInfo['TransactionAnalytics'].EI += modelInfo['TransactionAnalytics'].EI;
 			repoInfo['TransactionAnalytics'].EQ += modelInfo['TransactionAnalytics'].EQ;
@@ -406,9 +327,6 @@
 			repoInfo['TransactionAnalytics'].TranLength += modelInfo['TransactionAnalytics'].TranLength;
 			repoInfo['TransactionAnalytics'].EXTIVK += modelInfo['TransactionAnalytics'].EXTIVK;
 			repoInfo['TransactionAnalytics'].EXTCLL += modelInfo['TransactionAnalytics'].EXTCLL;
-//			repoInfo['TransactionAnalytics'].NWT += modelInfo['TransactionAnalytics'].NWT;
-//			repoInfo['TransactionAnalytics'].NWT_DE += modelInfo['TransactionAnalytics'].NWT_DE;
-//			repoInfo['TransactionAnalytics'].CCSS += modelInfo['TransactionAnalytics'].CCSS;
 		}
 		
 		repoInfo['TransactionAnalytics'].AvgTranLength = repoInfo['TransactionAnalytics'].NT == 0 ? 0 : repoInfo['TransactionAnalytics'].TranLength/repoInfo['TransactionAnalytics'].NT;
@@ -468,8 +386,6 @@
 		
 		transactionNum = !transactionNum ? 0 : transactionNum;
 		
-//		var useCaseInfo['TransactionAnalytics'] = useCaseInfo.UseCaseAnalytics;
-		
 		var transactionAnalyticsStr = transactionNum == 0 ? "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" : "";
 		
 		for ( var i in useCaseInfo.Diagrams) {
@@ -516,11 +432,7 @@
 		
 		transactionNum = !transactionNum ? 0 : transactionNum;
 		
-//		var modelInfo['TransactionAnalytics'] = modelInfo.ModelAnalytics;
-		
 		var transactionAnalyticsStr = "";
-		
-//		var transactionAnalyticsStr = transactionNum == 0 ? "id,path,diagram,useCase,transactional,path_length\n" : "";
 		
 		for ( var i in modelInfo.UseCases) {
 			var useCaseInfo = modelInfo.UseCases[i];
@@ -547,10 +459,6 @@
 		// console.log("dump useCase analytics");
 		
 		transactionNum = !transactionNum ? 0 : transactionNum;
-		
-//		var repoInfo['TransactionAnalytics'] = repoInfo.RepoAnalytics;
-		
-//		var transactionAnalyticsStr = transactionNum == 0 ? "id,path,diagram,useCase,transactional,path_length\n" : "";
 		
 		var transactionAnalyticsStr = "";
 		

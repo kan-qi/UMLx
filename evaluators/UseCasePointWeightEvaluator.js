@@ -19,10 +19,7 @@
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
-//		var modelAnalytics = modelInfo.ModelAnalytics;
-//		var modelEmpirics = modelInfo.ModelEmpirics;
-//	
-		
+
 		return modelInfo['UCWeightCal'].SimpleUC+","+
 		modelInfo['UCWeightCal'].AverageUC+","+
 		modelInfo['UCWeightCal'].ComplexUC+","+
@@ -32,8 +29,6 @@
 	
 	function evaluateModel(modelInfo){
 		//calculate the normalized use case point effort.
-//		var modelAnalytics = modelInfo.ModelAnalytics;
-//		var modelEmpirics = modelInfo.ModelEmpirics;
 		
 		modelInfo['UCWeightCal'] = {
 				EF : 0,
