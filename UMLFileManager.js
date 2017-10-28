@@ -136,8 +136,6 @@
 			 umlFileInfo.umlFilePath = umlFilePath.replace(/\\/g, '/');
 			 umlFileInfo.umlModelType = umlModelType;
 			 // should put in the repo dir.
-			 umlFileInfo.outputDir = repoInfo.outputDir+"/"+umlFileInfo.fileId;
-			 umlFileInfo.accessDir = repoInfo.accessDir+"/" + umlFileInfo.fileId;
 			 umlFileInfo.formInfo = formInfo;
 			 return umlFileInfo;
 		}

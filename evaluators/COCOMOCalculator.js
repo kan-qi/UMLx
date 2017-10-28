@@ -99,7 +99,7 @@
 			}
 	};
 	
-	function loadFromModelEmpirics(modelEmpirics, modelInfo){
+	function loadModelEmpirics(modelLoad, modelInfo, modelIndex){
 	
 				COCOMOData = {
 						Effort: 0,
@@ -142,41 +142,41 @@
 				
 				
 				// populate scale factor data
-				COCOMOData['Effort'] = modelEmpirics['Effort'];
-				COCOMOData['KSLOC'] = modelEmpirics['KSLOC'];
+				COCOMOData['Effort'] = modelLoad['Effort'];
+				COCOMOData['KSLOC'] = modelLoad['KSLOC'];
 				for(var j in COCOMOData.SF ){
-					var rating = modelEmpirics[j];
+					var rating = modelLoad[j];
 					var value = COCOMO['SF'][j][rating];
 					COCOMOData['SF'][j] = value;
 				}
 				// populate effort multiplier data
 				// populate product data
 				for(var j in COCOMOData.EM.PROD){
-					var rating = modelEmpirics[j];
+					var rating = modelLoad[j];
 					var value = COCOMO['EM']['PROD'][j][rating];
 					COCOMOData['EM']['PROD'][j] = value;
 				}
 				// populate platform data
 				for(var j in COCOMOData.EM.PLAT){
-					var rating = modelEmpirics[j];
+					var rating = modelLoad[j];
 					var value = COCOMO['EM']['PLAT'][j][rating];
 					COCOMOData['EM']['PLAT'][j] = value;
 				}
 				// populate personnel data
 				for(var j in COCOMOData.EM.PERS){
-					var rating = modelEmpirics[j];
+					var rating = modelLoad[j];
 					var value = COCOMO['EM']['PERS'][j][rating];
 					COCOMOData['EM']['PERS'][j] = value;
 				}
 				// populate project data
 				for(var j in COCOMOData.EM.PROJ){
-					var rating = modelEmpirics[j];
+					var rating = modelLoad[j];
 					var value = COCOMO['EM']['PROJ'][j][rating];
 					COCOMOData['EM']['PROJ'][j] = value;
 				}
 				
-				modelEmpirics.COCOMOData = COCOMOData;
-				normalizeEffort(modelEmpirics.COCOMOData);
+				modelInfo.COCOMOData = COCOMOData;
+				normalizeEffort(modelInfo.COCOMOData);
 				
 //				if(cocomoData){
 //					modelEmprics.Effort = cocomoData.Effort;
@@ -188,31 +188,28 @@
 	}
 	
 	function toModelEvaluationHeader(){
-		return "Effort,Effort_ALY,Effort_Norm,Norm_Factor,KSLOC";
+		return "Effort_Norm,Norm_Factor,KSLOC";
 //		return "";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
-		modelEmpirics = modelInfo.ModelEmpirics;
-		modelAnalytics = modelInfo.ModelAnalytics;
+//		cocomoData = modelInfo.COCOMOData;
 		
-		var normEffort = 0;
-		var normFactor = 0;
-		var ksloc = 0;
 		//COCOMOData may not exist, if COCOMO data is not loaded
-		if(modelEmpirics.COCOMOData){
-			normEffort = modelEmpirics.COCOMOData.Effort_Norm;
-			normFactor = modelEmpirics.COCOMOData.Norm_Factor;
-			ksloc = modelEmpirics.COCOMOData.KSLOC;
+//		if(!modelInfo.COCOMOData){
+//			modelInfo.COCOMOData = {
+//					normEffort : 0,
+//					normFactor : 0,
+//					ksloc : 0
+//			}
+//		}
+		
+		if(modelInfo.COCOMOData){
+			return modelInfo.COCOMOData.Effort_Norm+"," + modelInfo.COCOMOData.Norm_Factor+"," + modelInfo.COCOMOData.KSLOC;
 		}
-		
-		return modelEmpirics.Effort+"," +
-		modelAnalytics.Effort+"," +
-		normEffort.toFixed(2)+","+
-		normFactor.toFixed(2)+","+
-		ksloc;
-		
-//		return "";
+		else {
+			return "NA,NA,NA";
+		}
 	}
 	
 	function normalizeEffort(cocomoData){
@@ -272,7 +269,7 @@
 	module.exports = {
 		toModelEvaluationHeader: toModelEvaluationHeader,
 		toModelEvaluationRow: toModelEvaluationRow,
-		loadFromModelEmpirics: loadFromModelEmpirics,
+		loadModelEmpirics: loadModelEmpirics,
 		COCOMO: COCOMO
 	}
 	

@@ -13,25 +13,49 @@
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
 	
+	
+	function toModelEvaluationHeader(){
+		return "Simple_UC, Average_UC, Complex_UC, Normalized_UC_Effort";
+	}
+	
+	function toModelEvaluationRow(modelInfo, index){
+//		var modelAnalytics = modelInfo.ModelAnalytics;
+//		var modelEmpirics = modelInfo.ModelEmpirics;
+//	
+		
+		return modelInfo['UCWeightCal'].SimpleUC+","+
+		modelInfo['UCWeightCal'].AverageUC+","+
+		modelInfo['UCWeightCal'].ComplexUC+","+
+		modelInfo['UCWeightCal'].NormalizedUCEffort;
+	}
+	
+	
 	function evaluateModel(modelInfo){
 		//calculate the normalized use case point effort.
-		var modelAnalytics = modelInfo.ModelAnalytics;
-		var modelEmpirics = modelInfo.ModelEmpirics;
+//		var modelAnalytics = modelInfo.ModelAnalytics;
+//		var modelEmpirics = modelInfo.ModelEmpirics;
 		
-		var ef = modelEmpirics.EF;
-		var tcf = modelEmpirics.TCF;
-		var effort = modelEmpirics.Effort;
-		var normalizedUCEffort = effort/(ef*tcf*20);
+		modelInfo['UCWeightCal'] = {
+				EF : 0,
+				TCF : 0,
+				Effort : 0,
+				NormalizedUCEffort : 0
+		}
 		
-		modelAnalytics.NormalizedUCEffort = normalizedUCEffort;
+		if(modelInfo['UCWeightCalEmp']){
+			modelInfo['UCWeightCal'].EF = modelInfo['UCWeightCalEmp'].EF;
+			modelInfo['UCWeightCal'].TCF = modelInfo['UCWeightCalEmp'].TCF;
+			modelInfo['UCWeightCal'].Effort = modelInfo['UCWeightCalEmp'].Effort;
+			modelInfo['UCWeightCal'].NormalizedUCEffort = modelInfo['UCWeightCal'].Effort/(modelInfo['UCWeightCal'].EF*modelInfo['UCWeightCal'].TCF*20);
+		}
+		
 		
 		var simpleUC = 0;
 		var averageUC = 0;
 		var complexUC = 0;
 		for(var i in modelInfo.UseCases){
 			var useCase = modelInfo.UseCases[i];
-			var useCaseAnalytics = useCase.UseCaseAnalytics;
-			var nt = useCaseAnalytics.NT;
+			var nt = useCase["ElementAnalytics"].NT;
 			if(nt <= 3){
 				simpleUC++;
 			}
@@ -43,42 +67,29 @@
 			}
 		}
 		
-		modelAnalytics.SimpleUC = simpleUC;
-		modelAnalytics.AverageUC = averageUC;
-		modelAnalytics.ComplexUC = complexUC;
+		modelInfo['UCWeightCal'].SimpleUC = simpleUC;
+		modelInfo['UCWeightCal'].AverageUC = averageUC;
+		modelInfo['UCWeightCal'].ComplexUC = complexUC;
 	}
 	
-	
-	function toModelEvaluationHeader(){
-		return "Simple_UC, Average_UC, Complex_UC, Normalized_UC_Effort";
-	}
-	
-	function toModelEvaluationRow(modelInfo, index){
-		var modelAnalytics = modelInfo.ModelAnalytics;
-		var modelEmpirics = modelInfo.ModelEmpirics;
-	
-		
-		return modelAnalytics.SimpleUC+","+
-		modelAnalytics.AverageUC+","+
-		modelAnalytics.ComplexUC+","+
-		modelAnalytics.NormalizedUCEffort;
-	}
-	
-	function evaluateRepoForModels(repoAnalytics){
-		 repoAnalytics.repoModelEvaluationResultsPath = repoAnalytics.OutputDir+"/Model_Evaluation_Results";
+
+	function evaluateRepo(repoInfo){
+		 repoInfo['UCWeightCal'] = {
+			repoUseCaseEvaluationResultsPath : repoInfo.OutputDir+"/Use_Case_Evaluation_Results" 
+		 }
 		 
-			mkdirp(repoAnalytics.repoModelEvaluationResultsPath, function(err) { 
+			mkdirp(repoInfo['UCWeightCal'].repoUseCaseEvaluationResultsPath, function(err) { 
 				if(err) {
 					console.log(err);
 			        return;
 			    }
-						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/UseCasePointWeightsCalibration.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForModelsFileName+'" "'+repoAnalytics.repoModelEvaluationResultsPath+'"';	
+						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['UCWeightCal'].repoUseCaseEvaluationResultsPath+'"';	
 						 console.log(command);
 							var child = exec(command, function(error, stdout, stderr) {
 
 								if (error !== null) {
 //									console.log('exec error: ' + error);
-									console.log('exec error: repo id=' + repoAnalytics._id);
+									console.log('exec error: repo id=' + repoInfo._id);
 								} 
 								console.log("Repo Evaluation were saved!");
 							});
@@ -90,7 +101,7 @@
 		toModelEvaluationHeader: toModelEvaluationHeader,
 		toModelEvaluationRow: toModelEvaluationRow,
 		evaluateModel: evaluateModel,
-		evaluateRepoForModels: evaluateRepoForModels
+		evaluateRepo: evaluateRepo
 	}
 	
 	

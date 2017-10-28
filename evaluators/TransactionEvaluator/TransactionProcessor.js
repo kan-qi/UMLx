@@ -57,6 +57,8 @@
 				return true;
 			},
 			processPath: function(path, diagram, usecase){
+
+				path['TransactionAnalytics'] = {};
 				
 				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path, diagram, transactionalPatternTreeRoot);
 				var transactionalOperationStr = "";
@@ -95,16 +97,36 @@
 								}
 							}
 						}
-						path.Transactional = matchedCategories;
+						path['TransactionAnalytics'].Transactional = matchedCategories;
 //						console.log(path.Operations.transactional);
 					}
 					else{
-						path.Transactional = ['TRAN_NA'];
+						path['TransactionAnalytics'].Transactional = ['TRAN_NA'];
 					}
 					
-				if(path.Transactional.length > 0){
-					path.TransactionalTag += ","+path.Transactional.join(',');
+				if(path['TransactionAnalytics'].Transactional.length > 0){
+					path['TransactionAnalytics'].TransactionalTag += ","+path['TransactionAnalytics'].Transactional.join(',');
 				}
+				
+
+				var totalDegree = 0;
+				var tranLength = 0;
+				
+				for(var i = 0; i < path.Elements.length; i++)
+				{
+					var elementID = path['Elements'][i];
+					var element = diagram.Elements[elementID];
+					if(!element){
+						break;
+					}
+					totalDegree += element.InboundNumber;
+					tranLength++;
+				}
+				
+
+				path['TransactionAnalytics'].TranLength = tranLength;
+				//need to think it through
+				path['TransactionAnalytics'].TotalDegree = totalDegree;
 				
 				return true;
 			},

@@ -129,12 +129,12 @@ print(barplot(transactionalPatternCounts, main="Transactional Pattern Counts", x
 
 
 #draw the piechart for the types of operations
-transactionData <- factor(transactionData[transactionData$transactional != 'TRAN_NA' & transactionData$transactional != 'EQ' & transactionData$transactional != 'EI', 'transactional'])
+transactionDistData <- factor(transactionData[transactionData$transactional != 'TRAN_NA' & transactionData$transactional != 'EQ' & transactionData$transactional != 'EI', 'transactional'])
 #transactionData <- data[, 'transactional']
 svg(paste(outputDir, "transaction_type_percentage_plot.svg", sep="/"), width=5, height=5)
 # Pie Chart from data frame with Appended Sample Sizes
 #percentlabels<- round(100*transactionData/sum(transactionData), 1)
-mytable <- table(transactionData)
+mytable <- table(transactionDistData)
 print(mytable)
 #mytable$TRAN_NA= NULL
 #colors = c("red", "yellow", "green", "violet", "orange", "blue", "pink", "cyan") 
@@ -147,13 +147,15 @@ print(pieChart)
 legend("topright", lbls, cex=0.8, fill=colors)
 
 
-transactionArchDiffData = transactionData[c('arch_diff')]
+transactionArchDiffData = transactionData$arch_diff
+print("hello")
+print(transactionArchDiffData)
 if(length(transactionArchDiffData) == 0){
 	transactionArchDiffData = c(0);
 }
 transactionArchDiffData = as.numeric(transactionArchDiffData)
 
-transactionLengthData = transactionData[c('tran_length')]
+transactionLengthData = transactionData$tran_length
 if(length(transactionLengthData) == 0){
 	transactionLengthData = c(0);
 }

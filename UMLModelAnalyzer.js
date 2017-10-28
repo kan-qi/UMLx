@@ -16,7 +16,7 @@
 
 
 	function extractModelInfo(umlModelInfo, callbackfunc) {
-		mkdirp(umlModelInfo.outputDir, function(err) {
+		mkdirp(umlModelInfo.OutputDir, function(err) {
 			// path exists unless there was an error
 			if(err) {
 				callbackfunc(false);
@@ -30,10 +30,10 @@
 //				console.log(models);
 				umlModelInfo.UseCases = [];
 				umlModelInfo.DomainModel = {
-						outputDir: umlModelInfo.outputDir+"/domainModel",
-						accessDir: umlModelInfo.accessDir+"/domainModel",
-						dotGraphFile: 'domainModel.dotty',
-						svgGraphFile: 'domainModel.svg',
+						OutputDir: umlModelInfo.OutputDir+"/domainModel",
+						AccessDir: umlModelInfo.AccessDir+"/domainModel",
+						DotGraphFile: 'domainModel.dotty',
+						SvgGraphFile: 'domainModel.svg',
 						Diagrams: [],
 //						DomainModelAnalytics: initDomainModelAnalytics(umlModelInfo)
 				};
@@ -48,18 +48,18 @@
 								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
 								var fileName = useCase._id;
-								useCase.outputDir = umlModelInfo.outputDir+"/"+fileName;
-								useCase.accessDir = umlModelInfo.accessDir+"/"+fileName;
+								useCase.OutputDir = umlModelInfo.OutputDir+"/"+fileName;
+								useCase.AccessDir = umlModelInfo.AccessDir+"/"+fileName;
 								for(var k in useCase.Diagrams){
 									var diagram = useCase.Diagrams[k];
-									diagram.outputDir = useCase.outputDir;
-									diagram.accessDir = useCase.accessDir;
+									diagram.OutputDir = useCase.OutputDir;
+									diagram.AccessDir = useCase.AccessDir;
 									diagramProfiler.profileDiagram(diagram, function(){
 										console.log("diagram is processed!");
 									});
 //									console.log("Diagram file name:"+diagram.Name);
 								}
-//								mkdirp(useCase.outputDir, function(err) {
+//								mkdirp(useCase.OutputDir, function(err) {
 //									if(err) {
 //										console.log(err);
 //										// the folders may already exists during re-analyse
@@ -78,8 +78,8 @@
 							var diagram = modelPackage.DomainModel.Diagrams[j];
 							diagram._id = j;
 //							var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_") + Date.now();
-							diagram.outputDir = umlModelInfo.DomainModel.outputDir;
-							diagram.accessDir = umlModelInfo.DomainModel.accessDir;
+							diagram.OutputDir = umlModelInfo.DomainModel.OutputDir;
+							diagram.AccessDir = umlModelInfo.DomainModel.AccessDir;
 							diagramProfiler.profileDiagram(diagram);
 							umlModelInfo.DomainModel.Diagrams.push(diagram);
 //							console.log("diagram file name:"+diagram.Name);
@@ -101,7 +101,7 @@
 	module.exports = {
 			extractModelInfo : extractModelInfo,
 			extractModelInfoTest : function(umlModelInfo, func){
-				mkdirp(umlModelInfo.outputDir, function(err) {
+				mkdirp(umlModelInfo.OutputDir, function(err) {
 					// path exists unless there was an error
 					if(err) {
 						return console.log(err);
