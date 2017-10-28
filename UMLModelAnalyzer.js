@@ -88,6 +88,8 @@
 		var elementNum = 0;
 		var useCaseAnalyticsStr = "id,useCase,average_degree,average_path_length,architecture_difficulty,path_number\n";
 		var useCaseNum = 0;
+		
+		var modelVersionInfoStr = "id,model_name,update_time,number_of_paths\n"
 
 
 		for(var i in repo.models){
@@ -150,6 +152,13 @@
 				useCaseAnalytics.ArchDiff+","+
 				useCaseAnalytics.PathNum+"\n"
 			}
+			
+
+			modelVersionInfoStr += model._id+","+model.umlModelName+","+model.creationTime+","+model.ModelAnalytics.PathNum+"\n";
+			for(var i in model.Versions){
+				var version = model.Versions[i];
+				modelVersionInfoStr += version._id+","+version.umlModelName+","+version.creationTime+","+version.ModelAnalytics.PathNum+"\n";
+			}
 		}
 
 
@@ -204,9 +213,20 @@
 							return; 
 						}
 
-//						console.log("Elements Analytics were saved!");
+						fs.writeFile(repoAnalytics.OutputDir+"/model_version_info.csv", modelVersionInfoStr, function(err){
+							if(err) {
+								console.log(err);
+								if(callbackfunc !== undefined){
+									callbackfunc(false);
+								}
+								return; 
+							}
 
-						generateRepoStatisticalCharts(repoAnalytics, callbackfunc);
+//							console.log("Elements Analytics were saved!");
+
+							generateRepoStatisticalCharts(repoAnalytics, callbackfunc);
+
+						});
 
 					});
 				  });
@@ -219,9 +239,9 @@
 
 
 	function generateRepoStatisticalCharts(repoAnalytics, callbackfunc){
-		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/RepoAnalyticsScript.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.ElementAnalyticsFileName+'" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.PathAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.UseCaseAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'" "."';
+		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/RepoAnalyticsScript.R "'+repoAnalytics.OutputDir+"/"+repoAnalytics.ElementAnalyticsFileName+'" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.PathAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+repoAnalytics.OutputDir+"/"+repoAnalytics.UseCaseAnalyticsFileName+'" "'+repoAnalytics.OutputDir+'/model_version_info.csv" "'+repoAnalytics.OutputDir+'" "."';
 //		console.log('generate model Analytics');
-//		console.log(command);
+		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
 
 			if (error !== null) {
@@ -342,6 +362,8 @@
 		var useCaseNum = 0;
 		var domainModelAnalyticsStr = "id, element_name, attribute_num,operation_num\n";
 		
+		var modelVersionInfoStr = "id,model_name,update_time,number_of_paths\n"
+		
 		for(var i in model.UseCases){
 //			console.log("dump useCase Analytics");
 			var useCaseAnalytics = model.UseCases[i].UseCaseAnalytics;
@@ -433,6 +455,12 @@
 			diagram.OperationNum+","+
 			diagram.ElementNum+"\n";
 		}
+		
+		modelVersionInfoStr += model._id+","+model.umlModelName+","+model.creationTime+","+model.ModelAnalytics.PathNum+"\n";
+		for(var i in model.Versions){
+			var version = model.Versions[i];
+			modelVersionInfoStr += version._id+","+version.umlModelName+","+version.creationTime+","+version.ModelAnalytics.PathNum+"\n";
+		}
 
 		mkdirp(modelAnalytics.OutputDir, function(err) { 
 			if(err) {
@@ -489,9 +517,19 @@
 									}
 									return; 
 								}
+								fs.writeFile(modelAnalytics.OutputDir+"/model_version_info.csv", modelVersionInfoStr, function(err){
+									if(err) {
+										console.log(err);
+										if(callbackfunc !== undefined){
+											callbackfunc(false);
+										}
+										return; 
+									}
 
-								console.log("Elements Analytics were saved!");
-								generateModelStatisticalCharts(modelAnalytics, callbackfunc);
+									console.log("Elements Analytics were saved!");
+									generateModelStatisticalCharts(modelAnalytics, callbackfunc);
+
+								});
 
 							});
 
@@ -508,8 +546,8 @@
 
 
 	function generateModelStatisticalCharts(modelAnalytics, callbackfunc){
-		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/ModelAnalyticsScript.R "'+modelAnalytics.OutputDir+"/"+modelAnalytics.ElementAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.PathAnalyticsFileName+'" "'+modelAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.UseCaseAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.DomainModelAnalyticsFileName+'" "'+modelAnalytics.OutputDir+'" "."';
-//		console.log(command);
+		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/ModelAnalyticsScript.R "'+modelAnalytics.OutputDir+"/"+modelAnalytics.ElementAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.PathAnalyticsFileName+'" "'+modelAnalytics.OutputDir+'/expandedPathAnalytics.csv" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.UseCaseAnalyticsFileName+'" "'+modelAnalytics.OutputDir+"/"+modelAnalytics.DomainModelAnalyticsFileName+'" "'+modelAnalytics.OutputDir+'/model_version_info.csv" "'+modelAnalytics.OutputDir+'" "."';
+		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
 
 			if (error !== null) {
@@ -523,6 +561,7 @@
 				callbackfunc(modelAnalytics);
 			}
 		});
+		
 	}
 
 	function analyseDomainModel(domainModelInfo, callbackfunc){

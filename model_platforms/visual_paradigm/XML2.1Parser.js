@@ -1,11 +1,21 @@
 (function() {
-		class Node{
+	class Node{
 		constructor(Id, Name)
 		{
 			this.Id = Id;
 			this.Name = Name;
 		}
 	}
+
+class ActivityNode{
+	
+	constructor(Id, Name, PartitionName)
+	{
+		this.Id = Id;
+		this.Name = Name;
+		this.partitionName = PartitionName;
+	}
+}
 	
 	class Edge {
 		constructor(fromEnd, toEnd, Id, Name)
@@ -55,14 +65,14 @@
 	
 	
 	// read a file.
-	function readFile(fileName, dataCallback) {
+	function readFile(fileName, processFunction ,dataCallback) {
 		fs.readFile(fileName, function(err, data) {
 			if (err) {
 				console.log('Parser : the file entered is not read.');
 				dataCallback(err);
 			} else {
 				console.log ('Parser: The file was read');
-				parseData(data, dataCallback);
+				processFunction(data, dataCallback);
 			}
 		});
 	}
@@ -80,8 +90,103 @@
 	}
 	
 	
+	function extractContainedElements(activityComponents){
+		var activityDiagram = activityComponents[0];
+		var  activityPartitions = activityDiagram.ActivityPartition;
+		
+		for (var partition = 0; partition < activityPartitions.length; partition++){
+			var activityPartition = activityPartitions[partition];
+			
+			var partitionName = activityPartition.$.Name;
+			
+			var containedElement = activityPartition.ContainedElements[0];
+			
+			var initialNodes = _.get(containedElement, 'InitialNode', {});
+			for (initialNodeElement = 0; initialNodeElement < initialNodes.length; initialNodeElement++){
+				var initialNode = initialNodes[initialNodeElement];
+				var node = new ActivityNode(initialNode.$.Idref, initialNode.$.Name, partitionName);
+				graph.addNode(node);
+			}
+		
+			var activityActions = _.get(containedElement, 'ActivityAction', {});
+			for (var activtiyAction = 0; activtiyAction < activityActions.length; activtiyAction++){
+				var action = activityActions[activtiyAction];
+				var actionNode = new ActivityNode (action.$.Idref,action.$.Name, partitionName);
+				graph.addNode(actionNode);
+			}
+			
+			var decisionNodes = _.get(containedElement, 'DecisionNode', {});
+			for (var decision = 0; decision  < decisionNodes.length; decision++){
+				var decisionNode = decisionNodes[decision];
+				var decisionGraphNode = new ActivityNode(decisionNode.$.Idref, decisionNode.$.Name, partitionName);
+				graph.addNode(decisionGraphNode);
+			}
+			
+			var finalNodes = _.get(containedElement, 'ActivityFinalNode', {});
+			for (var finalNodeElement = 0; finalNodeElement < finalNodes.length; finalNodeElement++){
+				var finalNode = finalNodes[finalNodeElement];
+				var finalGraphNode = new ActivityNode(finalNode.$.Idref, finalNode.$.Name, partitionName);
+				graph.addNode(finalGraphNode);
+			}
+		}
+	}
 	
-	// Function to extract the nodes suchs as InteractionLifeLine, from the parsed
+	
+	
+	function extractContainedRelationships(relationshipComponents){
+		var controlFlows = relationshipComponents[0].ControlFlow;
+		for (var flow = 0; flow < controlFlows.length; flow++){
+			var controlFlow = controlFlows[flow];
+			
+			var fromId = controlFlow.$.From;
+			var toId = controlFlow.$.To;
+			var id = controlFlow.$.Id;
+			var Name = controlFlow.$.Guard;
+			
+			var edge = new Edge(fromId,toId, id, Name);
+			graph.addEdge(edge);
+		}
+	}
+	
+
+	function extractActivityNodes(activityDiagramJSON){
+		var models = activityDiagramJSON.Project.Models[0];
+	
+		console.log ('the models are ', JSON.stringify(models));
+		var activityComponents = undefined;
+		if (_.get(models,'Activity', undefined) == undefined){
+			activityComponents = models.ActivitySwimlane2[0].ModelChildren;
+		}else{
+			var activityModel = models.Activity[0];
+			var activityModelChildren = activityModel.ModelChildren[0];
+			activityComponents = activityModelChildren.ActivitySwimlane2[0].ModelChildren;
+		}
+		
+		extractContainedElements(activityComponents);
+	}
+	
+	function extractActivityEdges(activityDiagramJSON){
+		var models = activityDiagramJSON.Project.Models[0];
+		var relationshipModel = models.ModelRelationshipContainer[0];
+		var relationshipModelChildren = relationshipModel.ModelChildren[0];		
+		var relationshipComponents = relationshipModelChildren.ModelRelationshipContainer[0].ModelChildren;
+		
+		extractContainedRelationships(relationshipComponents);
+	}
+	
+	function parseActivityData(data, dataCallback){
+		xmlParser.parseString(data, function (err, result) {
+			if (err)
+				console.log ("error in parsing", err);
+			
+			extractActivityNodes(result);
+			extractActivityEdges(result);
+			dataCallback(graph);
+		});
+	}
+	
+	// Function to extract the nodes suchs as InteractionLifeLine, from the
+	// parsed
 	// JSON.
 	function extractNodes(sequenceDiagramJSON){
 		// TODO: is an array.
@@ -137,7 +242,8 @@
 	}
 	
 	
-	// Extracts the Messages between InteractionLifeLine as edges to a graph node.
+	// Extracts the Messages between InteractionLifeLine as edges to a graph
+	// node.
 	function extractEdges (sequenceDiagramJSON){	
 		// TODO: is an array.
 		var models = sequenceDiagramJSON.Project.Models;
@@ -178,10 +284,15 @@
 	}
 	
 	function extractSequenceDiagrams (file, func) {
-		readFile(file,func);
+		readFile(file, parseData, func);
+	}
+	
+	function extractActivityDiagram(file, func){
+		readFile(file, parseActivityData, func);
 	}
 	
 	module.exports = { extractSequenceDiagrams };
+	
 }());
 
 
