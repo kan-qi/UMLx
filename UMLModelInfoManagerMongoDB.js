@@ -70,7 +70,7 @@
 			db.collection("repo_collection").update({_id:new mongo.ObjectID(repo._id)}, repo, function(err, updateCount){
 				if(err) throw err;
 				db.close();
-				if(callbackfunc !== null){
+				if(callbackfunc){
 					callbackfunc(repo);
 				}
 			});
@@ -508,7 +508,7 @@
 
             							if (err) throw err;
             							if(data){
-
+            										console.log(data);
 								                    // found an existing user
 								                    db.close();
 
@@ -605,20 +605,21 @@
 				}
 				return;
 			}
-			modelInfoVersion._id = modelInfo._id;
-			modelInfoVersion.umlModelName = modelInfo.umlModelName;//copy the model identifier from the original model Info into the new model version, to be the new model info, which is the head of the model versions.
-			modelInfoVersion.ModelEmpirics = JSON.parse(JSON.stringify(modelInfo.ModelEmpirics)); //copy the model empirics from the older model version. User can update later.
+//			No need to make the populate the information. Alredy did it.
+//			modelInfoVersion._id = modelInfo._id;
+//			modelInfoVersion.Name = modelInfo.Name;//copy the model identifier from the original model Info into the new model version, to be the new model info, which is the head of the model versions.
+//			modelInfoVersion.ModelEmpirics = JSON.parse(JSON.stringify(modelInfo.ModelEmpirics)); //copy the model empirics from the older model version. User can update later.
 			var oldVersions = modelInfo.Versions; //include the previous versions for the model file.
 			if(!oldVersions){
 				oldVersions = [];
 			}
 			delete modelInfo.Versions;
 			delete modelInfo._id;
-			delete modelInfo.umlModelName;
+			delete modelInfo.Name;
 			oldVersions.push(modelInfo);
 			//remove the versions property for the old version. to avoid nesting problem.
 			modelInfoVersion.Versions = oldVersions;
-			console.log(modelInfoVersion);
+//			console.log(modelInfoVersion);
 			updateModelInfo(modelInfoVersion, repoId, function(modelInfoVersion){
 				if(callbackfunc){
 					callbackfunc(modelInfoVersion);
@@ -640,8 +641,8 @@
 			var olderVersion = modelInfo.Versions.pop(); //include the previous versions for the model file.
 			olderVersion.Versions = modelInfo.Versions;
 			olderVersion._id = modelInfo._id;
-			olderVersion.umlModelName = modelInfo.umlModelName;
-			console.log(olderVersion);
+			olderVersion.Name = modelInfo.Name;
+//			console.log(olderVersion);
 //			console.log(modelInfo);
 			updateModelInfo(olderVersion, repoId, function(olderVersion){
 				if(callbackfunc){
@@ -654,12 +655,8 @@
 	/*
 	 * if modelInfo is not null, create an model info with the id and name in modelInfo, so as to create an version of the model Info
 	 */
-	function initModelInfo(umlModelInfo, umlModelName, repoInfo, umlModelInfoBase){
-		if(umlModelInfoBase){
-			umlModelInfo._id = umlModelInfoBase._id;
-			umlModelInfo.umlModelName = umlModelInfoBase.umlModelName;
-			return umlModelInfo;
-		}
+	function initModelInfo(umlModelInfo, umlModelName, repoInfo){
+		
 		umlModelInfo._id = umlModelInfo.fileId + Date.now();
 		if(!umlModelName || umlModelName === ''){
 			umlModelName = umlModelInfo.fileId;
@@ -671,7 +668,34 @@
 
 		return umlModelInfo;
 	}
+	
+	function createModelInfoVersion(umlFileInfo, umlModelInfoBase){
+		if(umlModelInfoBase){
+			//reuse the umlFileInfo object.
+			var umlModelInfoVersion = umlFileInfo;
+			umlModelInfoVersion._id = umlModelInfoBase._id;
+			umlModelInfoVersion.Name = umlModelInfoBase.Name;
+			umlModelInfoVersion.OutputDir = umlModelInfoBase.OutputDir;
+			umlModelInfoVersion.AccessDir = umlModelInfoBase.AccessDir;
 
+			return umlModelInfoVersion;
+		}
+		
+		return false;
+	}
+
+	function duplicateModelInfo(umlModelInfo){
+		if(umlModelInfo){
+			var umlFileInfo = umlFileManager.duplicateUMLFileInfo(umlModelInfo);
+			umlFileInfo._id = umlModelInfo._id;
+			umlFileInfo.Name = umlModelInfo.Name;
+			umlFileInfo.Outputdir = umlModelInfo.OutputDir;
+			umlFileInfo.AccessDir = umlModelInfo.AccessDir;
+			return umlFileInfo;
+		}
+		
+		return false;
+	}
 
 
 	module.exports = {
@@ -733,15 +757,67 @@
 				  });
 				});
 			},
-
-
-		reloadRepo: function(repo, modelReloadProcessor){
-			var models = repo.Models;
-			for (var i in models) { //for multiple files
-			    (function(model) {
-			    	umlModelAnalyzer.extractModelInfo(model, modelReloadProcessor)
-			    })(models[i]);
+		// this method will reanalyse the models in the repo entirely. Can be used when there is a change in the schema of repo_info_schema.
+		reloadRepo: function(repo, callback){
+			//create a replica of the existing repo.
+			var newRepo = {
+					_id:repo._id,
+					Models: [],
+					OutputDir: repo.OutputDir,
+					AccessDir: repo.AccessDir
+			};
+			
+			function reloadModel(modelInfo){
+				//update model analytics.
+//				console.log(modelInfo);
+				return new Promise((resolve, reject) => {
+					umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
+					umlEvaluator.evaluateModel(modelInfo, function(modelInfo){
+						console.log("model analysis complete");
+//						console.log(modelInfo);
+//						umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
+								if(err){
+									reject(err);
+									return;
+								}
+								resolve();
+//						});
+					});
+					});
+				  });
 			}
+			
+
+			let chain = Promise.resolve();
+			
+			for (var i in repo.Models) { //for multiple files
+			    (function(model) {
+			    	//create duplicate of the existing model.
+			    	var newModel = duplicateModelInfo(model);
+			    	newRepo.Models.push(newModel);
+//			    	umlModelAnalyzer.extractModelInfo(newModel, modelReloadProcessor);
+			    	chain = chain.then(reloadModel(newModel));
+			    })(repo.Models[i]);
+			}
+			
+			chain.then(function(){
+				umlEvaluator.evaluateRepo(repo, function(repo){
+					console.log("model analysis complete");
+//					console.log(modelInfo);
+//					umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
+
+					if(callbackfunc){
+						callbackfunc(repo);
+					}
+//						});
+				});
+				
+			}).catch(function(err){
+				console.log(err);
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+			});
 		},
 		updateModelInfo: updateModelInfo,
 		updateRepoInfo: updateRepoInfo,
@@ -758,6 +834,7 @@
 		pushModelInfoVersion:pushModelInfoVersion,
 		popModelInfoVersion:popModelInfoVersion,
 		initModelInfo: initModelInfo, //create model info
+		createModelInfoVersion: createModelInfoVersion,
         newUserSignUp : newUserSignUp,
         validateUserLogin : validateUserLogin,
         queryUserInfo: queryUserInfo,

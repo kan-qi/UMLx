@@ -90,8 +90,6 @@
 				  });
 			}
 			
-			
-			
 			let chain = Promise.resolve();
 			
 			mkdirp(dir, function(err) { 
@@ -116,7 +114,7 @@
 				if(callbackfunc){
 					callbackfunc(err);
 				}
-			})
+			});
 			});
 			
 		},
@@ -138,6 +136,18 @@
 			 // should put in the repo dir.
 			 umlFileInfo.formInfo = formInfo;
 			 return umlFileInfo;
+		},
+		duplicateUMLFileInfo: function(umlFileInfo){
+			return {
+				 fileId: umlFileInfo.fileId,
+				 fileSize: umlFileInfo.fileSize,
+				 creationTime: umlFileInfo.creationTime,
+				 fileUrl: umlFileInfo.fileUrl,
+				 umlFilePath: umlFileInfo.umlFilePath,
+				 umlModelType: umlFileInfo.umlModelType,
+				 // should put in the repo dir.
+				 formInfo: umlFileInfo.formInfo
+			}
 		}
 	}
 }())

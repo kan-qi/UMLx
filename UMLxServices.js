@@ -265,7 +265,7 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType);
 //		console.log('umlFileInfo');
 		umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-			var modelInfoVersion = umlModelInfoManager.initModelInfo(umlFileInfo, modelInfo.umlModelName, repoInfo, modelInfo)
+			var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
 			umlModelAnalyzer.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
 			//update model analytics.
 //			console.log(modelInfo);
@@ -639,15 +639,13 @@ app.get('/reloadRepo', function(req, res){
 	
 //	console.log(refresh);
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-		umlModelInfoManager.reloadRepo(repoInfo, function(modelInfo){
-			//update model analytics.
-//			console.log(modelInfo);
-			umlEvaluator.evaluateModel(modelInfo, function(){
-				console.log("model analysis complete");
-			});
-//			console.log(modelInfo);
-			umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
-				
+		umlModelInfoManager.reloadRepo(repoInfo, function(repoInfo){
+			if(!repoInfo){
+				res.end("error");
+				return;
+			}
+			umlModelInfoManager.updateRepo(repoInfo, function(repoInfo){
+				res.end("success");
 			});
 		});
 	});
