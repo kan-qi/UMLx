@@ -1,5 +1,5 @@
+
 function setCookie(cname, cvalue, exdays) {
-	
 	var expires="";
 	if(exdays > 0){
 	    var d = new Date();
@@ -37,6 +37,31 @@ function model_file_upload_fnc() {
 		}
 	});
 
+}
+
+
+
+function send_analytics_data(uuid, clientIpAddress, pageNumber) {
+    var data = {
+        ip: clientIpAddress,
+        uuid: uuid,
+        page: pageNumber
+    };
+
+    $.ajax({
+        url: "surveyAnalytics",
+        type: 'GET',
+		dataType: "json",
+        contentType: "application/json",
+        data: data,
+        success: function (response) {
+            console.log(response);
+        },
+        error: function () {
+            console.log("fail");
+            console.log(err);
+        }
+    });
 }
 
 

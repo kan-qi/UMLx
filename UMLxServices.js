@@ -8,6 +8,7 @@ var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
 var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
 var umlEstimator = require("./UMLEstimator.js");
+var bodyParser = require('body-parser');
 //var COCOMOCalculator = require("./COCOMOCalculator.js");
 var multer = require('multer');
 var jade = require('jade');
@@ -39,7 +40,7 @@ var upload = multer({ storage: storage })
 
 app.use(express.static('public'));
 app.use(cookieParser());
-
+app.use(bodyParser.json()); // for parsing application/json
 
 app.set('views', './views');
 app.set('view engine', 'jade');
@@ -158,6 +159,13 @@ app.use(function(req, res, next) {
 		res.redirect('/login');
 	}
 
+});
+
+app.get('/surveyAnalytics', function (req, res){
+    // console.log(req);
+    umlModelInfoManager.saveSurveyAnalyticsData(req.query.uuid, req.query.ip, req.query.page);
+    // console.log(data)
+    res.sendStatus(200);
 });
 
 
