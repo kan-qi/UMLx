@@ -15,7 +15,6 @@ var jade = require('jade');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
-var sleep = require('sleep');
 
 
 var storage = multer.diskStorage({
@@ -165,7 +164,7 @@ app.get('/surveyAnalytics', function (req, res){
     // console.log(req);
     umlModelInfoManager.saveSurveyAnalyticsData(req.query.uuid, req.query.ip, req.query.page);
     // console.log(data)
-    res.sendStatus(200);
+    // res.sendStatus(200);
 });
 
 

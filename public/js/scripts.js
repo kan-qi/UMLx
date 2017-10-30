@@ -51,15 +51,13 @@ function send_analytics_data(uuid, clientIpAddress, pageNumber) {
     $.ajax({
         url: "surveyAnalytics",
         type: 'GET',
-		dataType: "json",
         contentType: "application/json",
         data: data,
         success: function (response) {
             console.log(response);
         },
-        error: function () {
-            console.log("fail");
-            console.log(err);
+        error: function(xhr, textStatus, errorThrown){
+            console.log('request failed->'+textStatus);
         }
     });
 }

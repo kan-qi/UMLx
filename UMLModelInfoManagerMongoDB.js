@@ -678,9 +678,9 @@
     var insertSurveyDoc = function(db, data, callback) {
         db.collection('client_analytics').insertOne(data, function(err, result){
             if(err==null){
-                console.log("insertion complete");
+                console.log("insertion complete "  + JSON.stringify(data));
             }else{
-                console.log("error in inserting" + data);
+                console.log("error in inserting" + JSON.stringify(data));
             }
         })
     };
