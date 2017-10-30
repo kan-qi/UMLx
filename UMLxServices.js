@@ -177,17 +177,6 @@ app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:
 
 
 app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
-	//console.log(req.body);
-//	console.log(req);
-//	console.log(req.connection.socket);
-//	console.log(req.connection.socket.remoteAddress);
-	
-	//https://stackoverflow.com/questions/8107856/how-to-determine-a-users-ip-address-in-node
-	//https://stackoverflow.com/questions/38621921/best-way-to-get-the-ip-address-of-client-is-req-ip-or-req-connection-remoteaddre
-	//check the impl to find the client and no the server
-	console.log(req.headers.origin);
-	console.log(req.headers.host);
-	var ipAddress = req.headers.host;
 	var umlFilePath = req.files['uml-file'][0].path;
 	var umlModelName = req.body['uml-model-name'];
 	var umlModelType = req.body['uml-model-type'];
