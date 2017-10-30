@@ -3,6 +3,7 @@
 	var mongo = require('mongodb');
 	var MongoClient = mongo.MongoClient;
 	var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
+	var umlEvaluator = require("./UMLEvaluator.js");
 	var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 	var umlFileManager = require("./UMLFileManager.js");
 	var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -12,11 +13,11 @@
 		var o_id = new mongo.ObjectID(repoId);
 		var modelQuery = {
 				_id:o_id,
-				models:{
+				Models:{
 					$elemMatch:{_id:modelId}
 				}
 		};
-//		modelQueryInfo["models."+modelId] = {
+//		modelQueryInfo["Models."+modelId] = {
 //		'$exists': true
 //		};
 
@@ -27,11 +28,11 @@
 		var o_id = new mongo.ObjectID(repoId);
 		var modelQueryProjection = {
 				_id:1,
-				models:{
+				Models:{
 					$elemMatch:{_id:modelId}
 				}
 		};
-//		modelQueryInfo["models."+modelId] = {
+//		modelQueryInfo["Models."+modelId] = {
 //		'$exists': true
 //		};
 
@@ -44,10 +45,10 @@
 			var modelQueryInfo = getModelQuery(modelInfo._id, repoId);
 			var updateOperation = {
 					"$set": {
-						"models.$":modelInfo
+						"Models.$":modelInfo
 					}
 			};
-			db.collection("repo_collection").update(modelQueryInfo, updateOperation, function(err, updateCount){
+			db.collection("repos").update(modelQueryInfo, updateOperation, function(err, updateCount){
 				if(err) throw err;
 				db.close();
 				if(callbackfunc !== null){
@@ -66,10 +67,10 @@
 //			repo
 //			}
 //			};
-			db.collection("repo_collection").update({_id:new mongo.ObjectID(repo._id)}, repo, function(err, updateCount){
+			db.collection("repos").update({_id:new mongo.ObjectID(repo._id)}, repo, function(err, updateCount){
 				if(err) throw err;
 				db.close();
-				if(callbackfunc !== null){
+				if(callbackfunc){
 					callbackfunc(repo);
 				}
 			});
@@ -79,44 +80,44 @@
 	}
 
 
-	 function queryModelAnalytics(modelId, repoId, callbackfunc, update){
-			/*
-			 * query Analytics
-			 *
-			 * 1. first search for the field of model: model_Analytics
-			 * 2. calculate based on useCase Analytics, if exists
-			 * 3. if useCase Analytics, doesn't exist, calculate useCase Analytics
-			 *
-			 */
-
-		 	if(update !== true){
-				update == false;
-			}
-
-			  queryModelInfo(modelId, repoId, function(modelInfo){
-				    modelInfo._id = modelId;
-				    var modelAnalytics = modelInfo.ModelAnalytics;
-
-				    if(modelAnalytics && !update){
-				    	  console.log('model Analytics exist');
-				    	  callbackfunc(modelInfo.ModelAnalytics, modelInfo);
-				    }
-				    else{
-				    	 console.log('model Analytics doesn\'t exist');
-				    	 	 umlModelAnalyzer.analyseModel(modelInfo, function(){
-				    	 		 console.log('model analysis is complete');
-				    	 	 });
-//				    		 console.log("queryModelInfo");
-				    		 updateModelInfo(modelInfo, repoId, function(modelInfo){
-				    			 if(callbackfunc !== null){
-				    				 callbackfunc(modelInfo.ModelAnalytics, modelInfo);
-				    			 }
-				    		 });
-
-				    }
-
-				  });
-		}
+//	 function queryModelAnalytics(modelId, repoId, callbackfunc, update){
+//			/*
+//			 * query Analytics
+//			 *
+//			 * 1. first search for the field of model: model_Analytics
+//			 * 2. calculate based on useCase Analytics, if exists
+//			 * 3. if useCase Analytics, doesn't exist, calculate useCase Analytics
+//			 *
+//			 */
+//
+//		 	if(update !== true){
+//				update == false;
+//			}
+//
+//			  queryModelInfo(modelId, repoId, function(modelInfo){
+//				    modelInfo._id = modelId;
+//				    var modelAnalytics = modelInfo.ModelAnalytics;
+//
+//				    if(modelAnalytics && !update){
+//				    	  console.log('model Analytics exist');
+//				    	  callbackfunc(modelInfo.ModelAnalytics, modelInfo);
+//				    }
+//				    else{
+//				    	 console.log('model Analytics doesn\'t exist');
+//				    	 	 umlEvaluator.evaluateModel(modelInfo, function(){
+//				    	 		 console.log('model analysis is complete');
+//				    	 	 });
+////				    		 console.log("queryModelInfo");
+//				    		 updateModelInfo(modelInfo, repoId, function(modelInfo){
+//				    			 if(callbackfunc !== null){
+//				    				 callbackfunc(modelInfo.ModelAnalytics, modelInfo);
+//				    			 }
+//				    		 });
+//
+//				    }
+//
+//				  });
+//		}
 
 	function updateUseCaseInfo(repoId, modelId, useCaseInfo, callbackfunc){
 		//update here. It is not efficient.
@@ -129,7 +130,7 @@
 				}
 			}
 
-			umlModelAnalyzer.analyseModel(modelInfo, function(){
+			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis is complete");
 			});
 
@@ -146,12 +147,12 @@
 			var modelQuery = getModelQuery(modelId,repoId);
 			var projections = getModelQueryProjections(modelId, repoId);
 
-			db.collection("repo_collection").findOne(modelQuery, projections, function(err, repo) {
+			db.collection("repos").findOne(modelQuery, projections, function(err, repo) {
 				if (err) throw err;
 //				console.log('==============selected repo============');
 //				console.log(repo);
 				db.close();
-				callbackfunc(repo["models"][0]);
+				callbackfunc(repo["Models"][0]);
 			});
 		});
 	}
@@ -162,30 +163,30 @@
 		console.log("model id:"+modelId);
 		MongoClient.connect(url, function(err, db) {
 			if (err) throw err;
-			db.collection("repo_collection").aggregate([
+			db.collection("repos").aggregate([
 			                                            {
 			                                            	'$match':{
 			                                            		'_id':new mongo.ObjectID(repoId),
-			                                            		'models._id':modelId,
-			                                            		'models.UseCases._id': useCaseId
+			                                            		'Models._id':modelId,
+			                                            		'Models.UseCases._id': useCaseId
 			                                            	}
 			                                            },
 			                                            {
-			                                            	'$unwind':'$models'
+			                                            	'$unwind':'$Models'
 			                                            },
 			                                            {
-			                                            	'$unwind':'$models.UseCases'
+			                                            	'$unwind':'$Models.UseCases'
 			                                            },
 			                                            {
 			                                            	'$match':{
 			                                            		'_id':new mongo.ObjectID(repoId),
-			                                            		'models._id':modelId,
-			                                            		'models.UseCases._id': useCaseId
+			                                            		'Models._id':modelId,
+			                                            		'Models.UseCases._id': useCaseId
 			                                            	}
 			                                            },
 			                                            {
 			                                            	'$project': {
-			                                            		"UseCases":"$models.UseCases"
+			                                            		"UseCases":"$Models.UseCases"
 			                                            	}
 			                                            }
 			                                            ], function(err, result){
@@ -196,16 +197,32 @@
 		});
 	}
 
-	function queryRepoInfo(repoId, callbackfunc){
+	function queryRepoInfo(repoId, callbackfunc, update){
+		if(update !== true){
+		update == false;
+		}
 		MongoClient.connect(url, function(err, db) {
 			if (err) throw err;
 			var o_id = new mongo.ObjectID(repoId);
-//			db.collection("repo_collection").find({}, {umlModelType:1}).toArray(function(err, result) {
-			db.collection("repo_collection").findOne({_id:o_id}, {}, function(err, repo) {
+//			db.collection("repos").find({}, {umlModelType:1}).toArray(function(err, result) {
+			db.collection("repos").findOne({_id:o_id}, {}, function(err, repo) {
 				if (err) throw err;
 //				console.log(repo);
 				db.close();
+				if(!update){
 				callbackfunc(repo);
+				} else{
+//					console.log('Repo Analytics doesn\'t exist');
+					umlEvaluator.evaluateRepo(repo, function(){
+						console.log("evaluate repo finished");
+					});
+//					repo.RepoAnalytics = repoAnalytics;
+					updateRepoInfo(repo, function(repoInfo){
+						if(callbackfunc !== null){
+							callbackfunc(repo);
+						}
+					});
+				}
 			});
 		});
 	}
@@ -215,11 +232,11 @@
 				  if (err) throw err;
 				  var obj_ids = repoIds.map(function(repoid) { return new mongo.ObjectID(repoid); });
 
-			      db.collection("repo_collection").find({_id: {$in : obj_ids}}, {models :1 ,_id :0}).toArray(function(err, repos) {
+			      db.collection("repos").find({_id: {$in : obj_ids}}, {Models :1 ,_id :0}).toArray(function(err, repos) {
 					if (err) throw err;
 				    db.close();
 				    var modelArray = repos.map(function(repo){
-				    	return repo.models;
+				    	return repo.Models;
 				    });
 
 				    	callbackfunc(modelArray);
@@ -228,32 +245,32 @@
 				});
 	}
 
-	function queryRepoAnalytics(repoId, callbackfunc, update){
-		if(update !== true){
-			update == false;
-		}
-
-		queryRepoInfo(repoId, function(repo){
-
-			var repoAnalytics = repo.RepoAnalytics;
-			if(!update){
-				console.log('Repo Analytics exist');
-				callbackfunc(repoAnalytics, repo);
-			} else
-			{
-				console.log('Repo Analytics doesn\'t exist');
-				umlModelAnalyzer.analyseRepo(repo, function(){
-					console.log("analyse repo finished");
-				});
-//				repo.RepoAnalytics = repoAnalytics;
-				updateRepoInfo(repo, function(repoInfo){
-					if(callbackfunc !== null){
-						callbackfunc(repoInfo.RepoAnalytics, repo);
-					}
-				});
-			}
-		});
-	}
+//	function queryRepoAnalytics(repoId, callbackfunc, update){
+//		if(update !== true){
+//			update == false;
+//		}
+//
+//		queryRepoInfo(repoId, function(repo){
+//
+//			var repoAnalytics = repo.RepoAnalytics;
+//			if(!update){
+//				console.log('Repo Analytics exist');
+//				callbackfunc(repoAnalytics, repo);
+//			} else
+//			{
+//				console.log('Repo Analytics doesn\'t exist');
+//				umlEvaluator.evaluateRepo(repo, function(){
+//					console.log("evaluate repo finished");
+//				});
+////				repo.RepoAnalytics = repoAnalytics;
+//				updateRepoInfo(repo, function(repoInfo){
+//					if(callbackfunc !== null){
+//						callbackfunc(repoInfo.RepoAnalytics, repo);
+//					}
+//				});
+//			}
+//		});
+//	}
 
 	/*
 	shekhars: on model update, we see this error intermittently, not fixed yet,
@@ -280,7 +297,7 @@
 			fs.writeFile('./temp/modelInfo1.json', JSON.stringify(modelInfo, null, 2) , 'utf-8');
 			console.log(repoId);
 			var o_id = new mongo.ObjectID(repoId);
-			db.collection("repo_collection").update({_id:o_id}, {$push: {models: modelInfo}}, function(err, res) {
+			db.collection("repos").update({_id:o_id}, {$push: {Models: modelInfo}}, function(err, res) {
 				if (err) throw err;
 				console.log("1 record inserted");
 				db.close();
@@ -291,25 +308,25 @@
 		});
 	}
 
-	function updateRepoAnalytics(repoAnalytics, callbackfunc){
-		MongoClient.connect(url, function(err, db) {
-			if (err) throw err;
-			db.collection("repo_collection").update({_id:new mongo.ObjectID(repoAnalytics._id)}, {$set:{RepoAnalytics: repoAnalytics}}, function(err, updateCount){
-				if(err) throw err;
-				db.close();
-				if(callbackfunc !== null){
-					callbackfunc(repoAnalytics);
-				}
-			});
-		});
-	}
+//	function updateRepoAnalytics(repoAnalytics, callbackfunc){
+//		MongoClient.connect(url, function(err, db) {
+//			if (err) throw err;
+//			db.collection("repos").update({_id:new mongo.ObjectID(repoAnalytics._id)}, {$set:{RepoAnalytics: repoAnalytics}}, function(err, updateCount){
+//				if(err) throw err;
+//				db.close();
+//				if(callbackfunc !== null){
+//					callbackfunc(repoAnalytics);
+//				}
+//			});
+//		});
+//	}
 
 	function deleteModel(repoId, modelId, callbackfunc){
 		MongoClient.connect(url, function(err, db) {
 			  if (err) throw err;
 //			  console.log(modelInfo);
 			  var o_id = new mongo.ObjectID(repoId);
-			  db.collection("repo_collection").update({_id:o_id}, {$pull: {'models': {'_id': modelId}}}, function(err){
+			  db.collection("repos").update({_id:o_id}, {$pull: {'Models': {'_id': modelId}}}, function(err){
 			      if (err) {
 			    	  console.log(err);
 			    	  if(callbackfunc){
@@ -332,7 +349,7 @@
 //			  console.log(modelInfo);
 //			  var o_id = new mongo.ObjectID(repoId);
 			  var modelQuery = getModelQuery(modelId, repoId);
-			  db.collection("repo_collection").update(modelQuery, {$pull: {'models.$.useCases':{'_id':useCaseId}}}, function(err){
+			  db.collection("repos").update(modelQuery, {$pull: {'Models.$.useCases':{'_id':useCaseId}}}, function(err){
 			      console.log("delete useCase");
 				  if (err) {
 			    	  console.log(err);
@@ -340,7 +357,7 @@
 			    	  return;
 			      }
 				  queryModelInfo(modelId, repoId, function(modelInfo){
-				 	 umlModelAnalyzer.analyseModel(modelInfo, function(){
+				 	 umlEvaluator.evaluateModel(modelInfo, function(){
 		    	 		 console.log('model analysis is complete');
 		    	 	 });
 //		    		 console.log("queryModelInfo");
@@ -373,18 +390,18 @@
                     var userId = user._id;
 
                     var repoInfo = {};
-  				    db.collection("repo_collection").insertOne(repoInfo, function(err, result) {
+  				    db.collection("repos").insertOne(repoInfo, function(err, result) {
   				    if (err) throw err;
   				    console.log("1 record inserted");
-
+  				    //init reqo information
   				    var repoId = repoInfo._id;
-  				    repoInfo.models = [];
-  					repoInfo.outputDir = "public/output/repo"+repoId;
-  					repoInfo.accessDir = "output/repo"+repoId;
-  					repoInfo.RepoAnalytics = umlModelAnalyzer.initRepoAnalytics(repoInfo);
+  				    repoInfo.Models = [];
+  					repoInfo.OutputDir = "public/output/repo"+repoId;
+  					repoInfo.AccessDir = "output/repo"+repoId;
+  					
   				    var o_id = new mongo.ObjectID(repoId);
 
-  	   			  	db.collection("repo_collection").update({_id:o_id}, repoInfo, function(){
+  	   			  	db.collection("repos").update({_id:o_id}, repoInfo, function(){
 
   	   			  		var user_o_id = new mongo.ObjectID(userId)
   	   			  		user.repoId = repoId;
@@ -491,7 +508,7 @@
 
             							if (err) throw err;
             							if(data){
-
+            										console.log(data);
 								                    // found an existing user
 								                    db.close();
 
@@ -532,7 +549,7 @@
     function saveSurveyData(surveyData){
 		MongoClient.connect(url, function(err, db) {
 			if (err) throw err;
-			databaseCollectionName = "UML_model_submission";
+			databaseCollectionName = "surveys";
 			db.collection(databaseCollectionName).insertOne(surveyData, function(err, result) {
 				if (err) throw err;
 				console.log("1 record inserted");
@@ -552,7 +569,9 @@
 				  db.collection("users").findOne({_id:o_id}, {}, function(err, user) {
 					if (err) throw err;
 				    db.close();
-				    	callbackfunc(user);
+				    if(callbackfunc){
+				    callbackfunc(user);
+				    }
 				  });
 			  }
 
@@ -588,20 +607,21 @@
 				}
 				return;
 			}
-			modelInfoVersion._id = modelInfo._id;
-			modelInfoVersion.umlModelName = modelInfo.umlModelName;//copy the model identifier from the original model Info into the new model version, to be the new model info, which is the head of the model versions.
-			modelInfoVersion.ModelEmpirics = JSON.parse(JSON.stringify(modelInfo.ModelEmpirics)); //copy the model empirics from the older model version. User can update later.
+//			No need to make the populate the information. Alredy did it.
+//			modelInfoVersion._id = modelInfo._id;
+//			modelInfoVersion.Name = modelInfo.Name;//copy the model identifier from the original model Info into the new model version, to be the new model info, which is the head of the model versions.
+//			modelInfoVersion.ModelEmpirics = JSON.parse(JSON.stringify(modelInfo.ModelEmpirics)); //copy the model empirics from the older model version. User can update later.
 			var oldVersions = modelInfo.Versions; //include the previous versions for the model file.
 			if(!oldVersions){
 				oldVersions = [];
 			}
 			delete modelInfo.Versions;
 			delete modelInfo._id;
-			delete modelInfo.umlModelName;
+			delete modelInfo.Name;
 			oldVersions.push(modelInfo);
 			//remove the versions property for the old version. to avoid nesting problem.
 			modelInfoVersion.Versions = oldVersions;
-			console.log(modelInfoVersion);
+//			console.log(modelInfoVersion);
 			updateModelInfo(modelInfoVersion, repoId, function(modelInfoVersion){
 				if(callbackfunc){
 					callbackfunc(modelInfoVersion);
@@ -623,8 +643,8 @@
 			var olderVersion = modelInfo.Versions.pop(); //include the previous versions for the model file.
 			olderVersion.Versions = modelInfo.Versions;
 			olderVersion._id = modelInfo._id;
-			olderVersion.umlModelName = modelInfo.umlModelName;
-			console.log(olderVersion);
+			olderVersion.Name = modelInfo.Name;
+//			console.log(olderVersion);
 //			console.log(modelInfo);
 			updateModelInfo(olderVersion, repoId, function(olderVersion){
 				if(callbackfunc){
@@ -637,22 +657,47 @@
 	/*
 	 * if modelInfo is not null, create an model info with the id and name in modelInfo, so as to create an version of the model Info
 	 */
-	function initModelInfo(umlModelInfo, umlModelName, umlModelInfoBase){
-		if(umlModelInfoBase){
-			umlModelInfo._id = umlModelInfoBase._id;
-			umlModelInfo.umlModelName = umlModelInfoBase.umlModelName;
-			return umlModelInfo;
-		}
+	function initModelInfo(umlModelInfo, umlModelName, repoInfo){
+		
 		umlModelInfo._id = umlModelInfo.fileId + Date.now();
 		if(!umlModelName || umlModelName === ''){
 			umlModelName = umlModelInfo.fileId;
 		}
 
-		umlModelInfo.umlModelName = umlModelName;
+		umlModelInfo.Name = umlModelName;
+		umlModelInfo.OutputDir = repoInfo.OutputDir+"/"+umlModelInfo.fileId;
+		umlModelInfo.AccessDir = repoInfo.AccessDir+"/" + umlModelInfo.fileId;
 
 		return umlModelInfo;
 	}
+	
+	function createModelInfoVersion(umlFileInfo, umlModelInfoBase){
+		if(umlModelInfoBase){
+			//reuse the umlFileInfo object.
+			var umlModelInfoVersion = umlFileInfo;
+			umlModelInfoVersion._id = umlModelInfoBase._id;
+			umlModelInfoVersion.Name = umlModelInfoBase.Name;
+			umlModelInfoVersion.OutputDir = umlModelInfoBase.OutputDir;
+			umlModelInfoVersion.AccessDir = umlModelInfoBase.AccessDir;
 
+			return umlModelInfoVersion;
+		}
+		
+		return false;
+	}
+
+	function duplicateModelInfo(umlModelInfo){
+		if(umlModelInfo){
+			var umlFileInfo = umlFileManager.duplicateUMLFileInfo(umlModelInfo);
+			umlFileInfo._id = umlModelInfo._id;
+			umlFileInfo.Name = umlModelInfo.Name;
+			umlFileInfo.Outputdir = umlModelInfo.OutputDir;
+			umlFileInfo.AccessDir = umlModelInfo.AccessDir;
+			return umlFileInfo;
+		}
+		
+		return false;
+	}
 
 
 	module.exports = {
@@ -660,74 +705,131 @@
 			// Connect to the db
 			MongoClient.connect(url, function(err, db) {
 				if (err) throw err;
-			  db.createCollection('repo_collection', function(err, collection) {
-				    console.log("Table created!");
-				    db.close();
-				    callbackfunc();
+			  db.createCollection('repos', function(err, collection) {
+				  db.createCollection('users', function(err, collection) {
+					  db.createCollection('surveys', function(err, collection) {
+						    console.log("Table created!");
+						    db.close();
+						    callbackfunc();
+					  });
+				  });
 			  });
 
 				});
 			},
-			createRepo: createRepo,
-
-			queryModelAnalytics: queryModelAnalytics,
-			queryModelInfo: queryModelInfo,
-			deleteModelInfo : function(repoId, modelInfo) {
+		createRepo: createRepo,
+//		queryModelAnalytics: queryModelAnalytics,
+		queryModelInfo: queryModelInfo,
+		deleteModelInfo : function(repoId, modelInfo) {
 
 		},
 		updateUseCaseInfo: updateUseCaseInfo,
 		saveModelInfo : saveModelInfo,
 		queryRepoInfo : queryRepoInfo,
 		queryUseCaseInfo: queryUseCaseInfo,
-		queryUseCaseAnalytics: function(repoId, modelId, useCaseId, callbackfunc){
-			queryUseCaseInfo(repoId, modelId, useCaseId, function(useCaseInfo){
-				var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
-				if(useCaseAnalytics !== undefined){
-					console.log("useCase analytics defined");
-					if(callbackfunc !== undefined){
-						callbackfunc(useCaseAnalytics, useCaseInfo);
-					}
-				}
-				else{
-					console.log("useCase analytics undefined");
-
-					useCaseAnalytics = umlModelAnalyzer.analyseUseCase(useCaseInfo, function(){
-						console.log("useCase analysis is finished");
-					});
-					useCaseInfo.UseCaseAnalytics = useCaseAnalytics;
-					updateUseCaseInfo(repoId, modelId, useCaseInfo, function(useCaseInfo){
-//						console.log(useCaseAnalytics);
-						if(callbackfunc !== undefined){
-							callbackfunc(useCaseInfo.UseCaseAnalytics, useCaseInfo);
-						}
-					});
-				}
-			});
-		},
+//		queryUseCaseAnalytics: function(repoId, modelId, useCaseId, callbackfunc){
+//			queryUseCaseInfo(repoId, modelId, useCaseId, function(useCaseInfo){
+//				var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
+//				if(useCaseAnalytics !== undefined){
+//					console.log("useCase analytics defined");
+//					if(callbackfunc !== undefined){
+//						callbackfunc(useCaseAnalytics, useCaseInfo);
+//					}
+//				}
+//				else{
+//					console.log("useCase analytics undefined");
+//
+//					useCaseAnalytics = umlEvaluator.evaluateUseCase(useCaseInfo, function(){
+//						console.log("useCase analysis is finished");
+//					});
+//					useCaseInfo.UseCaseAnalytics = useCaseAnalytics;
+//					updateUseCaseInfo(repoId, modelId, useCaseInfo, function(useCaseInfo){
+////						console.log(useCaseAnalytics);
+//						if(callbackfunc !== undefined){
+//							callbackfunc(useCaseInfo.UseCaseAnalytics, useCaseInfo);
+//						}
+//					});
+//				}
+//			});
+//		},
 		clearDB: function(callbackfunc){
 			MongoClient.connect(url, function(err, db) {
 				  if (err) throw err;
-				  db.collection("repo_collection").drop(function(err, delOK) {
+				  db.dropDatabase(function(err, result) {
 				    if (err) throw err;
-				    if (delOK) console.log("Table deleted");
+				    if (result) console.log("Datbase is deleted");
 				    db.close();
+				    if(db){
 				    callbackfunc();
+				    }
 				  });
 				});
 			},
-
-
-		reloadRepo: function(repo, modelReloadProcessor){
-			var models = repo.models;
-			for (var i in models) { //for multiple files
-			    (function(model) {
-			    	umlModelAnalyzer.extractModelInfo(model, modelReloadProcessor)
-			    })(models[i]);
+		// this method will reanalyse the models in the repo entirely. Can be used when there is a change in the schema of repo_info_schema.
+		reloadRepo: function(repo, callback){
+			//create a replica of the existing repo.
+			var newRepo = {
+					_id:repo._id,
+					Models: [],
+					OutputDir: repo.OutputDir,
+					AccessDir: repo.AccessDir
+			};
+			
+			function reloadModel(modelInfo){
+				//update model analytics.
+//				console.log(modelInfo);
+				return new Promise((resolve, reject) => {
+					umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
+					umlEvaluator.evaluateModel(modelInfo, function(modelInfo){
+						console.log("model analysis complete");
+//						console.log(modelInfo);
+//						umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
+								if(err){
+									reject(err);
+									return;
+								}
+								resolve();
+//						});
+					});
+					});
+				  });
 			}
+			
+
+			let chain = Promise.resolve();
+			
+			for (var i in repo.Models) { //for multiple files
+			    (function(model) {
+			    	//create duplicate of the existing model.
+			    	var newModel = duplicateModelInfo(model);
+			    	newRepo.Models.push(newModel);
+//			    	umlModelAnalyzer.extractModelInfo(newModel, modelReloadProcessor);
+			    	chain = chain.then(reloadModel(newModel));
+			    })(repo.Models[i]);
+			}
+			
+			chain.then(function(){
+				umlEvaluator.evaluateRepo(repo, function(repo){
+					console.log("model analysis complete");
+//					console.log(modelInfo);
+//					umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
+
+					if(callbackfunc){
+						callbackfunc(repo);
+					}
+//						});
+				});
+				
+			}).catch(function(err){
+				console.log(err);
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+			});
 		},
 		updateModelInfo: updateModelInfo,
 		updateRepoInfo: updateRepoInfo,
-		queryRepoAnalytics: queryRepoAnalytics,
+//		queryRepoAnalytics: queryRepoAnalytics,
 		deleteModel:deleteModel,
 		deleteUseCase:deleteUseCase,
 		queryDomainModelDetail:function(modelId, repoId, callbackfunc){
@@ -740,6 +842,7 @@
 		pushModelInfoVersion:pushModelInfoVersion,
 		popModelInfoVersion:popModelInfoVersion,
 		initModelInfo: initModelInfo, //create model info
+		createModelInfoVersion: createModelInfoVersion,
         newUserSignUp : newUserSignUp,
         validateUserLogin : validateUserLogin,
         queryUserInfo: queryUserInfo,
