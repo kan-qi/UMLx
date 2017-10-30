@@ -48,7 +48,7 @@
 						"Models.$":modelInfo
 					}
 			};
-			db.collection("repo_collection").update(modelQueryInfo, updateOperation, function(err, updateCount){
+			db.collection("repos").update(modelQueryInfo, updateOperation, function(err, updateCount){
 				if(err) throw err;
 				db.close();
 				if(callbackfunc !== null){
@@ -67,7 +67,7 @@
 //			repo
 //			}
 //			};
-			db.collection("repo_collection").update({_id:new mongo.ObjectID(repo._id)}, repo, function(err, updateCount){
+			db.collection("repos").update({_id:new mongo.ObjectID(repo._id)}, repo, function(err, updateCount){
 				if(err) throw err;
 				db.close();
 				if(callbackfunc){
@@ -147,7 +147,7 @@
 			var modelQuery = getModelQuery(modelId,repoId);
 			var projections = getModelQueryProjections(modelId, repoId);
 
-			db.collection("repo_collection").findOne(modelQuery, projections, function(err, repo) {
+			db.collection("repos").findOne(modelQuery, projections, function(err, repo) {
 				if (err) throw err;
 //				console.log('==============selected repo============');
 //				console.log(repo);
@@ -163,7 +163,7 @@
 		console.log("model id:"+modelId);
 		MongoClient.connect(url, function(err, db) {
 			if (err) throw err;
-			db.collection("repo_collection").aggregate([
+			db.collection("repos").aggregate([
 			                                            {
 			                                            	'$match':{
 			                                            		'_id':new mongo.ObjectID(repoId),
@@ -204,8 +204,8 @@
 		MongoClient.connect(url, function(err, db) {
 			if (err) throw err;
 			var o_id = new mongo.ObjectID(repoId);
-//			db.collection("repo_collection").find({}, {umlModelType:1}).toArray(function(err, result) {
-			db.collection("repo_collection").findOne({_id:o_id}, {}, function(err, repo) {
+//			db.collection("repos").find({}, {umlModelType:1}).toArray(function(err, result) {
+			db.collection("repos").findOne({_id:o_id}, {}, function(err, repo) {
 				if (err) throw err;
 //				console.log(repo);
 				db.close();
@@ -232,7 +232,7 @@
 				  if (err) throw err;
 				  var obj_ids = repoIds.map(function(repoid) { return new mongo.ObjectID(repoid); });
 
-			      db.collection("repo_collection").find({_id: {$in : obj_ids}}, {Models :1 ,_id :0}).toArray(function(err, repos) {
+			      db.collection("repos").find({_id: {$in : obj_ids}}, {Models :1 ,_id :0}).toArray(function(err, repos) {
 					if (err) throw err;
 				    db.close();
 				    var modelArray = repos.map(function(repo){
@@ -297,7 +297,7 @@
 			fs.writeFile('./temp/modelInfo1.json', JSON.stringify(modelInfo, null, 2) , 'utf-8');
 			console.log(repoId);
 			var o_id = new mongo.ObjectID(repoId);
-			db.collection("repo_collection").update({_id:o_id}, {$push: {Models: modelInfo}}, function(err, res) {
+			db.collection("repos").update({_id:o_id}, {$push: {Models: modelInfo}}, function(err, res) {
 				if (err) throw err;
 				console.log("1 record inserted");
 				db.close();
@@ -311,7 +311,7 @@
 //	function updateRepoAnalytics(repoAnalytics, callbackfunc){
 //		MongoClient.connect(url, function(err, db) {
 //			if (err) throw err;
-//			db.collection("repo_collection").update({_id:new mongo.ObjectID(repoAnalytics._id)}, {$set:{RepoAnalytics: repoAnalytics}}, function(err, updateCount){
+//			db.collection("repos").update({_id:new mongo.ObjectID(repoAnalytics._id)}, {$set:{RepoAnalytics: repoAnalytics}}, function(err, updateCount){
 //				if(err) throw err;
 //				db.close();
 //				if(callbackfunc !== null){
@@ -326,7 +326,7 @@
 			  if (err) throw err;
 //			  console.log(modelInfo);
 			  var o_id = new mongo.ObjectID(repoId);
-			  db.collection("repo_collection").update({_id:o_id}, {$pull: {'Models': {'_id': modelId}}}, function(err){
+			  db.collection("repos").update({_id:o_id}, {$pull: {'Models': {'_id': modelId}}}, function(err){
 			      if (err) {
 			    	  console.log(err);
 			    	  if(callbackfunc){
@@ -349,7 +349,7 @@
 //			  console.log(modelInfo);
 //			  var o_id = new mongo.ObjectID(repoId);
 			  var modelQuery = getModelQuery(modelId, repoId);
-			  db.collection("repo_collection").update(modelQuery, {$pull: {'Models.$.useCases':{'_id':useCaseId}}}, function(err){
+			  db.collection("repos").update(modelQuery, {$pull: {'Models.$.useCases':{'_id':useCaseId}}}, function(err){
 			      console.log("delete useCase");
 				  if (err) {
 			    	  console.log(err);
@@ -390,7 +390,7 @@
                     var userId = user._id;
 
                     var repoInfo = {};
-  				    db.collection("repo_collection").insertOne(repoInfo, function(err, result) {
+  				    db.collection("repos").insertOne(repoInfo, function(err, result) {
   				    if (err) throw err;
   				    console.log("1 record inserted");
   				    //init reqo information
@@ -401,7 +401,7 @@
   					
   				    var o_id = new mongo.ObjectID(repoId);
 
-  	   			  	db.collection("repo_collection").update({_id:o_id}, repoInfo, function(){
+  	   			  	db.collection("repos").update({_id:o_id}, repoInfo, function(){
 
   	   			  		var user_o_id = new mongo.ObjectID(userId)
   	   			  		user.repoId = repoId;
@@ -549,7 +549,7 @@
     function saveSurveyData(surveyData){
 		MongoClient.connect(url, function(err, db) {
 			if (err) throw err;
-			databaseCollectionName = "UML_model_submission";
+			databaseCollectionName = "surveys";
 			db.collection(databaseCollectionName).insertOne(surveyData, function(err, result) {
 				if (err) throw err;
 				console.log("1 record inserted");
@@ -569,7 +569,9 @@
 				  db.collection("users").findOne({_id:o_id}, {}, function(err, user) {
 					if (err) throw err;
 				    db.close();
-				    	callbackfunc(user);
+				    if(callbackfunc){
+				    callbackfunc(user);
+				    }
 				  });
 			  }
 
@@ -703,10 +705,14 @@
 			// Connect to the db
 			MongoClient.connect(url, function(err, db) {
 				if (err) throw err;
-			  db.createCollection('repo_collection', function(err, collection) {
-				    console.log("Table created!");
-				    db.close();
-				    callbackfunc();
+			  db.createCollection('repos', function(err, collection) {
+				  db.createCollection('users', function(err, collection) {
+					  db.createCollection('surveys', function(err, collection) {
+						    console.log("Table created!");
+						    db.close();
+						    callbackfunc();
+					  });
+				  });
 			  });
 
 				});
@@ -749,11 +755,13 @@
 		clearDB: function(callbackfunc){
 			MongoClient.connect(url, function(err, db) {
 				  if (err) throw err;
-				  db.collection("repo_collection").drop(function(err, delOK) {
+				  db.dropDatabase(function(err, result) {
 				    if (err) throw err;
-				    if (delOK) console.log("Table deleted");
+				    if (result) console.log("Datbase is deleted");
 				    db.close();
+				    if(db){
 				    callbackfunc();
+				    }
 				  });
 				});
 			},

@@ -117,6 +117,25 @@ app.get('/surveyProject', function(req, res){
 	res.render('surveyProject');	
 });
 
+app.get('/clearDB', function(req, res){
+	var userId = req.query.user_id;
+	if(userId === "flyqk"){
+	umlModelInfoManager.clearDB(function(result){
+		res.end('database is clear');
+	    });
+	}
+})
+
+
+app.get('/setupRepoStorage', function(req, res){
+	var userId = req.query.user_id;
+	if(userId === "flyqk"){
+	umlModelInfoManager.setupRepoStorage(function(){
+		res.end('database is set up');
+	    });
+	}
+})
+
 
 //route middleware to verify a token
 app.use(function(req, res, next) {
@@ -136,6 +155,10 @@ app.use(function(req, res, next) {
 		   } else {
 		     // if everything is good, save to request for use in other routes
 		     umlModelInfoManager.queryUserInfo(user.userId,function(user){
+		    	if(!user){
+		    		res.redirect('/login');
+		    		return;
+		    	}
 		    	 
 		    	req.userInfo ={};
 		    	req.userInfo.userName = user.username;
@@ -561,26 +584,6 @@ app.get('/requestModelUseCases', function(req, res){
 	    });
 })
 
-app.get('/clearDB', function(req, res){
-	var userId = req.query.user_id;
-	if(userId === "flyqk"){
-	umlModelInfoManager.clearDB(function(result){
-		res.end('database is clear');
-	    });
-	}
-})
-
-
-app.get('/setupRepoStorage', function(req, res){
-	var userId = req.query.user_id;
-	if(userId === "flyqk"){
-	umlModelInfoManager.setupRepoStorage(function(){
-		res.end('database is set up');
-	    });
-	}
-})
-
-
 //app.get('/addRepo', function(req, res){
 //	var userId = req.query.user_id;
 //	var password = req.query.password;
@@ -828,7 +831,7 @@ app.get('/', function(req, res){
 						for(var i in modelArray ){
 							var model = modelArray[i];
 							for(var j in model ){
-							repoInfo.models.push(model[j]);
+							repoInfo.Models.push(model[j]);
 							}
 							
 						}

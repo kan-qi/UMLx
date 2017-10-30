@@ -109,8 +109,10 @@
 		// console.log(domainModelAnalytics);
 
 		if(callbackfunc){
+		if(modelInfo['ModelVersion']){
 		var files = [{fileName : modelInfo['ModelVersion'].ModelVersionInfoFileName , content : modelVersionInfoStr}];
 		umlFileManager.writeFiles(modelInfo.OutputDir, files, callbackfunc);
+		}
 		}
 		
 		return {
@@ -118,7 +120,6 @@
 			modelVersionNum : modelVersionNum
 		}
 
-		
 	}
 
 	function dumpRepoVersionInfo(repoInfo, callbackfunc) {

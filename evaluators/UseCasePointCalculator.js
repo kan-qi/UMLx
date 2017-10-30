@@ -256,21 +256,13 @@
 		modelInfo['UseCasePointData'].DUCP = 0;
 		
 		
-		calculateEUCP(modelInfo);
-		calculateEXUCP(modelInfo);
-		calculateDUCP(modelInfo);
-	}
-	
-
-	function calculateEUCP(modelInfo){
-		
+		//calculate EUCP
 		var UEUCW = 0;
 		for(var i in modelInfo.UseCases){
-		
 		var useCaseInfo = modelInfo.UseCases[i];
-		
-		
+		if(useCaseInfo['UseCasePointData']){
 		UEUCW += useCaseInfo['UseCasePointData'].UEUCW;
+		}
 		}
 		
 		var TCF = Number(modelInfo['UseCasePointData'].TCF);
@@ -281,17 +273,16 @@
 
 		modelInfo['UseCasePointData'].UEUCW = UEUCW;
 		modelInfo['UseCasePointData'].EUCP = EUCP;
-
-		return EUCP;
 		
-	}
-	
-	function calculateEXUCP(modelInfo){
+		//calculate EXUCP
 		var UEXUCW = 0;
 		for(var i in modelInfo.UseCases){
 		var useCaseInfo = modelInfo.UseCases[i];
 //		var useCaseAnalytics = useCase.UseCaseAnalytics;
+
+		if(useCaseInfo['UseCasePointData']){
 		UEXUCW += useCaseInfo['UseCasePointData'].UEXUCW;
+		}
 		}
 		
 		var TCF = Number(modelInfo['UseCasePointData'].TCF);
@@ -306,15 +297,15 @@
 		modelInfo['UseCasePointData'].UEXUCW = UEXUCW;
 		modelInfo['UseCasePointData'].EXUCP = EXUCP;
 		
-		return EXUCP;
-	}
-	
-	function calculateDUCP(modelInfo){
+		//calculate DUCP
 		var UDUCW = 0;
 		for(var i in modelInfo.UseCases){
 		var useCaseInfo = modelInfo.UseCases[i];
 //		var useCaseAnalytics = useCase.UseCaseAnalytics;
+
+		if(useCaseInfo['UseCasePointData']){
 		UDUCW += useCaseInfo['UseCasePointData'].UDUCW;
+		}
 		}
 		
 		var TCF = Number(modelInfo['UseCasePointData'].TCF);
@@ -325,11 +316,9 @@
 
 		modelInfo['UseCasePointData'].UDUCW = UDUCW;
 		modelInfo['UseCasePointData'].DUCP = DUCP;
-		
-		return DUCP;
 	}
 	
-	function evaluateRepo(repoInfo){
+	function analyseRepoEvaluation(repoInfo){
 		 repoInfo['UseCasePointData'] = {
 				 repoUseCasePointEvaluationResultsPath : repoInfo.OutputDir+"/Model_Evaluation_Results"
 		 }
@@ -361,7 +350,7 @@
 		loadModelEmpirics: loadModelEmpirics,
 		evaluateUseCase: evaluateUseCase,
 		evaluateModel: evaluateModel,
-		evaluateRepo: evaluateRepo
+		analyseRepoEvaluation: analyseRepoEvaluation
 	}
 	
 	

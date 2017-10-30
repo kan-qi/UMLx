@@ -281,21 +281,23 @@
 
 		if (modelInfo.DomainModel) {
 			var domainModelInfo = modelInfo.DomainModel;
-//			domainModelInfo["FPAnalytics"] = domainModelInfo.DomainModelAnalytics;
+			if(domainModelInfo["FPAnalytics"]){
 			modelInfo["FPAnalytics"].DET += domainModelInfo["FPAnalytics"].DET;
 			modelInfo["FPAnalytics"].RET += domainModelInfo["FPAnalytics"].RET;
 			modelInfo["FPAnalytics"].ILF += domainModelInfo["FPAnalytics"].ILF;
 			modelInfo["FPAnalytics"].EIF += domainModelInfo["FPAnalytics"].EIF;
+			}
 		}
 		
 		for ( var i in modelInfo.UseCases) {
 			var useCaseInfo = modelInfo.UseCases[i];
-//			var useCaseInfo["FPAnalytics"] = useCaseInfo.UseCaseAnalytics;
+			if(useCaseInfo["FPAnalytics"]){
 			modelInfo["FPAnalytics"].EI = useCaseInfo["FPAnalytics"].EI;
 			modelInfo["FPAnalytics"].EO = useCaseInfo["FPAnalytics"].EO;
 			modelInfo["FPAnalytics"].EQ = useCaseInfo["FPAnalytics"].EQ;
 			modelInfo["FPAnalytics"].FUNC_NA = useCaseInfo["FPAnalytics"].FUNC_NA;
 			modelInfo["FPAnalytics"].FN = useCaseInfo["FPAnalytics"].FN;
+			}
 		}
 		
 		return modelInfo["FPAnalytics"];
@@ -318,8 +320,8 @@
 
 		for ( var i in repoInfo.models) {
 			var modelInfo = repoInfo.models[i];
-//			var modelInfo["FPAnalytics"] = modelInfo.ModelAnalytics;
 			
+			if(modelInfo["FPAnalytics"]){
 			repoInfo["FPAnalytics"].DET += modelInfo["FPAnalytics"].DET;
 			repoInfo["FPAnalytics"].RET += modelInfo["FPAnalytics"].RET;
 			repoInfo["FPAnalytics"].ILF += modelInfo["FPAnalytics"].ILF;
@@ -329,6 +331,7 @@
 			repoInfo["FPAnalytics"].EQ += modelInfo["FPAnalytics"].EQ;
 			repoInfo["FPAnalytics"].FUNC_NA += modelInfo["FPAnalytics"].FUNC_NA;
 			repoInfo["FPAnalytics"].FN += modelInfo["FPAnalytics"].FN;
+			}
 		}
 		
 		return repoInfo["FPAnalytics"];

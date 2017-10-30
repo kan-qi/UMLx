@@ -249,8 +249,9 @@
 
 		//analyse use cases
 		for(var i in modelInfo.UseCases){
-			var useCaseInfo = modelInfo.UseCases[i];
-//			var useCaseInfo['TransactionAnalytics'] = useCase.UseCaseAnalytics;
+			var useCaseInfo = modelInfo.UseCases[i]
+
+			if(useCaseInfo['TransactionAnalytics']){
 			modelInfo['TransactionAnalytics'].EI += useCaseInfo['TransactionAnalytics'].EI;
 			modelInfo['TransactionAnalytics'].EQ += useCaseInfo['TransactionAnalytics'].EQ;
 			modelInfo['TransactionAnalytics'].INT += useCaseInfo['TransactionAnalytics'].INT;
@@ -261,6 +262,7 @@
 			modelInfo['TransactionAnalytics'].TRAN_NA += useCaseInfo['TransactionAnalytics'].TRAN_NA;
 			modelInfo['TransactionAnalytics'].NT += useCaseInfo['TransactionAnalytics'].NT;
 			modelInfo['TransactionAnalytics'].TranLength += useCaseInfo['TransactionAnalytics'].Tran_Length;
+			}
 		}
 
 		modelInfo['TransactionAnalytics'].AvgTranLength = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : modelInfo['TransactionAnalytics'].TranLength/modelInfo['TransactionAnalytics'].NT;
@@ -311,6 +313,7 @@
 		for(var i in repoInfo.models){
 			var modelInfo = repoInfo.models[i];
 
+			if(modelInfo['TransactionAnalytics']){
 			repoInfo['TransactionAnalytics'].EI += modelInfo['TransactionAnalytics'].EI;
 			repoInfo['TransactionAnalytics'].EQ += modelInfo['TransactionAnalytics'].EQ;
 			repoInfo['TransactionAnalytics'].INT += modelInfo['TransactionAnalytics'].INT;
@@ -321,6 +324,7 @@
 			repoInfo['TransactionAnalytics'].TranLength += modelInfo['TransactionAnalytics'].TranLength;
 			repoInfo['TransactionAnalytics'].EXTIVK += modelInfo['TransactionAnalytics'].EXTIVK;
 			repoInfo['TransactionAnalytics'].EXTCLL += modelInfo['TransactionAnalytics'].EXTCLL;
+			}
 		}
 		
 		repoInfo['TransactionAnalytics'].AvgTranLength = repoInfo['TransactionAnalytics'].NT == 0 ? 0 : repoInfo['TransactionAnalytics'].TranLength/repoInfo['TransactionAnalytics'].NT;
