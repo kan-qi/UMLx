@@ -393,12 +393,12 @@
   				    db.collection("repo_collection").insertOne(repoInfo, function(err, result) {
   				    if (err) throw err;
   				    console.log("1 record inserted");
-
+  				    //init reqo information
   				    var repoId = repoInfo._id;
   				    repoInfo.Models = [];
   					repoInfo.OutputDir = "public/output/repo"+repoId;
   					repoInfo.AccessDir = "output/repo"+repoId;
-//  					repoInfo.RepoAnalytics = umlEvaluator.initRepoAnalytics(repoInfo);
+  					
   				    var o_id = new mongo.ObjectID(repoId);
 
   	   			  	db.collection("repo_collection").update({_id:o_id}, repoInfo, function(){

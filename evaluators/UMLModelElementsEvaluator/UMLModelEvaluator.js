@@ -416,8 +416,8 @@
 //		repoInfo.RepoAnalytics = repoInfo["ElementAnalytics"];
 		
 		
-		for ( var i in repoInfo.models) {
-			var modelInfo = repoInfo.models[i];
+		for ( var i in repoInfo.Models) {
+			var modelInfo = repoInfo.Models[i];
 //			var modelInfo["ElementAnalytics"] = modelInfo.ModelAnalytics;
 			repoInfo["ElementAnalytics"].TotalPathLength += modelInfo["ElementAnalytics"].TotalPathLength;
 			repoInfo["ElementAnalytics"].PathNum += modelInfo["ElementAnalytics"].PathNum;
