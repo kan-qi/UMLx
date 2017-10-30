@@ -10,8 +10,8 @@
 (function() {
 	
 	var fs = require('fs');
-	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
+	var RScriptExec = require('../../utils/RScriptUtil.js')
 	var umlFileManager = require('../../UMLFileManager');
 	var transactionProcessor = require('./TransactionProcessor.js');
 	
@@ -213,18 +213,15 @@
 					 		
 							console.log("evaluate transactions for the use cases");
 							
-							var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/TransactionEvaluator/TransactionAnalyticsScript.R "'+useCaseInfo.OutputDir+"/"+useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName+'" "'+useCaseInfo.OutputDir+'" "."';
-//							console.log(command);
-							var child = exec(command, function(error, stdout, stderr) {
-
-								if (error !== null) {
-									console.log('exec error: ' + error);
-//									console.log('exec error: useCase id=' + useCaseInfo['TransactionAnalytics']._id)
+							var command = './evaluators/TransactionEvaluator/TransactionAnalyticsScript.R "'+useCaseInfo.OutputDir+"/"+useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName+'" "'+useCaseInfo.OutputDir+'" "."';
+							
+							RScriptExec.runRScript(command,function(result){
+								if (!result) {
 									if(callbackfunc){
 										callbackfunc(false);
 									}
-								} 
-
+									return;
+								}
 								if(callbackfunc){
 									callbackfunc(useCaseInfo['TransactionAnalytics']);
 								}
@@ -278,18 +275,15 @@
 				 
 					console.log("evaluate transactions for the model");
 					
-					var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/TransactionEvaluator/TransactionAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "."';
-//					console.log(command);
-					var child = exec(command, function(error, stdout, stderr) {
-
-						if (error) {
-							console.log('exec error: ' + error);
-//							console.log('exec error: useCase id=' + useCaseInfo['TransactionAnalytics']._id)
+					var command = './evaluators/TransactionEvaluator/TransactionAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "."';
+					
+					RScriptExec.runRScript(command,function(result){
+						if (!result) {
 							if(callbackfunc){
 								callbackfunc(false);
 							}
-						} 
-
+							return;
+						}
 						if(callbackfunc){
 							callbackfunc(modelInfo['TransactionAnalytics']);
 						}
@@ -339,14 +333,12 @@
 					console.log(err);
 			        return;
 			    }
-						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo['TransactionAnalytics'].RepoEvaluationForModelsFileName+'" "'+repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath+'"';	
-						 console.log(command);
-							var child = exec(command, function(error, stdout, stderr) {
-
-								if (error !== null) {
-//									console.log('exec error: ' + error);
-									console.log('exec error: repo id=' + repoInfo['TransactionAnalytics']._id);
-								} 
+						 var command = './Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo['TransactionAnalytics'].RepoEvaluationForModelsFileName+'" "'+repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath+'"';	
+							
+							RScriptExec.runRScript(command,function(result){
+								if (!result) {
+									console.log('exec error: repo id=' + repoInfo._id);
+								}
 								console.log("Repo Evaluation were saved!");
 							});
 			});
@@ -360,18 +352,15 @@
 					 
 					 console.log("evaluate transactions for the repo");
 						
-						var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/TransactionEvaluator/TransactionAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "."';
-//						console.log(command);
-						var child = exec(command, function(error, stdout, stderr) {
-
-							if (error !== null) {
-								console.log('exec error: ' + error);
-//								console.log('exec error: useCase id=' + useCaseInfo['TransactionAnalytics']._id)
+						var command = './evaluators/TransactionEvaluator/TransactionAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "."';
+						
+						RScriptExec.runRScript(command,function(result){
+							if (!result) {
 								if(callbackfunc){
 									callbackfunc(false);
 								}
-							} 
-
+								return;
+							}
 							if(callbackfunc){
 								callbackfunc(repoInfo['TransactionAnalytics']);
 							}

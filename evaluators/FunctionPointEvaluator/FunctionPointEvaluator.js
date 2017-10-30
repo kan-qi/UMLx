@@ -11,7 +11,6 @@
 (function() {
 
 	var fs = require('fs');
-	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
 	var umlFileManager = require('../../UMLFileManager');
 	var functionPointProcessor = require('./FunctionPointProcessor.js');

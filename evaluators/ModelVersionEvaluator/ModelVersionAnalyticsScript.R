@@ -49,7 +49,7 @@ modelVersionInfo=read.csv(modelVersionInfoPath,header=TRUE)
 #      breaks=5
 
 #draw trending line based on version info
-svg(paste(outputDir,"trending_lines.svg",sep="/"), width=12, height=3)
+svg(paste(outputDir,"model_version_trending_lines.svg",sep="/"), width=12, height=3)
 print("model version info")
 print(modelVersionInfo)
 print(ggplot(modelVersionInfo,aes(x=update_time,group=1))+geom_line(aes(y=number_of_paths))+ggtitle("Number of Transactions"))

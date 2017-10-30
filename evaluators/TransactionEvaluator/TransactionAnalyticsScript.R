@@ -30,6 +30,7 @@ sink(reportPath)
 cat(getwd())
 # load the necessary libraries
 library(lattice)
+library(ggplot2)
 # set the output file
 # cat(paste(args[3],"repo_analysis_result.svg", sep="/"))
 # load the dataset
@@ -106,6 +107,32 @@ svg(paste(outputDir,"external_call_operation_analysis_result.svg", sep="/"))
 print(hist(extcllPathData, main="External Call Operation Num", xlab="Path Length", breaks=15))
 svg(paste(outputDir,"not_matched_analysis_result.svg", sep="/"))
 print(hist(naPathData, main="Not Matched Operation Num", xlab="Path Length", breaks=15))
+
+#Added the smoothing distributions for the number of transactions for different types.
+#converting the numeric vectors into data frames
+DataFrame_Interface_Operation=as.data.frame(intPathData)
+DataFrame_Control_Operation=as.data.frame(ctrlPathData)
+DataFrame_External_Input_Operation=as.data.frame(eiPathData)
+DataFrame_External_Query_Operation=as.data.frame(eqPathData)
+DataFrame_External_Invocation_Operation=as.data.frame(extivkPathData)
+DataFrame_Not_Matched_Operation=as.data.frame(naPathData)
+# adding a column called col for each document for visualizing each dataframe through a color
+DataFrame_Interface_Operation$col="Interface_Operation"
+DataFrame_Control_Operation$col="Control_Operation"
+DataFrame_External_Input_Operation$col="External_Input_Operation"
+DataFrame_External_Query_Operation$col="External_Query_Operation"
+DataFrame_External_Invocation_Operation$col="External_Invocation_Operation"
+DataFrame_Not_Matched_Operation$col="Not_Matched_Operation"
+
+
+#combine all the 6 data frames
+DataFrame_Combined=data.frame(mapply(c,DataFrame_Interface_Operation,DataFrame_Control_Operation,
+				DataFrame_External_Input_Operation,DataFrame_External_Query_Operation,DataFrame_External_Invocation_Operation,
+				DataFrame_Not_Matched_Operation,SIMPLIFY=FALSE))
+print(DataFrame_Combined)
+svg(paste(outputDir,"merged_distributions_for_transactions.svg",sep="/"))
+print(ggplot(DataFrame_Combined, aes(x = intPathData,fill=col)) + geom_density(alpha = 0.5)+xlab("Number of Paths"))
+## end of the smoothing distributions.
 
 
 transactionalPatternCounts <- table(transactionData$transactional)

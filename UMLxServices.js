@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var fs = require("fs");
 var admZip = require('adm-zip');
-var exec = require('child_process').exec;
 var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
 var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
@@ -15,7 +14,6 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
 var sleep = require('sleep');
-
 var RScriptUtil = require('./utils/RScriptUtil.js');
 
 
@@ -714,7 +712,7 @@ app.get('/dumpRepoDescriptiveDistributions', function(req, res){
 //	var repoId = req.query.repo_id;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 				umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
-					var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/RepoDiscriptiveAnalysis.R "'+repoInfo.OutputDir+"/"+repoInfo.RepoEvaluationForUseCasesFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo.RepoEvaluationForModelsFileName+'" "'+repoInfo.OutputDir+'" "."';
+					var command = './Rscript/RepoDiscriptiveAnalysis.R "'+repoInfo.OutputDir+"/"+repoInfo.RepoEvaluationForUseCasesFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo.RepoEvaluationForModelsFileName+'" "'+repoInfo.OutputDir+'" "."';
 
 					//	console.log('generate model Analytics');
 //					console.log(command);

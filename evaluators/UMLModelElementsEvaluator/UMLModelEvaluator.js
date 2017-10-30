@@ -11,8 +11,8 @@
 (function() {
 
 	var fs = require('fs');
-	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
+	var RScriptExec = require('../../utils/RScriptUtil.js');
 	var umlFileManager = require('../../UMLFileManager');
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
@@ -177,19 +177,16 @@
 			
 				console.log("evaluate uml elements for use cases");
 				
-				var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/UMLModelElementsEvaluator/UseCaseElementsAnalyticsScript.R "'+useCaseInfo.OutputDir+"/"+useCaseInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+useCaseInfo.OutputDir+"/"+useCaseInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+useCaseInfo.OutputDir+'" "."';
-//				console.log(command);
-				var child = exec(command, function(error, stdout, stderr) {
-
-					if (error !== null) {
-						console.log('exec error: ' + error);
-//						console.log('exec error: useCase id=' + useCaseInfo["ElementAnalytics"]._id)
-						if(callbackfunc !== undefined){
+				var command = './evaluators/UMLModelElementsEvaluator/UseCaseElementsAnalyticsScript.R "'+useCaseInfo.OutputDir+"/"+useCaseInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+useCaseInfo.OutputDir+"/"+useCaseInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+useCaseInfo.OutputDir+'" "."';
+				
+				RScriptExec.runRScript(command,function(result){
+					if (!result) {
+						if(callbackfunc){
 							callbackfunc(false);
 						}
-					} 
-
-					if(callbackfunc !== undefined){
+						return;
+					}
+					if(callbackfunc){
 						callbackfunc(useCaseInfo["ElementAnalytics"]);
 					}
 				});
@@ -289,18 +286,16 @@
 			}
 			console.log("evaluate uml elements for domain model");
 			
-			var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/UMLModelElementsEvaluator/DomainModelElementsAnalyticsScript.R "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+domainModelInfo.OutputDir+'" "."';
-//			console.log(command);
-			var child = exec(command, function(error, stdout, stderr) {
+			var command = './evaluators/UMLModelElementsEvaluator/DomainModelElementsAnalyticsScript.R "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+domainModelInfo.OutputDir+'" "."';
 
-				if (error !== null) {
-//					console.log('exec error: ' + error);
-					console.log('exec error: model id=' + domainModelInfo._id)
-					if(callbackfunc !== undefined){
+			RScriptExec.runRScript(command,function(result){
+				if (!result) {
+					if(callbackfunc){
 						callbackfunc(false);
 					}
+					return;
 				}
-				if(callbackfunc !== undefined){
+				if(callbackfunc){
 					callbackfunc(domainModelInfo["ElementAnalytics"]);
 				}
 			});
@@ -380,18 +375,16 @@
 			//Needs to be upgraded soon
 			console.log("evaluate uml elements at model level");
 			
-			var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "."';
-			console.log(command);
-			var child = exec(command, function(error, stdout, stderr) {
+			var command = './evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "."';
 
-				if (error !== null) {
-//					console.log('exec error: ' + error);
-					console.log('exec error: model id=' + modelInfo["ElementAnalytics"]._id)
-					if(callbackfunc !== undefined){
+			RScriptExec.runRScript(command,function(result){
+				if (!result) {
+					if(callbackfunc){
 						callbackfunc(false);
 					}
+					return;
 				}
-				if(callbackfunc !== undefined){
+				if(callbackfunc){
 					callbackfunc(modelInfo["ElementAnalytics"]);
 				}
 			});
@@ -455,23 +448,20 @@
 			}
 			//Needs to be upgraded soon
 			console.log("evaluate uml elements at repo level");
-			var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "."';
+			var command = './evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "."';
 			
-//			console.log('generate model Analytics');
-			console.log(command);
-			var child = exec(command, function(error, stdout, stderr) {
-
-				if (error !== null) {
-//					console.log('exec error: ' + error);
-					console.log('exec error: repo id=' + repoInfo["ElementAnalytics"]._id)
-					if(callbackfunc !== undefined){
+			RScriptExec.runRScript(command,function(result){
+				if (!result) {
+					if(callbackfunc){
 						callbackfunc(false);
 					}
-				} 
-				if(callbackfunc !== undefined){
+					return;
+				}
+				if(callbackfunc){
 					callbackfunc(repoInfo["ElementAnalytics"]);
 				}
 			});
+			
 		});
 		}
 		
@@ -780,20 +770,16 @@
 	
 	function analyseModelEvaluation(modelInfo, callbackfunc){
 		console.log("evaluate uml elements at repo level");
-		var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/UMLModelElementsEvaluator/UseCaseAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName+'" "'+modelInfo.OutputDir+'" "."';
-		
-//		console.log('generate model Analytics');
-		console.log(command);
-		var child = exec(command, function(error, stdout, stderr) {
+		var command = './evaluators/UMLModelElementsEvaluator/UseCaseAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName+'" "'+modelInfo.OutputDir+'" "."';
 
-			if (error !== null) {
-//				console.log('exec error: ' + error);
-				console.log('exec error: repo id=' + modelInfo._id)
-				if(callbackfunc !== undefined){
+		RScriptExec.runRScript(command,function(result){
+			if (!result) {
+				if(callbackfunc){
 					callbackfunc(false);
 				}
-			} 
-			if(callbackfunc !== undefined){
+				return;
+			}
+			if(callbackfunc){
 				callbackfunc(modelInfo);
 			}
 		});

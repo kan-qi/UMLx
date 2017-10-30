@@ -11,9 +11,9 @@
 (function() {
 
 	var fs = require('fs');
-	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
-	var umlFileManager = require('../../UMLFileManager');
+	var RScriptExec = require('../../utils/RScriptUtil.js');
+	var umlFileManager = require('../../UMLFileManager.js');
 
 	function evaluateModel(modelInfo, callbackfunc) {
 //		var modelAnalytics = modelInfo.ModelAnalytics;
@@ -24,7 +24,28 @@
 		}
 		
 		if (callbackfunc) {
-		dumpModelVersionInfo(modelInfo, callbackfunc);
+		dumpModelVersionInfo(modelInfo, function(err){
+				//Needs to be upgraded soon
+				if(err){
+					console.log(err);
+					callbackfunc(false);
+					return;
+				}
+				console.log("evaluate model version info at model level");
+				var command = './evaluators/ModelVersionEvaluator/ModelVersionAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo['ModelVersion'].ModelVersionInfoFileName+'" "'+modelInfo.OutputDir+'" "."';
+
+				RScriptExec.runRScript(command,function(result){
+					if (!result) {
+						if(callbackfunc){
+							callbackfunc(false);
+						}
+						return;
+					}
+					if(callbackfunc){
+						callbackfunc(modelInfo);
+					}
+				});
+		});
 		}
 		
 //		return modelAnalytics;
@@ -39,7 +60,31 @@
 		}
 		
 		if (callbackfunc) {
-			dumpRepoVersionInfo(repoInfo, callbackfunc);
+			dumpRepoVersionInfo(repoInfo, function(err){
+
+					if(err){
+						console.log(err);
+						callbackfunc(false);
+						return;
+					}
+					//Needs to be upgraded soon
+					console.log("evaluate model version at repo level");
+					var command = './evaluators/ModelVersionEvaluator/ModelVersionAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo['ModelVersion'].ModelVersionInfoFileName+'" "'+repoInfo.OutputDir+'" "."';
+					
+					RScriptExec.runRScript(command,function(result){
+						if (!result) {
+//							console.log('exec error: ' + error);
+//							console.log('exec error: model id=' + modelInfo._id)
+							if(callbackfunc){
+								callbackfunc(false);
+							}
+							return;
+						}
+						if(callbackfunc){
+							callbackfunc(repoInfo);
+						}
+					});
+			});
 		}
 		
 		return repoInfo['ModelVersion'];
@@ -64,31 +109,8 @@
 		// console.log(domainModelAnalytics);
 
 		if(callbackfunc){
-
-
 		var files = [{fileName : modelInfo['ModelVersion'].ModelVersionInfoFileName , content : modelVersionInfoStr}];
-		
-		umlFileManager.writeFiles(modelInfo.OutputDir, files,function(){
-			//Needs to be upgraded soon
-			console.log("evaluate uml elements at model level");
-			
-			var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/ModelVersionEvaluator/ModelVersionAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo['ModelVersion'].ModelVersionInfoFileName+'" "'+modelInfo.OutputDir+'" "."';
-			console.log(command);
-			var child = exec(command, function(error, stdout, stderr) {
-
-				if (error !== null) {
-//					console.log('exec error: ' + error);
-					console.log('exec error: model id=' + modelInfo._id)
-					if(callbackfunc){
-						callbackfunc(false);
-					}
-				}
-				if(callbackfunc){
-					callbackfunc(modelInfo);
-				}
-			});
-		});
-		
+		umlFileManager.writeFiles(modelInfo.OutputDir, files, callbackfunc);
 		}
 		
 		return {
@@ -105,39 +127,15 @@
 		var modelVersionInfoStr = "";
 
 		for ( var i in repoInfo.Models) {
-			
 			var modelInfo = repoInfo.Models[i];
 			var modelVersionDump = dumpModelVersionInfo(modelInfo, null, modelVersionNum);
 			modelVersionInfoStr += modelVersionDump.modelVersionInfoStr;
-			modelVersionNum = modelVersionNum;
+			modelVersionNum = modelVersionDump.modelVersionNum;
 		}
 		
-
 		if(callbackfunc){
-				
 		var files = [{fileName : repoInfo['ModelVersion'].ModelVersionInfoFileName , content : modelVersionInfoStr}];
-		
-		umlFileManager.writeFiles(repoInfo.OutputDir, files,function(){
-			//Needs to be upgraded soon
-			console.log("evaluate uml elements at repo level");
-			var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./evaluators/ModelVersionEvaluator/ModelVersionAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo['ModelVersion'].ModelVersionInfoFileName+'" "'+repoInfo.OutputDir+'" "."';
-//			console.log('generate model Analytics');
-			console.log(command);
-			var child = exec(command, function(error, stdout, stderr) {
-
-				if (error !== null) {
-//					console.log('exec error: ' + error);
-					console.log('exec error: repo id=' + repoInfo._id)
-					if(callbackfunc){
-						callbackfunc(false);
-					}
-				} 
-				if(callbackfunc){
-					callbackfunc(repoInfo);
-				}
-			});
-		})
-
+		umlFileManager.writeFiles(repoInfo.OutputDir, files, callbackfunc)
 		}
 	   
 	}

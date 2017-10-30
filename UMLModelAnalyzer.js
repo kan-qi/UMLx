@@ -6,7 +6,6 @@
 	var diagramProfiler = require('./diagram_profilers/UMLDiagramProfiler.js');
 	var mkdirp = require('mkdirp');
 	var fs = require('fs');
-	var exec = require('child_process').exec;
 	//To process second order information, for example, determine duplicate or identify patterns.
 	var useCaseProcessor = require('./diagram_profilers/UseCaseProcessor.js');
 	var domainModelProcessor = require('./diagram_profilers/DomainModelProcessor.js');
