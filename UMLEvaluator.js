@@ -17,18 +17,21 @@
 	
 	var umlFileManager = require("./UMLFileManager.js");
 	var fs = require('fs');
-	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
+	var umlFileManager = require('./UMLFileManager');
 	
 	// current available evaluators
+	var umlModelEvaluator = require('./evaluators/UMLModelElementsEvaluator/UMLModelEvaluator.js');
+	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
+	var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
+	var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
 	var useCasePointCalculator = require('./evaluators/UseCasePointCalculator.js');
 	var cocomoCalculator = require('./evaluators/COCOMOCalculator.js');
-	var umlDiagramEvaluator = require('./evaluators/UMLDiagramEvaluator.js');
-	var functionPointCalculator = require('./evaluators/FunctionPointEvaluator.js');
-	var projectEvaluator = require('./evaluators/ProjectEvaluator.js');
+	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
 	var useCasePointWeightEvaluator = require('./evaluators/UseCasePointWeightEvaluator.js');
 	
-	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
+//	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
+	var evaluators = [umlModelEvaluator,functionPointEvaluator, transactionEvaluator,modelVersionEvaluator, projectTypeEvaluator, cocomoCalculator,useCasePointWeightEvaluator,useCasePointCalculator];
 //	function setUp(){
 //		evaluators = [cocomoCalculator, useCaseCalculator, umlModelEvaluator];
 //		for(var i in evaluators){
@@ -36,9 +39,9 @@
 //		}
 //	}
 	
-	function loadModelEmpiricsForRepo(repoInfo, callbackfunction, modelFile){
+	function loadModelEmpirics(repoInfo, callbackfunction, modelFile){
 			var ModelDataFilePath = modelFile ? modelFile :repoInfo.outputDir+"/ModelDataLoad.csv";
-			console.log('loadModelEmpiricsForRepo:', ModelDataFilePath);
+			console.log('loadModelEmpirics:', ModelDataFilePath);
 			umlFileManager.loadCSVFile(ModelDataFilePath, true, function(data){
 				var modelDataArray = {};
 				for(var i in data){
@@ -58,25 +61,26 @@
 				var modelIndex = 0;
 				for(var i in models){
 					var model = models[i];
-					var modelName = model.umlModelName;
-					if(!modelDataArray[modelName]){
+					var modelName = model.Name;
+					var modelLoad = modelDataArray[modelName];
+					if(!modelLoad){
 						continue;
 					}
 					
-					if(!model.ModelEmpirics){
-						model.ModelEmpirics = {};
-					}
+//					if(!model.ModelEmpirics){
+//						model.ModelEmpirics = {};
+//					}
 					
-					for(var j in modelDataArray[modelName]){
-						model.ModelEmpirics[j] = modelDataArray[modelName][j];
-					}
+//					for(var j in modelDataArray[modelName]){
+//						model.ModelEmpirics[j] = modelDataArray[modelName][j];
+//					}
 					
 //					console.log(model.ModelEmpirics);
 					
-					for (var m in evaluators){
-						var evaluator = evaluators[m];
-						if(evaluator.loadFromModelEmpirics){
-							evaluator.loadFromModelEmpirics(model.ModelEmpirics, model, modelIndex);
+					for (var j in evaluators){
+						var evaluator = evaluators[j];
+						if(evaluator.loadModelEmpirics){
+							evaluator.loadModelEmpirics(modelLoad, model, modelIndex);
 						}
 					}
 					modelIndex++;
@@ -88,7 +92,7 @@
 			});
 	}
 	
-	function loadUseCaseEmpiricsForRepo(repoInfo, callbackfunc, dataFilePath){
+	function loadUseCaseEmpirics(repoInfo, callbackfunc, dataFilePath){
 			// dataFilePath is optional argument if don't get this we take csv file from repo itself.
 			var csvDataFilePath = dataFilePath ? dataFilePath : repoInfo.outputDir+"/useCaseDataLoad.csv";
 			console.log('usecaseFilePath:', csvDataFilePath);
@@ -113,7 +117,7 @@
 			for(var i in models){
 				var model = models[i];
 
-				var modelName = model.umlModelName;
+				var modelName = model.Name;
 				 if(!useCaseData[modelName]){
 					 continue;
 				 }
@@ -129,21 +133,21 @@
 						 continue;
 					 }
 					 
-					 if(!useCaseInfo.UseCaseEmpirics){
-						 useCaseInfo.UseCaseEmpirics = {};
-					 }
+//					 if(!useCaseInfo.UseCaseEmpirics){
+//						 useCaseInfo.UseCaseEmpirics = {};
+//					 }
 					 
-					 var useCaseEmpirics = useCaseInfo.UseCaseEmpirics;
+//					 var useCaseEmpirics = useCaseInfo.UseCaseEmpirics;
 				
-					 for(var k in useCaseLoad){
-						 useCaseEmpirics[k] = useCaseLoad[k];
-					 }
+//					 for(var k in useCaseLoad){
+//						 useCaseEmpirics[k] = useCaseLoad[k];
+//					 }
 					 
 					 // to distribute the use case data to the evaluators.
 					 
 					 for (var k in evaluators){
-						 if(evaluators[k].loadFromUseCaseEmpirics){
-							 evaluators[k].loadFromUseCaseEmpirics(useCaseEmpirics, useCaseInfo, useCaseIndex, model, modelIndex);
+						 if(evaluators[k].loadUseCaseEmpirics){
+							 evaluators[k].loadUseCaseEmpirics(useCaseLoad, useCaseInfo, useCaseIndex, model, modelIndex);
 						 }
 					 }
 					 
@@ -158,23 +162,8 @@
 			});
 	}
 	
-	//This well be called when there is a change in the analytical data
-	function redoUseCaseEvaluation(useCaseInfo){
-		if(!useCaseInfo.UseCaseEmpirics){
-			useCaseInfo.UseCaseEmpirics = {};
-		}
-		
-		for(var i in evaluators){
-			var evaluator = evaluators[i];
-			if(evaluator.evaluateUseCase){
-				evaluator.evaluateUseCase(useCaseInfo);
-			}
-		}
-		
-	}
-	
 	// to converge use case empirics and use case analytics, dump it and evaluate it.
-	function toUseCaseEvaluationStr(useCaseInfo, useCaseNum, header){
+	function toUseCaseEvaluationStr(useCaseInfo, useCaseNum){
 //		var useCaseEvaluationStr = "NUM,UC,CCSS,CCSS_ALY,UEUCW,UEUCW_ALY,IT,IT_ALY,UEXUCW,UEXUCW_ALY,ILF,ILF_ALY,ELF,ELF_ALY,EI,EI_ALY,EO,EO_ALY,EQ,EQ_ALY,ADD,ADD_ALY,CFP,CFP_ALY,DFP,DFP_ALY,AFP,AFP_ALY,Effort,Effort_ALY\n";
 //		var useCaseEvaluationStr = "NUM,UC,CCSS_EMP,CCSS_ALY,UEUCW_EMP,UEUCW_ALY,UEXUCW_EMP,UEXUCW_ALY,EI_EMP,EI_ALY,EO_EMP,EO_ALY,EQ,EQ_ALY,FN,FN_ALY,DM, DM_ALY,INT,INT_ALY,CTRL,CTRL_ALY,EXTIVK,EXTIVK_ALY,EXTCLL,EXTCLL_ALY,TN,TN_ALY,Effort,Effort_ALY\n";
 		var useCaseEvaluationStr = "NUM,UC";
@@ -188,25 +177,20 @@
 		
 		useCaseEvaluationStr += "\n";
 		
-		if(!header){
+		if(useCaseNum !== 1){
 			useCaseEvaluationStr = "";
-		}
-		
-		var index = 0;
-		if(useCaseNum){
-			index = useCaseNum;
 		}
 		
 //
 //		var useCaseEmpirics = useCaseInfo.UseCaseEmpirics;
 //		var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
 //		
-		useCaseEvaluationStr += index+","+ useCaseInfo.UseCaseAnalytics.Name.replace(/,/gi, "");
+		useCaseEvaluationStr += useCaseNum+","+ useCaseInfo.Name.replace(/,/gi, "");
 		
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.toUseCaseEvaluationRow){
-				useCaseEvaluationStr += "," + evaluator.toUseCaseEvaluationRow(useCaseInfo, index);
+				useCaseEvaluationStr += "," + evaluator.toUseCaseEvaluationRow(useCaseInfo, useCaseNum);
 			}
 		}
 		
@@ -216,26 +200,44 @@
 }
 	
 	
-	function redoModelEvaluation(modelInfo){
-		if(!modelInfo.ModelEmpirics){
-			modelInfo.ModelEmpirics = {};
-		}
+	function toDomainModelEvaluationStr(domainModelInfo, domainModelNum){
+		var domainModelEvaluationStr = "NUM,DM";
 		
-		for(i in evaluators){
+		for(var i in evaluators){
 			var evaluator = evaluators[i];
-			if(evaluator.evaluateModel)
-			{
-			evaluator.evaluateModel(modelInfo);
+			if(evaluator.toDomainModelEvaluationHeader){
+				domainModelEvaluationStr += "," + evaluator.toDomainModelEvaluationHeader();
 			}
 		}
 		
+		domainModelEvaluationStr += "\n";
+		
+		if(domainModelNum !== 1){
+			domainModelEvaluationStr = "";
+		}
+		
+//
+//		var domainModelEmpirics = domainModelInfo.DomainModelEmpirics;
+//		var domainModelAnalytics = domainModelInfo.DomainModelAnalytics;
+//		
+		domainModelEvaluationStr += domainModelNum+",domain_model";
+		
+		for(var i in evaluators){
+			var evaluator = evaluators[i];
+			if(evaluator.toDomainModelEvaluationRow){
+				domainModelEvaluationStr += "," + evaluator.toDomainModelEvaluationRow(domainModelInfo, domainModelNum);
+			}
+		}
+		
+		domainModelEvaluationStr += "\n";
+		
+		return domainModelEvaluationStr;
 	}
-	
 
 	/*
 	 * for the plugged in evaluators, they also can expand the output
 	 */
-	function toModelEvaluationStr(modelInfo, modelNum, header){
+	function toModelEvaluationStr(modelInfo, modelNum){
 //		var modelEmpirics = "PROJ,UC,CCSS,UEUCW,IT,UEXUCW,UAW,TCF,EF,EUCP,EXUCP,ILF,ELF,EI,EO,EQ,ADD,CFP,DFP,VAF,AFPC\n";
 		var modelEvaluationStr = "NUM,PROJ";
 //		var useCaseEvaluationStr = "NUM,PROJ,UC,CCSS,UEUCW,IT,UEXUCW,ILF,ELF,EI,EO,EQ,ADD,CFP,DFP,AFP,Effort\n";
@@ -254,22 +256,17 @@
 		
 //		console.log(modelInfo);
 		
-		if(!header){
+		if(modelNum !== 1){
 			modelEvaluationStr = "";
 		}
 		
-		var index = 0;
 		
-		if(modelNum){
-			index = modelNum;
-		}
-		
-		modelEvaluationStr += index+","+ modelInfo.ModelAnalytics.Name.replace(/,/gi, "");
+		modelEvaluationStr += modelNum+","+ modelInfo.Name.replace(/,/gi, "");
 		
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.toModelEvaluationRow){
-				modelEvaluationStr += "," + evaluator.toModelEvaluationRow(modelInfo, index);
+				modelEvaluationStr += "," + evaluator.toModelEvaluationRow(modelInfo, modelNum);
 			}
 		}
 		
@@ -278,262 +275,213 @@
 		return modelEvaluationStr;
 	}
 	
-	function evaluateModelForUseCases(modelInfo, callbackfunc, refresh){
-		var modelAnalytics = modelInfo.ModelAnalytics;
+	function evaluateUseCase(useCaseInfo, callbackfunc){
+		
+		if(callbackfunc){
+		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
+		
+		for(var i in evaluators){
+			var evaluator = evaluators[i];
+			if(evaluator.evaluateUseCase){
+				evaluator.evaluateUseCase(useCaseInfo, function(){
+					console.log("use case evaluation finishes");
+				});
+			}
+		}
+		
+		callbackfunc(useCaseInfo);
+		
+		}
+		else{
+			return useCaseInfo;
+		}
+	}
+	
+	function evaluateDomainModel(domainModelInfo, callbackfunc){
+		if(callbackfunc){
+			// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
+			
+			for(var i in evaluators){
+				var evaluator = evaluators[i];
+				if(evaluator.evaluateDomainModel){
+					evaluator.evaluateDomainModel(domainModelInfo, function(){
+						console.log("domain model evaluation finishes");
+					});
+				}
+			}
+			
+			callbackfunc(domainModelInfo);
+			
+			}
+			else{
+				return domainModelInfo;
+			}
+	}
+	
+	function evaluateModel(modelInfo, callbackfunc){
 
 		var useCaseNum = 1;
 //		var useCaseEmpiricss = [];
 		var useCaseEvaluationStr = "";
+		
+		var domainModelNum = 1;
+		var domainModelEvaluationStr = "";
+		
+		if(callbackfunc){
+		
 		for(var i in modelInfo.UseCases){
-			
-			if(refresh){
-				redoUseCaseEvaluation(modelInfo.UseCases[i]);
-			}
-			
-			//too many such sentences to check if usecaseEmpirics and modelEmpirics exist.
-			if(!modelInfo.UseCases[i].UseCaseEmpirics){
-				modelInfo.UseCases[i].UseCaseEmpirics = {};
-			}
+			var useCase = modelInfo.UseCases[i];
+			evaluateUseCase(useCase, function(){
+					console.log('use case analysis is complete');
+				});
 //			
-			var useCaseEvaluationHeader = false;
-			if(useCaseNum === 1){
-				useCaseEvaluationHeader = true;
-			}
-			else{
-				useCaseEvaluationHeader = false;
-			}
-			useCaseEvaluationStr += toUseCaseEvaluationStr(modelInfo.UseCases[i], useCaseNum, useCaseEvaluationHeader);
+			useCaseEvaluationStr += toUseCaseEvaluationStr(useCase, useCaseNum);
 //			useCaseEmpiricss.push(useCaseEmpirics);
 			useCaseNum ++;
-		
 		}
 		
-		
-		
-		
-		mkdirp(modelAnalytics.OutputDir, function(err) { 
-			if(err) {
-				console.log(err);
-				if(callbackfunc !== undefined){
-		    	callbackfunc(false);
-				}
-		        return;
-		    }
-			
-		    
-		    fs.writeFile(modelAnalytics.OutputDir+"/"+modelAnalytics.ModelEmpiricsForUseCasesFileName, useCaseEvaluationStr, function(err){
-				 if(err) {
-					 	console.log(err);
-					 	if(callbackfunc !== undefined){
-					    	callbackfunc(false);
-							}
-				        return; 
-				    }
-				 
-					for(i in evaluators){
-						var evaluator = evaluators[i];
-						if(evaluator.evaluateModelForUseCases)
-						{
-						evaluator.evaluateModelForUseCases(modelAnalytics);
-						}
-					}
-					 	
-					    console.log("Repo Evaluation were saved!");
-//					    generateModelStatisticalCharts(modelAnalytics, callbackfunc);
-					    if(callbackfunc !== undefined){
-//							console.log(useCaseEvaluationStr);
-					    	callbackfunc(useCaseEvaluationStr, modelInfo);
-						}
-					  
-			});
-		
-
+		var domainModel = modelInfo.DomainModel;
+		evaluateDomainModel(domainModel, function(){
+					console.log('doamin model analysis is complete');
 		});
 		
-
-//		var useCaseEmpiricsResult = {index: useCaseNum, useCaseEvaluationStr: useCaseEvaluationStr, useCaseEmpiricss:useCaseEmpiricss};
-		return useCaseEvaluationStr;
+		domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
+//		useCaseEmpiricss.push(useCaseEmpirics);
+//		domainModelNum ++;
+		
+		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
+		for(var i in evaluators){
+			var evaluator = evaluators[i];
+			if(evaluator.evaluateModel){
+				evaluator.evaluateModel(modelInfo, function(){
+					console.log('model evaluation finishes');
+				});
+			}
+		}
+		
+		modelInfo.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
+		modelInfo.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
+		
+		var files = [{fileName : modelInfo.UseCaseEvaluationFileName , content : useCaseEvaluationStr},
+			{fileName : modelInfo.DomainModelEvaluationFileName , content : domainModelEvaluationStr}];
+		
+		umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
+			if(err) {
+			 	console.log(err);
+			 	if(callbackfunc){
+			    	callbackfunc(false);
+				} 
+		    }
+			else {
+				
+				for(var i in evaluators){
+					var evaluator = evaluators[i];
+					if(evaluator.analyseModelEvaluation){
+						evaluator.analyseModelEvaluation(modelInfo);
+					}
+				}
+				
+				 if(callbackfunc){
+//						console.log(repoEvaluationsForUseCaseStr);
+				    	callbackfunc(modelInfo);
+					}
+			}
+				
+		});
+		
+		}
+		else{
+			return modelInfo;
+		}
+		
 	}
 	
-	
-	function evaluateRepoForModels(repo, callbackfunc, refresh){
+/*
+ * callbackfunc is the function called when the analysis is finished.
+ */
+	function evaluateRepo(repoInfo, callbackfunc){
 //		var modelEmpirics = "PROJ,UC,CCSS,UEUCW,IT,UEXUCW,UAW,TCF,EF,EUCP,EXUCP,ILF,ELF,EI,EO,EQ,ADD,CFP,DFP,VAF,AFPC\n";
-		var repoAnalytics = repo.RepoAnalytics;
 //		var repoEvaluationStr = "NUM,PROJ,UEUCW,UEXUCW,UAW,TCF,EF,EUCP,EXUCP,AFP,VAF,AFPC,Effort\n";
 		var modelEvaluationStr = "";
-//		var modelEmpiricss = [];
-		var modelNum = 1;
-//		if(index !== undefined){
-//			modelNum = index;
-//		}
-		
-		for(var i in repo.models){
-//			console.log("dump diagram Analytics");
-			var modelInfo = repo.models[i];
-			
-			if(refresh){
-				redoModelEvaluation(modelInfo);
-			}
-			
-			if(!modelInfo.ModelEmpirics){
-				modelInfo.ModelEmpirics = {};
-			}
-			
-//			console.log("model evaluations");
-//			console.log(modelEmpiricss);
-			var modelEvaluationHeader = false;
-//			for(var j in modelEmpiricss){
-				if(modelNum === 1){
-					modelEvaluationHeader = true;
-				} else{
-					modelEvaluationHeader = false;
-				}
-//			var modelEmpirics = modelEmpiricss[j];
-			modelEvaluationStr += toModelEvaluationStr(modelInfo,modelNum,modelEvaluationHeader);
-//			modelEmpiricss.push(modelEmpirics);
-			modelNum++;
-			header = false;
-//			}
-		}
-		
-		mkdirp(repoAnalytics.OutputDir, function(err) { 
-			if(err) {
-				console.log(err);
-				if(callbackfunc !== undefined){
-		    	callbackfunc(false);
-				}
-		        return;
-		    }
-		  
-		    fs.writeFile(repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForModelsFileName, modelEvaluationStr, function(err){
-				 if(err) {
-					 	console.log(err);
-					 	if(callbackfunc !== undefined){
-					    	callbackfunc(false);
-							}
-				        return; 
-				    }
-				 
-
-					for(i in evaluators){
-						var evaluator = evaluators[i];
-						if(evaluator.evaluateRepoForModels)
-						{
-						evaluator.evaluateRepoForModels(repoAnalytics);
-						}
-					}
-					
-
-//				    generateModelStatisticalCharts(modelAnalytics, callbackfunc);
-				    if(callbackfunc){
-//						console.log(modelEvaluationStr);
-				    	callbackfunc(modelEvaluationStr, repoAnalytics);
-					}
-				
-					
-			});
-		
-
-		});
-		
-
-//		var modelEmpiricsResult = {index: modelNum, modelEvaluationStr: modelEvaluationStr, modelEmpiricss:modelEmpiricss};
-//		return modelEmpiricsResult;
-		return modelEvaluationStr
-	}
-	
-	function evaluateRepoForUseCases(repo, callbackfunc, refresh){
-//		var modelEmpirics = "PROJ,UC,CCSS,UEUCW,IT,UEXUCW,UAW,TCF,EF,EUCP,EXUCP,ILF,ELF,EI,EO,EQ,ADD,CFP,DFP,VAF,AFPC\n";
-		var repoAnalytics = repo.RepoAnalytics;
-//		var repoEvaluationStr = "NUM,PROJ,UEUCW,UEXUCW,UAW,TCF,EF,EUCP,EXUCP,AFP,VAF,AFPC,Effort\n";
-		var useCaseEvaluationStr = "";
 //		var repoEvaluationsForUseCase = [];
-		var useCaseNum = 1;
+		var modelNum = 1;
 //		if(index !== undefined){
 //			useCaseNum = index;
 //		}
-//		
 		
-		for(var i in repo.models){
-//			console.log("dump diagram Analytics");
-			var modelInfo = repo.models[i];
-			for(var j in modelInfo.UseCases){
-			var useCaseInfo = modelInfo.UseCases[j];
-			
-			if(refresh){
-				redoUseCaseEvaluation(modelInfo.UseCases[i]);
+		if(callbackfunc){
+			// iterate the hierarchy of the repo
+			for(var i in repoInfo.Models){
+				var modelInfo = repoInfo.Models[i];
+				evaluateModel(modelInfo, function(){
+					console.log('model analysis is complete');
+				})
+				
+//				var useCaseEmpirics = evaluateUseCase(useCaseInfo, modelInfo.umlModelName);
+				modelEvaluationStr += toModelEvaluationStr(modelInfo, modelNum);
+//				console.log(useCaseEvaluationStr);
+				modelNum ++;
 			}
 			
-			if(!modelInfo.UseCases[j].UseCaseEmpirics){
-				modelInfo.UseCases[j].UseCaseEmpirics = {};
+			// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
+			for(var i in evaluators){
+				var evaluator = evaluators[i];
+				if(evaluator.evaluateRepo){
+					evaluator.evaluateRepo(repoInfo, function(){
+						console.log('repo evaluation finishes');
+					});
+				}
 			}
 			
-			var useCaseEvaluationHeader = false;
-			if(useCaseNum === 1){
-				useCaseEvaluationHeader = true;
+
+		repoInfo.ModelEvaluationFileName = "modelEvaluation.csv";
+			
+		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr}];
+		
+		umlFileManager.writeFiles(repoInfo.OutputDir, files, function(err){
+			if(err) {
+			 	console.log(err);
+			 	if(callbackfunc){
+			    	callbackfunc(false);
+				} 
+		    }
+			else {
+				
+				for(var i in evaluators){
+					var evaluator = evaluators[i];
+					if(evaluator.analyseRepoEvaluation){
+						evaluator.analyseRepoEvaluation(repoInfo);
+					}
+				}
+				
+				 if(callbackfunc){
+//						console.log(repoEvaluationsForUseCaseStr);
+				    	callbackfunc(repoInfo);
+					}
 			}
-			else{
-				useCaseEvaluationHeader = false;
-			}
-//			var useCaseEmpirics = evaluateUseCase(useCaseInfo, modelInfo.umlModelName);
-			useCaseEvaluationStr += toUseCaseEvaluationStr(useCaseInfo, useCaseNum, useCaseEvaluationHeader);
-//			repoEvaluationsForUseCase.push(useCaseEmpirics);
-//			console.log(useCaseEvaluationStr);
-			header = false;
-			useCaseNum ++;
-			}
+			
+		});
+			
+		}
+		else {
+			return repoInfo;
 		}
 		
-		
-		mkdirp(repoAnalytics.OutputDir, function(err) { 
-			if(err) {
-				console.log(err);
-				if(callbackfunc !== undefined){
-		    	callbackfunc(false);
-				}
-		        return;
-		    }
-		  
-		    fs.writeFile(repoAnalytics.OutputDir+"/"+repoAnalytics.RepoEvaluationForUseCasesFileName, useCaseEvaluationStr, function(err){
-				 if(err) {
-					 	console.log(err);
-					 	if(callbackfunc !== undefined){
-					    	callbackfunc(false);
-							}
-				        return; 
-				    }
-
-					for(i in evaluators){
-						var evaluator = evaluators[i];
-						if(evaluator.evaluateRepoForUseCases)
-						{
-						evaluator.evaluateRepoForUseCases(repoAnalytics);
-						}
-					}
-					    console.log("Repo Evaluation were saved!");
-//					    generateModelStatisticalCharts(modelAnalytics, callbackfunc);
-					    if(callbackfunc){
-//							console.log(repoEvaluationsForUseCaseStr);
-					    	callbackfunc(useCaseEvaluationStr, repoAnalytics);
-						}
-					  
-			});
-		
-
-		});
-		
-//		{index: useCaseNum, useCaseEvaluationStr: useCaseEvaluationStr, repoEvaluationsForUseCase:repoEvaluationsForUseCase};
-		return useCaseEvaluationStr;
 	}
+	
+	/*
+	 * Thinking about get rid of the analytics part totally.
+	 * The specfic analytics will be embedded from the evaluator plugins.
+	 */
+	
 	
 	
 	module.exports = {
-			loadUseCaseEmpiricsForRepo: loadUseCaseEmpiricsForRepo,
-			loadModelEmpiricsForRepo: loadModelEmpiricsForRepo,
-			evaluateModelForUseCases: evaluateModelForUseCases,
-			evaluateRepoForUseCases: evaluateRepoForUseCases,
-			evaluateRepoForModels: evaluateRepoForModels,
-			redoUseCaseEvaluation: redoUseCaseEvaluation,
-			redoModelEvaluation: redoModelEvaluation
+			loadUseCaseEmpirics: loadUseCaseEmpirics,
+			loadModelEmpirics: loadModelEmpirics,
+			evaluateUseCase: evaluateUseCase,
+			evaluateDomainModel: evaluateDomainModel,
+			evaluateModel: evaluateModel,
+			evaluateRepo: evaluateRepo
 	}
 }());

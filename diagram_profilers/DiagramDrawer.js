@@ -27,9 +27,9 @@
 			}
 		}
 		graph += '}';
-		var graphFilePath = robustnessDiagram.outputDir+'/'+robustnessDiagram.dotGraphFile; 
+		var graphFilePath = robustnessDiagram.OutputDir+'/'+robustnessDiagram.DotGraphFile; 
 //		console.log(graphFilePath);
-		mkdirp(robustnessDiagram.outputDir, function(err) {
+		mkdirp(robustnessDiagram.OutputDir, function(err) {
 		    // path exists unless there was an error
 			 if(err) {
 			        return console.log(err);
@@ -39,7 +39,7 @@
 		        return console.log(err);
 		    }
 		    
-		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+robustnessDiagram.outputDir+"/"+robustnessDiagram.svgGraphFile+'"';
+		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+robustnessDiagram.OutputDir+"/"+robustnessDiagram.SvgGraphFile+'"';
 //			console.log(command);
 			var child = exec(command, function(error, stdout, stderr) {
 				if (error !== null) {
@@ -80,8 +80,8 @@
 		graph += '}';
 		
 		var fileName = sequenceDiagram.Name+'_sequence.dotty';
-		var graphFilePath = sequenceDiagram.outputDir+'/'+sequenceDiagram.dotGraphFile;
-		mkdirp(sequenceDiagram.outputDir, function(err) {
+		var graphFilePath = sequenceDiagram.OutputDir+'/'+sequenceDiagram.DotGraphFile;
+		mkdirp(sequenceDiagram.OutputDir, function(err) {
 		    // path exists unless there was an error
 			 if(err) {
 			        return console.log(err);
@@ -91,7 +91,7 @@
 		        return console.log(err);
 		    }
 		    
-		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+sequenceDiagram.outputDir+"/"+sequenceDiagram.svgGraphFile+'"';
+		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+sequenceDiagram.OutputDir+"/"+sequenceDiagram.SvgGraphFile+'"';
 //			console.log(command);
 			var child = exec(command, function(error, stdout, stderr) {
 				if (error !== null) {
@@ -128,8 +128,8 @@
 		}
 		graph += '}';
 		
-		var graphFilePath = classDiagram.outputDir+'/'+classDiagram.dotGraphFile;
-		mkdirp(classDiagram.outputDir, function(err) {
+		var graphFilePath = classDiagram.OutputDir+'/'+classDiagram.DotGraphFile;
+		mkdirp(classDiagram.OutputDir, function(err) {
 		    // path exists unless there was an error
 			 if(err) {
 			        return console.log(err);
@@ -141,7 +141,7 @@
 		    }
 		    
 		    //to generate svg file.
-		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+classDiagram.outputDir+"/"+classDiagram.svgGraphFile+'"';
+		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+classDiagram.OutputDir+"/"+classDiagram.SvgGraphFile+'"';
 //			console.log(command);
 			var child = exec(command, function(error, stdout, stderr) {
 				if (error !== null) {
@@ -163,8 +163,8 @@
 		drawClassDiagram:function(diagram, callbackfunc){
 //			console.log('draw class diagram	');
 			var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_");
-			diagram.dotGraphFile = fileName+'_class.dotty';
-			diagram.svgGraphFile = fileName+'_class.svg';
+			diagram.DotGraphFile = fileName+'_class.dotty';
+			diagram.SvgGraphFile = fileName+'_class.svg';
 //			diagramDrawer.drawClassDiagram(diagram, function(diagram){
 //				console.log('class diagram is drawed.');
 //			});
@@ -172,8 +172,8 @@
 		},
 		drawRobustnessDiagram: function(diagram, callbackfunc){
 			var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_");
-			diagram.dotGraphFile = fileName+'_robustness.dotty';
-			diagram.svgGraphFile = fileName+'_robustness.svg';
+			diagram.DotGraphFile = fileName+'_robustness.dotty';
+			diagram.SvgGraphFile = fileName+'_robustness.svg';
 //			diagramDrawer.drawRobustnessDiagram(diagram, function(diagram){
 //				console.log('robustness diagram is drawed.');
 //			});
@@ -181,8 +181,8 @@
 		},
 		drawSequenceDiagram: function(diagram, callbackfunc){
 			var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_");
-			diagram.dotGraphFile = fileName+'_sequence.dotty';
-			diagram.svgGraphFile = fileName+'_sequence.svg';
+			diagram.DotGraphFile = fileName+'_sequence.dotty';
+			diagram.SvgGraphFile = fileName+'_sequence.svg';
 //			diagramDrawer.drawSequenceDiagram(diagram, function(diagram){
 //				console.log('sequence diagram is drawed.');
 //			});

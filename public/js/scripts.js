@@ -172,7 +172,7 @@ function query_model_usecase_func(modelId) {
 	console.log('query_model_usecase_func');
 	$.ajax({
 		type : 'GET',
-		url : 'requestModelInfo?model_id='+modelId,
+		url : 'requestModelUseCases?model_id='+modelId,
 		success : function(response) {
 //			console.log(response);
 			$("#model-usecase-analysis").html("");
