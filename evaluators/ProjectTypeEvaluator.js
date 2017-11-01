@@ -14,14 +14,28 @@
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
 	
+	function loadModelEmpirics(modelLoad, modelInfo, modelIndex) {
+
+		if(!modelInfo["ProjectTypeEmpirics"]){
+			modelInfo["ProjectTypeEmpirics"] = {
+				projectType: ""
+				}
+		}
+		
+		modelInfo['ProjectTypeEmpirics'].projectType = modelLoad.projectType;
+		
+	}
+	
 	function toModelEvaluationHeader(){
 		return "Type";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
-		var modelEmpirics = modelInfo.ModelEmpirics;
+		if(modelInfo["ProjectTypeEmpirics"]){
+			return modelInfo['ProjectTypeEmpirics'].projectType;
+		}
 		
-		return modelEmpirics.Type;
+		return "";
 	}
 	
 	
