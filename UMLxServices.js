@@ -185,6 +185,7 @@ app.use(function(req, res, next) {
 		    	if(req.userInfo.isEnterprise){
 		    		req.userInfo.enterpriseUserId = user.enterpriseUserId;
 		    	}
+		    	req.userInfo.email = user.email;
 		    		
 		     next();
 		    	
@@ -199,6 +200,17 @@ app.use(function(req, res, next) {
 	}
 
 });
+
+app.get('/profile',function(req,res){
+	
+	var profileInfo = {}
+
+	profileInfo.userName = req.userInfo.userName;
+	profileInfo.email = req.userInfo.email;
+	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
+	res.render('profile', {profileInfo:profileInfo});
+	
+})
 
 app.get('/inviteUser',function(req,res){
 	res.render('invite');
@@ -898,7 +910,7 @@ app.get('/', function(req, res){
 							
 						}
 						
-						res.render('index', {repo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
+						res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
 
 						
 					});
@@ -906,7 +918,7 @@ app.get('/', function(req, res){
 				
 			} else {
 
-				res.render('index', {repo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
+				res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
 			}
 			
 		
