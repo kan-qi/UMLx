@@ -33,7 +33,7 @@ library(lattice)
 #for draw the density plots
 
 library(ggplot2)
-
+library(data.table)
 sink(reportPath)
 
 useCaseData <- read.csv(dataUrl, header=TRUE)
@@ -164,6 +164,9 @@ folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 #data structure to hold the data for 10 fold cross validation
 foldResults <- matrix(,nrow=nfold,ncol=12)
 colnames(foldResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
+#data structure to hold
+foldResults1 <- array(0,dim=c(100,3,nfold))
+#colnames(foldResults1) <- c('baye_pred','apriori_pred','regression_pred')
 #Perform 10 fold cross validation
 for(i in 1:nfold){
 	#Segement your data by fold using the which() function 
@@ -199,6 +202,11 @@ for(i in 1:nfold){
 	bayesian.pred50 = length(bayesian.mre[bayesian.mre<=0.50])/length(bayesian.mre)
 	print(c(bayesian.pred15, bayesian.pred25, bayesian.pred50))
 	
+	bayesian.pred <- 0
+	for(j in 1:99){
+		bayesian.pred <- c(bayesian.pred, length(bayesian.mre[bayesian.mre<=0.01*j])/length(bayesian.mre))
+	}
+	
 	print('apriori testing set predication')
 	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
 	apriori.predict = cbind(as.matrix(testDataX) %*% t(aprioriMeans), testData$norm_effort)
@@ -213,6 +221,11 @@ for(i in 1:nfold){
 	apriori.pred50 = length(apriori.mre[apriori.mre<=0.50])/length(apriori.mre)
 	print(c(apriori.pred15, apriori.pred25, apriori.pred50))
 	
+	apriori.pred <- 0
+	for(j in 1:99){
+		apriori.pred <- c(apriori.pred, length(apriori.mre[apriori.mre<=0.01*j])/length(apriori.mre))
+	}
+	
 	print('regression testing set predication')
 	regression.m = lm(norm_effort ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
 	regression.predict = cbind(predicted=predict(regression.m, testData), actual=testData$norm_effort)
@@ -226,7 +239,15 @@ for(i in 1:nfold){
 	regression.pred50 = length(regression.mre[regression.mre<=0.50])/length(regression.mre)
 	print(c(regression.pred15, regression.pred25, regression.pred50))
 	
+	regression.pred <- 0
+	for(j in 1:99){
+		regression.pred <- c(regression.pred, length(regression.mre[regression.mre<=0.01*j])/length(regression.mre))
+	}
+	
+	
 	foldResults[i,] = c(bayesian.mmre,bayesian.pred15,bayesian.pred25,bayesian.pred50,apriori.mmre,apriori.pred15,apriori.pred25,apriori.pred50,regression.mmre,regression.pred15,regression.pred25,regression.pred50)
+	foldResults1[,,i] = array(c(bayesian.pred, apriori.pred, regression.pred),c(100,3))
+	
 }
 
 #average out the folds.
@@ -249,6 +270,31 @@ cvResults <- c(
 
 names(cvResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
 print(cvResults)
+
+for(i in 1:nfold){
+	#print(foldResults1[,,i])
+}
+avgPreds <- matrix(,nrow=100,ncol=4)
+colnames(avgPreds) <- c("Pred","Bayesian","Apriori","Regression")
+for(i in 1:100){
+	avgPreds[i,] <- c(i, mean(foldResults1[i,1,]),mean(foldResults1[i,2,]),mean(foldResults1[i,3,]))
+	#print(i)
+	#print(avgPreds[i,])
+}
+
+avgPreds <- data.frame(avgPreds)
+print(avgPreds)
+meltAvgPreds = melt(avgPreds, id.vars="Pred", value.name="Value", variable.name="Method")
+print("melt avg preds info")
+print(meltAvgPreds)
+svg(paste(outputPath,"use_case_weight_calibration_err_plot.svg", sep="/"), width=12, height=4)
+print(ggplot(meltAvgPreds) + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3))
+
+print("melt avg preds info as lines")
+svg(paste(outputPath,"use_case_weight_calibration_err_plot_lines.svg", sep="/"), width=12, height=4)
+ggplot(meltAvgPreds) + 
+		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
+		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)
 
 #also have linear regression on sloc and normalized effort.
 sink()

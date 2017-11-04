@@ -64,7 +64,7 @@ print(ggplot() +
 	ggtitle("Use Case Weights")+
 	scale_y_continuous(sec.axis = sec_axis(~.*maxWeight/0.2, name="Weight"))+
 	labs(y = "Percentage", x = "Number of Transaction")+
-	geom_vline(xintercept=c(4,7),linetype="dashed", size=1)
+	geom_vline(xintercept=c(3,7),linetype="dashed", size=1)
 )
 
 svg(paste(outputDir,"transaction_distribution.svg",sep="/"), width=8, height=4)
@@ -104,10 +104,10 @@ for(i in 1:nrow(tranDist)) {
 print(tranDist)
 
 #simpleTranDist <- tranDist[which(tranDist$NT>0 & tranDist$NT < 5),]
-simpleTranDist <- subset(tranDist, NT>0 & NT < 5)
+simpleTranDist <- subset(tranDist, NT>0 & NT < 4)
 simpleTranDist$Freq <- simpleTranDist$Freq/sum(simpleTranDist$Freq)
 print(simpleTranDist)
-averageTranDist <- subset(tranDist, NT>4 & NT < 8)
+averageTranDist <- subset(tranDist, NT>3 & NT < 8)
 averageTranDist$Freq <- averageTranDist$Freq/sum(averageTranDist$Freq)
 print(averageTranDist)
 complexTranDist <- subset(tranDist, NT>7)
@@ -116,7 +116,7 @@ print(complexTranDist)
 
 
 #step 2. For each each weight schema, calculate the mean and variance.
-simpleWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 0 & useCaseWeightInfo$Tran_Num < 5),]
+simpleWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 0 & useCaseWeightInfo$Tran_Num < 4),]
 print(simpleWeight)
 simpleMeans = unlist(list(t(simpleWeight$Weight1) %*% simpleTranDist$Freq,
 		t(simpleWeight$Weight2) %*% simpleTranDist$Freq,
@@ -131,7 +131,7 @@ print(mean(simpleMeans))
 print("apriori estimated variance")
 print(var(simpleMeans))
 
-averageWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 4 & useCaseWeightInfo$Tran_Num < 8),]
+averageWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 3 & useCaseWeightInfo$Tran_Num < 8),]
 print(averageWeight)
 averageMeans = unlist(list(t(averageWeight$Weight1) %*% averageTranDist$Freq,
 				t(averageWeight$Weight2) %*% averageTranDist$Freq,
