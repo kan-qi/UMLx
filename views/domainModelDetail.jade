@@ -4,7 +4,7 @@ if domainModelInfo
    li.active
     a(data-toggle='tab', href='#domain-model-info-pane') Domain Model Info
    li
-    a(data-toggle='tab', href='#domain-model-analytics') Analytics
+    a(data-toggle='tab', href='#domain-model-analytics') 
    li
     a(data-toggle='tab', href='#domain-model-distributions') Distributions
    li
@@ -28,8 +28,8 @@ if domainModelInfo
          th Attribute
          th TYPE
        tbody
-        each diagram in domainModelInfo.DomainModelAnalytics.Diagrams
-         each element in diagram.DiagramAnalytics.Elements
+        each diagram in domainModelInfo.DomainModel.Diagrams
+         each element in diagram.Diagram.Elements
           if element.Attributes
            each attribute,key in element.Attributes
             tr
@@ -46,8 +46,8 @@ if domainModelInfo
          th OPERATION
          th TYPE
        tbody
-        each diagram in domainModelInfo.DomainModelAnalytics.Diagrams
-         each element in diagram.DiagramAnalytics.Elements
+        each diagram in domainModelInfo.DomainModel.Diagrams
+         each element in diagram.Diagram.Elements
           if element.Operations
            each operation,key in element.Operations
             tr
@@ -60,41 +60,41 @@ if domainModelInfo
         h3 Calculated:
         ul
          li
-          span.statistical-item Number of Attributes: #{domainModelInfo.DomainModelAnalytics.AttributeNum}
+          span.statistical-item Number of Attributes: #{domainModelInfo.DomainModel.AttributeNum}
          li
-          span.statistical-item Number of Operations: #{domainModelInfo.DomainModelAnalytics.OperationNum}
+          span.statistical-item Number of Operations: #{domainModelInfo.DomainModel.OperationNum}
          li
-          span.statistical-item Number of Elements: #{domainModelInfo.DomainModelAnalytics.ElementNum}
+          span.statistical-item Number of Elements: #{domainModelInfo.DomainModel.ElementNum}
          li
-          span.statistical-item ILF: #{domainModelInfo.DomainModelAnalytics.ILF}
+          span.statistical-item ILF: #{domainModelInfo.DomainModel.ILF}
          li
-          span.statistical-item EIF: #{domainModelInfo.DomainModelAnalytics.EIF}
+          span.statistical-item EIF: #{domainModelInfo.DomainModel.EIF}
   div.tab-pane.fade(id="domain-model-distributions")
     div.domain-model-distributions
         div.stats-chart
-         img(src="#{domainModelInfo.DomainModelAnalytics.AccessDir}/attribute_num_analysis_result.svg")
+         img(src="#{domainModelInfo.DomainModel.AccessDir}/attribute_num_analysis_result.svg")
         div.stats-chart
-         img(src="#{domainModelInfo.DomainModelAnalytics.AccessDir}/operation_num_analysis_result.svg")
+         img(src="#{domainModelInfo.DomainModel.AccessDir}/operation_num_analysis_result.svg")
   div.tab-pane.fade(id="domain-model-evaluation")
      div.domain-model-evaluation
         h3 Evaluation:
         form(id="domain-model-evaluation-form", onsubmit="return false;")
          div
-          div Cyclomatic coplexity of structured scenarios (#{domainModelInfo.DomainModelAnalytics.CCSS}):
+          div Cyclomatic coplexity of structured scenarios (#{domainModelInfo.DomainModel.CCSS}):
            input(type='text', name='ccss', id='ccss')
-          div Number of transactions (#{domainModelInfo.DomainModelAnalytics.IT}):
+          div Number of transactions (#{domainModelInfo.DomainModel.IT}):
            input(type='text', name='it', id='it')
-          div Internal logical files (#{domainModelInfo.DomainModelAnalytics.ILF}):
+          div Internal logical files (#{domainModelInfo.DomainModel.ILF}):
            input(type='text', name='ilf', id='ilf')
-          div External logical files (#{domainModelInfo.DomainModelAnalytics.ELF}):
+          div External logical files (#{domainModelInfo.DomainModel.ELF}):
            input(type='text', name='elf', id='elf')
-          div External input (#{domainModelInfo.DomainModelAnalytics.EI}):
+          div External input (#{domainModelInfo.DomainModel.EI}):
            input(type='text', name='ei', id='ei')
-          div External output (#{domainModelInfo.DomainModelAnalytics.EO}):
+          div External output (#{domainModelInfo.DomainModel.EO}):
            input(type='text', name='eo', id='eo')
-          div External query (#{domainModelInfo.DomainModelAnalytics.EQ}):
+          div External query (#{domainModelInfo.DomainModel.EQ}):
            input(type='text', name='eq', id='eq')
-          div Effort (person-hours) (#{domainModelInfo.DomainModelAnalytics.PH}):
+          div Effort (person-hours) (#{domainModelInfo.DomainModel.PH}):
            input(type='text', name='ph', id='ph')
            input(type='hidden', name='model-id', value='#{modelId}')
           div

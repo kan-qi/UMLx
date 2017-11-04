@@ -3,12 +3,18 @@ div.banner
         div.col-md-10.banner-title
             h2 UMLx
         div.col-md-2.banner-operations
+            if isEnterprise
+             div.user-invite
+                a(href="javascript:void();",data-toggle="popover", data-content="<a href='./inviteUser'>Invite User</a>"
+                data-placement="bottom", data-trigger="focus")
+                    span(class="glyphicon glyphicon-envelope")
             div.add-button
                 a(href="javascript:void();",data-toggle="popover", data-content="<a href='./uploadProject'>Upload Project</a>"
                 data-placement="bottom", data-trigger="focus")
                     span(class="glyphicon glyphicon-plus")
                     span.caret
             div.user-operation
-                a(href="javascript:void();",data-toggle="popover", data-content="<a href='./login'>Login</a>"
+                a(href="javascript:void();",data-toggle="popover", data-content="<a href='./login'>Login</a> <hr> <a href='./profile'>View Profile</a>"
                 data-placement="bottom", data-trigger="focus")
                     span(class="glyphicon glyphicon-user")
+            
