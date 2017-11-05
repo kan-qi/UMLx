@@ -129,7 +129,7 @@ div.block.panel.panel-default
                 h2 #{modelInfo.ActorNum}
                 span Actors
         div.col-sm-12.scatter-plot-row
-          img(src="#{modelInfo.AccessDir}/model_version_trending_lines.svg" style="width:100%;")  
+          svg(data="./#{modelInfo.AccessDir}/modelVersionInfo.csv" width="960" height="400")  
         div.col-sm-12.chart-row  
           .col-sm-6
             img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")

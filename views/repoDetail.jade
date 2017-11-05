@@ -120,7 +120,7 @@ div.block.panel.panel-default
                 h2 #{repoInfo.Models.length}
                 span Classes
         div.col-sm-12.scatter-plot-row
-          img(src="#{repoInfo.AccessDir}/model_version_trending_lines.svg" style="width:100%;")  
+          svg(data="./#{repoInfo.AccessDir}/modelVersionInfo.csv" width="960" height="400")  
         div.col-sm-12.chart-row  
           .col-sm-6
             img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
