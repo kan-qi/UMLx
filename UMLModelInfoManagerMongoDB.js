@@ -8,6 +8,7 @@
     var umlFileManager = require("./UMLFileManager.js");
     var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
     var config = require('./config'); // get our config file
+    const uuidv4 = require('uuid/v4');
 
 	function getModelQuery(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
@@ -547,12 +548,11 @@
     function saveSurveyData(surveyData){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
-            databaseCollectionName = "UML_model_submission";
+            var databaseCollectionName = "surveyData";
             db.collection(databaseCollectionName).insertOne(surveyData, function(err, result) {
                 if (err) throw err;
                 console.log("1 record inserted");
             });
-
         });
     }
 
@@ -685,6 +685,13 @@
 
     // collect survey data analytic per page
     function saveSurveyAnalyticsData(uuid, clientIpAddress, pageNumber) {
+	    if(uuid==""){
+	        //fall back in case uuid is not generated on client end
+            console.log("uuid was blank, adding uuid on server side");
+
+            // TODO:  what should we do?? generate a new uuid on server or discard data or insert blank?
+	        uuid = uuidv4();
+        }
         data = {
             ip: clientIpAddress,
             pageNumber: pageNumber,
