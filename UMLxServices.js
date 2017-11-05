@@ -894,7 +894,13 @@ app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');
 });
 
-
+app.get('/getSubmittedSurvey', function(req, res){
+	console.log(JSON.stringify("u got served"));
+    var data = {
+    	status: "successful"
+	}
+	res.send(data);
+});
 
 app.get('/', function(req, res){
 		var message = req.query.e;
