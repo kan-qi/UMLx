@@ -1,0 +1,193 @@
+-var repoID = repoInfo._id
+div.block.panel.panel-default
+  div.panel-heading
+   div.panel-title.analytics-title.pull-left
+    include breadcrumb
+   if repoInfo
+    div.repo-analytics-ops.pull-right
+      div.dropdown
+        button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Repo
+          span.caret
+        ul.dropdown-menu
+          li
+            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoInfo._id}&simulation=false&refresh=true') Evaluation For Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoInfo._id}&simulation=true&refresh=true') Evaluation For Models (simulation)
+          li
+            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForUseCases?repo_id=#{repoInfo._id}&simulation=false') Evaluation For Use Cases
+          li
+            a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
+      div.dropdown
+        button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
+          span.caret
+        ul.dropdown-menu
+          li
+            a.dropdown-item(id="open_btn" onclick="openDialogueBox('#{repoInfo._id}', '1');" href="javaScript:void(0);") Empirical Data For Use Cases
+          li
+            a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '2');" href="javaScript:void(0);") Empirical Data For Models
+          li
+            a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '3');" href="javaScript:void(0);") COCOMO Data
+      div.dropdown
+          button.btn.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
+            span.caret
+          ul.dropdown-menu
+            li
+              a.request-repo-analytics.dropdown-item(href='queryRepoInfo?repo_id=#{repoInfo._id}&refresh=true') Reanalyse Repo
+            li
+              a.dropdown-item(href='reloadRepo?repo_id=#{repoInfo._id}') Reload Repo
+   div.clearFix
+  div.panel-body(id="repo-stats-chart")
+   div.repo-info-content
+    ul.nav.nav-tabs
+     li.active
+      a(data-toggle='tab', href='#repo_analytics') Analytics
+     li
+      a(data-toggle='tab', href='#repo_distributions') Distributions
+     li
+      a(data-toggle='tab', href='#repo_estimation') Estimation
+     li
+      a(data-toggle='tab', href='#project_list') Projects 
+        span(class="badge") #{repoInfo.Models.length}
+    div.tab-content
+     div.tab-pane.fade.in.active(id="repo_analytics")
+      if false
+       h3 Calculated:
+       ul
+        li
+         span.statistical-item Average Path Length: #{repoInfo.AvgPathLength}
+        li
+         span.statistical-item Number of Paths: #{repoInfo.PathNum}
+        li
+         span.statistical-item Total Number of Links: #{repoInfo.TotalLinks}
+        li
+         span.statistical-item Number of Actors: #{repoInfo.ActorNum}
+        li
+         span.statistical-item Number of Boundaries: #{repoInfo.BoundaryNum}
+        li
+         span.statistical-item Number of Actors: #{repoInfo.ControlNum}
+        li
+         span.statistical-item Number of Boundaries: #{repoInfo.EntityNum}
+        li
+         span.statistical-item Number of Elements: #{repoInfo.ElementNum}
+        li
+         span.statistical-item Average Element Degree: #{repoInfo.AvgDegree}
+        li
+         span.statistical-item Number of Interface Management: #{repoInfo.INT}
+        li
+         span.statistical-item Number of Data Management: #{repoInfo.DM}
+        li
+         span.statistical-item Number of Control Flows: #{repoInfo.CTRL}
+        li
+         span.statistical-item Number of External Invocations: #{repoInfo.EXTIVK}
+        li
+         span.statistical-item Number of External Calls: #{repoInfo.EXTCLL}
+        li
+         span.statistical-item Number of External Inputs: #{repoInfo.EI}
+        li
+         span.statistical-item Number of External Inquiries: #{repoInfo.EQ}
+        li
+         span.statistical-item Number of External Outputs: #{repoInfo.EO}
+        li
+         span.statistical-item Number of Transactions: #{repoInfo.TN}
+      if repoInfo
+        div.col-sm-12.status-row
+          div.col-sm-3
+            div.blue-card.analytics-card
+              .col-sm-4.image-box
+                img(src="img/project.png", alt="")
+              .col-sm-8.text-box
+                h2 #{repoInfo.Models.length}
+                span Projects
+          div.col-sm-3
+            div.red-card.analytics-card
+              .col-sm-4.image-box
+                img(src="img/project.png", alt="")
+              .col-sm-8.text-box
+                h2 #{repoInfo.Models.length}
+                span Use Cases
+          div.col-sm-3
+            div.green-card.analytics-card
+              .col-sm-4.image-box
+                img(src="img/project.png", alt="")
+              .col-sm-8.text-box
+                h2 #{repoInfo.Models.length}
+                span Transactions
+          div.col-sm-3 
+            div.purple-card.analytics-card
+              .col-sm-4.image-box
+                img(src="img/project.png", alt="")
+              .col-sm-8.text-box
+                h2 #{repoInfo.Models.length}
+                span Classes
+        div.col-sm-12.scatter-plot-row
+          img(src="#{repoInfo.AccessDir}/model_version_trending_lines.svg" style="width:100%;")  
+        div.col-sm-12.chart-row  
+          .col-sm-6
+            img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
+          .col-sm-6 
+            img(src="#{repoInfo.AccessDir}/transaction_type_percentage_plot.svg" style="width:100%;")                        
+     div.tab-pane.fade(id="repo_distributions")
+      if repoInfo
+       div(id="repo-stats-chart")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/control_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/external_input_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/external_query_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/external_invocation_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/external_call_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/interface_operation_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/not_matched_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/architecture_difficulty_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/average_degree_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/average_path_length_analysis_result.svg")
+        div.stats-chart
+         img(src="#{repoInfo.AccessDir}/path_number_analysis_result.svg")
+     div.tab-pane.fade(id="repo_estimation")
+      if repoInfo
+       div(id="estimation-models-panel")
+        div(id="model-query-box")
+         div.row-item(id='estimator-selector-box')
+          div.dropdown
+           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Estimator
+            span.caret
+           ul.dropdown-menu
+            li
+             a.estimator-selector(data-estimator='OLSR') Linear Regression
+            li
+             a.estimator-selector(data-estimator='RR') Ridge Regression
+            li
+             a.estimator-selector(data-estimator='LS') Linear Spline
+         div.row-item(id='model-selector-box')
+          div.dropdown
+           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Model
+            span.caret
+           ul.dropdown-menu
+            li
+             a.estimator-selector(data-model='EUCP') EUCP
+            li
+             a.estimator-selector(data-model='EXUCP') EXUCP
+            li
+             a.estimator-selector(data-model='DUCP') DUCP
+         div.checkbox.row-item
+          label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           input(type='checkbox' value='simulation-data')
+         button.btn.btn-primary.row-item(id='query-model-btn', data-repo-id="#{repoInfo._id}") Query
+         img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
+         div.clear
+       div(id='estimation-model-detail')
+     div.tab-pane.fade(id="project_list")
+      div.card-deck
+       each model in repoInfo.Models
+        div.card.col-md-2(data-model-id=model._id)
+          div(class="card-block")
+            div.card-title.model-name(title= model.Name)
+              a.model-title(href="queryModelInfo?model_id="+model._id) #{model.Name}

@@ -1,3 +1,4 @@
 module.exports ={
-		'secret' :'projectumlx'
+		'secret' :'projectumlx',
+		'secretUserInvite' :'umlxUserInvite'
 }
