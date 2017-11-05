@@ -7,7 +7,6 @@ var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
 var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
 var umlEstimator = require("./UMLEstimator.js");
-var bodyParser = require('body-parser');
 //var COCOMOCalculator = require("./COCOMOCalculator.js");
 var multer = require('multer');
 var jade = require('jade');
@@ -15,6 +14,7 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
 var sleep = require('sleep');
+var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
 
 
@@ -40,7 +40,7 @@ var upload = multer({ storage: storage })
 
 app.use(express.static('public'));
 app.use(cookieParser());
-app.use(bodyParser.json()); // for parsing application/json
+
 
 app.set('views', './views');
 app.set('view engine', 'jade');
@@ -56,8 +56,8 @@ var modelInfo = {};
 
 app.get('/signup',function(req,res){
 	
-	if(req.query.uid!=null && req.query.uid!=undefined){
-		res.render('signup', {uid:req.query.uid});
+	if(req.query.tk!=null && req.query.tk!=undefined){
+		res.render('signup', {tk:req.query.tk});
 	} else {
 	res.render('signup');
 	}
@@ -77,7 +77,7 @@ app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password'
 	
 })
 
-app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'enterpriseUserId',maxCount : 1}]),  function (req, res){
+app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'token',maxCount : 1}]),  function (req, res){
 	
 	var email = req.body['email'];
 	var username = req.body['username'];
@@ -86,25 +86,41 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 	if(req.body['enterpriseUser']){
 		isEnterpriseUser= req.body['enterpriseUser']=="on"? true : false;
 	}
-	var enterpriseUserId = '';
-	if(req.body['enterpriseUserId']){
-		 enterpriseUserId = req.body['enterpriseUserId'];
-		 // check if this is a valid one 
-		 umlModelInfoManager.queryUserInfo(enterpriseUserId, function(user){
-	
-			 if(!user || !user.isEnterprise){
-				 console.log('Not a valid enterprise userId');
-				 var result = {
-            	          success: false,
-            	          message: 'Invalid Enterprise User Id',
-                 };
-				 res.json(result);
-			 }  else {
-				 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
-				        res.json(result)
-				    });
-			 }
-		 });
+	var token = '';
+	var enterpriseUserId ='';
+	if(req.body['token']){
+		 token = req.body['token'];
+			 // verifies secret and checks exp
+				 jwt.verify(token, config.secretUserInvite, function(err, payload) {
+				   if (err) {
+					   console.log('Failed to authenticate token. Token is not Valid');
+
+						 var result = {
+		            	          success: false,
+		            	          message: 'Link is no longer valid.',
+		                 };
+						 res.json(result);
+					   //return res.json({ success: false, message: 'Failed to authenticate token.' });
+				   } else {
+				     // if everything is good, save to request for use in other routes
+					   umlModelInfoManager.queryUserInfo(payload.enterpriseUserId, function(user){
+
+							 if(!user || !user.isEnterprise){
+								 console.log('Not a valid enterprise userId');
+								 var result = {
+				            	          success: false,
+				            	          message: 'Invalid Enterprise User Id',
+				                 };
+								 res.json(result);
+							 }  else {
+								 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
+								        res.json(result)
+								    });
+							 }
+						 });
+				   }
+				 });
+
 
 	} else {
     umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
@@ -160,7 +176,7 @@ app.use(function(req, res, next) {
 		    		res.redirect('/login');
 		    		return;
 		    	}
-
+		    	 
 		    	req.userInfo ={};
 		    	req.userInfo.userName = user.username;
 		    	req.userInfo.repoId = user.repoId;
@@ -169,7 +185,8 @@ app.use(function(req, res, next) {
 		    	if(req.userInfo.isEnterprise){
 		    		req.userInfo.enterpriseUserId = user.enterpriseUserId;
 		    	}
-		    		
+		    	req.userInfo.email = user.email;
+
 		     next();
 		    	
 		 	  });
@@ -184,6 +201,62 @@ app.use(function(req, res, next) {
 
 });
 
+app.get('/profile',function(req,res){
+
+	var profileInfo = {}
+
+	profileInfo.userName = req.userInfo.userName;
+	profileInfo.email = req.userInfo.email;
+	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
+	res.render('profile', {profileInfo:profileInfo});
+
+})
+
+app.get('/inviteUser',function(req,res){
+	res.render('invite');
+});
+
+app.post('/inviteUser', upload.fields([{name:'email',maxCount:1}]),  function (req, res){
+
+	var email = req.body['email'];
+	var enterpriseUserId = req.userInfo._id;
+	var smtpTransport = nodemailer.createTransport({
+	    service: "gmail",
+	    host: "smtp.gmail.com",
+	    auth: {
+	        user: "kritikavaid123@gmail.com",
+	        pass: "Strong123"
+	    }
+	});
+
+	var payload = {
+    		enterpriseUserId : enterpriseUserId,
+    		invitedUserEmail : email
+    };
+
+    var token = jwt.sign(payload, config.secretUserInvite, {
+    	expiresIn : 60*60*24 // expires in 24 hours
+    });
+
+	var mailOptions = {
+		        from: '"Kritika Vaid" <kritikavaid123@gmail.com>', // sender address
+		        to: email, // list of receivers
+		        subject: 'Umlx Invitation Link', // Subject line
+		        html: 'Please sign up using this '+ '<a href="http://localhost:8081/signup?tk='+token+'">link</a>' // html body
+		    };
+
+	smtpTransport.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+    });
+	var result = {
+	          success: true,
+	          message: 'User Invited',
+   };
+	res.json(result);
+
+})
 app.get('/surveyAnalytics', function (req, res){
     // console.log(req);
     umlModelInfoManager.saveSurveyAnalyticsData(req.query.uuid, req.query.ip, req.query.page);
@@ -194,21 +267,19 @@ app.get('/surveyAnalytics', function (req, res){
 
 app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
 	console.log(req.body);
-	console.log(req);
 	var formInfo = req.body;
 	umlModelInfoManager.saveSurveyData(formInfo);
 });
 
 
 app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
+	console.log(req.body);
 	var umlFilePath = req.files['uml-file'][0].path;
 	var umlModelName = req.body['uml-model-name'];
 	var umlModelType = req.body['uml-model-type'];
 	var repoId = req.userInfo.repoId;
 	var uuidVal = req.body['uuid'];
 	var formInfo = req.body;
-	formInfo.ipAddress = ipAddress;
-//	return;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
 		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
@@ -522,26 +593,26 @@ app.post('/uploadUseCaseEvaluation', upload.fields([{name:'ccss',maxCount:1},{na
 //	VAF : req.body['vaf'],
 //	Effort : req.body['ph']
 //	}
-//
+//	
 //	modelId = req.body['model-id'];
 //	repoId = req.userInfo.repoId;
-//
+//	
 //	console.log("model-id:"+modelId);
-//
+//	
 //	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo, modelInfo){
 //		for(var i in uploadModelEvaluation){
 //			if(uploadModelEvaluation[i]){
 //				modelAnalytics[i] = uploadModelEvaluation[i];
 //			}
 //		}
-//
+//		
 //		modelInfo.ModelAnalytics = modelAnalytics;
 //		umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
 ////			console.log(modelInfo.ModelAnalytics);
 //			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id: repoId});
 //		});
 //	});
-//
+//	
 //})
 
 
@@ -717,7 +788,7 @@ app.get('/dumpRepoDescriptiveDistributions', function(req, res){
 	if(req.query.refresh === 'true'){
 	refresh = true;
 	}
-
+	
 //	var repoId = "595b50d4aebbbd2c4c4c6b58";
 	console.log(repoId);
 //	var repoId = req.query.repo_id;
@@ -746,7 +817,7 @@ app.get('/evaluateRepoForModels', function(req, res){
 	if(req.query.simulation === 'true'){
 	 simulation = true ;
 	}
-
+	
 	if(req.query.refresh === 'true'){
 	refresh = true;
 	}
@@ -846,13 +917,15 @@ app.get('/', function(req, res){
 							
 						}
 						
-						res.render('index', {repoInfo:repoInfo, message:message});
+						res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
+
 						
 					});
 				});
 				
 			} else {
-				res.render('index', {repoInfo:repoInfo, message:message});
+
+				res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
 			}
 			
 		
@@ -871,4 +944,5 @@ var server = app.listen(8081,'127.0.0.1', function () {
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
+
 

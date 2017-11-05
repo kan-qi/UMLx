@@ -563,6 +563,68 @@ function loginFormSubmit (e){
 	return false;
 }
 
+function inviteFormSubmit (e){
+	e.preventDefault();
+	var formData = new FormData($('#invite-form')[0]);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	
+	var emailMissing  = $('#invite-form #email').val().length>0 ? false : true;
+	
+	var successDiv = '<div class="alert alert-success alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+   
+    var alertDiv = '<div class="alert alert-danger alert-dismissible">'+
+    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+	
+	if(emailMissing){
+		alertDiv+='Please enter your email </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	} 
+	
+	if(!validateEmail(email)){
+		alertDiv+='Please enter a valid email </div>'
+		$('#messageDiv').html(alertDiv);
+		return false;
+	}
+	
+
+	$.ajax({
+		type : 'POST',
+		url : "inviteUser",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			
+			if(response.success==true){
+				console.log('success');
+				successDiv+=response.message+' </div>';
+				$('#messageDiv').html(successDiv);
+				
+				return false;
+				
+			} else {
+				
+				console.log('failure');
+				alertDiv+=response.message+' </div>';
+				$('#messageDiv').html(alertDiv);
+				return false;
+				
+			}
+		},
+		error : function() {
+			console.log("fail");
+			alert("There was an error signing up");
+		}
+	});
+
+	return false;
+}
+
+
 
 
 function drawChartBySVG(){
@@ -753,6 +815,8 @@ $(document).ready(function() {
 	
 	$('form#sign-up').submit(signUpFormSubmit);
 	$('form#login-form').submit(loginFormSubmit);
+	$('form#invite-form').submit(inviteFormSubmit);
+	
 	$('[data-toggle="popover"]').popover({'html':true});
 //	drawChartBySVG();
 });
