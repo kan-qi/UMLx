@@ -25,12 +25,8 @@ function model_file_upload_fnc() {
 		enctype : 'multipart/form-data',
 		success : function(response) {
 			console.log(response);
-			$("#main-panel").html("");
-			$("#main-panel").append(response);
 		},
 		error : function() {
-			// $("#commentList").append($("#name").val() + "<br/>" +
-			// $("#body").val());
 			console.log("fail");
 			console.log(err);
 			alert("There was an error submitting commentA");

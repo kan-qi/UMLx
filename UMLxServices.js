@@ -903,6 +903,10 @@ app.get('/uploadProject', function(req, res){
 });
 
 
+// to handle post redirect to home page
+app.post('/', function(req, res){
+	res.redirect('/')
+});
 
 app.get('/', function(req, res){
 		var message = req.query.e;
