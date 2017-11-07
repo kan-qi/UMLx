@@ -903,6 +903,16 @@ app.get('/uploadProject', function(req, res){
 });
 
 
+app.get('/getSubmittedSurveyList', function(req, res){
+    // var data = {
+    //     status: "successful"
+    // }
+	var data = umlModelInfoManager.getSurveyData()
+
+	res.send(data);
+});
+
+
 // to handle post redirect to home page
 app.post('/', function(req, res){
 	res.redirect('/')

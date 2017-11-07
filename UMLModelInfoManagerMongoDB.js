@@ -722,6 +722,29 @@
     };
 
 
+	function getSurveyData(callback){
+	    var schemaName = "surveyData";
+	    var data = null;
+	    data = getAllData(schemaName).then(function(items){
+	        return items;
+        });
+        return data;
+
+    };
+
+
+    function getAllData(schemaName) {
+        var connection = MongoClient.connect(url);
+        return connection.then(function (db) {
+            var collection = db.collection(schemaName);
+            return collection.find().toArray()
+                .then(function (items) {
+                    return items;
+                })
+        });
+    }
+
+
 	function duplicateModelInfo(umlModelInfo){
 		if(umlModelInfo){
 			var umlFileInfo = umlFileManager.duplicateUMLFileInfo(umlModelInfo);
@@ -880,7 +903,8 @@
         queryRepoIdsForAdmin:queryRepoIdsForAdmin,
         queryRepoInfoForAdmin:queryRepoInfoForAdmin,
         saveSurveyData: saveSurveyData,
-        saveSurveyAnalyticsData: saveSurveyAnalyticsData
+        saveSurveyAnalyticsData: saveSurveyAnalyticsData,
+        getSurveyData: getSurveyData
 
     }
 }())
