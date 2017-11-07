@@ -725,23 +725,29 @@
 	function getSurveyData(callback){
 	    var schemaName = "surveyData";
 	    var data = null;
-	    data = getAllData(schemaName).then(function(items){
-	        return items;
-        });
+	    data = getAllData(schemaName, collectInfo);
+	    console.log("from get All Data");
+	    console.log(data);
         return data;
 
     };
 
 
-    function getAllData(schemaName) {
-        var connection = MongoClient.connect(url);
-        return connection.then(function (db) {
-            var collection = db.collection(schemaName);
-            return collection.find().toArray()
-                .then(function (items) {
-                    return items;
-                })
+    function getAllData(schemaName, callback) {
+        var doc = null;
+        MongoClient.connect(url, function (err, db) {
+            db.collection(schemaName).find().toArray(function(err, record){
+                // console.log(record);
+                doc= record;
+                db.close();
+                //return callback(null, record);
+            })
         });
+        return doc;
+    }
+
+    function collectInfo(err, data){
+        return data;
     }
 
 
