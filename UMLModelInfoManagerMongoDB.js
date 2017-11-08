@@ -365,18 +365,13 @@
 						   db.collection("repos").deleteOne(repoQuery, function(err, repo) {
 							    if (err) throw err;
 							    console.log("repo deleted");
-							    
-							    //console.log('repo_id '+repo._id);
-							   // console.log("output dir repo " + "public/output/repo"+repo_id.toString());
-							    
+							    						    
 							    db.collection("users").deleteOne(userQuery, function(err,user){
 							    	if (err) throw err;
 								    console.log("user deleted");
 								    db.close();
 								    callbackfunc(true);
 							    });
-							    
-							    
 							    
 						  });
 						  
