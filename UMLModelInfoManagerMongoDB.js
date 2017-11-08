@@ -342,6 +342,56 @@
 			});
 		});
 	}
+	
+
+	function deleteUser(userId, callbackfunc){
+		
+			  MongoClient.connect(url, function(err, db) {
+				  if (err) throw err;
+				  
+				  var o_id = new mongo.ObjectID(userId);
+				  var userQuery = {_id: o_id };
+				  
+				  db.collection("users").findOne(userQuery,function(err,user){
+					  if (err) throw err;
+					  
+					  if(user){
+						  var repo_id = user.repoId ; 
+						  var repoQuery = {_id : repo_id}
+						  
+						  var repo_dir = "public/output/repo"+repo_id.toString();
+						  umlFileManager.deleteUMLRepo(repo_dir);
+						  
+						   db.collection("repos").deleteOne(repoQuery, function(err, repo) {
+							    if (err) throw err;
+							    console.log("repo deleted");
+							    
+							    //console.log('repo_id '+repo._id);
+							   // console.log("output dir repo " + "public/output/repo"+repo_id.toString());
+							    
+							    db.collection("users").deleteOne(userQuery, function(err,user){
+							    	if (err) throw err;
+								    console.log("user deleted");
+								    db.close();
+								    callbackfunc(true);
+							    });
+							    
+							    
+							    
+						  });
+						  
+					  } else {
+						  
+						  console.log('user not found');
+						  db.close();
+						  callbackfunc(false);
+						  
+					  }
+				  });
+				  
+			  });
+			 
+	}
 
 	function deleteUseCase(repoId, modelId, useCaseId, callbackfunc){
 		MongoClient.connect(url, function(err, db) {
@@ -848,7 +898,8 @@
         queryUserInfo: queryUserInfo,
         queryRepoIdsForAdmin:queryRepoIdsForAdmin,
         queryRepoInfoForAdmin:queryRepoInfoForAdmin,
-		saveSurveyData: saveSurveyData
+		saveSurveyData: saveSurveyData,
+		deleteUser: deleteUser
 
 	}
 }())

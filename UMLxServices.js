@@ -13,7 +13,7 @@ var jade = require('jade');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
-var sleep = require('sleep');
+//var sleep = require('sleep');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
 
@@ -929,6 +929,13 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+app.get('/deleteUser', function(req,res){
+	var userId = req.query['uid'];
+	umlModelInfoManager.deleteUser(userId, function(status){
+		var result ={'status' : status};
+		res.json(result);
+	});
+});
 
 
 var server = app.listen(8081,'127.0.0.1', function () {
