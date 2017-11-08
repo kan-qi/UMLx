@@ -724,8 +724,12 @@
 
 	function getSurveyData(callback){
 	    var schemaName = "surveyData";
-	    var data = null;
-	    data = getAllData(schemaName, collectInfo);
+	    var data = [];
+	    getAllData(schemaName, function(records){
+	        data = records;
+	        //unable to get these data back!!!
+	        console.log(data)
+        });
 	    console.log("from get All Data");
 	    console.log(data);
         return data;
@@ -733,23 +737,35 @@
     };
 
 
-    function getAllData(schemaName, callback) {
-        var doc = null;
-        MongoClient.connect(url, function (err, db) {
-            db.collection(schemaName).find().toArray(function(err, record){
-                // console.log(record);
-                doc= record;
+    function getAllData(schemaName, callback){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            db.collection(schemaName).find().toArray(function(err, records) {
+                if (err) throw err;
                 db.close();
-                //return callback(null, record);
-            })
+                if(callback){
+                    callback(records);
+                }
+            });
         });
-        return doc;
     }
 
-    function collectInfo(err, data){
-        return data;
-    }
+    // function getAllData(schemaName, callback) {
+    //     var doc = null;
+    //     MongoClient.connect(url)
+    //         .then(function(err, db){
+    //             if(err) throw err;
+    //             db.collection(schemaName).find()
+    //         })
+    //         .then(function(cursor){
+    //             console.log(cursor)
+    //         })
+    // }
 
+    // function collectInfo(err, data){
+    //     return data;
+    // }
+    //
 
 	function duplicateModelInfo(umlModelInfo){
 		if(umlModelInfo){
