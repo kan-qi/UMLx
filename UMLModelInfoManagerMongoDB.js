@@ -722,33 +722,36 @@
     };
 
 
-	function getSurveyData(callback){
-	    var schemaName = "surveyData";
-	    var data = [];
-	    getAllData(schemaName, function(records){
-	        data = records;
-	        //unable to get these data back!!!
-	        console.log(data)
-        });
-	    console.log("from get All Data");
-	    console.log(data);
-        return data;
-
-    };
-
-
-    function getAllData(schemaName, callback){
+	//TODO add parameters for specific records
+    function getSurveyData(callback){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
+
+            var schemaName = "surveyData";
             db.collection(schemaName).find().toArray(function(err, records) {
                 if (err) throw err;
                 db.close();
                 if(callback){
                     callback(records);
                 }
+                console.log(records)
             });
+
         });
-    }
+    };
+
+    // function getAllData(schemaName, callback){
+    //     MongoClient.connect(url, function(err, db) {
+    //         if (err) throw err;
+    //         db.collection(schemaName).find().toArray(function(err, records) {
+    //             if (err) throw err;
+    //             db.close();
+    //             if(callback){
+    //                 callback(records);
+    //             }
+    //         });
+    //     });
+    // }
 
     // function getAllData(schemaName, callback) {
     //     var doc = null;
