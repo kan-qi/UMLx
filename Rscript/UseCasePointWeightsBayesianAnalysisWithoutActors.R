@@ -34,10 +34,67 @@ library(lattice)
 
 library(ggplot2)
 library(data.table)
+library(gridExtra)
 sink(reportPath)
+
 
 useCaseData <- read.csv(dataUrl, header=TRUE)
 aprioriData <- read.csv(apriori, header=TRUE)
+
+#output the project descriptive data for number valued data
+projectDescriptiveNumberData <- useCaseData[c("Project_No", "Real_Effort_Person_Hours", "KSLOC", "Use_Case_Num")]
+projectDescriptiveNumberDataMelt <- melt(projectDescriptiveNumberData, id=c("Project_No"))
+
+
+print(projectDescriptiveNumberDataMelt)
+
+#svg(paste(outputPath,"project_discriptive_statistics.svg", sep="/"))
+png(filename=paste(outputPath,"project_number_valued_discriptive_statistics_for_bayesian_analysis.png", sep="/"),
+		units="in",
+		width=4*2, 
+		height=4*2, 
+		pointsize=12,
+		res=96)
+projectHist = xyplot(Project_No ~ value | variable,
+		main="Project Descriptive Statistics", 
+		ylab="Frequency",
+		xlab="",
+		panel = function(x, y) {
+			x <- as.numeric(x)
+			
+			panel.histogram(x,
+						breaks=15,
+						type = "count")
+			
+			#xlab="1-Mobile App   2- Web App   3-Mobile Game  4-Mobile & Web App"
+		},
+		strip =strip.custom(factor.levels = c("Effort(PH)","KSLOC","Number of Use Cases")),
+		scales=list(x=list(relation="free")),
+		data=projectDescriptiveNumberDataMelt)
+print(projectHist)
+
+#output the project descriptive data for categorical valued data
+projectDescriptiveCatData <- useCaseData[c("Project_No", "Application_Type")]
+projectDescriptiveCatDataMelt <- melt(projectDescriptiveCatData, id=c("Project_No"))
+
+
+print(projectDescriptiveCatDataMelt)
+
+#svg(paste(outputPath,"project_categorical_valued__discriptive_statistics.svg", sep="/"))
+png(filename=paste(outputPath,"project_categorical_valued_discriptive_statistics_for_bayesian_analysis.png", sep="/"),
+		units="in",
+		width=4*1, 
+		height=4*1, 
+		pointsize=12,
+		res=96)
+projectBarchart = barchart(Project_No ~ value | variable, data = projectDescriptiveCatDataMelt,
+		groups = variable, 
+		ylab = "Number",
+		scales = list(x = list(abbreviate = TRUE,
+						minlength = 5)))
+print(projectBarchart)
+
+#Calcualte the apriroi means and variances
 aprioriData <- aprioriData[c("Simple_UC","Average_UC", "Complex_UC")]
 aprioriMeans <- cbind(mean(aprioriData[,"Simple_UC"]), mean(aprioriData[,"Average_UC"]), mean(aprioriData[,"Complex_UC"]))
 colnames(aprioriMeans) <- c("Simple_UC", "Average_UC", "Complex_UC")
@@ -117,23 +174,32 @@ print(summary(fit))
 #draw the density flots
 
 #Simple use case bayesian averaging plot
-dat <- data.frame(dens = c(rnorm(100, aprioriMeans[,'Simple_UC'], aprioriVariance[,'Simple_UC']), rnorm(100, coefs['Simple_UC'], regVariance['Simple_UC', 'Simple_UC']),rnorm(100, averageCoefs['Simple_UC',1], bayesianVariance['Simple_UC', 'Simple_UC']))
-		, lines = rep(c("apriori", "regression", "bayesian"), each = 100))
-svg(paste(outputPath,"simple_use_case_bayesian_average_plot.svg", sep="/"), width=12, height=4)
-print(ggplot(dat, aes(x = dens, fill = lines)) + geom_density(alpha = 0.5)+labs(x="Simple Use Case Weight", fill="Methods"))
+dat1 <- data.frame(dens1 = c(rnorm(100, aprioriMeans[,'Simple_UC'], aprioriVariance[,'Simple_UC']), rnorm(100, coefs['Simple_UC'], regVariance['Simple_UC', 'Simple_UC']),rnorm(100, averageCoefs['Simple_UC',1], bayesianVariance['Simple_UC', 'Simple_UC']))
+		, lines1 = rep(c("apriori", "regression", "bayesian"), each = 100))
+svg(paste(outputPath,"simple_use_case_bayesian_average_plot.svg", sep="/"), width=6, height=4)
+simplePlot <- ggplot(dat1, aes(x = dens1, fill = lines1)) + geom_density(alpha = 0.5)+labs(x="Simple Use Case Weight", fill="Methods")
+print(simplePlot)
 
 #Average use case bayesian averaging plot
-dat <- data.frame(dens = c(rnorm(100, aprioriMeans[,'Average_UC'], aprioriVariance[,'Average_UC']), rnorm(100, coefs['Average_UC'], regVariance['Average_UC', 'Average_UC']),rnorm(100, averageCoefs['Average_UC',1], bayesianVariance['Average_UC', 'Average_UC']))
-		, lines = rep(c("apriori", "regression", "bayesian"), each = 100))
-svg(paste(outputPath,"average_use_case_bayesian_average_plot.svg", sep="/"), width=12, height=4)
-print(ggplot(dat, aes(x = dens, fill = lines)) + geom_density(alpha = 0.5))
+dat2 <- data.frame(dens2 = c(rnorm(100, aprioriMeans[,'Average_UC'], aprioriVariance[,'Average_UC']), rnorm(100, coefs['Average_UC'], regVariance['Average_UC', 'Average_UC']),rnorm(100, averageCoefs['Average_UC',1], bayesianVariance['Average_UC', 'Average_UC']))
+		, lines2 = rep(c("apriori", "regression", "bayesian"), each = 100))
+svg(paste(outputPath,"average_use_case_bayesian_average_plot.svg", sep="/"), width=6, height=4)
+averagePlot <- ggplot(dat2, aes(x = dens2, fill = lines2)) + geom_density(alpha = 0.5)
+print(averagePlot)
 
 #Complex use case bayesian averaging plot
-dat <- data.frame(dens = c(rnorm(100, aprioriMeans[,'Complex_UC'], aprioriVariance[,'Complex_UC']), rnorm(100, coefs['Complex_UC'], regVariance['Complex_UC', 'Complex_UC']),rnorm(100, averageCoefs['Complex_UC',1], bayesianVariance['Complex_UC', 'Complex_UC']))
-		, lines = rep(c("apriori", "regression", "bayesian"), each = 100))
-svg(paste(outputPath,"complex_use_case_bayesian_average_plot.svg", sep="/"), width=12, height=4)
-print(ggplot(dat, aes(x = dens, fill = lines)) + geom_density(alpha = 0.5))
+dat3 <- data.frame(dens3 = c(rnorm(100, aprioriMeans[,'Complex_UC'], aprioriVariance[,'Complex_UC']), rnorm(100, coefs['Complex_UC'], regVariance['Complex_UC', 'Complex_UC']),rnorm(100, averageCoefs['Complex_UC',1], bayesianVariance['Complex_UC', 'Complex_UC']))
+		, lines3 = rep(c("apriori", "regression", "bayesian"), each = 100))
+svg(paste(outputPath,"complex_use_case_bayesian_average_plot.svg", sep="/"), width=6, height=4)
+complexPlot <- ggplot(dat3, aes(x = dens3, fill = lines3)) + geom_density(alpha = 0.5)
+print(complexPlot)
 
+#print("output dat")
+#combDat <- cbind(dat1, dat2, dat3)
+svg(paste(outputPath,"combined_use_case_bayesian_average_plot.svg", sep="/"), width=16, height=4)
+#print(ggplot(combDat)+geom_density(alpha = 0.5,aes(x = dens1, fill = lines1)+geom_density(alpha = 0.5,aes(x = dens2, fill = lines2))+geom_density(alpha = 0.5,aes(x = dens3, fill = lines3))))
+
+print(grid.arrange(simplePlot, averagePlot, complexPlot, ncol=3))
 
 # 10 fold cross validation of mmre, pred(.25), pred(.50)
 # estimate the predication accuracy by n fold cross validation.
@@ -290,11 +356,18 @@ print(meltAvgPreds)
 svg(paste(outputPath,"use_case_weight_calibration_err_plot.svg", sep="/"), width=12, height=4)
 print(ggplot(meltAvgPreds) + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3))
 
-print("melt avg preds info as lines")
-svg(paste(outputPath,"use_case_weight_calibration_err_plot_lines.svg", sep="/"), width=12, height=4)
+print("melt avg preds info as lines and smooth function")
+svg(paste(outputPath,"use_case_weight_calibration_err_plot_lines_smooth.svg", sep="/"), width=12, height=4)
 ggplot(meltAvgPreds) + 
 		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
 		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)
+
+print("melt avg preds info as dots and smooth function")
+svg(paste(outputPath,"use_case_weight_calibration_err_plot_dots_smooth.svg", sep="/"), width=12, height=4)
+ggplot(meltAvgPreds) + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=1) +
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage")
 
 #also have linear regression on sloc and normalized effort.
 sink()
