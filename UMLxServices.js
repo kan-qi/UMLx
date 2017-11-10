@@ -16,6 +16,7 @@ var cookieParser = require('cookie-parser');
 var sleep = require('sleep');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
+var bodyParser = require('body-parser');
 
 
 var storage = multer.diskStorage({
@@ -40,6 +41,7 @@ var upload = multer({ storage: storage })
 
 app.use(express.static('public'));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.set('views', './views');
@@ -269,6 +271,12 @@ app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:
 	console.log(req.body);
 	var formInfo = req.body;
 	umlModelInfoManager.saveSurveyData(formInfo);
+
+	// app.get("/thankYou");
+	// res.render("thankYou");
+
+	res.redirect("thankYou");
+
 });
 
 
@@ -894,7 +902,21 @@ app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');
 });
 
+// TODO use this API to populate data on UI
+app.get('/getSubmittedSurveyList', function(req, res){
+    // var data = {
+    //     status: "successful"
+    // }
+    umlModelInfoManager.getSurveyData(function(data){
+        res.send(data);
+    })
+});
 
+
+// to handle post redirect to home page
+app.post('/', function(req, res){
+	res.redirect('/')
+});
 
 app.get('/', function(req, res){
 		var message = req.query.e;
