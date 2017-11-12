@@ -904,12 +904,13 @@ app.get('/uploadProject', function(req, res){
 
 // TODO use this API to populate data on UI
 app.get('/getSubmittedSurveyList', function(req, res){
-    // var data = {
-    //     status: "successful"
-    // }
     umlModelInfoManager.getSurveyData(function(data){
         res.send(data);
     })
+});
+
+app.get('/surveyData', function(req, res){
+   res.render("surveyData");
 });
 
 
