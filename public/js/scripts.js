@@ -10,18 +10,7 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
-function getSurveyData(){
-	$.ajax({
-		type:'GET',
-		url: 'getSubmittedSurveyList',
-		success: function(response){
-			console.log(response);
-		},
-		error: function(err){
-			console.log(err);
-		}
-	})
-}
+
 
 function model_file_upload_fnc() {
 	var formData = new FormData($('#model-file-submit-form')[0]);

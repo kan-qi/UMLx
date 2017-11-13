@@ -5,7 +5,47 @@ html
         script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
         script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
         script(type='text/javascript', src='js/scripts.js')
+        script(type='text/javascript', src='js/scripts.js')
         link(href='css/style.css', rel='stylesheet')
+        style.
+            td{
+                text-align: center;
+            }
         script.
+            function getSurveyData(){
+                $.ajax({
+                    type:'GET',
+                    url: 'getSubmittedSurveyList',
+                    success: function(response){
+                        var tableData = "";
+                        var len = response.length;
+                        for(var i=0; i<len; i++){
+                            tableData = tableData +
+                                '<tr>' +
+                                '<th scope="row">' + (i+1) + '</th>' +
+                                '<td>' + response[i]._id + '</td>' +
+                                '<td>' + response[i].uml_model_name + '</td>' +
+                                '<td>' + response[i].email + '</td>'+
+                                '<td>' + response[i].survey_date + '</td>'+
+                                '</tr>';
+                        }
+                        document.getElementById("dataBody").innerHTML = tableData;
+                        // TODO: details pending
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                })
+            }
     body#surveyData(onload='getSurveyData()')
-        p uuuuuuuuuuuuuuuu
+        include banner
+        .container
+        table.table.table-striped
+            thead
+                tr
+                    th(scope='col') #
+                    th(scope='col') Survey ID
+                    th(scope='col') Project Name
+                    th(scope='col') Contributor
+                    th(scope='col') Date
+            tbody#dataBody
