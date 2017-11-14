@@ -114,6 +114,7 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 				                 };
 								 res.json(result);
 							 }  else {
+								 enterpriseUserId = payload.enterpriseUserId;
 								 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
 								        res.json(result)
 								    });
@@ -943,6 +944,23 @@ app.get('/deleteUser', function(req,res){
 		var result ={'status' : status};
 		res.json(result);
 	});
+});
+
+
+app.get('/deactivateUser', function(req,res){
+	var userId = req.query['uid'];
+	
+	var loggedInUserId = req.userInfo._id;
+	
+	if( !req.userInfo.isEnterprise && req.userInfo._id!=userId){
+		var result={'status' : false , 'message' : 'Not authorized to deactivate this user'};
+		res.json(result);
+	} else {
+		umlModelInfoManager.deactivateUser(loggedInUserId, userId, function(status,msg){
+			var result ={'status' : status,'message' : msg};
+			res.json(result);
+		});
+	}
 });
 
 
