@@ -105,14 +105,14 @@ div.block.panel.panel-default
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{modelInfo.UseCaseNum}
+                h2 #{modelInfo.ElementAnalytics.UseCaseNum}
                 span Use Cases
           div.col-sm-3
             div.red-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{modelInfo.INT + modelInfo.DM + modelInfo.CTRL + modelInfo.TRAN_NA}
+                h2 #{modelInfo.TransactionAnalytics.INT + modelInfo.TransactionAnalytics.DM + modelInfo.TransactionAnalytics.CTRL + modelInfo.TransactionAnalytics.TRAN_NA}
                 span Transactions
           div.col-sm-3
             div.green-card.analytics-card
@@ -126,10 +126,10 @@ div.block.panel.panel-default
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{modelInfo.ActorNum}
+                h2 #{modelInfo.ElementAnalytics.ActorNum}
                 span Actors
         div.col-sm-12.scatter-plot-row
-          img(src="#{modelInfo.AccessDir}/model_version_trending_lines.svg" style="width:100%;")  
+          svg(data="./#{modelInfo.AccessDir}/modelVersionInfo.csv" width="960" height="400")  
         div.col-sm-12.chart-row  
           .col-sm-6
             img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
