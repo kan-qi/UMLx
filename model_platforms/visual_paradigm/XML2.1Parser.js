@@ -113,8 +113,12 @@ class ClassNode{
 
 			extractSequenceDiagNodes(result);
 			extractSequenceDiagramEdges(result);
-			if (dataCallback)
-				dataCallback(graph);
+			if (dataCallback){
+				
+				var response = { 'sequence_diagram' : graph};
+				
+				dataCallback(response);
+			}
 		});
 	}
 	
@@ -298,8 +302,10 @@ class ClassNode{
 			
 			extractActivityNodes(result);
 			extractActivityEdges(result);
-			if (dataCallback)
-			dataCallback(graph);
+			if (dataCallback){
+				var response = { 'activity_diagram' : graph};
+				dataCallback(response);
+			}
 		});
 	}
 	
@@ -310,14 +316,14 @@ class ClassNode{
 			extractClassDiagramNodes(result);
 			extractClassDiagramEdges(result);
 			
-			if (dataCallback)
-			dataCallback(graph);
+			if (dataCallback){
+				var response = { 'class_diagram' : graph};
+				dataCallback(graph);
+			}
 		});
 	}
 	
 	function extractSequenceDiagNodes (sequenceDiagramJSON){
-		
-		
 		
 		// TODO: is an array.
 		var models = sequenceDiagramJSON.Project.Models;
@@ -429,8 +435,10 @@ class ClassNode{
 			extractUseCaseNodes(result);
 			extractUseCaseEdges(result);
 			
-			if (dataCallback)
-			dataCallback(graph);
+			if (dataCallback){
+				var response = {'usecase_diagram' : graph};
+				dataCallback(response);
+			}
 		});
 	}
 	
