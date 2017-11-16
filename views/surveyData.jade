@@ -23,13 +23,10 @@ html
                             tableData = tableData +
                                 '<tr>' +
                                 '<th scope="row">' + (i+1) + '</th>' +
-                                '<td><button onclick="getSingleSurveyData(\'' + response[i]._id + '\')">' + response[i]._id + '</button></td>' +
-                                '<td>' + response[i].uml_model_name + '</td>' +
-                                '<td>' + response[i].email + '</td>'+
-                                '<td>' + response[i].survey_date + '</td>'+
-                                '</tr>' +
-                                '<tr>' +
-                                '<td id="' + response[i]._id + '" class="collapse" colspan="5">'+ JSON.stringify(response[i]) + '</td>' +
+                                    '<td>' + response[i].uml_model_name + '</td>' +
+                                    '<td>' + response[i].email + '</td>'+
+                                    '<td>' + response[i].survey_date + '</td>'+
+                                    '<td><button onclick="getSingleSurveyData(\'' + response[i]._id + '\')"> More Info </button></td>' +
                                 '</tr>';
                         }
                         document.getElementById("dataBody").innerHTML = tableData;
@@ -95,8 +92,8 @@ html
             thead
                 tr
                     th(scope='col') #
-                    th(scope='col') Survey ID
                     th(scope='col') Project Name
                     th(scope='col') Contributor
                     th(scope='col') Date
+                    th(scope='col') 
             tbody#dataBody
