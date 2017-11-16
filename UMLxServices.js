@@ -906,7 +906,7 @@ app.get('/uploadProject', function(req, res){
 app.get('/getSubmittedSurveyList', function(req, res){
     umlModelInfoManager.getSurveyData(function(data){
         res.send(data);
-    })
+    }, req.query.id);
 });
 
 app.get('/surveyData', function(req, res){

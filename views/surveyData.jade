@@ -23,10 +23,13 @@ html
                             tableData = tableData +
                                 '<tr>' +
                                 '<th scope="row">' + (i+1) + '</th>' +
-                                '<td>' + response[i]._id + '</td>' +
+                                '<td><button onclick="getSingleSurveyData(\'' + response[i]._id + '\')">' + response[i]._id + '</button></td>' +
                                 '<td>' + response[i].uml_model_name + '</td>' +
                                 '<td>' + response[i].email + '</td>'+
                                 '<td>' + response[i].survey_date + '</td>'+
+                                '</tr>' +
+                                '<tr>' +
+                                '<td id="' + response[i]._id + '" class="collapse" colspan="5">'+ JSON.stringify(response[i]) + '</td>' +
                                 '</tr>';
                         }
                         document.getElementById("dataBody").innerHTML = tableData;
@@ -36,11 +39,59 @@ html
                         console.log(err);
                     }
                 })
+            };
+            function getSingleSurveyData(o_id){
+                $.ajax({
+                    type:'GET',
+                    url: 'getSubmittedSurveyList',
+                    data:{
+                        id: o_id
+                    },
+                    success: function(response){
+                        var tableData = "";
+                        var len = response.length;
+                        for(var i=0; i<len; i++){
+                            tableData = tableData +
+                                '<tr><td>Name</td> <td>' + response[i].uml_model_name + '</td></tr>' +
+                                '<tr><td>Email</td> <td>' + response[i].email + '</td></tr>' +
+                                '<tr><td>Description</td> <td>' + response[i].project_desc + '</td></tr>' +
+                                '<tr><td>Duration</td> <td>' + response[i].project_duration + '</td></tr>' +
+                                '<tr><td>Organization/Personal Name</td> <td>' + response[i].organization_name + '</td></tr>' +
+                                '<tr><td>Distributed System</td> <td>' + response[i].distributed_system + '</td></tr>' +
+                                '<tr><td>Response time or throughput performance objectives</td> <td>' + response[i].response_time + '</td></tr>' +
+                                '<tr><td>End user efficiency</td> <td>' + response[i].end_user_efficiency + '</td></tr>' +
+                                '<tr><td>Complex internal processing</td> <td>' + response[i].complex_internal_processing + '</td></tr>' +
+                                '<tr><td>Code must be reusable</td> <td>' + response[i].code_must_be_reusable + '</td></tr>' +
+                                '<tr><td>Easy to install</td> <td>' + response[i].easy_to_install + '</td></tr>' +
+                                '<tr><td>Easy to use</td> <td>' + response[i].easy_to_use + '</td></tr>' +
+                                '<tr><td>Portable</td> <td>' + response[i].portable + '</td></tr>' +
+                                '<tr><td>Easy to change</td> <td>' + response[i].easy_to_change + '</td></tr>' +
+                                '<tr><td>Concurrent</td> <td>' + response[i].concurrent + '</td></tr>' +
+                                '<tr><td>Includes special security objectives</td> <td>' + response[i].includes_special_security_objectives + '</td></tr>' +
+                                '<tr><td>Provides direct access for third parties</td> <td>' + response[i].provides_direct_access_for_third_parties + '</td></tr>' +
+                                '<tr><td>Special user training facilities are required</td> <td>' + response[i].special_user_training_facilities_are_required + '</td></tr>' +
+                                '<tr><td>Familiar with the project model that is used</td> <td>' + response[i].familiar_with_the_project_model_that_is_used + '</td></tr>' +
+                                '<tr><td>Application experience</td> <td>' + response[i].application_experience + '</td></tr>' +
+                                '<tr><td>Object-oriented experience</td> <td>' + response[i].object_oriented_experience + '</td></tr>' +
+                                '<tr><td>Lead analyst capability</td> <td>' + response[i].lead_analyst_capability + '</td></tr>' +
+                                '<tr><td>Motivation</td> <td>' + response[i].motivation + '</td></tr>' +
+                                '<tr><td>Stable requirements</td> <td>' + response[i].stable_requirements + '</td></tr>' +
+                                '<tr><td>Part-time staff</td> <td>' + response[i].part_time_staff + '</td></tr>' +
+                                '<tr><td>Difficult programming language</td> <td>' + response[i].difficult_programming_language + '</td></tr>' +
+                                '<tr></tr>' +
+                                '<tr colspan="2"><input type="button" value="Go Back" onClick="window.location.reload()"></tr>';
+                        }
+                        document.getElementById("dataTable").innerHTML = tableData;
+                        // TODO: details pending
+                    },
+                    error: function(err){
+                        console.log(err);
+                    }
+                })
             }
     body#surveyData(onload='getSurveyData()')
-        include banner
-        .container
-        table.table.table-striped
+         include banner
+        table#dataTable.table.table-striped
             thead
                 tr
                     th(scope='col') #
