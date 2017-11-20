@@ -10,6 +10,8 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+
+
 function model_file_upload_fnc() {
 	var formData = new FormData($('#model-file-submit-form')[0]);
 	console.log("starting the ajax call to some where");
