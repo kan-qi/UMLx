@@ -257,7 +257,7 @@ print(grid.arrange(arrangeGrob(simplePlot+guides(fill=FALSE), averagePlot+guides
 #Randomly shuffle the data
 useCaseData<-useCaseData[sample(nrow(useCaseData)),]
 #Create 10 equally size folds
-nfold = 6
+nfold = 5
 folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 
 #function
@@ -279,8 +279,8 @@ folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 #}
 
 #data structure to hold the data for 10 fold cross validation
-foldResults <- matrix(,nrow=nfold,ncol=16)
-colnames(foldResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','original_mmre','original_pred15','original_pred25','original_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
+foldResults <- matrix(,nrow=nfold,ncol=12)
+colnames(foldResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
 #data structure to hold
 foldResults1 <- array(0,dim=c(100,4,nfold))
 #colnames(foldResults1) <- c('baye_pred','apriori_pred','regression_pred')
@@ -450,7 +450,7 @@ for(i in 1:nfold){
 	
 	
 	foldResults[i,] = c(bayesian.mmre,bayesian.pred15,bayesian.pred25,bayesian.pred50,apriori.mmre,apriori.pred15,apriori.pred25,apriori.pred50,original.mmre,original.pred15,original.pred25,original.pred50,regression.mmre,regression.pred15,regression.pred25,regression.pred50)
-	foldResults1[,,i] = array(c(bayesian.pred, apriori.pred, original.pred, regression.pred),c(100,4))
+	foldResults1[,,i] = array(c(bayesian.pred, apriori.pred, original.pred, regression.pred),c(100,3))
 	
 }
 
@@ -466,31 +466,25 @@ cvResults <- c(
 		mean(foldResults[, 'apriori_pred15']),
 		mean(foldResults[, 'apriori_pred25']),
 		mean(foldResults[, 'apriori_pred50']),
-		mean(foldResults[, 'original_mmre']),
-		mean(foldResults[, 'original_pred15']),
-		mean(foldResults[, 'original_pred25']),
-		mean(foldResults[, 'original_pred50']),
 		mean(foldResults[, 'regression_mmre']),
 		mean(foldResults[, 'regression_pred15']),
 		mean(foldResults[, 'regression_pred25']),
 		mean(foldResults[, 'regression_pred50'])
 );
 
-names(cvResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','original_mmre','original_pred15','original_pred25','original_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
+names(cvResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
 print(cvResults)
 
 for(i in 1:nfold){
 	#print(foldResults1[,,i])
 }
-
-avgPreds <- matrix(,nrow=100,ncol=5)
-colnames(avgPreds) <- c("Pred","Bayesian","A Priori","Original", "Regression")
+avgPreds <- matrix(,nrow=100,ncol=4)
+colnames(avgPreds) <- c("Pred","Bayesian","A Priori","Regression")
 for(i in 1:100){
-	avgPreds[i,] <- c(i, mean(foldResults1[i,1,]),mean(foldResults1[i,2,]),mean(foldResults1[i,3,]),mean(foldResults1[i,4,]))
+	avgPreds[i,] <- c(i, mean(foldResults1[i,1,]),mean(foldResults1[i,2,]),mean(foldResults1[i,3,]))
 	#print(i)
 	#print(avgPreds[i,])
 }
-
 
 avgPreds <- data.frame(avgPreds)
 print(avgPreds)
@@ -513,7 +507,7 @@ print("melt avg preds info as dots and smooth function")
 svg(paste(outputPath,"use_case_weight_calibration_err_plot_dots_smooth.svg", sep="/"), width=6, height=4)
 ggplot(meltAvgPreds) + 
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
-		scale_shape_manual(values=c(0,1,2,3))+
+		scale_shape_manual(values=c(0,1,2))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage")+ theme(legend.position="bottom")
 
