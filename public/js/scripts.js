@@ -154,7 +154,7 @@ function query_model_detail_func(){
 				}
 				console.dir(e);
 			});
-			createSVG();
+			createCharts();
 		},
 		error : function() {
 			console.log("fail");
@@ -819,8 +819,7 @@ $(document).ready(function() {
 	$('form#invite-form').submit(inviteFormSubmit);
 	
 	$('[data-toggle="popover"]').popover({'html':true});
-//	drawChartBySVG();
-	createSVG();
+	createCharts();
 });
 
 function openDialogueBox(repoId, type) {
@@ -929,118 +928,130 @@ function clearSelectedPathAndEdge() {
 	}
 }
 
-/* test code */
-function createSVG() {
-	var svg = d3.select("svg"),
-		margin = {top: 20, right: 60, bottom: 30, left: 40},
-		width = +svg.attr("width") - margin.left - margin.right,
-		height = +svg.attr("height") - margin.top - margin.bottom,
-		url = $('svg')[0].attributes.getNamedItem('data').value;
+function createCharts() {
+	createTrendingLines();
+	createPieChart();
+}
 
-	var parseTime = d3.timeFormat("%Y-%m-%d %H:%M:%S")
-		bisectDate = d3.bisector(function(d) { return d.update_time; }).left;
-
-	var x = d3.scaleTime().range([0, width]);
-	var y = d3.scaleLinear().range([height, 0]);
-
-	var line = d3.line()
-		.x(function(d) { return x(d.update_time); })
-		.y(function(d) { return y(d.number_of_paths); });
-
-	var g = svg.append("g")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+function createTrendingLines() {
+	var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
 	d3.csv(url, function(error, data) {
 		if (error) throw error;
 		var tempData = [];
 		data.forEach(function(d) {
-			d.update_time = new Date(d.update_time);
+			d.update_time = new Date(d.update_time).getTime();
 			d.number_of_paths = +d.number_of_paths;
-			tempData.push({'update_time': d.update_time,"number_of_paths": d.number_of_paths} )
+			tempData.push([d.update_time, d.number_of_paths])
 		});
 		data= tempData;
-		x.domain(d3.extent(data, function(d) { return d.update_time; }));
-		y.domain([d3.min(data, function(d) { return d.number_of_paths; }) / 1.005, d3.max(data, function(d) { return d.number_of_paths; }) * 1.005]);
-
-		g.append("g")
-			.attr("class", "axis axis--x")
-			.attr("transform", "translate(0," + height + ")")
-			.call(d3.axisBottom(x).ticks(data.length > 5 ? 5 : data.length ).tickFormat(d3.timeFormat("%Y-%m-%d %H:%M:%S")))
-			.append("text")
-			.attr("class", "axis-title")
-			.attr("x", width)
-			.attr("y", 25)
-			.attr("dx", ".71em")
-			.style("text-anchor", "end")
-			.attr("fill", "#5D6971")
-			.text("Update Time");
-
-		g.append("g")
-			.attr("class", "axis axis--y")
-			.call(d3.axisLeft(y).ticks(5).tickFormat(function(d) { return d;}))
-			.append("text")
-			.attr("class", "axis-title")
-			.attr("transform", "rotate(-90)")
-			.attr("y", -35)
-			.attr("dy", ".71em")
-			.style("text-anchor", "end")
-			.attr("fill", "#5D6971")
-			.text("Number of Paths");
-
-		g.append("path")
-			.datum(data)
-			.attr("class", "line")
-			.attr("d", line);
-
-		var focus = g.append("g")
-			.attr("class", "focus")
-			.style("display", "none");
-
-		focus.append("line")
-			.attr("class", "x-hover-line hover-line")
-			.attr("y1", 0)
-			.attr("y2", height);
-
-		focus.append("circle")
-			.attr("r", 7.5);
-
-		focus.append("text")
-			.attr("x", 15)
-			.attr("y", -10)
-			.attr("dy", ".31em");
-
-		svg.append("rect")
-			.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-			.attr("class", "overlay")
-			.attr("width", width)
-			.attr("height", height)
-			.on("mouseover", function() { focus.style("display", null); })
-			.on("mouseout", function() { focus.style("display", "none"); })
-			.on("mousemove", mousemove);
-
-		function mousemove() {
-			var x0 = x.invert(d3.mouse(this)[0]),
-				i = bisectDate(data, x0, 1),
-				d0 = data[i - 1],
-				d1 = data[i];
-			
-			if(d0.update_time && d1 && d1.update_time) {
-				d = x0 - d0.update_time > d1.update_time - x0 ? d1 : d0;
-			} else if(!d1){
-				d = d0;
-			} else {
-				return;
-			}
-			focus.attr("transform", "translate(" + x(d.update_time) + "," + y(d.number_of_paths) + ")");
-			focus.select("text").text(function() { return d.number_of_paths+", "+d.update_time; });
-			if(width < x(d.update_time) + focus.select("text").node().clientWidth) {
-				focus.select("text").attr('transform', "translate(" + (-focus.select("text").node().clientWidth) + "," + 0 + ")");
-			} else {
-				focus.select("text").attr('transform', "translate(" + 0 + "," + 0 + ")");
-				
-			}
-			focus.select(".x-hover-line").attr("y2", height - y(d.number_of_paths));
-		}
+		console.dir(data)
+		Highcharts.chart('trending-line', {
+			chart: {
+				zoomType: 'x'
+			},
+			title: {
+				text: 'Number of Transactions'
+			},
+			subtitle: {
+				text: document.ontouchstart === undefined ?
+						'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+			},
+			xAxis: {
+				type: 'datetime',
+				title: {
+					text: 'Update Time'
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'Number of Paths'
+				}
+			},
+			legend: {
+				enabled: false
+			},
+			plotOptions: {
+				area: {
+					fillColor: {
+						linearGradient: {
+							x1: 0,
+							y1: 0,
+							x2: 0,
+							y2: 1
+						},
+						stops: [
+							[0, Highcharts.getOptions().colors[0]],
+							[1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+						]
+					},
+					marker: {
+						radius: 2
+					},
+					lineWidth: 1,
+					states: {
+						hover: {
+							lineWidth: 1
+						}
+					},
+					threshold: null
+				}
+			},
+	
+			series: [{
+				type: 'line',
+				name: 'Number of Transactions',
+				data: data
+			}]
+		});
 	});
-
+}
+function createPieChart() {
+	var url = $('#transaction-pie')[0].attributes.getNamedItem('data').value;
+	var newData =[];
+	d3.csv(url, function(error, data) {
+		var counter = [], transactionLable = [];
+		data.forEach(function(d) {
+			counter[d.transactional] ?  counter[d.transactional]++ : counter[d.transactional]= 1;
+			if (transactionLable.indexOf(d.transactional) == -1) {
+				transactionLable.push(d.transactional);
+			}
+		});
+		transactionLable.forEach(function(transaction) {
+			newData.push({
+				name: transaction,
+				y: counter[transaction]
+			});
+		})
+	
+		// Build the chart
+		Highcharts.chart('transaction-pie', {
+			chart: {
+				plotBackgroundColor: null,
+				plotBorderWidth: null,
+				plotShadow: false,
+				type: 'pie'
+			},
+			title: {
+				text: 'Distribution of Types of operations'
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			},
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					dataLabels: {
+						enabled: false
+					},
+					showInLegend: true
+				}
+			},
+			series: [{
+				name: 'Transactions',
+				colorByPoint: true,
+				data: newData
+			}]
+		});
+	});
 }

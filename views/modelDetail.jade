@@ -128,13 +128,11 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{modelInfo.ElementAnalytics.ActorNum}
                 span Actors
-        div.col-sm-12.scatter-plot-row
-          svg(data="./#{modelInfo.AccessDir}/modelVersionInfo.csv" width="960" height="400")  
+        div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{modelInfo.AccessDir}/modelVersionInfo.csv")
         div.col-sm-12.chart-row  
           .col-sm-6
             img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
-          .col-sm-6 
-            img(src="#{modelInfo.AccessDir}/transaction_type_percentage_plot.svg" style="width:100%;")
+          .col-sm-6(id="transaction-pie" data="./#{modelInfo.AccessDir}/transactionAnalytics.csv")
      div.tab-pane.fade(id="model-distributions")
       div.stats-chart
        img(src="#{modelInfo.AccessDir}/control_operation_analysis_result.svg")
