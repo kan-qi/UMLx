@@ -119,13 +119,11 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{repoInfo.Models.length}
                 span Classes
-        div.col-sm-12.scatter-plot-row
-          svg(data="./#{repoInfo.AccessDir}/modelVersionInfo.csv" width="960" height="400")  
+        div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
         div.col-sm-12.chart-row  
           .col-sm-6
             img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
-          .col-sm-6 
-            img(src="#{repoInfo.AccessDir}/transaction_type_percentage_plot.svg" style="width:100%;")                        
+          .col-sm-6(id="transaction-pie" data="./#{repoInfo.AccessDir}/transactionAnalytics.csv")                      
      div.tab-pane.fade(id="repo_distributions")
       if repoInfo
        div(id="repo-stats-chart")
