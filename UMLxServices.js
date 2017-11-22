@@ -37,7 +37,32 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({ storage: storage })
+var fileDestination = null;
+var surveyFiles = multer.diskStorage({
+    destination: function (req, file, cb) {
+    	if(fileDestination==null) {
+            fileDestination = 'public/survey/';
+            var stat = null;
+            try {
+                stat = fs.statSync(fileDestination);
+            } catch (err) {
+                fs.mkdirSync(fileDestination);
+            }
+            if (stat && !stat.isDirectory()) {
+                throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
+            }
+        }
+        cb(null, fileDestination);
+    },
+    filename: function (req, file, cb) {
+        var fileName = Date.now()+ "-" + file.originalname;
+        cb(null, fileName)
+		console.log("saved the file " + fileName + " in " + fileDestination);
+    }
+})
+
+var upload = multer({ storage: storage });
+var surveyUploads = multer({ storage: surveyFiles });
 
 app.use(express.static('public'));
 app.use(cookieParser());
@@ -267,13 +292,10 @@ app.get('/surveyAnalytics', function (req, res){
 });
 
 
-app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
+app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
 	console.log(req.body);
 	var formInfo = req.body;
 	umlModelInfoManager.saveSurveyData(formInfo);
-
-	// app.get("/thankYou");
-	// res.render("thankYou");
 
 	res.redirect("thankYou");
 
