@@ -959,6 +959,12 @@ app.get('/thankYou', function(req, res){
 });
 
 
+var testingParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
+app.get('/testFunctions', function(req, res){
+	testingParser.extractDiagramModels("./vp_xml_export.xml/project.xml", function(data){
+		res.render(data);
+	})
+});
 
 var server = app.listen(8081,'127.0.0.1', function () {
   var host = server.address().address

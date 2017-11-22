@@ -576,7 +576,7 @@ function extractDiagramModels(file,func){
 		readFile(file,parseModelData, func);
 	}
 
-	module.exports = { extractClassDiagrams , extractSequenceDiagrams, extractUseCaseDiagram, extractActivityDiagram, extractDiagramModels}
+	module.exports = { extractSequenceDiagrams, extractUseCaseDiagram, extractActivityDiagram, extractDiagramModels}
 
 }());
 
