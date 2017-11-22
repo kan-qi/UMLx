@@ -39,7 +39,7 @@ html
     include banner
     .container
       h2  Project Survey
-      form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadSurveyData' )
+      form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadSurveyData', enctype='multipart/form-data' )
         // Page1
         #page1
           .alert.alert-info Project Information
