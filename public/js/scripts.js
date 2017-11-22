@@ -10,6 +10,8 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+
+
 function model_file_upload_fnc() {
 	var formData = new FormData($('#model-file-submit-form')[0]);
 	console.log("starting the ajax call to some where");
@@ -25,12 +27,8 @@ function model_file_upload_fnc() {
 		enctype : 'multipart/form-data',
 		success : function(response) {
 			console.log(response);
-			$("#main-panel").html("");
-			$("#main-panel").append(response);
 		},
 		error : function() {
-			// $("#commentList").append($("#name").val() + "<br/>" +
-			// $("#body").val());
 			console.log("fail");
 			console.log(err);
 			alert("There was an error submitting commentA");
@@ -70,23 +68,15 @@ function model_survey_file_upload_fnc() {
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type : 'POST',
-        url : "uploadUMLFile",
-        cache : false,
-        processData : false, // Don't process the files
-        contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+        url : "uploadSurveyData",
         data : formData,
-        enctype : 'multipart/form-data',
         success : function(response) {
             console.log(response);
-            $("#main-panel").html("");
-            $("#main-panel").append(response);
         },
         error : function() {
-            // $("#commentList").append($("#name").val() + "<br/>" +
-            // $("#body").val());
             console.log("fail");
             console.log(err);
-            alert("There was an error submitting commentB");
+            alert("There was an error submitting survey data");
         }
     });
 }

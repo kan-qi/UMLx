@@ -13,7 +13,7 @@ html
         function showPage(pageNumer) {
             var uuid = "";
             for (var i = 1; i <= 4; i++) {
-                var uuidElementName = "uuid-page"+pageNumer;
+                var uuidElementName = "uuid_page"+pageNumer;
                 var classList = document.getElementById("page" + i).classList;
                 if (i != pageNumer) {
                     classList.add("hidden");
@@ -36,39 +36,40 @@ html
 
 
   body#upload-body
+    include banner
     .container
       h2  Project Survey
-      form#model-file-submit-form.form-horizontal(novalidate='', onsubmit='model_survey_file_upload_fnc()', action='/thankYou')
+      form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadSurveyData', enctype='multipart/form-data' )
         // Page1
         #page1
           .alert.alert-info Project Information
           .form-group
-            label.control-label.col-xs-4(for='uml-model-name') Project Name
+            label.control-label.col-xs-4(for='uml_model_name') Project Name
             .col-xs-8
-              input#uml-model-name.form-control(type='text', placeholder='Project Name', name='uml-model-name')
-          input#uml-model-type(type='hidden', name='uml-model-type', value='uml')
-          input#repo-id(type='hidden', name='repo-id', value='598c93a9a9813b12105c953e')
+              input#uml_model_name.form-control(type='text', placeholder='Project Name', name='uml_model_name')
+          input#uml_model_type(type='hidden', name='uml_model_type', value='uml')
+          input#repo_id(type='hidden', name='repo_id', value='598c93a9a9813b12105c953e')
           .form-group
-            label.control-label.col-xs-4(for='project-desc') Project Description
+            label.control-label.col-xs-4(for='project_desc') Project Description
             .col-xs-8
-              textarea#project-desc.form-control(rows='5', name='project-desc', placeholder='Project description')
+              textarea#project_desc.form-control(rows='5', name='project_desc', placeholder='Project description')
           .form-group
-            label.control-label.col-xs-4(for='project-effort') Effort
+            label.control-label.col-xs-4(for='project_effort') Effort
             .col-xs-8
-              input#project-effort.form-control(type='text', placeholder='Effort', name='project-effort')
+              input#project_effort.form-control(type='text', placeholder='Effort', name='project_effort')
           .form-group
-            label.control-label.col-xs-4(for='project-duration') Duration
+            label.control-label.col-xs-4(for='project_duration') Duration
             .col-xs-8
-              input#project-duration.form-control(type='text', placeholder='Duration', name='project-duration')
+              input#project_duration.form-control(type='text', placeholder='Duration', name='project_duration')
           .form-group
-            label.control-label.col-xs-4(for='organization-name') Organization/Personal Name
+            label.control-label.col-xs-4(for='organization_name') Organization/Personal Name
             .col-xs-8
-              input#organization-name.form-control(type='text', placeholder='Organization Name or Personal Name', name='organization-name')
+              input#organization_name.form-control(type='text', placeholder='Organization Name or Personal Name', name='organization_name')
           .form-group
             label.control-label.col-xs-4(for='email') Contact Email
             .col-xs-8
               input#email.form-control(type='text', placeholder='Contact Email', name='email')
-          input#uuid-page1(type='hidden', name='uuid-page1', value='')
+          input#uuid_page1(type='hidden', name='uuid_page1', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.disabled.pull-left(type='button') < Previous
@@ -77,56 +78,56 @@ html
         #page2.hidden
           .alert.alert-info Technical Complexity Factor
           .form-group
-            label.control-label(for='distributed-system') Distributed System
-            select#distributed-system.form-control(name='distributed-system')
+            label.control-label(for='distributed_system') Distributed System
+            select#distributed_system.form-control(name='distributed_system')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='response-time') Response time or throughput performance objectives
-            select#response-time.form-control(name='response-time')
+            label.control-label(for='response_time') Response time or throughput performance objectives
+            select#response_time.form-control(name='response_time')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='end-user-efficiency') End user efficiency
-            select#end-user-efficiency.form-control(name='end-user-efficiency')
+            label.control-label(for='end_user_efficiency') End user efficiency
+            select#end_user_efficiency.form-control(name='end_user_efficiency')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='alert alert-infoternal-processing') Complex internal processing
-            select.form-control(id='alert alert-infoternal-processing', name='alert alert-infoternal-processing')
+            label.control-label(for='complex_internal_processing') Complex internal processing
+            select#complex_internal_processing.form-control(name='complex_internal_processing')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='code-must-be-resuable') Code must be reusable
-            select#code-must-be-resuable.form-control(name='code-must-be-resuable')
+            label.control-label(for='code_must_be_reusable') Code must be reusable
+            select#code_must_be_reusable.form-control(name='code_must_be_reusable')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='easy-to-install') Easy to install
-            select#easy-to-install.form-control(name='easy-to-install')
+            label.control-label(for='easy_to_install') Easy to install
+            select#easy_to_install.form-control(name='easy_to_install')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='easy-to-use') Easy to use
-            select#easy-to-use.form-control(name='easy-to-use')
+            label.control-label(for='easy_to_use') Easy to use
+            select#easy_to_use.form-control(name='easy_to_use')
               option 1
               option 2
               option 3
@@ -141,8 +142,8 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='easy-to-change') Easy to change
-            select#easy-to-change.form-control(name='easy-to-change')
+            label.control-label(for='easy_to_change') Easy to change
+            select#easy_to_change.form-control(name='easy_to_change')
               option 1
               option 2
               option 3
@@ -157,30 +158,30 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='includes-special-security-objectives') Includes special security objectives
-            select#includes-special-security-objectives.form-control(name='includes-special-security-objectives')
+            label.control-label(for='includes_special_security_objectives') Includes special security objectives
+            select#includes_special_security_objectives.form-control(name='includes_special_security_objectives')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='provides-direct-access-for-third-parties') Provides direct access for third parties
-            select#provides-direct-access-for-third-parties.form-control(name='provides-direct-access-for-third-parties')
+            label.control-label(for='provides_direct_access_for_third_parties') Provides direct access for third parties
+            select#provides_direct_access_for_third_parties.form-control(name='provides_direct_access_for_third_parties')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='special-user-training-facilities-are-required') Special user training facilities are required
-            select#special-user-training-facilities-are-required.form-control(name='special-user-training-facilities-are-required')
+            label.control-label(for='special_user_training_facilities_are_required') Special user training facilities are required
+            select#special_user_training_facilities_are_required.form-control(name='special_user_training_facilities_are_required')
               option 1
               option 2
               option 3
               option 4
               option 5
-          input#uuid-page2(type='hidden', name='uuid-page2', value='')
+          input#uuid_page2(type='hidden', name='uuid_page2', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.pull-left(type='button', onclick='showPage(1)') < Previous
@@ -189,32 +190,32 @@ html
         #page3.hidden
           .alert.alert-info Environmental Factors
           .form-group
-            label.control-label(for='familiar-with-the-project-model-that-is-used') Familiar with the project model that is used
-            select#familiar-with-the-project-model-that-is-used.form-control(name='familiar-with-the-project-model-that-is-used')
+            label.control-label(for='familiar_with_the_project_model_that_is_used') Familiar with the project model that is used
+            select#familiar_with_the_project_model_that_is_used.form-control(name='familiar_with_the_project_model_that_is_used')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='application-experience') Application experience
-            select#application-experience.form-control(name='application-experience')
+            label.control-label(for='application_experience') Application experience
+            select#application_experience.form-control(name='application_experience')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='object-oriented-experience') Object-oriented experience
-            select#object-oriented-experience.form-control(name='object-oriented-experience')
+            label.control-label(for='object_oriented_experience') Object-oriented experience
+            select#object_oriented_experience.form-control(name='object_oriented_experience')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='lead-analyst-capability') Lead analyst capability
-            select#lead-analyst-capability.form-control(name='lead-analyst-capability')
+            label.control-label(for='lead_analyst_capability') Lead analyst capability
+            select#lead_analyst_capability.form-control(name='lead_analyst_capability')
               option 1
               option 2
               option 3
@@ -229,30 +230,30 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='stable-requirements') Stable requirements
-            select#stable-requirements.form-control(name='stable-requirements')
+            label.control-label(for='stable_requirements') Stable requirements
+            select#stable_requirements.form-control(name='stable_requirements')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='part-time-staff') Part-time staff
-            select#part-time-staff.form-control(name='part-time-staff')
+            label.control-label(for='part_time_staff') Part-time staff
+            select#part_time_staff.form-control(name='part_time_staff')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='difficult-programming-language') Difficult programming language
-            select#difficult-programming-language.form-control(name='difficult-programming-language')
+            label.control-label(for='difficult_programming_language') Difficult programming language
+            select#difficult_programming_language.form-control(name='difficult_programming_language')
               option 1
               option 2
               option 3
               option 4
               option 5
-          input#uuid-page3(type='hidden', name='uuid-page3', value='')
+          input#uuid_page3(type='hidden', name='uuid_page3', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.pull-left(type='button', onclick='showPage(2)') < Previous
@@ -261,20 +262,22 @@ html
         #page4.hidden
           .alert.alert-info Project model file and documents
           .form-group
-            label.control-label.col-xs-4(for='uml-file') Model File (file types: xml are supported)
+            label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
             .col-xs-8
-              input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
+              input#uml_file.form-control(type='file', name='uml_file', accept='text/xml')
           .form-group
-            label.control-label.col-xs-4(for='uml-other') Other Documents (file types: zip, rar, tar are supported)
+            label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
             .col-xs-8
-              input#uml-other.form-control(type='file', name='uml-other')
-          input#uuid-page4(type='hidden', name='uuid-page4', value='')
+              input#uml_other.form-control(type='file', name='uml_other')
+          input#uuid_page4(type='hidden', name='uuid_page4', value='')
+          input#survey_date(type='hidden', name='survey_date', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
               button.btn.btn-success.pull-right(type='submit') Submit
     script(type='text/javascript').
-        document.getElementById("uuid-page1").value = uuidv4();
-        document.getElementById("uuid-page2").value = uuidv4();
-        document.getElementById("uuid-page3").value = uuidv4();
-        document.getElementById("uuid-page4").value = uuidv4();
+        document.getElementById("uuid_page1").value = uuidv4();
+        document.getElementById("uuid_page2").value = uuidv4();
+        document.getElementById("uuid_page3").value = uuidv4();
+        document.getElementById("uuid_page4").value = uuidv4();
+        document.getElementById("survey_date").value = new Date();

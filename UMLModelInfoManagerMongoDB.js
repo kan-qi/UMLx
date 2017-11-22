@@ -8,6 +8,7 @@
     var umlFileManager = require("./UMLFileManager.js");
     var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
     var config = require('./config'); // get our config file
+    const uuidv4 = require('uuid/v4');
 
 	function getModelQuery(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
@@ -547,12 +548,11 @@
     function saveSurveyData(surveyData){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
-            databaseCollectionName = "UML_model_submission";
+            var databaseCollectionName = "surveyData";
             db.collection(databaseCollectionName).insertOne(surveyData, function(err, result) {
                 if (err) throw err;
                 console.log("1 record inserted");
             });
-
         });
     }
 
@@ -685,6 +685,13 @@
 
     // collect survey data analytic per page
     function saveSurveyAnalyticsData(uuid, clientIpAddress, pageNumber) {
+	    if(uuid==""){
+	        //fall back in case uuid is not generated on client end
+            console.log("uuid was blank, adding uuid on server side");
+
+            // TODO:  what should we do?? generate a new uuid on server or discard data or insert blank?
+	        uuid = uuidv4();
+        }
         data = {
             ip: clientIpAddress,
             pageNumber: pageNumber,
@@ -714,6 +721,66 @@
         })
     };
 
+
+	//TODO add parameters for specific records
+    function getSurveyData(callback, o_id){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+
+            var schemaName = "surveyData";
+            if(o_id){
+                o_id = new mongo.ObjectID(o_id);
+                db.collection(schemaName).find({_id:o_id}).toArray(function (err, records) {
+                    if (err) throw err;
+                    db.close();
+                    if (callback) {
+                        callback(records);
+                    }
+                    console.log(records)
+                });
+            }else {
+                db.collection(schemaName).find().toArray(function (err, records) {
+                    if (err) throw err;
+                    db.close();
+                    if (callback) {
+                        callback(records);
+                    }
+                    console.log(records)
+                });
+            }
+
+        });
+    };
+
+    // function getAllData(schemaName, callback){
+    //     MongoClient.connect(url, function(err, db) {
+    //         if (err) throw err;
+    //         db.collection(schemaName).find().toArray(function(err, records) {
+    //             if (err) throw err;
+    //             db.close();
+    //             if(callback){
+    //                 callback(records);
+    //             }
+    //         });
+    //     });
+    // }
+
+    // function getAllData(schemaName, callback) {
+    //     var doc = null;
+    //     MongoClient.connect(url)
+    //         .then(function(err, db){
+    //             if(err) throw err;
+    //             db.collection(schemaName).find()
+    //         })
+    //         .then(function(cursor){
+    //             console.log(cursor)
+    //         })
+    // }
+
+    // function collectInfo(err, data){
+    //     return data;
+    // }
+    //
 
 	function duplicateModelInfo(umlModelInfo){
 		if(umlModelInfo){
@@ -873,7 +940,8 @@
         queryRepoIdsForAdmin:queryRepoIdsForAdmin,
         queryRepoInfoForAdmin:queryRepoInfoForAdmin,
         saveSurveyData: saveSurveyData,
-        saveSurveyAnalyticsData: saveSurveyAnalyticsData
+        saveSurveyAnalyticsData: saveSurveyAnalyticsData,
+        getSurveyData: getSurveyData
 
     }
 }())
