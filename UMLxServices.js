@@ -896,6 +896,17 @@ app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');
 });
 
+// TODO use this API to populate data on UI
+app.get('/getSubmittedSurveyList', function(req, res){
+    umlModelInfoManager.getSurveyData(function(data){
+        res.send(data);
+    }, req.query.id);
+});
+
+app.get('/surveyData', function(req, res){
+   res.render("surveyData");
+});
+
 
 
 app.get('/', function(req, res){

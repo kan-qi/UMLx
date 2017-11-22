@@ -833,19 +833,31 @@
 
 
 	//TODO add parameters for specific records
-    function getSurveyData(callback){
+    function getSurveyData(callback, o_id){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
 
             var schemaName = "surveyData";
-            db.collection(schemaName).find().toArray(function(err, records) {
-                if (err) throw err;
-                db.close();
-                if(callback){
-                    callback(records);
-                }
-                console.log(records)
-            });
+            if(o_id){
+                o_id = new mongo.ObjectID(o_id);
+                db.collection(schemaName).find({_id:o_id}).toArray(function (err, records) {
+                    if (err) throw err;
+                    db.close();
+                    if (callback) {
+                        callback(records);
+                    }
+                    console.log(records)
+                });
+            }else {
+                db.collection(schemaName).find().toArray(function (err, records) {
+                    if (err) throw err;
+                    db.close();
+                    if (callback) {
+                        callback(records);
+                    }
+                    console.log(records)
+                });
+            }
 
         });
     };
