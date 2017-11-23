@@ -203,6 +203,7 @@ app.use(function(req, res, next) {
 
 });
 
+
 app.get('/profile',function(req,res){
 
 	var profileInfo = {}
@@ -907,6 +908,101 @@ app.get('/surveyData', function(req, res){
    res.render("surveyData");
 });
 
+
+// GIT API TEST
+app.get('/testgitapirepos', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	// TODO: optional authentication here depending on desired endpoints. See below in README.
+
+	github.repos.getForUser({
+	    // optional
+	    // headers: {
+	    //     "cookie": "blahblah"
+	    // },
+	  username: 'kritikavd'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	  
+	});
+});
+
+
+
+app.get('/testgitapiuser', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	github.search.users({
+	  q: 'kritikavd'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	  //console.log(JSON.stringify(res))
+	});
+});
+
+
+app.get('/testgitapionecommit', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.gitdata.getCommit({
+		owner: 'kritikavd',
+		  repo: 'Web-Tech-Assignments',
+		  sha :'c904b7eb886086665382162ad123555efb66be35'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+	
+});
+
+
+app.get('/testgitapiallcommit', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.repos.getCommits({
+		owner: 'kritikavd',
+		  repo: 'Web-Tech-Assignments',
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+	
+});
+
+
+app.get('/testgitapifollowing', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.users.getFollowingForUser({
+	    // optional
+	    // headers: {
+	    //     "cookie": "blahblah"
+	    // },
+	  username: 'defunkt'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	})
+});
+
+// END OF TEST GIT API
 
 
 app.get('/', function(req, res){
