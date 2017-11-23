@@ -321,9 +321,10 @@ class ClassNode{
 	function extractClassDiagramNodes (classDiagramJSON){
 		
 		var models = classDiagramJSON.Project.Models[0];
-		extractContainedClassElements(models.Class);
-		
-		
+		if (_.get(models,"Class", undefined) != undefined){
+			extractContainedClassElements(models.Class);
+		}
+	
 	}
 	
 	function extractActivityEdges (activityDiagramJSON){
@@ -371,14 +372,17 @@ class ClassNode{
 		
 		// TODO: is an array.
 		var models = sequenceDiagramJSON.Project.Models;
-		console.log ("the models ", JSON.stringify(models));
 		var model = models[0];
-		var modelChildren = model.Frame[0].ModelChildren;
-		var diagramChildren = modelChildren[0];
-			
-		extractInteractionActors(diagramChildren);
 		
-		extractInteractionLifeLine(diagramChildren);
+		
+		if (_.get(model, "Frame", undefined) != undefined){
+			var modelChildren = model.Frame[0].ModelChildren;
+			var diagramChildren = modelChildren[0];
+				
+			extractInteractionActors(diagramChildren);
+			
+			extractInteractionLifeLine(diagramChildren);
+		}
 	
 	}
 	
