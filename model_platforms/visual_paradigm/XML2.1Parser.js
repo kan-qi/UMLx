@@ -284,7 +284,7 @@ class ClassNode{
 	
 		var models = activityDiagramJSON.Project.Models[0];
 	
-		console.log ("the models are ", JSON.stringify(models));	
+		console.log ("the activity models are ", JSON.stringify(models));	
 		
 		var activityComponents = undefined;
 		if (_.get(models,'Activity', undefined) == undefined){
@@ -293,8 +293,11 @@ class ClassNode{
 			
 			var activityModel = models.Activity[0];
 		
-			if (isObject(activityModel)){
-				console.log ('the element are');
+			console.log ('the activity Model ', activityModel);
+			
+			var children = activityModel.ModelChildren[0];
+			if (_.get(children, "ActivitySwimlane2", undefined) == undefined)
+			{
 				extractActivityElementNodes(activityModel.ModelChildren[0]);
 				return;
 			}
@@ -306,6 +309,10 @@ class ClassNode{
 		
 		extractContainedActivityElements(activityComponents);
 	}
+	
+	isArray = function(a) {
+	    return (!!a) && (a.constructor === Array);
+	};
 	
 	function isObject(a) {
 	    return (!!a) && (a.constructor === Object);
@@ -491,7 +498,7 @@ class ClassNode{
 	function extractUseCaseNodes(useCaseDiagramJSON){
 		var models = useCaseDiagramJSON.Project.Models[0];
 
-		console.log ("the use case ", JSON.stringify(useCaseDiagramJSON));
+		//console.log ("the use case ", JSON.stringify(useCaseDiagramJSON));
 		var actors = _.get(models,"Actor",[]);
 		
 		for (var index = 0; index < actors.length; index++){
@@ -588,7 +595,7 @@ class ClassNode{
 			if (err)
 				console.log ("error in parsing", err);
 			
-			console.log ("the result ", JSON.stringify(result));
+			//console.log ("the result ", JSON.stringify(result));
 			
 			var response = {}
 			
