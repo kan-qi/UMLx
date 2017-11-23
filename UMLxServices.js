@@ -1,4 +1,3 @@
-
 var express = require('express');
 var app = express();
 var fs = require("fs");
@@ -37,7 +36,32 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({ storage: storage })
+var fileDestination = null;
+var surveyFiles = multer.diskStorage({
+    destination: function (req, file, cb) {
+    	if(fileDestination==null) {
+            fileDestination = 'public/survey/';
+            var stat = null;
+            try {
+                stat = fs.statSync(fileDestination);
+            } catch (err) {
+                fs.mkdirSync(fileDestination);
+            }
+            if (stat && !stat.isDirectory()) {
+                throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
+            }
+        }
+        cb(null, fileDestination);
+    },
+    filename: function (req, file, cb) {
+        var fileName = Date.now()+ "-" + file.originalname;
+        cb(null, fileName)
+		console.log("saved the file " + fileName + " in " + fileDestination);
+    }
+})
+
+var upload = multer({ storage: storage });
+var surveyUploads = multer({ storage: surveyFiles });
 
 app.use(express.static('public'));
 app.use(cookieParser());
@@ -54,6 +78,102 @@ app.set('view engine', 'jade');
 //}
 
 var modelInfo = {};
+
+
+//GIT API TEST
+app.get('/testgitapirepos', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	// TODO: optional authentication here depending on desired endpoints. See below in README.
+
+	github.repos.getForUser({
+	    // optional
+	    // headers: {
+	    //     "cookie": "blahblah"
+	    // },
+	  username: 'kritikavd'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	  
+	});
+});
+
+
+
+app.get('/testgitapiuser', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	github.search.users({
+	  q: 'kritikavd'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	  //console.log(JSON.stringify(res))
+	});
+});
+
+
+app.get('/testgitapionecommit', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.gitdata.getCommit({
+		owner: 'kritikavd',
+		  repo: 'Web-Tech-Assignments',
+		  sha :'c904b7eb886086665382162ad123555efb66be35'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+	
+});
+
+
+app.get('/testgitapiallcommit', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.repos.getCommits({
+		owner: 'kritikavd',
+		  repo: 'Web-Tech-Assignments',
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+	
+});
+
+
+app.get('/testgitapifollowing', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.users.getFollowingForUser({
+	    // optional
+	    // headers: {
+	    //     "cookie": "blahblah"
+	    // },
+	  username: 'defunkt'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	})
+});
+
+// END OF TEST GIT API
 
 app.get('/signup',function(req,res){
 
@@ -203,7 +323,6 @@ app.use(function(req, res, next) {
 
 });
 
-
 app.get('/profile',function(req,res){
 
 	var profileInfo = {}
@@ -268,10 +387,11 @@ app.get('/surveyAnalytics', function (req, res){
 });
 
 
-app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
+app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
 	console.log(req.body);
 	var formInfo = req.body;
 	umlModelInfoManager.saveSurveyData(formInfo);
+	res.redirect("thankYou");
 });
 
 
@@ -908,101 +1028,6 @@ app.get('/surveyData', function(req, res){
    res.render("surveyData");
 });
 
-
-// GIT API TEST
-app.get('/testgitapirepos', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-
-	// TODO: optional authentication here depending on desired endpoints. See below in README.
-
-	github.repos.getForUser({
-	    // optional
-	    // headers: {
-	    //     "cookie": "blahblah"
-	    // },
-	  username: 'kritikavd'
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	  
-	});
-});
-
-
-
-app.get('/testgitapiuser', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-
-	github.search.users({
-	  q: 'kritikavd'
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	  //console.log(JSON.stringify(res))
-	});
-});
-
-
-app.get('/testgitapionecommit', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-	
-	github.gitdata.getCommit({
-		owner: 'kritikavd',
-		  repo: 'Web-Tech-Assignments',
-		  sha :'c904b7eb886086665382162ad123555efb66be35'
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	});
-	
-});
-
-
-app.get('/testgitapiallcommit', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-	
-	github.repos.getCommits({
-		owner: 'kritikavd',
-		  repo: 'Web-Tech-Assignments',
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	});
-	
-});
-
-
-app.get('/testgitapifollowing', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-	
-	github.users.getFollowingForUser({
-	    // optional
-	    // headers: {
-	    //     "cookie": "blahblah"
-	    // },
-	  username: 'defunkt'
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	})
-});
-
-// END OF TEST GIT API
 
 
 app.get('/', function(req, res){
