@@ -113,12 +113,8 @@ class ClassNode{
 
 			extractSequenceDiagNodes(result);
 			extractSequenceDiagramEdges(result);
-			if (dataCallback){
-				
-				var response = { 'sequence_diagram' : graph};
-				
-				dataCallback(response);
-			}
+			if (dataCallback)
+				dataCallback(graph);
 		});
 	}
 	
@@ -252,21 +248,71 @@ class ClassNode{
 		}
 	}
 	
+	
+	function extractActivityElementNodes(containedElement){
+		var initialNodes = _.get(containedElement, 'InitialNode', {});
+		for (initialNodeElement = 0; initialNodeElement < initialNodes.length; initialNodeElement++){
+			var initialNode = initialNodes[initialNodeElement];
+			var node = new ActivityNode(initialNode.$.Idref, initialNode.$.Name, "");
+			graph.addNode(node);
+		}
+	
+		var activityActions = _.get(containedElement, 'ActivityAction', {});
+		for (var activtiyAction = 0; activtiyAction < activityActions.length; activtiyAction++){
+			var action = activityActions[activtiyAction];
+			var actionNode = new ActivityNode (action.$.Idref,action.$.Name, "");
+			graph.addNode(actionNode);
+		}
+		
+		var decisionNodes = _.get(containedElement, 'DecisionNode', {});
+		for (var decision = 0; decision  < decisionNodes.length; decision++){
+			var decisionNode = decisionNodes[decision];
+			var decisionGraphNode = new ActivityNode(decisionNode.$.Idref, decisionNode.$.Name, "");
+			graph.addNode(decisionGraphNode);
+		}
+		
+		var finalNodes = _.get(containedElement, 'ActivityFinalNode', {});
+		for (var finalNodeElement = 0; finalNodeElement < finalNodes.length; finalNodeElement++){
+			var finalNode = finalNodes[finalNodeElement];
+			var finalGraphNode = new ActivityNode(finalNode.$.Idref, finalNode.$.Name, "");
+			graph.addNode(finalGraphNode);
+		}
+	}
+	
+	
 	function extractActivityNodes (activityDiagramJSON){
+	
 		var models = activityDiagramJSON.Project.Models[0];
 	
+		console.log ("the models are ", JSON.stringify(models));	
+		
 		var activityComponents = undefined;
 		if (_.get(models,'Activity', undefined) == undefined){
 			activityComponents = models.ActivitySwimlane2[0].ModelChildren;
 		}else{
+			
 			var activityModel = models.Activity[0];
+		
+			if (isObject(activityModel)){
+				console.log ('the element are');
+				extractActivityElementNodes(activityModel.ModelChildren[0]);
+				return;
+			}
+			
 			var activityModelChildren = activityModel.ModelChildren[0];
+			console.log ("the activityModelChildren", activityModelChildren);
 			activityComponents = activityModelChildren.ActivitySwimlane2[0].ModelChildren;
 		}
 		
 		extractContainedActivityElements(activityComponents);
 	}
 	
+	function isObject(a) {
+	    return (!!a) && (a.constructor === Object);
+	};
+	
+	
+
 	function extractClassDiagramEdges (classDiagramJSON){
 		var models = classDiagramJSON.Project.Models[0];
 		extratContainedClassEdges(models.ModelRelationshipContainer);
@@ -302,10 +348,8 @@ class ClassNode{
 			
 			extractActivityNodes(result);
 			extractActivityEdges(result);
-			if (dataCallback){
-				var response = { 'activity_diagram' : graph};
-				dataCallback(response);
-			}
+			if (dataCallback)
+			dataCallback(graph);
 		});
 	}
 	
@@ -316,14 +360,14 @@ class ClassNode{
 			extractClassDiagramNodes(result);
 			extractClassDiagramEdges(result);
 			
-			if (dataCallback){
-				var response = { 'class_diagram' : graph};
-				dataCallback(graph);
-			}
+			if (dataCallback)
+			dataCallback(graph);
 		});
 	}
 	
 	function extractSequenceDiagNodes (sequenceDiagramJSON){
+		
+		
 		
 		// TODO: is an array.
 		var models = sequenceDiagramJSON.Project.Models;
@@ -435,10 +479,8 @@ class ClassNode{
 			extractUseCaseNodes(result);
 			extractUseCaseEdges(result);
 			
-			if (dataCallback){
-				var response = {'usecase_diagram' : graph};
-				dataCallback(response);
-			}
+			if (dataCallback)
+			dataCallback(graph);
 		});
 	}
 	
@@ -523,15 +565,15 @@ class ClassNode{
 		readFile(file, parseSequenceDiagramData, func);
 	}
 	
-	function extractActivityDiagram(file, func) {
+	function extractActivityDiagrams(file, func) {
 		readFile(file, parseActivityData, func);
 	}
 	
-	function extractClassDiagram(file, func) {
+	function extractClassDiagrams(file, func) {
 		readFile(file, parseClassData, func);
 	}
 	
-	function extractUseCaseDiagram(file,func) {
+	function extractUseCaseDiagrams(file,func) {
 		readFile(file, parseUseCaseData, func);
 	}
 	
@@ -576,7 +618,126 @@ function extractDiagramModels(file,func){
 		readFile(file,parseModelData, func);
 	}
 
-	module.exports = { extractSequenceDiagrams, extractUseCaseDiagram, extractActivityDiagram, extractDiagramModels}
+
+
+function computeIndegree(graph){
+	
+	console.log ('the graph is ', graph);
+	var nodes = graph.nodes;
+	var edges = graph.edges;
+	
+	var indegree = {}
+	
+	for (var node = 0; node < nodes.length; node++){
+		var count = 0;
+		var graphNode = nodes[node];
+		for (var edge = 0; edge < edges.length; edge++){
+			
+			var graphEdge = edges[edge];
+			
+			if (graphNode.Id == graphEdge.toEnd){
+				count = count + 1;
+			}
+		}
+		indegree[graphNode.Id] = count;
+	}
+	
+	return indegree;
+}
+
+
+function computeStartNodes(indegree){
+	
+	var startNodes = [];
+	
+	for (var key in indegree){
+		if (indegree[key] == 0){
+			startNodes.push(key);
+		}
+	}
+	return startNodes;
+}
+
+
+function traverseAllGraph(response){
+	
+	for ( var key in response) {
+		var graph =  response[key];
+		var indegree = computeIndegree(graph);
+		
+		
+		
+		var startNodes = computeStartNodes(indegree);
+		breadFirstSearch(startNodes,graph);
+	}
+}
+
+
+function breadFirstSearch(startNodes, graph){
+	
+	var nodes = graph.nodes;
+	var edges = graph.edges;
+	
+	var node_id_index = {}
+	var node_index_id = {}
+	index = 0;
+	for (var node =0 ; node < nodes.length; node++){
+		var graphNode = nodes[node];
+		node_id_index[graphNode.Id] = index;
+		node_index_id[index] = graphNode.Id;
+		index = index +  1;
+	}
+	
+	var adjacency_matrix = new Array(nodes.length);
+	for (var node = 0; node < nodes.length; node++){
+		adjacency_matrix[node] = new Array(nodes.length);
+		
+		for (var otherNode = 0; otherNode < nodes.length; otherNode++){
+			adjacency_matrix[node][otherNode] = 0;
+		}
+		
+	}
+	
+	for (var edge =0 ; edge < edges.length; edge++ ){
+		var graphEdge = edges[edge];
+		adjacency_matrix[node_id_index[graphEdge.fromEnd]][node_id_index[graphEdge.toEnd]] = 1;
+	}
+	
+	
+	
+	
+	for (var startNode = 0; startNode < startNodes.length; startNode++){
+		
+		var visited = new Array(nodes.length).fill(false);
+		var start_node = startNodes[startNode];
+		var queue = [];
+		var path = [];
+		
+		var checking = [];
+		
+		queue.push(node_id_index[start_node]);
+		visited[node_id_index[start_node]] = true;
+		
+		while (queue.length != 0){
+			
+			var element = queue.shift();
+			path.push(node_index_id[element]);
+			checking.push(nodes[element].Name);
+			
+			
+			for (var node = 0 ; node < nodes.length; node++){
+				if ( !visited[node] && adjacency_matrix[element][node] == 1){
+					visited[node] = true;
+					queue.push(node);
+				}
+			}
+		}
+		
+	}
+
+}
+
+	module.exports = { extractClassDiagrams , extractSequenceDiagrams, extractUseCaseDiagrams, extractActivityDiagrams, extractDiagramModels}
 
 }());
 

@@ -962,7 +962,8 @@ app.get('/thankYou', function(req, res){
 var testingParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
 app.get('/testFunctions', function(req, res){
 	testingParser.extractDiagramModels("./vp_xml_export.xml/project.xml", function(data){
-		res.render(data);
+		console.log ('the output data', JSON.stringify(data));
+		res.json(data);
 	})
 });
 
