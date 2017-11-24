@@ -853,6 +853,24 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1SequenceDiagramParser.js")
+app.get('/testSequenceDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractSequenceDiagrams("./temp/test_example.xml", function(sequenceDiagrams){
+		res.json(sequenceDiagrams);
+	});
+});
+
+app.get('/testRobustnessDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractRobustnessDiagrams("./temp/test_example.xml", function(robustnessDiagrams){
+		res.json(robustnessDiagrams);
+	});
+});
+
+app.get('/testActivityDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractActivityDiagrams("./temp/test_example.xml", function(activityDiagrams){
+		res.json(activityDiagrams);
+	});
+});
 
 
 var server = app.listen(8081,'127.0.0.1', function () {

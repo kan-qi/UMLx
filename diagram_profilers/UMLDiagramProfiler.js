@@ -11,6 +11,55 @@
 var diagramDrawer = require('./DiagramDrawer.js');
 var exec = require('child_process').exec;
 
+
+function traverseBehavioralDiagram(diagram){
+	
+	var entries=diagram.Entries;// tag: elements
+	
+	var toExpandCollection = new Array();
+	
+	for (var i=0; i < entries.length; i++){
+		var entry = entries[i];
+		//define the node structure to keep the infor while traversing the graph
+		var node = {
+			//id: startElement, //ElementGUID
+			Node: entry,
+			PathToNode: [entry]
+		};
+		toExpandCollection.push(node);
+	}
+	
+	var Paths = new Array();
+	var toExpand;
+	while((toExpand = toExpandCollection.pop()) != null){
+		var node = toExpand.Node;
+		var pathToNode = toExpand.PathToNode;
+//		var toExpandID = toExpand.id;
+//		var expanded = false;
+		// test completeness of the expanded path first to decide if continue to expand
+		var childNodes = diagram.expand(node);
+		// if null is returned, then node is an end node.
+		
+		if(!childNodes){
+			Paths.push(pathToNode);
+		}
+		else{
+
+			for(var i in childNodes){
+				var childNode = childNodes[i];
+				var toExpandNode = {
+						Node: childNode,
+						PathToNode: pathToNode.concat(childNode)
+					}
+				toExpandCollection.push(toExpandNode);
+			}		
+		}
+		
+		
+	}
+	
+	return Paths;
+}
 	
 
 function traverseRobustnessDiagram(robustnessDiagram){
@@ -378,7 +427,8 @@ module.exports = {
 			diagramDrawer.drawRobustnessDiagram(diagram, func);
 		}
 		return diagram;
-	}
+	},
+	traverseBehavioralDiagram: traverseBehavioralDiagram
 };
 
 
