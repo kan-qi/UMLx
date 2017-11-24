@@ -112,15 +112,18 @@
 				var totalDegree = 0;
 				var tranLength = 0;
 				
-				for(var i = 0; i < path.Elements.length; i++)
-				{
-					var elementID = path['Elements'][i];
-					var element = diagram.Elements[elementID];
-					if(!element){
-						break;
+				for(var i in path)
+				{	
+					var node = path[i];
+//					var elementID = path['Elements'][i];
+					var components = diagram.allocate(node);
+//					if(!element){
+//						break;
+//					}
+					for(var j in components){
+						totalDegree += components[j].InboundNumber;
+						tranLength++;	
 					}
-					totalDegree += element.InboundNumber;
-					tranLength++;
 				}
 				
 

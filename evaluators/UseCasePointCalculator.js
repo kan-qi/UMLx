@@ -128,7 +128,7 @@
 			for(var k in diagramInfo.Paths){
 				var path = diagramInfo.Paths[k];
 				var utw = 0;
-				var doN = path.Elements.length;
+				var doN = path.length;
 				var uieN = path.boundaryNum
 				
 				

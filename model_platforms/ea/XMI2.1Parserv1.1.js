@@ -400,6 +400,25 @@
 				
 			}
 			
+			// the function to search for the component that realize the message, can also the properties of the component.
+			diagram.allocate = function(node){
+				// the function call to call the method of an object.
+				var component = modelComponents[node.ClientID];
+				component.inboundNumber = 0;
+				component.outboundNumber = 0;
+				for(var i in diagram.Nodes){
+					var otherNode = diagram.Nodes[i];
+					if(otherNode.ClientID === node.ClientID){
+						component.inboundNumber ++; 
+					}
+					else if(otherNode.SupplierID == node.ClientID){
+						component.outboundNumber ++;
+					}
+				}
+				// return an array, to add more flexibility, if a message is realized by more than one system components.
+				return [component];
+			}
+			
 			
 		} else if (diagram.Type === 'Analysis') {
 
@@ -495,6 +514,28 @@
 				}
 				
 			}
+			
+			// the function to search for the component that realize the message, can also the properties of the component.
+			diagram.allocate = function(node){
+				// the function call to call the method of an object.
+				var component = modelComponents[node.ClientID];
+				if(!component){
+					return [];
+				}
+				component.inboundNumber = 0;
+				component.outboundNumber = 0;
+				for(var i in diagram.Nodes){
+					var otherNode = diagram.Nodes[i];
+					if(otherNode.ClientID === node.ClientID){
+						component.inboundNumber ++; 
+					}
+					else if(otherNode.SupplierID == node.ClientID){
+						component.outboundNumber ++;
+					}
+				}
+				// return an array, to add more flexibility, if a message is realized by more than one system components.
+				return [component];
+			}
 
 		} else if (diagram.Type === "Activity"){
 			
@@ -586,6 +627,28 @@
 					return children;
 				}
 				
+			}
+			
+			// the function to search for the component that realize the message, can also the properties of the component.
+			diagram.allocate = function(node){
+				// the function call to call the method of an object.
+				var component = modelComponents[node.ClientID];
+				if(!component){
+					return [];
+				}
+				component.inboundNumber = 0;
+				component.outboundNumber = 0;
+				for(var i in diagram.Nodes){
+					var otherNode = diagram.Nodes[i];
+					if(otherNode.ClientID === node.ClientID){
+						component.inboundNumber ++; 
+					}
+					else if(otherNode.SupplierID == node.ClientID){
+						component.outboundNumber ++;
+					}
+				}
+				// return an array, to add more flexibility, if a message is realized by more than one system components.
+				return [component];
 			}
 			
 		} else if (diagram.Type === "Logical") {

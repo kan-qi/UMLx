@@ -88,9 +88,13 @@
 	 
 	 function recognizePattern(path, diagram, patternRoot){
 		 	var preprocessedPath = new Array();
-			for(var i=0; i<path.Elements.length; i++){
-				var element = diagram['Elements'][path['Elements'][i]];
-				preprocessedPath.push(element.Type);
+			for(var i in path){
+				var node = path[i];
+				var components = diagram.allocate(node);
+//				var element = diagram['Elements'][path['Elements'][i]];
+				for(var j in components){
+					preprocessedPath.push(components[j].Type);	
+				}
 			}
 			
 //			console.log(preprocessedPath);
