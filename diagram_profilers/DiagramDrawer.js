@@ -159,14 +159,64 @@
 	   return graph;
 	}
 	
-	function drawGenericGraph(graph, callbackfunc){
+	function drawStructuralDiagram(diagram, callbackfunc){
+		var graph = 'digraph g {';
+		for(var i in diagram.Elements){
+		var element = diagram.Elements[i];
+		var attributes = element.Attributes;
+//		console.log(attributes);
+		for(var j in attributes){
+			var attribute = attributes[j];
+			graph += '"'+element.Name+'"->"'+attribute.Name+'";';
+		}
+		var operations = element.Operations;
+//		console.log(operations);
+		for(var j in operations){
+			var operation = operations[j];
+			graph += '"'+element.Name+'"->"'+operation.Name+'";';
+		}
+		}
+		graph += '}';
+		
+		var graphFilePath = diagram.OutputDir+'/'+diagram.DotGraphFile;
+		mkdirp(diagram.OutputDir, function(err) {
+		    // path exists unless there was an error
+			 if(err) {
+			        return console.log(err);
+			 }
+//			 console.log(graph);
+		fs.writeFile(graphFilePath, graph, function(err) {
+		    if(err) {
+		        return console.log(err);
+		    }
+		    
+		    //to generate svg file.
+		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+diagram.OutputDir+"/"+diagram.SvgGraphFile+'"';
+//			console.log(command);
+			var child = exec(command, function(error, stdout, stderr) {
+				if (error !== null) {
+					console.log('exec error: ' + error);
+				}
+				 console.log('The file was saved!');
+				 if(callbackfunc){
+				  callbackfunc(graphFilePath);
+				 }
+			});
+		    
+		   
+		});
+		});
+	   return graph;
+	}
+	
+	function drawBehavioralDiagram(diagram, callbackfunc){
 		var dotty = 'digraph g {';
-		var Nodes = graph.Nodes;
+		var Nodes = diagram.Nodes;
 		for(var j in Nodes){
 			var node = Nodes[j];
 			dotty += '"'+node.Name+'";';
 		}
-		var Edges = graph.Edges;
+		var Edges = diagram.Edges;
 		for(var i in Edges){
 			var edge = Edges[i];
 			//var edges = node.Edges;
@@ -184,20 +234,20 @@
 		//graph.Name = "test";
 		//console.log(dotty);
 		
-		var fileName = graph.Name+'_graph.dotty';
+		var fileName = diagram.Name+'_graph.dotty';
 		console.log(fileName);
-		var graphFilePath = graph.OutputDir+'/'+fileName;
-		mkdirp(graph.OutputDir, function(err) {
+		var diagramFilePath = diagram.OutputDir+'/'+fileName;
+		mkdirp(diagram.OutputDir, function(err) {
 		    // path exists unless there was an error
 			 if(err) {
 			        return console.log(err);
 			 }
-			 fs.writeFile(graphFilePath, dotty, function(err) {
+			 fs.writeFile(diagramFilePath, dotty, function(err) {
 		    if(err) {
 		        return console.log(err);
 		    }
 		    
-		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+graph.OutputDir+"/"+graph.SvgGraphFile+'"';
+		    var command = 'dot -Tsvg "' + diagramFilePath + '">"'+diagram.OutputDir+"/"+diagram.SvgGraphFile+'"';
 //			console.log(command);
 			var child = exec(command, function(error, stdout, stderr) {
 				if (error !== null) {
@@ -206,7 +256,7 @@
 
 			    console.log('The file was saved!');
 			    if(callbackfunc){
-			    callbackfunc(graphFilePath);
+			    callbackfunc(diagramFilePath);
 			    }
 
 			});
@@ -235,7 +285,6 @@
 //			});
 			drawRobustnessDiagramFunc(diagram, callbackfunc);
 		},
-		drawGenericGraph : drawGenericGraph,
 		drawSequenceDiagram: function(diagram, callbackfunc){
 			var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_");
 			diagram.DotGraphFile = fileName+'_sequence.dotty';
@@ -247,12 +296,11 @@
 		},
 		drawDiagram: function(diagram, callbackfunc){
 			if(diagram.Type === 'Logical'){
-				drawClassDiagramFunc(diagram, callbackfunc);
-			} else if(diagram.Type === 'Sequence'){
-				drawSequenceDiagramFunc(diagram, callbackfunc);
-			} else if(diagram.Type === 'Analysis'){
-				drawRobustnessDiagramFunc(diagram, callbackfunc);
+				drawStructuralDiagram(diagram, callbackfunc);
+			} else if(diagram.Type === 'Sequence' || diagram.Type === 'Analysis' || diagram.Type === 'Activity'){
+				drawBehavioralDiagram(diagram, callbackfunc);
 			}
-		}
+		},
+		drawBehavioralDiagram: drawBehavioralDiagram
 	}
 }())

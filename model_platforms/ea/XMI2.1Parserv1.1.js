@@ -279,7 +279,7 @@
 			 * For sequence diagrams. Nodes are the messages.
 			 * The message that is implemented by components.
 			 */
-			var Elements = {};
+//			var Elements = {};
 			var Messages = [];
 			// here some logic needs to be applied to extract the structure for sequence diagrams
 			// console.log(modelComponents);
@@ -289,14 +289,16 @@
 					continue;
 				}
 				var category = component.Category;
-				var type = component.Type;
-				if (category === 'Element') { // more conditions to filter the
-					// element
-					if (type === 'actor' || type === 'boundary'
-							|| type === 'control' || type === 'entity') {
-						Elements[diagram['ComponentIDs'][i]] = component;
-					}
-				} else if (category === 'Connector') {
+//				var type = component.Type;
+//				if (category === 'Element') { // more conditions to filter the
+//					// element
+//					if (type === 'actor' || type === 'boundary'
+//							|| type === 'control' || type === 'entity') {
+//						Elements[diagram['ComponentIDs'][i]] = component;
+//					}
+//				} else 
+//					
+				if (category === 'Connector') {
 					if (type === 'Sequence') {
 						Messages.push(component);
 					}
@@ -325,7 +327,7 @@
 				 */
 				
 				var message = diagram.Nodes[j];
-				var no = message.no;
+				var seqNo = message.seqNo;
 				var preMessage = null;
 				
 				//search the incoming edges for a node.
@@ -343,8 +345,8 @@
 				
 				for(var k in incomingMessages){
 					var incomingMessage = incomingMessages[k];
-					var incomingNo = incomingMessage.no;
-					if(incomingNo < no){
+					var incomingNo = incomingMessage.seqNo;
+					if(incomingNo < seqNo){
 						preMessage = incomingMessage;
 					}
 					else{
@@ -414,7 +416,7 @@
 			
 			diagram.OutputDir = "temp/sequenceExperiments";
 			diagramDrawer = require("../../diagram_profilers/DiagramDrawer.js");
-			diagramDrawer.drawGenericGraph(diagram, function(filePath){
+			diagramDrawer.drawBehavioralDiagram(diagram, function(filePath){
 				console.log(filePath);
 			})
 			
@@ -426,7 +428,7 @@
 		} else if (diagram.Type === 'Analysis') {
 
 			var Interactions = [];
-			var Elements = {};
+//			var Elements = {};
 			
 			for ( var i in diagram['ComponentIDs']) {
 				var component = modelComponents[diagram['ComponentIDs'][i]];
@@ -434,14 +436,14 @@
 					continue;
 				}
 				var category = component.Category;
-				var type = component.Type;
-				if (category === 'Element') { // more conditions to filter the
-					// element
-					if (type === 'actor' || type === 'boundary'
-							|| type === 'control' || type === 'entity') {
-						Elements[diagram['ComponentIDs'][i]] = component;
-					}
-				}
+//				var type = component.Type;
+//				if (category === 'Element') { // more conditions to filter the
+//					// element
+//					if (type === 'actor' || type === 'boundary'
+//							|| type === 'control' || type === 'entity') {
+//						Elements[diagram['ComponentIDs'][i]] = component;
+//					}
+//				}
 				
 				if(category === "Connector") {
 					var tag = modelComponents[component.SupplierID].Name+"I"+modelComponents[component.ClientID].Name;
@@ -453,7 +455,7 @@
 					Interactions.push(component);
 				}
 			}
-			diagram.Elements = Elements;
+//			diagram.Elements = Elements;
 			
 			diagram.Nodes = Interactions;
 			diagram.Edges = [];
@@ -521,7 +523,7 @@
 			diagram.Name = "robustness_test"+diagram.Nodes.length;
 			diagram.OutputDir = "temp/sequenceExperiments";
 			diagramDrawer = require("../../diagram_profilers/DiagramDrawer.js");
-			diagramDrawer.drawGenericGraph(diagram, function(filePath){
+			diagramDrawer.drawBehavioralDiagram(diagram, function(filePath){
 			console.log(filePath);
 			});
 			
@@ -542,7 +544,7 @@
 					continue;
 				}
 				var category = component.Category;
-				var type = component.Type;
+//				var type = component.Type;
 				if (category === 'Element') { // more conditions to filter the
 					// element
 					//if (type === 'actor' || type === 'boundary' || type === 'control' || type === 'entity') {
@@ -626,7 +628,7 @@
 			diagram.Name = "activity_test"+diagram.Nodes.length;
 			diagram.OutputDir = "temp/sequenceExperiments";
 			diagramDrawer = require("../../diagram_profilers/DiagramDrawer.js");
-			diagramDrawer.drawGenericGraph(diagram, function(filePath){
+			diagramDrawer.drawBehavioralDiagram(diagram, function(filePath){
 			console.log(filePath);
 			});
 			

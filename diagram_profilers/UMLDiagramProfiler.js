@@ -347,16 +347,16 @@ function traverseSequenceDiagram(sequenceDiagram){
 	return sequenceDiagram;
 }
 
-function traverseClassDiagram(classDiagram){
+function traverseStructuralDiagram(diagram, diagramProcess){
 //	console.log("#===================================#");
-//	console.log("Current Class Diagram: "+ classDiagram.Name);
+//	console.log("Current Class Diagram: "+ diagram.Name);
 //	console.log("#===================================#");
 	var attributeNum = 0;
-	for(var i in classDiagram.Attributes){
-		var attribute = classDiagram.Attributes[i];
+	for(var i in diagram.Attributes){
+		var attribute = diagram.Attributes[i];
 		var isAttribute = true;
-//		if(classDiagramProcess && classDiagramProcess.processAttribute){
-//			isAttribute = classDiagramProcess.processAttribute(attribute);
+//		if(diagramProcess && diagramProcess.processAttribute){
+//			isAttribute = diagramProcess.processAttribute(attribute);
 //		}
 		
 		if(isAttribute){
@@ -366,11 +366,11 @@ function traverseClassDiagram(classDiagram){
 	
 	
 	var operationNum = 0;
-	for(var i in classDiagram.Operations){
-		var operation = classDiagram.Operations[i];
+	for(var i in diagram.Operations){
+		var operation = diagram.Operations[i];
 		var isOperation = true;
-		if(classDiagramProcess && classDiagramProcess.processOperation){
-			isOperation = classDiagramProcess.processOperation(operation);
+		if(diagramProcess && diagramProcess.processOperation){
+			isOperation = diagramProcess.processOperation(operation);
 		}
 		
 		if(isOperation){
@@ -378,9 +378,9 @@ function traverseClassDiagram(classDiagram){
 		}
 	}
 	
-	classDiagram.AttributeNum = attributeNum;
-	classDiagram.OperationNum = operationNum;
-	return classDiagram;
+	diagram.AttributeNum = attributeNum;
+	diagram.OperationNum = operationNum;
+	return diagram;
 }
 
 /*
@@ -412,23 +412,21 @@ function isBoundary(){
 }
 
 module.exports = {
-	profileRobustnessDiagram : traverseRobustnessDiagram,
-	profileSequenceDiagram: traverseSequenceDiagram,
-	profileClassDiagram: traverseClassDiagram,
+	profileRobustnessDiagram : traverseBehavioralDiagram,
+	profileSequenceDiagram: traverseBehavioralDiagram,
+	profileClassDiagram: traverseStructuralDiagram,
 	profileDiagram: function(diagram, func){
 		if(diagram.Type === 'Logical'){
-			traverseClassDiagram(diagram);
+			traverseStructuralDiagram(diagram);
 			diagramDrawer.drawClassDiagram(diagram, func);
-		} else if(diagram.Type === 'Sequence'){
-			traverseSequenceDiagram(diagram);
-			diagramDrawer.drawSequenceDiagram(diagram, func);
-		} else if(diagram.Type === 'Analysis'){
-			traverseRobustnessDiagram(diagram);
-			diagramDrawer.drawRobustnessDiagram(diagram, func);
-		}
+		} else if(diagram.Type === 'Sequence' || diagram.Type === "Analysis" || diagram.Type === "Activity"){
+			traverseBehavioralDiagram(diagram);
+			diagramDrawer.drawBehavioralDiagram(diagram, func);
+		} 
 		return diagram;
 	},
-	traverseBehavioralDiagram: traverseBehavioralDiagram
+	traverseBehavioralDiagram: traverseBehavioralDiagram,
+	traverseStructuralDiagram: traverseStructuralDiagram
 };
 
 
