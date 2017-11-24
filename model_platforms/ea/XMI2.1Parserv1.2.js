@@ -6,6 +6,9 @@
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
 
+	/*
+	 * this implementation should be compatible with UML 2.0
+	 */
 	function extractModelComponents(parsedResult) {
 		var components = {};
 
@@ -188,6 +191,18 @@
 		}
 
 		return components;
+	}
+	
+	/*
+	 * identify the UML diagrams within the model. Also associate the diagrams with use cases, domain model as categories.
+	 * A diagram is first categorized by the package, and then it is packaged by the use cases or domain models.
+	 */
+	function extractDiagrams(parseResult, filter){
+		var xmiExtension = parsedResult['xmi:XMI']['xmi:Extension'][0];
+		for ( var i in xmiExtension['diagrams'][0]['diagram']) {
+			var diagram = xmiExtension['diagrams'][0]['diagram'][i];
+			va
+		}
 	}
 
 	/*

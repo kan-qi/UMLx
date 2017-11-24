@@ -853,7 +853,7 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
-var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1SequenceDiagramParser.js")
+var sequenceDiagramParser = require("./model_platforms/ea/XML2.1Parserv1.1.js")
 app.get('/testSequenceDiagramExtraction', function(req, res){
 	sequenceDiagramParser.extractSequenceDiagrams("./temp/test_example.xml", function(sequenceDiagrams){
 		res.json(sequenceDiagrams);
