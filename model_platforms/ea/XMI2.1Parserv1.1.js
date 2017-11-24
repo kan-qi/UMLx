@@ -360,27 +360,13 @@
 				}
 			}
 			
-			// calculate the inbound number for each node for determine the entry and exit nodes
-//			
-//			for(var i in diagram.Nodes){
-//			var node = diagram.Nodes[i];
-//			var inboundNum = 0;
-//			var outboundNum = 0;
-//			for(var j in diagram.Edges){
-//				var msg = diagram.Edges[j];
-//				if(msg.end == node){
-//					
-//				}
-//			}
-//			}
-			
 			var entries = [];
 			// to generate an entry node set of start the search.
 			for(var i in diagram.Nodes){
 				var node = diagram.Nodes[i];
-				console.log(node);
-				console.log(node.SupplierID);
-				console.log(modelComponents[node.SupplierID]);
+				//console.log(node);
+				//console.log(node.SupplierID);
+				//console.log(modelComponents[node.SupplierID]);
 //				if(modelComponents[node.SupplierID] && modelComponents[node.SupplierID].Type === "boundary"){
 				if(node.inboundNum == 0){
 					entries.push(node);
@@ -413,16 +399,6 @@
 				}
 				
 			}
-			
-			diagram.OutputDir = "temp/sequenceExperiments";
-			diagramDrawer = require("../../diagram_profilers/DiagramDrawer.js");
-			diagramDrawer.drawBehavioralDiagram(diagram, function(filePath){
-				console.log(filePath);
-			})
-			
-			umlDiagramProfiler = require("../../diagram_profilers/UMLDiagramProfiler.js");
-			diagram.Paths = umlDiagramProfiler.traverseBehavioralDiagram(diagram);
-			console.log(diagram.Paths);
 			
 			
 		} else if (diagram.Type === 'Analysis') {
@@ -478,7 +454,7 @@
 
 			}
 			
-			console.log(diagram);
+//			console.log(diagram);
 			
 			var entries = [];
 			// to generate an entry node set of start the search.
@@ -519,19 +495,6 @@
 				}
 				
 			}
-			
-			diagram.Name = "robustness_test"+diagram.Nodes.length;
-			diagram.OutputDir = "temp/sequenceExperiments";
-			diagramDrawer = require("../../diagram_profilers/DiagramDrawer.js");
-			diagramDrawer.drawBehavioralDiagram(diagram, function(filePath){
-			console.log(filePath);
-			});
-			
-		console.log(diagram);
-		
-		umlDiagramProfiler = require("../../diagram_profilers/UMLDiagramProfiler.js");
-		diagram.Paths = umlDiagramProfiler.traverseBehavioralDiagram(diagram);
-		console.log(diagram.Paths);
 
 		} else if (diagram.Type === "Activity"){
 			
@@ -624,19 +587,6 @@
 				}
 				
 			}
-			
-			diagram.Name = "activity_test"+diagram.Nodes.length;
-			diagram.OutputDir = "temp/sequenceExperiments";
-			diagramDrawer = require("../../diagram_profilers/DiagramDrawer.js");
-			diagramDrawer.drawBehavioralDiagram(diagram, function(filePath){
-			console.log(filePath);
-			});
-			
-		console.log(diagram);
-		
-		umlDiagramProfiler = require("../../diagram_profilers/UMLDiagramProfiler.js");
-		diagram.Paths = umlDiagramProfiler.traverseBehavioralDiagram(diagram);
-		console.log(diagram.Paths);
 			
 		} else if (diagram.Type === "Logical") {
 			var Elements = {};

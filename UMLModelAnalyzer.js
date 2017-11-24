@@ -2,7 +2,7 @@
 	/**
 	 *  Work as a test stub
 	 */
-	var modelXMLParser = require('./model_platforms/ea/XMI2.1Parser.js');
+	var modelXMLParser = require('./model_platforms/ea/XMI2.1Parserv1.1.js');
 	var diagramProfiler = require('./diagram_profilers/UMLDiagramProfiler.js');
 	var mkdirp = require('mkdirp');
 	var fs = require('fs');

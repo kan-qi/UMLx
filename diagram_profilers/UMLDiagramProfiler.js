@@ -420,7 +420,8 @@ module.exports = {
 			traverseStructuralDiagram(diagram);
 			diagramDrawer.drawClassDiagram(diagram, func);
 		} else if(diagram.Type === 'Sequence' || diagram.Type === "Analysis" || diagram.Type === "Activity"){
-			traverseBehavioralDiagram(diagram);
+			var paths = traverseBehavioralDiagram(diagram);
+			diagram.Paths = paths;
 			diagramDrawer.drawBehavioralDiagram(diagram, func);
 		} 
 		return diagram;

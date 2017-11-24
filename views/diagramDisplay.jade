@@ -4,11 +4,11 @@ if diagram
   div.use-case-info-content
    ul.nav.nav-tabs
     li.active
-     a(data-toggle='tab', href='#use-case-elements') Elements
+     a(data-toggle='tab', href='#use-case-nodes') Nodes
     li
      a(data-toggle='tab', href='#use-case-paths') Paths
    div.tab-content
-    div.tab-pane.fade.in.active(id="use-case-elements")
+    div.tab-pane.fade.in.active(id="use-case-nodes")
      table.table.table-striped.use-case-info-tab
       thead
        tr
@@ -16,15 +16,15 @@ if diagram
         th ELEMENT
         th TYPE
       tbody
-       -var elementId = 1;
-       each element in diagram.Elements
+       -var nodeId = 1;
+       each node in diagram.Nodes
         tr
-         th #{elementId}
+         th #{nodeId}
          th
-          span.use-case-element #{element.Name}
+          span.use-case-node #{node.Name}
          th
-          span.use-case-element-type #{element.Type}
-        - elementId++;
+          span.use-case-node-type #{node.Type}
+        - nodeId++;
     div.tab-pane.fade(id="use-case-paths")
      table.table.table-striped.use-case-info-tab
       thead
