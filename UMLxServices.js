@@ -16,7 +16,6 @@ var cookieParser = require('cookie-parser');
 var sleep = require('sleep');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
-var bodyParser = require('body-parser');
 
 
 var storage = multer.diskStorage({
@@ -66,7 +65,6 @@ var surveyUploads = multer({ storage: surveyFiles });
 
 app.use(express.static('public'));
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.set('views', './views');
@@ -80,6 +78,102 @@ app.set('view engine', 'jade');
 //}
 
 var modelInfo = {};
+
+
+//GIT API TEST
+app.get('/testgitapirepos', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	// TODO: optional authentication here depending on desired endpoints. See below in README.
+
+	github.repos.getForUser({
+	    // optional
+	    // headers: {
+	    //     "cookie": "blahblah"
+	    // },
+	  username: 'kritikavd'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	  
+	});
+});
+
+
+
+app.get('/testgitapiuser', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	github.search.users({
+	  q: 'kritikavd'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	  //console.log(JSON.stringify(res))
+	});
+});
+
+
+app.get('/testgitapionecommit', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.gitdata.getCommit({
+		owner: 'kritikavd',
+		  repo: 'Web-Tech-Assignments',
+		  sha :'c904b7eb886086665382162ad123555efb66be35'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+	
+});
+
+
+app.get('/testgitapiallcommit', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.repos.getCommits({
+		owner: 'kritikavd',
+		  repo: 'Web-Tech-Assignments',
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+	
+});
+
+
+app.get('/testgitapifollowing', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.users.getFollowingForUser({
+	    // optional
+	    // headers: {
+	    //     "cookie": "blahblah"
+	    // },
+	  username: 'defunkt'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	})
+});
+
+// END OF TEST GIT API
 
 app.get('/signup',function(req,res){
 
@@ -140,6 +234,7 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 				                 };
 								 res.json(result);
 							 }  else {
+								 enterpriseUserId = payload.enterpriseUserId;
 								 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
 								        res.json(result)
 								    });
@@ -296,9 +391,7 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount:
 	console.log(req.body);
 	var formInfo = req.body;
 	umlModelInfoManager.saveSurveyData(formInfo);
-
 	res.redirect("thankYou");
-
 });
 
 
@@ -936,10 +1029,6 @@ app.get('/surveyData', function(req, res){
 });
 
 
-// to handle post redirect to home page
-app.post('/', function(req, res){
-	res.redirect('/')
-});
 
 app.get('/', function(req, res){
 		var message = req.query.e;
@@ -981,6 +1070,31 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+app.get('/deleteUser', function(req,res){
+	var userId = req.query['uid'];
+	umlModelInfoManager.deleteUser(userId, function(status){
+		var result ={'status' : status};
+		res.json(result);
+	});
+});
+
+
+app.get('/deactivateUser', function(req,res){
+	var userId = req.query['uid'];
+	
+	var loggedInUserId = req.userInfo._id;
+	
+	if( !req.userInfo.isEnterprise && req.userInfo._id!=userId){
+		var result={'status' : false , 'message' : 'Not authorized to deactivate this user'};
+		res.json(result);
+	} else {
+		umlModelInfoManager.deactivateUser(loggedInUserId, userId, function(status,msg){
+			var result ={'status' : status,'message' : msg};
+			res.json(result);
+		});
+	}
+});
+
 
 
 var server = app.listen(8081,'127.0.0.1', function () {
@@ -989,5 +1103,4 @@ var server = app.listen(8081,'127.0.0.1', function () {
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
-
 

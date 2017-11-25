@@ -1,3 +1,4 @@
+
 (function() {
     // Retrieve
     var mongo = require('mongodb');
@@ -24,6 +25,102 @@
 
         return modelQuery;
     }
+	
+	function deleteUser(userId, callbackfunc){
+		
+		  MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+			  
+			  var o_id = new mongo.ObjectID(userId);
+			  var userQuery = {_id: o_id };
+			  
+			  db.collection("users").findOne(userQuery,function(err,user){
+				  if (err) throw err;
+				  
+				  if(user){
+					  var repo_id = user.repoId ; 
+					  var repoQuery = {_id : repo_id}
+					  
+					  var repo_dir = "public/output/repo"+repo_id.toString();
+					  umlFileManager.deleteUMLRepo(repo_dir);
+					  
+					   db.collection("repos").deleteOne(repoQuery, function(err, repo) {
+						    if (err) throw err;
+						    console.log("repo deleted");
+						    						    
+						    db.collection("users").deleteOne(userQuery, function(err,user){
+						    	if (err) throw err;
+							    console.log("user deleted");
+							    db.close();
+							    callbackfunc(true);
+						    });
+						    
+					  });
+					  
+				  } else {
+					  
+					  console.log('user not found');
+					  db.close();
+					  callbackfunc(false);
+					  
+				  }
+			  });
+			  
+		  });
+		 
+}
+	
+	
+	function deactivateUser(loggedInUserId, userId, callbackfunc){
+		
+		  MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+			  
+			  var o_id = new mongo.ObjectID(userId);
+			  var userQuery = {_id: o_id };
+			  
+			  var updateOperation = {
+		                "$set": {
+		                    "isActive":false
+		                }
+		      };
+			  
+			  db.collection("users").findOne(userQuery,function(err,user){
+				  if (err) throw err;
+				  
+				  if(user){
+					  
+					 var enterpriseUserIdString = user.enterpriseUserId? user.enterpriseUserId.toString(): '';
+					  
+					  		if(user._id.toString() == loggedInUserId.toString() || enterpriseUserIdString == loggedInUserId.toString()){
+						    db.collection("users").update(userQuery, updateOperation, function(err,updateCount){
+						    	if (err) throw err;
+							    console.log("user deactivated");
+							    db.close();
+							    callbackfunc(true, 'User Deactivated');
+						    });
+					  		} else {
+					  			
+					  			console.log('not authorised');
+								  db.close();
+								  callbackfunc(false, 'Not authorized to deactivate this user');
+					  			
+					  		}
+						    
+				  } else {
+					  
+					  console.log('user not found');
+					  db.close();
+					  callbackfunc(false, 'User Not Found');
+					  
+				  }
+			  });
+			  
+		  });
+		 
+}
+	
+	
 
 	function getModelQueryProjections(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
@@ -453,7 +550,7 @@
 
                 } else{
 
-                    var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise }
+                    var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise , "isActive" : true}
                     if(enterpriseUserId!=''){
                         userInfo.enterpriseUserId=  new mongo.ObjectID(enterpriseUserId);
                     }db.collection("users").insertOne(userInfo, function(err, result) {
@@ -507,28 +604,41 @@
 
                 if (err) throw err;
                 if(data){
-            										console.log(data);
-                    // found an existing user
-                    db.close();
-
-                    // generate a token and pass it as response
-                    var payload = {
-                        userId : data._id,
-                        userName : data.username,
-                        userEmail : data.email
-                    };
-
-                    var token = jwt.sign(payload, config.secret, {
-                        expiresIn : 60*60*24 // expires in 24 hours
-                    });
-
-                    // return the information including token as JSON
-                    var result = {
-                        success: true,
-                        message: 'Successful Authentication',
-                        token: token
-                    };
-                    callback(result);
+                	
+                	if(data.isActive){
+	            		console.log(data);
+	                    // found an existing user
+	                    db.close();
+	
+	                    // generate a token and pass it as response
+	                    var payload = {
+	                        userId : data._id,
+	                        userName : data.username,
+	                        userEmail : data.email
+	                    };
+	
+	                    var token = jwt.sign(payload, config.secret, {
+	                        expiresIn : 60*60*24 // expires in 24 hours
+	                    });
+	
+	                    // return the information including token as JSON
+	                    var result = {
+	                        success: true,
+	                        message: 'Successful Authentication',
+	                        token: token
+	                    };
+	                    callback(result);
+                	} else {
+                		
+                		 console.log('Your profile is no longer active. Please register again.');
+                         db.close();
+                         var result = {
+                             success: false,
+                             message: 'Your profile is no longer active. Please register again. ',
+                         }
+                         callback(result);
+                		
+                	}
 
                 } else{
                     console.log('Invalid Username and password combination');
@@ -564,7 +674,7 @@
 				  	callbackfunc(null);
 			  }  else {
 				  var o_id = new mongo.ObjectID(userId);
-				  db.collection("users").findOne({_id:o_id}, {}, function(err, user) {
+				  db.collection("users").findOne({_id:o_id, isActive : true}, {}, function(err, user) {
 					if (err) throw err;
 				    db.close();
 				    	if(callbackfunc){callbackfunc(user);
@@ -582,7 +692,7 @@
 
             var o_id = new mongo.ObjectID(userId);
             db.collection("users").find(
-                { enterpriseUserId:o_id }, { repoId: 1 , _id :0}).toArray( function (err,repoIds){
+                { enterpriseUserId:o_id , isActive: true}, { repoId: 1 , _id :0}).toArray( function (err,repoIds){
                 if (err) throw err;
                 db.close();
                 var repoIdArray = repoIds.map(function(repo){
@@ -941,7 +1051,10 @@
         queryRepoInfoForAdmin:queryRepoInfoForAdmin,
         saveSurveyData: saveSurveyData,
         saveSurveyAnalyticsData: saveSurveyAnalyticsData,
-        getSurveyData: getSurveyData
+        getSurveyData: getSurveyData,
+        deleteUser: deleteUser,
+        deactivateUser:deactivateUser
 
     }
+
 }())
