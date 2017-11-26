@@ -23,7 +23,7 @@
 				return;
 			}
 
-			modelXMLParser.extractModels(umlModelInfo.umlFilePath, function(models){
+			modelXMLParser.extractModel(umlModelInfo.umlFilePath, function(model){
 //				console.log("extract model");
 //				each model contains multiple use case models and multiple domain models, it is necessary to consolidate the extract models from different packages into one.
 //				console.log(models);
@@ -37,11 +37,9 @@
 //						DomainModelAnalytics: initDomainModelAnalytics(umlModelInfo)
 				};
 //				umlModelInfo.ModelAnalytics = initModelAnalytics(umlModelInfo);
-
-				for (var i in models.Packages){
-					var modelPackage = models.Packages[i];
-					if(modelPackage.UseCases){
-						for(var j in modelPackage.UseCases) {
+				
+					var useCases = model.getUseCases();
+						for(var i in useCases) {
 							(function(useCase, id){
 //								console.log(useCase);
 								useCase._id = id;
@@ -67,15 +65,14 @@
 //									
 //								});
 //								useCase.UseCaseAnalytics = initUseCaseAnalytics(useCase);
-							})(modelPackage.UseCases[j], j);
-							umlModelInfo.UseCases.push(modelPackage.UseCases[j]);
+							})(useCases[i], i);
+							umlModelInfo.UseCases.push(useCases[i]);
 						}
-					}
-
-					if(modelPackage.DomainModel && modelPackage.DomainModel.Diagrams){
-						for(var j in modelPackage.DomainModel.Diagrams){
-							var diagram = modelPackage.DomainModel.Diagrams[j];
-							diagram._id = j;
+						
+					var domainModel = model.getDomainModel();
+						for(var i in domainModel.Diagrams){
+							var diagram = domainModel[i].Diagrams;
+//							diagram._id = j;
 //							var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_") + Date.now();
 							diagram.OutputDir = umlModelInfo.DomainModel.OutputDir;
 							diagram.AccessDir = umlModelInfo.DomainModel.AccessDir;
@@ -83,8 +80,6 @@
 							umlModelInfo.DomainModel.Diagrams.push(diagram);
 //							console.log("diagram file name:"+diagram.Name);
 						}
-					}
-				}
 
 
 				if(callbackfunc){

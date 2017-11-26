@@ -190,81 +190,79 @@
 		return components;
 	}
 	
-	/*
-	 * identify the UML diagrams within the model. Also associate the diagrams with use cases, domain model as categories.
-	 * A diagram is first categorized by the package, and then it is packaged by the use cases or domain models.
-	 */
-	function extractDiagrams(parseResult, filter){
-		var xmiExtension = parsedResult['xmi:XMI']['xmi:Extension'][0];
-		for ( var i in xmiExtension['diagrams'][0]['diagram']) {
-			var diagram = xmiExtension['diagrams'][0]['diagram'][i];
-		}
+	
+	function Model(){
+		this.Diagrams  = [];
 	}
 
 	/*
 	 * filter can be assigned with values: "sequence", "logic", "analysis", to extract specific types of diagrams.
 	 * May need to adjust this structure to better structure the diagrams.
 	 */
-	function extractModels(parsedResult, filter) {
+	function extractModel(parsedResult, filter) {
 		var modelComponents = extractModelComponents(parsedResult);
-		var models = {};
 		var xmiExtension = parsedResult['xmi:XMI']['xmi:Extension'][0];
 		
+		/*
+		 * model include a set of diagrams as well as a set of methods to search specific diagrams.
+		 */
+		var model = new Model();
+		
 		for ( var i in xmiExtension['diagrams'][0]['diagram']) {
-			var diagram = xmiExtension['diagrams'][0]['diagram'][i];
-			var modelPackage = models['Packages'];
-			if (!modelPackage) {
-				modelPackage = {};
-				models['Packages'] = modelPackage;
-			}
-			var owner = modelPackage[diagram['model'][0]['$']['owner']];
-			if (!owner) {
-				owner = {};
-				modelPackage[diagram['model'][0]['$']['owner']] = owner;
-			}
+			var xmiDiagram = xmiExtension['diagrams'][0]['diagram'][i];
+			var diagram = {
+					_id: xmiDiagram['$']['xmi:id'],
+					Package : xmiDiagram['model'][0]['$']['owner'],
+					Type : xmiDiagram['properties'][0]['$']['type'],
+			};
 
-			var model = owner;
-			var diagramType = diagram['properties'][0]['$']['type'];
-
-			if (diagramType === 'Sequence' || diagramType === 'Analysis' || diagramType === "Activity") {
-				if (diagram['model'][0]['$']['parent']) {
-					if (!owner['UseCases']) {
-						owner['UseCases'] = {};
-					}
-
-					useCase = owner['UseCases'][diagram['model'][0]['$']['parent']];
-					if (!useCase) {
-						var useCaseComponent = modelComponents[diagram['model'][0]['$']['parent']];
-						// console.log(useCaseComponent);
-						useCase = {
-							Name : useCaseComponent.Name
-						};
-						owner['UseCases'][diagram['model'][0]['$']['parent']] = useCase;
-					}
-					model = useCase;
-				}
-			} else if (diagramType === 'Logical') {
-				domainModel = owner['DomainModel'];
-				if (!domainModel) {
-					domainModel = {};
-					owner['DomainModel'] = domainModel;
-				}
-				model = domainModel;
-			}
-			// console.log(modelComponents[diagram['$']['xmi:id']]);
-
-			if (!model.Diagrams) {
-				model['Diagrams'] = {};
-			}
-			
 			if(!filter || diagramType == filter){
-			console.log("populate model");
-			model['Diagrams'][diagram['$']['xmi:id']] = modelComponents[diagram['$']['xmi:id']];
-			populateDiagram(model['Diagrams'][diagram['$']['xmi:id']], modelComponents);
+//				console.log("populate model");
+//				model['Diagrams'][diagram['$']['xmi:id']] = modelComponents[diagram['$']['xmi:id']];
+				populateDiagram(diagram, xmiDiagram, modelComponents);
+				model.Diagrams.push(diagram);
 			}
-			
+		}
+		
+		model.getUseCases = function(){
+			var UseCases = {};
+			for(var i in this.Diagrams){
+				var diagram = this.Diagrams[i];
+				if(diagram.UseCase){
+					if(!UseCases[diagram.UseCase._id]){
+						UseCases[diagram.UseCase._id] = {
+								Name: diagram.UseCase.Name,
+								Diagrams: []
+						};
+					}
+
+					var useCase = UseCases[diagram.UseCase._id];
+					useCase.Diagrams.push(diagram);
+				}
 			}
-		return models;
+			return UseCases;
+		}
+		
+		model.findUseCaseByID = function(useCaseID){
+			var useCases = this.getUseCases();
+			var useCase = useCases[useCaseID];
+			return useCase;
+		}
+		
+		model.getDomainModel = function(){
+			var DomainModel = {
+					Diagrams: []
+			};
+			for(var i in this.Diagrams){
+				var diagram = this.Diagrams[i];
+				if(diagram.Type === "Logical"){
+					DomainModel.Diagrams.push(diagram);
+				}
+			}
+			return DomainModel;
+		}
+		
+		return model;
 	}
 	
 	/*
@@ -272,13 +270,20 @@
 	 * Each node should have a tag about the which component the action is implemented upon, if the action is detailed.
 	 */
 
-	function populateDiagram(diagram, modelComponents) {
+	function populateDiagram(diagram, xmiDiagram, modelComponents) {
 		
 		if (diagram.Type === 'Sequence') {
 			/*
 			 * For sequence diagrams. Nodes are the messages.
 			 * The message that is implemented by components.
 			 */
+			
+
+			diagram.UseCase = {
+				_id: xmiDiagram['model'][0]['$']['parent'],
+				Name: modelComponents[xmiDiagram['model'][0]['$']['parent']].Name
+			}
+		
 //			var Elements = {};
 			var Messages = [];
 			// here some logic needs to be applied to extract the structure for sequence diagrams
@@ -421,7 +426,10 @@
 			
 			
 		} else if (diagram.Type === 'Analysis') {
-
+			diagram.UseCase = {
+					_id: xmiDiagram['model'][0]['$']['parent'],
+					Name: modelComponents[xmiDiagram['model'][0]['$']['parent']].Name
+				}
 			var Interactions = [];
 //			var Elements = {};
 			
@@ -538,7 +546,10 @@
 			}
 
 		} else if (diagram.Type === "Activity"){
-			
+			diagram.UseCase = {
+					_id: xmiDiagram['model'][0]['$']['parent'],
+					Name: modelComponents[xmiDiagram['model'][0]['$']['parent']].Name
+				}
 			var ControlFlows = [];
 			var Activities = [];
 			
@@ -688,14 +699,6 @@
 		}
 	}
 
-	function extractUseCasesFromParsedResult(parsedResult) {
-
-	}
-
-	function extractDomainModelFromParsedResult(parsedResult) {
-
-	}
-
 	module.exports = {
 		extractClassDiagrams : function(file, func) {
 			fs
@@ -706,7 +709,7 @@
 										.parseString(
 												data,
 												function(err, result) {
-													var classDiagrams =  extractModels(result, "Logical");
+													var classDiagrams =  extractModel(result, "Logical");
 													if (func) {
 														func(classDiagrams);
 													}
@@ -715,7 +718,7 @@
 		},
 		extractSequenceDiagrams : function(file, func) {
 			fs.readFile(file,function(err, data) {parser.parseString(data, function(err, result) {
-											var sequenceDiagrams = extractModels(result, "Sequence");
+											var sequenceDiagrams = extractModel(result, "Sequence");
 											if (func) {
 												func(sequenceDiagrams);
 											}
@@ -730,7 +733,7 @@
 										.parseString(
 												data,
 												function(err, result) {
-													var robustnessDiagrams = extractModels(result, "Analysis");
+													var robustnessDiagrams = extractModel(result, "Analysis");
 													if (func) {
 														func(robustnessDiagrams);
 													}
@@ -744,7 +747,7 @@
 								.parseString(
 										data,
 										function(err, result) {
-											var activityDiagrams = extractModels(result, "Activity");
+											var activityDiagrams = extractModel(result, "Activity");
 											if (func) {
 												func(activityDiagrams);
 											}
@@ -759,13 +762,13 @@
 			// Domain Models include class diagrams, information block
 			// diagrams
 		},
-		extractModels : function(file, func) {
+		extractModel : function(file, func) {
 			// robustnessDiagram
 			// contained in the
 			// xmi model file
 			fs.readFile(file, function(err, data) {
 				parser.parseString(data, function(err, result) {
-					var models = extractModels(result);
+					var models = extractModel(result);
 
 					if (func) {
 						func(models);
