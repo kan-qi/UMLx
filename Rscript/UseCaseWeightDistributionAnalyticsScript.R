@@ -60,7 +60,7 @@ meltUseCaseWeightInfo$Value <- meltUseCaseWeightInfo$Value/maxWeight*0.2
 
 print(
 	ggplot()+
-	geom_density(data=transactionInfo, aes(x=NT), color="gray", fill="gray",alpha=.8)+
+	geom_density(data=transactionInfo, aes(x=NT), color="gray", fill="gray",alpha=.8, adjust=1.5)+
 	geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, linetype=Wght.Schm),size=0.5)+
 	geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, shape=Wght.Schm), size=2, fill="white")+
 	scale_linetype_manual(values = c(1,2,1,1,1,1)) +
@@ -126,7 +126,8 @@ simpleMeans = unlist(list(t(simpleWeight$Wght.1) %*% simpleTranDist$Freq,
 		t(simpleWeight$Wght.2) %*% simpleTranDist$Freq,
 		t(simpleWeight$Wght.3) %*% simpleTranDist$Freq,
 		t(simpleWeight$Wght.4) %*% simpleTranDist$Freq,
-		t(simpleWeight$Wght.5) %*% simpleTranDist$Freq
+		t(simpleWeight$Wght.5) %*% simpleTranDist$Freq,
+		t(simpleWeight$Wght.6) %*% simpleTranDist$Freq
 		))
 print("calculated means:")
 print(simpleMeans)
@@ -141,7 +142,8 @@ averageMeans = unlist(list(t(averageWeight$Wght.1) %*% averageTranDist$Freq,
 				t(averageWeight$Wght.2) %*% averageTranDist$Freq,
 				t(averageWeight$Wght.3) %*% averageTranDist$Freq,
 				t(averageWeight$Wght.4) %*% averageTranDist$Freq,
-				t(averageWeight$Wght.5) %*% averageTranDist$Freq
+				t(averageWeight$Wght.5) %*% averageTranDist$Freq,
+				t(averageWeight$Wght.6) %*% averageTranDist$Freq
 		))
 print(averageMeans)
 print("apriori estimated mean")
@@ -155,7 +157,8 @@ complexMeans = unlist(list(t(complexWeight$Wght.1) %*% complexTranDist$Freq,
 				t(complexWeight$Wght.2) %*% complexTranDist$Freq,
 				t(complexWeight$Wght.3) %*% complexTranDist$Freq,
 				t(complexWeight$Wght.4) %*% complexTranDist$Freq,
-				t(complexWeight$Wght.5) %*% complexTranDist$Freq
+				t(complexWeight$Wght.5) %*% complexTranDist$Freq,
+				t(complexWeight$Wght.6) %*% complexTranDist$Freq
 		))
 print(complexMeans)
 print("apriori estimated mean")
