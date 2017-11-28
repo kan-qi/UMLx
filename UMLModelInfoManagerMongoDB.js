@@ -1,3 +1,4 @@
+
 (function() {
     // Retrieve
     var mongo = require('mongodb');
@@ -8,6 +9,7 @@
     var umlFileManager = require("./UMLFileManager.js");
     var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
     var config = require('./config'); // get our config file
+    const uuidv4 = require('uuid/v4');
 
 	function getModelQuery(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
@@ -23,6 +25,102 @@
 
         return modelQuery;
     }
+	
+	function deleteUser(userId, callbackfunc){
+		
+		  MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+			  
+			  var o_id = new mongo.ObjectID(userId);
+			  var userQuery = {_id: o_id };
+			  
+			  db.collection("users").findOne(userQuery,function(err,user){
+				  if (err) throw err;
+				  
+				  if(user){
+					  var repo_id = user.repoId ; 
+					  var repoQuery = {_id : repo_id}
+					  
+					  var repo_dir = "public/output/repo"+repo_id.toString();
+					  umlFileManager.deleteUMLRepo(repo_dir);
+					  
+					   db.collection("repos").deleteOne(repoQuery, function(err, repo) {
+						    if (err) throw err;
+						    console.log("repo deleted");
+						    						    
+						    db.collection("users").deleteOne(userQuery, function(err,user){
+						    	if (err) throw err;
+							    console.log("user deleted");
+							    db.close();
+							    callbackfunc(true);
+						    });
+						    
+					  });
+					  
+				  } else {
+					  
+					  console.log('user not found');
+					  db.close();
+					  callbackfunc(false);
+					  
+				  }
+			  });
+			  
+		  });
+		 
+}
+	
+	
+	function deactivateUser(loggedInUserId, userId, callbackfunc){
+		
+		  MongoClient.connect(url, function(err, db) {
+			  if (err) throw err;
+			  
+			  var o_id = new mongo.ObjectID(userId);
+			  var userQuery = {_id: o_id };
+			  
+			  var updateOperation = {
+		                "$set": {
+		                    "isActive":false
+		                }
+		      };
+			  
+			  db.collection("users").findOne(userQuery,function(err,user){
+				  if (err) throw err;
+				  
+				  if(user){
+					  
+					 var enterpriseUserIdString = user.enterpriseUserId? user.enterpriseUserId.toString(): '';
+					  
+					  		if(user._id.toString() == loggedInUserId.toString() || enterpriseUserIdString == loggedInUserId.toString()){
+						    db.collection("users").update(userQuery, updateOperation, function(err,updateCount){
+						    	if (err) throw err;
+							    console.log("user deactivated");
+							    db.close();
+							    callbackfunc(true, 'User Deactivated');
+						    });
+					  		} else {
+					  			
+					  			console.log('not authorised');
+								  db.close();
+								  callbackfunc(false, 'Not authorized to deactivate this user');
+					  			
+					  		}
+						    
+				  } else {
+					  
+					  console.log('user not found');
+					  db.close();
+					  callbackfunc(false, 'User Not Found');
+					  
+				  }
+			  });
+			  
+		  });
+		 
+}
+	
+	
 
 	function getModelQueryProjections(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
@@ -452,7 +550,7 @@
 
                 } else{
 
-                    var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise }
+                    var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise , "isActive" : true}
                     if(enterpriseUserId!=''){
                         userInfo.enterpriseUserId=  new mongo.ObjectID(enterpriseUserId);
                     }db.collection("users").insertOne(userInfo, function(err, result) {
@@ -506,28 +604,41 @@
 
                 if (err) throw err;
                 if(data){
-            										console.log(data);
-                    // found an existing user
-                    db.close();
-
-                    // generate a token and pass it as response
-                    var payload = {
-                        userId : data._id,
-                        userName : data.username,
-                        userEmail : data.email
-                    };
-
-                    var token = jwt.sign(payload, config.secret, {
-                        expiresIn : 60*60*24 // expires in 24 hours
-                    });
-
-                    // return the information including token as JSON
-                    var result = {
-                        success: true,
-                        message: 'Successful Authentication',
-                        token: token
-                    };
-                    callback(result);
+                	
+                	if(data.isActive){
+	            		console.log(data);
+	                    // found an existing user
+	                    db.close();
+	
+	                    // generate a token and pass it as response
+	                    var payload = {
+	                        userId : data._id,
+	                        userName : data.username,
+	                        userEmail : data.email
+	                    };
+	
+	                    var token = jwt.sign(payload, config.secret, {
+	                        expiresIn : 60*60*24 // expires in 24 hours
+	                    });
+	
+	                    // return the information including token as JSON
+	                    var result = {
+	                        success: true,
+	                        message: 'Successful Authentication',
+	                        token: token
+	                    };
+	                    callback(result);
+                	} else {
+                		
+                		 console.log('Your profile is no longer active. Please register again.');
+                         db.close();
+                         var result = {
+                             success: false,
+                             message: 'Your profile is no longer active. Please register again. ',
+                         }
+                         callback(result);
+                		
+                	}
 
                 } else{
                     console.log('Invalid Username and password combination');
@@ -547,12 +658,11 @@
     function saveSurveyData(surveyData){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
-            databaseCollectionName = "UML_model_submission";
+            var databaseCollectionName = "surveyData";
             db.collection(databaseCollectionName).insertOne(surveyData, function(err, result) {
                 if (err) throw err;
                 console.log("1 record inserted");
             });
-
         });
     }
 
@@ -564,7 +674,7 @@
 				  	callbackfunc(null);
 			  }  else {
 				  var o_id = new mongo.ObjectID(userId);
-				  db.collection("users").findOne({_id:o_id}, {}, function(err, user) {
+				  db.collection("users").findOne({_id:o_id, isActive : true}, {}, function(err, user) {
 					if (err) throw err;
 				    db.close();
 				    	if(callbackfunc){callbackfunc(user);
@@ -582,7 +692,7 @@
 
             var o_id = new mongo.ObjectID(userId);
             db.collection("users").find(
-                { enterpriseUserId:o_id }, { repoId: 1 , _id :0}).toArray( function (err,repoIds){
+                { enterpriseUserId:o_id , isActive: true}, { repoId: 1 , _id :0}).toArray( function (err,repoIds){
                 if (err) throw err;
                 db.close();
                 var repoIdArray = repoIds.map(function(repo){
@@ -685,6 +795,13 @@
 
     // collect survey data analytic per page
     function saveSurveyAnalyticsData(uuid, clientIpAddress, pageNumber) {
+	    if(uuid==""){
+	        //fall back in case uuid is not generated on client end
+            console.log("uuid was blank, adding uuid on server side");
+
+            // TODO:  what should we do?? generate a new uuid on server or discard data or insert blank?
+	        uuid = uuidv4();
+        }
         data = {
             ip: clientIpAddress,
             pageNumber: pageNumber,
@@ -714,6 +831,66 @@
         })
     };
 
+
+	//TODO add parameters for specific records
+    function getSurveyData(callback, o_id){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+
+            var schemaName = "surveyData";
+            if(o_id){
+                o_id = new mongo.ObjectID(o_id);
+                db.collection(schemaName).find({_id:o_id}).toArray(function (err, records) {
+                    if (err) throw err;
+                    db.close();
+                    if (callback) {
+                        callback(records);
+                    }
+                    console.log(records)
+                });
+            }else {
+                db.collection(schemaName).find().toArray(function (err, records) {
+                    if (err) throw err;
+                    db.close();
+                    if (callback) {
+                        callback(records);
+                    }
+                    console.log(records)
+                });
+            }
+
+        });
+    };
+
+    // function getAllData(schemaName, callback){
+    //     MongoClient.connect(url, function(err, db) {
+    //         if (err) throw err;
+    //         db.collection(schemaName).find().toArray(function(err, records) {
+    //             if (err) throw err;
+    //             db.close();
+    //             if(callback){
+    //                 callback(records);
+    //             }
+    //         });
+    //     });
+    // }
+
+    // function getAllData(schemaName, callback) {
+    //     var doc = null;
+    //     MongoClient.connect(url)
+    //         .then(function(err, db){
+    //             if(err) throw err;
+    //             db.collection(schemaName).find()
+    //         })
+    //         .then(function(cursor){
+    //             console.log(cursor)
+    //         })
+    // }
+
+    // function collectInfo(err, data){
+    //     return data;
+    // }
+    //
 
 	function duplicateModelInfo(umlModelInfo){
 		if(umlModelInfo){
@@ -873,7 +1050,11 @@
         queryRepoIdsForAdmin:queryRepoIdsForAdmin,
         queryRepoInfoForAdmin:queryRepoInfoForAdmin,
         saveSurveyData: saveSurveyData,
-        saveSurveyAnalyticsData: saveSurveyAnalyticsData
+        saveSurveyAnalyticsData: saveSurveyAnalyticsData,
+        getSurveyData: getSurveyData,
+        deleteUser: deleteUser,
+        deactivateUser:deactivateUser
 
     }
+
 }())
