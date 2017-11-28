@@ -931,6 +931,9 @@ function clearSelectedPathAndEdge() {
 function createCharts() {
 	createTrendingLines();
 	createPieChart();
+	createHistogram();
+	creatAvgHistograms();
+	createHistogramForPathNumber();
 }
 
 function createTrendingLines() {
@@ -1053,5 +1056,208 @@ function createPieChart() {
 				data: newData
 			}]
 		});
+	});
+}
+
+function createHistogram(dataList, max) {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-expandedPathURL').value : "";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			var newData = {
+				CTRL: {
+					list: [],
+					id: "chart-1",
+					xAxis: "Path Length",
+					yAxis: "Frequency",
+					chartName: "Control Operation Number"
+				}, 
+				EI: {
+					list: [],
+					id: "chart-2",
+					xAxis: "Path Length",
+					yAxis: "Frequency",
+					chartName: "Extra Input Operation Number"
+				}, 
+				EQ: {
+					list: [],
+					id: "chart-3",
+					xAxis: "Path Length",
+					yAxis: "Frequency",
+					chartName: "Extra Query Operation Number"
+				},
+				EXTIVK: {
+					list: [],
+					id: "chart-4",
+					xAxis: "Path Length",
+					yAxis: "Frequency",
+					chartName: "Extra Invocation Operation Number"
+				},
+				EXTCLL: {
+					list: [],
+					id: "chart-5",
+					xAxis: "Path Length",
+					yAxis: "Frequency",
+					chartName: "Extra Call Operation Number"
+				},
+				INT: {
+					list: [],
+					id: "chart-6",
+					xAxis: "Path Length",
+					yAxis: "Frequency",
+					chartName: "Interface Operation Number"
+				},
+				TRAN_NA: {
+					list: [],
+					id: "chart-7",
+					xAxis: "Path Length",
+					yAxis: "Frequency",
+					chartName: "Not Matched Operation Number"
+				}
+			};
+			data.forEach(function(d) {
+				var temp = newData[d.transactional] ? newData[d.transactional] : undefined;
+				if (temp) {
+					temp.list[+d.path_length] ? temp.list[+d.path_length]++ : temp.list[+d.path_length] = 1;
+				}
+			});
+			var maxLength = 0;
+			var dataList = [];
+			for (var chartData in newData) {
+				if (newData.hasOwnProperty(chartData)) {
+					var temp = newData[chartData]; 
+					maxLength = (maxLength < temp.list.length ? temp.list.length : maxLength);
+					for(i= 0;i < temp.list.length; i++) {
+						temp.list[i] = (temp.list[i] ? temp.list[i] : 0);
+					}
+					//createHistogram(temp.id, temp.list , temp.xAxis, temp.yAxis, temp.chartName);
+					dataList.push({
+						data: temp.list,
+						name: temp.chartName,
+						subName: chartData
+					})
+				}
+			}
+			var categoriesList = [];
+			for(i= 0; i< maxLength; i++) {
+				categoriesList.push(i.toString());
+			}
+			Highcharts.chart('chart-1', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: 'Distribution Graph'
+				},
+				xAxis: {
+					categories: categoriesList,
+					crosshair: true,
+					title: {
+						text: 'path_length'
+					}
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'Frequency'
+					}
+				},
+				tooltip: {
+					headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					pointFormat: '<tr><td style="color:{series.color};padding:0">&#x26AB;: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+					footerFormat: '</table>',
+					shared: true,
+					useHTML: true
+				},
+				plotOptions: {
+					column: {
+						pointPadding: 0.2,
+						borderWidth: 0
+					}
+				},
+				series: dataList
+			});
+		});
+	}	
+}
+function creatAvgHistograms() {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-pathAnalyticsURL').value : "";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			var newData = [
+				{
+					list: [],
+					id: "chart-8",
+					xAxis: "Architecture Difficulty",
+					yAxis: "Frequency",
+					chartName: "Architecture Difficulty"
+				}, {
+					list: [],
+					id: "chart-9",
+					xAxis: "Average Degree",
+					yAxis: "Frequency",
+					chartName: "Average Degree"
+				}, {
+					list: [],
+					id: "chart-10",
+					xAxis: "Average Path Length",
+					yAxis: "Frequency",
+					chartName: "Average Path Length"
+				}
+			];
+			data.forEach(function(d) {
+				newData[0].list[+d.arch_diff] ? newData[0].list[+d.arch_diff]++ : newData[0].list[+d.arch_diff] = 1;
+				newData[1].list[+d.avg_degree] ? newData[1].list[+d.avg_degree]++ : newData[1].list[+d.avg_degree] = 1;
+				newData[2].list[+d.path_length] ? newData[2].list[+d.path_length]++ : newData[2].list[+d.path_length] = 1;
+			});
+			newData.forEach(function(chartData) { 
+				for(i= 0;i < chartData.list.length; i++) {
+					chartData.list[i] = (chartData.list[i] ? chartData.list[i] : 0);
+				}
+				createHistogramIndividually(chartData.id, chartData.list , chartData.xAxis, chartData.yAxis, chartData.chartName);
+			}); 
+		});
+	}
+}
+
+function createHistogramForPathNumber() {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-usecaseAnalyticsURL').value : "";
+	var	list= [],
+		id= "chart-11",
+		xAxis= "Path Number",
+		yAxis= "Frequency",
+		chartName= "Path Number";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			data.forEach(function(d) {
+				list[+d.path_number] ? list[+d.path_number]++ : list[+d.path_number] = 1;
+			});
+			for(i= 0;i < list.length; i++) {
+				list[i] = (list[i] ? list[i] : 0);
+			}
+			createHistogramIndividually(id, list , xAxis, yAxis, chartName);
+		});
+	}
+	
+	
+}
+function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTitle) {
+	Highcharts.chart(id, {
+		title: {
+			text: histogramTitle
+		},
+		xAxis: [{
+			title: { text: xAxisName }
+		}],
+	
+		yAxis: [{
+			title: { text: yAxisName }
+		}],
+	
+		series: [{
+			name: xAxisName,
+			type: 'histogram',
+			data: data
+		}]
 	});
 }

@@ -133,29 +133,12 @@ div.block.panel.panel-default
           .col-sm-6
             img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
           .col-sm-6(id="transaction-pie" data="./#{modelInfo.AccessDir}/transactionAnalytics.csv")
-     div.tab-pane.fade(id="model-distributions")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/control_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/external_input_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/external_query_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/external_invocation_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/external_call_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/interface_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/not_matched_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/architecture_difficulty_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/average_degree_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/average_path_length_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/path_number_analysis_result.svg")
+     div.tab-pane.fade(id="model-distributions" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
+      div.stats-chart.col-md-12(id="chart-1")
+      div.stats-chart.col-md-6(id="chart-8")
+      div.stats-chart.col-md-6(id="chart-9")
+      div.stats-chart.col-md-6(id="chart-10")
+      div.stats-chart.col-md-6(id="chart-11")
      div.tab-pane.fade(id="model-empirical")
        div.model-evaluation
         h3 Evaluation:
