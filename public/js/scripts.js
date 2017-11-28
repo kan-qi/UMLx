@@ -1016,7 +1016,7 @@ function createPieChart() {
 			});
 		})
 	
-		// Build the chart
+		// Build the chart :  refer highchart pie-chart for more information 
 		Highcharts.chart('transaction-pie', {
 			chart: {
 				plotBackgroundColor: null,
@@ -1056,51 +1056,30 @@ function createHistogram(dataList, max) {
 			var newData = {
 				CTRL: {
 					list: [],
-					id: "chart-1",
-					xAxis: "Path Length",
-					yAxis: "Frequency",
 					chartName: "Control Operation Number"
 				}, 
 				EI: {
 					list: [],
-					id: "chart-2",
-					xAxis: "Path Length",
-					yAxis: "Frequency",
 					chartName: "Extra Input Operation Number"
 				}, 
 				EQ: {
 					list: [],
-					id: "chart-3",
-					xAxis: "Path Length",
-					yAxis: "Frequency",
 					chartName: "Extra Query Operation Number"
 				},
 				EXTIVK: {
 					list: [],
-					id: "chart-4",
-					xAxis: "Path Length",
-					yAxis: "Frequency",
 					chartName: "Extra Invocation Operation Number"
 				},
 				EXTCLL: {
 					list: [],
-					id: "chart-5",
-					xAxis: "Path Length",
-					yAxis: "Frequency",
 					chartName: "Extra Call Operation Number"
 				},
 				INT: {
 					list: [],
-					id: "chart-6",
-					xAxis: "Path Length",
-					yAxis: "Frequency",
 					chartName: "Interface Operation Number"
 				},
 				TRAN_NA: {
 					list: [],
-					id: "chart-7",
-					xAxis: "Path Length",
-					yAxis: "Frequency",
 					chartName: "Not Matched Operation Number"
 				}
 			};
@@ -1119,14 +1098,13 @@ function createHistogram(dataList, max) {
 					for(i= 0;i < temp.list.length; i++) {
 						temp.list[i] = (temp.list[i] ? temp.list[i] : 0);
 					}
-					//createHistogram(temp.id, temp.list , temp.xAxis, temp.yAxis, temp.chartName);
 					dataList.push({
 						data: temp.list,
-						name: temp.chartName,
-						subName: chartData
+						name: temp.chartName
 					})
 				}
 			}
+			//refer http://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/demo/column-basic/ for sample
 			var categoriesList = [];
 			for(i= 0; i< maxLength; i++) {
 				categoriesList.push(i.toString());
@@ -1228,8 +1206,6 @@ function createHistogramForPathNumber() {
 			createHistogramIndividually(id, list , xAxis, yAxis, chartName);
 		});
 	}
-	
-	
 }
 function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTitle) {
 	Highcharts.chart(id, {
