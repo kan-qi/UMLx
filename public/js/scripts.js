@@ -929,7 +929,10 @@ function createCharts() {
 function createTrendingLines() {
 	var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
 	d3.csv(url, function(error, data) {
-		if (error) throw error;
+		if (error) {
+			console.error(error);
+			return;
+		}
 		var tempData = [];
 		data.forEach(function(d) {
 			d.update_time = new Date(d.update_time).getTime();
@@ -1002,6 +1005,10 @@ function createPieChart() {
 	var url = $('#transaction-pie')[0].attributes.getNamedItem('data').value;
 	var newData =[];
 	d3.csv(url, function(error, data) {
+		if (error) {
+			console.error(error);
+			return;
+		}
 		var counter = [], transactionLable = [];
 		data.forEach(function(d) {
 			counter[d.transactional] ?  counter[d.transactional]++ : counter[d.transactional]= 1;
@@ -1053,6 +1060,10 @@ function createHistogram(dataList, max) {
 	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-expandedPathURL').value : "";
 	if (url) {
 		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
+				return;
+			}
 			var newData = {
 				CTRL: {
 					list: [],
@@ -1152,6 +1163,10 @@ function creatAvgHistograms() {
 	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-pathAnalyticsURL').value : "";
 	if (url) {
 		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
+				return;
+			}
 			var newData = [
 				{
 					list: [],
@@ -1197,6 +1212,10 @@ function createHistogramForPathNumber() {
 		chartName= "Path Number";
 	if (url) {
 		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
+				return;
+			}
 			data.forEach(function(d) {
 				list[+d.path_number] ? list[+d.path_number]++ : list[+d.path_number] = 1;
 			});
