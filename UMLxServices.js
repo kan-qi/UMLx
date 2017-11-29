@@ -38,6 +38,7 @@ var storage = multer.diskStorage({
 })
 
 var fileDestination = null;
+umlSurveyFiles = [];
 var surveyFiles = multer.diskStorage({
     destination: function (req, file, cb) {
     	if(fileDestination==null) {
@@ -57,6 +58,7 @@ var surveyFiles = multer.diskStorage({
     filename: function (req, file, cb) {
         var fileName = Date.now()+ "-" + file.originalname;
         cb(null, fileName)
+        umlSurveyFiles.push(fileName);
 		console.log("saved the file " + fileName + " in " + fileDestination);
     }
 })
@@ -295,6 +297,11 @@ app.get('/surveyAnalytics', function (req, res){
 app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
 	console.log(req.body);
 	var formInfo = req.body;
+    // console.log(umlSurveyFiles);
+
+    // save the file names in DB
+    formInfo.uml_file = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
+    formInfo.uml_other = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
 	umlModelInfoManager.saveSurveyData(formInfo);
 
 	res.redirect("thankYou");
