@@ -111,7 +111,7 @@ app.get('/testgitapiuser', function(req,response){
 	})
 
 	github.search.users({
-	  q: 'kritikavd'
+	  q: 'kvaid@usc.edu in:email'
 	}, function (err, res) {
 	  if (err) throw err
 	  response.json(res);
@@ -146,7 +146,7 @@ app.get('/testgitapiallcommit', function(req,response){
 	
 	github.repos.getCommits({
 		owner: 'kritikavd',
-		  repo: 'Web-Tech-Assignments',
+		  repo: 'node-github',
 	}, function (err, res) {
 	  if (err) throw err
 	  response.json(res);
@@ -323,14 +323,32 @@ app.use(function(req, res, next) {
 
 });
 
+app.get('/savegitinfo', function(req,res){
+	
+	var email = req.userInfo.email;
+	var userId = req.userInfo._id;
+	umlModelInfoManager.saveGitInfo(email,userId, function(success,msg){
+		var result = {
+		          success: success,
+		          message: msg,
+	   };
+		res.json(result);
+	});
+});
+
 app.get('/profile',function(req,res){
 
 	var profileInfo = {}
-
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;
 	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
-	res.render('profile', {profileInfo:profileInfo});
+	
+	umlModelInfoManager.getGitData(req.userInfo._id, function(gitData, success, msg){
+		if(success==true){
+			profileInfo.gitData = gitData;
+		}
+		res.render('profile',{profileInfo:profileInfo});
+	});
 
 })
 
