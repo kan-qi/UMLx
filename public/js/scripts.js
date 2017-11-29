@@ -144,6 +144,7 @@ function query_model_detail_func(){
 				}
 				console.dir(e);
 			});
+			createCharts();
 		},
 		error : function() {
 			console.log("fail");
@@ -808,7 +809,7 @@ $(document).ready(function() {
 	$('form#invite-form').submit(inviteFormSubmit);
 	
 	$('[data-toggle="popover"]').popover({'html':true});
-//	drawChartBySVG();
+	createCharts();
 });
 
 function openDialogueBox(repoId, type) {
@@ -874,5 +875,173 @@ function load_file_upload_fnc(type) {
 			console.log("fail");
 			alert("There was an error submitting commentO");
 		}
+	});
+}
+
+var activatedItem, activatedPath = []; 
+function colorUseCaseElementAndPath(name, type) {
+	clearSelectedPathAndEdge();
+	var svg = $('.use-case')[0].getSVGDocument();
+	var list = svg.getElementsByTagName('g');
+	if(type == "element") {
+		for (var item of list) {
+			if(item.getElementsByTagName("title")[0].innerHTML == name) {
+				item.getElementsByTagName('ellipse')[0].style.fill = "red";
+				activatedItem = item.getElementsByTagName('ellipse')[0].style;
+			}
+		}
+	} else {
+		var pathArray = name.split('->');
+		for(var i=0; i<pathArray.length-1; i++) {
+			for (var item of list) {
+				if(item.getElementsByTagName("title")[0].innerHTML == pathArray[i]+'-&gt;'+pathArray[i+1]) {
+					item.getElementsByTagName('polygon')[0].style.stroke = "green";
+					item.getElementsByTagName('polygon')[0].style.fill = "green";
+					item.getElementsByTagName('path')[0].style.stroke = "green";
+					activatedPath.push(item);
+				}
+			}
+		}
+	}
+}
+
+function clearSelectedPathAndEdge() {
+	if(activatedPath.length) {
+		for(var path of activatedPath) {
+			path.getElementsByTagName('polygon')[0].style.stroke = "black";
+			path.getElementsByTagName('polygon')[0].style.fill = "black";
+			path.getElementsByTagName('path')[0].style.stroke = "black";
+		}
+	}
+	if(activatedItem) {
+		activatedItem.fill = "white";
+	}
+}
+
+function createCharts() {
+	createTrendingLines();
+	createPieChart();
+}
+
+function createTrendingLines() {
+	var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
+	d3.csv(url, function(error, data) {
+		if (error) throw error;
+		var tempData = [];
+		data.forEach(function(d) {
+			d.update_time = new Date(d.update_time).getTime();
+			d.number_of_paths = +d.number_of_paths;
+			tempData.push([d.update_time, d.number_of_paths])
+		});
+		data= tempData;
+		console.dir(data)
+		Highcharts.chart('trending-line', {
+			chart: {
+				zoomType: 'x'
+			},
+			title: {
+				text: 'Number of Transactions'
+			},
+			subtitle: {
+				text: document.ontouchstart === undefined ?
+						'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+			},
+			xAxis: {
+				type: 'datetime',
+				title: {
+					text: 'Update Time'
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'Number of Paths'
+				}
+			},
+			legend: {
+				enabled: false
+			},
+			plotOptions: {
+				area: {
+					fillColor: {
+						linearGradient: {
+							x1: 0,
+							y1: 0,
+							x2: 0,
+							y2: 1
+						},
+						stops: [
+							[0, Highcharts.getOptions().colors[0]],
+							[1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+						]
+					},
+					marker: {
+						radius: 2
+					},
+					lineWidth: 1,
+					states: {
+						hover: {
+							lineWidth: 1
+						}
+					},
+					threshold: null
+				}
+			},
+	
+			series: [{
+				type: 'line',
+				name: 'Number of Transactions',
+				data: data
+			}]
+		});
+	});
+}
+function createPieChart() {
+	var url = $('#transaction-pie')[0].attributes.getNamedItem('data').value;
+	var newData =[];
+	d3.csv(url, function(error, data) {
+		var counter = [], transactionLable = [];
+		data.forEach(function(d) {
+			counter[d.transactional] ?  counter[d.transactional]++ : counter[d.transactional]= 1;
+			if (transactionLable.indexOf(d.transactional) == -1) {
+				transactionLable.push(d.transactional);
+			}
+		});
+		transactionLable.forEach(function(transaction) {
+			newData.push({
+				name: transaction,
+				y: counter[transaction]
+			});
+		})
+	
+		// Build the chart
+		Highcharts.chart('transaction-pie', {
+			chart: {
+				plotBackgroundColor: null,
+				plotBorderWidth: null,
+				plotShadow: false,
+				type: 'pie'
+			},
+			title: {
+				text: 'Distribution of Types of operations'
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			},
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					dataLabels: {
+						enabled: false
+					},
+					showInLegend: true
+				}
+			},
+			series: [{
+				name: 'Transactions',
+				colorByPoint: true,
+				data: newData
+			}]
+		});
 	});
 }
