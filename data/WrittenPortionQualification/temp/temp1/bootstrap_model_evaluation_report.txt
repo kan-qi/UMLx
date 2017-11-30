@@ -1,0 +1,49 @@
+
+ORDINARY NONPARAMETRIC BOOTSTRAP
+
+
+Call:
+boot(data = dmData, statistic = rsq, R = 1000, formula = mpg ~ 
+    wt + disp)
+
+
+Bootstrap Statistics :
+     original        bias    std. error
+t1* 0.6363636 -0.0009090909  0.14282765
+t2* 0.9090909  0.0008181818  0.08989879
+t3* 0.9090909  0.0008181818  0.08989879
+BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+Based on 1000 bootstrap replicates
+
+CALL : 
+boot.ci(boot.out = results, type = "bca", index = 1)
+
+Intervals : 
+Level       BCa          
+95%   ( 0.2200,  0.8182 )  
+Calculations and Intervals on Original Scale
+Some BCa intervals may be unstable
+BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+Based on 1000 bootstrap replicates
+
+CALL : 
+boot.ci(boot.out = results, type = "bca", index = 2)
+
+Intervals : 
+Level       BCa          
+95%   ( 0.4545,  1.0000 )  
+Calculations and Intervals on Original Scale
+Warning : BCa Intervals used Extreme Quantiles
+Some BCa intervals may be unstable
+BOOTSTRAP CONFIDENCE INTERVAL CALCULATIONS
+Based on 1000 bootstrap replicates
+
+CALL : 
+boot.ci(boot.out = results, type = "bca", index = 3)
+
+Intervals : 
+Level       BCa          
+95%   ( 0.4545,  1.0000 )  
+Calculations and Intervals on Original Scale
+Warning : BCa Intervals used Extreme Quantiles
+Some BCa intervals may be unstable
