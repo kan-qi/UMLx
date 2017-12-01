@@ -16,6 +16,7 @@ var cookieParser = require('cookie-parser');
 var sleep = require('sleep');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
+var bodyParser = require('body-parser');
 
 
 var storage = multer.diskStorage({
@@ -37,6 +38,7 @@ var storage = multer.diskStorage({
 })
 
 var fileDestination = null;
+umlSurveyFiles = [];
 var surveyFiles = multer.diskStorage({
     destination: function (req, file, cb) {
     	if(fileDestination==null) {
@@ -56,6 +58,7 @@ var surveyFiles = multer.diskStorage({
     filename: function (req, file, cb) {
         var fileName = Date.now()+ "-" + file.originalname;
         cb(null, fileName)
+        umlSurveyFiles.push(fileName);
 		console.log("saved the file " + fileName + " in " + fileDestination);
     }
 })
@@ -65,6 +68,7 @@ var surveyUploads = multer({ storage: surveyFiles });
 
 app.use(express.static('public'));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.set('views', './views');
@@ -98,7 +102,7 @@ app.get('/testgitapirepos', function(req,response){
 	}, function (err, res) {
 	  if (err) throw err
 	  response.json(res);
-	  
+
 	});
 });
 
@@ -125,7 +129,7 @@ app.get('/testgitapionecommit', function(req,response){
 
 	var github = new GitHubApi({
 	})
-	
+
 	github.gitdata.getCommit({
 		owner: 'kritikavd',
 		  repo: 'Web-Tech-Assignments',
@@ -134,7 +138,7 @@ app.get('/testgitapionecommit', function(req,response){
 	  if (err) throw err
 	  response.json(res);
 	});
-	
+
 });
 
 
@@ -143,7 +147,7 @@ app.get('/testgitapiallcommit', function(req,response){
 
 	var github = new GitHubApi({
 	})
-	
+
 	github.repos.getCommits({
 		owner: 'kritikavd',
 		  repo: 'Web-Tech-Assignments',
@@ -151,7 +155,7 @@ app.get('/testgitapiallcommit', function(req,response){
 	  if (err) throw err
 	  response.json(res);
 	});
-	
+
 });
 
 
@@ -160,7 +164,7 @@ app.get('/testgitapifollowing', function(req,response){
 
 	var github = new GitHubApi({
 	})
-	
+
 	github.users.getFollowingForUser({
 	    // optional
 	    // headers: {
@@ -390,6 +394,11 @@ app.get('/surveyAnalytics', function (req, res){
 app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
 	console.log(req.body);
 	var formInfo = req.body;
+    // console.log(umlSurveyFiles);
+
+    // save the file names in DB
+    formInfo.uml_file = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
+    formInfo.uml_other = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
 	umlModelInfoManager.saveSurveyData(formInfo);
 	res.redirect("thankYou");
 });
@@ -1029,6 +1038,10 @@ app.get('/surveyData', function(req, res){
 });
 
 
+// to handle post redirect to home page
+app.post('/', function(req, res){
+	res.redirect('/')
+});
 
 app.get('/', function(req, res){
 		var message = req.query.e;
@@ -1081,9 +1094,9 @@ app.get('/deleteUser', function(req,res){
 
 app.get('/deactivateUser', function(req,res){
 	var userId = req.query['uid'];
-	
+
 	var loggedInUserId = req.userInfo._id;
-	
+
 	if( !req.userInfo.isEnterprise && req.userInfo._id!=userId){
 		var result={'status' : false , 'message' : 'Not authorized to deactivate this user'};
 		res.json(result);
