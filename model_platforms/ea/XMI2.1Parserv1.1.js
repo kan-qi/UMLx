@@ -250,15 +250,32 @@
 		}
 		
 		model.getDomainModel = function(){
-			var DomainModel = {
-					Diagrams: []
-			};
+			function DomainModel(){
+				this.Diagrams = [];	
+			} 
+			
+			var domainModel = new DomainModel();
+			
 			for(var i in this.Diagrams){
 				var diagram = this.Diagrams[i];
 				if(diagram.Type === "Logical"){
-					DomainModel.Diagrams.push(diagram);
+					domainModel.Diagrams.push(diagram);
 				}
 			}
+			
+			// make extra processing for the domain model diagrams. To reference their elements 
+			domainModel.findElement = function(elementName){
+				for(var i in this.Diagrams){
+					var diagram = this.Diagrams[i];
+					for(var j in diagram.Elements){
+						var element = diagram.Elements[j];
+						if(elementName === element.Name){
+							return element;
+						}
+					}
+				}
+			}
+			
 			return DomainModel;
 		}
 		
