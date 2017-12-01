@@ -205,7 +205,13 @@
 		useCaseInfo['TransactionAnalytics'].ArchDiff =  useCaseInfo['TransactionAnalytics'].AvgPathLength * useCaseInfo["ElementAnalytics"].AvgDegree;
 			
 			if(callbackfunc){
-				 dumpUseCaseTransactionsInfo(useCaseInfo, function(err){
+				var useCaseTransactionDump = dumpUseCaseTransactionsInfo(useCaseInfo);
+
+				var transactionAnalyticsStr = "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
+				 
+						useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName = "transactionAnalytics.csv";
+						var files = [{fileName : useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName , content : transactionAnalyticsStr}];
+						umlFileManager.writeFiles(useCaseInfo.OutputDir, files, function(err){
 					 		if(err){
 					 			console.log(err);
 					 			return;
@@ -227,7 +233,7 @@
 								}
 							});
 				 });
-			}
+				}
 	}
 	
 	function evaluateModel(modelInfo, callbackfunc){
@@ -269,7 +275,13 @@
 		modelInfo['TransactionAnalytics'].ArchDiff = modelInfo['TransactionAnalytics'].AvgTranLength*modelInfo["ElementAnalytics"].AvgDegree;
 		
 		if(callbackfunc){
-			 dumpModelTransactionsInfo(modelInfo, function(err){
+			 var modelTransactionInfoDump = dumpModelTransactionsInfo(modelInfo);
+
+				var transactionAnalyticsStr = "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
+	
+				modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
+				var files = [{fileName : modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
+				umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
 				 if(err){
 					 console.log(err);
 					 return;
@@ -332,23 +344,29 @@
 		
 		 repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath = repoInfo.OutputDir+"/Model_Evaluation_Results";
 		 
-			mkdirp(repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath, function(err) { 
-				if(err) {
-					console.log(err);
-			        return;
-			    }
-						 var command = './Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo['TransactionAnalytics'].RepoEvaluationForModelsFileName+'" "'+repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath+'"';	
-							
-							RScriptExec.runRScript(command,function(result){
-								if (!result) {
-									console.log('exec error: repo id=' + repoInfo._id);
-								}
-								console.log("Repo Evaluation were saved!");
-							});
-			});
+//			mkdirp(repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath, function(err) { 
+//				if(err) {
+//					console.log(err);
+//			        return;
+//			    }
+//						 var command = './Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo['TransactionAnalytics'].RepoEvaluationForModelsFileName+'" "'+repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath+'"';	
+//							
+//							RScriptExec.runRScript(command,function(result){
+//								if (!result) {
+//									console.log('exec error: repo id=' + repoInfo._id);
+//								}
+//								console.log("Repo Evaluation were saved!");
+//							});
+//			});
 			
 			if(callbackfunc){
-				 dumpRepoTransactionsInfo(repoInfo, function(err){
+				var repoTransactionInfoDump = dumpRepoTransactionsInfo(repoInfo);
+
+				var transactionAnalyticsStr = "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
+	
+					repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
+					var files = [{fileName : repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
+					umlFileManager.writeFiles(repoInfo.OutputDir, files, function(err){
 					 if(err){
 						 console.log(err);
 						 return;
@@ -370,16 +388,17 @@
 							}
 						});
 				 });
+					
 			}
 	}
 	
 	
-	function dumpUseCaseTransactionsInfo(useCaseInfo, callbackfunc, transactionNum) {
+	function dumpUseCaseTransactionsInfo(useCaseInfo, transactionNum) {
 		// console.log("dump useCase analytics");
 		
 		transactionNum = !transactionNum ? 0 : transactionNum;
 		
-		var transactionAnalyticsStr = transactionNum == 0 ? "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" : "";
+		var transactionAnalyticsStr = "";
 		
 		for ( var i in useCaseInfo.Diagrams) {
 			var diagram = useCaseInfo.Diagrams[i];
@@ -405,13 +424,7 @@
 				
 			}
 		}
-		
-		if(callbackfunc){
-		useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName = "transactionalAnalytics.csv";
-		var files = [{fileName : useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName , content : transactionAnalyticsStr}];
-		umlFileManager.writeFiles(useCaseInfo.OutputDir, files, callbackfunc);
-		}
-		
+	
 		return {
 			transactionAnalyticsStr: transactionAnalyticsStr,
 			transactionNum: transactionNum
@@ -420,10 +433,12 @@
 	}
 	
 	
-	function dumpModelTransactionsInfo(modelInfo, callbackfunc, transactionNum) {
+	function dumpModelTransactionsInfo(modelInfo, transactionNum) {
 		// console.log("dump useCase analytics");
 		
 		transactionNum = !transactionNum ? 0 : transactionNum;
+		
+//		var transactionAnalyticsStr = header ? "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" : "";
 		
 		var transactionAnalyticsStr = "";
 		
@@ -434,12 +449,6 @@
 			transactionNum = transactionDump.transactionNum;
 		}
 		
-		if(callbackfunc){
-		modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
-		var files = [{fileName : modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
-		umlFileManager.writeFiles(modelInfo.OutputDir, files, callbackfunc);
-		}
-		
 		return {
 			transactionAnalyticsStr: transactionAnalyticsStr,
 			transactionNum: transactionNum
@@ -448,7 +457,7 @@
 	}
 	
 	
-	function dumpRepoTransactionsInfo(repoInfo, callbackfunc, transactionNum) {
+	function dumpRepoTransactionsInfo(repoInfo, transactionNum) {
 		// console.log("dump useCase analytics");
 		
 		transactionNum = !transactionNum ? 0 : transactionNum;
@@ -460,12 +469,6 @@
 			var transactionDump = dumpModelTransactionsInfo(model, null, transactionNum);
 			transactionAnalyticsStr += transactionDump.transactionAnalyticsStr;
 			transactionNum = transactionDump.transactionNum;
-		}
-		
-		if(callbackfunc){
-		repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
-		var files = [{fileName : repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
-		umlFileManager.writeFiles(repoInfo.OutputDir, files, callbackfunc);
 		}
 		
 		return {

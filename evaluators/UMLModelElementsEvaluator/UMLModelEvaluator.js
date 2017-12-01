@@ -17,7 +17,7 @@
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
 	function toModelEvaluationHeader() {
-		return "Path_Num,UseCase_Num,Diagram_Num,Total_Degree,Node_Num,Total_Links,Actor_Num,Boundary_Num,ControlNum,Entity_Num";
+		return "Path_Num,UseCase_Num,Diagram_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Boundary_Num,ControlNum,Entity_Num";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -28,7 +28,7 @@
 				+ modelInfo["ElementAnalytics"].UseCaseNum + ","
 				+ modelInfo["ElementAnalytics"].DiagramNum + ","
 				+ modelInfo["ElementAnalytics"].TotalDegree + ","
-				+ modelInfo["ElementAnalytics"].NodeNum + ","
+				+ modelInfo["ElementAnalytics"].ElementNum + ","
 				+ modelInfo["ElementAnalytics"].TotalLinks + ","
 				+ modelInfo["ElementAnalytics"].ActorNum + ","
 				+ modelInfo["ElementAnalytics"].BoundaryNum + ","
@@ -37,7 +37,7 @@
 	}
 
 	function toUseCaseEvaluationHeader() {
-		return "Path_Num,UseCase_Num,Diagram_Num,Total_Degree,Node_Num,Total_Links,Avg_Degree,Avg_Path_Length,Actor_Num,Boundary_Num,Control_Num,Entity_Num";
+		return "Path_Num,UseCase_Num,Diagram_Num,Total_Degree,Element_Num,Total_Links,Avg_Degree,Avg_Path_Length,Actor_Num,Boundary_Num,Control_Num,Entity_Num";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
@@ -48,7 +48,7 @@
 		+ useCaseInfo["ElementAnalytics"].UseCaseNum + ","
 		+ useCaseInfo["ElementAnalytics"].DiagramNum + ","
 		+ useCaseInfo["ElementAnalytics"].TotalDegree + ","
-		+ useCaseInfo["ElementAnalytics"].NodeNum + ","
+		+ useCaseInfo["ElementAnalytics"].ElementNum + ","
 		+ useCaseInfo["ElementAnalytics"].TotalLinks + ","
 		+ useCaseInfo["ElementAnalytics"].AvgDegree + ","
 		+ useCaseInfo["ElementAnalytics"].AvgPathLength + ","
@@ -74,11 +74,11 @@
 	}
 
 	
-	// callbackfunc is called when the nodes are dumped into the files?
+	// callbackfunc is called when the elements are dumped into the files?
 	function evaluateUseCase(useCaseInfo, callbackfunc) {
 		useCaseInfo["ElementAnalytics"] = {
 		TotalDegree:0,
-		NodeNum:0,
+		ElementNum:0,
 		AvgDegree:0,
 		TotalLinks:0,
 		ActorNum:0,
@@ -111,8 +111,8 @@
 				var pathNum = 0;
 
 				for ( var j in diagram.Nodes) {
-					var Node = diagram.Nodes[j]; // tag: nodes
-					var components = diagram.allocate(Node);
+					var Element = diagram.Nodes[j]; // tag: elements
+					var components = diagram.allocate(Element);
 					for(var k in components){
 						var component = components[k];
 						elementNum++;
@@ -127,7 +127,7 @@
 						} else if (type === "entity") {
 							entityNum++;
 						}
-//						totalLinks += Node.InboundNumber;
+//						totalLinks += Element.InboundNumber;
 						
 					}
 						
@@ -149,14 +149,14 @@
 				diagram["ElementAnalytics"].BoundaryNum = boundaryNum;
 				diagram["ElementAnalytics"].ControlNum = controlNum;
 				diagram["ElementAnalytics"].EntityNum = entityNum;
-				diagram["ElementAnalytics"].NodeNum = elementNum;
-				diagram["ElementAnalytics"].AvgDegree = diagram["ElementAnalytics"].NodeNum == 0 ? 0: diagram["ElementAnalytics"].TotalDegree / diagram["ElementAnalytics"].NodeNum;
+				diagram["ElementAnalytics"].ElementNum = elementNum;
+				diagram["ElementAnalytics"].AvgDegree = diagram["ElementAnalytics"].ElementNum == 0 ? 0: diagram["ElementAnalytics"].TotalDegree / diagram["ElementAnalytics"].ElementNum;
 				diagram["ElementAnalytics"].PathNum = pathNum;
 				diagram["ElementAnalytics"].AvgPathLength = diagram["ElementAnalytics"].PathNum == 0 ? 0 : diagram["ElementAnalytics"].TotalPathLength / diagram["ElementAnalytics"].PathNum;
 				diagram["ElementAnalytics"].TotalPathLength = totalPathLength;
 
 				useCaseInfo["ElementAnalytics"].TotalDegree += diagram["ElementAnalytics"].TotalDegree;
-				useCaseInfo["ElementAnalytics"].NodeNum += diagram["ElementAnalytics"].NodeNum;
+				useCaseInfo["ElementAnalytics"].ElementNum += diagram["ElementAnalytics"].ElementNum;
 				useCaseInfo["ElementAnalytics"].AvgDegree += diagram["ElementAnalytics"].AvgDegree;
 				useCaseInfo["ElementAnalytics"].TotalLinks += diagram["ElementAnalytics"].TotalLinks;
 				useCaseInfo["ElementAnalytics"].ActorNum += diagram["ElementAnalytics"].ActorNum;
@@ -168,24 +168,24 @@
 				useCaseInfo["ElementAnalytics"].DiagramNum++;
 		}
 
-		useCaseInfo["ElementAnalytics"].AvgDegree = useCaseInfo["ElementAnalytics"].NodeNum == 0 ? 0 : useCaseInfo["ElementAnalytics"].TotalDegree / useCaseInfo["ElementAnalytics"].NodeNum;
+		useCaseInfo["ElementAnalytics"].AvgDegree = useCaseInfo["ElementAnalytics"].ElementNum == 0 ? 0 : useCaseInfo["ElementAnalytics"].TotalDegree / useCaseInfo["ElementAnalytics"].ElementNum;
 		useCaseInfo["ElementAnalytics"].AvgPathLength = useCaseInfo["ElementAnalytics"].PathNum == 0 ? 0 : useCaseInfo["ElementAnalytics"].TotalPathLength / useCaseInfo["ElementAnalytics"].PathNum;
 		
 		if (callbackfunc) {
 
 		useCaseInfo["ElementAnalytics"].PathAnalyticsFileName = "pathAnalytics.csv";
-		useCaseInfo["ElementAnalytics"].ElementAnalyticsFileName = "nodeAnalytics.csv";
+		useCaseInfo["ElementAnalytics"].ElementAnalyticsFileName = "elementAnalytics.csv";
 		useCaseInfo["ElementAnalytics"].DiagramAnalyticsFileName = "diagramAnalytics.csv";
-		dumpUseCaseNodesInfo(useCaseInfo, function(err){
+		dumpUseCaseElementsInfo(useCaseInfo, function(err){
 			
 				if(err){
 					console.log(err);
 					return;
 				}
 			
-				console.log("evaluate uml nodes for use cases");
+				console.log("evaluate uml elements for use cases");
 				
-				var command = './evaluators/UMLModelElementsEvaluator/UseCaseNodesAnalyticsScript.R "'+useCaseInfo.OutputDir+"/"+useCaseInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+useCaseInfo.OutputDir+"/"+useCaseInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+useCaseInfo.OutputDir+'" "."';
+				var command = './evaluators/UMLModelElementsEvaluator/UseCaseElementsAnalyticsScript.R "'+useCaseInfo.OutputDir+"/"+useCaseInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+useCaseInfo.OutputDir+"/"+useCaseInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+useCaseInfo.OutputDir+'" "."';
 				
 				RScriptExec.runRScript(command,function(result){
 					if (!result) {
@@ -227,8 +227,8 @@
 			var operationNum = 0;
 			var entityNum = 0;
 
-			for ( var j in diagram.Elements) {
-				var element = diagram.Elements[j];
+			for ( var j in diagram.Nodes) {
+				var element = diagram.Nodes[j];
 					entityNum++;
 					for ( var k in element.Attributes) {
 						var attribute = element.Attributes[k];
@@ -255,13 +255,13 @@
 
 		if (callbackfunc) {
 			
-			dumpDomainModelNodesInfo(domainModelInfo, function(err){
+			dumpDomainModelElementsInfo(domainModelInfo, function(err){
 			if(err){
 				callbackfunc(err);
 			}
-			console.log("evaluate uml nodes for domain model");
+			console.log("evaluate uml elements for domain model");
 			
-			var command = './evaluators/UMLModelElementsEvaluator/DomainModelNodesAnalyticsScript.R "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+domainModelInfo.OutputDir+'" "."';
+			var command = './evaluators/UMLModelElementsEvaluator/DomainModelElementsAnalyticsScript.R "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+domainModelInfo.OutputDir+'" "."';
 
 			RScriptExec.runRScript(command,function(result){
 				if (!result) {
@@ -287,11 +287,10 @@
 				AttributeNum : 0,
 				OperationNum : 0,
 				EntityNum : 0,
-				NodeNum : 0,
+				ElementNum : 0,
 				TotalPathLength : 0,
 				PathNum : 0,
 				UseCaseNum : 0,
-				DiagramNum : 0,
 				TotalLinks : 0,
 				ActorNum : 0,
 				BoundaryNum : 0,
@@ -301,7 +300,7 @@
 				EntityAnalyticsFileName : "entityAnalytics.csv",
 				AttributeAnalyticsFileName : "attributeAnalytics.csv",
 				OperationAnalyticsFileName : "operationAnalytics.csv",
-				ElementAnalyticsFileName : "nodeAnalytics.csv",
+				ElementAnalyticsFileName : "elementAnalytics.csv",
 				PathAnalyticsFileName : "pathAnalytics.csv"
 		}
 		
@@ -321,12 +320,12 @@
 			modelInfo["ElementAnalytics"].EntityNum += useCaseInfo["ElementAnalytics"].EntityNum;
 
 			modelInfo["ElementAnalytics"].TotalDegree += useCaseInfo["ElementAnalytics"].TotalDegree;
-			modelInfo["ElementAnalytics"].NodeNum += useCaseInfo["ElementAnalytics"].NodeNum;
+			modelInfo["ElementAnalytics"].ElementNum += useCaseInfo["ElementAnalytics"].ElementNum;
 			}
 		}
 
 		modelInfo["ElementAnalytics"].AvgPathLength = modelInfo["ElementAnalytics"].PathNum == 0 ? 0 : modelInfo["ElementAnalytics"].TotalPathLength / modelInfo["ElementAnalytics"].PathNum;
-		modelInfo["ElementAnalytics"].AvgDegree = modelInfo["ElementAnalytics"].NodeNum == 0 ? 0 : modelInfo["ElementAnalytics"].TotalDegree / modelInfo["ElementAnalytics"].NodeNum;
+		modelInfo["ElementAnalytics"].AvgDegree = modelInfo["ElementAnalytics"].ElementNum == 0 ? 0 : modelInfo["ElementAnalytics"].TotalDegree / modelInfo["ElementAnalytics"].ElementNum;
 
 		// analyse domain model
 		var domainModelInfo = modelInfo.DomainModel;
@@ -341,15 +340,15 @@
 		
 		if (callbackfunc) {
 
-			dumpModelNodesInfo(modelInfo, function(err){
+			dumpModelElementsInfo(modelInfo, function(err){
 			if(err){
 				callbackfunc(err);
 			}
 			
 			//Needs to be upgraded soon
-			console.log("evaluate uml nodes at model level");
+			console.log("evaluate uml elements at model level");
 			
-			var command = './evaluators/UMLModelElementsEvaluator/ModelNodesAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "."';
+			var command = './evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "."';
 
 			RScriptExec.runRScript(command,function(result){
 				if (!result) {
@@ -380,11 +379,11 @@
 		ControlNum:0,
 		EntityNum:0,
 		TotalDegree:0,
-		NodeNum:0,
+		ElementNum:0,
 		EntityAnalyticsFileName : "entityAnalytics.csv",
 		AttributeAnalyticsFileName : "attributeAnalytics.csv",
 		OperationAnalyticsFileName : "operationAnalytics.csv",
-		ElementAnalyticsFileName : "nodeAnalytics.csv",
+		ElementAnalyticsFileName : "elementAnalytics.csv",
 		PathAnalyticsFileName : "pathAnalytics.csv"
 		}
 //		repoInfo.RepoAnalytics = repoInfo["ElementAnalytics"];
@@ -407,24 +406,24 @@
 			repoInfo["ElementAnalytics"].EntityNum += modelInfo["ElementAnalytics"].EntityNum;
 
 			repoInfo["ElementAnalytics"].TotalDegree += modelInfo["ElementAnalytics"].TotalDegree;
-			repoInfo["ElementAnalytics"].NodeNum += modelInfo["ElementAnalytics"].NodeNum;
+			repoInfo["ElementAnalytics"].ElementNum += modelInfo["ElementAnalytics"].ElementNum;
 			}
 		}
 
 		repoInfo["ElementAnalytics"].AvgPathLength = repoInfo["ElementAnalytics"].PathNum == 0 ? 0 : repoInfo["ElementAnalytics"].TotalPathLength / repoInfo["ElementAnalytics"].PathNum;
-		repoInfo["ElementAnalytics"].AvgDegree = repoInfo["ElementAnalytics"].NodeNum == 0 ? 0 : repoInfo["ElementAnalytics"].TotalDegree / repoInfo["ElementAnalytics"].NodeNum;
+		repoInfo["ElementAnalytics"].AvgDegree = repoInfo["ElementAnalytics"].ElementNum == 0 ? 0 : repoInfo["ElementAnalytics"].TotalDegree / repoInfo["ElementAnalytics"].ElementNum;
 
 		repoInfo["ElementAnalytics"].repoModelEvaluationResultsPath = repoInfo.OutputDir + "/Model_Evaluation_Results";
 
 		if (callbackfunc) {
 
-			dumpRepoNodesInfo(repoInfo, function(err){
+			dumpRepoElementsInfo(repoInfo, function(err){
 			if(err){
 				callbackfunc(err);
 			}
 			//Needs to be upgraded soon
-			console.log("evaluate uml nodes at repo level");
-			var command = './evaluators/UMLModelElementsEvaluator/ModelNodesAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "."';
+			console.log("evaluate uml elements at repo level");
+			var command = './evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "."';
 			
 			RScriptExec.runRScript(command,function(result){
 				if (!result) {
@@ -444,7 +443,7 @@
 		return repoInfo["ElementAnalytics"];
 	}
 
-	function dumpUseCaseNodesInfo(useCaseInfo, callbackfunc, elementNum, pathNum, expandedPathNum, diagramNum) {
+	function dumpUseCaseElementsInfo(useCaseInfo, callbackfunc, elementNum, pathNum, expandedPathNum, diagramNum) {
 		// console.log("dump useCase analytics");
 		
 		elementNum = !elementNum ? 0 : elementNum;
@@ -452,10 +451,10 @@
 //		expandedPathNum = !expandedPathNum ? 0 : expandedPathNum;
 		diagramNum = !diagramNum ? 0 : diagramNum;
 
-		var nodeAnalyticsStr = elementNum == 0 ? "id,node,diagram,useCase,type,outboundDegree,inboundDegree\n" : "";
+		var elementAnalyticsStr = elementNum == 0 ? "id,element,diagram,useCase,type,outboundDegree,inboundDegree\n" : "";
 		var pathAnalyticsStr = pathNum == 0 ? "id,path, diagram,useCase,path_length, boundry_num, control_num, entity_num, actor_num\n" : "";
 //		var expandedPathAnalyticsStr = expandedPathNum == 0 ? "id,path,diagram,useCase,transactional,path_length\n" : "";
-		var diagramAnalyticsStr = diagramNum == 0 ? "id,diagram, useCase,path_num,node_num,boundry_num,control_num,entity_num,actor_num,total_degree,avg_degree,avg_path_length,total_links\n" : "";
+		var diagramAnalyticsStr = diagramNum == 0 ? "id,diagram, useCase,path_num,element_num,boundry_num,control_num,entity_num,actor_num,total_degree,avg_degree,avg_path_length,total_links\n" : "";
 		
 		for ( var i in useCaseInfo.Diagrams) {
 			var diagram = useCaseInfo.Diagrams[i];
@@ -479,21 +478,21 @@
 			useCaseInfo["ElementAnalytics"] = useCaseInfo.UseCaseAnalytics;
 
 			for ( var j in diagram.Nodes) {
-				var node = diagram.Nodes[j];
-				var nodeName = node.Name ? node.Name.replace(/,/gi, "") : "undefined";
-				var nodeType = "";
-				var components = diagram.allocate(node);
+				var element = diagram.Nodes[j];
+				var elementName = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
+				var elementType = "";
+				var components = diagram.allocate(element);
 				for(var k in components){
-					nodeType += components[k]+";"
+					elementType += components[k]+";"
 				}
 				elementNum++;
-				nodeAnalyticsStr += elementNum + ","
-						+ nodeName + ","
+				elementAnalyticsStr += elementNum + ","
+						+ elementName + ","
 						+ diagram.Name + ","
 						+ useCaseInfo.Name + "," +
-						+ nodeType.replace(/,/gi, "") + ","
-						+ node.OutboundNumber + ","
-						+ node.InboundNumber+"\n";
+						+ elementType.replace(/,/gi, "") + ","
+						+ element.OutboundNumber + ","
+						+ element.InboundNumber+"\n";
 			}
 
 			
@@ -503,7 +502,7 @@
 					+ diagram.Name+ ","
 					+ useCaseInfo.Name+ "," 
 					+ diagram["ElementAnalytics"].PathNum + ","
-					+ diagram["ElementAnalytics"].NodeNum + ","
+					+ diagram["ElementAnalytics"].ElementNum + ","
 					+ diagram["ElementAnalytics"].BoundaryNum + ","
 					+ diagram["ElementAnalytics"].ControlNum + ","
 					+ diagram["ElementAnalytics"].EntityNum + "," 
@@ -519,14 +518,14 @@
 		if(callbackfunc){
 			
 		var files = [{fileName : useCaseInfo["ElementAnalytics"].DiagramAnalyticsFileName , content : diagramAnalyticsStr},
-			{fileName : useCaseInfo["ElementAnalytics"].ElementAnalyticsFileName, content : nodeAnalyticsStr},
+			{fileName : useCaseInfo["ElementAnalytics"].ElementAnalyticsFileName, content : elementAnalyticsStr},
 			{fileName : useCaseInfo["ElementAnalytics"].PathAnalyticsFileName, content : pathAnalyticsStr}];
 		
 		umlFileManager.writeFiles(useCaseInfo.OutputDir, files, callbackfunc);
 		}
 		
 		return {
-			nodeAnalyticsStr: nodeAnalyticsStr,
+			elementAnalyticsStr: elementAnalyticsStr,
 			elementNum: elementNum,
 			pathAnalyticsStr: pathAnalyticsStr,
 			pathNum: pathNum,
@@ -536,7 +535,7 @@
 		
 	}
 
-	function dumpDomainModelNodesInfo(domainModelInfo, callbackfunc, entityNum, attributeNum, operationNum) {
+	function dumpDomainModelElementsInfo(domainModelInfo, callbackfunc, entityNum, attributeNum, operationNum) {
 		
 		entityNum = !entityNum ? 0 : entityNum;
 		attributeNum = !attributeNum ? 0 : attributeNum;
@@ -545,9 +544,9 @@
 //		console.log("domain model");
 //		console.log(domainModelInfo);
 
-		var entityAnalyticsStr = entityNum == 0 ? "id,node,attributeNum,operationNum,diagram\n" : "";
-		var attributeAnalyticsStr = attributeNum == 0 ? "id,attribute,type,node,diagram\n" : "";
-		var operationAnalyticsStr = operationNum == 0 ? "id,operation,node,diagram\n" : "";
+		var entityAnalyticsStr = entityNum == 0 ? "id,element,attributeNum,operationNum,diagram\n" : "";
+		var attributeAnalyticsStr = attributeNum == 0 ? "id,attribute,type,element,diagram\n" : "";
+		var operationAnalyticsStr = operationNum == 0 ? "id,operation,element,diagram\n" : "";
 
 		for ( var i in domainModelInfo.Diagrams) {
 			
@@ -555,31 +554,31 @@
 			
 			for ( var j in diagram.Nodes) {
 				
-				var node = diagram.Nodes[j];
+				var element = diagram.Nodes[j];
 				
 					entityNum++;
 					entityAnalyticsStr += entityNum + ","
-						+ node.Name + ","
-						+ node.Attributes.length + ","
-						+ node.Operations.length + ","
+						+ element.Name + ","
+						+ element.Attributes.length + ","
+						+ element.Operations.length + ","
 						+ diagram.Name + "\n";
 					
-				for ( var k in node.Attributes) {
+				for ( var k in element.Attributes) {
 					attributeNum++;
-					var attribute = node.Attributes[k];
+					var attribute = element.Attributes[k];
 					attributeAnalyticsStr += attributeNum + ","
 							+ attribute.Name + ","
 							+ attribute.Type + ","
-							+ node.Name + ","
+							+ element.Name + ","
 							+ diagram.Name + "\n";
 				}
 
-				for ( var k in node.Operations) {
+				for ( var k in element.Operations) {
 					operationNum++;
-					var operation = node.Operations[k];
+					var operation = element.Operations[k];
 					operationAnalyticsStr += operationNum + ","
 							+ operation.Name + ","
-							+ node.Name + ","
+							+ element.Name + ","
 							+ diagram.Name + "\n";
 				}
 				
@@ -608,7 +607,7 @@
 		}
 	}
 
-	function dumpModelNodesInfo(modelInfo, callbackfunc, elementNum, pathNum, entityNum, attributeNum, operationNum) {
+	function dumpModelElementsInfo(modelInfo, callbackfunc, elementNum, pathNum, entityNum, attributeNum, operationNum) {
 		
 
 		elementNum = !elementNum ? 0 : elementNum;
@@ -621,33 +620,33 @@
 //		var modelInfo["ElementAnalytics"] = modelInfo.ModelAnalytics;
 		// console.log(modelInfo["ElementAnalytics"]);
 
-		var nodeAnalyticsStr = "";
+		var elementAnalyticsStr = "";
 		var pathAnalyticsStr = "";
 		var entityAnalyticsStr = "";
 		var attributeAnalyticsStr = "";
 		var operationAnalyticsStr = "";
 		
-//		var nodeAnalyticsStr = "id,node,type,outbound_degree,inbound_degree,diagram,useCase\n";
+//		var elementAnalyticsStr = "id,element,type,outbound_degree,inbound_degree,diagram,useCase\n";
 //		var pathAnalyticsStr = "id,path,diagram,useCase, path_length, boundary_num, control_num, entity_num, actor_num, utw, \n";
 		
 		for ( var i in modelInfo.UseCases) {
 			var useCase = modelInfo.UseCases[i];
-			var useCaseDump = dumpUseCaseNodesInfo(useCase, null, elementNum, pathNum);
+			var useCaseDump = dumpUseCaseElementsInfo(useCase, null, elementNum, pathNum);
 			pathNum = useCaseDump.pathNum;
 			pathAnalyticsStr += useCaseDump.pathAnalyticsStr;
 			elementNum = useCaseDump.elementNum;
-			nodeAnalyticsStr += useCaseDump.nodeAnalyticsStr;
+			elementAnalyticsStr += useCaseDump.elementAnalyticsStr;
 		}
 		
 		
-//		var entityAnalyticsStr = "id,node,attributeNum,operationNum,diagram\n";
-//		var attributeAnalyticsStr = "id,attribute,type,node,diagram\n";
-//		var operationAnalyticsStr = "id,operation,node,diagram\n";
+//		var entityAnalyticsStr = "id,element,attributeNum,operationNum,diagram\n";
+//		var attributeAnalyticsStr = "id,attribute,type,element,diagram\n";
+//		var operationAnalyticsStr = "id,operation,element,diagram\n";
 		
 //		console.log("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
 //		console.log(model);
 		
-	    domainModelDump = dumpDomainModelNodesInfo(modelInfo.DomainModel);
+	    domainModelDump = dumpDomainModelElementsInfo(modelInfo.DomainModel);
 	    
 	    entityNum = domainModelDump.entityNum;
 	    entityAnalyticsStr += domainModelDump.entityAnalyticsStr;
@@ -661,7 +660,7 @@
 		if(callbackfunc){
 		
 		var files = [{fileName : modelInfo["ElementAnalytics"].PathAnalyticsFileName , content : pathAnalyticsStr },
-			{fileName : modelInfo["ElementAnalytics"].ElementAnalyticsFileName, content : nodeAnalyticsStr},
+			{fileName : modelInfo["ElementAnalytics"].ElementAnalyticsFileName, content : elementAnalyticsStr},
 			{fileName : modelInfo["ElementAnalytics"].OperationAnalyticsFileName, content : operationAnalyticsStr},
 			{fileName : modelInfo["ElementAnalytics"].AttributeAnalyticsFileName, content : attributeAnalyticsStr},
 			{fileName : modelInfo["ElementAnalytics"].EntityAnalyticsFileName, content : entityAnalyticsStr}
@@ -678,7 +677,7 @@
 			attributeNum: attributeNum,
 			operationAnalyticsStr: operationAnalyticsStr,
 			operationNum: operationNum,
-			nodeAnalyticsStr: nodeAnalyticsStr,
+			elementAnalyticsStr: elementAnalyticsStr,
 			elementNum: elementNum,
 			pathAnalyticsStr: pathAnalyticsStr,
 			pathNum: pathNum,
@@ -687,7 +686,7 @@
 		
 	}
 
-	function dumpRepoNodesInfo(repoInfo, callbackfunc) {
+	function dumpRepoElementsInfo(repoInfo, callbackfunc) {
 		
 		var elementNum = 0;
 		var pathNum = 0;
@@ -699,26 +698,26 @@
 		// console.log(repoInfo.OutputDir);
 
 		var pathAnalyticsStr = "";
-		var nodeAnalyticsStr = "";
+		var elementAnalyticsStr = "";
 		var entityAnalyticsStr = "";
 		var attributeAnalyticsStr = "";
 		var operationAnalyticsStr = "";
 		
 //		var pathAnalyticsStr = "id,path,functional,transactional,path_length,avg_degree,arch_diff,diagram,use_case,model\n";
-//		var nodeAnalyticsStr = "id,node,type,outboundDegree,inboundDegree,diagram,useCase,model\n";
-//		var entityAnalyticsStr = "id,node,attributeNum,operationNum,diagram\n";
-//		var attributeAnalyticsStr = "id,attribute,type,node,diagram\n";
-//		var operationAnalyticsStr = "id,operation,node,diagram\n";
+//		var elementAnalyticsStr = "id,element,type,outboundDegree,inboundDegree,diagram,useCase,model\n";
+//		var entityAnalyticsStr = "id,element,attributeNum,operationNum,diagram\n";
+//		var attributeAnalyticsStr = "id,attribute,type,element,diagram\n";
+//		var operationAnalyticsStr = "id,operation,element,diagram\n";
 
 		for ( var i in repoInfo.Models) {
 			
 			var modelInfo = repoInfo.Models[i];
-			var modelDump = dumpModelNodesInfo(modelInfo, null, elementNum, pathNum, entityNum, attributeNum, operationNum);
+			var modelDump = dumpModelElementsInfo(modelInfo, null, elementNum, pathNum, entityNum, attributeNum, operationNum);
 			
 			pathNum = modelDump.pathNum;
 			pathAnalyticsStr += modelDump.pathAnalyticsStr;
 			elementNum = modelDump.elementNum;
-			nodeAnalyticsStr += modelDump.nodeAnalyticsStr;
+			elementAnalyticsStr += modelDump.elementAnalyticsStr;
 			entityNum = domainModelDump.entityNum;
 			entityAnalyticsStr += modelDump.entityAnalyticsStr;
 			attributeNum = modelDump.attributeNum;
@@ -731,7 +730,7 @@
 		if(callbackfunc){
 
 			var files = [{fileName : repoInfo["ElementAnalytics"].PathAnalyticsFileName , content : pathAnalyticsStr},
-				{fileName : repoInfo["ElementAnalytics"].ElementAnalyticsFileName, content : nodeAnalyticsStr},
+				{fileName : repoInfo["ElementAnalytics"].ElementAnalyticsFileName, content : elementAnalyticsStr},
 				{fileName : repoInfo["ElementAnalytics"].OperationAnalyticsFileName, content : operationAnalyticsStr},
 				{fileName : repoInfo["ElementAnalytics"].AttributeAnalyticsFileName, content : attributeAnalyticsStr},
 				{fileName : repoInfo["ElementAnalytics"].EntityAnalyticsFileName, content : entityAnalyticsStr}
@@ -744,7 +743,7 @@
 	}
 	
 	function analyseModelEvaluation(modelInfo, callbackfunc){
-		console.log("evaluate uml nodes at repo level");
+		console.log("evaluate uml elements at repo level");
 		var command = './evaluators/UMLModelElementsEvaluator/UseCaseAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName+'" "'+modelInfo.OutputDir+'" "."';
 
 		RScriptExec.runRScript(command,function(result){
