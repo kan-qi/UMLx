@@ -235,60 +235,71 @@
 		 * 1. first build up the domain model.
 		 */
 		
-		model.getDomainModel = function(){
-			function DomainModel(){
-				this.Diagrams = [];	
-			} 
-			
-			var domainModel = new DomainModel();
-			
-			for(var i in this.Diagrams){
-				var diagram = this.Diagrams[i];
-				if(diagram.Type === "Logical"){
-					domainModel.Diagrams.push(diagram);
-				}
-			}
-			
-			// make extra processing for the domain model diagrams. To reference their elements 
-			domainModel.findElement = function(elementName){
-				for(var i in this.Diagrams){
-					var diagram = this.Diagrams[i];
-					for(var j in diagram.Elements){
-						var element = diagram.Elements[j];
-						if(elementName === element.Name){
-							return element;
-						}
-					}
-				}
-			}
-			
-			return DomainModel;
+		function DomainModel(){
+			this.Diagrams = [];	
 		}
 		
-		model.getUseCases = function(){
-			var UseCases = {};
-			for(var i in this.Diagrams){
-				var diagram = this.Diagrams[i];
-				if(diagram.UseCase){
-					if(!UseCases[diagram.UseCase._id]){
-						UseCases[diagram.UseCase._id] = {
-								Name: diagram.UseCase.Name,
-								Diagrams: []
-						};
-					}
 
-					var useCase = UseCases[diagram.UseCase._id];
-					useCase.Diagrams.push(diagram);
-				}
+		var domainModel = new DomainModel();
+		
+		for(var i in this.Diagrams){
+			var diagram = this.Diagrams[i];
+			if(diagram.Type === "Logical"){
+				domainModel.Diagrams.push(diagram);
 			}
-			return UseCases;
 		}
 		
-		model.findUseCaseByID = function(useCaseID){
-			var useCases = this.getUseCases();
-			var useCase = useCases[useCaseID];
-			return useCase;
+		// make extra processing for the domain model diagrams. To reference their elements 
+		domainModel.findElement = function(elementName){
+			for(var i in this.Diagrams){
+				var diagram = this.Diagrams[i];
+				for(var j in diagram.Elements){
+					var element = diagram.Elements[j];
+					if(elementName === element.Name){
+						return element;
+					}
+				}
+			}
 		}
+		
+		model.DomainModel = domainModel;
+		
+		function UseCase(name){
+			this.Name = name;
+			this.Diagrams = [];
+		}
+		
+		var UseCases = [];
+		
+		for(var i in this.Diagrams){
+			var diagram = this.Diagrams[i];
+			if(diagram.UseCase){
+				if(!UseCases[diagram.UseCase._id]){
+					UseCases[diagram.UseCase._id] = {
+							Name: diagram.UseCase.Name,
+							Diagrams: []
+					};
+				}
+
+				var useCase = UseCases[diagram.UseCase._id];
+				useCase.Diagrams.push(diagram);
+			}
+		}
+		
+		model.UseCases = [];
+		for(var i in UseCases){
+			var useCase = UseCases[i];
+			for(var j in useCase.Diagrams[j]){
+				var diagram = useCase.Diagrams[j];
+			}
+			model.UseCases.push(useCase);
+		}
+		
+//		model.findUseCaseByID = function(useCaseID){
+//			var useCases = this.getUseCases();
+//			var useCase = useCases[useCaseID];
+//			return useCase;
+//		}
 		
 		
 		
