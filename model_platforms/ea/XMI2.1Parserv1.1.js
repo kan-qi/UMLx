@@ -224,30 +224,16 @@
 			}
 		}
 		
-		model.getUseCases = function(){
-			var UseCases = {};
-			for(var i in this.Diagrams){
-				var diagram = this.Diagrams[i];
-				if(diagram.UseCase){
-					if(!UseCases[diagram.UseCase._id]){
-						UseCases[diagram.UseCase._id] = {
-								Name: diagram.UseCase.Name,
-								Diagrams: []
-						};
-					}
-
-					var useCase = UseCases[diagram.UseCase._id];
-					useCase.Diagrams.push(diagram);
-				}
-			}
-			return UseCases;
-		}
+		/*
+		 * After we identify the diagrams of the model, we classify the diagrams into domain model, and build up different use cases based on the diagrams and use cases.
+		 * 
+		 * The information at this stage, we should remove all the ids as references.
+		 * 
+		 */
 		
-		model.findUseCaseByID = function(useCaseID){
-			var useCases = this.getUseCases();
-			var useCase = useCases[useCaseID];
-			return useCase;
-		}
+		/*
+		 * 1. first build up the domain model.
+		 */
 		
 		model.getDomainModel = function(){
 			function DomainModel(){
@@ -278,6 +264,33 @@
 			
 			return DomainModel;
 		}
+		
+		model.getUseCases = function(){
+			var UseCases = {};
+			for(var i in this.Diagrams){
+				var diagram = this.Diagrams[i];
+				if(diagram.UseCase){
+					if(!UseCases[diagram.UseCase._id]){
+						UseCases[diagram.UseCase._id] = {
+								Name: diagram.UseCase.Name,
+								Diagrams: []
+						};
+					}
+
+					var useCase = UseCases[diagram.UseCase._id];
+					useCase.Diagrams.push(diagram);
+				}
+			}
+			return UseCases;
+		}
+		
+		model.findUseCaseByID = function(useCaseID){
+			var useCases = this.getUseCases();
+			var useCase = useCases[useCaseID];
+			return useCase;
+		}
+		
+		
 		
 		return model;
 	}
@@ -311,7 +324,7 @@
 					continue;
 				}
 				var category = component.Category;
-//				var type = component.Type;
+				var type = component.Type;
 //				if (category === 'Element') { // more conditions to filter the
 //					// element
 //					if (type === 'actor' || type === 'boundary'
@@ -328,13 +341,17 @@
 			}
 			console.log(diagram);
 //			diagram.Elements = Elements;
-			diagram.Nodes = Messages;
-			for(var j in diagram.Nodes){
-				var node = diagram.Nodes[j];
-				node.no = j;
+			diagram.Nodes = [];
+			for(var i in Messages){
+				var message = Messages[i];
+				var node = {};
+				node.seqNo = i;
 				node.tag = "message";
 				node.inboundNum = 0;
 				node.outboundNum = 0;
+				node.supplier = modelComponents[message.SupplierID];
+				node.client = modelComponents[message.ClientID];
+				diagram.Nodes.push(node);
 				console.log(node.Name);
 			}
 			
@@ -348,15 +365,15 @@
 				 * 
 				 */
 				
-				var message = diagram.Nodes[j];
-				var seqNo = message.seqNo;
+				var node = diagram.Nodes[j];
+				var seqNo = node.seqNo;
 				var preMessage = null;
 				
 				//search the incoming edges for a node.
 				var incomingMessages = [];
 				for(var k in diagram.Nodes){
-					var messageIt = diagram.Nodes[k];
-						if(messageIt.ClientID === message.SupplierID){
+					var nodeIt = diagram.Nodes[k];
+						if(nodeIt.ClientID === node.SupplierID){
 							incomingMessages.push(messageIt);
 						}
 						
@@ -466,7 +483,7 @@
 //				}
 				
 				if(category === "Connector") {
-					var tag = modelComponents[component.SupplierID].Name+"I"+modelComponents[component.ClientID].Name;
+					var tag = modelComponents[component.SupplierID].Name+">"+modelComponents[component.ClientID].Name;
 					component.Name = tag;
 
 					component.inboundNum = 0;

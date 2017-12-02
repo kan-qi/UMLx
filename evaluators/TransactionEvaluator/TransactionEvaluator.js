@@ -1,9 +1,11 @@
 /**
  * http://usejsdoc.org/
  * 
- * Integrate use case point evaluator to calculate eucp, exucp, ducp
+ * Has three major functions:
  * 
- * Includes the methods  to calculate EUCP, EXUCP, DUCP, 
+ * 1. identify paths for use cases.
+ * 2. identify pattern for the paths and determine as transactions.
+ * 3. associate with components.
  */
 
 
@@ -102,7 +104,7 @@
 	}
 
 	
-	function evaluateUseCase(useCaseInfo, callbackfunc){
+	function evaluateUseCase(useCaseInfo, modelInfo, callbackfunc){
 		useCaseInfo['TransactionAnalytics'] = {
 				EI : 0,
 				EQ : 0,
@@ -122,6 +124,8 @@
 		
 		for ( var i in useCaseInfo.Diagrams) {
 			var diagram = useCaseInfo.Diagrams[i];
+			
+			transactionProcessor.processDiagram(diagram);
 			
 			var EI = 0;
 			var EQ = 0;
