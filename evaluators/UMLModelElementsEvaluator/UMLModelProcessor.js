@@ -55,9 +55,10 @@
 				for(var i = 0; i < path.length; i++)
 				{
 					var node = path[i];
-					var components = diagram.allocate(node);
-					for(var j in components){
-						var component = components[j];
+//					var components = diagram.allocate(node);
+					
+					if(node.supplier){
+						var component = node.supplier;
 						avgDegree += component.InboundNumber;
 
 						if(component.Type=="actor")actorNum++;

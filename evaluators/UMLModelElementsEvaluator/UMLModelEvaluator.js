@@ -112,9 +112,9 @@
 
 				for ( var j in diagram.Nodes) {
 					var Element = diagram.Nodes[j]; // tag: elements
-					var components = diagram.allocate(Element);
-					for(var k in components){
-						var component = components[k];
+//					var components = diagram.allocate(Element);
+					if(Element.supplier){
+						var component = Element.supplier;
 						elementNum++;
 						totalDegree += component.InboundNumber;
 						var type = component.Type;
@@ -481,9 +481,10 @@
 				var element = diagram.Nodes[j];
 				var elementName = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
 				var elementType = "";
-				var components = diagram.allocate(element);
-				for(var k in components){
-					elementType += components[k]+";"
+//				var components = diagram.allocate(Element);
+				if(element.supplier){
+					var component = element.supplier;
+					elementType = component.Type;
 				}
 				elementNum++;
 				elementAnalyticsStr += elementNum + ","

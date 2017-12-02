@@ -38,7 +38,9 @@
 				};
 //				umlModelInfo.ModelAnalytics = initModelAnalytics(umlModelInfo);
 				
-					var useCases = model.getUseCases();
+					console.log("use cases");
+					var useCases = model.UseCases;
+					console.log(useCases);
 						for(var i in useCases) {
 							(function(useCase, id){
 //								console.log(useCase);
@@ -69,9 +71,11 @@
 							umlModelInfo.UseCases.push(useCases[i]);
 						}
 						
-					var domainModel = model.getDomainModel();
+					var domainModel = model.DomainModel;
+					console.log("domainModel");
+					console.log(domainModel);
 						for(var i in domainModel.Diagrams){
-							var diagram = domainModel[i].Diagrams;
+							var diagram = domainModel.Diagrams[i];
 //							diagram._id = j;
 //							var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_") + Date.now();
 							diagram.OutputDir = umlModelInfo.DomainModel.OutputDir;

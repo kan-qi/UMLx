@@ -65,6 +65,8 @@
 				var components = [];
 				for(var i in path)
 				{	
+					var node = path[i];
+					
 					if(i === 0){
 						if(node.client){
 						components.push(node.client);

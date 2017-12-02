@@ -7,37 +7,40 @@
 	var parser = new xml2js.Parser();
 
 	function extractModelComponents(parsedResult) {
+		var xmiExtension = parsedResult['xmi:XMI']['xmi:Extension'][0];
 		var components = {};
-
-		var elements = parsedResult['xmi:XMI']['xmi:Extension'][0]['elements'][0]['element'];
-		for ( var i in elements) {
-			var element = elements[i];
+		
+		var xmiElements = parsedResult['xmi:XMI']['xmi:Extension'][0]['elements'][0]['element'];
+		for ( var i in xmiElements) {
+			var xmiElement = xmiElements[i];
 			var component = {
+				//keep the ID of the xmi model, for re-analyse
+				_id : xmiElement['$']['xmi:idref'],
 				Category : 'Element',
-				StereoType : element['$']['xmi:type'],
-				Name : element['$']['name']
+				StereoType : xmiElement['$']['xmi:type'],
+				Name : xmiElement['$']['name']
 			};
 			if (component.StereoType === 'uml:Object') {
 				var connectors = new Array();
-				if (element['links'] && element['links'][0]) {
-					for ( var j in element['links'][0]['Association']) {
-						var association = element['links'][0]['Association'][j];
+				if (xmiElement['links'] && xmiElement['links'][0]) {
+					for ( var j in xmiElement['links'][0]['Association']) {
+						var association = xmiElement['links'][0]['Association'][j];
 						connectors.push({
 							ClientID : association['$']['start'],
 							SupplierID : association['$']['end']
 						});
 					}
 
-					for ( var j in element['links'][0]['Dependency']) {
-						var dependency = element['links'][0]['Dependency'][j];
+					for ( var j in xmiElement['links'][0]['Dependency']) {
+						var dependency = xmiElement['links'][0]['Dependency'][j];
 						connectors.push({
 							ClientID : dependency['$']['start'],
 							SupplierID : dependency['$']['end']
 						});
 					}
 
-					for ( var j in element['links'][0]['InformationFlow']) {
-						var informationFlow = element['links'][0]['InformationFlow'][j];
+					for ( var j in xmiElement['links'][0]['InformationFlow']) {
+						var informationFlow = xmiElement['links'][0]['InformationFlow'][j];
 						connectors.push({
 							ClientID : informationFlow['$']['start'],
 							SupplierID : informationFlow['$']['end']
@@ -47,28 +50,28 @@
 				}
 
 				component.Connectors = connectors;
-				component.Type = element['properties'][0]['$']['stereotype'];
+				component.Type = xmiElement['properties'][0]['$']['stereotype'];
 			} else if (component.StereoType === 'uml:Actor') {
 				var connectors = new Array();
-				if (element['links'] && element['links'][0]) {
-					for ( var j in element['links'][0]['Association']) {
-						var association = element['links'][0]['Association'][j];
+				if (xmiElement['links'] && xmiElement['links'][0]) {
+					for ( var j in xmiElement['links'][0]['Association']) {
+						var association = xmiElement['links'][0]['Association'][j];
 						connectors.push({
 							ClientID : association['$']['start'],
 							SupplierID : association['$']['end']
 						});
 					}
 
-					for ( var j in element['links'][0]['Dependency']) {
-						var dependency = element['links'][0]['Dependency'][j];
+					for ( var j in xmiElement['links'][0]['Dependency']) {
+						var dependency = xmiElement['links'][0]['Dependency'][j];
 						connectors.push({
 							ClientID : dependency['$']['start'],
 							SupplierID : dependency['$']['end']
 						});
 					}
 
-					for ( var j in element['links'][0]['InformationFlow']) {
-						var informationFlow = element['links'][0]['InformationFlow'][j];
+					for ( var j in xmiElement['links'][0]['InformationFlow']) {
+						var informationFlow = xmiElement['links'][0]['InformationFlow'][j];
 						connectors.push({
 							ClientID : informationFlow['$']['start'],
 							SupplierID : informationFlow['$']['end']
@@ -79,10 +82,10 @@
 				component.Type = 'actor';
 			} else if (component.StereoType === 'uml:Class') {
 				var attributes = new Array();
-				if (element['attributes']) {
-					if (element['attributes'][0]['attribute']) {
-						for (var j = 0; j < element['attributes'][0]['attribute'].length; j++) {
-							var attribute = element['attributes'][0]['attribute'][j];
+				if (xmiElement['attributes']) {
+					if (xmiElement['attributes'][0]['attribute']) {
+						for (var j = 0; j < xmiElement['attributes'][0]['attribute'].length; j++) {
+							var attribute = xmiElement['attributes'][0]['attribute'][j];
 							if (!attribute['$']['name']) {
 								continue;
 							}
@@ -95,10 +98,10 @@
 				}
 
 				var operations = new Array();
-				if (element['operations']) {
-					if (element['operations'][0]['operation']) {
-						for (var j = 0; j < element['operations'][0]['operation'].length; j++) {
-							var operation = element['operations'][0]['operation'][j];
+				if (xmiElement['operations']) {
+					if (xmiElement['operations'][0]['operation']) {
+						for (var j = 0; j < xmiElement['operations'][0]['operation'].length; j++) {
+							var operation = xmiElement['operations'][0]['operation'][j];
 							var parameters = [];
 							for ( var k in operation['parameters'][0]['parameter']) {
 								var parameter = operation['parameters'][0]['parameter'][k];
@@ -120,9 +123,9 @@
 				component.Type = 'class';
 			} else if (component.StereoType === 'uml:Sequence') {
 				var connectors = new Array();
-				if (element['links'] && element['links'][0] && element['links'][0]['Sequence']) {
-					for (var j = 0; j < element['links'][0]['Sequence'].length; j++) {
-						var sequence = element['links'][0]['Sequence'][j];
+				if (xmiElement['links'] && xmiElement['links'][0] && xmiElement['links'][0]['Sequence']) {
+					for (var j = 0; j < xmiElement['links'][0]['Sequence'].length; j++) {
+						var sequence = xmiElement['links'][0]['Sequence'][j];
 						connectors.push({
 							ClientID : sequence['$']['start'],
 							SupplierID : sequence['$']['end']
@@ -130,13 +133,13 @@
 					}
 				}
 				component.Connectors = connectors;
-				component.Type = element['properties'][0]['$']['stereotype'];
-			} else if (component.StereoType = "uml:Activity"){
+				component.Type = xmiElement['properties'][0]['$']['stereotype'];
+			} else if (component.StereoType === "uml:Activity"){
 				
 				var connectors = new Array();
-				if (element['links'] && element['links'][0] && element['links'][0]['ControlFlow']) {
-					for (var j = 0; j < element['links'][0]['ControlFlow'].length; j++) {
-						var controlFlow = element['links'][0]['ControlFlow'][j];
+				if (xmiElement['links'] && xmiElement['links'][0] && xmiElement['links'][0]['ControlFlow']) {
+					for (var j = 0; j < xmiElement['links'][0]['ControlFlow'].length; j++) {
+						var controlFlow = xmiElement['links'][0]['ControlFlow'][j];
 						connectors.push({
 							ClientID : controlFlow['$']['start'],
 							SupplierID : controlFlow['$']['end']
@@ -144,47 +147,49 @@
 					}
 				}
 				component.Connectors = connectors;
-				component.Type = element['properties'][0]['$']['stereotype'];
+				component.Type = xmiElement['properties'][0]['$']['stereotype'];
 				
 			}
 			else if (component.Stereotype === 'uml:Requirement') {
-				console.log('requirement element: ' + component.Name);
+				console.log('requirement xmiElement: ' + component.Name);
 			}
 
-			components[element['$']['xmi:idref']] = component;
+			components[xmiElement['$']['xmi:idref']] = component;
 
 		}
 
 		//initiate connectors as components.
-		var connectors = parsedResult['xmi:XMI']['xmi:Extension'][0]['connectors'][0]['connector'];
-		for ( var i in connectors) {
-			var connector = connectors[i];
-			components[connector['$']['xmi:idref']] = {
+		var xmiConnectors = parsedResult['xmi:XMI']['xmi:Extension'][0]['connectors'][0]['connector'];
+		for ( var i in xmiConnectors) {
+			var xmiConnector = xmiConnectors[i];
+			components[xmiConnector['$']['xmi:idref']] = {
+				_id : xmiConnector['$']['xmi:idref'],
 				Category : 'Connector',
-				Type : connector['properties'][0]['$']['ea_type'],
-				Name : connector['properties'][0]['$']['name'],
-				ClientID : connector['target'][0]['$']['xmi:idref'],
-				SupplierID : connector['source'][0]['$']['xmi:idref']
+				Type : xmiConnector['properties'][0]['$']['ea_type'],
+				Name : xmiConnector['properties'][0]['$']['name'],
+				ClientID : xmiConnector['target'][0]['$']['xmi:idref'],
+				SupplierID : xmiConnector['source'][0]['$']['xmi:idref']
 			};
 		}
 		
 		//initiate diagrams as components.
-		var diagrams = parsedResult['xmi:XMI']['xmi:Extension'][0]['diagrams'][0]['diagram'];
-		for ( var i in diagrams) {
-			var diagram = diagrams[i];
+		var xmiDiagrams = parsedResult['xmi:XMI']['xmi:Extension'][0]['diagrams'][0]['diagram'];
+		for ( var i in xmiDiagrams) {
+			var xmiDiagram = xmiDiagrams[i];
 			// elements from diagram doesn't have sufficient information.
-			var componentIDs = [];
-			if (diagram['elements']) {
-				for ( var j in diagram['elements'][0]['element']) {
-					componentIDs.push(diagram['elements'][0]['element'][j]['$']['subject']);
-				}
-			}
-			components[diagram['$']['xmi:id']] = {
-				Category : 'Diagram',
-				Type : diagram['properties'][0]['$']['type'],
-				Name : diagram['properties'][0]['$']['name'],
-				ComponentIDs : componentIDs
-			};
+			var diagram = {
+					_id : xmiDiagram['$']['xmi:id'],
+					Category : 'Diagram',
+					Type : xmiDiagram['properties'][0]['$']['type'],
+					Name : xmiDiagram['properties'][0]['$']['name'],
+					Package : xmiDiagram['model'][0]['$']['owner'],
+//					XMIElement: xmiDiagram,
+//					ComponentIDs : componentIDs,
+				};
+			
+			populateDiagram(diagram, xmiDiagram, components);
+
+			components[xmiDiagram['$']['xmi:id']] = diagram; 
 		}
 
 		return components;
@@ -201,26 +206,25 @@
 	 */
 	function extractModel(parsedResult, filter) {
 		var modelComponents = extractModelComponents(parsedResult);
-		var xmiExtension = parsedResult['xmi:XMI']['xmi:Extension'][0];
 		
 		/*
 		 * model include a set of diagrams as well as a set of methods to search specific diagrams.
 		 */
 		var model = new Model();
-		
-		for ( var i in xmiExtension['diagrams'][0]['diagram']) {
-			var xmiDiagram = xmiExtension['diagrams'][0]['diagram'][i];
-			var diagram = {
-					_id: xmiDiagram['$']['xmi:id'],
-					Package : xmiDiagram['model'][0]['$']['owner'],
-					Type : xmiDiagram['properties'][0]['$']['type'],
-			};
+		/*
+		 * Search diagrams from the existing components.
+		 */
+		for ( var i in modelComponents) {
+			if(modelComponents[i].Category === "Diagram"){
+				var diagram = modelComponents[i];
+//				diagram._id = i;
+//				diagram.Type = xmiElement['properties'][0]['$']['type'];
 
-			if(!filter || diagramType == filter){
-//				console.log("populate model");
-//				model['Diagrams'][diagram['$']['xmi:id']] = modelComponents[diagram['$']['xmi:id']];
-				populateDiagram(diagram, xmiDiagram, modelComponents);
-				model.Diagrams.push(diagram);
+				if(!filter || diagram.Type == filter){
+//					console.log("populate model");
+//					model['Diagrams'][diagram['$']['xmi:id']] = modelComponents[diagram['$']['xmi:id']];
+					model.Diagrams.push(diagram);
+				}
 			}
 		}
 		
@@ -242,11 +246,13 @@
 
 		var domainModel = new DomainModel();
 		
-		for(var i in this.Diagrams){
-			var diagram = this.Diagrams[i];
+		for(var i in model.Diagrams){
+			var diagram = model.Diagrams[i];
 			if(diagram.Type === "Logical"){
 				domainModel.Diagrams.push(diagram);
 			}
+			console.log("diagrams");
+			console.log(diagram);
 		}
 		
 		// make extra processing for the domain model diagrams. To reference their elements 
@@ -271,8 +277,8 @@
 		
 		var UseCases = [];
 		
-		for(var i in this.Diagrams){
-			var diagram = this.Diagrams[i];
+		for(var i in model.Diagrams){
+			var diagram = model.Diagrams[i];
 			if(diagram.UseCase){
 				if(!UseCases[diagram.UseCase._id]){
 					UseCases[diagram.UseCase._id] = {
@@ -311,7 +317,9 @@
 //		}
 		
 		
-		
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("model",model);
+		debug.writeJson("test", {test:"hello"})
 		return model;
 	}
 	
@@ -320,7 +328,16 @@
 	 * Each node should have a tag about the which component the action is implemented upon, if the action is detailed.
 	 */
 
-	function populateDiagram(diagram, xmiDiagram, modelComponents) {
+	function populateDiagram(diagram, xmiElement, modelComponents) {
+		
+//		var xmiElement = modelComponents[diagram._id];
+		
+		var componentIDs = [];
+		if (xmiElement['elements']) {
+			for ( var j in xmiElement['elements'][0]['element']) {
+				componentIDs.push(xmiElement['elements'][0]['element'][j]['$']['subject']);
+			}
+		}
 		
 		if (diagram.Type === 'Sequence') {
 			/*
@@ -330,16 +347,16 @@
 			
 
 			diagram.UseCase = {
-				_id: xmiDiagram['model'][0]['$']['parent'],
-				Name: modelComponents[xmiDiagram['model'][0]['$']['parent']].Name
+				_id: xmiElement['model'][0]['$']['parent'],
+				Name: modelComponents[xmiElement['model'][0]['$']['parent']].Name
 			}
 		
 //			var Elements = {};
 			var Messages = [];
 			// here some logic needs to be applied to extract the structure for sequence diagrams
 			// console.log(modelComponents);
-			for ( var i in diagram['ComponentIDs']) {
-				var component = modelComponents[diagram['ComponentIDs'][i]];
+			for ( var i in componentIDs) {
+				var component = modelComponents[componentIDs[i]];
 				if(!component){
 					continue;
 				}
@@ -349,7 +366,7 @@
 //					// element
 //					if (type === 'actor' || type === 'boundary'
 //							|| type === 'control' || type === 'entity') {
-//						Elements[diagram['ComponentIDs'][i]] = component;
+//						Elements[componentIDs[i]] = component;
 //					}
 //				} else 
 //					
@@ -481,14 +498,14 @@
 			
 		} else if (diagram.Type === 'Analysis') {
 			diagram.UseCase = {
-					_id: xmiDiagram['model'][0]['$']['parent'],
-					Name: modelComponents[xmiDiagram['model'][0]['$']['parent']].Name
+					_id: xmiElement['model'][0]['$']['parent'],
+					Name: modelComponents[xmiElement['model'][0]['$']['parent']].Name
 				}
 			var Interactions = [];
 //			var Elements = {};
 			
-			for ( var i in diagram['ComponentIDs']) {
-				var component = modelComponents[diagram['ComponentIDs'][i]];
+			for ( var i in componentIDs) {
+				var component = modelComponents[componentIDs[i]];
 				if(!component){
 					continue;
 				}
@@ -498,14 +515,16 @@
 //					// element
 //					if (type === 'actor' || type === 'boundary'
 //							|| type === 'control' || type === 'entity') {
-//						Elements[diagram['ComponentIDs'][i]] = component;
+//						Elements[componentIDs[i]] = component;
 //					}
 //				}
 				
 				if(category === "Connector") {
-					var supplier = modelComponent[component.SupplierID];
-					var client = modelComponent[component.ClientID];
-					var tag = suplier.Name+">"+client.Name;
+					var supplier = modelComponents[component.SupplierID];
+					var client = modelComponents[component.ClientID];
+//					console.log('supplier');
+//					console.log(supplier);
+					var tag = supplier.Name+">"+client.Name;
 					component.Name = tag;
 					component.Supper = supplier;
 					component.Client = client;
@@ -604,14 +623,14 @@
 
 		} else if (diagram.Type === "Activity"){
 			diagram.UseCase = {
-					_id: xmiDiagram['model'][0]['$']['parent'],
-					Name: modelComponents[xmiDiagram['model'][0]['$']['parent']].Name
+					_id: xmiElement['model'][0]['$']['parent'],
+					Name: modelComponents[xmiElement['model'][0]['$']['parent']].Name
 				}
 			var ControlFlows = [];
 			var Activities = [];
 			
-			for ( var i in diagram['ComponentIDs']) {
-				var component = modelComponents[diagram['ComponentIDs'][i]];
+			for ( var i in componentIDs) {
+				var component = modelComponents[componentIDs[i]];
 				if(!component){
 					continue;
 				}
@@ -620,7 +639,7 @@
 				if (category === 'Element') { // more conditions to filter the
 					// element
 					//if (type === 'actor' || type === 'boundary' || type === 'control' || type === 'entity') {
-					//	Elements[diagram['ComponentIDs'][i]] = component;
+					//	Elements[componentIDs[i]] = component;
 					//}
 					Activities.push(component);
 					//for activity components, there is no supplier and client.
@@ -721,12 +740,12 @@
 //			}
 			
 		} else if (diagram.Type === "Logical") {
-			var Elements = {};
+			var Elements = [];
 			var elementNum = 0;
 			var attributeNum = 0;
 			var operationNum = 0;
-			for ( var i in diagram['ComponentIDs']) {
-				var component = modelComponents[diagram['ComponentIDs'][i]];
+			for ( var i in componentIDs) {
+				var component = modelComponents[componentIDs[i]];
 				if (!component) {
 					continue;
 				}
@@ -735,7 +754,7 @@
 				if (category === 'Element') { // more conditions to filter the
 					// element
 					if (type === 'class') {
-						Elements[diagram['ComponentIDs'][i]] = component;
+						Elements.push(component);
 						elementNum++;
 						if (component.Operations) {
 							for ( var j in component.Operations) {
@@ -754,6 +773,7 @@
 			diagram.ElementNum = elementNum;
 			diagram.AttributeNum = attributeNum;
 			diagram.OperationNum = operationNum;
+			
 		}
 	}
 
