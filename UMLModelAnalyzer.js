@@ -3,13 +3,13 @@
 	 *  Work as a test stub
 	 */
 	var modelXMLParser = require('./model_platforms/ea/XMI2.1Parserv1.1.js');
-	var diagramProfiler = require('./diagram_profilers/UMLDiagramProfiler.js');
+//	var diagramProfiler = require('./diagram_profilers/UMLDiagramProfiler.js');
 	var mkdirp = require('mkdirp');
 	var fs = require('fs');
 	//To process second order information, for example, determine duplicate or identify patterns.
-	var useCaseProcessor = require('./diagram_profilers/UseCaseProcessor.js');
-	var domainModelProcessor = require('./diagram_profilers/DomainModelProcessor.js');
-	var domainModelDrawer = require('./diagram_profilers/DomainModelDrawer.js');
+//	var useCaseProcessor = require('./diagram_profilers/UseCaseProcessor.js');
+//	var domainModelProcessor = require('./diagram_profilers/DomainModelProcessor.js');
+//	var domainModelDrawer = require('./diagram_profilers/DomainModelDrawer.js');
 	var umlEvaluator = require('./UMLEvaluator.js');
 	
 
@@ -51,9 +51,9 @@
 									var diagram = useCase.Diagrams[k];
 									diagram.OutputDir = useCase.OutputDir;
 									diagram.AccessDir = useCase.AccessDir;
-									diagramProfiler.profileDiagram(diagram, function(){
-										console.log("diagram is processed!");
-									});
+//									diagramProfiler.profileDiagram(diagram, function(){
+//										console.log("diagram is processed!");
+//									});
 //									console.log("Diagram file name:"+diagram.Name);
 								}
 //								mkdirp(useCase.OutputDir, function(err) {
@@ -76,7 +76,7 @@
 //							var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_") + Date.now();
 							diagram.OutputDir = umlModelInfo.DomainModel.OutputDir;
 							diagram.AccessDir = umlModelInfo.DomainModel.AccessDir;
-							diagramProfiler.profileDiagram(diagram);
+//							diagramProfiler.profileDiagram(diagram);
 							umlModelInfo.DomainModel.Diagrams.push(diagram);
 //							console.log("diagram file name:"+diagram.Name);
 						}

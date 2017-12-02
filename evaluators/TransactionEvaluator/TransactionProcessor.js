@@ -66,11 +66,15 @@
 				for(var i in path)
 				{	
 					if(i === 0){
+						if(node.client){
 						components.push(node.client);
-						components.push(node.supplier);
+						}
 					}
-					else{
+	
+					if(node.supplier){
+						if(node.supplier){
 						components.push(node.supplier);
+						}
 					}
 //					var node = path[i];
 //					var elementID = path['Elements'][i];

@@ -87,15 +87,15 @@
 	 }
 	 
 	 function recognizePattern(path, diagram, patternRoot){
-		 	var preprocessedPath = new Array();
-			for(var i in path){
-				var node = path[i];
-				var components = diagram.allocate(node);
-//				var element = diagram['Elements'][path['Elements'][i]];
-				for(var j in components){
-					preprocessedPath.push(components[j].Type);	
-				}
-			}
+//		 	var preprocessedPath = new Array();
+//			for(var i in path){
+//				var node = path[i];
+//				var components = diagram.allocate(node);
+////				var element = diagram['Elements'][path['Elements'][i]];
+//				for(var j in components){
+//					preprocessedPath.push(components[j].Type);	
+//				}
+//			}
 			
 //			console.log(preprocessedPath);
 				
@@ -135,8 +135,8 @@
 			var searchIndex = 0;
 			
 //			console.log('===========Search Pattern============');
-			while(searchIndex < preprocessedPath.length){
-				var matchingTarget = preprocessedPath[searchIndex];
+			while(searchIndex < path.length){
+				var matchingTarget = path[searchIndex];
 //				console.log(matchingTarget);
 				var patternElement = null;
 				var matchedPatternElementArray = [];

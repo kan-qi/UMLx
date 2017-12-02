@@ -291,6 +291,15 @@
 			var useCase = UseCases[i];
 			for(var j in useCase.Diagrams[j]){
 				var diagram = useCase.Diagrams[j];
+				for(var k in diagram.Nodes){
+					var node = diagram.Nodes[k];
+					var supplier = node.supplier;
+					var supplierComponent = model.DomainModel.findElement(supplier.Name);
+					supplier.component = supplierComponent;
+					var client = node.client;
+					var clientComponent = model.DomainModel.findElement(client.Name);
+					client.component = clientComponent;
+				}
 			}
 			model.UseCases.push(useCase);
 		}
@@ -383,9 +392,9 @@
 				//search the incoming edges for a node.
 				var incomingMessages = [];
 				for(var k in diagram.Nodes){
-					var nodeIt = diagram.Nodes[k];
-						if(nodeIt.ClientID === node.SupplierID){
-							incomingMessages.push(messageIt);
+					var otherNode = diagram.Nodes[k];
+						if(otherNode.ClientID === node.SupplierID){
+							incomingMessages.push(otherNode);
 						}
 						
 				}
@@ -451,23 +460,23 @@
 			}
 			
 			// the function to search for the component that realize the message, can also the properties of the component.
-			diagram.allocate = function(node){
-				// the function call to call the method of an object.
-				var component = modelComponents[node.ClientID];
-				component.inboundNumber = 0;
-				component.outboundNumber = 0;
-				for(var i in diagram.Nodes){
-					var otherNode = diagram.Nodes[i];
-					if(otherNode.ClientID === node.ClientID){
-						component.inboundNumber ++; 
-					}
-					else if(otherNode.SupplierID == node.ClientID){
-						component.outboundNumber ++;
-					}
-				}
-				// return an array, to add more flexibility, if a message is realized by more than one system components.
-				return [component];
-			}
+//			diagram.allocate = function(node){
+//				// the function call to call the method of an object.
+//				var component = modelComponents[node.ClientID];
+//				component.inboundNumber = 0;
+//				component.outboundNumber = 0;
+//				for(var i in diagram.Nodes){
+//					var otherNode = diagram.Nodes[i];
+//					if(otherNode.ClientID === node.ClientID){
+//						component.inboundNumber ++; 
+//					}
+//					else if(otherNode.SupplierID == node.ClientID){
+//						component.outboundNumber ++;
+//					}
+//				}
+//				// return an array, to add more flexibility, if a message is realized by more than one system components.
+//				return [component];
+//			}
 			
 			
 		} else if (diagram.Type === 'Analysis') {
@@ -494,9 +503,12 @@
 //				}
 				
 				if(category === "Connector") {
-					var tag = modelComponents[component.SupplierID].Name+">"+modelComponents[component.ClientID].Name;
+					var supplier = modelComponent[component.SupplierID];
+					var client = modelComponent[component.ClientID];
+					var tag = suplier.Name+">"+client.Name;
 					component.Name = tag;
-
+					component.Supper = supplier;
+					component.Client = client;
 					component.inboundNum = 0;
 					component.outboundNum = 0;
 				
@@ -532,9 +544,9 @@
 			// to generate an entry node set of start the search.
 			for(var i in diagram.Nodes){
 				var node = diagram.Nodes[i];
-				console.log(node);
+//				console.log(node);
 				console.log(node.SupplierID);
-				console.log(modelComponents[node.SupplierID]);
+//				console.log(modelComponents[node.SupplierID]);
 //				if(modelComponents[node.SupplierID] && modelComponents[node.SupplierID].Type === "boundary"){
 				if(node.inboundNum == 0){
 					entries.push(node);
@@ -569,26 +581,26 @@
 			}
 			
 			// the function to search for the component that realize the message, can also the properties of the component.
-			diagram.allocate = function(node){
-				// the function call to call the method of an object.
-				var component = modelComponents[node.ClientID];
-				if(!component){
-					return [];
-				}
-				component.inboundNumber = 0;
-				component.outboundNumber = 0;
-				for(var i in diagram.Nodes){
-					var otherNode = diagram.Nodes[i];
-					if(otherNode.ClientID === node.ClientID){
-						component.inboundNumber ++; 
-					}
-					else if(otherNode.SupplierID == node.ClientID){
-						component.outboundNumber ++;
-					}
-				}
-				// return an array, to add more flexibility, if a message is realized by more than one system components.
-				return [component];
-			}
+//			diagram.allocate = function(node){
+//				// the function call to call the method of an object.
+//				var component = modelComponents[node.ClientID];
+//				if(!component){
+//					return [];
+//				}
+//				component.inboundNumber = 0;
+//				component.outboundNumber = 0;
+//				for(var i in diagram.Nodes){
+//					var otherNode = diagram.Nodes[i];
+//					if(otherNode.ClientID === node.ClientID){
+//						component.inboundNumber ++; 
+//					}
+//					else if(otherNode.SupplierID == node.ClientID){
+//						component.outboundNumber ++;
+//					}
+//				}
+//				// return an array, to add more flexibility, if a message is realized by more than one system components.
+//				return [component];
+//			}
 
 		} else if (diagram.Type === "Activity"){
 			diagram.UseCase = {
@@ -611,6 +623,7 @@
 					//	Elements[diagram['ComponentIDs'][i]] = component;
 					//}
 					Activities.push(component);
+					//for activity components, there is no supplier and client.
 					component.outboundNum = 0;
 					component.inboundNum = 0;
 				}
@@ -649,9 +662,9 @@
 			// to generate an entry node set of start the search.
 			for(var i in diagram.Nodes){
 				var node = diagram.Nodes[i];
-				console.log(node);
-				console.log(node.SupplierID);
-				console.log(modelComponents[node.SupplierID]);
+//				console.log(node);
+//				console.log(node.SupplierID);
+//				console.log(modelComponents[node.SupplierID]);
 //				if(modelComponents[node.SupplierID] && modelComponents[node.SupplierID].Type === "boundary"){
 				if(node.inboundNum == 0){
 					entries.push(node);
@@ -672,7 +685,7 @@
 				}
 				else {
 
-					var  children = [];
+					var children = [];
 					for(var i in diagram.Edges){
 						var edge = diagram.Edges[i];
 						if(edge.start == node){
@@ -686,26 +699,26 @@
 			}
 			
 			// the function to search for the component that realize the message, can also the properties of the component.
-			diagram.allocate = function(node){
-				// the function call to call the method of an object.
-				var component = modelComponents[node.ClientID];
-				if(!component){
-					return [];
-				}
-				component.inboundNumber = 0;
-				component.outboundNumber = 0;
-				for(var i in diagram.Nodes){
-					var otherNode = diagram.Nodes[i];
-					if(otherNode.ClientID === node.ClientID){
-						component.inboundNumber ++; 
-					}
-					else if(otherNode.SupplierID == node.ClientID){
-						component.outboundNumber ++;
-					}
-				}
+//			diagram.allocate = function(node){
+//				// the function call to call the method of an object.
+//				var component = modelComponents[node.ClientID];
+//				if(!component){
+//					return [];
+//				}
+//				component.inboundNumber = 0;
+//				component.outboundNumber = 0;
+//				for(var i in diagram.Nodes){
+//					var otherNode = diagram.Nodes[i];
+//					if(otherNode.ClientID === node.ClientID){
+//						component.inboundNumber ++; 
+//					}
+//					else if(otherNode.SupplierID == node.ClientID){
+//						component.outboundNumber ++;
+//					}
+//				}
 				// return an array, to add more flexibility, if a message is realized by more than one system components.
-				return [component];
-			}
+//				return [component];
+//			}
 			
 		} else if (diagram.Type === "Logical") {
 			var Elements = {};
