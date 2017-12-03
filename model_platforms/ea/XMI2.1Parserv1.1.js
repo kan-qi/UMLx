@@ -5,6 +5,10 @@
 	var fs = require('fs');
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
+	
+	function standardiseName(name){
+		return name.replace(/\s/g, '').toUpperCase()
+	}
 
 	function extractModelComponents(parsedResult) {
 		var xmiExtension = parsedResult['xmi:XMI']['xmi:Extension'][0];
@@ -195,10 +199,6 @@
 		return components;
 	}
 	
-	
-	function Model(){
-		this.Diagrams  = [];
-	}
 
 	/*
 	 * filter can be assigned with values: "sequence", "logic", "analysis", to extract specific types of diagrams.
@@ -206,6 +206,12 @@
 	 */
 	function extractModel(parsedResult, filter) {
 		var modelComponents = extractModelComponents(parsedResult);
+		
+
+		
+		function Model(){
+			this.Diagrams  = [];
+		}
 		
 		/*
 		 * model include a set of diagrams as well as a set of methods to search specific diagrams.
@@ -217,12 +223,11 @@
 		for ( var i in modelComponents) {
 			if(modelComponents[i].Category === "Diagram"){
 				var diagram = modelComponents[i];
-//				diagram._id = i;
-//				diagram.Type = xmiElement['properties'][0]['$']['type'];
 
 				if(!filter || diagram.Type == filter){
-//					console.log("populate model");
-//					model['Diagrams'][diagram['$']['xmi:id']] = modelComponents[diagram['$']['xmi:id']];
+					/*
+					 * only consider the diagrams that are not filtered out.
+					 */
 					model.Diagrams.push(diagram);
 				}
 			}
@@ -237,6 +242,7 @@
 		
 		/*
 		 * 1. first build up the domain model.
+		 * 2. the class of domain model is used to represent a whole level of abstraction.
 		 */
 		
 		function DomainModel(){
@@ -251,21 +257,21 @@
 			if(diagram.Type === "Logical"){
 				domainModel.Diagrams.push(diagram);
 			}
-			console.log("diagrams");
-			console.log(diagram);
+//			console.log("diagrams");
+//			console.log(diagram);
 		}
 		
 		// make extra processing for the domain model diagrams. To reference their elements 
 		domainModel.findElement = function(elementName){
 
 //			console.log("checking class elments");
-			console.log(elementName);
+//			console.log(elementName);
 			for(var i in this.Diagrams){
 				var diagram = this.Diagrams[i];
 				for(var j in diagram.Elements){
 					var element = diagram.Elements[j];
-					//apply the rules to convert to standard names.
-					if(elementName.replace(/\s/g, '').toUpperCase() === element.Name.replace(/\s/g, '').toUpperCase()){
+					//apply the rules to convert to standard names, and use the standard ones to compare with each other.
+					if(standardiseName(elementName) === standardiseName(element.Name)){
 						return element;
 					}
 				}
@@ -309,8 +315,8 @@
 					var source = node.source;
 					var sourceComponent = model.DomainModel.findElement(source.Name);
 					source.component = sourceComponent;
-					console.log("source component");
-					console.log(source);
+//					console.log("source component");
+//					console.log(source);
 					var target = node.target;
 					var targetComponent = model.DomainModel.findElement(target.Name);
 					target.component = targetComponent;
@@ -319,21 +325,31 @@
 			model.UseCases.push(useCase);
 		}
 		
-//		model.findUseCaseByID = function(useCaseID){
-//			var useCases = this.getUseCases();
-//			var useCase = useCases[useCaseID];
-//			return useCase;
-//		}
+		model.findDegree = function(component){
+			// this method to find out the degree of a component, which is the total number of outbound edges.
+			var degree = 0;
+			for(var i in this.Diagrams){
+				var diagram = this.Diagrams[i];
+				for(var j in diagram.Edges){
+					var edge = diagram.Edges[j];
+					if(edge.source){
+						if(standardiseName(edge.source.Name) === standardiseName(component.Name)){
+							degree++;
+						}
+					}
+				}
+			}
+			return degree;
+		}
 		
-		
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("model",model);
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("model",model);
 		
 //		var modelDrawer = require("./../evaluators/TransactionEvaluator/DiagramProfilers/ModelDrawer.js");
-		var modelDrawer = require("./ModelDrawer.js");
-		modelDrawer.drawModel(model, "./debug/model.dotty", function(){
-			console.log("model is drawn");
-		});
+//		var modelDrawer = require("./ModelDrawer.js");
+//		modelDrawer.drawModel(model, "./debug/model.dotty", function(){
+//			console.log("model is drawn");
+//		});
 		return model;
 	}
 	
@@ -356,16 +372,14 @@
 		if (diagram.Type === 'Sequence') {
 			/*
 			 * For sequence diagrams. Nodes are the messages.
-			 * The message that is implemented by components.
+			 * The message that is implemented by components. The components have been identified at the 
 			 */
 			
-
 			diagram.UseCase = {
 				_id: xmiElement['model'][0]['$']['parent'],
 				Name: modelComponents[xmiElement['model'][0]['$']['parent']].Name
 			}
 		
-//			var Elements = {};
 			var Messages = [];
 			var seqNo = 0;
 			// here some logic needs to be applied to extract the structure for sequence diagrams
@@ -375,18 +389,8 @@
 				if(!component){
 					continue;
 				}
-				var category = component.Category;
-				var type = component.Type;
-//				if (category === 'Element') { // more conditions to filter the
-//					// element
-//					if (type === 'actor' || type === 'boundary'
-//							|| type === 'control' || type === 'entity') {
-//						Elements[componentIDs[i]] = component;
-//					}
-//				} else 
-//					
-				if (category === 'Connector') {
-					if (type === 'Sequence') {
+				
+				if (component.Category === 'Connector' && component.Type === 'Sequence') {
 						component.seqNo = seqNo;
 						component.Name = component.seqNo+". "+ component.Name;
 						component.tag = "message";
@@ -397,21 +401,12 @@
 						Messages.push(component);
 						seqNo++;
 						console.log(component.Name);
-					}
 				}
 			}
-//			console.log(diagram);
-//			diagram.Elements = Elements;
-			diagram.Nodes = Messages;
-//			for(var i in Messages){
-//				var message = Messages[i];
-//				var node = {};
-				
-//				diagram.Nodes.push(node);
-
-//			}
 			
+			diagram.Nodes = Messages;
 			diagram.Edges = [];
+			
 			for(var j in diagram.Nodes){
 				/*
 				 * The rule of identifying the adjacency of the edges.
@@ -434,9 +429,6 @@
 						}
 						
 				}
-				
-				console.log("incoming messages");
-				console.log(incomingMessages);
 				
 				for(var k in incomingMessages){
 					var incomingMessage = incomingMessages[k];
@@ -494,55 +486,21 @@
 				}
 				
 			}
-			
-			// the function to search for the component that realize the message, can also the properties of the component.
-//			diagram.allocate = function(message){
-//				// the function call to call the method of an object.
-//				var component = modelComponents[message.TargetID];
-//				component.inboundNumber = 0;
-//				component.outboundNumber = 0;
-//				for(var i in diagram.Nodes){
-//					var otherMessage = diagram.Nodes[i];
-//					if(otherMessage.TargetID === message.TargetID){
-//						component.inboundNumber ++; 
-//					}
-//					else if(otherMessage.SourceID == message.TargetID){
-//						component.outboundNumber ++;
-//					}
-//				}
-//				// return an array, to add more flexibility, if a message is realized by more than one system components.
-//				return [component];
-//			}
-			
-			
 		} else if (diagram.Type === 'Analysis') {
 			diagram.UseCase = {
 					_id: xmiElement['model'][0]['$']['parent'],
 					Name: modelComponents[xmiElement['model'][0]['$']['parent']].Name
 				}
 			var Interactions = [];
-//			var Elements = {};
 			
 			for ( var i in componentIDs) {
 				var component = modelComponents[componentIDs[i]];
 				if(!component){
 					continue;
 				}
-				var category = component.Category;
-//				var type = component.Type;
-//				if (category === 'Element') { // more conditions to filter the
-//					// element
-//					if (type === 'actor' || type === 'boundary'
-//							|| type === 'control' || type === 'entity') {
-//						Elements[componentIDs[i]] = component;
-//					}
-//				}
-				
-				if(category === "Connector") {
+				if(component.Category === "Connector") {
 					var source = modelComponents[component.SourceID];
 					var target = modelComponents[component.TargetID];
-//					console.log('source');
-//					console.log(source);
 					var tag = source.Name+">"+target.Name;
 					component.Name = tag;
 					component.Supper = source;
@@ -553,20 +511,15 @@
 					Interactions.push(component);
 				}
 			}
-//			diagram.Elements = Elements;
 			
 			diagram.Nodes = Interactions;
 			diagram.Edges = [];
 			
 			for(var j in diagram.Nodes){
 				var node = diagram.Nodes[j];
-//				var receiver = modelComponents[node.TargetID];
-//				var connectors = receiver.Connectors;
 				for(var k in diagram.Nodes){
 					if(diagram.Nodes[j].SourceID === diagram.Nodes[k].TargetID){
-//						console.log(connectors[k])
 						diagram.Edges.push({start: diagram.Nodes[k], end: diagram.Nodes[j]})
-
 						diagram.Nodes[j].inboundNum ++;
 						diagram.Nodes[k].outboundNum ++;
 					
@@ -583,7 +536,7 @@
 			for(var i in diagram.Nodes){
 				var node = diagram.Nodes[i];
 //				console.log(node);
-				console.log(node.SourceID);
+//				console.log(node.SourceID);
 //				console.log(modelComponents[node.SourceID]);
 //				if(modelComponents[node.SourceID] && modelComponents[node.SourceID].Type === "boundary"){
 				if(node.inboundNum == 0){
@@ -617,28 +570,6 @@
 				}
 				
 			}
-			
-			// the function to search for the component that realize the message, can also the properties of the component.
-//			diagram.allocate = function(node){
-//				// the function call to call the method of an object.
-//				var component = modelComponents[node.TargetID];
-//				if(!component){
-//					return [];
-//				}
-//				component.inboundNumber = 0;
-//				component.outboundNumber = 0;
-//				for(var i in diagram.Nodes){
-//					var otherNode = diagram.Nodes[i];
-//					if(otherNode.TargetID === node.TargetID){
-//						component.inboundNumber ++; 
-//					}
-//					else if(otherNode.SourceID == node.TargetID){
-//						component.outboundNumber ++;
-//					}
-//				}
-//				// return an array, to add more flexibility, if a message is realized by more than one system components.
-//				return [component];
-//			}
 
 		} else if (diagram.Type === "Activity"){
 			diagram.UseCase = {
@@ -656,10 +587,6 @@
 				var category = component.Category;
 //				var type = component.Type;
 				if (category === 'Element') { // more conditions to filter the
-					// element
-					//if (type === 'actor' || type === 'boundary' || type === 'control' || type === 'entity') {
-					//	Elements[componentIDs[i]] = component;
-					//}
 					Activities.push(component);
 					//for activity components, there is no source and target.
 					component.outboundNum = 0;
@@ -667,31 +594,19 @@
 				}
 				
 				if(category === "Connector") {
-					//var tag = modelComponents[component.SourceID].Name+"I"+modelComponents[component.TargetID].Name;
-					//component.Name = tag;
-					//Interactions.push(component);
-					
 					ControlFlows.push(component);
 					
 				}
 			}
-//			diagram.Elements = Elements;
 			
 			diagram.Nodes = Activities;
 			diagram.Edges = [];
 			
 			for(var j in ControlFlows){
 				var controlFlow = ControlFlows[j];
-//				var receiver = modelComponents[node.TargetID];
-//				var connectors = node.Connectors;
-//				for(var k in diagram.Nodes){
-//					if(diagram.Nodes[j].SourceID === diagram.Nodes[k].TargetID){
-//						console.log(connectors[k])
 						diagram.Edges.push({start: modelComponents[controlFlow.SourceID], end: modelComponents[controlFlow.TargetID]})
 						modelComponents[controlFlow.SourceID].outboundNum ++;
 						modelComponents[controlFlow.TargetID].inboundNum ++;
-//					}
-//				}
 			}
 			
 			console.log(diagram);
@@ -700,10 +615,6 @@
 			// to generate an entry node set of start the search.
 			for(var i in diagram.Nodes){
 				var node = diagram.Nodes[i];
-//				console.log(node);
-//				console.log(node.SourceID);
-//				console.log(modelComponents[node.SourceID]);
-//				if(modelComponents[node.SourceID] && modelComponents[node.SourceID].Type === "boundary"){
 				if(node.inboundNum == 0){
 					entries.push(node);
 				}
@@ -735,28 +646,6 @@
 				}
 				
 			}
-			
-			// the function to search for the component that realize the message, can also the properties of the component.
-//			diagram.allocate = function(node){
-//				// the function call to call the method of an object.
-//				var component = modelComponents[node.TargetID];
-//				if(!component){
-//					return [];
-//				}
-//				component.inboundNumber = 0;
-//				component.outboundNumber = 0;
-//				for(var i in diagram.Nodes){
-//					var otherNode = diagram.Nodes[i];
-//					if(otherNode.TargetID === node.TargetID){
-//						component.inboundNumber ++; 
-//					}
-//					else if(otherNode.SourceID == node.TargetID){
-//						component.outboundNumber ++;
-//					}
-//				}
-				// return an array, to add more flexibility, if a message is realized by more than one system components.
-//				return [component];
-//			}
 			
 		} else if (diagram.Type === "Logical") {
 			var Elements = [];
@@ -854,10 +743,28 @@
 		extractUseCases : function(file, func) {
 			// Use Cases include sequence diagrams, robustness diagram, and
 			// activity diagrams.
+			fs.readFile(file, function(err, data) {
+				parser.parseString(data, function(err, result) {
+					var model = extractModel(result);
+
+					if (func) {
+						func(model.UseCases);
+					}
+				})
+			});
 		},
 		extractDomainModel : function(file, func) {
 			// Domain Models include class diagrams, information block
 			// diagrams
+			fs.readFile(file, function(err, data) {
+				parser.parseString(data, function(err, result) {
+					var model = extractModel(result);
+
+					if (func) {
+						func(model.DomainModel);
+					}
+				})
+			});
 		},
 		extractModel : function(file, func) {
 			// robustnessDiagram
@@ -865,10 +772,10 @@
 			// xmi model file
 			fs.readFile(file, function(err, data) {
 				parser.parseString(data, function(err, result) {
-					var models = extractModel(result);
+					var model = extractModel(result);
 
 					if (func) {
-						func(models);
+						func(model);
 					}
 				})
 			});

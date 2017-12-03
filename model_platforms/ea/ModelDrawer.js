@@ -14,7 +14,6 @@
 	function drawModel(model, filePath, callbackfunc){
 		var dotty = 'digraph g {';
 		var diagrams = model.Diagrams;
-//		var Nodes = diagram.Nodes;
 		for(var i in diagrams){
 			var diagram = diagrams[i];
 			if(diagram.Type === 'Logical'){
@@ -43,27 +42,17 @@
 				var Edges = diagram.Edges;
 				for(var i in Edges){
 					var edge = Edges[i];
-					//var edges = node.Edges;
-					//if(edges !== undefined){
-					//for(var j in edges){
-					//	var edge = edges[j];
 						var start = edge.start;
 						var end = edge.end;
 						dotty += '"'+start.Name+'"->"'+end.Name+'";';
-					//}
-					//}
 				}
 			}
 		}
 		
 		dotty += '}';
 		
-		//graph.Name = "test";
-		//console.log(dotty);
-		
 		if(callbackfunc){
 		console.log(filePath);
-//		var graphFilePath = diagram.OutputDir+'/'+fileName;
 		dottyUtil.drawDottyGraph(dotty,filePath,callbackfunc);
 		}
 	   return dotty;
@@ -71,13 +60,6 @@
 	
 	module.exports = {
 		drawModel:function(model, filePath, callbackfunc){
-//			console.log('draw class diagram	');
-//			var fileName = model.Name.replace(/[^A-Za-z0-9_]/gi, "_");
-//			model.DotGraphFile = fileName+'_class.dotty';
-//			model.SvgGraphFile = fileName+'_class.svg';
-//			diagramDrawer.drawClassDiagram(diagram, function(diagram){
-//				console.log('class diagram is drawed.');
-//			});
 			drawModel(model, filePath, callbackfunc);
 		},
 	}

@@ -51,13 +51,7 @@
 		
 		dotty += '}';
 		
-		//graph.Name = "test";
-		//console.log(dotty);
-		
 		if(callbackfunc){
-//		var fileName = diagram.Name+'_graph.dotty';
-//		console.log(fileName);
-//		var graphFilePath = diagram.OutputDir+'/'+fileName;
 		dottyUtil.drawDottyGraph(dotty,graphFilePath,callbackfunc);
 		}
 	   return dotty;
@@ -65,13 +59,6 @@
 	
 	module.exports = {
 		drawTransactions:function(transactions, filePath, callbackfunc){
-//			console.log('draw class diagram	');
-//			var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_");
-//			diagram.DotGraphFile = fileName+'_class.dotty';
-//			diagram.SvgGraphFile = fileName+'_class.svg';
-//			diagramDrawer.drawClassDiagram(diagram, function(diagram){
-//				console.log('class diagram is drawed.');
-//			});
 			drawTransactions(transactions, filePath, callbackfunc);
 		},
 	}

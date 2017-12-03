@@ -25,51 +25,68 @@
 
 			modelXMLParser.extractModel(umlModelInfo.umlFilePath, function(model){
 //				console.log("extract model");
-				if(!model){
-					return;
-				}
 				
-				for(var i in umlModelInfo){
-					model[i] = umlModelInfo[i];
-				}
-//					console.log("use cases");
+				umlModelInfo.UseCases = [];
+				umlModelInfo.DomainModel = {
+						OutputDir: umlModelInfo.OutputDir+"/domainModel",
+						AccessDir: umlModelInfo.AccessDir+"/domainModel",
+						DotGraphFile: 'domainModel.dotty',
+						SvgGraphFile: 'domainModel.svg',
+						Diagrams: [],
+//						DomainModelAnalytics: initDomainModelAnalytics(umlModelInfo)
+				};
+//				umlModelInfo.ModelAnalytics = initModelAnalytics(umlModelInfo);
+				
+					console.log("use cases");
 					var useCases = model.UseCases;
-//					console.log(useCases);
+					console.log(useCases);
 						for(var i in useCases) {
 							(function(useCase, id){
 //								console.log(useCase);
 								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
 								var fileName = useCase._id;
-								useCase.OutputDir = model.OutputDir+"/"+fileName;
-								useCase.AccessDir = model.AccessDir+"/"+fileName;
+								useCase.OutputDir = umlModelInfo.OutputDir+"/"+fileName;
+								useCase.AccessDir = umlModelInfo.AccessDir+"/"+fileName;
 								for(var k in useCase.Diagrams){
 									var diagram = useCase.Diagrams[k];
 									diagram.OutputDir = useCase.OutputDir;
 									diagram.AccessDir = useCase.AccessDir;
+//									diagramProfiler.profileDiagram(diagram, function(){
+//										console.log("diagram is processed!");
+//									});
+//									console.log("Diagram file name:"+diagram.Name);
 								}
+//								mkdirp(useCase.OutputDir, function(err) {
+//									if(err) {
+//										console.log(err);
+//										// the folders may already exists during re-analyse
+//									}
+//									// draw diagrams
+//									
+//								});
+//								useCase.UseCaseAnalytics = initUseCaseAnalytics(useCase);
 							})(useCases[i], i);
+							umlModelInfo.UseCases.push(useCases[i]);
 						}
 						
 					var domainModel = model.DomainModel;
-//					var domainModel = model.DomainModel;
-					domainModel.OutputDir = model.OutputDir+"/domainModel";
-					domainModel.AccessDir = model.AccessDir+"/domainModel";
-					domainModel.DotGraphFile = 'domainModel.dotty';
-					domainModel.SvgGraphFile = 'domainModel.svg';
-//					console.log("domainModel");
-//					console.log(domainModel);
+					console.log("domainModel");
+					console.log(domainModel);
 						for(var i in domainModel.Diagrams){
 							var diagram = domainModel.Diagrams[i];
-							diagram.OutputDir = domainModel.OutputDir;
-							diagram.AccessDir = domainModel.AccessDir;
+//							diagram._id = j;
+//							var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_") + Date.now();
+							diagram.OutputDir = umlModelInfo.DomainModel.OutputDir;
+							diagram.AccessDir = umlModelInfo.DomainModel.AccessDir;
+//							diagramProfiler.profileDiagram(diagram);
+							umlModelInfo.DomainModel.Diagrams.push(diagram);
+//							console.log("diagram file name:"+diagram.Name);
 						}
 
-						var debug = require("./utils/DebuggerOutput.js");
-						debug.writeJson("model",model);
 
 				if(callbackfunc){
-					callbackfunc(model);
+					callbackfunc(umlModelInfo);
 				}
 
 			});
