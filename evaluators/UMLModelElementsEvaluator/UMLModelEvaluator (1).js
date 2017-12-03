@@ -110,14 +110,11 @@
 				var totalPathLength = 0;
 				var pathNum = 0;
 
-				for ( var j in diagram.Nodes) {
-					var Element = diagram.Nodes[j]; // tag: elements
-//					var components = diagram.allocate(Element);
-					if(Element.target){
-						var component = Element.target;
+				for ( var j in diagram.Elements) {
+					var Element = diagram.Elements[j]; // tag: elements
 						elementNum++;
-						totalDegree += component.InboundNumber;
-						var type = component.Type;
+						totalDegree += Element.InboundNumber;
+						var type = Element.Type;
 						if (type === "actor") {
 							actorNum++;
 						} else if (type === "boundary") {
@@ -127,18 +124,13 @@
 						} else if (type === "entity") {
 							entityNum++;
 						}
-//						totalLinks += Element.InboundNumber;
-						
-					}
-						
+						totalLinks += Element.InboundNumber;
 //					}
 				}
-				
-				totalLinks += diagram.Edges.length;
 
 				for ( var j in diagram.Paths) {
 					var Path = diagram.Paths[j];
-					totalPathLength += Path.length;
+					totalPathLength += Path.Elements.length;
 					pathNum++;
 				}
 
@@ -227,8 +219,8 @@
 			var operationNum = 0;
 			var entityNum = 0;
 
-			for ( var j in diagram.Nodes) {
-				var element = diagram.Nodes[j];
+			for ( var j in diagram.Elements) {
+				var element = diagram.Elements[j];
 					entityNum++;
 					for ( var k in element.Attributes) {
 						var attribute = element.Attributes[k];
@@ -291,6 +283,7 @@
 				TotalPathLength : 0,
 				PathNum : 0,
 				UseCaseNum : 0,
+				DiagramNum : 0,
 				TotalLinks : 0,
 				ActorNum : 0,
 				BoundaryNum : 0,
@@ -467,7 +460,7 @@
 						+ path.PathStr.replace(/,/gi, "") + ","
 						+ diagram.Name + ","
 						+ useCaseInfo.Name + ","
-						+ path.length + ","
+						+ path.Elements.length + ","
 						+ path.boundaryNum + ","
 						+ path.controlNum + ","
 						+ path.entityNum + ","
@@ -477,21 +470,14 @@
 
 			useCaseInfo["ElementAnalytics"] = useCaseInfo.UseCaseAnalytics;
 
-			for ( var j in diagram.Nodes) {
-				var element = diagram.Nodes[j];
-				var elementName = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
-				var elementType = "";
-//				var components = diagram.allocate(Element);
-				if(element.target){
-					var component = element.target;
-					elementType = component.Type;
-				}
+			for ( var j in diagram.Elements) {
+				var element = diagram.Elements[j];
 				elementNum++;
 				elementAnalyticsStr += elementNum + ","
-						+ elementName + ","
+						+ element.Name.replace(/,/gi, "") + ","
 						+ diagram.Name + ","
 						+ useCaseInfo.Name + "," +
-						+ elementType+ ","
+						+ element.Type.replace(/,/gi, "") + ","
 						+ element.OutboundNumber + ","
 						+ element.InboundNumber+"\n";
 			}
@@ -553,9 +539,9 @@
 			
 			var diagram = domainModelInfo.Diagrams[i];
 			
-			for ( var j in diagram.Nodes) {
+			for ( var j in diagram.Elements) {
 				
-				var element = diagram.Nodes[j];
+				var element = diagram.Elements[j];
 				
 					entityNum++;
 					entityAnalyticsStr += entityNum + ","

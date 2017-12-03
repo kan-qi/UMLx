@@ -26,24 +26,24 @@
 					for ( var j in xmiElement['links'][0]['Association']) {
 						var association = xmiElement['links'][0]['Association'][j];
 						connectors.push({
-							ClientID : association['$']['start'],
-							SupplierID : association['$']['end']
+							TargetID : association['$']['start'],
+							SourceID : association['$']['end']
 						});
 					}
 
 					for ( var j in xmiElement['links'][0]['Dependency']) {
 						var dependency = xmiElement['links'][0]['Dependency'][j];
 						connectors.push({
-							ClientID : dependency['$']['start'],
-							SupplierID : dependency['$']['end']
+							TargetID : dependency['$']['start'],
+							SourceID : dependency['$']['end']
 						});
 					}
 
 					for ( var j in xmiElement['links'][0]['InformationFlow']) {
 						var informationFlow = xmiElement['links'][0]['InformationFlow'][j];
 						connectors.push({
-							ClientID : informationFlow['$']['start'],
-							SupplierID : informationFlow['$']['end']
+							TargetID : informationFlow['$']['start'],
+							SourceID : informationFlow['$']['end']
 						});
 					}
 
@@ -57,24 +57,24 @@
 					for ( var j in xmiElement['links'][0]['Association']) {
 						var association = xmiElement['links'][0]['Association'][j];
 						connectors.push({
-							ClientID : association['$']['start'],
-							SupplierID : association['$']['end']
+							TargetID : association['$']['start'],
+							SourceID : association['$']['end']
 						});
 					}
 
 					for ( var j in xmiElement['links'][0]['Dependency']) {
 						var dependency = xmiElement['links'][0]['Dependency'][j];
 						connectors.push({
-							ClientID : dependency['$']['start'],
-							SupplierID : dependency['$']['end']
+							TargetID : dependency['$']['start'],
+							SourceID : dependency['$']['end']
 						});
 					}
 
 					for ( var j in xmiElement['links'][0]['InformationFlow']) {
 						var informationFlow = xmiElement['links'][0]['InformationFlow'][j];
 						connectors.push({
-							ClientID : informationFlow['$']['start'],
-							SupplierID : informationFlow['$']['end']
+							TargetID : informationFlow['$']['start'],
+							SourceID : informationFlow['$']['end']
 						});
 					}
 				}
@@ -127,8 +127,8 @@
 					for (var j = 0; j < xmiElement['links'][0]['Sequence'].length; j++) {
 						var sequence = xmiElement['links'][0]['Sequence'][j];
 						connectors.push({
-							ClientID : sequence['$']['start'],
-							SupplierID : sequence['$']['end']
+							TargetID : sequence['$']['start'],
+							SourceID : sequence['$']['end']
 						});
 					}
 				}
@@ -141,8 +141,8 @@
 					for (var j = 0; j < xmiElement['links'][0]['ControlFlow'].length; j++) {
 						var controlFlow = xmiElement['links'][0]['ControlFlow'][j];
 						connectors.push({
-							ClientID : controlFlow['$']['start'],
-							SupplierID : controlFlow['$']['end']
+							TargetID : controlFlow['$']['start'],
+							SourceID : controlFlow['$']['end']
 						});
 					}
 				}
@@ -167,8 +167,8 @@
 				Category : 'Connector',
 				Type : xmiConnector['properties'][0]['$']['ea_type'],
 				Name : xmiConnector['properties'][0]['$']['name'],
-				ClientID : xmiConnector['target'][0]['$']['xmi:idref'],
-				SupplierID : xmiConnector['source'][0]['$']['xmi:idref']
+				TargetID : xmiConnector['target'][0]['$']['xmi:idref'],
+				SourceID : xmiConnector['source'][0]['$']['xmi:idref']
 			};
 		}
 		
@@ -257,11 +257,15 @@
 		
 		// make extra processing for the domain model diagrams. To reference their elements 
 		domainModel.findElement = function(elementName){
+
+//			console.log("checking class elments");
+			console.log(elementName);
 			for(var i in this.Diagrams){
 				var diagram = this.Diagrams[i];
 				for(var j in diagram.Elements){
 					var element = diagram.Elements[j];
-					if(elementName === element.Name){
+					//apply the rules to convert to standard names.
+					if(elementName.replace(/\s/g, '').toUpperCase() === element.Name.replace(/\s/g, '').toUpperCase()){
 						return element;
 					}
 				}
@@ -294,17 +298,22 @@
 		
 		model.UseCases = [];
 		for(var i in UseCases){
+
+//			console.log("checking use cases");
 			var useCase = UseCases[i];
-			for(var j in useCase.Diagrams[j]){
+			for(var j in useCase.Diagrams){
+//				console.log("checking diagrams");
 				var diagram = useCase.Diagrams[j];
 				for(var k in diagram.Nodes){
 					var node = diagram.Nodes[k];
-					var supplier = node.supplier;
-					var supplierComponent = model.DomainModel.findElement(supplier.Name);
-					supplier.component = supplierComponent;
-					var client = node.client;
-					var clientComponent = model.DomainModel.findElement(client.Name);
-					client.component = clientComponent;
+					var source = node.source;
+					var sourceComponent = model.DomainModel.findElement(source.Name);
+					source.component = sourceComponent;
+					console.log("source component");
+					console.log(source);
+					var target = node.target;
+					var targetComponent = model.DomainModel.findElement(target.Name);
+					target.component = targetComponent;
 				}
 			}
 			model.UseCases.push(useCase);
@@ -319,7 +328,12 @@
 		
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("model",model);
-		debug.writeJson("test", {test:"hello"})
+		
+//		var modelDrawer = require("./../evaluators/TransactionEvaluator/DiagramProfilers/ModelDrawer.js");
+		var modelDrawer = require("./ModelDrawer.js");
+		modelDrawer.drawModel(model, "./debug/model.dotty", function(){
+			console.log("model is drawn");
+		});
 		return model;
 	}
 	
@@ -353,6 +367,7 @@
 		
 //			var Elements = {};
 			var Messages = [];
+			var seqNo = 0;
 			// here some logic needs to be applied to extract the structure for sequence diagrams
 			// console.log(modelComponents);
 			for ( var i in componentIDs) {
@@ -372,25 +387,29 @@
 //					
 				if (category === 'Connector') {
 					if (type === 'Sequence') {
+						component.seqNo = seqNo;
+						component.Name = component.seqNo+". "+ component.Name;
+						component.tag = "message";
+						component.inboundNum = 0;
+						component.outboundNum = 0;
+						component.source = modelComponents[component.SourceID];
+						component.target = modelComponents[component.TargetID];
 						Messages.push(component);
+						seqNo++;
+						console.log(component.Name);
 					}
 				}
 			}
-			console.log(diagram);
+//			console.log(diagram);
 //			diagram.Elements = Elements;
-			diagram.Nodes = [];
-			for(var i in Messages){
-				var message = Messages[i];
-				var node = {};
-				node.seqNo = i;
-				node.tag = "message";
-				node.inboundNum = 0;
-				node.outboundNum = 0;
-				node.supplier = modelComponents[message.SupplierID];
-				node.client = modelComponents[message.ClientID];
-				diagram.Nodes.push(node);
-				console.log(node.Name);
-			}
+			diagram.Nodes = Messages;
+//			for(var i in Messages){
+//				var message = Messages[i];
+//				var node = {};
+				
+//				diagram.Nodes.push(node);
+
+//			}
 			
 			diagram.Edges = [];
 			for(var j in diagram.Nodes){
@@ -402,16 +421,16 @@
 				 * 
 				 */
 				
-				var node = diagram.Nodes[j];
-				var seqNo = node.seqNo;
+				var message = diagram.Nodes[j];
+				var seqNo = message.seqNo;
 				var preMessage = null;
 				
-				//search the incoming edges for a node.
+				//search the incoming edges for a message.
 				var incomingMessages = [];
 				for(var k in diagram.Nodes){
-					var otherNode = diagram.Nodes[k];
-						if(otherNode.ClientID === node.SupplierID){
-							incomingMessages.push(otherNode);
+					var otherMessage = diagram.Nodes[k];
+						if(otherMessage.target == message.source){
+							incomingMessages.push(otherMessage);
 						}
 						
 				}
@@ -437,15 +456,15 @@
 			}
 			
 			var entries = [];
-			// to generate an entry node set of start the search.
+			// to generate an entry message set of start the search.
 			for(var i in diagram.Nodes){
-				var node = diagram.Nodes[i];
-				//console.log(node);
-				//console.log(node.SupplierID);
-				//console.log(modelComponents[node.SupplierID]);
-//				if(modelComponents[node.SupplierID] && modelComponents[node.SupplierID].Type === "boundary"){
-				if(node.inboundNum == 0){
-					entries.push(node);
+				var message = diagram.Nodes[i];
+				//console.log(message);
+				//console.log(message.SourceID);
+				//console.log(modelComponents[message.SourceID]);
+//				if(modelComponents[message.SourceID] && modelComponents[message.SourceID].Type === "boundary"){
+				if(message.inboundNum == 0){
+					entries.push(message);
 				}
 			}
 			
@@ -453,12 +472,12 @@
 			
 			// the rules to expand on a node. if the node is an end node, then the expansion rule will return null.
 			
-			diagram.expand = function(node){
+			diagram.expand = function(message){
 				// add condition on actor to prevent stop searching for message [actor, view].
-//				if(modelComponents[node.ClientID] && modelComponents[node.ClientID].Type === "boundary"){
+//				if(modelComponents[message.TargetID] && modelComponents[message.TargetID].Type === "boundary"){
 //					return;
 //				}
-				if(node.outboundNum == 0){
+				if(message.outboundNum == 0){
 					return;
 				}
 				else {
@@ -466,7 +485,7 @@
 					var  children = [];
 					for(var i in diagram.Edges){
 						var edge = diagram.Edges[i];
-						if(edge.start == node){
+						if(edge.start == message){
 							children.push(edge.end);
 						}
 					}
@@ -477,17 +496,17 @@
 			}
 			
 			// the function to search for the component that realize the message, can also the properties of the component.
-//			diagram.allocate = function(node){
+//			diagram.allocate = function(message){
 //				// the function call to call the method of an object.
-//				var component = modelComponents[node.ClientID];
+//				var component = modelComponents[message.TargetID];
 //				component.inboundNumber = 0;
 //				component.outboundNumber = 0;
 //				for(var i in diagram.Nodes){
-//					var otherNode = diagram.Nodes[i];
-//					if(otherNode.ClientID === node.ClientID){
+//					var otherMessage = diagram.Nodes[i];
+//					if(otherMessage.TargetID === message.TargetID){
 //						component.inboundNumber ++; 
 //					}
-//					else if(otherNode.SupplierID == node.ClientID){
+//					else if(otherMessage.SourceID == message.TargetID){
 //						component.outboundNumber ++;
 //					}
 //				}
@@ -520,14 +539,14 @@
 //				}
 				
 				if(category === "Connector") {
-					var supplier = modelComponents[component.SupplierID];
-					var client = modelComponents[component.ClientID];
-//					console.log('supplier');
-//					console.log(supplier);
-					var tag = supplier.Name+">"+client.Name;
+					var source = modelComponents[component.SourceID];
+					var target = modelComponents[component.TargetID];
+//					console.log('source');
+//					console.log(source);
+					var tag = source.Name+">"+target.Name;
 					component.Name = tag;
-					component.Supper = supplier;
-					component.Client = client;
+					component.Supper = source;
+					component.target = target;
 					component.inboundNum = 0;
 					component.outboundNum = 0;
 				
@@ -541,10 +560,10 @@
 			
 			for(var j in diagram.Nodes){
 				var node = diagram.Nodes[j];
-//				var receiver = modelComponents[node.ClientID];
+//				var receiver = modelComponents[node.TargetID];
 //				var connectors = receiver.Connectors;
 				for(var k in diagram.Nodes){
-					if(diagram.Nodes[j].SupplierID === diagram.Nodes[k].ClientID){
+					if(diagram.Nodes[j].SourceID === diagram.Nodes[k].TargetID){
 //						console.log(connectors[k])
 						diagram.Edges.push({start: diagram.Nodes[k], end: diagram.Nodes[j]})
 
@@ -564,9 +583,9 @@
 			for(var i in diagram.Nodes){
 				var node = diagram.Nodes[i];
 //				console.log(node);
-				console.log(node.SupplierID);
-//				console.log(modelComponents[node.SupplierID]);
-//				if(modelComponents[node.SupplierID] && modelComponents[node.SupplierID].Type === "boundary"){
+				console.log(node.SourceID);
+//				console.log(modelComponents[node.SourceID]);
+//				if(modelComponents[node.SourceID] && modelComponents[node.SourceID].Type === "boundary"){
 				if(node.inboundNum == 0){
 					entries.push(node);
 				}
@@ -578,7 +597,7 @@
 			
 			diagram.expand = function(node){
 				// add condition on actor to prevent stop searching for message [actor, view].
-//				if(modelComponents[node.ClientID] && modelComponents[node.ClientID].Type === "boundary"){
+//				if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
 //					return;
 //				}
 				if(node.outboundNum == 0){
@@ -602,7 +621,7 @@
 			// the function to search for the component that realize the message, can also the properties of the component.
 //			diagram.allocate = function(node){
 //				// the function call to call the method of an object.
-//				var component = modelComponents[node.ClientID];
+//				var component = modelComponents[node.TargetID];
 //				if(!component){
 //					return [];
 //				}
@@ -610,10 +629,10 @@
 //				component.outboundNumber = 0;
 //				for(var i in diagram.Nodes){
 //					var otherNode = diagram.Nodes[i];
-//					if(otherNode.ClientID === node.ClientID){
+//					if(otherNode.TargetID === node.TargetID){
 //						component.inboundNumber ++; 
 //					}
-//					else if(otherNode.SupplierID == node.ClientID){
+//					else if(otherNode.SourceID == node.TargetID){
 //						component.outboundNumber ++;
 //					}
 //				}
@@ -642,13 +661,13 @@
 					//	Elements[componentIDs[i]] = component;
 					//}
 					Activities.push(component);
-					//for activity components, there is no supplier and client.
+					//for activity components, there is no source and target.
 					component.outboundNum = 0;
 					component.inboundNum = 0;
 				}
 				
 				if(category === "Connector") {
-					//var tag = modelComponents[component.SupplierID].Name+"I"+modelComponents[component.ClientID].Name;
+					//var tag = modelComponents[component.SourceID].Name+"I"+modelComponents[component.TargetID].Name;
 					//component.Name = tag;
 					//Interactions.push(component);
 					
@@ -663,14 +682,14 @@
 			
 			for(var j in ControlFlows){
 				var controlFlow = ControlFlows[j];
-//				var receiver = modelComponents[node.ClientID];
+//				var receiver = modelComponents[node.TargetID];
 //				var connectors = node.Connectors;
 //				for(var k in diagram.Nodes){
-//					if(diagram.Nodes[j].SupplierID === diagram.Nodes[k].ClientID){
+//					if(diagram.Nodes[j].SourceID === diagram.Nodes[k].TargetID){
 //						console.log(connectors[k])
-						diagram.Edges.push({start: modelComponents[controlFlow.SupplierID], end: modelComponents[controlFlow.ClientID]})
-						modelComponents[controlFlow.SupplierID].outboundNum ++;
-						modelComponents[controlFlow.ClientID].inboundNum ++;
+						diagram.Edges.push({start: modelComponents[controlFlow.SourceID], end: modelComponents[controlFlow.TargetID]})
+						modelComponents[controlFlow.SourceID].outboundNum ++;
+						modelComponents[controlFlow.TargetID].inboundNum ++;
 //					}
 //				}
 			}
@@ -682,9 +701,9 @@
 			for(var i in diagram.Nodes){
 				var node = diagram.Nodes[i];
 //				console.log(node);
-//				console.log(node.SupplierID);
-//				console.log(modelComponents[node.SupplierID]);
-//				if(modelComponents[node.SupplierID] && modelComponents[node.SupplierID].Type === "boundary"){
+//				console.log(node.SourceID);
+//				console.log(modelComponents[node.SourceID]);
+//				if(modelComponents[node.SourceID] && modelComponents[node.SourceID].Type === "boundary"){
 				if(node.inboundNum == 0){
 					entries.push(node);
 				}
@@ -696,7 +715,7 @@
 			
 			diagram.expand = function(node){
 				// add condition on actor to prevent stop searching for message [actor, view].
-//				if(modelComponents[node.ClientID] && modelComponents[node.ClientID].Type === "boundary"){
+//				if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
 //					return;
 //				}
 				if(node.outboundNum == 0){
@@ -720,7 +739,7 @@
 			// the function to search for the component that realize the message, can also the properties of the component.
 //			diagram.allocate = function(node){
 //				// the function call to call the method of an object.
-//				var component = modelComponents[node.ClientID];
+//				var component = modelComponents[node.TargetID];
 //				if(!component){
 //					return [];
 //				}
@@ -728,10 +747,10 @@
 //				component.outboundNumber = 0;
 //				for(var i in diagram.Nodes){
 //					var otherNode = diagram.Nodes[i];
-//					if(otherNode.ClientID === node.ClientID){
+//					if(otherNode.TargetID === node.TargetID){
 //						component.inboundNumber ++; 
 //					}
-//					else if(otherNode.SupplierID == node.ClientID){
+//					else if(otherNode.SourceID == node.TargetID){
 //						component.outboundNumber ++;
 //					}
 //				}

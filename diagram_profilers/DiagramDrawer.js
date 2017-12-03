@@ -7,7 +7,6 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
-	var dottyUtil = require("../../../utils/DottyUtil.js");
 	
 	function drawRobustnessDiagramFunc(robustnessDiagram, callbackfunc){
 		var graph = 'digraph g {';
@@ -17,8 +16,8 @@
 			var connectors = element.Connectors;
 			if(connectors !== undefined){
 			for(var j in connectors){
-				if(Elements[connectors[j].targetID] && Elements[connectors[j].SupplierID]){
-				var start = Elements[connectors[j].targetID]['Name'];
+				if(Elements[connectors[j].ClientID] && Elements[connectors[j].SupplierID]){
+				var start = Elements[connectors[j].ClientID]['Name'];
 				var end = Elements[connectors[j].SupplierID]['Name'];
 				if(start === element.Name){
 					graph += '"'+start+'"->"'+end+'";';
@@ -28,12 +27,34 @@
 			}
 		}
 		graph += '}';
-		
-		if(callbackfunc){
 		var graphFilePath = robustnessDiagram.OutputDir+'/'+robustnessDiagram.DotGraphFile; 
 //		console.log(graphFilePath);
-		dottyUtil.drawDottyGraph(graph, graphFilePath,callbackfunc);
-		}
+		mkdirp(robustnessDiagram.OutputDir, function(err) {
+		    // path exists unless there was an error
+			 if(err) {
+			        return console.log(err);
+			 }
+			 fs.writeFile(graphFilePath, graph, function(err) {
+		    if(err) {
+		        return console.log(err);
+		    }
+		    
+		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+robustnessDiagram.OutputDir+"/"+robustnessDiagram.SvgGraphFile+'"';
+//			console.log(command);
+			var child = exec(command, function(error, stdout, stderr) {
+				if (error !== null) {
+					console.log('exec error: ' + error);
+				}
+
+			    console.log('The file was saved!');
+			    if(callbackfunc){
+			    	callbackfunc(graphFilePath);
+			    }
+			});
+			
+			
+		});
+		});
 		return graph
 	}
 	
@@ -45,8 +66,8 @@
 			var connectors = element.Connectors;
 			if(connectors !== undefined){
 			for(var j in connectors){
-				if(Elements[connectors[j].targetID] && Elements[connectors[j].SupplierID]){
-				var start = Elements[connectors[j].targetID]['Name'];
+				if(Elements[connectors[j].ClientID] && Elements[connectors[j].SupplierID]){
+				var start = Elements[connectors[j].ClientID]['Name'];
 				var end = Elements[connectors[j].SupplierID]['Name'];
 				if(start === element.Name){
 					graph += '"'+start+'"->"'+end+'";';
@@ -58,11 +79,33 @@
 		}
 		graph += '}';
 		
-		if(callbackfunc){
 		var fileName = sequenceDiagram.Name+'_sequence.dotty';
 		var graphFilePath = sequenceDiagram.OutputDir+'/'+sequenceDiagram.DotGraphFile;
-		dottyUtil.drawDottyGraph(graph,graphFilePath,callbackfunc);
-		}
+		mkdirp(sequenceDiagram.OutputDir, function(err) {
+		    // path exists unless there was an error
+			 if(err) {
+			        return console.log(err);
+			 }
+			 fs.writeFile(graphFilePath, graph, function(err) {
+		    if(err) {
+		        return console.log(err);
+		    }
+		    
+		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+sequenceDiagram.OutputDir+"/"+sequenceDiagram.SvgGraphFile+'"';
+//			console.log(command);
+			var child = exec(command, function(error, stdout, stderr) {
+				if (error !== null) {
+					console.log('exec error: ' + error);
+				}
+
+			    console.log('The file was saved!');
+			    if(callbackfunc){
+			    callbackfunc(graphFilePath);
+			    }
+
+			});
+		    		});
+		});
 	   return graph;
 	}
 	
@@ -85,71 +128,35 @@
 		}
 		graph += '}';
 		
-		if(callbackfunc){
 		var graphFilePath = classDiagram.OutputDir+'/'+classDiagram.DotGraphFile;
-		dottyUtil.drawDottyGraph(graph,graphFilePath,callbackfunc);
-		}
+		mkdirp(classDiagram.OutputDir, function(err) {
+		    // path exists unless there was an error
+			 if(err) {
+			        return console.log(err);
+			 }
+//			 console.log(graph);
+		fs.writeFile(graphFilePath, graph, function(err) {
+		    if(err) {
+		        return console.log(err);
+		    }
+		    
+		    //to generate svg file.
+		    var command = 'dot -Tsvg "' + graphFilePath + '">"'+classDiagram.OutputDir+"/"+classDiagram.SvgGraphFile+'"';
+//			console.log(command);
+			var child = exec(command, function(error, stdout, stderr) {
+				if (error !== null) {
+					console.log('exec error: ' + error);
+				}
+				 console.log('The file was saved!');
+				 if(callbackfunc){
+				  callbackfunc(graphFilePath);
+				 }
+			});
+		    
+		   
+		});
+		});
 	   return graph;
-	}
-	
-	function drawStructuralDiagram(diagram, callbackfunc){
-		var graph = 'digraph g {';
-		for(var i in diagram.Elements){
-		var element = diagram.Elements[i];
-		var attributes = element.Attributes;
-//		console.log(attributes);
-		for(var j in attributes){
-			var attribute = attributes[j];
-			graph += '"'+element.Name+'"->"'+attribute.Name+'";';
-		}
-		var operations = element.Operations;
-//		console.log(operations);
-		for(var j in operations){
-			var operation = operations[j];
-			graph += '"'+element.Name+'"->"'+operation.Name+'";';
-		}
-		}
-		graph += '}';
-		
-		
-		var graphFilePath = diagram.OutputDir+'/'+diagram.DotGraphFile;
-	
-	   return graph;
-	}
-	
-	function drawBehavioralDiagram(diagram, callbackfunc){
-		var dotty = 'digraph g {';
-		var Nodes = diagram.Nodes;
-		for(var j in Nodes){
-			var node = Nodes[j];
-			dotty += '"'+node.Name+'";';
-		}
-		var Edges = diagram.Edges;
-		for(var i in Edges){
-			var edge = Edges[i];
-			//var edges = node.Edges;
-			//if(edges !== undefined){
-			//for(var j in edges){
-			//	var edge = edges[j];
-				var start = edge.start;
-				var end = edge.end;
-				dotty += '"'+start.Name+'"->"'+end.Name+'";';
-			//}
-			//}
-		}
-		dotty += '}';
-		
-		//graph.Name = "test";
-		//console.log(dotty);
-		
-		if(callbackfunc){
-		var fileName = diagram.Name+'_graph.dotty';
-		console.log(fileName);
-		var diagramFilePath = diagram.OutputDir+'/'+fileName;
-		dottyUtil.drawDottyGraph(graph,graphFilePath,callbackfunc);
-		}
-		
-	   return dotty;
 	}
 	
 	module.exports = {
@@ -183,11 +190,12 @@
 		},
 		drawDiagram: function(diagram, callbackfunc){
 			if(diagram.Type === 'Logical'){
-				drawStructuralDiagram(diagram, callbackfunc);
-			} else if(diagram.Type === 'Sequence' || diagram.Type === 'Analysis' || diagram.Type === 'Activity'){
-				drawBehavioralDiagram(diagram, callbackfunc);
+				drawClassDiagramFunc(diagram, callbackfunc);
+			} else if(diagram.Type === 'Sequence'){
+				drawSequenceDiagramFunc(diagram, callbackfunc);
+			} else if(diagram.Type === 'Analysis'){
+				drawRobustnessDiagramFunc(diagram, callbackfunc);
 			}
-		},
-		drawBehavioralDiagram: drawBehavioralDiagram
+		}
 	}
 }())

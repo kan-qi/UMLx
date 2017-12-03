@@ -1,6 +1,5 @@
 (function(){
 	
-	var UMLDiagramTraverser = require("./DiagramProfilers/UMLDiagramTraverser.js");
 	var pathPatternMatchUtil = require("../../utils/PathPatternMatchUtil.js");
 
 	 var transactionalPatterns = [
@@ -54,45 +53,14 @@
 	var transactionalPatternTreeRoot = pathPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
 	
 	module.exports = {
-			/*
-			 * At the diagram level, the components need to associate with domain model.
-			 */
-			processDiagram: function(diagram, usecase, model){
-				return UMLDiagramTraverser.traverseDiagram(diagram);
-				
+			processDiagram: function(diagram, usecase){
+				return true;
 			},
 			processPath: function(path, diagram, usecase){
-				var components = [];
-				for(var i in path)
-				{	
-					var node = path[i];
-					
-					if(i === 0){
-						if(node.source){
-						components.push(node.source);
-						}
-					}
-	
-					if(node.target){
-						if(node.target){
-						components.push(node.target);
-						}
-					}
-//					var node = path[i];
-//					var elementID = path['Elements'][i];
-//					var components = diagram.allocate(node);
-//					if(!element){
-//						break;
-//					}
-//					for(var j in components){
-//						totalDegree += components[j].InboundNumber;
-//						tranLength++;	
-//					}
-				}
 
 				path['TransactionAnalytics'] = {};
 				
-				var transactionalOperations = pathPatternMatchUtil.recognizePattern(components, diagram, transactionalPatternTreeRoot);
+				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path, diagram, transactionalPatternTreeRoot);
 				var transactionalOperationStr = "";
 				for(var i=0; i < transactionalOperations.length; i++){
 					if(i !== 0){
@@ -144,7 +112,18 @@
 				var totalDegree = 0;
 				var tranLength = 0;
 				
-				path['TransactionAnalytics'].Components = components;
+				for(var i = 0; i < path.Elements.length; i++)
+				{
+					var elementID = path['Elements'][i];
+					var element = diagram.Elements[elementID];
+					if(!element){
+						break;
+					}
+					totalDegree += element.InboundNumber;
+					tranLength++;
+				}
+				
+
 				path['TransactionAnalytics'].TranLength = tranLength;
 				//need to think it through
 				path['TransactionAnalytics'].TotalDegree = totalDegree;
