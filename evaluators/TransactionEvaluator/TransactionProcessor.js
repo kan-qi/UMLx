@@ -3,6 +3,8 @@
 	var UMLDiagramTraverser = require("./DiagramProfilers/UMLDiagramTraverser.js");
 	var pathPatternMatchUtil = require("../../utils/PathPatternMatchUtil.js");
 
+	var diagramDrawer = require('./DiagramProfilers/DiagramDrawer.js');
+
 	 var transactionalPatterns = [
 		 ['actor', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'transactional','Data management'],
 		 ['actor', 'boundary', 'control[+]', 'entity', 'control[+]', 'boundary','pattern#2','EQ,INT', 'transactional', 'Data management with feedback or inquiry'],
@@ -57,15 +59,15 @@
 			/*
 			 * At the diagram level, the components need to associate with domain model.
 			 */
-			processDiagram: function(diagram, usecase, model){
-				return UMLDiagramTraverser.traverseDiagram(diagram);
-				
+			processDiagram: function(diagram, usecase, model, callbackfunc){
+				diagram.Paths = UMLDiagramTraverser.traverseDiagram(diagram);
+				diagramDrawer.drawBehavioralDiagram(diagram, callbackfunc);
 			},
 			processPath: function(path, diagram, usecase){
 				var components = [];
-				for(var i in path)
+				for(var i in path.Nodes)
 				{	
-					var node = path[i];
+					var node = path.Nodes[i];
 					
 					if(i === 0){
 						if(node.source){

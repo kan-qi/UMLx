@@ -346,10 +346,10 @@
 //		debug.writeJson("model",model);
 		
 //		var modelDrawer = require("./../evaluators/TransactionEvaluator/DiagramProfilers/ModelDrawer.js");
-//		var modelDrawer = require("./ModelDrawer.js");
-//		modelDrawer.drawModel(model, "./debug/model.dotty", function(){
-//			console.log("model is drawn");
-//		});
+		var modelDrawer = require("./ModelDrawer.js");
+		modelDrawer.drawModel(model, "./debug/model.dotty", function(){
+			console.log("model is drawn");
+		});
 		return model;
 	}
 	

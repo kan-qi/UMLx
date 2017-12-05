@@ -12,35 +12,65 @@
 	
 	function drawTransactions(transactions, graphFilePath, callbackfunc){
 		var dotty = 'digraph g {';
+		dotty += "node[shape=record]";
+		// used to get rid of duplicates.
+		var drawnObjects = [];
+		function DottyDraw(){
+			this.drawnObjects = [];
+			this.draw = function(dottyObject){
+				if(drawnObjects[dottyObject]){
+					return "";
+				}
+				else{
+					drawnObjects[dottyObject] = 1;
+					return dottyObject;
+				}
+			}
+		}
 		
+		var dottyDraw = new DottyDraw();
 //		var Nodes = diagram.Nodes;
 		for(var i in transactions){
 			var transaction = transactions[i];
 			var preNode = null;
-			for(var j in transaction){
-				var node = transaction[j];
-				dotty += '"'+node.Name+'";';
+			for(var j in transaction.Nodes){
+				var node = transaction.Nodes[j];
+//				console.log("transaction nodes");
+//				console.log(node);
+				dotty += dottyDraw.draw(node._id+'[label="'+node.Name+'" shape=ellipse];');
 				if(preNode){
 					var start = preNode;
 					var end = node;
-					dotty += '"'+start.Name+'"->"'+end.Name+'";';
+					dotty += dottyDraw.draw('"'+start._id+'"->"'+end._id+'";');
 				}
 				
 				var target = node.target;
 				if(target){
-					dotty += '"'+target.Name+'"->"'+node.Name+'";';
+					dotty += dottyDraw.draw(target._id+'[label="'+target.Name+'"];');
+					dotty += dottyDraw.draw('"'+target._id+'"->"'+node._id+'";');
 					if(target.component){
 						var component = target.component;
-						dotty += '"'+component.Name+'"->"'+target.Name+'";';
-						for (var k in component.Operations){
-							var operation = component.Operations[k];
-							dotty += '"'+operation.Name+'"->"'+component.Name+'";';
-						}
-						
+						var componentInternal = "{";
+						var componentInternalIndex = 0;
+						componentInternal += "<f"+componentInternalIndex+">"+component.Name;
+						componentInternalIndex++;
 						for (var k in component.Attributes){
 							var attribute = component.Attributes[k];
-							dotty += '"'+attribute.Name+'"->"'+component.Name+'";';
+//							componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
+							componentInternal += "|<f"+componentInternalIndex+">"+attribute.Name;
+							componentInternalIndex++;
 						}
+						
+						for (var k in component.Operations){
+							var operation = component.Operations[k];
+//							dotty += '"'+operation.Name+'"->"'+component.Name+'";';
+							componentInternal += "|<f"+componentInternalIndex+">"+operation.Name;
+							componentInternalIndex++;
+						}
+						
+						componentInternal += "}";
+						dotty += dottyDraw.draw(component._id+'[label="'+componentInternal+'" shape=Mrecord];');
+						dotty += dottyDraw.draw('"'+component._id+'"->"'+target._id+'";');
 					}
 				}
 				

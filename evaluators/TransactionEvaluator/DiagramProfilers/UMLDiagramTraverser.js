@@ -8,7 +8,6 @@
 * 
 */
 	
-var diagramDrawer = require('./DiagramDrawer.js');
 var exec = require('child_process').exec;
 
 
@@ -41,7 +40,7 @@ function traverseBehavioralDiagram(diagram){
 		// if null is returned, then node is an end node.
 		
 		if(!childNodes){
-			Paths.push(pathToNode);
+			Paths.push({Nodes: pathToNode});
 		}
 		else{
 
@@ -92,11 +91,9 @@ function isBoundary(){
 module.exports = {
 	traverseDiagram: function(diagram, callbackfunc){
 		if(diagram.Type === 'Sequence' || diagram.Type === "Analysis" || diagram.Type === "Activity"){
-			var paths = traverseBehavioralDiagram(diagram);
-			diagram.Paths = paths;
-			diagramDrawer.drawBehavioralDiagram(diagram, callbackfunc);
+			return traverseBehavioralDiagram(diagram);
 		} 
-		return diagram;
+		return [];
 	}
 };
 
