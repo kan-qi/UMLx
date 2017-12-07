@@ -8,9 +8,9 @@
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
 
-	var dottyUtil = require("../../../utils/DottyUtil.js");
+	var dottyUtil = require("../utils/DottyUtil.js");
 	
-	function drawTransactions(transactions, graphFilePath, callbackfunc){
+	function drawPaths(paths, graphFilePath, callbackfunc){
 		var dotty = 'digraph g {';
 		dotty += "node[shape=record]";
 		// used to get rid of duplicates.
@@ -30,26 +30,26 @@
 		
 		var dottyDraw = new DottyDraw();
 //		var Nodes = diagram.Nodes;
-		for(var i in transactions){
-			// add tag to every nodes, such that transactions will be separated in drawing.
-			var transactionTag = "_"+i;
-			var transaction = transactions[i];
+		for(var i in paths){
+			// add tag to every nodes, such that paths will be separated in drawing.
+			var pathTag = "_"+i;
+			var path = paths[i];
 			var preNode = null;
-			for(var j in transaction.Nodes){
-				var node = transaction.Nodes[j];
-//				console.log("transaction nodes");
+			for(var j in path.Nodes){
+				var node = path.Nodes[j];
+//				console.log("path nodes");
 //				console.log(node);
-				dotty += dottyDraw.draw(node._id+transactionTag+'[label="'+node.Name+'" shape=ellipse];');
+				dotty += dottyDraw.draw(node._id+pathTag+'[label="'+node.Name+'" shape=ellipse];');
 				if(preNode){
 					var start = preNode;
 					var end = node;
-					dotty += dottyDraw.draw('"'+start._id+transactionTag+'"->"'+end._id+transactionTag+'";');
+					dotty += dottyDraw.draw('"'+start._id+pathTag+'"->"'+end._id+pathTag+'";');
 				}
 				
 				var target = node.target;
 				if(target){
-					dotty += dottyDraw.draw(target._id+transactionTag+'[label="'+target.Name+'"];');
-					dotty += dottyDraw.draw('"'+target._id+transactionTag+'"->"'+node._id+transactionTag+'";');
+					dotty += dottyDraw.draw(target._id+pathTag+'[label="'+target.Name+'"];');
+					dotty += dottyDraw.draw('"'+target._id+pathTag+'"->"'+node._id+pathTag+'";');
 					if(target.component){
 						var component = target.component;
 						var componentInternal = "{";
@@ -71,8 +71,8 @@
 						}
 						
 						componentInternal += "}";
-						dotty += dottyDraw.draw(component._id+transactionTag+'[label="'+componentInternal+'" shape=Mrecord];');
-						dotty += dottyDraw.draw('"'+component._id+transactionTag+'"->"'+target._id+transactionTag+'";');
+						dotty += dottyDraw.draw(component._id+pathTag+'[label="'+componentInternal+'" shape=Mrecord];');
+						dotty += dottyDraw.draw('"'+component._id+pathTag+'"->"'+target._id+pathTag+'";');
 					}
 				}
 				
@@ -90,8 +90,8 @@
 	}
 	
 	module.exports = {
-		drawTransactions:function(transactions, filePath, callbackfunc){
-			drawTransactions(transactions, filePath, callbackfunc);
+		drawPaths:function(paths, filePath, callbackfunc){
+			drawPaths(paths, filePath, callbackfunc);
 		},
 	}
 }())

@@ -7,7 +7,7 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
-	var dottyUtil = require("../../../utils/DottyUtil.js");
+	var dottyUtil = require("../utils/DottyUtil.js");
 	
 	function drawRobustnessDiagramFunc(robustnessDiagram, callbackfunc){
 		var graph = 'digraph g {';

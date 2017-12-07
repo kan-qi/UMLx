@@ -3,7 +3,7 @@
 //	var UMLDiagramTraverser = require("./UMLDiagramTraverser.js");
 	var pathPatternMatchUtil = require("../../utils/PathPatternMatchUtil.js");
 
-	var diagramDrawer = require('./DiagramProfilers/DiagramDrawer.js');
+//	var diagramDrawer = require('./DiagramProfilers/DiagramDrawer.js');
 
 	 var transactionalPatterns = [
 		 ['actor', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'transactional','Data management'],
