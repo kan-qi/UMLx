@@ -16,6 +16,26 @@ class ActivityNode{
 		this.partitionName = PartitionName;
 	}
 }
+
+class ClassNode{
+	constructor(Id,Name,attributes,operations){
+		this.Id = Id
+		this.Name = Name
+		this.attributes = attributes
+		this.operations = operations
+	}
+}
+
+	class ClassRelationEdge{
+		constructor(fromEnd, toEnd,fromMultiplicity,toMultiplicity, Id)
+		{
+			this.fromEnd = fromEnd;
+			this.toEnd = toEnd;
+			this.fromMultiplicity = fromMultiplicity;
+			this.toMultiplicity = toMultiplicity;
+			this.Id = Id;
+		}
+	}
 	
 	class Edge {
 		constructor(fromEnd, toEnd, Id, Name)
@@ -132,6 +152,78 @@ class ActivityNode{
 	}
 	
 	
+	function extractContainedClassElements(classComponents){
+		console.log ('the classComponents are', JSON.stringify(classComponents));
+		
+		for (var classIndex = 0; classIndex < classComponents.length; classIndex++){
+			var classComponent = classComponents[classIndex];
+			
+			var className = classComponent.$.Name;
+			var classId = classComponent.$.Id;
+			
+			var metaData = classComponent.ModelChildren[0];
+			
+			var attributes = []
+			var attributesMetaData = metaData.Attribute;
+			for (var attribute = 0; attribute < attributesMetaData.length; attribute++){
+				attributes.push(attributesMetaData[attribute].$.Name);
+			}
+			
+			var operations = []
+			var operationsMetaData = metaData.Operation;
+			for (var operation = 0; operation < operationsMetaData.length; operation++){
+				operations.push(operationsMetaData[operation].$.Name);
+			}
+			
+			var classNode = new ClassNode(classId, className, attributes, operations);
+			graph.addNode(classNode);
+		}
+	}
+	
+	
+	function extratContainedClassEdges(classEdgesComponents){
+		var edgesComponents = classEdgesComponents[0];
+		var edgeComponentsChildren = edgesComponents.ModelChildren[0].ModelRelationshipContainer;
+		
+		for (edgeRelation = 0; edgeRelation < edgeComponentsChildren.length; edgeRelation++){
+		
+			var edgeGroupChildren = edgeComponentsChildren[edgeRelation].ModelChildren[0];
+			
+			if (_.get(edgeGroupChildren,'Association',undefined) != undefined){
+				var associations = edgeGroupChildren.Association;
+				
+				for (var associationIndex = 0; associationIndex < associations.length; associationIndex++){
+					var association = associations[associationIndex];
+					var id = association.$.Id;
+					var fromEnd = association.FromEnd[0].AssociationEnd[0].$.EndModelElement;
+					var fromMultiplicity = association.FromEnd[0].AssociationEnd[0].$.Multiplicity;
+					var toEnd = association.ToEnd[0].AssociationEnd[0].$.EndModelElement;
+					var toMultiplicity = association.ToEnd[0].AssociationEnd[0].$.Multiplicity;
+				
+					var edge = new ClassRelationEdge(fromEnd, toEnd, fromMultiplicity, toMultiplicity, id);
+					graph.addEdge(edge);
+					
+				}
+			}
+			else if (_.get(edgeGroupChildren, 'Generalization',undefined) != undefined){
+				var generalizations = edgeGroupChildren.Generalization;
+				
+				for (var generalizationIndex = 0; generalizationIndex < generalizations.length; generalizationIndex++){
+					var generalization = generalizations[generalizationIndex];
+					
+					var id = generalization.$.Id;
+					var fromEnd = generalization.$.From;
+					var toEnd = generalization.$.To;
+					
+					var edge = new ClassRelationEdge(fromEnd, toEnd, '', '', id);
+					graph.addEdge(edge);
+				}
+			}
+		}		
+	}
+	
+	
+	
 	
 	function extractContainedRelationships(relationshipComponents){
 		var controlFlows = relationshipComponents[0].ControlFlow;
@@ -165,6 +257,24 @@ class ActivityNode{
 		extractContainedElements(activityComponents);
 	}
 	
+	
+	function extractClassDiagramEdges(classDiagramJSON){
+		var models = classDiagramJSON.Project.Models[0];
+		extratContainedClassEdges(models.ModelRelationshipContainer);
+	}
+	
+
+	function extractClassDiagramNodes(classDiagramJSON){
+		
+		var models = classDiagramJSON.Project.Models[0];
+		extractContainedClassElements(models.Class);
+		
+		
+		console.log ('the models are', JSON.stringify(models));	
+	}
+	
+	
+	
 	function extractActivityEdges(activityDiagramJSON){
 		var models = activityDiagramJSON.Project.Models[0];
 		var relationshipModel = models.ModelRelationshipContainer[0];
@@ -181,6 +291,17 @@ class ActivityNode{
 			
 			extractActivityNodes(result);
 			extractActivityEdges(result);
+			dataCallback(graph);
+		});
+	}
+	
+	
+	function parseClassData(data, dataCallback){
+		xmlParser.parseString(data, function (err, result){
+			if (err)
+				console.log ("error in parsing", err);
+			extractClassDiagramNodes(result);
+			extractClassDigramEdges(result);
 			dataCallback(graph);
 		});
 	}
@@ -291,7 +412,10 @@ class ActivityNode{
 		readFile(file, parseActivityData, func);
 	}
 	
-	module.exports = { extractSequenceDiagrams };
+	function extractClassDiagram(file, func){
+		readFile(file, parseClassData, func);
+	}
+	module.exports = { extractSequenceDiagrams, extractActivityDiagram, extractClassDiagram};
 	
 }());
 

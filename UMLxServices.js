@@ -14,7 +14,9 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
 //var sleep = require('sleep');
+var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
+var bodyParser = require('body-parser');
 
 
 var storage = multer.diskStorage({
@@ -39,6 +41,7 @@ var upload = multer({ storage: storage })
 
 app.use(express.static('public'));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.set('views', './views');
@@ -54,9 +57,9 @@ app.set('view engine', 'jade');
 var modelInfo = {};
 
 app.get('/signup',function(req,res){
-	
-	if(req.query.uid!=null && req.query.uid!=undefined){
-		res.render('signup', {uid:req.query.uid});
+
+	if(req.query.tk!=null && req.query.tk!=undefined){
+		res.render('signup', {tk:req.query.tk});
 	} else {
 	res.render('signup');
 	}
@@ -67,17 +70,17 @@ app.get('/login',function(req,res){
 });
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
-	
+
 	var username = req.body['username'];
 	var pwd = req.body['password'];
 	umlModelInfoManager.validateUserLogin(username,pwd,function(result,message){
         res.json(result);
     });
-	
+
 })
 
-app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'enterpriseUserId',maxCount : 1}]),  function (req, res){
-	
+app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'token',maxCount : 1}]),  function (req, res){
+
 	var email = req.body['email'];
 	var username = req.body['username'];
 	var pwd = req.body['password'];
@@ -85,25 +88,41 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 	if(req.body['enterpriseUser']){
 		isEnterpriseUser= req.body['enterpriseUser']=="on"? true : false;
 	}
-	var enterpriseUserId = '';
-	if(req.body['enterpriseUserId']){
-		 enterpriseUserId = req.body['enterpriseUserId'];
-		 // check if this is a valid one 
-		 umlModelInfoManager.queryUserInfo(enterpriseUserId, function(user){
-	
-			 if(!user || !user.isEnterprise){
-				 console.log('Not a valid enterprise userId');
-				 var result = {
-            	          success: false,
-            	          message: 'Invalid Enterprise User Id',
-                 };
-				 res.json(result);
-			 }  else {
-				 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
-				        res.json(result)
-				    });
-			 }
-		 });
+	var token = '';
+	var enterpriseUserId ='';
+	if(req.body['token']){
+		 token = req.body['token'];
+			 // verifies secret and checks exp
+				 jwt.verify(token, config.secretUserInvite, function(err, payload) {
+				   if (err) {
+					   console.log('Failed to authenticate token. Token is not Valid');
+
+						 var result = {
+		            	          success: false,
+		            	          message: 'Link is no longer valid.',
+		                 };
+						 res.json(result);
+					   //return res.json({ success: false, message: 'Failed to authenticate token.' });
+				   } else {
+				     // if everything is good, save to request for use in other routes
+					   umlModelInfoManager.queryUserInfo(payload.enterpriseUserId, function(user){
+
+							 if(!user || !user.isEnterprise){
+								 console.log('Not a valid enterprise userId');
+								 var result = {
+				            	          success: false,
+				            	          message: 'Invalid Enterprise User Id',
+				                 };
+								 res.json(result);
+							 }  else {
+								 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
+								        res.json(result)
+								    });
+							 }
+						 });
+				   }
+				 });
+
 
 	} else {
     umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
@@ -114,7 +133,7 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 })
 
 app.get('/surveyProject', function(req, res){
-	res.render('surveyProject');	
+	res.render('surveyProject');
 });
 
 app.get('/clearDB', function(req, res){
@@ -147,11 +166,11 @@ app.use(function(req, res, next) {
 
 	if (token) {
 	 // verifies secret and checks exp
-		 jwt.verify(token, config.secret, function(err, user) {      
+		 jwt.verify(token, config.secret, function(err, user) {
 		   if (err) {
 			   console.log('Failed to authenticate token.');
 			   res.redirect('/login');
-			   //return res.json({ success: false, message: 'Failed to authenticate token.' });    
+			   //return res.json({ success: false, message: 'Failed to authenticate token.' });
 		   } else {
 		     // if everything is good, save to request for use in other routes
 		     umlModelInfoManager.queryUserInfo(user.userId,function(user){
@@ -159,7 +178,7 @@ app.use(function(req, res, next) {
 		    		res.redirect('/login');
 		    		return;
 		    	}
-		    	 
+
 		    	req.userInfo ={};
 		    	req.userInfo.userName = user.username;
 		    	req.userInfo.repoId = user.repoId;
@@ -168,19 +187,83 @@ app.use(function(req, res, next) {
 		    	if(req.userInfo.isEnterprise){
 		    		req.userInfo.enterpriseUserId = user.enterpriseUserId;
 		    	}
-		    		
+		    	req.userInfo.email = user.email;
+
 		     next();
-		    	
+
 		 	  });
 		   }
 		 });
-		
+
 	} else {
-		
+
 	 // if there is no token
 		res.redirect('/login');
 	}
 
+});
+
+app.get('/profile',function(req,res){
+
+	var profileInfo = {}
+
+	profileInfo.userName = req.userInfo.userName;
+	profileInfo.email = req.userInfo.email;
+	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
+	res.render('profile', {profileInfo:profileInfo});
+
+})
+
+app.get('/inviteUser',function(req,res){
+	res.render('invite');
+});
+
+app.post('/inviteUser', upload.fields([{name:'email',maxCount:1}]),  function (req, res){
+
+	var email = req.body['email'];
+	var enterpriseUserId = req.userInfo._id;
+	var smtpTransport = nodemailer.createTransport({
+	    service: "gmail",
+	    host: "smtp.gmail.com",
+	    auth: {
+	        user: "kritikavaid123@gmail.com",
+	        pass: "Strong123"
+	    }
+	});
+
+	var payload = {
+    		enterpriseUserId : enterpriseUserId,
+    		invitedUserEmail : email
+    };
+
+    var token = jwt.sign(payload, config.secretUserInvite, {
+    	expiresIn : 60*60*24 // expires in 24 hours
+    });
+
+	var mailOptions = {
+		        from: '"Kritika Vaid" <kritikavaid123@gmail.com>', // sender address
+		        to: email, // list of receivers
+		        subject: 'Umlx Invitation Link', // Subject line
+		        html: 'Please sign up using this '+ '<a href="http://localhost:8081/signup?tk='+token+'">link</a>' // html body
+		    };
+
+	smtpTransport.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            return console.log(error);
+        }
+    });
+	var result = {
+	          success: true,
+	          message: 'User Invited',
+   };
+	res.json(result);
+
+})
+app.get('/surveyAnalytics', function (req, res){
+    // console.log(req);
+    umlModelInfoManager.saveSurveyAnalyticsData(req.query.uuid, req.query.ip, req.query.page);
+    // console.log(data)
+    // res.sendStatus(200);
 });
 
 
@@ -188,6 +271,12 @@ app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:
 	console.log(req.body);
 	var formInfo = req.body;
 	umlModelInfoManager.saveSurveyData(formInfo);
+
+	// app.get("/thankYou");
+	// res.render("thankYou");
+
+	res.redirect("thankYou");
+
 });
 
 
@@ -212,7 +301,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 				console.log("model analysis complete");
 			});
 //			console.log(modelInfo);
-			
+
 			umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
 //				console.log(modelInfo);
 //				umlModelInfoManager.queryRepoAnalytics(repoId, function(repoInfo, repoInfo){
@@ -257,7 +346,7 @@ app.post('/uploadModelFile', upload.fields([{name:'model-file',maxCount:1}, {nam
 			umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
 					res.redirect('/');
 			});
-			
+
 		}, modelFilePath);
 	});
 })
@@ -295,7 +384,7 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 			umlEvaluator.evaluateModel(modelInfoVersion, function(){
 				console.log("model analysis complete");
 			});
-			
+
 			umlModelInfoManager.pushModelInfoVersion(modelId, repoId, modelInfoVersion, function(modelInfo){
 //				console.log(modelInfo);
 				if(!modelInfo){
@@ -303,7 +392,7 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 				}
 //				res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:repoId});
 			});
-			
+
 		});
 		});
 	});
@@ -321,7 +410,7 @@ app.get('/deleteModel', function (req, res){
 			res.end('delete error!');
 			return;
 		}
-		
+
 		if(reanalyseRepo){
 		 queryRepoInfo(repoId, function(repoInfo){
 		      console.log(repoInfo);
@@ -330,9 +419,9 @@ app.get('/deleteModel', function (req, res){
 				});
 				updateRepo(repoInfo, function(){
 //					umlFileManager.deleteDir(function(result){
-					
+
 //					});
-					
+
 					res.redirect('/');
 
 				});
@@ -394,7 +483,7 @@ app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
 			res.end('load error!');
 			return;
 		}
-		
+
 //		umlModelAnalyzer.analyseRepo(repo, function(){
 //			console.log("repo analysis complete");
 //		});
@@ -404,7 +493,7 @@ app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
 //			console.log(modelInfo);
 				res.redirect('/');
 		});
-		
+
 	});
 	});
 })
@@ -418,7 +507,7 @@ app.get('/loadEmpiricalModelDataForRepo', function (req, res){
 			res.end('load error!');
 			return;
 		}
-		
+
 //		umlModelAnalyzer.analyseRepo(repo, function(){
 //			console.log("repo analysis complete");
 //		});
@@ -428,7 +517,7 @@ app.get('/loadEmpiricalModelDataForRepo', function (req, res){
 //			console.log(modelInfo);
 				res.redirect('/');
 		});
-		
+
 	});
 	});
 })
@@ -443,7 +532,7 @@ app.get('/deleteUseCase', function (req, res){
 			res.end('delete error!');
 			return;
 		}
-		
+
 		umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 //			console.log(modelInfo);
 			res.render('modelDetail', {modelInfo:modelInfo});
@@ -456,7 +545,7 @@ app.get('/getUseCaseAnalyticsForModelCSV', function (req, res){
 	console.log("/getUseCaseAnalyticsForModelCSV");
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
-		
+
 		umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 			umlFileManager.loadCSVFileAsString(modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName, function(csvData){
 				if(csvData){
@@ -479,7 +568,7 @@ app.post('/uploadUseCaseEvaluation', upload.fields([{name:'ccss',maxCount:1},{na
 	var useCaseId = req.body['useCase-id'];
 	var modelId = req.body['model-id'];
 	var repoId = req.userInfo.repoId;
-	
+
 	umlModelInfoManager.queryUseCaseInfo(repoId, modelId, useCaseId, function(useCaseInfo){
 		console.log("useCase analytics name");
 //		console.log(useCaseInfo.Name);
@@ -497,7 +586,7 @@ app.post('/uploadUseCaseEvaluation', upload.fields([{name:'ccss',maxCount:1},{na
 			res.render('useCaseDetail', {useCaseInfo:useCaseInfo,modelId:modelId,repoId:repoId});
 		});
 	});
-	
+
 })
 
 //app.post('/uploadModelEvaluation', upload.fields([{name:'ueucw',maxCount:1},{name:'uexucw', maxCount:1},{name:'uaw', maxCount:1},{name:'tcf',maxCount:1},{name:'ef', maxCount:1},{name:'afp', maxCount:1},{name:'vaf', maxCount:1},{name:'ph', maxCount:1}, {name:'model-id',maxCount:1}]),  function (req, res){
@@ -628,7 +717,7 @@ app.get('/queryRepoInfo', function(req, res){
 	else{
 		refresh = false;
 	}
-	
+
 //	console.log(refresh);
 	umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
 //		console.log(repoInfo);
@@ -639,7 +728,7 @@ app.get('/queryRepoInfo', function(req, res){
 app.get('/reloadRepo', function(req, res){
 	//temporary analysis
 	var repoId = req.query.repo_id;
-	
+
 //	console.log(refresh);
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlModelInfoManager.reloadRepo(repoInfo, function(repoInfo){
@@ -691,7 +780,7 @@ app.get('/queryEstimationModel', function(req, res){
 //					res.render('calibrationResult', {calibrationResult:calibrationResults[x], ver: new Date().getTime()});
 //				}
 //			});
-			
+
 		}, false);
 		});
 	}
@@ -703,11 +792,11 @@ app.get('/queryEstimationModel', function(req, res){
 app.get('/dumpRepoDescriptiveDistributions', function(req, res){
 	var repoId = req.query.repo_id;
 	var refresh = false;
-	
+
 	if(req.query.refresh === 'true'){
 	refresh = true;
 	}
-	
+
 //	var repoId = "595b50d4aebbbd2c4c4c6b58";
 	console.log(repoId);
 //	var repoId = req.query.repo_id;
@@ -736,7 +825,7 @@ app.get('/evaluateRepoForModels', function(req, res){
 	if(req.query.simulation === 'true'){
 	 simulation = true ;
 	}
-	
+
 	if(req.query.refresh === 'true'){
 	refresh = true;
 	}
@@ -776,12 +865,12 @@ app.get('/evaluateModelForUseCases', function(req, res){
 	var simulation = false;
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 			umlEvaluator.evaluateModel(modelInfo, function(modelInfo){
-				
+
 				umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
 //					console.log(modelInfo);
 					if(useCaseEvaluationStr){
 						// calculateObserluteDifferences
-						
+
 //					console.log(modelEvaluationResult.usecaseEvaluationStr);
 //					var modelAnalytics = modelInfo.ModelAnalytics;
 					useCaseEvaluationStr += "this part nees to improve";
@@ -810,42 +899,58 @@ app.get('/evaluateModelForUseCases', function(req, res){
 });
 
 app.get('/uploadProject', function(req, res){
-	res.render('uploadProject');	
+	res.render('uploadProject');
+});
+
+// TODO use this API to populate data on UI
+app.get('/getSubmittedSurveyList', function(req, res){
+    // var data = {
+    //     status: "successful"
+    // }
+    umlModelInfoManager.getSurveyData(function(data){
+        res.send(data);
+    })
 });
 
 
+// to handle post redirect to home page
+app.post('/', function(req, res){
+	res.redirect('/')
+});
 
 app.get('/', function(req, res){
 		var message = req.query.e;
-		
+
 		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
 //			console.log(req.userInfo);
-			
+
 			if(req.userInfo.isEnterprise){
 				// get the repoinfo for all the repo that are part of this enterprise account
 				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
 					repoIds.push(req.userInfo.repoId);
 					//console.log(repoIds);
 					umlModelInfoManager.queryRepoInfoForAdmin(repoIds, function(modelArray){
-						
+
 						for(var i in modelArray ){
 							var model = modelArray[i];
 							for(var j in model ){
 							repoInfo.Models.push(model[j]);
 							}
-							
+
 						}
-						
-						res.render('index', {repoInfo:repoInfo, message:message});
-						
+
+						res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
+
+
 					});
 				});
-				
+
 			} else {
-				res.render('index', {repoInfo:repoInfo, message:message});
+
+				res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
 			}
-			
-		
+
+
 	});
 });
 
@@ -879,4 +984,5 @@ var server = app.listen(8081,'127.0.0.1', function () {
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
+
 

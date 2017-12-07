@@ -1,6 +1,6 @@
 if diagram        
   div.use-case-info
-     img.use-case(src=diagram.AccessDir+"/"+diagram.SvgGraphFile)
+     object.use-case(data=diagram.AccessDir+"/"+diagram.SvgGraphFile type="image/svg+xml")
   div.use-case-info-content
    ul.nav.nav-tabs
     li.active
@@ -16,15 +16,15 @@ if diagram
         th ELEMENT
         th TYPE
       tbody
-       -var nodeId = 1;
-       each node in diagram.Nodes
-        tr
-         th #{nodeId}
-         th
-          span.use-case-node #{node.Name}
-         th
-          span.use-case-node-type #{node.Type}
-        - nodeId++;
+       -var elementId = 1;
+       each element in diagram.Nodes
+        tr(onclick="colorUseCaseElementAndPath('#{element.Name}', 'element')", class="usecase-tr")
+         td #{elementId}
+         td
+          span.use-case-element #{element.Name}
+         td
+          span.use-case-element-type #{element.Type}
+        - elementId++;
     div.tab-pane.fade(id="use-case-paths")
      table.table.table-striped.use-case-info-tab
       thead
@@ -35,10 +35,10 @@ if diagram
       tbody
        -var pathId = 1;
        each path in diagram.Paths
-        tr
-         th #{pathId}
-         th
+        tr(onclick="colorUseCaseElementAndPath('#{path.PathStr}', 'path')", class="usecase-tr")
+         td #{pathId}
+         td
           span.use-case-path #{path.PathStr}
-         th
+         td
           span.use-case-path-type #{path.Tag}
         - pathId++;
