@@ -1,6 +1,6 @@
 (function(){
 	
-	var UMLDiagramTraverser = require("./UMLDiagramTraverser.js");
+//	var UMLDiagramTraverser = require("./UMLDiagramTraverser.js");
 	var pathPatternMatchUtil = require("../../utils/PathPatternMatchUtil.js");
 
 	var diagramDrawer = require('./DiagramProfilers/DiagramDrawer.js');
@@ -61,14 +61,14 @@
 			 */
 			
 			processDiagram: function(diagram, usecase, model, callbackfunc){
-				console.log("transaction process: process diagram");
-				diagram.Paths = UMLDiagramTraverser.traverseDiagram(diagram);
-				diagramDrawer.drawBehavioralDiagram(diagram, callbackfunc);
-				console.log(diagram.Paths);
+//				console.log("transaction process: process diagram");
+//				diagram.Paths = UMLDiagramTraverser.traverseDiagram(diagram);
+//				diagramDrawer.drawBehavioralDiagram(diagram, callbackfunc);
+//				console.log(diagram.Paths);
 			},
 			processPath: function(path, diagram, usecase, model){
-				var components = [];
-				var pathStr = "";
+//				var components = [];
+//				var pathStr = "";
 				
 				//the total degree should be determined differently. If an element has a component, then the degree is the number of components associated with the current component, and if not, it is the number of messages, associated with the current messages.
 				var totalDegree = 0;
@@ -76,43 +76,43 @@
 				for(var i in path.Nodes)
 				{	
 					var node = path.Nodes[i];
-					
-					if(i == 0){
-						if(node.source){
-						components.push(node.source);
-						}
-					}
-	
-					if(node.target){
-						components.push(node.target);
-					}
-					
-//					var node = path[i];
-//					var elementID = path['Elements'][i];
-//					var components = diagram.allocate(node);
-//					if(!element){
-//						break;
+//					
+//					if(i == 0){
+//						if(node.source){
+//						components.push(node.source);
+//						}
 //					}
-//					for(var j in components){
-//						totalDegree += components[j].InboundNumber;
-//						tranLength++;	
+//	
+//					if(node.target){
+//						components.push(node.target);
 //					}
-					
-					pathStr += node.Name;
-					if( i != path.Nodes.length - 1){
-						pathStr += "->";
-					}
+//					
+////					var node = path[i];
+////					var elementID = path['Elements'][i];
+////					var components = diagram.allocate(node);
+////					if(!element){
+////						break;
+////					}
+////					for(var j in components){
+////						totalDegree += components[j].InboundNumber;
+////						tranLength++;	
+////					}
+//					
+//					pathStr += node.Name;
+//					if( i != path.Nodes.length - 1){
+//						pathStr += "->";
+//					}
 					
 					var associatedComponents = model.findAssociatedComponents(node);
 					totalDegree += associatedComponents.length + 1;
 				}
 				
 //				console.log(pathStr);
-				path.PathStr = pathStr;
+//				path.PathStr = pathStr;
 
 				path['TransactionAnalytics'] = {};
 				
-				var transactionalOperations = pathPatternMatchUtil.recognizePattern(components, diagram, transactionalPatternTreeRoot);
+				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, diagram, transactionalPatternTreeRoot);
 				var transactionalOperationStr = "";
 				for(var i=0; i < transactionalOperations.length; i++){
 					if(i !== 0){
@@ -162,7 +162,7 @@
 				}
 				
 				
-				path['TransactionAnalytics'].Components = components;
+//				path['TransactionAnalytics'].Components = components;
 				path['TransactionAnalytics'].TranLength = path.Nodes.length;
 				//The transaction length is defined as the number of operations of a transaction, which can be the number of activities, messages, interactions.
 				

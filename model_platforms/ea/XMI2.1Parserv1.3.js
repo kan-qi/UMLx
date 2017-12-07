@@ -191,12 +191,12 @@
 					Type : xmiDiagram['properties'][0]['$']['type'],
 					Name : xmiDiagram['properties'][0]['$']['name'],
 					Package : xmiDiagram['model'][0]['$']['owner'],
-					Parent: xmiElement['model'][0]['$']['parent'],
+					Parent: xmiDiagram['model'][0]['$']['parent'],
 //					XMIElement: xmiDiagram,
 					ComponentIDs : componentIDs,
 				};
 			
-			populateDiagram(diagram, components);
+//			populateDiagram(diagram, components);
 
 			components[xmiDiagram['$']['xmi:id']] = diagram; 
 		}
@@ -206,6 +206,6 @@
 
 	module.exports = {
 			
-			extractModelComponents : extractModelComponent(xmiString)
+			extractModelComponents : extractModelComponents
 	}
 }());

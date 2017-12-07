@@ -2,7 +2,8 @@
 	/**
 	 *  Work as a test stub
 	 */
-	var modelXMLParser = require('./model_platforms/ea/XMI2.1Parserv1.1.js');
+//	var modelXMLParser = require('./model_platforms/ea/XMI2.1Parserv1.1.js');
+	var modelExtractor = require('./UMLModelExtractor.js');
 //	var diagramProfiler = require('./diagram_profilers/UMLDiagramProfiler.js');
 	var mkdirp = require('mkdirp');
 	var fs = require('fs');
@@ -23,7 +24,7 @@
 				return;
 			}
 
-			modelXMLParser.extractModel(umlModelInfo.umlFilePath, function(model){
+			modelExtractor.extractModel(umlModelInfo.umlFilePath, function(model){
 				console.log("extract model");
 				if(!model){
 					return;
@@ -86,7 +87,7 @@
 					if(err) {
 						return console.log(err);
 					}
-					modelXMLParser.extractModels(umlModelInfo.umlFilePath, func);			
+					modelExtractor.extractModels(umlModelInfo.umlFilePath, func);			
 				});
 			},
 	}

@@ -5,6 +5,7 @@
 	var fs = require('fs');
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
+	var xmiParser = require('./model_platforms/ea/XMI2.1Parserv1.3.js');
 	
 	function standardiseName(name){
 		return name.replace(/\s/g, '').toUpperCase();
@@ -18,8 +19,6 @@
 	function populateDiagram(diagram, modelComponents) {
 		
 //		var xmiElement = modelComponents[diagram._id];
-		
-		
 		
 		if (diagram.Type === 'Sequence') {
 			/*
@@ -36,8 +35,8 @@
 			var seqNo = 0;
 			// here some logic needs to be applied to extract the structure for sequence diagrams
 			// console.log(modelComponents);
-			for ( var i in componentIDs) {
-				var component = modelComponents[componentIDs[i]];
+			for ( var i in diagram.ComponentIDs) {
+				var component = modelComponents[diagram.ComponentIDs[i]];
 				if(!component){
 					continue;
 				}
@@ -145,8 +144,8 @@
 				}
 			var Interactions = [];
 			
-			for ( var i in componentIDs) {
-				var component = modelComponents[componentIDs[i]];
+			for ( var i in diagram.ComponentIDs) {
+				var component = modelComponents[diagram.ComponentIDs[i]];
 				if(!component){
 					continue;
 				}
@@ -232,8 +231,8 @@
 			var ControlFlows = [];
 			var Activities = [];
 			
-			for ( var i in componentIDs) {
-				var component = modelComponents[componentIDs[i]];
+			for ( var i in diagram.ComponentIDs) {
+				var component = modelComponents[diagram.ComponentIDs[i]];
 				if(!component){
 					continue;
 				}
@@ -309,8 +308,8 @@
 			var elementNum = 0;
 			var attributeNum = 0;
 			var operationNum = 0;
-			for ( var i in componentIDs) {
-				var component = modelComponents[componentIDs[i]];
+			for ( var i in diagram.ComponentIDs) {
+				var component = modelComponents[diagram.ComponentIDs[i]];
 				if (!component) {
 					continue;
 				}
@@ -339,20 +338,19 @@
 		}
 	}
 	
+	function isCycled(path){
+		var lastNode = path[path.length-1];
+			for(var i=0; i < path.length-1; i++){
+				if(path[i] == lastNode){
+					return true;
+				}
+			}
+		return false;
+	}
 
 	function traverseBehavioralDiagram(diagram){
 		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
 		var entries=diagram.Entries;// tag: elements
-		
-		function isCycled(path){
-			var lastNode = path[path.length-1];
-				for(var i=0; i < path.length-1; i++){
-					if(path[i] == lastNode){
-						return true;
-					}
-				}
-			return false;
-		}
 		
 		var toExpandCollection = new Array();
 		
@@ -411,10 +409,10 @@
 	 * May need to adjust this structure to better structure the diagrams.
 	 */
 	function extractModel(parsedResult, filter) {
-		var modelComponents = extractModelComponents(parsedResult);
+		var modelComponents = xmiParser.extractModelComponents(parsedResult);
 		
 		function Model(){
-			this.Diagrams  = [];
+//			this.Diagrams  = [];
 		}
 		
 		/*
@@ -442,6 +440,27 @@
 		
 		model.DomainModel = domainModel;
 		
+		// make extra processing for the domain model diagrams. To reference their elements 
+		domainModel.findElement = function(elementName){
+			if(!elementName){
+				return null;
+			}
+			console.log("checking class elments");
+			console.log(elementName);
+			for(var i in this.Diagrams){
+				var diagram = this.Diagrams[i];
+				for(var j in diagram.Elements){
+					var element = diagram.Elements[j];
+					console.log("iterating class element");
+					console.log(element.Name);
+					//apply the rules to convert to standard names, and use the standard ones to compare with each other.
+					if(standardiseName(elementName) === standardiseName(element.Name)){
+						return element;
+					}
+				}
+			}
+		}
+		
 		
 		function UseCase(id, name){
 			this._id = id;
@@ -466,7 +485,7 @@
 					 */
 //					var diagram = model.Diagrams[i];
 					// populate the diagram with the elements by replacing the ids.
-					populateDiagram(diagram, modelComponent);
+					populateDiagram(diagram, modelComponents);
 					
 					if(diagram.Type === "Logical"){
 						domainModel.Diagrams.push(diagram);
@@ -496,10 +515,53 @@
 							target.component = targetComponent;
 							}
 						}
+						
+						diagram.Paths = traverseBehavioralDiagram(diagram);
+						
+					// associate information for the paths.
+						
+					for(var j in diagram.Paths){
+						var path = diagram.Paths[j];
+						var pathStr = "";
+						var components = [];
+						for(var k in path.Nodes)
+						{	
+							var node = path.Nodes[k];
+							
+							if(i == 0){
+								if(node.source){
+								components.push(node.source);
+								}
+							}
+			
+							if(node.target){
+								components.push(node.target);
+							}
+							
+//							var node = path[i];
+//							var elementID = path['Elements'][i];
+//							var components = diagram.allocate(node);
+//							if(!element){
+//								break;
+//							}
+//							for(var j in components){
+//								totalDegree += components[j].InboundNumber;
+//								tranLength++;	
+//							}
+							
+							pathStr += node.Name;
+							if( i != path.Nodes.length - 1){
+								pathStr += "->";
+							}
+						}
+						
+						path.PathStr = pathStr;
+						path.Components = components;
+						
 					}
-					
+					}
 
-					model.Diagrams.push(diagram);
+//					model.Diagrams.push(diagram);
 				}
 			}
 		}
@@ -510,27 +572,6 @@
 //			console.log("checking use cases");
 			var useCase = UseCases[i];
 			model.UseCases.push(useCase);
-		}
-		
-		// make extra processing for the domain model diagrams. To reference their elements 
-		domainModel.findElement = function(elementName){
-			if(!elementName){
-				return null;
-			}
-			console.log("checking class elments");
-			console.log(elementName);
-			for(var i in this.Diagrams){
-				var diagram = this.Diagrams[i];
-				for(var j in diagram.Elements){
-					var element = diagram.Elements[j];
-					console.log("iterating class element");
-					console.log(element.Name);
-					//apply the rules to convert to standard names, and use the standard ones to compare with each other.
-					if(standardiseName(elementName) === standardiseName(element.Name)){
-						return element;
-					}
-				}
-			}
 		}
 		
 
@@ -576,22 +617,22 @@
 		}
 		
 
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("model",model);
+		var debug = require("./utils/DebuggerOutput.js");
+		debug.writeJson("extacted_model1",model);
 		
 //		var modelDrawer = require("./../evaluators/TransactionEvaluator/DiagramProfilers/ModelDrawer.js");
-		var modelDrawer = require("./ModelDrawer.js");
-		modelDrawer.drawModel(model, "./debug/model.dotty", function(){
-			console.log("model is drawn");
-		});
+//		var modelDrawer = require("./ModelDrawer.js");
+//		modelDrawer.drawModel(model, "./debug/model.dotty", function(){
+//			console.log("model is drawn");
+//		});
 		
-		console.log("domain model");
-		console.log(model.DomainModel);
-		var domainModelDrawer = require("./DomainModelDrawer.js");
-		domainModelDrawer.drawDomainModel(model.DomainModel, "./debug/domainModel.dotty", function(){
-			console.log("domainModel is drawn");
-		});
-		
+//		console.log("domain model");
+//		console.log(model.DomainModel);
+//		var domainModelDrawer = require("./DomainModelDrawer.js");
+//		domainModelDrawer.drawDomainModel(model.DomainModel, "./debug/domainModel.dotty", function(){
+//			console.log("domainModel is drawn");
+//		});
+//		
 		
 		return model;
 	}

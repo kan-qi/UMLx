@@ -107,16 +107,15 @@
 				var boundaryNum = 0;
 				var controlNum = 0;
 				var entityNum = 0;
-				var elementNum = 0;
 				var totalPathLength = 0;
 				var pathNum = 0;
 
 				for ( var j in diagram.Nodes) {
 					var Element = diagram.Nodes[j]; // tag: elements
 //					var components = diagram.allocate(Element);
+					// if it is mvc decomposed. we are able to understand the boundry, control, and entity.
 					if(Element.target){
 						var component = Element.target;
-						elementNum++;
 						totalDegree += component.InboundNumber;
 						var type = component.Type;
 						if (type === "actor") {
@@ -127,12 +126,11 @@
 							controlNum++;
 						} else if (type === "entity") {
 							entityNum++;
-						} else{
-							elementNum++;
 						}
 //						totalLinks += Element.InboundNumber;
 					}
-						
+
+					elementNum++;
 //					}
 				}
 				
@@ -140,7 +138,7 @@
 
 				for ( var j in diagram.Paths) {
 					var Path = diagram.Paths[j];
-					totalPathLength += Path.length;
+					totalPathLength += Path.Nodes.length;
 					pathNum++;
 				}
 
