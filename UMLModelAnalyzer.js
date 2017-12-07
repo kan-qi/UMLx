@@ -2,14 +2,15 @@
 	/**
 	 *  Work as a test stub
 	 */
-	var modelXMLParser = require('./model_platforms/ea/XMI2.1Parser.js');
-	var diagramProfiler = require('./diagram_profilers/UMLDiagramProfiler.js');
+//	var modelXMLParser = require('./model_platforms/ea/XMI2.1Parserv1.1.js');
+	var modelExtractor = require('./UMLModelExtractor.js');
+//	var diagramProfiler = require('./diagram_profilers/UMLDiagramProfiler.js');
 	var mkdirp = require('mkdirp');
 	var fs = require('fs');
 	//To process second order information, for example, determine duplicate or identify patterns.
-	var useCaseProcessor = require('./diagram_profilers/UseCaseProcessor.js');
-	var domainModelProcessor = require('./diagram_profilers/DomainModelProcessor.js');
-	var domainModelDrawer = require('./diagram_profilers/DomainModelDrawer.js');
+//	var useCaseProcessor = require('./diagram_profilers/UseCaseProcessor.js');
+//	var domainModelProcessor = require('./diagram_profilers/DomainModelProcessor.js');
+//	var domainModelDrawer = require('./diagram_profilers/DomainModelDrawer.js');
 	var umlEvaluator = require('./UMLEvaluator.js');
 	
 
@@ -23,72 +24,53 @@
 				return;
 			}
 
-			modelXMLParser.extractModels(umlModelInfo.umlFilePath, function(models){
-//				console.log("extract model");
-//				each model contains multiple use case models and multiple domain models, it is necessary to consolidate the extract models from different packages into one.
-//				console.log(models);
-				umlModelInfo.UseCases = [];
-				umlModelInfo.DomainModel = {
-						OutputDir: umlModelInfo.OutputDir+"/domainModel",
-						AccessDir: umlModelInfo.AccessDir+"/domainModel",
-						DotGraphFile: 'domainModel.dotty',
-						SvgGraphFile: 'domainModel.svg',
-						Diagrams: [],
-//						DomainModelAnalytics: initDomainModelAnalytics(umlModelInfo)
-				};
-//				umlModelInfo.ModelAnalytics = initModelAnalytics(umlModelInfo);
-
-				for (var i in models.Packages){
-					var modelPackage = models.Packages[i];
-					if(modelPackage.UseCases){
-						for(var j in modelPackage.UseCases) {
-							(function(useCase, id){
+			modelExtractor.extractModel(umlModelInfo.umlFilePath, function(model){
+				console.log("extract model");
+				if(!model){
+					return;
+				}
+				
+				for(var i in umlModelInfo){
+					model[i] = umlModelInfo[i];
+				}
+//					console.log("use cases");
+					var useCases = model.UseCases;
+//					console.log(useCases);
+						for(var i in useCases) {
+							(function(useCase){
 //								console.log(useCase);
-								useCase._id = id;
+//								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
 								var fileName = useCase._id;
-								useCase.OutputDir = umlModelInfo.OutputDir+"/"+fileName;
-								useCase.AccessDir = umlModelInfo.AccessDir+"/"+fileName;
+								useCase.OutputDir = model.OutputDir+"/"+fileName;
+								useCase.AccessDir = model.AccessDir+"/"+fileName;
 								for(var k in useCase.Diagrams){
 									var diagram = useCase.Diagrams[k];
 									diagram.OutputDir = useCase.OutputDir;
 									diagram.AccessDir = useCase.AccessDir;
-									diagramProfiler.profileDiagram(diagram, function(){
-										console.log("diagram is processed!");
-									});
-//									console.log("Diagram file name:"+diagram.Name);
 								}
-//								mkdirp(useCase.OutputDir, function(err) {
-//									if(err) {
-//										console.log(err);
-//										// the folders may already exists during re-analyse
-//									}
-//									// draw diagrams
-//									
-//								});
-//								useCase.UseCaseAnalytics = initUseCaseAnalytics(useCase);
-							})(modelPackage.UseCases[j], j);
-							umlModelInfo.UseCases.push(modelPackage.UseCases[j]);
+							})(useCases[i]);
 						}
-					}
-
-					if(modelPackage.DomainModel && modelPackage.DomainModel.Diagrams){
-						for(var j in modelPackage.DomainModel.Diagrams){
-							var diagram = modelPackage.DomainModel.Diagrams[j];
-							diagram._id = j;
-//							var fileName = diagram.Name.replace(/[^A-Za-z0-9_]/gi, "_") + Date.now();
-							diagram.OutputDir = umlModelInfo.DomainModel.OutputDir;
-							diagram.AccessDir = umlModelInfo.DomainModel.AccessDir;
-							diagramProfiler.profileDiagram(diagram);
-							umlModelInfo.DomainModel.Diagrams.push(diagram);
-//							console.log("diagram file name:"+diagram.Name);
+						
+					var domainModel = model.DomainModel;
+//					var domainModel = model.DomainModel;
+					domainModel.OutputDir = model.OutputDir+"/domainModel";
+					domainModel.AccessDir = model.AccessDir+"/domainModel";
+					domainModel.DotGraphFile = 'domainModel.dotty';
+					domainModel.SvgGraphFile = 'domainModel.svg';
+//					console.log("domainModel");
+//					console.log(domainModel);
+						for(var i in domainModel.Diagrams){
+							var diagram = domainModel.Diagrams[i];
+							diagram.OutputDir = domainModel.OutputDir;
+							diagram.AccessDir = domainModel.AccessDir;
 						}
-					}
-				}
 
+						var debug = require("./utils/DebuggerOutput.js");
+						debug.writeJson("model",model);
 
 				if(callbackfunc){
-					callbackfunc(umlModelInfo);
+					callbackfunc(model);
 				}
 
 			});
@@ -105,7 +87,7 @@
 					if(err) {
 						return console.log(err);
 					}
-					modelXMLParser.extractModels(umlModelInfo.umlFilePath, func);			
+					modelExtractor.extractModels(umlModelInfo.umlFilePath, func);			
 				});
 			},
 	}

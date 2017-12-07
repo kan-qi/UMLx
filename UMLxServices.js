@@ -13,7 +13,7 @@ var jade = require('jade');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
-var sleep = require('sleep');
+//var sleep = require('sleep');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
 var bodyParser = require('body-parser');
@@ -420,7 +420,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		console.log(modelInfo);
 		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
-//			console.log(modelInfo);
+			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
 			});
@@ -593,7 +593,7 @@ app.get('/requestDomainModelDetail', function (req, res){
 			return;
 		}
 //		console.log(domainModel);
-		res.render('domainModelDetail',{domainModelInfo: domainModel});
+		res.render('domainModelDetail',{domainModel: domainModel});
 	});
 })
 
@@ -1083,6 +1083,25 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+
+var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parserv1.1.js")
+app.get('/testSequenceDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractSequenceDiagrams("./temp/test_example.xml", function(sequenceDiagrams){
+		res.json(sequenceDiagrams);
+	});
+});
+
+app.get('/testRobustnessDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractRobustnessDiagrams("./temp/test_example.xml", function(robustnessDiagrams){
+		res.json(robustnessDiagrams);
+	});
+});
+
+app.get('/testActivityDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractActivityDiagrams("./temp/test_example.xml", function(activityDiagrams){
+		res.json(activityDiagrams);
+	});
+});
 app.get('/deleteUser', function(req,res){
 	var userId = req.query['uid'];
 	umlModelInfoManager.deleteUser(userId, function(status){
@@ -1107,7 +1126,6 @@ app.get('/deactivateUser', function(req,res){
 		});
 	}
 });
-
 
 
 var server = app.listen(8081,'127.0.0.1', function () {

@@ -75,7 +75,7 @@
 
 	
 	// callbackfunc is called when the elements are dumped into the files?
-	function evaluateUseCase(useCaseInfo, callbackfunc) {
+	function evaluateUseCase(useCaseInfo, model, callbackfunc) {
 		useCaseInfo["ElementAnalytics"] = {
 		TotalDegree:0,
 		ElementNum:0,
@@ -95,9 +95,9 @@
 
 		for ( var i in useCaseInfo.Diagrams) {
 			var diagram = useCaseInfo.Diagrams[i];
-			if(!diagram.DiagramAnalytics){
-				diagram.DiagramAnalytics = {};
-			}
+//			if(!diagram.DiagramAnalytics){
+//				diagram.DiagramAnalytics = {};
+//			}
 			
 				// element analytics
 				var totalDegree = 0;
@@ -110,11 +110,14 @@
 				var totalPathLength = 0;
 				var pathNum = 0;
 
-				for ( var j in diagram.Elements) {
-					var Element = diagram.Elements[j]; // tag: elements
-						elementNum++;
-						totalDegree += Element.InboundNumber;
-						var type = Element.Type;
+				for ( var j in diagram.Nodes) {
+					var Element = diagram.Nodes[j]; // tag: elements
+//					var components = diagram.allocate(Element);
+					// if it is mvc decomposed. we are able to understand the boundry, control, and entity.
+					if(Element.target){
+						var component = Element.target;
+						totalDegree += component.InboundNumber;
+						var type = component.Type;
 						if (type === "actor") {
 							actorNum++;
 						} else if (type === "boundary") {
@@ -124,13 +127,18 @@
 						} else if (type === "entity") {
 							entityNum++;
 						}
-						totalLinks += Element.InboundNumber;
+//						totalLinks += Element.InboundNumber;
+					}
+
+					elementNum++;
 //					}
 				}
+				
+				totalLinks += diagram.Edges.length;
 
 				for ( var j in diagram.Paths) {
 					var Path = diagram.Paths[j];
-					totalPathLength += Path.Elements.length;
+					totalPathLength += Path.Nodes.length;
 					pathNum++;
 				}
 
@@ -219,8 +227,8 @@
 			var operationNum = 0;
 			var entityNum = 0;
 
-			for ( var j in diagram.Elements) {
-				var element = diagram.Elements[j];
+			for ( var j in diagram.Nodes) {
+				var element = diagram.Nodes[j];
 					entityNum++;
 					for ( var k in element.Attributes) {
 						var attribute = element.Attributes[k];
@@ -283,7 +291,6 @@
 				TotalPathLength : 0,
 				PathNum : 0,
 				UseCaseNum : 0,
-				DiagramNum : 0,
 				TotalLinks : 0,
 				ActorNum : 0,
 				BoundaryNum : 0,
@@ -460,7 +467,7 @@
 						+ path.PathStr.replace(/,/gi, "") + ","
 						+ diagram.Name + ","
 						+ useCaseInfo.Name + ","
-						+ path.Elements.length + ","
+						+ path.length + ","
 						+ path.boundaryNum + ","
 						+ path.controlNum + ","
 						+ path.entityNum + ","
@@ -470,14 +477,21 @@
 
 			useCaseInfo["ElementAnalytics"] = useCaseInfo.UseCaseAnalytics;
 
-			for ( var j in diagram.Elements) {
-				var element = diagram.Elements[j];
+			for ( var j in diagram.Nodes) {
+				var element = diagram.Nodes[j];
+				var elementName = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
+				var elementType = "";
+//				var components = diagram.allocate(Element);
+				if(element.target){
+					var component = element.target;
+					elementType = component.Type;
+				}
 				elementNum++;
 				elementAnalyticsStr += elementNum + ","
-						+ element.Name.replace(/,/gi, "") + ","
+						+ elementName + ","
 						+ diagram.Name + ","
 						+ useCaseInfo.Name + "," +
-						+ element.Type.replace(/,/gi, "") + ","
+						+ elementType+ ","
 						+ element.OutboundNumber + ","
 						+ element.InboundNumber+"\n";
 			}
@@ -539,9 +553,9 @@
 			
 			var diagram = domainModelInfo.Diagrams[i];
 			
-			for ( var j in diagram.Elements) {
+			for ( var j in diagram.Nodes) {
 				
-				var element = diagram.Elements[j];
+				var element = diagram.Nodes[j];
 				
 					entityNum++;
 					entityAnalyticsStr += entityNum + ","

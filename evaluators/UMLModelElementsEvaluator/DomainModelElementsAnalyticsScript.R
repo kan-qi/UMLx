@@ -52,13 +52,13 @@ operationData <- read.csv(operationAnalyticsPath, header=TRUE)
 #      breaks=5
 
 #setwd("")
-operationNumData = elementData[,4]
+operationNumData = entityData[,4]
 if(length(operationNumData) == 0 || is.na(operationNumData)){
 	operationNumData = c(0);
 }
 operationNumData = as.numeric(operationNumData)
 
-attributeNumData = elementData[,3]
+attributeNumData = entityData[,3]
 if(length(attributeNumData) == 0 || is.na(attributeNumData)){
 	attributeNumData = c(0);
 }

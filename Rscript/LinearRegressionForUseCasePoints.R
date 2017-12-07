@@ -29,10 +29,15 @@ independentVariablesScatterPlotPath <- paste(outputPath,'use-case-point-independ
 # load the necessary libraries
 
 library(lattice)
-library(latticeExtra)
+#library(latticeExtra)
 # set the output file
-library(reshape)
+#library(reshape)
 #library(dplyr)
+
+library(ggplot2)
+library(data.table)
+#library(gridExtra)
+
 
 sink(reportPath)
 
@@ -190,6 +195,17 @@ plot = xyplot(Effort_Norm_UCP~ value | variable, data=useCaseDataMelt,
 		auto.key = TRUE,
 		type = c("p", "r"))
 		
+		
+# print(grid.arrange(plot1, plot2, plot3))
+# dev.off()
+		png(filename=linearRegressionPlotPath,
+				type="cairo",
+				units="in", 
+				width=4*3, 
+				height=4*1,
+				res=96)
+		print(plot)
+		
 # estimate the predication accuracy by n fold cross validation.
 #Randomly shuffle the data
 useCaseData<-useCaseData[sample(nrow(useCaseData)),]
@@ -218,6 +234,9 @@ folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 #data structure to hold the data for 10 fold cross validation
 foldResults <- matrix(,nrow=nfold,ncol=12)
 colnames(foldResults) <- c('eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50','exucp_mmre','exucp_pred15','exucp_pred25','exucp_pred50','ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50')
+
+foldResults1 <- array(0,dim=c(100,3,nfold))
+
 #Perform 10 fold cross validation
 for(i in 1:nfold){
 	#Segement your data by fold using the which() function 
@@ -239,6 +258,11 @@ for(i in 1:nfold){
 	eucp.pred50 = length(eucp.mre[eucp.mre<=0.50])/length(eucp.mre)
 	print(c(eucp.pred15, eucp.pred25, eucp.pred50))
 	
+	eucp.pred <- 0
+	for(j in 1:99){
+		eucp.pred <- c(eucp.pred, length(eucp.mre[eucp.mre<=0.01*j])/length(eucp.mre))
+	}
+	
 	print('exucp testing set predication')
 	exucp.m = lm(Effort_Norm_UCP~EXUCP_ALY, data=trainData)
 	exucp.predict = cbind(predicted=predict(exucp.m, testData), actual=testData$Effort_Norm_UCP)
@@ -251,6 +275,11 @@ for(i in 1:nfold){
 	exucp.pred25 = length(exucp.mre[exucp.mre<=0.25])/length(exucp.mre)
 	exucp.pred50 = length(exucp.mre[exucp.mre<=0.50])/length(exucp.mre)
 	print(c(exucp.pred15, exucp.pred25, exucp.pred50))
+	
+	exucp.pred <- 0
+	for(j in 1:99){
+		exucp.pred <- c(exucp.pred, length(exucp.mre[exucp.mre<=0.01*j])/length(exucp.mre))
+	}
 	
 	print('ducp testing set predication')
 	ducp.m = lm(Effort_Norm_UCP~DUCP_ALY, data=trainData)
@@ -265,7 +294,14 @@ for(i in 1:nfold){
 	ducp.pred50 = length(ducp.mre[ducp.mre<=0.50])/length(ducp.mre)
 	print(c(ducp.pred15, ducp.pred25, ducp.pred50))
 	
+	ducp.pred <- 0
+	for(j in 1:99){
+		ducp.pred <- c(ducp.pred, length(ducp.mre[ducp.mre<=0.01*j])/length(ducp.mre))
+	}
+	
 	foldResults[i,] = c(eucp.mmre,eucp.pred15,eucp.pred25,eucp.pred50,exucp.mmre,exucp.pred15,exucp.pred25,exucp.pred50,ducp.mmre,ducp.pred15,ducp.pred25,ducp.pred50)
+	
+	foldResults1[,,i] = array(c(eucp.pred,exucp.pred,ducp.pred),c(100,3))
 }
 
 #average out the folds.
@@ -288,15 +324,48 @@ cvResults <- c(
 
 names(cvResults) <- c('eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50','exucp_mmre','exucp_pred15','exucp_pred25','exucp_pred50','ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50')
 print(cvResults)
-# print(grid.arrange(plot1, plot2, plot3))
-# dev.off()
-png(filename=linearRegressionPlotPath,
-		type="cairo",
-		units="in", 
-		width=4*3, 
-		height=4*1,
-		res=96)
-print(plot)
+
+avgPreds <- matrix(,nrow=100,ncol=4)
+colnames(avgPreds) <- c("Pred","EUCP","EXUCP","DUCP")
+for(i in 1:100){
+	eucp_fold_mean = mean(foldResults1[i,1,]);
+	exucp_fold_mean = mean(foldResults1[i,2,]);
+	ducp_fold_mean = mean(foldResults1[i,3,]);
+	avgPreds[i,] <- c(i,eucp_fold_mean,exucp_fold_mean,ducp_fold_mean)
+	#print(i)
+	#print(avgPreds[i,])
+}
+
+print('average improvement over ucp')
+print(mean(avgPreds[, "EXUCP"] - avgPreds[,"EUCP"]))
+print(mean(avgPreds[, "DUCP"] - avgPreds[,"EUCP"]))
+print(mean(avgPreds[, "DUCP"] - avgPreds[,"EXUCP"]))
+
+avgPreds <- data.frame(avgPreds)
+print(avgPreds)
+meltAvgPreds = melt(avgPreds, id.vars="Pred", value.name="Value", variable.name="Method")
+
+print("melt avg preds info")
+print(meltAvgPreds)
+svg(paste(outputPath,"eucp_exucp_ducp_err_plot.svg", sep="/"), width=6, height=4)
+print(ggplot(meltAvgPreds) + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
+				ylab("Percentage")+ theme(legend.position="bottom"))
+
+print("melt avg preds info as lines and smooth function")
+svg(paste(outputPath,"eucp_exucp_ducp_err_lines_plot.svg", sep="/"), width=6, height=4)
+ggplot(meltAvgPreds) + 
+		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
+		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage")+ theme(legend.position="bottom")
+
+
+print("melt avg preds info as dots and smooth function")
+svg(paste(outputPath,"eucp_exucp_ducp_err_dots_plot.svg", sep="/"), width=6, height=4)
+ggplot(meltAvgPreds) + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage")+ theme(legend.position="bottom")
 
 
 #also have linear regression on sloc and normalized effort.
