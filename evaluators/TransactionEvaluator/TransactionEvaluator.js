@@ -88,7 +88,7 @@
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
-
+		
 		return useCaseInfo['TransactionAnalytics'].EI + ","
 		+ useCaseInfo['TransactionAnalytics'].EQ + ","
 		+ useCaseInfo['TransactionAnalytics'].INT + ","
@@ -100,11 +100,12 @@
 		+ useCaseInfo['TransactionAnalytics'].NT+ ","
 		+ useCaseInfo['TransactionAnalytics'].AvgTranLength+ ","
 		+ useCaseInfo['TransactionAnalytics'].ArchDiff;
-		;
 	}
 
 	
 	function evaluateUseCase(useCaseInfo, modelInfo, callbackfunc){
+		
+		//the things that need to be evaluated for use cases.
 		useCaseInfo['TransactionAnalytics'] = {
 				EI : 0,
 				EQ : 0,
@@ -142,11 +143,18 @@
 			for ( var j in diagram.Paths) {
 				
 				var path = diagram.Paths[j];
-				// console.log('--------Process Path-------');
+				 console.log('--------Process Path-------');
+				 console.log(path);
+				 
+				 console.log(modelInfo);
 				
-				transactionProcessor.processPath(path, diagram);
+				transactionProcessor.processPath(path, diagram, useCaseInfo, modelInfo);
+				
+				console.log(path);
+				console.log(diagram.Paths);
 
 				var transactionalOperations = path['TransactionAnalytics'].Transactional;
+				
 				if(transactionalOperations.indexOf("EI") > -1){
 					EI++;
 				}
@@ -205,28 +213,40 @@
 //			console.log(useCaseInfo['TransactionAnalytics']);
 		}
 		
-		useCaseInfo.getPaths = function(){
-			var paths = [];
-			for(var i in this.Diagrams){
-				var diagram = this.Diagrams[i];
-				for(var j in diagram.Paths){
-					paths.push(diagram.Paths[j]);
-				}
+//		useCaseInfo.getPaths = function(){
+//			var paths = [];
+//			for(var i in this.Diagrams){
+//				var diagram = this.Diagrams[i];
+//				for(var j in diagram.Paths){
+//					paths.push(diagram.Paths[j]);
+//				}
+//			}
+//			return paths;
+//		}
+		
+		var useCasePaths = [];
+		for(var i in useCaseInfo.Diagrams){
+			var diagram = useCaseInfo.Diagrams[i];
+			for(var j in diagram.Paths){
+				console.log("iterating paths");
+				console.log(diagram.Paths[j]);
+				useCasePaths.push(diagram.Paths[j]);
 			}
-			return paths;
 		}
 		
-		var useCasePaths = useCaseInfo.getPaths();
-		console.log("paths");
+		useCaseInfo.Paths = useCasePaths;
+		
+//		var useCasePaths = useCaseInfo.getPaths();
+		console.log("evaluate use cases: paths");
 		console.log(useCasePaths);
 		
+		console.log("stringified paths");
+		console.log( JSON.stringify(useCasePaths));
+//		console.log('test1');
+//		console.log(useCasePaths);
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("paths",useCasePaths);
-		
-		var transactionDrawer = require("./DiagramProfilers/TransactionDrawer.js");
-		transactionDrawer.drawTransactions(useCasePaths, "./debug/transactions.dotty", function(){
-			console.log("transactions are drawn");
-		});
+		debug.writeJson("paths"+useCaseInfo.Name,useCasePaths);
+//		debug.writeJson("model1",modelInfo);
 		
 		useCaseInfo['TransactionAnalytics'].AvgTranLength = useCaseInfo['TransactionAnalytics'].NT == 0 ? 0 : useCaseInfo['TransactionAnalytics'].TranLength/useCaseInfo['TransactionAnalytics'].NT;
 		useCaseInfo['TransactionAnalytics'].ArchDiff =  useCaseInfo['TransactionAnalytics'].AvgPathLength * useCaseInfo["ElementAnalytics"].AvgDegree;
@@ -280,6 +300,7 @@
 				ArchDiff:0
 		};
 
+		var useCasePaths = [];
 		//analyse use cases
 		for(var i in modelInfo.UseCases){
 			var useCaseInfo = modelInfo.UseCases[i]
@@ -296,7 +317,24 @@
 			modelInfo['TransactionAnalytics'].NT += useCaseInfo['TransactionAnalytics'].NT;
 			modelInfo['TransactionAnalytics'].TranLength += useCaseInfo['TransactionAnalytics'].Tran_Length;
 			}
+			
+			console.log("paths 2");
+			console.log(useCaseInfo.Paths);
+			useCasePaths = useCasePaths.concat(useCaseInfo.Paths);
 		}
+		
+		
+		console.log('test1');
+		console.log(useCasePaths);
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("paths",useCasePaths);
+		debug.writeJson("model1",modelInfo);
+		
+		var transactionDrawer = require("./DiagramProfilers/TransactionDrawer.js");
+		transactionDrawer.drawTransactions(useCasePaths, "./debug/transactions.dotty", function(){
+			console.log("transactions are drawn");
+		});
+		
 
 		modelInfo['TransactionAnalytics'].AvgTranLength = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : modelInfo['TransactionAnalytics'].TranLength/modelInfo['TransactionAnalytics'].NT;
 		modelInfo['TransactionAnalytics'].ArchDiff = modelInfo['TransactionAnalytics'].AvgTranLength*modelInfo["ElementAnalytics"].AvgDegree;

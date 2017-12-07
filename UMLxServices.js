@@ -207,7 +207,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		console.log(modelInfo);
 		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
-//			console.log(modelInfo);
+			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
 			});
@@ -380,7 +380,7 @@ app.get('/requestDomainModelDetail', function (req, res){
 			return;
 		}
 //		console.log(domainModel);
-		res.render('domainModelDetail',{domainModelInfo: domainModel});
+		res.render('domainModelDetail',{domainModel: domainModel});
 	});
 })
 

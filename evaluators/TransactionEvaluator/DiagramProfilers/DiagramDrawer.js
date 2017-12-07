@@ -118,6 +118,7 @@
 	}
 	
 	function drawBehavioralDiagram(diagram, callbackfunc){
+		console.log("DiagramDrawer: drawBehaviorDiagram");
 		var dotty = 'digraph g {';
 		var Nodes = diagram.Nodes;
 		for(var j in Nodes){

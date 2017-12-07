@@ -75,7 +75,7 @@
 
 	
 	// callbackfunc is called when the elements are dumped into the files?
-	function evaluateUseCase(useCaseInfo, callbackfunc) {
+	function evaluateUseCase(useCaseInfo, model, callbackfunc) {
 		useCaseInfo["ElementAnalytics"] = {
 		TotalDegree:0,
 		ElementNum:0,
@@ -95,9 +95,9 @@
 
 		for ( var i in useCaseInfo.Diagrams) {
 			var diagram = useCaseInfo.Diagrams[i];
-			if(!diagram.DiagramAnalytics){
-				diagram.DiagramAnalytics = {};
-			}
+//			if(!diagram.DiagramAnalytics){
+//				diagram.DiagramAnalytics = {};
+//			}
 			
 				// element analytics
 				var totalDegree = 0;
@@ -107,6 +107,7 @@
 				var boundaryNum = 0;
 				var controlNum = 0;
 				var entityNum = 0;
+				var elementNum = 0;
 				var totalPathLength = 0;
 				var pathNum = 0;
 
@@ -126,9 +127,10 @@
 							controlNum++;
 						} else if (type === "entity") {
 							entityNum++;
+						} else{
+							elementNum++;
 						}
 //						totalLinks += Element.InboundNumber;
-						
 					}
 						
 //					}

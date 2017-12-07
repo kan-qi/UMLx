@@ -24,7 +24,7 @@
 			}
 
 			modelXMLParser.extractModel(umlModelInfo.umlFilePath, function(model){
-//				console.log("extract model");
+				console.log("extract model");
 				if(!model){
 					return;
 				}
@@ -36,9 +36,9 @@
 					var useCases = model.UseCases;
 //					console.log(useCases);
 						for(var i in useCases) {
-							(function(useCase, id){
+							(function(useCase){
 //								console.log(useCase);
-								useCase._id = id;
+//								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
 								var fileName = useCase._id;
 								useCase.OutputDir = model.OutputDir+"/"+fileName;
@@ -48,7 +48,7 @@
 									diagram.OutputDir = useCase.OutputDir;
 									diagram.AccessDir = useCase.AccessDir;
 								}
-							})(useCases[i], i);
+							})(useCases[i]);
 						}
 						
 					var domainModel = model.DomainModel;

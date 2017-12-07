@@ -31,23 +31,25 @@
 		var dottyDraw = new DottyDraw();
 //		var Nodes = diagram.Nodes;
 		for(var i in transactions){
+			// add tag to every nodes, such that transactions will be separated in drawing.
+			var transactionTag = "_"+i;
 			var transaction = transactions[i];
 			var preNode = null;
 			for(var j in transaction.Nodes){
 				var node = transaction.Nodes[j];
 //				console.log("transaction nodes");
 //				console.log(node);
-				dotty += dottyDraw.draw(node._id+'[label="'+node.Name+'" shape=ellipse];');
+				dotty += dottyDraw.draw(node._id+transactionTag+'[label="'+node.Name+'" shape=ellipse];');
 				if(preNode){
 					var start = preNode;
 					var end = node;
-					dotty += dottyDraw.draw('"'+start._id+'"->"'+end._id+'";');
+					dotty += dottyDraw.draw('"'+start._id+transactionTag+'"->"'+end._id+transactionTag+'";');
 				}
 				
 				var target = node.target;
 				if(target){
-					dotty += dottyDraw.draw(target._id+'[label="'+target.Name+'"];');
-					dotty += dottyDraw.draw('"'+target._id+'"->"'+node._id+'";');
+					dotty += dottyDraw.draw(target._id+transactionTag+'[label="'+target.Name+'"];');
+					dotty += dottyDraw.draw('"'+target._id+transactionTag+'"->"'+node._id+transactionTag+'";');
 					if(target.component){
 						var component = target.component;
 						var componentInternal = "{";
@@ -69,8 +71,8 @@
 						}
 						
 						componentInternal += "}";
-						dotty += dottyDraw.draw(component._id+'[label="'+componentInternal+'" shape=Mrecord];');
-						dotty += dottyDraw.draw('"'+component._id+'"->"'+target._id+'";');
+						dotty += dottyDraw.draw(component._id+transactionTag+'[label="'+componentInternal+'" shape=Mrecord];');
+						dotty += dottyDraw.draw('"'+component._id+transactionTag+'"->"'+target._id+transactionTag+'";');
 					}
 				}
 				

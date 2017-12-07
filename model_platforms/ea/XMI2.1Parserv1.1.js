@@ -7,7 +7,7 @@
 	var parser = new xml2js.Parser();
 	
 	function standardiseName(name){
-		return name.replace(/\s/g, '').toUpperCase()
+		return name.replace(/\s/g, '').toUpperCase();
 	}
 
 	function extractModelComponents(parsedResult) {
@@ -207,8 +207,6 @@
 	function extractModel(parsedResult, filter) {
 		var modelComponents = extractModelComponents(parsedResult);
 		
-
-		
 		function Model(){
 			this.Diagrams  = [];
 		}
@@ -263,13 +261,17 @@
 		
 		// make extra processing for the domain model diagrams. To reference their elements 
 		domainModel.findElement = function(elementName){
-
-//			console.log("checking class elments");
-//			console.log(elementName);
+			if(!elementName){
+				return null;
+			}
+			console.log("checking class elments");
+			console.log(elementName);
 			for(var i in this.Diagrams){
 				var diagram = this.Diagrams[i];
 				for(var j in diagram.Elements){
 					var element = diagram.Elements[j];
+					console.log("iterating class element");
+					console.log(element.Name);
 					//apply the rules to convert to standard names, and use the standard ones to compare with each other.
 					if(standardiseName(elementName) === standardiseName(element.Name)){
 						return element;
@@ -280,7 +282,8 @@
 		
 		model.DomainModel = domainModel;
 		
-		function UseCase(name){
+		function UseCase(id, name){
+			this._id = id;
 			this.Name = name;
 			this.Diagrams = [];
 		}
@@ -291,10 +294,10 @@
 			var diagram = model.Diagrams[i];
 			if(diagram.UseCase){
 				if(!UseCases[diagram.UseCase._id]){
-					UseCases[diagram.UseCase._id] = {
-							Name: diagram.UseCase.Name,
-							Diagrams: []
-					};
+					UseCases[diagram.UseCase._id] = new UseCase(
+							diagram.UseCase._id,
+							diagram.UseCase.Name
+							);
 				}
 
 				var useCase = UseCases[diagram.UseCase._id];
@@ -313,18 +316,23 @@
 				for(var k in diagram.Nodes){
 					var node = diagram.Nodes[k];
 					var source = node.source;
+					if(source){
 					var sourceComponent = model.DomainModel.findElement(source.Name);
 					source.component = sourceComponent;
+					}
 //					console.log("source component");
 //					console.log(source);
 					var target = node.target;
+					if(target){
 					var targetComponent = model.DomainModel.findElement(target.Name);
 					target.component = targetComponent;
+					}
 				}
 			}
 			model.UseCases.push(useCase);
 		}
 		
+		// the function are just temporary for deriving information. will be erased after stored into database.
 		model.findDegree = function(component){
 			// this method to find out the degree of a component, which is the total number of outbound edges.
 			var degree = 0;
@@ -350,6 +358,38 @@
 		modelDrawer.drawModel(model, "./debug/model.dotty", function(){
 			console.log("model is drawn");
 		});
+		
+		console.log("domain model");
+		console.log(model.DomainModel);
+		var domainModelDrawer = require("./DomainModelDrawer.js");
+		domainModelDrawer.drawDomainModel(model.DomainModel, "./debug/domainModel.dotty", function(){
+			console.log("domainModel is drawn");
+		});
+		
+		
+		//crate a few high level functions for further analysis
+		model.findAssociatedComponents = function(node){
+			var components = new Set();
+			if(node.target){
+				var outgoingEdges = [];
+				for(var i in this.Diagrams){
+					var edges = this.Diagrams[i].edges;
+					for(var j in edges){
+						var edge = edges[j];
+						if(edge.source == node.target){
+							outgoingEdges.push(edge);
+						}
+					}
+				}
+				
+				for(var edge in outgoingEdges){
+					components.add(edge.target);
+				}		
+			}
+			
+			return Array.from(components);
+		}
+		
 		return model;
 	}
 	
@@ -501,9 +541,10 @@
 				if(component.Category === "Connector") {
 					var source = modelComponents[component.SourceID];
 					var target = modelComponents[component.TargetID];
+					
 					var tag = source.Name+">"+target.Name;
 					component.Name = tag;
-					component.Supper = source;
+					component.source = source;
 					component.target = target;
 					component.inboundNum = 0;
 					component.outboundNum = 0;
@@ -587,8 +628,12 @@
 				var category = component.Category;
 //				var type = component.Type;
 				if (category === 'Element') { // more conditions to filter the
+					var source = modelComponents[component.SourceID];
+					var target = modelComponents[component.TargetID];
 					Activities.push(component);
 					//for activity components, there is no source and target.
+					component.source = source;
+					component.target = target;
 					component.outboundNum = 0;
 					component.inboundNum = 0;
 				}
@@ -659,9 +704,8 @@
 				}
 				var category = component.Category;
 				var type = component.Type;
-				if (category === 'Element') { // more conditions to filter the
+				if (category === 'Element' && type === 'class') { // more conditions to filter the
 					// element
-					if (type === 'class') {
 						Elements.push(component);
 						elementNum++;
 						if (component.Operations) {
@@ -674,14 +718,12 @@
 								attributeNum++;
 							}
 						}
-					}
 				}
 			}
 			diagram.Elements = Elements;
 			diagram.ElementNum = elementNum;
 			diagram.AttributeNum = attributeNum;
 			diagram.OperationNum = operationNum;
-			
 		}
 	}
 

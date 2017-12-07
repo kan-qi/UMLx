@@ -10,9 +10,24 @@
 	
 var exec = require('child_process').exec;
 
+/*
+* change of strategy. To traverse all the paths first and then match the pattern space.
+*
+*/
+
+function isCycled(path){
+	var lastNode = path[path.length-1];
+		for(var i=0; i < path.length-1; i++){
+			if(path[i] == lastNode){
+				return true;
+			}
+		}
+	return false;
+}
+
 
 function traverseBehavioralDiagram(diagram){
-	
+	console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
 	var entries=diagram.Entries;// tag: elements
 	
 	var toExpandCollection = new Array();
@@ -50,7 +65,13 @@ function traverseBehavioralDiagram(diagram){
 						Node: childNode,
 						PathToNode: pathToNode.concat(childNode)
 					}
+
+				if(!isCycled(toExpandNode.PathToNode)){
 				toExpandCollection.push(toExpandNode);
+				}
+				else{
+				 Paths.push({Nodes: toExpandNode.PathToNode});
+				}
 			}		
 		}
 		
@@ -60,38 +81,12 @@ function traverseBehavioralDiagram(diagram){
 	return Paths;
 }	
 
-/*
-* change of strategy. To traverse all the paths first and then match the pattern space.
-*
-*/
-
-function isCycled(path){
-	var lastNode = path[path.length-1];
-		for(var i=0; i < path.length-1; i++){
-			if(path[i] == lastNode){
-				return true;
-			}
-		}
-	return false;
-}
-
-/*
-*
-* when encounter a boundary, start expansion. Or the other strategy is to eliminate the at the pattern matching stage
-* currently boundary is defined as:
-* Actor
-* Boundary
-*
-*/
-
-function isBoundary(){
-	
-}
 
 module.exports = {
 	traverseDiagram: function(diagram, callbackfunc){
 		if(diagram.Type === 'Sequence' || diagram.Type === "Analysis" || diagram.Type === "Activity"){
-			return traverseBehavioralDiagram(diagram);
+			var Paths = traverseBehavioralDiagram(diagram);
+			return Paths;
 		} 
 		return [];
 	}
