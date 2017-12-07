@@ -37,7 +37,34 @@ var storage = multer.diskStorage({
     }
 })
 
-var upload = multer({ storage: storage })
+var fileDestination = null;
+umlSurveyFiles = [];
+var surveyFiles = multer.diskStorage({
+    destination: function (req, file, cb) {
+    	if(fileDestination==null) {
+            fileDestination = 'public/survey/';
+            var stat = null;
+            try {
+                stat = fs.statSync(fileDestination);
+            } catch (err) {
+                fs.mkdirSync(fileDestination);
+            }
+            if (stat && !stat.isDirectory()) {
+                throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
+            }
+        }
+        cb(null, fileDestination);
+    },
+    filename: function (req, file, cb) {
+        var fileName = Date.now()+ "-" + file.originalname;
+        cb(null, fileName)
+        umlSurveyFiles.push(fileName);
+		console.log("saved the file " + fileName + " in " + fileDestination);
+    }
+})
+
+var upload = multer({ storage: storage });
+var surveyUploads = multer({ storage: surveyFiles });
 
 app.use(express.static('public'));
 app.use(cookieParser());
@@ -55,6 +82,102 @@ app.set('view engine', 'jade');
 //}
 
 var modelInfo = {};
+
+
+//GIT API TEST
+app.get('/testgitapirepos', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	// TODO: optional authentication here depending on desired endpoints. See below in README.
+
+	github.repos.getForUser({
+	    // optional
+	    // headers: {
+	    //     "cookie": "blahblah"
+	    // },
+	  username: 'kritikavd'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+
+	});
+});
+
+
+
+app.get('/testgitapiuser', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	github.search.users({
+	  q: 'kritikavd'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	  //console.log(JSON.stringify(res))
+	});
+});
+
+
+app.get('/testgitapionecommit', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	github.gitdata.getCommit({
+		owner: 'kritikavd',
+		  repo: 'Web-Tech-Assignments',
+		  sha :'c904b7eb886086665382162ad123555efb66be35'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+
+});
+
+
+app.get('/testgitapiallcommit', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	github.repos.getCommits({
+		owner: 'kritikavd',
+		  repo: 'Web-Tech-Assignments',
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+
+});
+
+
+app.get('/testgitapifollowing', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+
+	github.users.getFollowingForUser({
+	    // optional
+	    // headers: {
+	    //     "cookie": "blahblah"
+	    // },
+	  username: 'defunkt'
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	})
+});
+
+// END OF TEST GIT API
 
 app.get('/signup',function(req,res){
 
@@ -115,6 +238,7 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 				                 };
 								 res.json(result);
 							 }  else {
+								 enterpriseUserId = payload.enterpriseUserId;
 								 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
 								        res.json(result)
 								    });
@@ -267,16 +391,16 @@ app.get('/surveyAnalytics', function (req, res){
 });
 
 
-app.post('/uploadSurveyData', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
+app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
 	console.log(req.body);
 	var formInfo = req.body;
+    // console.log(umlSurveyFiles);
+
+    // save the file names in DB
+    formInfo.uml_file = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
+    formInfo.uml_other = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
 	umlModelInfoManager.saveSurveyData(formInfo);
-
-	// app.get("/thankYou");
-	// res.render("thankYou");
-
 	res.redirect("thankYou");
-
 });
 
 
@@ -904,12 +1028,13 @@ app.get('/uploadProject', function(req, res){
 
 // TODO use this API to populate data on UI
 app.get('/getSubmittedSurveyList', function(req, res){
-    // var data = {
-    //     status: "successful"
-    // }
     umlModelInfoManager.getSurveyData(function(data){
         res.send(data);
-    })
+    }, req.query.id);
+});
+
+app.get('/surveyData', function(req, res){
+   res.render("surveyData");
 });
 
 
@@ -958,6 +1083,7 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+
 var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parserv1.1.js")
 app.get('/testSequenceDiagramExtraction', function(req, res){
 	sequenceDiagramParser.extractSequenceDiagrams("./temp/test_example.xml", function(sequenceDiagrams){
@@ -976,6 +1102,30 @@ app.get('/testActivityDiagramExtraction', function(req, res){
 		res.json(activityDiagrams);
 	});
 });
+app.get('/deleteUser', function(req,res){
+	var userId = req.query['uid'];
+	umlModelInfoManager.deleteUser(userId, function(status){
+		var result ={'status' : status};
+		res.json(result);
+	});
+});
+
+
+app.get('/deactivateUser', function(req,res){
+	var userId = req.query['uid'];
+
+	var loggedInUserId = req.userInfo._id;
+
+	if( !req.userInfo.isEnterprise && req.userInfo._id!=userId){
+		var result={'status' : false , 'message' : 'Not authorized to deactivate this user'};
+		res.json(result);
+	} else {
+		umlModelInfoManager.deactivateUser(loggedInUserId, userId, function(status,msg){
+			var result ={'status' : status,'message' : msg};
+			res.json(result);
+		});
+	}
+});
 
 
 var server = app.listen(8081,'127.0.0.1', function () {
@@ -984,5 +1134,4 @@ var server = app.listen(8081,'127.0.0.1', function () {
   console.log("Example app listening at http://%s:%s", host, port)
 
 })
-
 

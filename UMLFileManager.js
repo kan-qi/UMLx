@@ -3,6 +3,20 @@
 	var path = require('path');
 	var mkdirp = require('mkdirp');
 	
+	function deleteUMLRepo(path) {
+		  if( fs.existsSync(path) ) {
+			    fs.readdirSync(path).forEach(function(file,index){
+			      var curPath = path + "/" + file;
+			      if(fs.lstatSync(curPath).isDirectory()) { // recurse
+			    	  deleteUMLRepo(curPath);
+			      } else { // delete file
+			        fs.unlinkSync(curPath);
+			      }
+			    });
+			    fs.rmdirSync(path);
+			  }
+	}
+	
 	function parseCSVData(csvData, header){
 			 var data = [];
 			    var lines = csvData.split(/\r?\n/g);
@@ -121,6 +135,7 @@
 		deleteUMLFileInfo: function(umlFileInfo) {
 			fs.unlinkSync(umlFileInfo.umlFilePath);
 		},
+		deleteUMLRepo : deleteUMLRepo,
 		getUMLFileInfo: function(repoInfo, umlFilePath, umlModelType, formInfo){
 			 var stats = fs.statSync(umlFilePath);
 			 var fileSizeInBytes = stats["size"];
