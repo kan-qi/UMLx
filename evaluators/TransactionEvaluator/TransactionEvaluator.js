@@ -329,12 +329,6 @@
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("paths",useCasePaths);
 		debug.writeJson("model1",modelInfo);
-		
-		var transactionDrawer = require("./DiagramProfilers/TransactionDrawer.js");
-		transactionDrawer.drawTransactions(useCasePaths, "./debug/transactions.dotty", function(){
-			console.log("transactions are drawn");
-		});
-		
 
 		modelInfo['TransactionAnalytics'].AvgTranLength = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : modelInfo['TransactionAnalytics'].TranLength/modelInfo['TransactionAnalytics'].NT;
 		modelInfo['TransactionAnalytics'].ArchDiff = modelInfo['TransactionAnalytics'].AvgTranLength*modelInfo["ElementAnalytics"].AvgDegree;

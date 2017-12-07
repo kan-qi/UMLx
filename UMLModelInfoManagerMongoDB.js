@@ -685,6 +685,24 @@
         });
 
     }
+    
+    function queryUsers(callbackfunc){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            
+            db.collection("users").find().toArray(function(err, users) {
+               if(err) throw err;
+               
+               if(callbackfunc){
+            	   callbackfunc(users);
+               }
+
+                db.close();
+              });
+
+        });
+
+    }
 
     function queryRepoIdsForAdmin(userId, callbackfunc){
         MongoClient.connect(url, function(err, db) {
@@ -1053,6 +1071,7 @@
         saveSurveyAnalyticsData: saveSurveyAnalyticsData,
         getSurveyData: getSurveyData,
         deleteUser: deleteUser,
+        queryUsers: queryUsers,
         deactivateUser:deactivateUser
 
     }

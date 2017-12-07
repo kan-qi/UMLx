@@ -1,16 +1,13 @@
 /**
- * This module is responsible for extra
+ * This module is responsible for extracting models from the xmi files by constructing a hierarchy of the elements in UML models and replacing the UUIDs as references.
  */
+
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
 	var xmiParser = require('./model_platforms/ea/XMI2.1Parserv1.3.js');
 	
-	function standardiseName(name){
-		return name.replace(/\s/g, '').toUpperCase();
-	}
-
 	/*
 	 * Diagrams are abstracted into nodes. Each node is an activity, action, or operation.
 	 * Each node should have a tag about the which component the action is implemented upon, if the action is detailed.
@@ -115,28 +112,29 @@
 			
 			// the rules to expand on a node. if the node is an end node, then the expansion rule will return null.
 			
-			diagram.expand = function(message){
-				// add condition on actor to prevent stop searching for message [actor, view].
-//				if(modelComponents[message.TargetID] && modelComponents[message.TargetID].Type === "boundary"){
+			// the expand function should be generalized by the structure of the diagrams. Instead of the function.
+//			diagram.expand = function(message){
+//				// add condition on actor to prevent stop searching for message [actor, view].
+////				if(modelComponents[message.TargetID] && modelComponents[message.TargetID].Type === "boundary"){
+////					return;
+////				}
+//				if(message.outboundNum == 0){
 //					return;
 //				}
-				if(message.outboundNum == 0){
-					return;
-				}
-				else {
-
-					var  children = [];
-					for(var i in diagram.Edges){
-						var edge = diagram.Edges[i];
-						if(edge.start == message){
-							children.push(edge.end);
-						}
-					}
-
-					return children;
-				}
-				
-			}
+//				else {
+//
+//					var  children = [];
+//					for(var i in diagram.Edges){
+//						var edge = diagram.Edges[i];
+//						if(edge.start == message){
+//							children.push(edge.end);
+//						}
+//					}
+//
+//					return children;
+//				}
+//				
+//			}
 		} else if (diagram.Type === 'Analysis') {
 			diagram.UseCase = {
 					_id: diagram.Parent,
@@ -200,28 +198,28 @@
 			
 			// the rules to expand on a node. if the node is an end node, then the expansion rule will return null.
 			
-			diagram.expand = function(node){
-				// add condition on actor to prevent stop searching for message [actor, view].
-//				if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
+//			diagram.expand = function(node){
+//				// add condition on actor to prevent stop searching for message [actor, view].
+////				if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
+////					return;
+////				}
+//				if(node.outboundNum == 0){
 //					return;
 //				}
-				if(node.outboundNum == 0){
-					return;
-				}
-				else {
-
-					var  children = [];
-					for(var i in diagram.Edges){
-						var edge = diagram.Edges[i];
-						if(edge.start == node){
-							children.push(edge.end);
-						}
-					}
-
-					return children;
-				}
-				
-			}
+//				else {
+//
+//					var  children = [];
+//					for(var i in diagram.Edges){
+//						var edge = diagram.Edges[i];
+//						if(edge.start == node){
+//							children.push(edge.end);
+//						}
+//					}
+//
+//					return children;
+//				}
+//				
+//			}
 
 		} else if (diagram.Type === "Activity"){
 			diagram.UseCase = {
@@ -280,28 +278,28 @@
 			
 			// the rules to expand on a node. if the node is an end node, then the expansion rule will return null.
 			
-			diagram.expand = function(node){
-				// add condition on actor to prevent stop searching for message [actor, view].
-//				if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
+//			diagram.expand = function(node){
+//				// add condition on actor to prevent stop searching for message [actor, view].
+////				if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
+////					return;
+////				}
+//				if(node.outboundNum == 0){
 //					return;
 //				}
-				if(node.outboundNum == 0){
-					return;
-				}
-				else {
-
-					var children = [];
-					for(var i in diagram.Edges){
-						var edge = diagram.Edges[i];
-						if(edge.start == node){
-							children.push(edge.end);
-						}
-					}
-
-					return children;
-				}
-				
-			}
+//				else {
+//
+//					var children = [];
+//					for(var i in diagram.Edges){
+//						var edge = diagram.Edges[i];
+//						if(edge.start == node){
+//							children.push(edge.end);
+//						}
+//					}
+//
+//					return children;
+//				}
+//				
+//			}
 			
 		} else if (diagram.Type === "Logical") {
 			var Elements = [];
@@ -338,72 +336,6 @@
 		}
 	}
 	
-	function isCycled(path){
-		var lastNode = path[path.length-1];
-			for(var i=0; i < path.length-1; i++){
-				if(path[i] == lastNode){
-					return true;
-				}
-			}
-		return false;
-	}
-
-	function traverseBehavioralDiagram(diagram){
-		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
-		var entries=diagram.Entries;// tag: elements
-		
-		var toExpandCollection = new Array();
-		
-		for (var i=0; i < entries.length; i++){
-			var entry = entries[i];
-			//define the node structure to keep the infor while traversing the graph
-			var node = {
-				//id: startElement, //ElementGUID
-				Node: entry,
-				PathToNode: [entry]
-			};
-			toExpandCollection.push(node);
-		}
-		
-		var Paths = new Array();
-		var toExpand;
-		while((toExpand = toExpandCollection.pop()) != null){
-			var node = toExpand.Node;
-			var pathToNode = toExpand.PathToNode;
-//			var toExpandID = toExpand.id;
-//			var expanded = false;
-			// test completeness of the expanded path first to decide if continue to expand
-			var childNodes = diagram.expand(node);
-			// if null is returned, then node is an end node.
-			
-			if(!childNodes){
-				Paths.push({Nodes: pathToNode});
-			}
-			else{
-
-				for(var i in childNodes){
-					var childNode = childNodes[i];
-					var toExpandNode = {
-							Node: childNode,
-							PathToNode: pathToNode.concat(childNode)
-						}
-
-					if(!isCycled(toExpandNode.PathToNode)){
-					toExpandCollection.push(toExpandNode);
-					}
-					else{
-					 Paths.push({Nodes: toExpandNode.PathToNode});
-					}
-				}		
-			}
-			
-			
-		}
-		
-		return Paths;
-	}	
-	
-	
 	/*
 	 * filter can be assigned with values: "sequence", "logic", "analysis", to extract specific types of diagrams.
 	 * May need to adjust this structure to better structure the diagrams.
@@ -439,28 +371,7 @@
 		var domainModel = new DomainModel();
 		
 		model.DomainModel = domainModel;
-		
-		// make extra processing for the domain model diagrams. To reference their elements 
-		domainModel.findElement = function(elementName){
-			if(!elementName){
-				return null;
-			}
-			console.log("checking class elments");
-			console.log(elementName);
-			for(var i in this.Diagrams){
-				var diagram = this.Diagrams[i];
-				for(var j in diagram.Elements){
-					var element = diagram.Elements[j];
-					console.log("iterating class element");
-					console.log(element.Name);
-					//apply the rules to convert to standard names, and use the standard ones to compare with each other.
-					if(standardiseName(elementName) === standardiseName(element.Name)){
-						return element;
-					}
-				}
-			}
-		}
-		
+	
 		
 		function UseCase(id, name){
 			this._id = id;
@@ -499,66 +410,6 @@
 						}
 						var useCase = UseCases[diagram.UseCase._id];
 						useCase.Diagrams.push(diagram);
-						
-						for(var j in diagram.Nodes){
-							var node = diagram.Nodes[j];
-							var source = node.source;
-							if(source){
-							var sourceComponent = model.DomainModel.findElement(source.Name);
-							source.component = sourceComponent;
-							}
-//							console.log("source component");
-//							console.log(source);
-							var target = node.target;
-							if(target){
-							var targetComponent = model.DomainModel.findElement(target.Name);
-							target.component = targetComponent;
-							}
-						}
-						
-						diagram.Paths = traverseBehavioralDiagram(diagram);
-						
-					// associate information for the paths.
-						
-					for(var j in diagram.Paths){
-						var path = diagram.Paths[j];
-						var pathStr = "";
-						var components = [];
-						for(var k in path.Nodes)
-						{	
-							var node = path.Nodes[k];
-							
-							if(i == 0){
-								if(node.source){
-								components.push(node.source);
-								}
-							}
-			
-							if(node.target){
-								components.push(node.target);
-							}
-							
-//							var node = path[i];
-//							var elementID = path['Elements'][i];
-//							var components = diagram.allocate(node);
-//							if(!element){
-//								break;
-//							}
-//							for(var j in components){
-//								totalDegree += components[j].InboundNumber;
-//								tranLength++;	
-//							}
-							
-							pathStr += node.Name;
-							if( i != path.Nodes.length - 1){
-								pathStr += "->";
-							}
-						}
-						
-						path.PathStr = pathStr;
-						path.Components = components;
-						
-					}
 					}
 
 //					model.Diagrams.push(diagram);
@@ -575,46 +426,46 @@
 		}
 		
 
-		// the function are just temporary for deriving information. will be erased after stored into database.
-		model.findDegree = function(component){
-			// this method to find out the degree of a component, which is the total number of outbound edges.
-			var degree = 0;
-			for(var i in this.Diagrams){
-				var diagram = this.Diagrams[i];
-				for(var j in diagram.Edges){
-					var edge = diagram.Edges[j];
-					if(edge.source){
-						if(standardiseName(edge.source.Name) === standardiseName(component.Name)){
-							degree++;
-						}
-					}
-				}
-			}
-			return degree;
-		}
+//		// the function are just temporary for deriving information. will be erased after stored into database.
+//		model.findDegree = function(component){
+//			// this method to find out the degree of a component, which is the total number of outbound edges.
+//			var degree = 0;
+//			for(var i in this.Diagrams){
+//				var diagram = this.Diagrams[i];
+//				for(var j in diagram.Edges){
+//					var edge = diagram.Edges[j];
+//					if(edge.source){
+//						if(standardiseName(edge.source.Name) === standardiseName(component.Name)){
+//							degree++;
+//						}
+//					}
+//				}
+//			}
+//			return degree;
+//		}
 		
-		//crate a few high level functions for further analysis
-		model.findAssociatedComponents = function(node){
-			var components = new Set();
-			if(node.target){
-				var outgoingEdges = [];
-				for(var i in this.Diagrams){
-					var edges = this.Diagrams[i].edges;
-					for(var j in edges){
-						var edge = edges[j];
-						if(edge.source == node.target){
-							outgoingEdges.push(edge);
-						}
-					}
-				}
-				
-				for(var edge in outgoingEdges){
-					components.add(edge.target);
-				}		
-			}
-			
-			return Array.from(components);
-		}
+//		//crate a few high level functions for further analysis
+//		model.findAssociatedComponents = function(node){
+//			var components = new Set();
+//			if(node.target){
+//				var outgoingEdges = [];
+//				for(var i in this.Diagrams){
+//					var edges = this.Diagrams[i].edges;
+//					for(var j in edges){
+//						var edge = edges[j];
+//						if(edge.source == node.target){
+//							outgoingEdges.push(edge);
+//						}
+//					}
+//				}
+//				
+//				for(var edge in outgoingEdges){
+//					components.add(edge.target);
+//				}		
+//			}
+//			
+//			return Array.from(components);
+//		}
 		
 
 		var debug = require("./utils/DebuggerOutput.js");

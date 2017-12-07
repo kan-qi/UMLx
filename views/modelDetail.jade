@@ -43,6 +43,8 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#model-evaluation') Evaluation
      li
       a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Use cases
+     li
+      a(data-toggle='tab', href='#model-representation') Representation
     div.tab-content
      div.tab-pane.fade.in.active(id="model-analytics")
       if false
@@ -183,3 +185,6 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="usecase-analysis")
       div(id="model-usecase-analysis")
        h3 loading...
+     div.tab-pane.fade(id="model-representation")
+      div(id="model-representation-frame")
+       img(src="#{modelInfo.AccessDir}/model.svg" style="width:100%;")
