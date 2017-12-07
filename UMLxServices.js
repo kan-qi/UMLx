@@ -428,11 +428,11 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 
 			umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
 //				console.log(modelInfo);
-//				umlModelInfoManager.queryRepoAnalytics(repoId, function(repoInfo, repoInfo){
-//					console.log("=============repoInfo==========");
-//					console.log(repoInfo);
-//					res.render('mainPanel', {repoInfo:repoInfo});
-//				}, true);
+				umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+					console.log("=============repoInfo==========");
+					console.log(repoInfo);
+					res.render('mainPanel', {repoInfo:repoInfo});
+				}, true);
 			});
 		});
 	});
@@ -1102,11 +1102,23 @@ app.get('/testActivityDiagramExtraction', function(req, res){
 		res.json(activityDiagrams);
 	});
 });
+
 app.get('/deleteUser', function(req,res){
 	var userId = req.query['uid'];
 	umlModelInfoManager.deleteUser(userId, function(status){
 		var result ={'status' : status};
 		res.json(result);
+	});
+});
+
+/*
+ * only for debugging process
+ */
+app.get('/queryUsers', function(req,res){
+	var userId = req.query['uid'];
+	umlModelInfoManager.queryUsers(function(users){
+		console.log(users);
+		res.render('userList', {users: users});
 	});
 });
 

@@ -1,3 +1,8 @@
+/**
+ * This module is responsible for analyzing the extract model, by applying certain algorithms, for example, path search, components allocation, degree searching.
+ */
+
+
 (function() {
 	/**
 	 *  Work as a test stub
@@ -13,8 +18,6 @@
 //	var domainModelDrawer = require('./diagram_profilers/DomainModelDrawer.js');
 	var umlEvaluator = require('./UMLEvaluator.js');
 	
-
-
 	function extractModelInfo(umlModelInfo, callbackfunc) {
 		mkdirp(umlModelInfo.OutputDir, function(err) {
 			// path exists unless there was an error

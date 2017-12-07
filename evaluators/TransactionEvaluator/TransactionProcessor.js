@@ -103,8 +103,34 @@
 //						pathStr += "->";
 //					}
 					
-					var associatedComponents = model.findAssociatedComponents(node);
-					totalDegree += associatedComponents.length + 1;
+//					var associatedComponents = model.findAssociatedComponents(node);
+					
+					//crate a few high level functions for further analysis
+//					model.findAssociatedComponents = function(node){
+//						var components = new Set();
+					totalDegree += 1;
+						if(node.target){
+							var outgoingEdges = [];
+							for(var i in this.Diagrams){
+								var edges = this.Diagrams[i].edges;
+								for(var j in edges){
+									var edge = edges[j];
+									if(edge.source == node.target){
+//										outgoingEdges.push(edge);
+										totalDegree++;
+									}
+								}
+							}
+							
+//							for(var edge in outgoingEdges){
+//								components.add(edge.target);
+//							}		
+						}
+						
+//						return Array.from(components);
+//					}
+					
+//					totalDegree += associatedComponents.length + 1;
 				}
 				
 //				console.log(pathStr);

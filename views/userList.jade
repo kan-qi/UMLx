@@ -7,12 +7,12 @@ html(lang='en')
     script(type='text/javascript', src='js/scripts.js')
     script(type='text/javascript', src='js/scripts.js')
     link(href='css/style.css', rel='stylesheet')
-    title Thank You
+    title User List
   body
     include banner
-    h1 Thank You for taking the survey
+    h1 User List
     #container.col
-      p
-        | You can go to the home page by clicking 
-        a(href='/') here
-       
+     if users
+      each user in users
+       div
+        a(href="deleteUser?uid="+user._id) #{user.username}

@@ -1,6 +1,7 @@
 /**
- * This module is responsible for extra
+ * This module is responsible for extracting models from the xmi files by constructing a hierarchy of the elements in UML models and replacing the UUIDs as references.
  */
+
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
@@ -575,46 +576,46 @@
 		}
 		
 
-		// the function are just temporary for deriving information. will be erased after stored into database.
-		model.findDegree = function(component){
-			// this method to find out the degree of a component, which is the total number of outbound edges.
-			var degree = 0;
-			for(var i in this.Diagrams){
-				var diagram = this.Diagrams[i];
-				for(var j in diagram.Edges){
-					var edge = diagram.Edges[j];
-					if(edge.source){
-						if(standardiseName(edge.source.Name) === standardiseName(component.Name)){
-							degree++;
-						}
-					}
-				}
-			}
-			return degree;
-		}
+//		// the function are just temporary for deriving information. will be erased after stored into database.
+//		model.findDegree = function(component){
+//			// this method to find out the degree of a component, which is the total number of outbound edges.
+//			var degree = 0;
+//			for(var i in this.Diagrams){
+//				var diagram = this.Diagrams[i];
+//				for(var j in diagram.Edges){
+//					var edge = diagram.Edges[j];
+//					if(edge.source){
+//						if(standardiseName(edge.source.Name) === standardiseName(component.Name)){
+//							degree++;
+//						}
+//					}
+//				}
+//			}
+//			return degree;
+//		}
 		
-		//crate a few high level functions for further analysis
-		model.findAssociatedComponents = function(node){
-			var components = new Set();
-			if(node.target){
-				var outgoingEdges = [];
-				for(var i in this.Diagrams){
-					var edges = this.Diagrams[i].edges;
-					for(var j in edges){
-						var edge = edges[j];
-						if(edge.source == node.target){
-							outgoingEdges.push(edge);
-						}
-					}
-				}
-				
-				for(var edge in outgoingEdges){
-					components.add(edge.target);
-				}		
-			}
-			
-			return Array.from(components);
-		}
+//		//crate a few high level functions for further analysis
+//		model.findAssociatedComponents = function(node){
+//			var components = new Set();
+//			if(node.target){
+//				var outgoingEdges = [];
+//				for(var i in this.Diagrams){
+//					var edges = this.Diagrams[i].edges;
+//					for(var j in edges){
+//						var edge = edges[j];
+//						if(edge.source == node.target){
+//							outgoingEdges.push(edge);
+//						}
+//					}
+//				}
+//				
+//				for(var edge in outgoingEdges){
+//					components.add(edge.target);
+//				}		
+//			}
+//			
+//			return Array.from(components);
+//		}
 		
 
 		var debug = require("./utils/DebuggerOutput.js");
