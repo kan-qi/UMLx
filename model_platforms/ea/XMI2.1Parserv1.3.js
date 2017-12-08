@@ -6,6 +6,23 @@
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
 
+	/*
+	 * The actual parsing method, which take xmi file as the input and construct a named array 
+	 * with element uui (in xmi file) as the key and the component which represent xmi element as the value.
+	 * 
+	 * So the basic properties for a component contains are as follows:
+	 * 
+	 * var component = {
+				//keep the ID of the xmi model, for re-analyse
+				_id : xmiElement['$']['xmi:idref'],
+				Category : 'Element',
+				StereoType : xmiElement['$']['xmi:type'],
+				Name : xmiElement['$']['name']
+			};
+	 *
+	 *
+	 *For different stereotypes, for example 'uml:Object", 'uml:Actor', they have their specific properties.
+	 */
 	function extractModelComponents(xmiString) {
 		var xmiExtension = xmiString['xmi:XMI']['xmi:Extension'][0];
 		var components = {};
@@ -200,6 +217,9 @@
 
 			components[xmiDiagram['$']['xmi:id']] = diagram; 
 		}
+		
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("modelComponents", components);
 
 		return components;
 	}
