@@ -40,7 +40,11 @@
 			  owner: owner,
 			  repo: name,
 		}, function (err, res2) {
-	        result = res2.data.length;
+			if(err)
+				result =0;
+			else{
+				result = res2.data.length;
+			}
 	        sync = false;
 	    });
 	    while(sync) {require('deasync').sleep(100);}
@@ -63,16 +67,17 @@
 					}, function (err, res1) {
 					  if (err) throw err
 					  
+					  var repoData =[];
 					  if(res1 && res1.data.length > 0){
 						  
 						  var repos = res1.data;
-						  var repoData= repos.map(function(repo, index){
+						  repoData= repos.map(function(repo, index){
 							 return {name : repo.name, owner : repo.owner.login, html_url : repo.html_url} 
 						  });
 						  
 					  }
 					  
-					  if(repoData){
+					  if(repoData.length > 0){
 						  for(var index in repoData){
 							  repoData[index].commits =  getCommitsForRepo(repoData[index].name,repoData[index].owner);
 						  }
@@ -102,6 +107,9 @@
 		                    });
 					});
 					});
+			  } else {
+				  
+				  callbackfunc(false, 'Could not find user');
 			  }
 			 
 		});

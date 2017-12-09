@@ -13,7 +13,7 @@ var jade = require('jade');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
-//var sleep = require('sleep');
+var sleep = require('sleep');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
 var bodyParser = require('body-parser');
@@ -386,8 +386,8 @@ app.post('/inviteUser', upload.fields([{name:'email',maxCount:1}]),  function (r
 	    service: "gmail",
 	    host: "smtp.gmail.com",
 	    auth: {
-	        user: "kritikavaid123@gmail.com",
-	        pass: "Strong123"
+	        user: "teamumlx@gmail.com",
+	        pass: "teamumlx123"
 	    }
 	});
 
