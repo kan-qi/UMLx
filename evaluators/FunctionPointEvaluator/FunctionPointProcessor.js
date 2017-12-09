@@ -30,9 +30,9 @@
 				return true;
 			},
 			processPath: function(path, diagram, usecase){
-				
-				path.Operations = {};
-				var functionalOperations = pathPatternMatchUtil.recognizePattern(path, diagram, functionalPatternTreeRoot);
+				path["FPAnalytics"] = {};
+				path["FPAnalytics"].Operations = {};
+				var functionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, diagram, functionalPatternTreeRoot);
 				var functionalOperationStr = "";
 				for(var i=0; i < functionalOperations.length; i++){
 					if(i !== 0){
@@ -42,14 +42,14 @@
 				}
 				
 				if(functionalOperationStr !== ''){
-				path.Functional = functionalOperationStr.split(/,/g);
+					path["FPAnalytics"].Functional = functionalOperationStr.split(/,/g);
 				}
 				else{
-				path.Functional = ['FUNC_NA'];
+					path["FPAnalytics"].Functional = ['FUNC_NA'];
 				}
 				
 					
-				path.FunctionalTag = path.Functional.join(',');
+				path["FPAnalytics"].FunctionalTag = path["FPAnalytics"].Functional.join(',');
 				
 				return true;
 			},

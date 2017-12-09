@@ -1,0 +1,303 @@
+[1] "apriori means"
+     Simple_UC Average_UC Complex_UC
+[1,]       5.9       12.6       18.6
+[1] "apriori variance"
+     Simple_UC Average_UC Complex_UC
+[1,]  11.65556   4.933333   10.48889
+[1] "normalized effort"
+ [1]  21.96527 109.45498  17.71651  80.90975  37.33065  39.85238  87.01286
+ [8]  20.73348  39.92663  42.33066  22.35886 244.26291 235.28418 136.73450
+[15] 104.28666 238.50510 345.84163  80.74255  47.26283 313.47484 136.83485
+[22] 122.99162 269.94203 518.94892  66.77620
+[1] "covariance matrix for apriori data"
+            Simple_UC Average_UC Complex_UC
+Simple_UC   1.0000000 -0.1230836 -0.5667681
+Average_UC -0.1230836  1.0000000  0.4850116
+Complex_UC -0.5667681  0.4850116  1.0000000
+[1] "variance-covariance matrix for apriori data"
+            Simple_UC Average_UC Complex_UC
+Simple_UC  11.6555556 -0.9333333  -6.266667
+Average_UC -0.9333333  4.9333333   3.488889
+Complex_UC -6.2666667  3.4888889  10.488889
+[1] "weighted apriori calibrated parameters"
+               [,1]
+Simple_UC  1.991464
+Average_UC 1.092203
+Complex_UC 2.599824
+[1] "residual variance"
+[1] 3826.081
+           Simple_UC Average_UC Complex_UC
+Simple_UC  1.0140924  0.2556140  0.2872391
+Average_UC 0.2556140  0.1591707  0.1136933
+Complex_UC 0.2872391  0.1136933  0.1372161
+            Simple_UC  Average_UC Complex_UC
+Simple_UC   2.4508077  -0.6645351  -4.579743
+Average_UC -0.6645351  15.5724697 -11.511810
+Complex_UC -4.5797427 -11.5118100  26.413059
+[1] "regression calibrated parameters"
+ Simple_UC Average_UC Complex_UC 
+  2.992097   4.377124  27.351958 
+[1] "weighted regression calibrated parameters"
+                [,1]
+Simple_UC  12.009668
+Average_UC  4.571267
+Complex_UC  5.110226
+[1] "bayesian averaged coefficients"
+                [,1]
+Simple_UC   3.643825
+Average_UC 11.296292
+Complex_UC 19.469572
+[1] "bayesian variance"
+           Simple_UC Average_UC Complex_UC
+Simple_UC   1.679048 -0.8399610 -1.9594760
+Average_UC -0.839961  2.7110721  0.9990362
+Complex_UC -1.959476  0.9990362  5.3496979
+    bayesian estimated    actual bayesian_residual   residual
+1   80.11567  73.81948  21.96527          58.15040  51.854216
+2  125.45684 117.51695 109.45498          16.00185   8.061969
+3   80.11567  73.81948  17.71651          62.39916  56.102969
+4  140.76177 120.28701  80.90975          59.85203  39.377262
+5   99.58524 101.17144  37.33065          62.25460  63.840794
+6   75.22140  58.43591  39.85238          35.36902  18.583531
+7  108.58947  49.97748  87.01286          21.57660  37.035384
+8   95.05579  81.18870  20.73348          74.32231  60.455223
+9  114.00455  86.95085  39.92663          74.07792  47.024222
+10 115.93180 147.12111  42.33066          73.60114 104.790452
+11  67.93375  52.45172  22.35886          45.57489  30.092857
+12 160.23134 147.63897 244.26291          84.03157  96.623945
+13 205.41651 165.14746 235.28418          29.86766  70.136714
+14 227.95627 230.87883 136.73450          91.22178  94.144331
+15 165.01810 128.84022 104.28666          60.73144  24.553552
+16 197.71122 220.73955 238.50510          40.79388  17.765549
+17 398.38946 396.69242 345.84163          52.54783  50.850788
+18 136.54431 152.68222  80.74255          55.80176  71.939675
+19  83.75950  76.81158  47.26283          36.49667  29.548754
+20 270.38325 262.38587 313.47484          43.09159  51.088973
+21  51.37837  37.29019 136.83485          85.45648  99.544655
+22 139.66732 134.08451 122.99162          16.67570  11.092888
+23 200.10460 211.34018 269.94203          69.83743  58.601853
+24 352.06135 400.97477 518.94892         166.88757 117.974151
+25 102.02711  83.77872  66.77620          35.25091  17.002525
+[1] 58.07489
+[1] 53.12349
+
+Call:
+lm(formula = norm_effort ~ Simple_UC + Average_UC + Complex_UC - 
+    1, data = useCaseData)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-104.79  -51.85  -24.55   37.03  117.97 
+
+Coefficients:
+           Estimate Std. Error t value Pr(>|t|)    
+Simple_UC     2.992      1.654   1.809   0.0841 .  
+Average_UC    4.377      4.169   1.050   0.3052    
+Complex_UC   27.352      5.430   5.037 4.81e-05 ***
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 65.35 on 22 degrees of freedom
+Multiple R-squared:  0.8885,	Adjusted R-squared:  0.8733 
+F-statistic: 58.45 on 3 and 22 DF,  p-value: 1.211e-10
+
+[1] "bayesian testing set predication"
+           Simple_UC Average_UC Complex_UC
+Simple_UC  1.1026352  0.2622789  0.2602844
+Average_UC 0.2622789  0.1795065  0.1100308
+Complex_UC 0.2602844  0.1100308  0.1047121
+                [,1]
+Simple_UC  11.505453
+Average_UC  4.623272
+Complex_UC  4.041660
+   predicted    actual
+6   73.52805  39.85238
+19  80.76910  47.26283
+10 110.25638  42.33066
+14 220.72451 136.73450
+24 338.39290 518.94892
+[1] 0.8241548
+[1] 0.0 0.0 0.2
+[1] "apriori testing set predication"
+   predicted    actual
+6       91.8  39.85238
+19      92.7  47.26283
+10     117.4  42.33066
+14     263.1 136.73450
+24     386.5 518.94892
+[1] 1.043534
+[1] 0.0 0.0 0.2
+[1] "regression testing set predication"
+   predicted    actual
+6   63.04547  39.85238
+19  76.39080  47.26283
+10 130.35919  42.33066
+14 223.41874 136.73450
+24 370.72761 518.94892
+[1] 0.8394794
+[1] 0.0 0.0 0.2
+[1] "bayesian testing set predication"
+           Simple_UC Average_UC Complex_UC
+Simple_UC  0.7634193 0.16670941 0.20089982
+Average_UC 0.1667094 0.10905990 0.08085906
+Complex_UC 0.2008998 0.08085906 0.10182252
+               [,1]
+Simple_UC  8.903808
+Average_UC 3.356731
+Complex_UC 3.968675
+   predicted    actual
+5  104.49182  37.33065
+3   84.33613  17.71651
+17 418.44761 345.84163
+1   84.33613  21.96527
+7  116.11423  87.01286
+[1] 1.788662
+[1] 0.0 0.2 0.4
+[1] "apriori testing set predication"
+   predicted    actual
+5      105.4  37.33065
+3       86.8  17.71651
+17     464.6 345.84163
+1       86.8  21.96527
+7      130.3  87.01286
+[1] 1.903073
+[1] 0.0 0.0 0.4
+[1] "regression testing set predication"
+   predicted    actual
+5  108.32673  37.33065
+3   78.23315  17.71651
+17 417.64574 345.84163
+1   78.23315  21.96527
+7   47.17455  87.01286
+[1] 1.708958
+[1] 0.0 0.2 0.4
+[1] "bayesian testing set predication"
+           Simple_UC Average_UC Complex_UC
+Simple_UC  1.0923701  0.2605312  0.3132578
+Average_UC 0.2605312  0.1386398  0.1085547
+Complex_UC 0.3132578  0.1085547  0.1473242
+                [,1]
+Simple_UC  12.490292
+Average_UC  3.947666
+Complex_UC  5.252996
+   predicted   actual
+13 197.66796 235.2842
+22 135.48130 122.9916
+12 155.17165 244.2629
+2  121.57830 109.4550
+21  49.16662 136.8348
+[1] 0.2755214
+[1] 0.4 0.6 0.8
+[1] "apriori testing set predication"
+   predicted   actual
+13     224.0 235.2842
+22     170.3 122.9916
+12     173.6 244.2629
+2      141.6 109.4550
+21      77.5 136.8348
+[1] 0.2898407
+[1] 0.2 0.2 1.0
+[1] "regression testing set predication"
+   predicted   actual
+13 126.71085 235.2842
+22 127.39514 122.9916
+12 127.77215 244.2629
+2  105.31219 109.4550
+21  34.01951 136.8348
+[1] 0.3526798
+[1] 0.4 0.4 0.8
+[1] "bayesian testing set predication"
+           Simple_UC Average_UC Complex_UC
+Simple_UC  0.6779606 0.17003280 0.19511566
+Average_UC 0.1700328 0.11287284 0.08079573
+Complex_UC 0.1951157 0.08079573 0.10177850
+               [,1]
+Simple_UC  8.009067
+Average_UC 3.195758
+Complex_UC 3.674116
+   predicted    actual
+18  136.0511  80.74255
+15  165.8494 104.28666
+4   141.9953  80.90975
+23  199.4624 269.94203
+20  271.5803 313.47484
+[1] 0.4850085
+[1] 0.2 0.2 0.4
+[1] "apriori testing set predication"
+   predicted    actual
+18     163.7  80.74255
+15     207.2 104.28666
+4      155.0  80.90975
+23     248.0 269.94203
+20     301.8 313.47484
+[1] 0.6097011
+[1] 0.4 0.4 0.4
+[1] "regression testing set predication"
+   predicted    actual
+18  149.5841  80.74255
+15  129.1749 104.28666
+4   120.5746  80.90975
+23  207.4800 269.94203
+20  260.2869 313.47484
+[1] 0.3965112
+[1] 0.0 0.6 0.8
+[1] "bayesian testing set predication"
+           Simple_UC Average_UC Complex_UC
+Simple_UC  0.6358922 0.20585623 0.22372727
+Average_UC 0.2058562 0.12306131 0.09048625
+Complex_UC 0.2237273 0.09048625 0.10858351
+               [,1]
+Simple_UC  9.056014
+Average_UC 3.760487
+Complex_UC 4.066776
+   predicted    actual
+9  116.68879  39.92663
+11  70.18812  22.35886
+8   97.17896  20.73348
+16 201.88355 238.50510
+25 110.54140  66.77620
+[1] 1.711549
+[1] 0.0 0.2 0.2
+[1] "apriori testing set predication"
+   predicted    actual
+9      124.6  39.92663
+11      80.0  22.35886
+8      105.3  20.73348
+16     231.2 238.50510
+25     165.2  66.77620
+[1] 2.056406
+[1] 0.2 0.2 0.2
+[1] "regression testing set predication"
+   predicted    actual
+9   96.46059  39.92663
+11  57.66799  22.35886
+8   86.57885  20.73348
+16 216.61965 238.50510
+25  88.08513  66.77620
+[1] 1.316363
+[1] 0.2 0.2 0.4
+[1] "n fold cross validation results"
+     bayesian_mmre bayesian_pred15 bayesian_pred25 bayesian_pred50 apriori_mmre
+[1,]     0.8241548             0.0             0.0             0.2    1.0435339
+[2,]     1.7886625             0.0             0.2             0.4    1.9030728
+[3,]     0.2755214             0.4             0.6             0.8    0.2898407
+[4,]     0.4850085             0.2             0.2             0.4    0.6097011
+[5,]     1.7115491             0.0             0.2             0.2    2.0564059
+     apriori_pred15 apriori_pred25 apriori_pred50 regression_mmre
+[1,]            0.0            0.0            0.2       0.8394794
+[2,]            0.0            0.0            0.4       1.7089580
+[3,]            0.2            0.2            1.0       0.3526798
+[4,]            0.4            0.4            0.4       0.3965112
+[5,]            0.2            0.2            0.2       1.3163633
+     regression_pred15 regression_pred25 regression_pred50
+[1,]               0.0               0.0               0.2
+[2,]               0.0               0.2               0.4
+[3,]               0.4               0.4               0.8
+[4,]               0.0               0.6               0.8
+[5,]               0.2               0.2               0.4
+    bayesian_mmre   bayesian_pred15   bayesian_pred25   bayesian_pred50 
+        1.0169792         0.1200000         0.2400000         0.4000000 
+     apriori_mmre    apriori_pred15    apriori_pred25    apriori_pred50 
+        1.1805109         0.1600000         0.1600000         0.4400000 
+  regression_mmre regression_pred15 regression_pred25 regression_pred50 
+        0.9227983         0.1200000         0.2800000         0.5200000 

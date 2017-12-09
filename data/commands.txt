@@ -26,6 +26,8 @@
 
 ./Rscript/UseCasePointWeightsBayesianAnalysisWithoutActors.R "data/UseCaseWeighting/UCP_Datasetv1.1.csv" data/UseCaseWeighting/UCP_Apriori_Weights.csv
 
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCasePointWeightsBayesianAnalysisWithoutActors.R "data/UseCaseWeighting/UCP_Datasetv1.3.csv" data/UseCaseWeighting/UCP_Apriori_WeightsV1.1.csv
+
 "C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/RepoAnalyticsScript.R "public/output/repo598c93a9a9813b12105c953e/elementAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e/pathAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e/expandedPathAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e/useCaseAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e" "."
 
 "C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/ModelAnalyticsScript.R "public/output/repo598c93a9a9813b12105c953e/4128a6b28b1ff3bdb1a6094dc0d70949/elementAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e/4128a6b28b1ff3bdb1a6094dc0d70949/pathAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e/4128a6b28b1ff3bdb1a6094dc0d70949/expandedPathAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e/4128a6b28b1ff3bdb1a6094dc0d70949/domainModelAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e/4128a6b28b1ff3bdb1a6094dc0d70949/useCaseAnalytics.csv" "public/output/repo598c93a9a9813b12105c953e/4128a6b28b1ff3bdb1a6094dc0d70949" "."
@@ -41,5 +43,19 @@ db.users.update({'username': 'test'},{$set:{'username':'umlxteam','password':'um
 
 db.users.update({'username': 'test2'},{$set:{'username':'umlxteamenterprise','password':'umlxteamfighton'}})
 
-"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCaseWeightDistributionAnalyticsScript.R "data/UseCaseWeighting/UCP_Apriori_Weight_Distribution.csv" "data/UseCaseWeighting/useCasesEvaluation1.1.csv"
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCaseWeightDistributionAnalyticsScript.R "data/UseCaseWeighting/UCP_Apriori_Weight_Distribution.csv" "data/UseCaseWeighting/useCasesEvaluation1.1.csv" "data/temp/bayesian_log_transform"
+
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCasePointWeightsBayesianAnalysisWithoutActors.R "data/UseCaseWeighting/UCP_Datasetv1.5.csv" data/UseCaseWeighting/UCP_Apriori_Weights.csv
+
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCasePointWeightsBayesianAnalysisWithoutActors.R "data/UseCaseWeighting/UCP_Datasetv2.1.csv" "data/UseCaseWeighting/UCP_Apriori_Weights.csv" "data/temp"
+
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCasePointWeightsBayesianAnalysisWithoutActorsWithLogTransformation.R "data/UseCaseWeighting/UCP_Datasetv2.1.csv" "data/UseCaseWeighting/UCP_Apriori_Weights.csv" "data/temp/bayesian_log_transform"
+
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCasePointWeightsBayesianAnalysisWithoutActorsWithLogTransformation.R "data/UseCaseWeighting/UCP_Datasetv2.3.csv" "data/UseCaseWeighting/UCP_Apriori_Weights.csv" "data/temp/bayesian_log_transform"
+
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/LinearRegressionForEUCP-EXUCP-DUCP.R "data/Resilient Agile/eucp_exucp_ducp_effort.csv" "data/Resilient Agile/temp"
+
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCasePointWeightsBayesianAnalysisWithoutActors.R "data/UseCaseWeighting/UCP_Datasetv2.7.csv" "data/UseCaseWeighting/UCP_Apriori_Weights.csv" "data/temp/bayesian_without_log"
+
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCaseWeightDistributionAnalyticsScript.R "data/UseCaseWeighting/UCP_Apriori_Weight_Distribution.csv" "data/UseCaseWeighting/useCasesEvaluation1.2.csv" "data/temp/bayesian_without_log"
 

@@ -165,7 +165,7 @@
 				
 				functionPointProcessor.processPath(path, diagram, useCaseInfo);
 				
-				var functionalOperations = path.Functional;
+				var functionalOperations = path["FPAnalytics"].Functional;
 				
 				if (functionalOperations.indexOf("EI") > -1) {
 					EI++;

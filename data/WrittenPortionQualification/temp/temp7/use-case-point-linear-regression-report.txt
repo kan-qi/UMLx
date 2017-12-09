@@ -1,0 +1,688 @@
+[1] "correlation matrix:"
+                Effort_Norm_UCP   UAW   TCF   EF UEUCW_ALY UEXUCW_ALY UDUCW_ALY
+Effort_Norm_UCP            1.00  0.19  0.45 0.37      0.81       0.87      0.93
+UAW                        0.19  1.00 -0.08 0.06     -0.03       0.07      0.18
+TCF                        0.45 -0.08  1.00 0.58      0.43       0.42      0.46
+EF                         0.37  0.06  0.58 1.00      0.53       0.43      0.36
+UEUCW_ALY                  0.81 -0.03  0.43 0.53      1.00       0.91      0.85
+UEXUCW_ALY                 0.87  0.07  0.42 0.43      0.91       1.00      0.96
+UDUCW_ALY                  0.93  0.18  0.46 0.36      0.85       0.96      1.00
+   Effort_Norm_UCP  variable      value
+1           464.25  EUCP_ALY   77.92200
+2          1141.90  EUCP_ALY  471.27705
+3          2529.00  EUCP_ALY  456.24730
+4           393.63  EUCP_ALY  113.05237
+5           240.63  EUCP_ALY  137.59088
+6           194.09  EUCP_ALY  131.30250
+7          2447.93  EUCP_ALY  414.38265
+8           681.71  EUCP_ALY  103.02230
+9           652.02  EUCP_ALY  142.06500
+10          294.61  EUCP_ALY  148.18037
+11          572.18  EUCP_ALY  155.31675
+12          681.05  EUCP_ALY  186.70080
+13          549.82  EUCP_ALY  227.15025
+14         1045.26  EUCP_ALY  639.31375
+15          931.84  EUCP_ALY  272.40000
+16         1645.54  EUCP_ALY  301.03500
+17          579.54  EUCP_ALY  304.47112
+18         3216.99  EUCP_ALY  731.19780
+19          787.06  EUCP_ALY  651.10275
+20         3264.97  EUCP_ALY 1066.99600
+21          464.25 EXUCP_ALY   61.56800
+22         1141.90 EXUCP_ALY  441.97485
+23         2529.00 EXUCP_ALY  598.54225
+24          393.63 EXUCP_ALY  158.62387
+25          240.63 EXUCP_ALY   97.27763
+26          194.09 EXUCP_ALY  107.85563
+27         2447.93 EXUCP_ALY  550.76175
+28          681.71 EXUCP_ALY  186.10480
+29          652.02 EXUCP_ALY  126.38250
+30          294.61 EXUCP_ALY  126.09137
+31          572.18 EXUCP_ALY  293.67363
+32          681.05 EXUCP_ALY  181.20960
+33          549.82 EXUCP_ALY  169.67850
+34         1045.26 EXUCP_ALY  560.59625
+35          931.84 EXUCP_ALY  227.00000
+36         1645.54 EXUCP_ALY  163.67750
+37          579.54 EXUCP_ALY  220.30838
+38         3216.99 EXUCP_ALY  786.97740
+39          787.06 EXUCP_ALY  557.20850
+40         3264.97 EXUCP_ALY 1061.06000
+41          464.25  DUCP_ALY   50.98600
+42         1141.90  DUCP_ALY  479.82353
+43         2529.00  DUCP_ALY  775.84627
+44          393.63  DUCP_ALY   93.77213
+45          240.63  DUCP_ALY   89.39025
+46          194.09  DUCP_ALY  100.35263
+47         2447.93  DUCP_ALY  600.59258
+48          681.71  DUCP_ALY  192.75140
+49          652.02  DUCP_ALY  119.92500
+50          294.61  DUCP_ALY  101.24125
+51          572.18  DUCP_ALY  288.31788
+52          681.05  DUCP_ALY  245.27360
+53          549.82  DUCP_ALY  134.10075
+54         1045.26  DUCP_ALY  514.85500
+55          931.84  DUCP_ALY  380.22500
+56         1645.54  DUCP_ALY  218.78500
+57          579.54  DUCP_ALY  191.42900
+58         3216.99  DUCP_ALY  843.96960
+59          787.06  DUCP_ALY  357.10600
+60         3264.97  DUCP_ALY 1173.84400
+[1] "correlation between effort and EUCP_ALY"
+
+	Pearson's product-moment correlation
+
+data:  data$Effort_Norm_UCP and data$EUCP_ALY
+t = 5.3956, df = 18, p-value = 3.976e-05
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.5268357 0.9115265
+sample estimates:
+      cor 
+0.7860907 
+
+[1] 0
+[1] "linear regression of effort on EUCP_ALY"
+[1] "confidence interval for the parameters"
+                 2.5 %     97.5 %
+(Intercept) -339.08956 617.437916
+EUCP_ALY       1.77185   4.031546
+[1] "R-squared"
+[1] 0.6179385
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)  139.174    227.645   0.611    0.549
+EUCP_ALY       2.902      0.538   5.396    0.000
+[1] "correlation between effort and EXUCP"
+
+	Pearson's product-moment correlation
+
+data:  data$Effort_Norm_UCP and data$EXUCP_ALY
+t = 7.2582, df = 18, p-value = 9.519e-07
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.6809669 0.9448709
+sample estimates:
+      cor 
+0.8633301 
+
+[1] 0
+[1] "linear regression of effort on EXUCP_ALY"
+[1] "confidence interval for the parameters"
+                  2.5 %     97.5 %
+(Intercept) -302.897547 461.526643
+EXUCP_ALY      2.205926   4.003167
+[1] "R-squared"
+[1] 0.7453388
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)   79.315    181.926   0.436    0.668
+EXUCP_ALY      3.105      0.428   7.258    0.000
+[1] "correlation between effort and DUCP"
+
+	Pearson's product-moment correlation
+
+data:  data$Effort_Norm_UCP and data$DUCP_ALY
+t = 10.19, df = 18, p-value = 6.683e-09
+alternative hypothesis: true correlation is not equal to 0
+95 percent confidence interval:
+ 0.8126347 0.9695934
+sample estimates:
+      cor 
+0.9231747 
+
+[1] 0
+[1] "linear regression of effort on DUCP_ALY"
+[1] "confidence interval for the parameters"
+                  2.5 %     97.5 %
+(Intercept) -194.230930 363.414690
+DUCP_ALY       2.354556   3.577677
+[1] "R-squared"
+[1] 0.8522516
+            Estimate Std. Error t value Pr(>|t|)
+(Intercept)   84.592    132.714   0.637    0.532
+DUCP_ALY       2.966      0.291  10.190    0.000
+[1] "eucp testing set predication"
+   predicted  actual
+14  2055.502 1045.26
+3   1501.081 2529.00
+15   944.296  931.84
+17  1041.424  579.54
+[1] 0.5458254
+[1] 0.25 0.25 0.50
+[1] "exucp testing set predication"
+   predicted  actual
+14 1836.8727 1045.26
+3  1955.2196 2529.00
+15  796.4451  931.84
+17  775.5751  579.54
+[1] 0.3669436
+[1] 0.25 0.50 0.75
+[1] "ducp testing set predication"
+   predicted  actual
+14 1667.3981 1045.26
+3  2451.0059 2529.00
+15 1263.1811  931.84
+17  696.3346  579.54
+[1] 0.2957866
+[1] 0.25 0.50 0.75
+[1] "eucp testing set predication"
+   predicted actual
+12  731.1347 681.05
+11  631.2619 572.18
+19 2208.9906 787.06
+10  608.5520 294.61
+[1] 0.7622632
+[1] 0.5 0.5 0.5
+[1] "exucp testing set predication"
+   predicted actual
+12  719.4398 681.05
+11 1083.0678 572.18
+19 1935.1505 787.06
+10  541.2270 294.61
+[1] 0.8112631
+[1] 0.25 0.25 0.25
+[1] "ducp testing set predication"
+   predicted actual
+12  877.1744 681.05
+11 1002.8303 572.18
+19 1203.6382 787.06
+10  456.7117 294.61
+[1] 0.5300326
+[1] 0.00 0.00 0.25
+[1] "eucp testing set predication"
+   predicted  actual
+16  967.1849 1645.54
+1   306.2810  464.25
+8   380.6330  681.71
+6   464.4044  194.09
+[1] 0.6467206
+[1] 0.00 0.00 0.75
+[1] "exucp testing set predication"
+   predicted  actual
+16  476.0216 1645.54
+1   138.0518  464.25
+8   550.2532  681.71
+6   291.2581  194.09
+[1] 0.5267058
+[1] 0.00 0.25 0.25
+[1] "ducp testing set predication"
+   predicted  actual
+16  649.2864 1645.54
+1   130.0691  464.25
+8   568.7311  681.71
+6   282.8233  194.09
+[1] 0.4870402
+[1] 0.00 0.25 0.50
+[1] "eucp testing set predication"
+   predicted  actual
+5   595.7822  240.63
+9   608.6295  652.02
+2  1553.9521 1141.90
+13  852.9493  549.82
+[1] 0.6136616
+[1] 0.25 0.25 0.50
+[1] "exucp testing set predication"
+   predicted  actual
+5   397.7636  240.63
+9   488.5491  652.02
+2  1472.9618 1141.90
+13  623.6003  549.82
+[1] 0.3319589
+[1] 0.25 0.25 0.75
+[1] "ducp testing set predication"
+   predicted  actual
+5   347.4908  240.63
+9   439.5661  652.02
+2  1524.8133 1141.90
+13  482.3120  549.82
+[1] 0.3070098
+[1] 0.25 0.25 1.00
+[1] "eucp testing set predication"
+   predicted  actual
+18 1579.4055 3216.99
+4   538.7215  393.63
+20 2144.7414 3264.97
+7  1046.0287 2447.93
+[1] 0.4483588
+[1] 0.0 0.0 0.5
+[1] "exucp testing set predication"
+   predicted  actual
+18 1918.2212 3216.99
+4   605.4416  393.63
+20 2490.8447 3264.97
+7  1424.7107 2447.93
+[1] 0.3992285
+[1] 0.00 0.25 0.75
+[1] "ducp testing set predication"
+   predicted  actual
+18 2246.3000 3216.99
+4   387.6082  393.63
+20 3063.5979 3264.97
+7  1643.3083 2447.93
+[1] 0.176852
+[1] 0.5 0.5 1.0
+[1] "10 cross validation results"
+     eucp_mmre eucp_pred15 eucp_pred25 eucp_pred50 exucp_mmre exucp_pred15
+[1,] 0.5458254        0.25        0.25        0.50  0.3669436         0.25
+[2,] 0.7622632        0.50        0.50        0.50  0.8112631         0.25
+[3,] 0.6467206        0.00        0.00        0.75  0.5267058         0.00
+[4,] 0.6136616        0.25        0.25        0.50  0.3319589         0.25
+[5,] 0.4483588        0.00        0.00        0.50  0.3992285         0.00
+     exucp_pred25 exucp_pred50 ducp_mmre ducp_pred15 ducp_pred25 ducp_pred50
+[1,]         0.50         0.75 0.2957866        0.25        0.50        0.75
+[2,]         0.25         0.25 0.5300326        0.00        0.00        0.25
+[3,]         0.25         0.25 0.4870402        0.00        0.25        0.50
+[4,]         0.25         0.75 0.3070098        0.25        0.25        1.00
+[5,]         0.25         0.75 0.1768520        0.50        0.50        1.00
+   eucp_mmre  eucp_pred15  eucp_pred25  eucp_pred50   exucp_mmre exucp_pred15 
+   0.6033659    0.2000000    0.2000000    0.5500000    0.4872200    0.1500000 
+exucp_pred25 exucp_pred50    ducp_mmre  ducp_pred15  ducp_pred25  ducp_pred50 
+   0.3000000    0.5500000    0.3593443    0.2000000    0.3000000    0.7000000 
+[1] "average improvement over ucp"
+[1] 0.052
+[1] 0.1565
+[1] 0.1045
+    Pred EUCP EXUCP DUCP
+1      1 0.00  0.00 0.00
+2      2 0.00  0.00 0.00
+3      3 0.05  0.00 0.05
+4      4 0.05  0.00 0.05
+5      5 0.05  0.00 0.10
+6      6 0.05  0.00 0.10
+7      7 0.05  0.05 0.10
+8      8 0.10  0.05 0.15
+9      9 0.15  0.05 0.15
+10    10 0.15  0.05 0.15
+11    11 0.15  0.05 0.15
+12    12 0.20  0.05 0.15
+13    13 0.20  0.05 0.15
+14    14 0.20  0.05 0.20
+15    15 0.20  0.10 0.20
+16    16 0.20  0.15 0.20
+17    17 0.20  0.15 0.20
+18    18 0.20  0.15 0.25
+19    19 0.20  0.15 0.25
+20    20 0.20  0.15 0.25
+21    21 0.20  0.20 0.25
+22    22 0.20  0.20 0.30
+23    23 0.20  0.20 0.30
+24    24 0.20  0.25 0.30
+25    25 0.20  0.30 0.30
+26    26 0.20  0.30 0.30
+27    27 0.20  0.35 0.30
+28    28 0.20  0.35 0.30
+29    29 0.20  0.35 0.30
+30    30 0.20  0.40 0.35
+31    31 0.20  0.40 0.35
+32    32 0.20  0.40 0.40
+33    33 0.20  0.40 0.40
+34    34 0.20  0.40 0.50
+35    35 0.20  0.45 0.55
+36    36 0.30  0.45 0.55
+37    37 0.30  0.45 0.60
+38    38 0.40  0.45 0.60
+39    39 0.40  0.45 0.60
+40    40 0.40  0.45 0.60
+41    41 0.40  0.45 0.60
+42    42 0.45  0.50 0.60
+43    43 0.50  0.55 0.60
+44    44 0.50  0.55 0.60
+45    45 0.50  0.55 0.60
+46    46 0.55  0.55 0.65
+47    47 0.55  0.55 0.70
+48    48 0.55  0.55 0.70
+49    49 0.55  0.55 0.70
+50    50 0.55  0.55 0.70
+51    51 0.55  0.55 0.70
+52    52 0.60  0.60 0.70
+53    53 0.60  0.60 0.70
+54    54 0.60  0.60 0.75
+55    55 0.60  0.65 0.75
+56    56 0.60  0.65 0.75
+57    57 0.65  0.65 0.80
+58    58 0.65  0.65 0.80
+59    59 0.70  0.65 0.80
+60    60 0.70  0.65 0.80
+61    61 0.70  0.65 0.85
+62    62 0.70  0.65 0.90
+63    63 0.70  0.65 0.90
+64    64 0.70  0.65 0.90
+65    65 0.70  0.65 0.90
+66    66 0.70  0.65 0.90
+67    67 0.70  0.70 0.90
+68    68 0.70  0.70 0.90
+69    69 0.70  0.70 0.90
+70    70 0.70  0.70 0.90
+71    71 0.70  0.70 0.90
+72    72 0.70  0.75 0.90
+73    73 0.70  0.80 0.95
+74    74 0.70  0.80 0.95
+75    75 0.70  0.80 0.95
+76    76 0.70  0.80 0.95
+77    77 0.70  0.85 1.00
+78    78 0.70  0.85 1.00
+79    79 0.70  0.85 1.00
+80    80 0.70  0.85 1.00
+81    81 0.75  0.85 1.00
+82    82 0.75  0.85 1.00
+83    83 0.75  0.85 1.00
+84    84 0.75  0.85 1.00
+85    85 0.75  0.90 1.00
+86    86 0.75  0.90 1.00
+87    87 0.75  0.90 1.00
+88    88 0.75  0.90 1.00
+89    89 0.75  0.90 1.00
+90    90 0.75  0.90 1.00
+91    91 0.75  0.95 1.00
+92    92 0.75  0.95 1.00
+93    93 0.75  0.95 1.00
+94    94 0.75  0.95 1.00
+95    95 0.75  0.95 1.00
+96    96 0.75  0.95 1.00
+97    97 0.75  0.95 1.00
+98    98 0.80  0.95 1.00
+99    99 0.80  0.95 1.00
+100  100 0.80  0.95 1.00
+[1] "melt avg preds info"
+    Pred Method Value
+1      1   EUCP  0.00
+2      2   EUCP  0.00
+3      3   EUCP  0.05
+4      4   EUCP  0.05
+5      5   EUCP  0.05
+6      6   EUCP  0.05
+7      7   EUCP  0.05
+8      8   EUCP  0.10
+9      9   EUCP  0.15
+10    10   EUCP  0.15
+11    11   EUCP  0.15
+12    12   EUCP  0.20
+13    13   EUCP  0.20
+14    14   EUCP  0.20
+15    15   EUCP  0.20
+16    16   EUCP  0.20
+17    17   EUCP  0.20
+18    18   EUCP  0.20
+19    19   EUCP  0.20
+20    20   EUCP  0.20
+21    21   EUCP  0.20
+22    22   EUCP  0.20
+23    23   EUCP  0.20
+24    24   EUCP  0.20
+25    25   EUCP  0.20
+26    26   EUCP  0.20
+27    27   EUCP  0.20
+28    28   EUCP  0.20
+29    29   EUCP  0.20
+30    30   EUCP  0.20
+31    31   EUCP  0.20
+32    32   EUCP  0.20
+33    33   EUCP  0.20
+34    34   EUCP  0.20
+35    35   EUCP  0.20
+36    36   EUCP  0.30
+37    37   EUCP  0.30
+38    38   EUCP  0.40
+39    39   EUCP  0.40
+40    40   EUCP  0.40
+41    41   EUCP  0.40
+42    42   EUCP  0.45
+43    43   EUCP  0.50
+44    44   EUCP  0.50
+45    45   EUCP  0.50
+46    46   EUCP  0.55
+47    47   EUCP  0.55
+48    48   EUCP  0.55
+49    49   EUCP  0.55
+50    50   EUCP  0.55
+51    51   EUCP  0.55
+52    52   EUCP  0.60
+53    53   EUCP  0.60
+54    54   EUCP  0.60
+55    55   EUCP  0.60
+56    56   EUCP  0.60
+57    57   EUCP  0.65
+58    58   EUCP  0.65
+59    59   EUCP  0.70
+60    60   EUCP  0.70
+61    61   EUCP  0.70
+62    62   EUCP  0.70
+63    63   EUCP  0.70
+64    64   EUCP  0.70
+65    65   EUCP  0.70
+66    66   EUCP  0.70
+67    67   EUCP  0.70
+68    68   EUCP  0.70
+69    69   EUCP  0.70
+70    70   EUCP  0.70
+71    71   EUCP  0.70
+72    72   EUCP  0.70
+73    73   EUCP  0.70
+74    74   EUCP  0.70
+75    75   EUCP  0.70
+76    76   EUCP  0.70
+77    77   EUCP  0.70
+78    78   EUCP  0.70
+79    79   EUCP  0.70
+80    80   EUCP  0.70
+81    81   EUCP  0.75
+82    82   EUCP  0.75
+83    83   EUCP  0.75
+84    84   EUCP  0.75
+85    85   EUCP  0.75
+86    86   EUCP  0.75
+87    87   EUCP  0.75
+88    88   EUCP  0.75
+89    89   EUCP  0.75
+90    90   EUCP  0.75
+91    91   EUCP  0.75
+92    92   EUCP  0.75
+93    93   EUCP  0.75
+94    94   EUCP  0.75
+95    95   EUCP  0.75
+96    96   EUCP  0.75
+97    97   EUCP  0.75
+98    98   EUCP  0.80
+99    99   EUCP  0.80
+100  100   EUCP  0.80
+101    1  EXUCP  0.00
+102    2  EXUCP  0.00
+103    3  EXUCP  0.00
+104    4  EXUCP  0.00
+105    5  EXUCP  0.00
+106    6  EXUCP  0.00
+107    7  EXUCP  0.05
+108    8  EXUCP  0.05
+109    9  EXUCP  0.05
+110   10  EXUCP  0.05
+111   11  EXUCP  0.05
+112   12  EXUCP  0.05
+113   13  EXUCP  0.05
+114   14  EXUCP  0.05
+115   15  EXUCP  0.10
+116   16  EXUCP  0.15
+117   17  EXUCP  0.15
+118   18  EXUCP  0.15
+119   19  EXUCP  0.15
+120   20  EXUCP  0.15
+121   21  EXUCP  0.20
+122   22  EXUCP  0.20
+123   23  EXUCP  0.20
+124   24  EXUCP  0.25
+125   25  EXUCP  0.30
+126   26  EXUCP  0.30
+127   27  EXUCP  0.35
+128   28  EXUCP  0.35
+129   29  EXUCP  0.35
+130   30  EXUCP  0.40
+131   31  EXUCP  0.40
+132   32  EXUCP  0.40
+133   33  EXUCP  0.40
+134   34  EXUCP  0.40
+135   35  EXUCP  0.45
+136   36  EXUCP  0.45
+137   37  EXUCP  0.45
+138   38  EXUCP  0.45
+139   39  EXUCP  0.45
+140   40  EXUCP  0.45
+141   41  EXUCP  0.45
+142   42  EXUCP  0.50
+143   43  EXUCP  0.55
+144   44  EXUCP  0.55
+145   45  EXUCP  0.55
+146   46  EXUCP  0.55
+147   47  EXUCP  0.55
+148   48  EXUCP  0.55
+149   49  EXUCP  0.55
+150   50  EXUCP  0.55
+151   51  EXUCP  0.55
+152   52  EXUCP  0.60
+153   53  EXUCP  0.60
+154   54  EXUCP  0.60
+155   55  EXUCP  0.65
+156   56  EXUCP  0.65
+157   57  EXUCP  0.65
+158   58  EXUCP  0.65
+159   59  EXUCP  0.65
+160   60  EXUCP  0.65
+161   61  EXUCP  0.65
+162   62  EXUCP  0.65
+163   63  EXUCP  0.65
+164   64  EXUCP  0.65
+165   65  EXUCP  0.65
+166   66  EXUCP  0.65
+167   67  EXUCP  0.70
+168   68  EXUCP  0.70
+169   69  EXUCP  0.70
+170   70  EXUCP  0.70
+171   71  EXUCP  0.70
+172   72  EXUCP  0.75
+173   73  EXUCP  0.80
+174   74  EXUCP  0.80
+175   75  EXUCP  0.80
+176   76  EXUCP  0.80
+177   77  EXUCP  0.85
+178   78  EXUCP  0.85
+179   79  EXUCP  0.85
+180   80  EXUCP  0.85
+181   81  EXUCP  0.85
+182   82  EXUCP  0.85
+183   83  EXUCP  0.85
+184   84  EXUCP  0.85
+185   85  EXUCP  0.90
+186   86  EXUCP  0.90
+187   87  EXUCP  0.90
+188   88  EXUCP  0.90
+189   89  EXUCP  0.90
+190   90  EXUCP  0.90
+191   91  EXUCP  0.95
+192   92  EXUCP  0.95
+193   93  EXUCP  0.95
+194   94  EXUCP  0.95
+195   95  EXUCP  0.95
+196   96  EXUCP  0.95
+197   97  EXUCP  0.95
+198   98  EXUCP  0.95
+199   99  EXUCP  0.95
+200  100  EXUCP  0.95
+201    1   DUCP  0.00
+202    2   DUCP  0.00
+203    3   DUCP  0.05
+204    4   DUCP  0.05
+205    5   DUCP  0.10
+206    6   DUCP  0.10
+207    7   DUCP  0.10
+208    8   DUCP  0.15
+209    9   DUCP  0.15
+210   10   DUCP  0.15
+211   11   DUCP  0.15
+212   12   DUCP  0.15
+213   13   DUCP  0.15
+214   14   DUCP  0.20
+215   15   DUCP  0.20
+216   16   DUCP  0.20
+217   17   DUCP  0.20
+218   18   DUCP  0.25
+219   19   DUCP  0.25
+220   20   DUCP  0.25
+221   21   DUCP  0.25
+222   22   DUCP  0.30
+223   23   DUCP  0.30
+224   24   DUCP  0.30
+225   25   DUCP  0.30
+226   26   DUCP  0.30
+227   27   DUCP  0.30
+228   28   DUCP  0.30
+229   29   DUCP  0.30
+230   30   DUCP  0.35
+231   31   DUCP  0.35
+232   32   DUCP  0.40
+233   33   DUCP  0.40
+234   34   DUCP  0.50
+235   35   DUCP  0.55
+236   36   DUCP  0.55
+237   37   DUCP  0.60
+238   38   DUCP  0.60
+239   39   DUCP  0.60
+240   40   DUCP  0.60
+241   41   DUCP  0.60
+242   42   DUCP  0.60
+243   43   DUCP  0.60
+244   44   DUCP  0.60
+245   45   DUCP  0.60
+246   46   DUCP  0.65
+247   47   DUCP  0.70
+248   48   DUCP  0.70
+249   49   DUCP  0.70
+250   50   DUCP  0.70
+251   51   DUCP  0.70
+252   52   DUCP  0.70
+253   53   DUCP  0.70
+254   54   DUCP  0.75
+255   55   DUCP  0.75
+256   56   DUCP  0.75
+257   57   DUCP  0.80
+258   58   DUCP  0.80
+259   59   DUCP  0.80
+260   60   DUCP  0.80
+261   61   DUCP  0.85
+262   62   DUCP  0.90
+263   63   DUCP  0.90
+264   64   DUCP  0.90
+265   65   DUCP  0.90
+266   66   DUCP  0.90
+267   67   DUCP  0.90
+268   68   DUCP  0.90
+269   69   DUCP  0.90
+270   70   DUCP  0.90
+271   71   DUCP  0.90
+272   72   DUCP  0.90
+273   73   DUCP  0.95
+274   74   DUCP  0.95
+275   75   DUCP  0.95
+276   76   DUCP  0.95
+277   77   DUCP  1.00
+278   78   DUCP  1.00
+279   79   DUCP  1.00
+280   80   DUCP  1.00
+281   81   DUCP  1.00
+282   82   DUCP  1.00
+283   83   DUCP  1.00
+284   84   DUCP  1.00
+285   85   DUCP  1.00
+286   86   DUCP  1.00
+287   87   DUCP  1.00
+288   88   DUCP  1.00
+289   89   DUCP  1.00
+290   90   DUCP  1.00
+291   91   DUCP  1.00
+292   92   DUCP  1.00
+293   93   DUCP  1.00
+294   94   DUCP  1.00
+295   95   DUCP  1.00
+296   96   DUCP  1.00
+297   97   DUCP  1.00
+298   98   DUCP  1.00
+299   99   DUCP  1.00
+300  100   DUCP  1.00
+[1] "melt avg preds info as lines and smooth function"
+[1] "melt avg preds info as dots and smooth function"

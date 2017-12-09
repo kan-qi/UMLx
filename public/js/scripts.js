@@ -921,12 +921,18 @@ function clearSelectedPathAndEdge() {
 function createCharts() {
 	createTrendingLines();
 	createPieChart();
+	createHistogram();
+	creatAvgHistograms();
+	createHistogramForPathNumber();
 }
 
 function createTrendingLines() {
 	var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
 	d3.csv(url, function(error, data) {
-		if (error) throw error;
+		if (error) {
+			console.error(error);
+			return;
+		}
 		var tempData = [];
 		data.forEach(function(d) {
 			d.update_time = new Date(d.update_time).getTime();
@@ -999,6 +1005,10 @@ function createPieChart() {
 	var url = $('#transaction-pie')[0].attributes.getNamedItem('data').value;
 	var newData =[];
 	d3.csv(url, function(error, data) {
+		if (error) {
+			console.error(error);
+			return;
+		}
 		var counter = [], transactionLable = [];
 		data.forEach(function(d) {
 			counter[d.transactional] ?  counter[d.transactional]++ : counter[d.transactional]= 1;
@@ -1013,7 +1023,7 @@ function createPieChart() {
 			});
 		})
 	
-		// Build the chart
+		// Build the chart :  refer highchart pie-chart for more information 
 		Highcharts.chart('transaction-pie', {
 			chart: {
 				plotBackgroundColor: null,
@@ -1043,5 +1053,196 @@ function createPieChart() {
 				data: newData
 			}]
 		});
+	});
+}
+
+function createHistogram(dataList, max) {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-expandedPathURL').value : "";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
+				return;
+			}
+			var newData = {
+				CTRL: {
+					list: [],
+					chartName: "Control Operation Number"
+				}, 
+				EI: {
+					list: [],
+					chartName: "Extra Input Operation Number"
+				}, 
+				EQ: {
+					list: [],
+					chartName: "Extra Query Operation Number"
+				},
+				EXTIVK: {
+					list: [],
+					chartName: "Extra Invocation Operation Number"
+				},
+				EXTCLL: {
+					list: [],
+					chartName: "Extra Call Operation Number"
+				},
+				INT: {
+					list: [],
+					chartName: "Interface Operation Number"
+				},
+				TRAN_NA: {
+					list: [],
+					chartName: "Not Matched Operation Number"
+				}
+			};
+			data.forEach(function(d) {
+				var temp = newData[d.transactional] ? newData[d.transactional] : undefined;
+				if (temp) {
+					temp.list[+d.path_length] ? temp.list[+d.path_length]++ : temp.list[+d.path_length] = 1;
+				}
+			});
+			var maxLength = 0;
+			var dataList = [];
+			for (var chartData in newData) {
+				if (newData.hasOwnProperty(chartData)) {
+					var temp = newData[chartData]; 
+					maxLength = (maxLength < temp.list.length ? temp.list.length : maxLength);
+					for(i= 0;i < temp.list.length; i++) {
+						temp.list[i] = (temp.list[i] ? temp.list[i] : 0);
+					}
+					dataList.push({
+						data: temp.list,
+						name: temp.chartName
+					})
+				}
+			}
+			//refer http://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/demo/column-basic/ for sample
+			var categoriesList = [];
+			for(i= 0; i< maxLength; i++) {
+				categoriesList.push(i.toString());
+			}
+			Highcharts.chart('chart-1', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: 'Distribution Graph'
+				},
+				xAxis: {
+					categories: categoriesList,
+					crosshair: true,
+					title: {
+						text: 'path_length'
+					}
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'Frequency'
+					}
+				},
+				tooltip: {
+					headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					pointFormat: '<tr><td style="color:{series.color};padding:0">&#x26AB;: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+					footerFormat: '</table>',
+					shared: true,
+					useHTML: true
+				},
+				plotOptions: {
+					column: {
+						pointPadding: 0.2,
+						borderWidth: 0
+					}
+				},
+				series: dataList
+			});
+		});
+	}	
+}
+function creatAvgHistograms() {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-pathAnalyticsURL').value : "";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
+				return;
+			}
+			var newData = [
+				{
+					list: [],
+					id: "chart-8",
+					xAxis: "Architecture Difficulty",
+					yAxis: "Frequency",
+					chartName: "Architecture Difficulty"
+				}, {
+					list: [],
+					id: "chart-9",
+					xAxis: "Average Degree",
+					yAxis: "Frequency",
+					chartName: "Average Degree"
+				}, {
+					list: [],
+					id: "chart-10",
+					xAxis: "Average Path Length",
+					yAxis: "Frequency",
+					chartName: "Average Path Length"
+				}
+			];
+			data.forEach(function(d) {
+				newData[0].list[+d.arch_diff] ? newData[0].list[+d.arch_diff]++ : newData[0].list[+d.arch_diff] = 1;
+				newData[1].list[+d.avg_degree] ? newData[1].list[+d.avg_degree]++ : newData[1].list[+d.avg_degree] = 1;
+				newData[2].list[+d.path_length] ? newData[2].list[+d.path_length]++ : newData[2].list[+d.path_length] = 1;
+			});
+			newData.forEach(function(chartData) { 
+				for(i= 0;i < chartData.list.length; i++) {
+					chartData.list[i] = (chartData.list[i] ? chartData.list[i] : 0);
+				}
+				createHistogramIndividually(chartData.id, chartData.list , chartData.xAxis, chartData.yAxis, chartData.chartName);
+			}); 
+		});
+	}
+}
+
+function createHistogramForPathNumber() {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-usecaseAnalyticsURL').value : "";
+	var	list= [],
+		id= "chart-11",
+		xAxis= "Path Number",
+		yAxis= "Frequency",
+		chartName= "Path Number";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
+				return;
+			}
+			data.forEach(function(d) {
+				list[+d.path_number] ? list[+d.path_number]++ : list[+d.path_number] = 1;
+			});
+			for(i= 0;i < list.length; i++) {
+				list[i] = (list[i] ? list[i] : 0);
+			}
+			createHistogramIndividually(id, list , xAxis, yAxis, chartName);
+		});
+	}
+}
+function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTitle) {
+	Highcharts.chart(id, {
+		title: {
+			text: histogramTitle
+		},
+		xAxis: [{
+			title: { text: xAxisName }
+		}],
+	
+		yAxis: [{
+			title: { text: yAxisName }
+		}],
+	
+		series: [{
+			name: xAxisName,
+			type: 'histogram',
+			data: data
+		}]
 	});
 }

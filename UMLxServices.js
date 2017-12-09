@@ -13,9 +13,10 @@ var jade = require('jade');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
-var sleep = require('sleep');
+//var sleep = require('sleep');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
+var bodyParser = require('body-parser');
 
 
 var storage = multer.diskStorage({
@@ -37,6 +38,7 @@ var storage = multer.diskStorage({
 })
 
 var fileDestination = null;
+umlSurveyFiles = [];
 var surveyFiles = multer.diskStorage({
     destination: function (req, file, cb) {
     	if(fileDestination==null) {
@@ -56,6 +58,7 @@ var surveyFiles = multer.diskStorage({
     filename: function (req, file, cb) {
         var fileName = Date.now()+ "-" + file.originalname;
         cb(null, fileName)
+        umlSurveyFiles.push(fileName);
 		console.log("saved the file " + fileName + " in " + fileDestination);
     }
 })
@@ -65,6 +68,7 @@ var surveyUploads = multer({ storage: surveyFiles });
 
 app.use(express.static('public'));
 app.use(cookieParser());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 app.set('views', './views');
@@ -98,7 +102,7 @@ app.get('/testgitapirepos', function(req,response){
 	}, function (err, res) {
 	  if (err) throw err
 	  response.json(res);
-	  
+
 	});
 });
 
@@ -111,7 +115,7 @@ app.get('/testgitapiuser', function(req,response){
 	})
 
 	github.search.users({
-	  q: 'kvaid@usc.edu in:email'
+	  q: 'kritikavd'
 	}, function (err, res) {
 	  if (err) throw err
 	  response.json(res);
@@ -125,7 +129,7 @@ app.get('/testgitapionecommit', function(req,response){
 
 	var github = new GitHubApi({
 	})
-	
+
 	github.gitdata.getCommit({
 		owner: 'kritikavd',
 		  repo: 'Web-Tech-Assignments',
@@ -134,7 +138,7 @@ app.get('/testgitapionecommit', function(req,response){
 	  if (err) throw err
 	  response.json(res);
 	});
-	
+
 });
 
 
@@ -143,15 +147,15 @@ app.get('/testgitapiallcommit', function(req,response){
 
 	var github = new GitHubApi({
 	})
-	
+
 	github.repos.getCommits({
 		owner: 'kritikavd',
-		  repo: 'node-github',
+		  repo: 'Web-Tech-Assignments',
 	}, function (err, res) {
 	  if (err) throw err
 	  response.json(res);
 	});
-	
+
 });
 
 
@@ -160,7 +164,7 @@ app.get('/testgitapifollowing', function(req,response){
 
 	var github = new GitHubApi({
 	})
-	
+
 	github.users.getFollowingForUser({
 	    // optional
 	    // headers: {
@@ -323,32 +327,14 @@ app.use(function(req, res, next) {
 
 });
 
-app.get('/savegitinfo', function(req,res){
-	
-	var email = req.userInfo.email;
-	var userId = req.userInfo._id;
-	umlModelInfoManager.saveGitInfo(email,userId, function(success,msg){
-		var result = {
-		          success: success,
-		          message: msg,
-	   };
-		res.json(result);
-	});
-});
-
 app.get('/profile',function(req,res){
 
 	var profileInfo = {}
+
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;
 	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
-	
-	umlModelInfoManager.getGitData(req.userInfo._id, function(gitData, success, msg){
-		if(success==true){
-			profileInfo.gitData = gitData;
-		}
-		res.render('profile',{profileInfo:profileInfo});
-	});
+	res.render('profile', {profileInfo:profileInfo});
 
 })
 
@@ -408,6 +394,11 @@ app.get('/surveyAnalytics', function (req, res){
 app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
 	console.log(req.body);
 	var formInfo = req.body;
+    // console.log(umlSurveyFiles);
+
+    // save the file names in DB
+    formInfo.uml_file = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
+    formInfo.uml_other = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
 	umlModelInfoManager.saveSurveyData(formInfo);
 	res.redirect("thankYou");
 });
@@ -429,7 +420,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		console.log(modelInfo);
 		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
-//			console.log(modelInfo);
+			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
 			});
@@ -437,11 +428,11 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 
 			umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
 //				console.log(modelInfo);
-//				umlModelInfoManager.queryRepoAnalytics(repoId, function(repoInfo, repoInfo){
-//					console.log("=============repoInfo==========");
-//					console.log(repoInfo);
-//					res.render('mainPanel', {repoInfo:repoInfo});
-//				}, true);
+				umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+					console.log("=============repoInfo==========");
+					console.log(repoInfo);
+					res.render('mainPanel', {repoInfo:repoInfo});
+				}, true);
 			});
 		});
 	});
@@ -602,7 +593,7 @@ app.get('/requestDomainModelDetail', function (req, res){
 			return;
 		}
 //		console.log(domainModel);
-		res.render('domainModelDetail',{domainModelInfo: domainModel});
+		res.render('domainModelDetail',{domainModel: domainModel});
 	});
 })
 
@@ -1047,6 +1038,10 @@ app.get('/surveyData', function(req, res){
 });
 
 
+// to handle post redirect to home page
+app.post('/', function(req, res){
+	res.redirect('/')
+});
 
 app.get('/', function(req, res){
 		var message = req.query.e;
@@ -1088,6 +1083,26 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+
+var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parserv1.1.js")
+app.get('/testSequenceDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractSequenceDiagrams("./temp/test_example.xml", function(sequenceDiagrams){
+		res.json(sequenceDiagrams);
+	});
+});
+
+app.get('/testRobustnessDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractRobustnessDiagrams("./temp/test_example.xml", function(robustnessDiagrams){
+		res.json(robustnessDiagrams);
+	});
+});
+
+app.get('/testActivityDiagramExtraction', function(req, res){
+	sequenceDiagramParser.extractActivityDiagrams("./temp/test_example.xml", function(activityDiagrams){
+		res.json(activityDiagrams);
+	});
+});
+
 app.get('/deleteUser', function(req,res){
 	var userId = req.query['uid'];
 	umlModelInfoManager.deleteUser(userId, function(status){
@@ -1096,12 +1111,23 @@ app.get('/deleteUser', function(req,res){
 	});
 });
 
+/*
+ * only for debugging process
+ */
+app.get('/queryUsers', function(req,res){
+	var userId = req.query['uid'];
+	umlModelInfoManager.queryUsers(function(users){
+		console.log(users);
+		res.render('userList', {users: users});
+	});
+});
+
 
 app.get('/deactivateUser', function(req,res){
 	var userId = req.query['uid'];
-	
+
 	var loggedInUserId = req.userInfo._id;
-	
+
 	if( !req.userInfo.isEnterprise && req.userInfo._id!=userId){
 		var result={'status' : false , 'message' : 'Not authorized to deactivate this user'};
 		res.json(result);
@@ -1112,7 +1138,6 @@ app.get('/deactivateUser', function(req,res){
 		});
 	}
 });
-
 
 
 var server = app.listen(8081,'127.0.0.1', function () {
