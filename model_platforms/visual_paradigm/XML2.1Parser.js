@@ -18,6 +18,7 @@ class ActivityNode{
 		this.Id = Id;
 		this.Name = Name;
 		this.partitionName = PartitionName;
+		this.Category = 'Element';
 	}
 }
 
@@ -585,7 +586,7 @@ class ClassNode{
 			addToMap(graph);
 			
 			graph = new Graph();
-			//extractActivityNodes(result);
+			extractActivityNodes(result);
 			extractActivityEdges(result);
 			response['activity_diagram'] = graph;
 			addToMap(graph);
