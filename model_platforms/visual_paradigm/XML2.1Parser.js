@@ -1,10 +1,14 @@
 (function() {
-	class Node{
-		constructor(Id, Name)
-		{
+class Node{
+		
+		
+		constructor(Id,Name){
 			this.Id = Id;
 			this.Name = Name;
+			this.Category = 'Element';
 		}
+		
+		
 	}
 
 class ActivityNode{
@@ -17,12 +21,26 @@ class ActivityNode{
 	}
 }
 
+class ActivityEdge{
+	
+	constructor(fromEnd, toEnd, Id, Name)
+	{
+		this.fromEnd = fromEnd;
+		this.toEnd = toEnd;
+		this.Id = Id;
+		this.Name = Name;
+		this.Category = 'Activity-Relation';
+	}
+
+}
+
 class ClassNode{
 	constructor(Id,Name,attributes,operations){
 		this.Id = Id
 		this.Name = Name
 		this.attributes = attributes
 		this.operations = operations
+		this.Category = 'Element'
 	}
 }
 
@@ -34,6 +52,7 @@ class ClassNode{
 			this.fromMultiplicity = fromMultiplicity;
 			this.toMultiplicity = toMultiplicity;
 			this.Id = Id;
+			this.Category = 'Class-Relation';
 		}
 	}
 	
@@ -44,6 +63,7 @@ class ClassNode{
 			this.toEnd = toEnd;
 			this.Id = Id;
 			this.Name = Name;
+			this.Category = 'Sequence-Relation';
 		}
 	}
 	
@@ -55,6 +75,7 @@ class ClassNode{
 			this.fromMultiplicity = fromMultiplicity;
 			this.toMultiplicity = toMultiplicity;
 			this.Id = Id;
+			this.Category = 'UseCase-Association';
 		}
 	}
 	
@@ -92,6 +113,8 @@ class ClassNode{
 	var xmlParser = require('xml2js').Parser();
 	var fileSystem = require('fs');
 	var graph;
+	var hashMap = {};
+	
 	
 	function readFile(fileName, processFunction ,dataCallback) {
 		fs.readFile(fileName, function(err, data) {
@@ -110,7 +133,6 @@ class ClassNode{
 			if (err)
 				console.log ("error in parsing", err);
 			
-
 			extractSequenceDiagNodes(result);
 			extractSequenceDiagramEdges(result);
 			if (dataCallback)
@@ -243,83 +265,26 @@ class ClassNode{
 			var id = controlFlow.$.Id;
 			var Name = controlFlow.$.Guard;
 			
-			var edge = new Edge(fromId,toId, id, Name);
+			var edge = new ActivityEdge(fromId,toId, id, Name);
 			graph.addEdge(edge);
 		}
 	}
 	
-	
-	function extractActivityElementNodes(containedElement){
-		var initialNodes = _.get(containedElement, 'InitialNode', {});
-		for (initialNodeElement = 0; initialNodeElement < initialNodes.length; initialNodeElement++){
-			var initialNode = initialNodes[initialNodeElement];
-			var node = new ActivityNode(initialNode.$.Idref, initialNode.$.Name, "");
-			graph.addNode(node);
-		}
-	
-		var activityActions = _.get(containedElement, 'ActivityAction', {});
-		for (var activtiyAction = 0; activtiyAction < activityActions.length; activtiyAction++){
-			var action = activityActions[activtiyAction];
-			var actionNode = new ActivityNode (action.$.Idref,action.$.Name, "");
-			graph.addNode(actionNode);
-		}
-		
-		var decisionNodes = _.get(containedElement, 'DecisionNode', {});
-		for (var decision = 0; decision  < decisionNodes.length; decision++){
-			var decisionNode = decisionNodes[decision];
-			var decisionGraphNode = new ActivityNode(decisionNode.$.Idref, decisionNode.$.Name, "");
-			graph.addNode(decisionGraphNode);
-		}
-		
-		var finalNodes = _.get(containedElement, 'ActivityFinalNode', {});
-		for (var finalNodeElement = 0; finalNodeElement < finalNodes.length; finalNodeElement++){
-			var finalNode = finalNodes[finalNodeElement];
-			var finalGraphNode = new ActivityNode(finalNode.$.Idref, finalNode.$.Name, "");
-			graph.addNode(finalGraphNode);
-		}
-	}
-	
-	
 	function extractActivityNodes (activityDiagramJSON){
-	
 		var models = activityDiagramJSON.Project.Models[0];
 	
-		console.log ("the activity models are ", JSON.stringify(models));	
-		
 		var activityComponents = undefined;
 		if (_.get(models,'Activity', undefined) == undefined){
 			activityComponents = models.ActivitySwimlane2[0].ModelChildren;
 		}else{
-			
 			var activityModel = models.Activity[0];
-		
-			console.log ('the activity Model ', activityModel);
-			
-			var children = activityModel.ModelChildren[0];
-			if (_.get(children, "ActivitySwimlane2", undefined) == undefined)
-			{
-				extractActivityElementNodes(activityModel.ModelChildren[0]);
-				return;
-			}
-			
 			var activityModelChildren = activityModel.ModelChildren[0];
-			console.log ("the activityModelChildren", activityModelChildren);
 			activityComponents = activityModelChildren.ActivitySwimlane2[0].ModelChildren;
 		}
 		
 		extractContainedActivityElements(activityComponents);
 	}
 	
-	isArray = function(a) {
-	    return (!!a) && (a.constructor === Array);
-	};
-	
-	function isObject(a) {
-	    return (!!a) && (a.constructor === Object);
-	};
-	
-	
-
 	function extractClassDiagramEdges (classDiagramJSON){
 		var models = classDiagramJSON.Project.Models[0];
 		extratContainedClassEdges(models.ModelRelationshipContainer);
@@ -328,10 +293,9 @@ class ClassNode{
 	function extractClassDiagramNodes (classDiagramJSON){
 		
 		var models = classDiagramJSON.Project.Models[0];
-		if (_.get(models,"Class", undefined) != undefined){
-			extractContainedClassElements(models.Class);
-		}
-	
+		extractContainedClassElements(models.Class);
+		
+		
 	}
 	
 	function extractActivityEdges (activityDiagramJSON){
@@ -379,17 +343,14 @@ class ClassNode{
 		
 		// TODO: is an array.
 		var models = sequenceDiagramJSON.Project.Models;
+		console.log ("the models ", JSON.stringify(models));
 		var model = models[0];
-		
-		
-		if (_.get(model, "Frame", undefined) != undefined){
-			var modelChildren = model.Frame[0].ModelChildren;
-			var diagramChildren = modelChildren[0];
-				
-			extractInteractionActors(diagramChildren);
+		var modelChildren = model.Frame[0].ModelChildren;
+		var diagramChildren = modelChildren[0];
 			
-			extractInteractionLifeLine(diagramChildren);
-		}
+		extractInteractionActors(diagramChildren);
+		
+		extractInteractionLifeLine(diagramChildren);
 	
 	}
 	
@@ -498,7 +459,7 @@ class ClassNode{
 	function extractUseCaseNodes(useCaseDiagramJSON){
 		var models = useCaseDiagramJSON.Project.Models[0];
 
-		//console.log ("the use case ", JSON.stringify(useCaseDiagramJSON));
+		console.log ("the use case ", JSON.stringify(useCaseDiagramJSON));
 		var actors = _.get(models,"Actor",[]);
 		
 		for (var index = 0; index < actors.length; index++){
@@ -506,7 +467,7 @@ class ClassNode{
 			var id = actor.$.Id;
 			var name = actor.$.Name;
 			
-			var node = new Node(id, name);
+			var node = new Node(id, name,'Element');
 			graph.addNode(node);
 		}
 		
@@ -524,7 +485,7 @@ class ClassNode{
 			var id = useCase.$.Id;
 			var Name = useCase.$.Name;
 		
-			var node = new Node(id, Name);
+			var node = new Node(id, Name,'Element');
 			graph.addNode(node);
 		}
 	}
@@ -590,12 +551,30 @@ class ClassNode{
 	
 	
 	
+	function addToMap(graph){
+		
+		var nodes = graph.getNodes();
+		
+		for (var index = 0; index < nodes.length; index++){
+			var node = nodes[index];
+			hashMap[node.Id] = node;
+		}
+		
+		var edges = graph.getEdges();
+		for (var index = 0; index < edges.length; index++){
+			var edge = edges[index];
+			hashMap[edge.Id] = edge;
+		}
+		
+	}
+	
+	
 	function parseModelData(data, dataCallback){
 		xmlParser.parseString(data, function (err, result) {
 			if (err)
 				console.log ("error in parsing", err);
 			
-			//console.log ("the result ", JSON.stringify(result));
+			console.log ("the result ", JSON.stringify(result));
 			
 			var response = {}
 			
@@ -603,24 +582,28 @@ class ClassNode{
 			extractSequenceDiagNodes(result);
 			extractSequenceDiagramEdges(result);
 			response['sequence_diagram'] = graph;
+			addToMap(graph);
 			
 			graph = new Graph();
-			extractActivityNodes(result);
+			//extractActivityNodes(result);
 			extractActivityEdges(result);
 			response['activity_diagram'] = graph;
+			addToMap(graph);
 			
 			graph = new Graph();
 			extractClassDiagramNodes(result);
 			extractClassDiagramEdges(result);
 			response['class_diagram'] = graph;
+			addToMap(graph);
 			
 			graph = new Graph();
 			extractUseCaseNodes(result);
 			extractUseCaseEdges(result);
 			response['usecase_diagram'] = graph;
+			addToMap(graph);
 			
 			if (dataCallback)
-				dataCallback(response);
+				dataCallback(hashMap);
 		});
 	}
 	
@@ -633,7 +616,6 @@ function extractDiagramModels(file,func){
 
 function computeIndegree(graph){
 	
-	console.log ('the graph is ', graph);
 	var nodes = graph.nodes;
 	var edges = graph.edges;
 	
@@ -747,6 +729,7 @@ function breadFirstSearch(startNodes, graph){
 	}
 
 }
+
 
 	module.exports = { extractClassDiagrams , extractSequenceDiagrams, extractUseCaseDiagrams, extractActivityDiagrams, extractDiagramModels}
 
