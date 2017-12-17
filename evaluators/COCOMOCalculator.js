@@ -99,82 +99,87 @@
 			}
 	};
 	
-	function loadModelEmpirics(modelLoad, modelInfo, modelIndex){
 	
-				COCOMOData = {
-						Effort: 0,
-						KSLOC: 0,
-						Effort_Norm: 0,
-						SF: {
-							PREC: COCOMO.SF.PREC.N,
-							FLEX: COCOMO.SF.FLEX.N,
-							RESL: COCOMO.SF.RESL.N,
-							TEAM: COCOMO.SF.TEAM.N,
-							PMAT: COCOMO.SF.PMAT.N
-						},
-						EM: {
-							PROD:{
-								RELY: COCOMO.EM.PROD.RELY.N,
-								DATA: COCOMO.EM.PROD.DATA.N,
-								CPLX: COCOMO.EM.PROD.CPLX.N,
-								RUSE: COCOMO.EM.PROD.RUSE.N,
-								DOCU: COCOMO.EM.PROD.DOCU.N
-							},
-							PLAT:{
-								TIME: COCOMO.EM.PLAT.TIME.N,
-								STOR: COCOMO.EM.PLAT.STOR.N,
-								PVOL: COCOMO.EM.PLAT.PVOL.N
-							},
-							PERS:{
-								ACAP: COCOMO.EM.PERS.ACAP.N,
-								PCAP: COCOMO.EM.PERS.PCAP.N,
-								PCON: COCOMO.EM.PERS.PCON.N,
-								APEX: COCOMO.EM.PERS.APEX.N,
-								PLEX: COCOMO.EM.PERS.PLEX.N,
-								LTEX: COCOMO.EM.PERS.LTEX.N
-							},
-							PROJ:{
-								TOOL: COCOMO.EM.PROJ.TOOL.N,
-								SITE: COCOMO.EM.PROJ.SITE.N,
-								SCED: COCOMO.EM.PROJ.SCED.N
-							}						}
-					};
-				
-				
-				// populate scale factor data
-				COCOMOData['Effort'] = modelLoad['Effort'];
-				COCOMOData['KSLOC'] = modelLoad['KSLOC'];
-				for(var j in COCOMOData.SF ){
-					var rating = modelLoad[j];
-					var value = COCOMO['SF'][j][rating];
-					COCOMOData['SF'][j] = value;
-				}
-				// populate effort multiplier data
-				// populate product data
-				for(var j in COCOMOData.EM.PROD){
-					var rating = modelLoad[j];
-					var value = COCOMO['EM']['PROD'][j][rating];
-					COCOMOData['EM']['PROD'][j] = value;
-				}
-				// populate platform data
-				for(var j in COCOMOData.EM.PLAT){
-					var rating = modelLoad[j];
-					var value = COCOMO['EM']['PLAT'][j][rating];
-					COCOMOData['EM']['PLAT'][j] = value;
-				}
-				// populate personnel data
-				for(var j in COCOMOData.EM.PERS){
-					var rating = modelLoad[j];
-					var value = COCOMO['EM']['PERS'][j][rating];
-					COCOMOData['EM']['PERS'][j] = value;
-				}
-				// populate project data
-				for(var j in COCOMOData.EM.PROJ){
-					var rating = modelLoad[j];
-					var value = COCOMO['EM']['PROJ'][j][rating];
-					COCOMOData['EM']['PROJ'][j] = value;
-				}
-				
+	function covertCOCOMORatings(modelLoad){
+		COCOMOData = {
+				Effort: 0,
+				KSLOC: 0,
+				Effort_Norm: 0,
+				SF: {
+					PREC: COCOMO.SF.PREC.N,
+					FLEX: COCOMO.SF.FLEX.N,
+					RESL: COCOMO.SF.RESL.N,
+					TEAM: COCOMO.SF.TEAM.N,
+					PMAT: COCOMO.SF.PMAT.N
+				},
+				EM: {
+					PROD:{
+						RELY: COCOMO.EM.PROD.RELY.N,
+						DATA: COCOMO.EM.PROD.DATA.N,
+						CPLX: COCOMO.EM.PROD.CPLX.N,
+						RUSE: COCOMO.EM.PROD.RUSE.N,
+						DOCU: COCOMO.EM.PROD.DOCU.N
+					},
+					PLAT:{
+						TIME: COCOMO.EM.PLAT.TIME.N,
+						STOR: COCOMO.EM.PLAT.STOR.N,
+						PVOL: COCOMO.EM.PLAT.PVOL.N
+					},
+					PERS:{
+						ACAP: COCOMO.EM.PERS.ACAP.N,
+						PCAP: COCOMO.EM.PERS.PCAP.N,
+						PCON: COCOMO.EM.PERS.PCON.N,
+						APEX: COCOMO.EM.PERS.APEX.N,
+						PLEX: COCOMO.EM.PERS.PLEX.N,
+						LTEX: COCOMO.EM.PERS.LTEX.N
+					},
+					PROJ:{
+						TOOL: COCOMO.EM.PROJ.TOOL.N,
+						SITE: COCOMO.EM.PROJ.SITE.N,
+						SCED: COCOMO.EM.PROJ.SCED.N
+					}						}
+			};
+		
+		
+		// populate scale factor data
+		COCOMOData['Effort'] = modelLoad['Effort'];
+		COCOMOData['KSLOC'] = modelLoad['KSLOC'];
+		for(var j in COCOMOData.SF ){
+			var rating = modelLoad[j];
+			var value = COCOMO['SF'][j][rating];
+			COCOMOData['SF'][j] = value;
+		}
+		// populate effort multiplier data
+		// populate product data
+		for(var j in COCOMOData.EM.PROD){
+			var rating = modelLoad[j];
+			var value = COCOMO['EM']['PROD'][j][rating];
+			COCOMOData['EM']['PROD'][j] = value;
+		}
+		// populate platform data
+		for(var j in COCOMOData.EM.PLAT){
+			var rating = modelLoad[j];
+			var value = COCOMO['EM']['PLAT'][j][rating];
+			COCOMOData['EM']['PLAT'][j] = value;
+		}
+		// populate personnel data
+		for(var j in COCOMOData.EM.PERS){
+			var rating = modelLoad[j];
+			var value = COCOMO['EM']['PERS'][j][rating];
+			COCOMOData['EM']['PERS'][j] = value;
+		}
+		// populate project data
+		for(var j in COCOMOData.EM.PROJ){
+			var rating = modelLoad[j];
+			var value = COCOMO['EM']['PROJ'][j][rating];
+			COCOMOData['EM']['PROJ'][j] = value;
+		}
+		
+		return COCOMOData;
+	}
+	
+	function loadModelEmpirics(modelLoad, modelInfo, modelIndex){
+				var cocomoData = covertCOCOMORatings(modelLoad);
 				modelInfo.COCOMOData = COCOMOData;
 				normalizeEffort(modelInfo.COCOMOData);
 				
@@ -258,13 +263,77 @@
 		return cocomoData.Effort_Norm;
 	}
 	
+	function outputCOCOMORatings(cocomoData, modelNum){
+		return modelNum+","+
+		cocomoData['Effort']+","+
+		cocomoData['KSLOC']+","+
+		cocomoData.EM.PROD.RELY+","+
+		cocomoData.EM.PROD.DATA+","+
+		cocomoData.EM.PROD.CPLX+","+
+		cocomoData.EM.PROD.RUSE+","+
+		cocomoData.EM.PROD.DOCU+","+
+		cocomoData.EM.PLAT.TIME+","+
+		cocomoData.EM.PLAT.STOR+","+
+		cocomoData.EM.PLAT.PVOL+","+
+		cocomoData.EM.PERS.ACAP+","+
+		cocomoData.EM.PERS.PCAP+","+
+		cocomoData.EM.PERS.PCON+","+
+		cocomoData.EM.PERS.APEX+","+
+		cocomoData.EM.PERS.PLEX+","+
+		cocomoData.EM.PERS.LTEX+","+
+		cocomoData.EM.PROJ.TOOL+","+
+		cocomoData.EM.PROJ.SITE+","+
+		cocomoData.EM.PROJ.SCED ;
+	}
+	
 	
 	module.exports = {
 		toModelEvaluationHeader: toModelEvaluationHeader,
 		toModelEvaluationRow: toModelEvaluationRow,
 		loadModelEmpirics: loadModelEmpirics,
-		COCOMO: COCOMO
+		COCOMO: COCOMO,
+		loadCOCOMOData: function(ModelDataFilePath, callbackfunc){
+			var umlFileManager = require("../UMLFileManager.js");
+			umlFileManager.loadCSVFile(ModelDataFilePath, true, function(data){
+				var modelDataArray = {};
+				for(var i in data){
+					var dataElement = data[i];
+					var modelData = modelDataArray[dataElement['PROJ']];
+					if(modelData === undefined){
+						modelData = {};
+						modelDataArray[dataElement['PROJ']] = modelData;
+					}
+					
+					for(var j in dataElement){
+						modelData[j] = dataElement[j];
+					}
+				}
+				
+//				var models = repoInfo.models;
+				var modelIndex = 0;
+				var outputStr = "Project,Effort,KSLOC,RELY,DATA,CPLX,RUSE,DOCU,TIME,STOR,PVOL,ACAP,PCAP,PCON,APEX,PLEX,LTEX,TOOL,SITE,SCED\n";
+				
+				var modelIndex = 0;
+				for(var i in modelDataArray){
+				var modelLoad = modelDataArray[i];
+//				var modelInfo = {};
+//				loadModelEmpirics(modelLoad, modelInfo, modelIndex);
+				
+				var cocomoData = covertCOCOMORatings(modelLoad);
+				
+				console.log(modelLoad);
+				
+				outputStr += outputCOCOMORatings(cocomoData, modelIndex)+"\n";
+				//console.log(dataInfo);	
+				modelIndex++;
+				}
+
+				
+				if(callbackfunc){
+					callbackfunc(outputStr);
+				}
+			});
+		}
 	}
-	
 	
 }())
