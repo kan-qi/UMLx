@@ -1103,6 +1103,13 @@ app.get('/testActivityDiagramExtraction', function(req, res){
 	});
 });
 
+app.get('/testCOCOMODataLoad', function(req, res){
+	var cocomoCalculator = require("./evaluators/COCOMOCalculator.js")
+	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
+		res.end(outputStr);
+	});
+});
+
 app.get('/deleteUser', function(req,res){
 	var userId = req.query['uid'];
 	umlModelInfoManager.deleteUser(userId, function(status){
