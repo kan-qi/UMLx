@@ -1,6 +1,8 @@
 var xml2js = require('xml2js');
 var parser = new xml2js.Parser();
-var xmiParser = require('./XMI2.1Parserv1.3.js');
+//var xmiParser = require('./XMI2.1Parserv1.3.js');
+//var xmiParser = require('./XMI2.1ActivityDiagramParser.js');
+var xmiParser = require('./XMI2.1RobustnessDiagramParser.js');
 var fs = require("fs");
 
 fs.readFile("./model_platforms/bookTicketsExamplev1.3.xml", function(err, data) {
@@ -13,6 +15,13 @@ fs.readFile("./model_platforms/bookTicketsExamplev1.3.xml", function(err, data) 
 		}
 	});
 });
+
+//fs.readFile("./model_platforms/bookTicketsExamplev1.3.xml", function(err, data) {
+//	parser.parseString(data, function(err, result) {
+//		XMIUseCases = xmiParser.extractModelComponents(result);
+//	});
+//});
+
 
 
 function drawPrecedenceDiagramFunc(XMIUseCase, graphFilePath, callbackfunc){
@@ -55,6 +64,7 @@ function drawPrecedenceDiagramFunc(XMIUseCase, graphFilePath, callbackfunc){
 	var precedenceRelations = XMIUseCase.PrecedenceRelations;
 	for(var i in precedenceRelations){
 		var precedenceRelation = precedenceRelations[i];
+		console.log(precedenceRelation);
 			var start = precedenceRelation.start.id;
 			var end = precedenceRelation.end.id;
 //			dotty += '"'+start.Name+'"->"'+end.Name+'";';

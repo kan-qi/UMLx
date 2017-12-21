@@ -43,15 +43,17 @@
 		var XMIPackagedElements = [];
 		// search for the classes
 //		var XMIClasses = jsonQuery("$", {data: XMIUMLModel}).parents.value;
+		
+		console.log("start parsing");
 
-		var XMIClasses = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
-		var XMIClassesByStandardizedName = [];
-		for(var i in XMIClasses){
-			var XMIClass = XMIClasses[i];
-			console.log(XMIClass);
-			XMIClassesByStandardizedName[standardizeName(XMIClass.$.name)] = XMIClass;
-		}
-		console.log(XMIClasses);
+//		var XMIClasses = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+//		var XMIClassesByStandardizedName = [];
+//		for(var i in XMIClasses){
+//			var XMIClass = XMIClasses[i];
+//			console.log(XMIClass);
+//			XMIClassesByStandardizedName[standardizeName(XMIClass.$.name)] = XMIClass;
+//		}
+//		console.log(XMIClasses);
 //		debug.writeJson("XMIClasses", XMIClasses);
 		
 		
@@ -67,7 +69,15 @@
 		for(var i in XMIUseCases){
 			var XMIUseCase = XMIUseCases[i];
 //			console.log(XMIUseCase);
-			var XMIActivities = jp.query(XMIUseCase, '$.ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\') || $.node[?(@[\'$\'][\'xmi:type\']==\'uml:*\')]');
+			console.log("XMIActivities");
+			var XMIActivities = jp.query(XMIUseCase, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\')]');
+
+			console.log(XMIActivities);
+			
+			XMIActivities = XMIActivities.concat(jp.query(XMIUseCase, '$..node[?(@[\'$\'][\'xmi:type\'])]'));
+			
+			console.log(XMIActivities);
+			
 			XMIUseCase.Nodes = [];
 			NodesByID = [];
 			
@@ -88,7 +98,7 @@
 							name: XMIActivity['$']['name'],
 							id: XMIActivity['$']['xmi:id'],
 							attachment: XMIActivity
-					}
+					};
 					
 					XMIUseCase.Nodes.push(node);
 					NodesByID[XMIActivity['$']['xmi:id']] = node;
@@ -105,11 +115,14 @@
 				var XMIEdge = XMIEdges[j];
 //				console.log(XMIEdge);
 //				var XMILifelines = jp.query(XMIEdge, '$..lifeline[?(@[\'$\'][\'xmi:type\']==\'uml:Lifeline\')]');
-				
 				var sourceNode = NodesByID[XMIEdge['$']['source']];
 				var targetNode = NodesByID[XMIEdge['$']['target']];
-				XMIUseCase.PrecedenceRelations.push({start: sourceNode, targetNode});
+				if(sourceNode && targetNode){
+				XMIUseCase.PrecedenceRelations.push({start: sourceNode, end: targetNode});
+				}
 			}
+			
+			console.log(XMIUseCase.PrecedenceRelations);
 		}
 		
 
