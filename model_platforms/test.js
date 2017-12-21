@@ -1,32 +1,32 @@
 var xml2js = require('xml2js');
 var parser = new xml2js.Parser();
-//var xmiParser = require('./XMI2.1Parserv1.3.js');
+var xmiParser = require('./XMI2.1Parser.js');
 //var xmiParser = require('./XMI2.1ActivityDiagramParser.js');
-var xmiParser = require('./XMI2.1RobustnessDiagramParser.js');
+//var xmiParser = require('./XMI2.1RobustnessDiagramParser.js');
 var fs = require("fs");
 
 fs.readFile("./model_platforms/bookTicketsExamplev1.3.xml", function(err, data) {
 	parser.parseString(data, function(err, result) {
-		XMIUseCases = xmiParser.extractModelComponents(result);
-		for(var i in XMIUseCases){
-			var XMIUseCase = XMIUseCases[i];
+		Model = xmiParser.extractModelComponents(result);
+		for(var i in Model.UseCases){
+			var UseCase = Model.UseCases[i];
 			console.log("output use case");
-			drawPrecedenceDiagramFunc(XMIUseCase, "./model_platforms/usecase_"+i+".dotty");
+			drawPrecedenceDiagramFunc(UseCase, "./model_platforms/usecase_"+i+".dotty");
 		}
 	});
 });
 
 //fs.readFile("./model_platforms/bookTicketsExamplev1.3.xml", function(err, data) {
 //	parser.parseString(data, function(err, result) {
-//		XMIUseCases = xmiParser.extractModelComponents(result);
+//		UseCases = xmiParser.extractModelComponents(result);
 //	});
 //});
 
 
 
-function drawPrecedenceDiagramFunc(XMIUseCase, graphFilePath, callbackfunc){
-	var nodes = XMIUseCase.Nodes;
-	var precedenceRelations = XMIUseCase.PrecedenceRelations;
+function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
+	var nodes = UseCase.nodes;
+	var precedenceRelations = UseCase.precedenceRelations;
 	console.log(precedenceRelations);
 	var graph = 'digraph g {';
 	
@@ -61,7 +61,7 @@ function drawPrecedenceDiagramFunc(XMIUseCase, graphFilePath, callbackfunc){
 		}
 	}
 	
-	var precedenceRelations = XMIUseCase.PrecedenceRelations;
+	var precedenceRelations = UseCase.precedenceRelations;
 	for(var i in precedenceRelations){
 		var precedenceRelation = precedenceRelations[i];
 		console.log(precedenceRelation);

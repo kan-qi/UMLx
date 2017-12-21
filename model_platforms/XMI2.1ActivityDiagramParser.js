@@ -26,7 +26,6 @@
 	 */
 	
 	function extractModelComponents(xmiString) {
-//		var xmiExtension = xmiString['xmi:XMI']['xmi:Extension'][0];
 		
 		var debug = require("../utils/DebuggerOutput.js");
 //		debug.writeJson("XMIString", xmiString);
