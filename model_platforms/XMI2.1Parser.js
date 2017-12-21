@@ -8,18 +8,36 @@
 	var jsonQuery = require('json-query')
 	var jp = require('jsonpath')
 	/*
-	 * The actual parsing method, which take xmi file as the input and construct a named array 
-	 * with element uui (in xmi file) as the key and the component which represent xmi element as the value.
+	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
 	 * 
-	 * So the basic properties for a component contains are as follows:
+	 * The model has the following structure:
 	 * 
-	 * var component = {
-				//keep the ID of the xmi model, for re-analyse
-				_id : xmiElement['$']['xmi:idref'],
-				Category : 'Element',
-				StereoType : xmiElement['$']['xmi:type'],
-				Name : xmiElement['$']['name']
-			};
+	 * model = {
+	 * 	domainModel:[]
+	 *  useCases: []
+	 * }
+	 * 
+	 * useCase = {
+					id: XMIUseCase['$']['xmi:id'],
+					name: XMIUseCase['$']['name'],
+					precedenceRelations : [],
+					nodes : [],
+					attachment: XMIUseCase
+	 * 
+	 * }
+	 * 
+	 * node = {
+						type: "message",
+						name: XMIMessage['$']['name'],
+						id: XMIMessage['$']['xmi:id'],
+						attachment: XMIMessage
+	 * }
+	 * 
+	 * precedenceRelations = {
+	 * 		start: preNode,
+	 * 		end: nextNode
+	 * 
+	 * }
 	 *
 	 *
 	 *For different stereotypes, for example 'uml:Object", 'uml:Actor', they have their specific properties.
@@ -37,9 +55,6 @@
 		
 		console.log("process combined fragment");
 		console.log(XMICombinedFragment['$']['xmi:id']);
-		
-//		var XMILifelinesByID = XMIUseCase.XMILifelinesByID;
-//		var XMIMessagesByOccurrences = XMIUseCase.XMIMessagesByOccurrences;
 		
 		var XMIFragmentOperator = XMICombinedFragment.$.interactionOperator;
 		
@@ -68,9 +83,7 @@
 			var XMIMessages = [];
 //			console.log("occurence")
 			var XMIOccurrences = jp.query(XMIOperand, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
-//			var XMIOccurrencesByID = [];
-			// for each fragment,identify the covered lifeline
-			// iterate through occurences pair by pair.
+//			
 			console.log("in iteration");
 			console.log(XMIOccurrences);
 			var preNode = startNode;
@@ -82,13 +95,9 @@
 				if(XMIOccurrence['$']['xmi:type'] === "uml:OccurrenceSpecification"){
 				var XMIOccurrence1 = XMIOccurrence;
 				var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
-//				XMILifeline1 = XMILifeline;
-//				XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
 				
 				var XMIOccurrence2 = XMIOccurrences[j++];
 				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
-//				XMILifeline2 = XMILifeline;
-//				UseCase.nodes.push(XMIOccurrence2);
 				
 				var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
 				XMIMessages.push(XMIMessage);
@@ -341,8 +350,6 @@
 			console.log(XMIActivities);
 			for(var j in XMIActivities){
 				var XMIActivity = XMIActivities[j];
-//				console.log(XMIActivity);
-//				var XMILifelines = jp.query(XMIActivity, '$..lifeline[?(@[\'$\'][\'xmi:type\']==\'uml:Lifeline\')]');
 				if(XMIActivity.name === "EA_Activity1")	{
 					//Ea specific structure.
 					console.log("continue");
@@ -366,8 +373,6 @@
 			console.log(XMIEdges);
 			for(var j in XMIEdges){
 				var XMIEdge = XMIEdges[j];
-//				console.log(XMIEdge);
-//				var XMILifelines = jp.query(XMIEdge, '$..lifeline[?(@[\'$\'][\'xmi:type\']==\'uml:Lifeline\')]');
 				var sourceNode = NodesByID[XMIEdge['$']['source']];
 				var targetNode = NodesByID[XMIEdge['$']['target']];
 				if(sourceNode && targetNode){
@@ -393,10 +398,7 @@
 				nodes : [],
 				precedenceRelations : []
 		}
-//		NodesByID = [];
 		
-		// to create the node for each instance specification.
-		// to create the index for each instance specification by id.
 		for(var i in XMIInstanceSpecifications){
 			var XMIInstanceSpecification = XMIInstanceSpecifications[i];
 
@@ -430,11 +432,8 @@
 				
 				UseCase.precedenceRelations.push({start: startNode, end: endNode});
 				
-//				console.log(XMIAttribute);
-//				var XMILifelines = jp.query(XMIAttribute, '$..lifeline[?(@[\'$\'][\'xmi:type\']==\'uml:Lifeline\')]');
 			}
 			
-//			var XMIEdges = jp.query(XMIUseCase, '$..edge[?(@[\'$\'][\'xmi:type\']==\'uml:ControlFlow\')]')
 			
 			console.log(UseCase.precedenceRelations);
 		}
