@@ -5,7 +5,7 @@ var xmiParser = require('./XMI2.1Parser.js');
 //var xmiParser = require('./XMI2.1RobustnessDiagramParser.js');
 var fs = require("fs");
 
-fs.readFile("./model_platforms/bookTicketsExamplev1.3.xml", function(err, data) {
+fs.readFile("./model_platforms/bookTicketsExamplev1.4.xml", function(err, data) {
 	parser.parseString(data, function(err, result) {
 		Model = xmiParser.extractModelComponents(result);
 		for(var i in Model.UseCases){
@@ -49,17 +49,33 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 	
 	for(var j in nodes){
 		var node = nodes[j];
+		var color = "gray";
+		if(node.stimulus){
+			color = "red";
+		}
+		
+		if(node.inScope){
+			color = "green";
+		}
+		
+		var label = node.name;
+		if(node.group){
+			label=label+"GG"+node.group;
+		}
 //		dotty += '"'+node.Name+'";';
 		if(node.type === "fragment_start"){
-			graph += dottyDraw.draw(node.id+'[label="'+node.name+'" shape=diamond fillcolor = gray];');
+			graph += dottyDraw.draw(node.id+'[label="'+label+'" shape=diamond style=filled fillcolor=yellow];');
 		}
 		else if(node.type === "fragment_end"){
-			graph += dottyDraw.draw(node.id+'[label="'+node.name+'" shape=ellipse fillcolor = gray];');
+			graph += dottyDraw.draw(node.id+'[label="'+label+'" shape=ellipse style=filled fillcolor=yellow];');
 		}
 		else{
-			graph += dottyDraw.draw(node.id+'[label="'+node.name+'" shape=ellipse];');
+			graph += dottyDraw.draw(node.id+'[label="'+label+'" shape=ellipse style=filled fillcolor='+color+'];');
 		}
 	}
+	
+	console.log("nodes...");
+	console.log(graph);
 	
 	var precedenceRelations = UseCase.precedenceRelations;
 	for(var i in precedenceRelations){
