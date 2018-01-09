@@ -109,6 +109,7 @@
 						type: "message",
 						name: XMIMessage['$']['name'],
 						id: XMIMessage['$']['xmi:id'],
+						containingOperators: combinedFragment.containingOperators.concat(XMIFragmentOperator),
 						attachment: XMIMessage
 				};
 				
@@ -128,7 +129,10 @@
 				}
 				else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
 					console.log(XMIOccurrence);
-					var innerCombinedFragment = {attachment: XMIOccurrence};
+					var innerCombinedFragment = {
+							containingOperators: combinedFragment.concat(XMIFragmentOperator),
+							attachment: XMIOccurrence
+					};
 					processCombinedFragment(innerCombinedFragment, UseCase, XMILifelinesByID, XMIMessagesByOccurrences, DomainElementsByID);
 					UseCase.precedenceRelations.push({start: preNode, end: innerCombinedFragment.startNode});
 					preNode = innerCombinedFragment.endNode;
@@ -319,18 +323,21 @@
 					}
 					else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
 //						console.log("hello");
-						var innerCombinedFragment = {attachment: XMIOccurrence};
+						var innerCombinedFragment = {
+								attachment: XMIOccurrence,
+								containingOperators: []
+							};
 						processCombinedFragment(innerCombinedFragment, UseCase, XMILifelinesByID, XMIMessagesByOccurrences, DomainElementsByID);
 						UseCase.precedenceRelations.push({start: preNode, end: innerCombinedFragment.startNode});
 						preNode = innerCombinedFragment.endNode;
 					}
 				}
 //				console.log(XMIOccurrencesByID);
-				
 			}
 			
 			console.log("finished sequence diagram processing");
 			
+			// we are categorizing the messages for the in-scope and out-scope messages.
 			
 			//search for activities that are used to describe use cases
 			console.log("XMIActivities");

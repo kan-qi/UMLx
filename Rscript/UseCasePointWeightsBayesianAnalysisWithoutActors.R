@@ -48,10 +48,10 @@ png(filename=paste(outputPath,"project_descriptive_statistics_for_bayesian_analy
 		pointsize=12,
 		res=96)
 
-projectHist1 <- ggplot(useCaseData, aes(x=Real_Effort_Person_Hours))+geom_histogram(binwidth=350, colour="black", fill="white")+xlab("Effort (person-hours)")+ylab("Count")
-projectHist2 <- ggplot(useCaseData, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("KSLOC")+ylab("Count")
-projectHist3 <- ggplot(useCaseData, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="black", fill="white")+xlab("Use Case Num")+ylab("Count")
-projectBar <- ggplot(useCaseData, aes(x=Application_Type))+geom_bar(colour="black", fill="white")+xlab("Application Type")+ylab("Count")+ scale_x_discrete(label=abbreviate)
+projectHist1 <- ggplot(useCaseData, aes(x=Real_Effort_Person_Hours))+geom_histogram(binwidth=350, colour="white", fill="black")+xlab("Effort (person-hours)")+ylab("Number of Projects")
+projectHist2 <- ggplot(useCaseData, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="white", fill="black")+xlab("KSLOC")+ylab("Number of Projects")
+projectHist3 <- ggplot(useCaseData, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="white", fill="black")+xlab("Use Case Num")+ylab("Number of Projects")
+projectBar <- ggplot(useCaseData, aes(x=Application_Type))+geom_bar(colour="white", fill="black")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)
 print(grid.arrange(projectHist1, projectHist2, projectHist3, projectBar, ncol=2))
 
 #output the use case related statistics
@@ -63,11 +63,11 @@ png(filename=paste(outputPath,"project_counting_statistics_for_bayesian_analysis
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(useCaseData, aes(x=UAW))+geom_histogram(binwidth=1.2, colour="black", fill="white")+xlab("UAW")+ylab("Count")
-UCPHist2 <- ggplot(useCaseData, aes(x=UUCW))+geom_histogram(binwidth=20, colour="black", fill="white")+xlab("UUCW")+ylab("Count")
-UCPHist3 <- ggplot(useCaseData, aes(x=TCF))+geom_histogram(binwidth=0.05, colour="black", fill="white")+xlab("TCF")+ylab("Count")
-UCPHist4 <- ggplot(useCaseData, aes(x=EF))+geom_histogram(binwidth=0.02, colour="black", fill="white")+xlab("EF")+ylab("Count")
-UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=30, colour="black", fill="white")+xlab("UCP")+ylab("Count")
+UCPHist1 <- ggplot(useCaseData, aes(x=UAW))+geom_histogram(binwidth=1.2, colour="white", fill="black")+xlab("UAW")+ylab("Number of Projects")
+UCPHist2 <- ggplot(useCaseData, aes(x=UUCW))+geom_histogram(binwidth=20, colour="white", fill="black")+xlab("UUCW")+ylab("Number of Projects")
+UCPHist3 <- ggplot(useCaseData, aes(x=TCF))+geom_histogram(binwidth=0.05, colour="white", fill="black")+xlab("TCF")+ylab("Number of Projects")
+UCPHist4 <- ggplot(useCaseData, aes(x=EF))+geom_histogram(binwidth=0.02, colour="white", fill="black")+xlab("EF")+ylab("Number of Projects")
+UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=30, colour="white", fill="black")+xlab("UCP")+ylab("Number of Projects")
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, ncol=2))
 
@@ -78,9 +78,9 @@ png(filename=paste(outputPath,"project_UC_counting_statistics_for_bayesian_analy
 		pointsize=12,
 		res=96)
 
-UCHist1 <- ggplot(useCaseData, aes(x=Simple_UC))+geom_histogram(binwidth=1.3, colour="black", fill="white")+xlab("Simple Use Case")+ylab("Count")
-UCHist2 <- ggplot(useCaseData, aes(x=Average_UC))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("Average Use Case")+ylab("Count")
-UCHist3 <- ggplot(useCaseData, aes(x=Complex_UC))+geom_histogram(binwidth=1.1, colour="black", fill="white")+xlab("Complex Use Case")+ylab("Count")
+UCHist1 <- ggplot(useCaseData, aes(x=Simple_UC))+geom_histogram(binwidth=1.3, colour="white", fill="black")+xlab("Simple Use Case")+ylab("Number of Projects")
+UCHist2 <- ggplot(useCaseData, aes(x=Average_UC))+geom_histogram(binwidth=1, colour="white", fill="black")+xlab("Average Use Case")+ylab("Number of Projects")
+UCHist3 <- ggplot(useCaseData, aes(x=Complex_UC))+geom_histogram(binwidth=1.1, colour="white", fill="black")+xlab("Complex Use Case")+ylab("Number of Projects")
 
 print(grid.arrange(UCHist1, UCHist2, UCHist3, ncol=2))
 
