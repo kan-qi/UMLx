@@ -47,21 +47,65 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 	}
 	var dottyDraw = new DottyDraw();
 	
-	for(var j in nodes){
+	var groups = {};
+	var others = [];
+	for (var j in nodes){
 		var node = nodes[j];
+		if(node.group){
+			if(!groups[node.group]){
+				groups[node.group] = [];
+			}
+			var group = groups[node.group];
+			group.push(node);
+		}
+		else{
+			others.push(node);
+		}
+	}
+	
+	var groupNum = 0;
+	for(var j in groups){
+		var group = groups[j];
+		graph += "subgraph cluster"+groupNum+" {";
+		for(var k in group){
+			var node = group[k];
+			if(node.stimulus){
+				color = "red";
+			} else if(node.inScope){
+				color = "green";
+			}
+			
+			var label = node.name;
+			
+			if(node.type === "fragment_start"){
+				graph += dottyDraw.draw(node.id+'[label="'+label+'" shape=diamond style=filled fillcolor=yellow];');
+			}
+			else if(node.type === "fragment_end"){
+				graph += dottyDraw.draw(node.id+'[label="'+label+'" shape=ellipse style=filled fillcolor=yellow];');
+			}
+			else{
+				graph += dottyDraw.draw(node.id+'[label="'+label+'" shape=ellipse style=filled fillcolor='+color+'];');
+			}
+			
+		}
+		groupNum ++;
+		graph += "label = \""+j+"\";}";
+	}
+	
+	for(var j in others){
+		var node = others[j];
 		var color = "gray";
 		if(node.stimulus){
 			color = "red";
 		}
-		
-		if(node.inScope){
+		else if(node.inScope){
 			color = "green";
 		}
 		
 		var label = node.name;
-		if(node.group){
-			label=label+"GG"+node.group;
-		}
+//		if(node.group){
+//			label=label+"GG"+node.group;
+//		}
 //		dotty += '"'+node.Name+'";';
 		if(node.type === "fragment_start"){
 			graph += dottyDraw.draw(node.id+'[label="'+label+'" shape=diamond style=filled fillcolor=yellow];');

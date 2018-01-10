@@ -66,7 +66,7 @@ meltUseCaseWeightInfo$Value <- meltUseCaseWeightInfo$Value/maxWeight*80
 #	geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, shape=Wght.Schm), size=2, fill="white")+
 #	scale_linetype_manual(values = c(1,2,1,1,1,1)) +
 #	scale_shape_manual(values=c(0,1,2,3,1,4))+
-#	geom_vline(xintercept=c(3,7),linetype="dashed", color="black")+
+#	geom_vline(xintercept=c(3,7),linetype="dashed", color="gray55")+
 #	#ggtitle("Use Case Weights")+
 #	scale_y_continuous(sec.axis = sec_axis(~.*maxWeight/0.2, name="Weight"))+
 #	labs(y = "Percentage", x = "Number of Transactions (NT)")
@@ -75,12 +75,12 @@ meltUseCaseWeightInfo$Value <- meltUseCaseWeightInfo$Value/maxWeight*80
 print(
 		ggplot()+
 		geom_density(data=transactionInfo, aes(x=NT), color="gray", fill="gray",alpha=.8, adjust=1.5)+
-		geom_histogram(data=transactionInfo, aes(x=NT), binwidth=.5, colour="black", fill="black")+
+		geom_histogram(data=transactionInfo, aes(x=NT), binwidth=.5, colour="gray55", fill="gray55")+
 		geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, linetype=Wght.Schm),size=0.5)+
 		geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, shape=Wght.Schm), size=2, fill="white")+
 		scale_linetype_manual(values = c(1,2,1,1,1,1)) +
 		scale_shape_manual(values=c(0,1,2,3,1,4))+
-		geom_vline(xintercept=c(3,7),linetype="dashed", color="black")+
+		geom_vline(xintercept=c(3,7),linetype="dashed", color="gray55")+
 		#ggtitle("Use Case Weights")+
 		scale_y_continuous(sec.axis = sec_axis(~.*maxWeight*0.0125, name="Weight"), breaks = seq(0, 80, 15),
 				limits=c(0, 80))+
@@ -91,7 +91,7 @@ print(
 )
 
 svg(paste(outputDir,"transaction_distribution.svg",sep="/"), width=6, height=4)
-print(ggplot(transactionInfo, aes(x=NT, fill=cond))+ geom_histogram(binwidth=.5, colour="black", fill="black")+xlab("NT")+ylab("Number of Projects"))
+print(ggplot(transactionInfo, aes(x=NT, fill=cond))+ geom_histogram(binwidth=.5, colour="gray55", fill="gray55")+xlab("NT")+ylab("Number of Projects"))
 
 #populateFreq <- function(row){
 #	row$Freq=1

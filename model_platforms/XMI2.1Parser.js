@@ -65,6 +65,7 @@
 				name: XMIFragmentOperator+"_start",
 				id: XMICombinedFragment['$']['xmi:id']+"_start",
 				attachment: XMICombinedFragment,
+				group: "System",
 				stimulus: false,
 				inScope: true
 		};
@@ -74,11 +75,11 @@
 				name: XMIFragmentOperator+"_end",
 				id: XMICombinedFragment['$']['xmi:id']+"_end",
 				attachment: XMICombinedFragment,
+				group: "System",
 				stimulus: false,
 				inScope: true
 		};
 		
-
 		UseCase.nodes.push(startNode);
 		UseCase.nodes.push(endNode);
 		
@@ -105,6 +106,13 @@
 				var XMIOccurrence1 = XMIOccurrence;
 				var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
 				
+				var isStimulus = false;
+				var group = "System";
+				if(XMILifeline1.StimulusSource){
+					isStimulus = true;
+					group = "User";
+				}
+				
 				var XMIOccurrence2 = XMIOccurrences[j++];
 				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
 				
@@ -130,7 +138,8 @@
 						name: XMIMessage['$']['name'],
 						id: XMIMessage['$']['xmi:id'],
 						attachment: XMIMessage,
-						stimulus: false,
+						group: group,
+						stimulus: isStimulus,
 						inScope: inScope
 				};
 				
@@ -265,6 +274,12 @@
 				// for each life line, identify the associated classes
 				for(var k in XMILifelines){
 					var XMILifeline = XMILifelines[k];
+
+					// the stimulus are decided by the events that are connected to the actors...
+					if(XMILifeline['$']['name'] === "User"){
+						console.log("is a stimulus source");
+						XMILifeline.StimulusSource = true;
+					}
 					console.log(XMILifeline);
 					XMILifelinesByID[XMILifeline['$']['xmi:id']] = XMILifeline;
 					var XMIClass = XMIClassesByStandardizedName[standardizeName(XMILifeline.$.name)];
@@ -299,6 +314,7 @@
 						id: XMIInteraction['$']['xmi:id'],
 						attachment: null,
 						stimulus: true,
+						group: "User",
 						inScope: true,
 				};
 				
@@ -313,8 +329,14 @@
 						var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
 //						XMILifeline1 = XMILifeline;
 						
-						
 //						XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
+						
+						var isStimulus = false;
+						var group = "System";
+						if(XMILifeline1.StimulusSource){
+							isStimulus = true;
+							group = "User";
+						}
 						
 						var XMIOccurrence2 = XMIOccurrences[k++];
 						var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
@@ -326,7 +348,8 @@
 								type: "message",
 								name: XMIMessage['$']['name'],
 								id: XMIMessage['$']['xmi:id'],
-								stimulus: false,
+								stimulus: isStimulus,
+								group: group,
 								inScope: true,
 								attachment: XMIMessage
 						}
@@ -424,13 +447,28 @@
 				console.log("group")
 				console.log(XMIGroup);
 				var XMINodes = jp.query(XMIGroup, '$..node[?(@[\'$\'][\'xmi:idref\'])]');
+//				XMINodes = XMINodes.concat(jp.query(XMIGroup, '$..containedNode[?(@[\'$\'][\'xmi:type\'])]'));
 				for(var k in XMINodes){
 					var XMINode = XMINodes[k];
 					console.log(XMINode['$']['xmi:idref']);
 //					console.log(NodesByID);
 					var node = NodesByID[XMINode['$']['xmi:idref']];
+					
+//					var node = null;
+//					if(XMINode['$']['xmi:idref']){
+//						node = NodesByID[XMINode['$']['xmi:idref']];
+//					}
+//					else{
+//						console.log("containing node");
+//						node = NodesByID[XMINode['$']['xmi:id']];
+//						console.log(node);
+//					}
+					
 					if(node){
 					node.group = XMIGroup['$']['name'];
+					if(node.group === "User"){
+						node.stimulus=true;
+					}
 					console.log("grouped nodes");
 					console.log(node);
 					}
@@ -443,6 +481,7 @@
 		console.log("checking problem");
 		// search for the instance specifications that are used to represent the robustness diagrams.
 		var XMIInstanceSpecifications = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:InstanceSpecification\')]');
+		XMIInstanceSpecifications = XMIInstanceSpecifications.concat(jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]'));
 		console.log("checking problem");
 		console.log(XMIInstanceSpecifications);
 		XMIInstanceSpecificationsByID = [];
@@ -456,13 +495,21 @@
 		
 		for(var i in XMIInstanceSpecifications){
 			var XMIInstanceSpecification = XMIInstanceSpecifications[i];
+		
+			var isStimulus = false;
+			var group = "System";
+			if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
+				isStimulus = true;
+				group = "User";
+			}
 			
 			var node = {
 					type: "instanceSpecification",
 					name: XMIInstanceSpecification['$']['name'],
 					id: XMIInstanceSpecification['$']['xmi:id'],
 					attachment: XMIInstanceSpecification,
-					stimulus: false,
+					stimulus: isStimulus,
+					group: group,
 					inScope: true
 			}
 			
