@@ -537,6 +537,96 @@
 		
 	}
 	
+	
+	
+	function isCycled(path){
+		var lastNode = path[path.length-1];
+			for(var i=0; i < path.length-1; i++){
+				if(path[i] == lastNode){
+					return true;
+				}
+			}
+		return false;
+	}
+
+	function traverseBehavioralDiagram(diagram){
+		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+		var entries=diagram.Entries;// tag: elements
+		
+		var toExpandCollection = new Array();
+		
+		for (var i=0; i < entries.length; i++){
+			var entry = entries[i];
+			//define the node structure to keep the infor while traversing the graph
+			var node = {
+				//id: startElement, //ElementGUID
+				Node: entry,
+				PathToNode: [entry]
+			};
+			toExpandCollection.push(node);
+		}
+		
+		var Paths = new Array();
+		var toExpand;
+		while((toExpand = toExpandCollection.pop()) != null){
+			var node = toExpand.Node;
+			var pathToNode = toExpand.PathToNode;
+//			var toExpandID = toExpand.id;
+//			var expanded = false;
+			// test completeness of the expanded path first to decide if continue to expand
+//			var childNodes = diagram.expand(node);
+			// if null is returned, then node is an end node.
+			
+//			diagram.expand = function(node){
+			// add condition on actor to prevent stop searching for message [actor, view].
+//			if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
+//				return;
+//			}
+//			if(node.outboundNum == 0){
+//				return;
+//			}
+//			else {
+
+				var childNodes = [];
+				for(var i in diagram.Edges){
+					var edge = diagram.Edges[i];
+					if(edge.start == node){
+						childNodes.push(edge.end);
+					}
+				}
+
+//				return children;
+//			}
+			
+//		}
+			
+			if(!childNodes){
+				Paths.push({Nodes: pathToNode});
+			}
+			else{
+
+				for(var i in childNodes){
+					var childNode = childNodes[i];
+					var toExpandNode = {
+							Node: childNode,
+							PathToNode: pathToNode.concat(childNode)
+						}
+
+					if(!isCycled(toExpandNode.PathToNode)){
+					toExpandCollection.push(toExpandNode);
+					}
+					else{
+					 Paths.push({Nodes: toExpandNode.PathToNode});
+					}
+				}		
+			}
+			
+			
+		}
+		
+		return Paths;
+	}
+	
 
 	module.exports = {
 		toModelEvaluationHeader: toModelEvaluationHeader,

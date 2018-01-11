@@ -1,7 +1,7 @@
 var xml2js = require('xml2js');
 var parser = new xml2js.Parser();
 var xmiParser = require('./XMI2.1Parser.js');
-var pathsDrawer = require("./TransactionsDrawer.js");
+var pathsDrawer = require("../model_drawers/TransactionsDrawer.js");
 //var xmiParser = require('./XMI2.1ActivityDiagramParser.js');
 //var xmiParser = require('./XMI2.1RobustnessDiagramParser.js');
 var fs = require("fs");
@@ -100,9 +100,6 @@ function traverseUserSystemInterationModel(model){
 			else{
 				for(var j in childNodes){
 					var childNode = childNodes[j];
-					if(!childNode){
-						continue;
-					}
 					
 					//if childNode is an outside activity
 					
@@ -112,8 +109,6 @@ function traverseUserSystemInterationModel(model){
 					}
 					
 					console.log("child node");
-					console.log(childNodes);
-					console.log(childNode);
 					console.log(childNode.name);
 					console.log(childNode.group);
 
@@ -136,46 +131,12 @@ function traverseUserSystemInterationModel(model){
 	
 }
 
-function drawStimulusNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="stimulus_icon.png"/></TD></TR>\
-	  <TR><TD>'+label+'</TD></TR>\
-	</TABLE>>];';
-}
-
-function drawInternalNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="internal_activity_icon.png"/></TD></TR>\
-	  <TR><TD>'+label+'</TD></TR>\
-	</TABLE>>];';
-}
-
-function drawExternalNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="external_activity_icon.png"/></TD></TR>\
-	  <TR><TD>'+label+'</TD></TR>\
-	</TABLE>>];';
-}
-
-function getGroupDrawable(group){
-	if(group === "System"){
-		return "label = \""+group+"\";style=\"bold\";}";
-	}
-	else{
-		return "label = \""+group+"\";}";
-	}
-}
-
 function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 	var activities = UseCase.activities;
 	var precedenceRelations = UseCase.precedenceRelations;
 	console.log(precedenceRelations);
 	var graph = 'digraph g {\
-		node [shape=plaintext]';
-//		node [margin=0 fontcolor=blue fontsize=12 width=0.01 shape=circle style=filled]';
+		node [margin=0 fontcolor=blue fontsize=12 width=0.01 shape=circle style=filled]';
 	
 
 	// used to get rid of duplicates.
@@ -216,71 +177,52 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 		graph += "subgraph cluster"+groupNum+" {";
 		for(var k in group){
 			var activity = group[k];
-			
-//			var label = activity.name;
-			var node = drawExternalNode(activity.id, activity.name);
-			
 			if(activity.stimulus){
-				node = drawStimulusNode(activity.id, activity.name);
+				color = "red";
 			} else if(activity.inScope){
-				node = drawInternalNode(activity.id, activity.name);
+				color = "green";
 			}
 			
-//			console.log("node...");
-//			console.log(node);
+			var label = activity.name;
 			
 			if(activity.type === "fragment_start"){
-//				graph += dottyDraw.draw(activity.id+'[label=<'+label+'>];');
-				graph += dottyDraw.draw(node);
+				graph += dottyDraw.draw(activity.id+'[taillabel="'+label+'" labelloc=bottom fixedSize=true shape=diamond style=filled fillcolor=yellow];');
 			}
 			else if(activity.type === "fragment_end"){
-				graph += dottyDraw.draw(node);
+				graph += dottyDraw.draw(activity.id+'[taillabel="'+label+'" labelloc=bottom fixedSize=true style=filled fillcolor=yellow];');
 			}
 			else{
-				graph += dottyDraw.draw(node);
+				graph += dottyDraw.draw(activity.id+'[taillabel="'+label+'" labelloc=bottom fixedSize=true style=filled fillcolor='+color+'];');
 			}
 			
 		}
 		groupNum ++;
-//		graph += "label = \""+j+"\";style=\"bold\"}";
-		graph += getGroupDrawable(j)+";";
-//		graph += drawGroupShape(group)+";}";
+		graph += "label = \""+j+"\";}";
 	}
 	
 	for(var j in others){
 		var activity = others[j];
-//		var color = "gray";
-//		if(activity.stimulus){
-//			color = "red";
-//		}
-//		else if(activity.inScope){
-//			color = "green";
-//		}
+		var color = "gray";
+		if(activity.stimulus){
+			color = "red";
+		}
+		else if(activity.inScope){
+			color = "green";
+		}
 		
-//		var label = activity.name;
+		var label = activity.name;
 //		if(activity.group){
 //			label=label+"GG"+activity.group;
 //		}
 //		dotty += '"'+activity.Name+'";';
-		
-//		var node = drawStimulusNode(activity.id, activity.name);
-		
-		var node = drawExternalNode(activity.id, activity.name);
-		
-		if(activity.stimulus){
-			node = drawStimulusNode(activity.id, activity.name);
-		} else if(activity.inScope){
-			node = drawInternalNode(activity.id, activity.name);
-		}
-		
 		if(activity.type === "fragment_start"){
-			graph += dottyDraw.draw(node);
+			graph += dottyDraw.draw(activity.id+'[taillabel="'+label+'" labelloc=bottom fixedSize=true  shape=diamond style=filled fillcolor=yellow];');
 		}
 		else if(activity.type === "fragment_end"){
-			graph += dottyDraw.draw(node);
+			graph += dottyDraw.draw(activity.id+'[taillabel="'+label+'" labelloc=bottom fixedSize=true style=filled fillcolor=yellow];');
 		}
 		else{
-			graph += dottyDraw.draw(node);
+			graph += dottyDraw.draw(activity.id+'[taillabel="'+label+'" labelloc=bottom fixedSize=true style=filled fillcolor='+color+'];');
 		}
 	}
 	
@@ -291,46 +233,14 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 	for(var i in precedenceRelations){
 		var precedenceRelation = precedenceRelations[i];
 		console.log(precedenceRelation);
-			if(precedenceRelation.start && precedenceRelation.end){
+			var start = precedenceRelation.start.id;
+			var end = precedenceRelation.end.id;
 //			dotty += '"'+start.Name+'"->"'+end.Name+'";';
-
-				var start = precedenceRelation.start.id;
-				var end = precedenceRelation.end.id;
 			graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
-			}
-			}
+	}
 	
 	
 	graph += '}';
-	
-//	graph = 'digraph structs {\
-//	    node [shape=plaintext]\
-//	    struct1 [label=<\
-//	<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">\
-//	  <TR><TD>left</TD><TD PORT="f1">mid dle</TD><TD PORT="f2">right</TD></TR>\
-//	</TABLE>>];\
-//	    struct2 [label=<\
-//	<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0">\
-//	  <TR><TD PORT="f0">one</TD><TD>two</TD></TR>\
-//	</TABLE>>];\
-//	    struct3 [label=<\
-//	<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="4">\
-//	  <TR>\
-//	    <TD ROWSPAN="3">hello<BR/>world</TD>\
-//	    <TD COLSPAN="3">b</TD>\
-//	    <TD ROWSPAN="3">g</TD>\
-//	    <TD ROWSPAN="3">h</TD>\
-//	  </TR>\
-//	  <TR>\
-//	    <TD>c</TD><TD PORT="here">d</TD><TD>e</TD>\
-//	  </TR>\
-//	  <TR>\
-//	    <TD COLSPAN="3">f</TD>\
-//	  </TR>\
-//	</TABLE>>];\
-//	    struct1:f1 -> struct2:f0;\
-//	    struct1:f2 -> struct3:here;\
-//	}';
 	
 	dottyUtil = require("../utils/DottyUtil.js");
 	dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
@@ -365,5 +275,4 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 //	});
 //	});
 	return graph
-	
 }
