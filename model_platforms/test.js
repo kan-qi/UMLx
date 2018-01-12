@@ -55,7 +55,8 @@ function traverseUserSystemInterationModel(model){
 			var node = {
 				//id: startElement, //ElementGUID
 				Node: activity,
-				PathToNode: [activity]
+				PathToNode: [activity],
+				OutScope: activity.outScope
 			};
 			toExpandCollection.push(node);
 			}
@@ -95,7 +96,7 @@ function traverseUserSystemInterationModel(model){
 //		}
 			
 			if(childNodes.length == 0){
-				Paths.push({Nodes: pathToNode});
+				Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
 			}
 			else{
 				for(var j in childNodes){
@@ -106,10 +107,19 @@ function traverseUserSystemInterationModel(model){
 					
 					//if childNode is an outside activity
 					
+					var OutScope = false;
+					if(toExpand.OutScope||childNode.outScope){
+						OutScope = true;
+					}
+					
 					var toExpandNode = {
 						Node: childNode,
-						PathToNode: pathToNode.concat(childNode)
+						PathToNode: pathToNode.concat(childNode),
+						OutScope: OutScope
 					}
+					
+					console.log("toExpandNode");
+					console.log(toExpandNode);
 					
 					console.log("child node");
 					console.log(childNodes);
@@ -121,7 +131,7 @@ function traverseUserSystemInterationModel(model){
 					toExpandCollection.push(toExpandNode);
 					}
 					else{
-					Paths.push({Nodes: toExpandNode.PathToNode});
+					Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
 					}
 				}		
 			}
@@ -144,21 +154,30 @@ function drawStimulusNode(id, label){
 	</TABLE>>];';
 }
 
-function drawInternalNode(id, label){
+function drawNode(id, label){
 	return id+'[label=<\
 		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="internal_activity_icon.png"/></TD></TR>\
+		<TR><TD><IMG SRC="activity_icon.png"/></TD></TR>\
 	  <TR><TD>'+label+'</TD></TR>\
 	</TABLE>>];';
 }
 
-function drawExternalNode(id, label){
+function drawOutOfScopeNode(id, label){
 	return id+'[label=<\
 		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="external_activity_icon.png"/></TD></TR>\
+		<TR><TD><IMG SRC="out_of_scope_activity_icon.png"/></TD></TR>\
 	  <TR><TD>'+label+'</TD></TR>\
 	</TABLE>>];';
 }
+
+
+//function drawExternalNode(id, label){
+//	return id+'[label=<\
+//		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+//		<TR><TD><IMG SRC="external_activity_icon.png"/></TD></TR>\
+//	  <TR><TD>'+label+'</TD></TR>\
+//	</TABLE>>];';
+//}
 
 function getGroupDrawable(group){
 	if(group === "System"){
@@ -218,27 +237,28 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 			var activity = group[k];
 			
 //			var label = activity.name;
-			var node = drawExternalNode(activity.id, activity.name);
+//			var node = drawExternalNode(activity.id, activity.name);
+			var node = drawNode(activity.id, activity.name);
 			
 			if(activity.stimulus){
 				node = drawStimulusNode(activity.id, activity.name);
-			} else if(activity.inScope){
-				node = drawInternalNode(activity.id, activity.name);
+			} else if(activity.outScope){
+				node = drawOutOfScopeNode(activity.id, activity.name);
 			}
 			
 //			console.log("node...");
 //			console.log(node);
 			
-			if(activity.type === "fragment_start"){
+//			if(activity.type === "fragment_start"){
 //				graph += dottyDraw.draw(activity.id+'[label=<'+label+'>];');
+//				graph += dottyDraw.draw(node);
+//			}
+//			else if(activity.type === "fragment_end"){
+//				graph += dottyDraw.draw(node);
+//			}
+//			else{
 				graph += dottyDraw.draw(node);
-			}
-			else if(activity.type === "fragment_end"){
-				graph += dottyDraw.draw(node);
-			}
-			else{
-				graph += dottyDraw.draw(node);
-			}
+//			}
 			
 		}
 		groupNum ++;
@@ -265,23 +285,31 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 		
 //		var node = drawStimulusNode(activity.id, activity.name);
 		
-		var node = drawExternalNode(activity.id, activity.name);
+//		var node = drawExternalNode(activity.id, activity.name);
+//		
+//		if(activity.stimulus){
+//			node = drawStimulusNode(activity.id, activity.name);
+//		} else if(activity.inScope){
+//			node = drawInternalNode(activity.id, activity.name);
+//		}
+		
+		var node = drawNode(activity.id, activity.name);
 		
 		if(activity.stimulus){
 			node = drawStimulusNode(activity.id, activity.name);
-		} else if(activity.inScope){
-			node = drawInternalNode(activity.id, activity.name);
+		} else if(activity.outScope){
+			node = drawOutOfScopeNode(activity.id, activity.name);
 		}
 		
-		if(activity.type === "fragment_start"){
+//		if(activity.type === "fragment_start"){
+//			graph += dottyDraw.draw(node);
+//		}
+//		else if(activity.type === "fragment_end"){
+//			graph += dottyDraw.draw(node);
+//		}
+//		else{
 			graph += dottyDraw.draw(node);
-		}
-		else if(activity.type === "fragment_end"){
-			graph += dottyDraw.draw(node);
-		}
-		else{
-			graph += dottyDraw.draw(node);
-		}
+//		}
 	}
 	
 	console.log("activities...");
@@ -301,7 +329,7 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 			}
 	
 	
-	graph += '}';
+	graph += 'imagepath = \"./imgs\"}';
 	
 //	graph = 'digraph structs {\
 //	    node [shape=plaintext]\

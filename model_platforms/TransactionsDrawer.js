@@ -17,21 +17,29 @@
 		</TABLE>>];';
 	}
 	
-	function drawInternalNode(id, label){
+	function drawNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" ALIGN="CENTER">\
-			<TR><TD><IMG SRC="internal_activity_icon.png"/></TD></TR>\
+			<TR><TD><IMG SRC="activity_icon.png"/></TD></TR>\
+		  <TR><TD>'+label+'</TD></TR>\
+		</TABLE>>];';
+	}
+	
+	function drawOutOfScopeNode(id, label){
+		return id+'[label=<\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+			<TR><TD><IMG SRC="out_of_scope_activity_icon.png"/></TD></TR>\
 		  <TR><TD>'+label+'</TD></TR>\
 		</TABLE>>];';
 	}
 
-	function drawExternalNode(id, label){
-		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" ALIGN="CENTER">\
-			<TR><TD><IMG SRC="external_activity_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
-		</TABLE>>];';
-	}
+//	function drawExternalNode(id, label){
+//		return id+'[label=<\
+//			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" ALIGN="CENTER">\
+//			<TR><TD><IMG SRC="external_activity_icon.png"/></TD></TR>\
+//		  <TR><TD>'+label+'</TD></TR>\
+//		</TABLE>>];';
+//	}
 	
 	function drawPaths(paths, graphFilePath, callbackfunc){
 		
@@ -69,12 +77,20 @@
 //				console.log("path nodes");
 //				console.log(node);
 				
-				var nodeToDraw = drawExternalNode(node.id+pathTag, node.name);
+//				var nodeToDraw = drawExternalNode(node.id+pathTag, node.name);
+//				
+//				if(node.stimulus){
+//					nodeToDraw = drawStimulusNode(node.id+pathTag, node.name);
+//				} else if(node.inScope){
+//					nodeToDraw = drawInternalNode(node.id+pathTag, node.name);
+//				}
+				
+				var nodeToDraw = drawNode(node.id+pathTag, node.name);
 				
 				if(node.stimulus){
 					nodeToDraw = drawStimulusNode(node.id+pathTag, node.name);
-				} else if(node.inScope){
-					nodeToDraw = drawInternalNode(node.id+pathTag, node.name);
+				} else if(node.outScope){
+					nodeToDraw = drawOutOfScopeNode(node.id+pathTag, node.name);
 				}
 
 //				dotty += dottyDraw.draw(node.id+pathTag+'[label="'+node.name+'" shape=ellipse];');
@@ -118,6 +134,12 @@
 				}
 				
 				preNode = node;
+			}
+
+			console.log("out of scope transaction");
+			console.log(path);
+			if(path.OutScope){
+				dotty += 'bgcolor = "gray";'
 			}
 			dotty += "label = \"transaction"+pathTag+"\";}";
 		}
