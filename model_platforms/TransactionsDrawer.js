@@ -103,41 +103,45 @@
 					dotty += dottyDraw.draw('"'+start.id+pathTag+'"->"'+end.id+pathTag+'";');
 				}
 				
-				var target = node.target;
-				if(target){
-					dotty += dottyDraw.draw(target.id+pathTag+'[label="'+target.name+'"];');
-					dotty += dottyDraw.draw('"'+target.id+pathTag+'"->"'+node.id+pathTag+'";');
-					if(target.component){
-						var component = target.component;
-						var componentInternal = "{";
-						var componentInternalIndex = 0;
-						componentInternal += "<f"+componentInternalIndex+">"+component.name;
-						componentInternalIndex++;
-						for (var k in component.Attributes){
-							var attribute = component.Attributes[k];
-//							componentInternal += '"'+attribute.name+'"->"'+component.name+'";';
-							componentInternal += "|<f"+componentInternalIndex+">"+attribute.name;
-							componentInternalIndex++;
-						}
-						
-						for (var k in component.Operations){
-							var operation = component.Operations[k];
-//							dotty += '"'+operation.name+'"->"'+component.name+'";';
-							componentInternal += "|<f"+componentInternalIndex+">"+operation.name;
-							componentInternalIndex++;
-						}
-						
-						componentInternal += "}";
-						dotty += dottyDraw.draw(component.id+pathTag+'[label="'+componentInternal+'" shape=Mrecord];');
-						dotty += dottyDraw.draw('"'+component.id+pathTag+'"->"'+target.id+pathTag+'";');
-					}
-				}
+				
+//				var target = node.target;
+//				if(target){
+//					dotty += dottyDraw.draw(target.id+pathTag+'[label="'+target.name+'"];');
+//					dotty += dottyDraw.draw('"'+target.id+pathTag+'"->"'+node.id+pathTag+'";');
+//					if(target.component){
+//						var component = target.component;
+//						var componentInternal = "{";
+//						var componentInternalIndex = 0;
+//						componentInternal += "<f"+componentInternalIndex+">"+component.name;
+//						componentInternalIndex++;
+//						for (var k in component.Attributes){
+//							var attribute = component.Attributes[k];
+////							componentInternal += '"'+attribute.name+'"->"'+component.name+'";';
+//							componentInternal += "|<f"+componentInternalIndex+">"+attribute.name;
+//							componentInternalIndex++;
+//						}
+//						
+//						for (var k in component.Operations){
+//							var operation = component.Operations[k];
+////							dotty += '"'+operation.name+'"->"'+component.name+'";';
+//							componentInternal += "|<f"+componentInternalIndex+">"+operation.name;
+//							componentInternalIndex++;
+//						}
+//						
+//						componentInternal += "}";
+//						dotty += dottyDraw.draw(component.id+pathTag+'[label="'+componentInternal+'" shape=Mrecord];');
+//						dotty += dottyDraw.draw('"'+component.id+pathTag+'"->"'+target.id+pathTag+'";');
+//					}
+//				}
 				
 				preNode = node;
 			}
-
-			console.log("out of scope transaction");
+			
+			console.log("transaction detail");
 			console.log(path);
+			//to count the transaction
+			var DE = path.Nodes.length;
+			
 			if(path.OutScope){
 				dotty += 'bgcolor = "gray";'
 			}

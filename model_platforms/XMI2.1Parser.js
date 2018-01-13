@@ -50,7 +50,7 @@
 		return name.replace(/\s/g, '').toUpperCase();
 	}
 	
-	function processCombinedFragment(CombinedFragment, UseCase, XMILifelinesByID, XMIMessagesByOccurrences, DomainElementsByID){
+	function processCombinedFragment(CombinedFragment, UseCase, XMILifelinesByID, XMIMessagesByOccurrences){
 		
 		var XMIUseCase = UseCase.attachment;
 		var XMICombinedFragment = CombinedFragment.attachment;
@@ -143,16 +143,36 @@
 						outScope: outScope
 				};
 				
-				if(XMILifeline1.Class){
-					nextActivity.sender = DomainElementsByID[XMILifeline1.Class['$']["xmi:id"]];
-				}
+//				if(XMILifeline1.Class){
+//					nextActivity.sender = DomainElementsByID[XMILifeline1.Class];
+					nextActivity.sender = XMILifeline1;
+//				}
 				
-				if(XMILifeline2.Class){
-					nextActivity.receiver = DomainElementsByID[XMILifeline2.Class['$']["xmi:id"]];
-				}
+//				if(XMILifeline2.Class){
+//					nextActivity.receiver = DomainElementsByID[XMILifeline12.Class];
+					nextActivity.receiver = XMILifeline2;
+//				}
+				
+//				if(XMILifeline1.Class){
+//					nextActivity.sender = DomainElementsByID[XMILifeline1.Class['$']["xmi:id"]];
+//				}
+//				
+//				if(XMILifeline2.Class){
+//					nextActivity.receiver = DomainElementsByID[XMILifeline2.Class['$']["xmi:id"]];
+//				}
 				
 				UseCase.activities.push(nextActivity);
-				UseCase.precedenceRelations.push({start: preActivity, end: nextActivity});
+				
+				if(preActivity){
+				if(nextActivity.sender.isUser && preActivity.receiver != nextActivity.sender){
+//					var preMessage = preActivity.attachment;
+				}
+				else{
+
+					UseCase.precedenceRelations.push({start: preActivity, end: nextActivity});
+				}
+				}
+//				UseCase.precedenceRelations.push({start: preActivity, end: nextActivity});
 				
 				preActivity = nextActivity;
 				}
@@ -162,8 +182,12 @@
 							containingOperators: containingOperators,
 							attachment: XMIOccurrence
 					};
-					processCombinedFragment(innerCombinedFragment, UseCase, XMILifelinesByID, XMIMessagesByOccurrences, DomainElementsByID);
+					processCombinedFragment(innerCombinedFragment, UseCase, XMILifelinesByID, XMIMessagesByOccurrences);
+					
+					if(preActivity){
 					UseCase.precedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
+					}
+					
 					preActivity = innerCombinedFragment.endActivity;
 				}
 			}
@@ -207,6 +231,63 @@
 		}
 	}
 	
+	function createDomainElement(XMIClass){
+		var XMIAttributes = jp.query(XMIClass, '$.ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
+		var attributes = new Array();
+		
+		for(var i in XMIAttributes){
+			var XMIAttribute = XMIAttributes[i];
+			var types = jp.query(XMIAttribute, '$.type[?(@[\'$\'][\'xmi:idref\'])]');
+			var type = "EAJava_void";
+			if(types && types.length > 0){
+				type = types[0]['$']['xmi:idref'];
+			}
+			
+			console.log(XMIAttribute);
+			var attribute = {
+					name: XMIAttribute['$']['name'],
+					type: type
+			}
+			attributes.push(attribute);
+		}
+
+		var XMIOperations = jp.query(XMIClass, '$.ownedOperation[?(@[\'$\'][\'xmi:id\'])]');
+		var operations = new Array();
+		
+		for(var i in XMIOperations){
+			var XMIOperation = XMIOperations[i];
+			var XMIParameters = jp.query(XMIOperation, '$.ownedParameter[?(@[\'$\'][\'xmi:id\'])]');
+			var parameters = [];
+			for(var j in XMIParameters){
+				var XMIParameter = XMIParameters[j];
+				var parameter = {
+						name: XMIParameter['$']['name'],
+						type: XMIParameter['$']['type']
+				}
+				parameters.push(parameter);
+			}
+			
+			var operation = {
+					name: XMIOperation['$']['name'],
+					parameters: parameters
+			}
+			operations.push(operation);
+		}
+		//				
+		// console.log(classDiagram);
+//		component.Operations = operations;
+//		component.Attributes = attributes;
+//		component.Type = 'class';
+		
+		return {
+				id: XMIClass['$']['xmi:id'],
+				name: XMIClass['$']['name'],
+				operations: operations,
+				attributes: attributes,
+				attachment: XMIClass
+			}
+	}
+	
 	function extractModelComponents(xmiString) {
 		
 		var debug = require("../utils/DebuggerOutput.js");
@@ -228,11 +309,12 @@
 		for(var i in XMIClasses){
 			var XMIClass = XMIClasses[i];
 			console.log(XMIClass);
-			var domainElement = {
-				id: XMIClass['$']['xmi:id'],
-				name: XMIClass['$']['name'],
-				attachment: XMIClass
-			}
+//			var domainElement = {
+//				id: XMIClass['$']['xmi:id'],
+//				name: XMIClass['$']['name'],
+//				attachment: XMIClass
+//			}
+			var domainElement = createDomainElement(XMIClass);
 			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
 			DomainElementsByID[domainElement.id] = domainElement;
 //			model.DomainModel.push(domainElement);
@@ -388,17 +470,19 @@
 			console.log(XMIOccurrences);
 //			var XMIOccurrencesByID = [];
 			// for each fragment,identify the covered lifeline
-			var preActivity = {
-					type: "interaction_start",
-					name: "start",
-					id: XMIInteraction['$']['xmi:id'],
-					attachment: null,
-					stimulus: false,
-					group: "User",
-					outScope: false,
-			};
 			
-			UseCase.activities.push(preActivity);
+			var preActivity = null;
+//			var preActivity = {
+//					type: "interaction_start",
+//					name: "start",
+//					id: XMIInteraction['$']['xmi:id'],
+//					attachment: null,
+//					stimulus: false,
+//					group: "User",
+//					outScope: false,
+//			};
+			
+//			UseCase.activities.push(preActivity);
 			
 			for(var k= 0; k<XMIOccurrences.length;){
 				var XMIOccurrence = XMIOccurrences[k++];
@@ -434,17 +518,29 @@
 							attachment: XMIMessage
 					}
 					
-					if(XMILifeline1.Class){
-						nextActivity.sender = DomainElementsByID[XMILifeline1.Class];
-					}
+//					if(XMILifeline1.Class){
+//						nextActivity.sender = DomainElementsByID[XMILifeline1.Class];
+						nextActivity.sender = XMILifeline1;
+//					}
 					
-					if(XMILifeline2.Class){
-						nextActivity.receiver = DomainElementsByID[XMILifeline12.Class];
-					}
+//					if(XMILifeline2.Class){
+//						nextActivity.receiver = DomainElementsByID[XMILifeline12.Class];
+						nextActivity.receiver = XMILifeline2;
+//					}
 
 					UseCase.activities.push(nextActivity);
 					
-					UseCase.precedenceRelations.push({start: preActivity, end: nextActivity});
+					// The temporary rules to eliminate the unnecessary rules.
+					if(preActivity){
+					if(nextActivity.sender.isUser && preActivity.receiver != nextActivity.sender){
+//						var preMessage = preActivity.attachment;
+					}
+					else{
+
+						UseCase.precedenceRelations.push({start: preActivity, end: nextActivity});
+					}
+					}
+					
 					preActivity = nextActivity;
 					
 				}
@@ -454,8 +550,10 @@
 							attachment: XMIOccurrence,
 							containingOperators: []
 					};
-					processCombinedFragment(innerCombinedFragment, UseCase, XMILifelinesByID, XMIMessagesByOccurrences, DomainElementsByID);
+					processCombinedFragment(innerCombinedFragment, UseCase, XMILifelinesByID, XMIMessagesByOccurrences);
+					if(preActivity){
 					UseCase.precedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
+					}
 					preActivity = innerCombinedFragment.endActivity;
 				}
 			}
