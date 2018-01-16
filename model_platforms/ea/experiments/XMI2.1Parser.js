@@ -1,12 +1,12 @@
 /**
- * This module is used to parse different XMI modelf files.
+ * This module is used to parse different elements in XMI files to construct the user-system interaction model.
  */
 (function() {
 //	var fs = require('fs');
 //	var xml2js = require('xml2js');
 //	var parser = new xml2js.Parser();
-	var jsonQuery = require('json-query')
-	var jp = require('jsonpath')
+	var jsonQuery = require('json-query');
+	var jp = require('jsonpath');
 	/*
 	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
 	 * 
@@ -289,10 +289,8 @@
 	}
 	
 	function extractModelComponents(xmiString) {
-		
 		var debug = require("../utils/DebuggerOutput.js");
 //		debug.writeJson("XMIString", xmiString);
-		
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		
 		var Model = {
@@ -436,7 +434,6 @@
 			// for each life line, identify the associated classes
 			for(var k in XMILifelines){
 				var XMILifeline = XMILifelines[k];
-
 				// ...
 				if(XMILifeline['$']['name'] === "User"){
 					console.log("is a stimulus source");
