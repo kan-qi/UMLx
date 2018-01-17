@@ -40,10 +40,10 @@
 	 
 	
 	module.exports = {
-			processDiagram: function(diagram, usecase){
-				return true;
-			},
-			processPath: function(path, diagram, usecase){
+//			processDiagram: function(diagram, usecase){
+//				return true;
+//			},
+			processPath: function(path, usecase){
 				var pathLength = 0;
 				var avgDegree = 0;
 				var archDiff = 0;
@@ -93,7 +93,7 @@
 				return true;
 				
 			},
-			processElement: function(element, diagram, usecase){
+			processElement: function(element, usecase){
 				return true;
 			},
 			processLink: function(link){

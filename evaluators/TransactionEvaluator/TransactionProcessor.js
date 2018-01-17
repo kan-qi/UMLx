@@ -63,7 +63,7 @@
 			/*
 			 * At the diagram level, the components need to associate with domain model.
 			 */
-			processUseCase: function(usecase, model, callbackfunc){
+			processUseCase: function(useCase, model, callbackfunc){
 //				var useCase = model.UseCases[i];
 				
 //				var entries=diagram.Entries;// tag: elements
@@ -160,13 +160,13 @@
 			}
 				return Paths;
 			},
-			processDiagram: function(diagram, usecase, model, callbackfunc){
+//			processDiagram: function(diagram, usecase, model, callbackfunc){
 //				console.log("transaction process: process diagram");
 //				diagram.Paths = UMLDiagramTraverser.traverseDiagram(diagram);
 //				diagramDrawer.drawBehavioralDiagram(diagram, callbackfunc);
 //				console.log(diagram.Paths);
-			},
-			processPath: function(path, diagram, usecase, model){
+//			},
+			processPath: function(path,  usecase, model){
 //				var components = [];
 //				var pathStr = "";
 				
@@ -211,8 +211,8 @@
 					totalDegree += 1;
 						if(node.target){
 							var outgoingEdges = [];
-							for(var i in this.Diagrams){
-								var edges = this.Diagrams[i].edges;
+//							for(var i in this.Diagrams){
+								var edges = usecase.precedenceRelations;
 								for(var j in edges){
 									var edge = edges[j];
 									if(edge.source == node.target){
@@ -220,7 +220,7 @@
 										totalDegree++;
 									}
 								}
-							}
+//							}
 							
 //							for(var edge in outgoingEdges){
 //								components.add(edge.target);
@@ -238,7 +238,7 @@
 
 				path['TransactionAnalytics'] = {};
 				
-				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, diagram, transactionalPatternTreeRoot);
+				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, transactionalPatternTreeRoot);
 				var transactionalOperationStr = "";
 				for(var i=0; i < transactionalOperations.length; i++){
 					if(i !== 0){
