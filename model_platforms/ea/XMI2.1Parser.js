@@ -50,186 +50,7 @@
 		return name.replace(/\s/g, '').toUpperCase();
 	}
 	
-	function processCombinedFragment(CombinedFragment, XMICombinedFragment, UseCase, XMIUseCase, XMILifelinesByID, XMIMessagesByOccurrences){
-		
-//		var XMIUseCase = UseCase.Attachment;
-//		var XMICombinedFragment = CombinedFragment.Attachment;
-		
-		console.log("process combined fragment");
-		console.log(XMICombinedFragment['$']['xmi:id']);
-		
-		var XMIFragmentOperator = XMICombinedFragment.$.interactionOperator;
-		
-		var startActivity = {
-				Type: "fragment_start",
-				Name: XMIFragmentOperator+"_start",
-				id: XMICombinedFragment['$']['xmi:id']+"_start",
-//				Attachment: XMICombinedFragment,
-				Group: "System",
-				Stimulus: false,
-				OutScope: false
-		};
-
-		var endActivity = {
-				Type: "fragment_end",
-				Name: XMIFragmentOperator+"_end",
-				id: XMICombinedFragment['$']['xmi:id']+"_end",
-//				Attachment: XMICombinedFragment,
-				Group: "System",
-				Stimulus: false,
-				OutScope: false
-		};
-		
-		UseCase.Activities.push(startActivity);
-		UseCase.Activities.push(endActivity);
-		
-		var containingOperators = [XMIFragmentOperator];
-		containingOperators = containingOperators.concat(CombinedFragment.containingOperators);
-		
-		var XMIOperands = jp.query(XMICombinedFragment, '$.operand[?(@[\'$\'][\'xmi:type\']==\'uml:InteractionOperand\')]');
-		
-		for(var i in XMIOperands){
-			var XMIOperand = XMIOperands[i];
-			var XMIMessages = [];
-//			console.log("occurence")
-			var XMIOccurrences = jp.query(XMIOperand, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
-//			
-			console.log("in iteration");
-			console.log(XMIOccurrences);
-			var preActivity = startActivity;
-//			var nextActivity = null;
-			for(var j= 0; j<XMIOccurrences.length;){
-				var XMIOccurrence = XMIOccurrences[j++];
-//				UseCase.Activities.push(XMIOccurrence);
-				
-				if(XMIOccurrence['$']['xmi:type'] === "uml:OccurrenceSpecification"){
-				var XMIOccurrence1 = XMIOccurrence;
-				var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
-				
-//				var isStimulus = false;
-				var group = "System";
-				if(XMILifeline1.isUser){
-//					isStimulus = true;
-					group = "User";
-				}
-				
-				var XMIOccurrence2 = XMIOccurrences[j++];
-				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
-				
-				var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
-				XMIMessages.push(XMIMessage);
-				
-				console.log(XMIMessage);
-				
-				var OutScope = false;
-				// The rules to determine if the operation is in scope or out of the scope of the system.
-				for(var k in containingOperators){
-					var operator = containingOperators[k];
-					console.log("check operator");
-					console.log(operator);
-					if(operator === "ignore" || operator === "neg"){
-						OutScope = true;
-						break;
-					}
-				}
-				
-				var nextActivity = {
-						Type: "message",
-						Name: XMIMessage['$']['name'],
-						id: XMIMessage['$']['xmi:id'],
-//						Attachment: XMIMessage,
-						Group: group,
-						Stimulus: false,
-						OutScope: OutScope
-				};
-				
-//				if(XMILifeline1.Class){
-//					nextActivity.sender = DomainElementsByID[XMILifeline1.Class];
-					nextActivity.sender = XMILifeline1;
-//				}
-				
-//				if(XMILifeline2.Class){
-//					nextActivity.receiver = DomainElementsByID[XMILifeline12.Class];
-					nextActivity.receiver = XMILifeline2;
-//				}
-				
-//				if(XMILifeline1.Class){
-//					nextActivity.sender = DomainElementsByID[XMILifeline1.Class['$']["xmi:id"]];
-//				}
-//				
-//				if(XMILifeline2.Class){
-//					nextActivity.receiver = DomainElementsByID[XMILifeline2.Class['$']["xmi:id"]];
-//				}
-				
-				UseCase.Activities.push(nextActivity);
-				
-				if(preActivity){
-				if(nextActivity.sender.isUser && preActivity.receiver != nextActivity.sender){
-//					var preMessage = preActivity.Attachment;
-				}
-				else{
-
-					UseCase.PrecedenceRelations.push({start: preActivity, end: nextActivity});
-				}
-				}
-//				UseCase.PrecedenceRelations.push({start: preActivity, end: nextActivity});
-				
-				preActivity = nextActivity;
-				}
-				else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
-					console.log(XMIOccurrence);
-					var innerCombinedFragment = {
-							containingOperators: containingOperators,
-//							Attachment: XMIOccurrence
-					};
-					processCombinedFragment(innerCombinedFragment, XMIOccurence, UseCase, XMIUseCase, XMILifelinesByID, XMIMessagesByOccurrences);
-					
-					if(preActivity){
-					UseCase.PrecedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
-					}
-					
-					preActivity = innerCombinedFragment.endActivity;
-				}
-			}
-			
-			console.log("pre activity....");
-			console.log(preActivity);
-			// the last activity should be connected to the end of the fragment
-			UseCase.PrecedenceRelations.push({start: preActivity, end: endActivity});
-			
-			XMIOperand.XMIMessages = XMIMessages;
-		}
-		
-		if(XMIFragmentOperator === "alt"
-			|| XMIFragmentOperator === "par" 
-			|| XMIFragmentOperator === "critical"
-			|| XMIFragmentOperator === "neg"
-			|| XMIFragmentOperator === "assert"
-			|| XMIFragmentOperator === "strict"
-			|| XMIFragmentOperator === "seq"
-			|| XMIFragmentOperator === "ignore"
-			|| XMIFragmentOperator === "consider"){
-			
-			CombinedFragment.startActivity = startActivity;
-			CombinedFragment.endActivity = endActivity;
-//			console.log(XMICombinedFragments);
-		}
-		else if(XMIFragmentOperator === "loop"){
-			UseCase.PrecedenceRelations.push({start: endActivity, end: startActivity});
-			CombinedFragment.startActivity = startActivity;
-			CombinedFragment.endActivity = startActivity;
-		}
-		else if(XMIFragmentOperator === "break"){
-			CombinedFragment.startActivity = startActivity;
-			// represent that outside edges will both be connected to the start activities.
-			CombinedFragment.endActivity = startActivity;
-		}
-		else if(XMIFragmentOperator === "opt"){
-			UseCase.PrecedenceRelations.push({start: startActivity, end: endActivity});
-			CombinedFragment.startActivity = startActivity;
-			CombinedFragment.endActivity = endActivity;
-		}
-	}
+	
 	
 	function createDomainElement(XMIClass){
 		var XMIAttributes = jp.query(XMIClass, '$.ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
@@ -429,6 +250,197 @@
 			});
 		});
 	}
+	
+function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
+		
+//		var XMIUseCase = UseCase.Attachment;
+//		var XMICombinedFragment = CombinedFragment.Attachment;
+	
+		var activities = [];
+		var precedenceRelations = [];
+		var startActivity = null;
+		var endActivity = null;
+		
+		console.log("process combined fragment");
+		console.log(XMICombinedFragment['$']['xmi:id']);
+		
+		var XMIFragmentOperator = XMICombinedFragment.$.interactionOperator;
+		
+		var cfStart = {
+				Type: "fragment_start",
+				Name: XMIFragmentOperator+"_start",
+				id: XMICombinedFragment['$']['xmi:id']+"_start",
+//				Attachment: XMICombinedFragment,
+				Group: "System",
+				Stimulus: false,
+				OutScope: false
+		};
+
+		var cfEnd = {
+				Type: "fragment_end",
+				Name: XMIFragmentOperator+"_end",
+				id: XMICombinedFragment['$']['xmi:id']+"_end",
+//				Attachment: XMICombinedFragment,
+				Group: "System",
+				Stimulus: false,
+				OutScope: false
+		};
+		
+		activities.push(cfStart);
+		
+		var containingOperators = [XMIFragmentOperator];
+		containingOperators = containingOperators.concat(containingOperators);
+		
+		var XMIOperands = jp.query(XMICombinedFragment, '$.operand[?(@[\'$\'][\'xmi:type\']==\'uml:InteractionOperand\')]');
+		
+		for(var i in XMIOperands){
+			var XMIOperand = XMIOperands[i];
+			var XMIMessages = [];
+//			console.log("occurence")
+			var XMIOccurrences = jp.query(XMIOperand, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
+			var SDCFG = constructSDCFG(XMIOperand,XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
+			
+			precedenceRelations.push({start: cfStart, end: SDCFG.startActivity});
+			activities = activities.concat(SDCFG.Activities);
+			precedenceRelations = precedenceRelations.concat(SDCFG.PrecedenceRelations);
+			precedenceRelations.push({start: SDCFG.endActivity, end: cfEnd});
+		}
+		
+		if(XMIFragmentOperator === "alt"
+			|| XMIFragmentOperator === "par" 
+			|| XMIFragmentOperator === "critical"
+			|| XMIFragmentOperator === "neg"
+			|| XMIFragmentOperator === "assert"
+			|| XMIFragmentOperator === "strict"
+			|| XMIFragmentOperator === "seq"
+			|| XMIFragmentOperator === "ignore"
+			|| XMIFragmentOperator === "consider"){
+			
+			startActivity = cfStart;
+			endActivity = cfEnd;
+//			console.log(XMICombinedFragments);
+		}
+		else if(XMIFragmentOperator === "loop"){
+			UseCase.PrecedenceRelations.push({start: endActivity, end: startActivity});
+			startActivity = cfStart;
+			endActivity = cfStart;
+		}
+		else if(XMIFragmentOperator === "break"){
+			startActivity = cfStart;
+			// represent that outside edges will both be connected to the start activities.
+			endActivity = cfStart;
+		}
+		else if(XMIFragmentOperator === "opt"){
+			UseCase.PrecedenceRelations.push({start: startActivity, end: endActivity});
+			startActivity = cfStart;
+			endActivity = cfEnd;
+		}
+
+		activities.push(cfEnd);
+		
+		return {Activities: activities, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
+	}
+	
+	function constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
+		
+		var activities = [];
+		var precedenceRelations = [];
+		var startActivity = null;
+		var endActivity = null;
+
+		console.log("occurence at interaction level");
+//		console.log("occurrence");
+//		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\')]');
+		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
+		console.log(XMIOccurrences);
+//		var XMIOccurrencesByID = [];
+		// for each fragment,identify the covered lifeline
+		
+		var preActivity = null;
+		
+		for(var k= 0; k<XMIOccurrences.length;){
+			var XMIOccurrence = XMIOccurrences[k++];
+			
+			if(XMIOccurrence['$']['xmi:type'] === "uml:OccurrenceSpecification"){
+				var XMIOccurrence1 = XMIOccurrence;
+				console.log(XMIOccurrence1);
+				var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
+//				XMILifeline1 = XMILifeline;
+				
+//				XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
+				
+//				var isStimulus = false;
+				var group = "System";
+				if(XMILifeline1.isUser){
+//					isStimulus = true;
+					group = "User";
+				}
+				
+				var XMIOccurrence2 = XMIOccurrences[k++];
+				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
+//				XMILifeline2 = XMILifeline;
+				
+				var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
+//				XMIMessages.push(XMIMessage);
+				var nextActivity = {
+						Type: "message",
+						Name: XMIMessage['$']['name'],
+						id: XMIMessage['$']['xmi:id'],
+						Stimulus: false,
+						Group: group,
+						OutScope: false,
+//						Attachment: XMIMessage
+				}
+				
+					nextActivity.sender = XMILifeline1;
+					nextActivity.receiver = XMILifeline2;
+
+//				UseCase.Activities.push(nextActivity);
+				activities.push(nextActivity);
+				
+				if(preActivity){
+				if(nextActivity.sender.isUser && preActivity.receiver != nextActivity.sender){
+
+				}
+				else{
+//					UseCase.PrecedenceRelations.push({start: preActivity, end: nextActivity});
+					precedenceRelations.push({start: preActivity, end: nextActivity});
+				}
+				}
+				
+				preActivity = nextActivity;
+				
+				if(!startActivity){
+					startActivity = preActivity;
+				}
+				
+			}
+			else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
+				
+				var innerCombinedFragment = processCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
+				
+				console.log("process combined fragment");
+				console.log(innerCombinedFragment);
+				
+				if(preActivity){
+//				UseCase.PrecedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
+				precedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
+				}
+				
+				activities = activities.concat(innerCombinedFragment.Activities);
+				precedenceRelations = precedenceRelations.concat(innerCombinedFragment.PrecedenceRelations);
+				preActivity = innerCombinedFragment.endActivity;
+				
+				if(!startActivity){
+					startActivity = innerCombinedFragment.startActivity;
+				}
+			}
+		}
+		
+		endActivity = preActivity;
+		
+		return {Activities: activities, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
+	}
 
 	
 	function parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID){
@@ -474,102 +486,13 @@
 			console.log(XMIMessagesByOccurrences);
 //			XMIUseCase.XMIMessagesByOccurrences = XMIMessagesByOccurrences;
 			
-			console.log("occurence at interaction level");
-//			console.log("occurrence");
-//			var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\')]');
-			var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
-			console.log(XMIOccurrences);
-//			var XMIOccurrencesByID = [];
-			// for each fragment,identify the covered lifeline
-			
-			var preActivity = null;
-//			var preActivity = {
-//					Type: "interaction_start",
-//					name: "start",
-//					id: XMIInteraction['$']['xmi:id'],
-//					Attachment: null,
-//					Stimulus: false,
-//					Group: "User",
-//					OutScope: false,
-//			};
-			
-//			UseCase.Activities.push(preActivity);
-			
-			for(var k= 0; k<XMIOccurrences.length;){
-				var XMIOccurrence = XMIOccurrences[k++];
-				
-				if(XMIOccurrence['$']['xmi:type'] === "uml:OccurrenceSpecification"){
-					var XMIOccurrence1 = XMIOccurrence;
-					console.log(XMIOccurrence1);
-					var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
-//					XMILifeline1 = XMILifeline;
-					
-//					XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
-					
-//					var isStimulus = false;
-					var group = "System";
-					if(XMILifeline1.isUser){
-//						isStimulus = true;
-						group = "User";
-					}
-					
-					var XMIOccurrence2 = XMIOccurrences[k++];
-					var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
-//					XMILifeline2 = XMILifeline;
-					
-					var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
-//					XMIMessages.push(XMIMessage);
-					var nextActivity = {
-							Type: "message",
-							Name: XMIMessage['$']['name'],
-							id: XMIMessage['$']['xmi:id'],
-							Stimulus: false,
-							Group: group,
-							OutScope: false,
-//							Attachment: XMIMessage
-					}
-					
-//					if(XMILifeline1.Class){
-//						nextActivity.sender = DomainElementsByID[XMILifeline1.Class];
-						nextActivity.sender = XMILifeline1;
-//					}
-					
-//					if(XMILifeline2.Class){
-//						nextActivity.receiver = DomainElementsByID[XMILifeline12.Class];
-						nextActivity.receiver = XMILifeline2;
-//					}
-
-					UseCase.Activities.push(nextActivity);
-					
-					// The temporary rules to eliminate the unnecessary rules.
-					if(preActivity){
-					if(nextActivity.sender.isUser && preActivity.receiver != nextActivity.sender){
-//						var preMessage = preActivity.Attachment;
-					}
-					else{
-
-						UseCase.PrecedenceRelations.push({start: preActivity, end: nextActivity});
-					}
-					}
-					
-					preActivity = nextActivity;
-					
-				}
-				else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
-//					console.log("hello");
-					var innerCombinedFragment = {
-//							Attachment: XMIOccurrence,
-							containingOperators: []
-					};
-					processCombinedFragment(innerCombinedFragment, XMIOccurrence, UseCase, XMIUseCase, XMILifelinesByID, XMIMessagesByOccurrences);
-					if(preActivity){
-					UseCase.PrecedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
-					}
-					preActivity = innerCombinedFragment.endActivity;
-				}
-			}
-//			console.log(XMIOccurrencesByID);
+			SDCFG = constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, []);
+			UseCase.Activities = UseCase.Activities.concat(SDCFG.Activities);
+			UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(SDCFG.PrecedenceRelations);
 		}
+		
+		console.log("test use case");
+		console.log(UseCase);
 		
 		var ActivitiesToEliminate = [];
 		//to  eliminate unnecessary activities
