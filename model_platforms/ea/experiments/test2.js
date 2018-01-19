@@ -1,38 +1,24 @@
 var xml2js = require('xml2js');
 var parser = new xml2js.Parser();
-var xmiParser = require('../XMI2.1Parser.js');
+var xmiParser = require('./XMI2.1Parser.js');
 var pathsDrawer = require("./TransactionsDrawer.js");
 //var xmiParser = require('./XMI2.1ActivityDiagramParser.js');
 //var xmiParser = require('./XMI2.1RobustnessDiagramParser.js');
-//var fs = require("fs");
+var fs = require("fs");
 
-//fs.readFile("./model_platforms/bookTicketsExamplev1.4.xml", function(err, data) {
-//	parser.parseString(data, function(err, result) {
-//		Model = xmiParser.extractModelComponents(result);
-//		traverseUserSystemInterationModel(Model);
-//		for(var i in Model.UseCases){
-//			var UseCase = Model.UseCases[i];
-//			console.log("output use case");
-//			drawPrecedenceDiagramFunc(UseCase, Model.DomainModel, "./model_platforms/usecase_"+i+".dotty");
-//			pathsDrawer.drawPaths(UseCase.Paths, "./model_platforms/usecase_"+i+"_paths.dotty", function(){
-//				console.log("paths are drawn");
-//			});
-//		}
-//	});
-//});
-
-xmiParser.extractUserSystermInteractionModel("./model_platforms/ItemManagerExample.xml", function(Model){
-
-	traverseUserSystemInterationModel(Model);
-	for(var i in Model.UseCases){
-		var UseCase = Model.UseCases[i];
-		console.log("output use case");
-		drawPrecedenceDiagramFunc(UseCase, Model.DomainModel, "./model_platforms/usecase_"+i+".dotty");
-		drawSimplePrecedenceDiagramFunc(UseCase, Model.DomainModel, "./model_platforms/usecase_simple_"+i+".dotty");
-		pathsDrawer.drawPaths(UseCase.Paths, "./model_platforms/usecase_"+i+"_paths.dotty", function(){
-			console.log("paths are drawn");
-		});
-	}
+fs.readFile("./model_platforms/bookTicketsExamplev1.4.xml", function(err, data) {
+	parser.parseString(data, function(err, result) {
+		Model = xmiParser.extractModelComponents(result);
+		traverseUserSystemInterationModel(Model);
+		for(var i in Model.UseCases){
+			var UseCase = Model.UseCases[i];
+			console.log("output use case");
+			drawPrecedenceDiagramFunc(UseCase, Model.DomainModel, "./model_platforms/usecase_"+i+".dotty");
+			pathsDrawer.drawPaths(UseCase.Paths, "./model_platforms/usecase_"+i+"_paths.dotty", function(){
+				console.log("paths are drawn");
+			});
+		}
+	});
 });
 
 //fs.readFile("./model_platforms/bookTicketsExamplev1.3.xml", function(err, data) {
@@ -62,15 +48,15 @@ function traverseUserSystemInterationModel(model){
 		
 		var toExpandCollection = new Array();
 		
-		for (var j in useCase.Activities){
-			var activity = useCase.Activities[j];
+		for (var j in useCase.activities){
+			var activity = useCase.activities[j];
 			//define the node structure to keep the infor while traversing the graph
-			if(activity.Stimulus){
+			if(activity.stimulus){
 			var node = {
 				//id: startElement, //ElementGUID
 				Node: activity,
 				PathToNode: [activity],
-				OutScope: activity.OutScope
+				OutScope: activity.outScope
 			};
 			toExpandCollection.push(node);
 			}
@@ -98,8 +84,8 @@ function traverseUserSystemInterationModel(model){
 //			else {
 
 				var childNodes = [];
-				for(var j in useCase.PrecedenceRelations){
-					var edge = useCase.PrecedenceRelations[j];
+				for(var j in useCase.precedenceRelations){
+					var edge = useCase.precedenceRelations[j];
 					if(edge.start == node){
 						childNodes.push(edge.end);
 					}
@@ -122,7 +108,7 @@ function traverseUserSystemInterationModel(model){
 					//if childNode is an outside activity
 					
 					var OutScope = false;
-					if(toExpand.OutScope||childNode.OutScope){
+					if(toExpand.OutScope||childNode.outScope){
 						OutScope = true;
 					}
 					
@@ -138,10 +124,10 @@ function traverseUserSystemInterationModel(model){
 					console.log("child node");
 					console.log(childNodes);
 					console.log(childNode);
-					console.log(childNode.Name);
-					console.log(childNode.Group);
+					console.log(childNode.name);
+					console.log(childNode.group);
 
-					if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
+					if(!isCycled(toExpandNode.PathToNode) && childNode.group === "System"){
 					toExpandCollection.push(toExpandNode);
 					}
 					else{
@@ -171,7 +157,7 @@ function traverseUserSystemInterationModel(model){
 					var domainElement = domainModelById[node.receiver.Class];
 					for(var k in domainElement.operations){
 						var operation = domainElement.operations[k];
-						if(standardizeName(node.Name) === standardizeName(operation.Name)){
+						if(standardizeName(node.name) === standardizeName(operation.name)){
 //							console.log("yes");
 							DET += operation.parameters.length;
 						}
@@ -190,14 +176,14 @@ function traverseUserSystemInterationModel(model){
 	
 }
 
-function standardizeName(Name){
-	return Name.replace(/\s/g, '').toUpperCase();
+function standardizeName(name){
+	return name.replace(/\s/g, '').toUpperCase();
 }
 
 function drawStimulusNode(id, label){
 	return id+'[label=<\
 		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="Stimulus_icon.png"/></TD></TR>\
+		<TR><TD><IMG SRC="stimulus_icon.png"/></TD></TR>\
 	  <TR><TD>'+label+'</TD></TR>\
 	</TABLE>>];';
 }
@@ -218,14 +204,6 @@ function drawOutOfScopeNode(id, label){
 	</TABLE>>];';
 }
 
-function drawFragmentNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="fragment_node_icon.png"/></TD></TR>\
-	  <TR><TD>'+label+'</TD></TR>\
-	</TABLE>>];';
-}
-
 
 //function drawExternalNode(id, label){
 //	return id+'[label=<\
@@ -235,44 +213,42 @@ function drawFragmentNode(id, label){
 //	</TABLE>>];';
 //}
 
-function getGroupDrawable(Group){
-	if(Group === "System"){
-		return "label = \""+Group+"\";style=\"bold\";";
+function getGroupDrawable(group){
+	if(group === "System"){
+		return "label = \""+group+"\";style=\"bold\";";
 	}
 	else{
-		return "label = \""+Group+"\";";
+		return "label = \""+group+"\";";
 	}
 }
 
 function drawDomainObjectNode(component){
 	//temporarily eliminate some unnecessary nodes
-	console.log("domain objects");
-	console.log(component);
-	if(component.Name === "System Boundary" || component.Name.startsWith('$')){
+	if(component.name === "System Boundary" || component.name.startsWith('$')){
 		return "";
 	}
 	var componentInternal = "{";
 	var componentInternalIndex = 0;
-	componentInternal += "<f"+componentInternalIndex+">"+component.Name;
+	componentInternal += "<f"+componentInternalIndex+">"+component.name;
 	componentInternalIndex++;
-	for (var i in component.Attributes){
-		var attribute = component.Attributes[i];
-//		componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
-		componentInternal += "|<f"+componentInternalIndex+">"+attribute.Type+" "+attribute.Name;
+	for (var i in component.attributes){
+		var attribute = component.attributes[i];
+//		componentInternal += '"'+attribute.name+'"->"'+component.name+'";';
+		componentInternal += "|<f"+componentInternalIndex+">"+attribute.type+" "+attribute.name;
 		componentInternalIndex++;
 	}
 	
-	for (var i in component.Operations){
-		var operation = component.Operations[i];
-//		dotty += '"'+operation.Name+'"->"'+component.Name+'";';
-		var functionSignature = operation.Name+"(";
-		for(var j in operation.Parameters){
-			var parameter = operation.Parameters[j];
-			if(parameter.Name === 'return'){
-				functionSignature = parameter.Type + " "+functionSignature;
+	for (var i in component.operations){
+		var operation = component.operations[i];
+//		dotty += '"'+operation.name+'"->"'+component.name+'";';
+		var functionSignature = operation.name+"(";
+		for(var j in operation.parameters){
+			var parameter = operation.parameters[j];
+			if(parameter.name === 'return'){
+				functionSignature = parameter.type + " "+functionSignature;
 			}
 			else {
-				functionSignature += parameter.Type+" "+parameter.Name;
+				functionSignature += parameter.type+" "+parameter.name;
 			}
 		}
 		functionSignature += ")";
@@ -286,7 +262,7 @@ function drawDomainObjectNode(component){
 	console.log(component);
 	console.log(componentInternal);
 	return component.id+'[label="'+componentInternal+'" shape=Mrecord];'
-//	return component.id+'[label="'+component.Name+'" shape=Mrecord];'
+//	return component.id+'[label="'+component.name+'" shape=Mrecord];'
 //	return "";
 	
 //	graph += dottyDraw.draw(component.id+pathTag+'[label="'+componentInternal+'" shape=Mrecord];');
@@ -294,8 +270,8 @@ function drawDomainObjectNode(component){
 }
 
 function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
-	var activities = UseCase.Activities;
-	var precedenceRelations = UseCase.PrecedenceRelations;
+	var activities = UseCase.activities;
+	var precedenceRelations = UseCase.precedenceRelations;
 	console.log(precedenceRelations);
 	var graph = 'digraph g {\
 		node [shape=plaintext]';
@@ -318,43 +294,39 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 	}
 	var dottyDraw = new DottyDraw();
 	
-	var Groups = {};
+	var groups = {};
 	var others = [];
 	for (var j in activities){
 		var activity = activities[j];
-		if(activity.Group){
-			if(!Groups[activity.Group]){
-				Groups[activity.Group] = [];
+		if(activity.group){
+			if(!groups[activity.group]){
+				groups[activity.group] = [];
 			}
-			var Group = Groups[activity.Group];
-			Group.push(activity);
+			var group = groups[activity.group];
+			group.push(activity);
 		}
 		else{
 			others.push(activity);
 		}
 	}
 	
-	var GroupNum = 0;
+	var groupNum = 0;
 	var edgesToDomainObjects = [];
 	
-	for(var j in Groups){
-		var Group = Groups[j];
-		graph += "subgraph cluster"+GroupNum+" {";
-		for(var k in Group){
-			var activity = Group[k];
+	for(var j in groups){
+		var group = groups[j];
+		graph += "subgraph cluster"+groupNum+" {";
+		for(var k in group){
+			var activity = group[k];
 			
-//			var label = activity.Name;
-//			var node = drawExternalNode(activity.id, activity.Name);
-			var node = drawNode(activity.id, activity.Name);
+//			var label = activity.name;
+//			var node = drawExternalNode(activity.id, activity.name);
+			var node = drawNode(activity.id, activity.name);
 			
-			if(activity.Stimulus){
-				node = drawStimulusNode(activity.id, activity.Name);
-			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity.id, activity.Name);
-			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
-				console.log("drawing fragment node");
-				node = drawFragmentNode(activity.id, activity.Name);
-				console.log(node);
+			if(activity.stimulus){
+				node = drawStimulusNode(activity.id, activity.name);
+			} else if(activity.outScope){
+				node = drawOutOfScopeNode(activity.id, activity.name);
 			}
 			
 			//add edges to domain objects.
@@ -377,71 +349,67 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 //			}
 			
 		}
-		GroupNum ++;
+		groupNum ++;
 //		graph += "label = \""+j+"\";style=\"bold\"}";
 		graph += getGroupDrawable(j)+"};";
-//		graph += drawGroupShape(Group)+";}";
+//		graph += drawGroupShape(group)+";}";
 	}
 	
 	for(var j in others){
 		var activity = others[j];
 //		var color = "gray";
-//		if(activity.Stimulus){
+//		if(activity.stimulus){
 //			color = "red";
 //		}
 //		else if(activity.inScope){
 //			color = "green";
 //		}
 		
-//		var label = activity.Name;
-//		if(activity.Group){
-//			label=label+"GG"+activity.Group;
+//		var label = activity.name;
+//		if(activity.group){
+//			label=label+"GG"+activity.group;
 //		}
 //		dotty += '"'+activity.Name+'";';
 		
-//		var node = drawStimulusNode(activity.id, activity.Name);
+//		var node = drawStimulusNode(activity.id, activity.name);
 		
-//		var node = drawExternalNode(activity.id, activity.Name);
+//		var node = drawExternalNode(activity.id, activity.name);
 //		
-//		if(activity.Stimulus){
-//			node = drawStimulusNode(activity.id, activity.Name);
+//		if(activity.stimulus){
+//			node = drawStimulusNode(activity.id, activity.name);
 //		} else if(activity.inScope){
-//			node = drawInternalNode(activity.id, activity.Name);
+//			node = drawInternalNode(activity.id, activity.name);
 //		}
 		
-		var node = drawNode(activity.id, activity.Name);
+		var node = drawNode(activity.id, activity.name);
 		
-		if(activity.Stimulus){
-			node = drawStimulusNode(activity.id, activity.Name);
-		} else if(activity.OutScope){
-			node = drawOutOfScopeNode(activity.id, activity.Name);
-		} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
-			console.log("drawing fragment node");
-			node = drawFragmentNode(activity.id, activity.Name);
-			console.log(node);
+		if(activity.stimulus){
+			node = drawStimulusNode(activity.id, activity.name);
+		} else if(activity.outScope){
+			node = drawOutOfScopeNode(activity.id, activity.name);
 		}
 		
 //		var target = node.target;
 //		if(target){
-//			graph += dottyDraw.draw(target.id+pathTag+'[label="'+target.Name+'"];');
+//			graph += dottyDraw.draw(target.id+pathTag+'[label="'+target.name+'"];');
 //			graph += dottyDraw.draw('"'+target.id+pathTag+'"->"'+node.id+pathTag+'";');
 //			if(target.component){
 //				var component = target.component;
 //				var componentInternal = "{";
 //				var componentInternalIndex = 0;
-//				componentInternal += "<f"+componentInternalIndex+">"+component.Name;
+//				componentInternal += "<f"+componentInternalIndex+">"+component.name;
 //				componentInternalIndex++;
 //				for (var k in component.Attributes){
 //					var attribute = component.Attributes[k];
-////					componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
-//					componentInternal += "|<f"+componentInternalIndex+">"+attribute.Name;
+////					componentInternal += '"'+attribute.name+'"->"'+component.name+'";';
+//					componentInternal += "|<f"+componentInternalIndex+">"+attribute.name;
 //					componentInternalIndex++;
 //				}
 //				
 //				for (var k in component.Operations){
 //					var operation = component.Operations[k];
-////					dotty += '"'+operation.Name+'"->"'+component.Name+'";';
-//					componentInternal += "|<f"+componentInternalIndex+">"+operation.Name;
+////					dotty += '"'+operation.name+'"->"'+component.name+'";';
+//					componentInternal += "|<f"+componentInternalIndex+">"+operation.name;
 //					componentInternalIndex++;
 //				}
 //				
@@ -465,7 +433,7 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 	console.log("activities...");
 	console.log(graph);
 	
-	var precedenceRelations = UseCase.PrecedenceRelations;
+	var precedenceRelations = UseCase.precedenceRelations;
 	for(var i in precedenceRelations){
 		var precedenceRelation = precedenceRelations[i];
 		console.log(precedenceRelation);
@@ -479,8 +447,8 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 	}
 	
 	graph += "subgraph cluster"+1000+" {";
-	for(var i in DomainModel.Elements){
-		var domainObject = DomainModel.Elements[i];
+	for(var i in DomainModel){
+		var domainObject = DomainModel[i];
 		graph += dottyDraw.draw(drawDomainObjectNode(domainObject));
 	}
 	graph += "label = \"Domain Model\";};";
@@ -520,7 +488,7 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 //	    struct1:f2 -> struct3:here;\
 //	}';
 	
-	dottyUtil = require("../../../utils/DottyUtil.js");
+	dottyUtil = require("../utils/DottyUtil.js");
 	dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 		console.log("drawing is down");
 	});
@@ -552,77 +520,6 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 //		
 //	});
 //	});
-	return graph
-	
-}
-
-function drawSimplePrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
-	var activities = UseCase.Activities;
-	var precedenceRelations = UseCase.PrecedenceRelations;
-	console.log(precedenceRelations);
-	var graph = 'digraph g {\
-		node [shape=plaintext]';
-//		node [margin=0 fontcolor=blue fontsize=12 width=0.01 shape=circle style=filled]';
-	
-	// used to get rid of duplicates.
-	var drawnObjects = [];
-	function DottyDraw(){
-		this.drawnObjects = [];
-		this.draw = function(dottyObject){
-			if(drawnObjects[dottyObject]){
-				return "";
-			}
-			else{
-				drawnObjects[dottyObject] = 1;
-				return dottyObject;
-			}
-		}
-	}
-	var dottyDraw = new DottyDraw();
-	
-	for(var i in activities){
-		var activity = activities[i];
-		
-		var node = drawNode(activity.id, activity.Name);
-		
-		if(activity.Stimulus){
-			node = drawStimulusNode(activity.id, activity.Name);
-		} else if(activity.OutScope){
-			node = drawOutOfScopeNode(activity.id, activity.Name);
-		} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
-			console.log("drawing fragment node");
-			node = drawFragmentNode(activity.id, activity.Name);
-			console.log(node);
-		}
-		
-			graph += dottyDraw.draw(node);
-	}
-	
-	console.log("activities...");
-	console.log(graph);
-	
-	var precedenceRelations = UseCase.PrecedenceRelations;
-	for(var i in precedenceRelations){
-		var precedenceRelation = precedenceRelations[i];
-		console.log(precedenceRelation);
-			if(precedenceRelation.start && precedenceRelation.end){
-//			dotty += '"'+start.Name+'"->"'+end.Name+'";';
-
-			var start = precedenceRelation.start.id;
-			var end = precedenceRelation.end.id;
-			graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
-			}
-	}
-	
-	
-	graph += 'imagepath = \"./imgs\"}';
-	
-	
-	dottyUtil = require("../../../utils/DottyUtil.js");
-	dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-		console.log("drawing is down");
-	});
-
 	return graph
 	
 }
