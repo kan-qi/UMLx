@@ -11,6 +11,9 @@
 	var dottyUtil = require("../utils/DottyUtil.js");
 	
 	function drawPaths(paths, graphFilePath, callbackfunc){
+		
+		console.log("draw paths");
+		
 		var dotty = 'digraph g {';
 		dotty += "node[shape=record]";
 		// used to get rid of duplicates.
@@ -33,6 +36,7 @@
 		for(var i in paths){
 			// add tag to every nodes, such that paths will be separated in drawing.
 			var pathTag = "_"+i;
+			
 			var path = paths[i];
 			var preNode = null;
 			for(var j in path.Nodes){

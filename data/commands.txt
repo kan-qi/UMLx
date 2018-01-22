@@ -59,3 +59,6 @@ db.users.update({'username': 'test2'},{$set:{'username':'umlxteamenterprise','pa
 
 "C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/UseCaseWeightDistributionAnalyticsScript.R "data/UseCaseWeighting/UCP_Apriori_Weight_Distribution.csv" "data/UseCaseWeighting/useCasesEvaluation1.2.csv" "data/temp/bayesian_without_log"
 
+node -e 'require("./UMLModelAnalyzer").extractModelInfoTest()'
+
+node model_platforms/ea/experiments/test

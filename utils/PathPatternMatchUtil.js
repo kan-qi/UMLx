@@ -86,7 +86,7 @@
 	 	return patternRoot;
 	 }
 	 
-	 function recognizePattern(path, diagram, patternRoot){
+	 function recognizePattern(path, patternRoot){
 //		 	var preprocessedPath = new Array();
 //			for(var i in path){
 //				var node = path[i];

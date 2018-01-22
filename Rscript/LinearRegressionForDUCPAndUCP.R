@@ -58,10 +58,10 @@ png(filename=paste(outputPath,"project_descriptive_statistics_for_ducp_analysis.
 		pointsize=12,
 		res=96)
 
-projectHist1 <- ggplot(data, aes(x=Real_Effort))+geom_histogram(binwidth=200, colour="black", fill="white")+xlab("Effort (person-hours)")+ylab("Count")
-projectHist2 <- ggplot(data, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("KSLOC")+ylab("Count")
-projectHist3 <- ggplot(data, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="black", fill="white")+xlab("Use Case Num")+ylab("Count")
-projectBar <- ggplot(data, aes(x=Application_Type))+geom_bar(colour="black", fill="white")+xlab("Application Type")+ylab("Count")+ scale_x_discrete(label=abbreviate)
+projectHist1 <- ggplot(data, aes(x=Real_Effort))+geom_histogram(binwidth=200, colour="white", fill="gray55")+xlab("Effort (person-hours)")+ylab("Number of Projects")
+projectHist2 <- ggplot(data, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")
+projectHist3 <- ggplot(data, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="white", fill="gray55")+xlab("Use Case Num")+ylab("Number of Projects")
+projectBar <- ggplot(data, aes(x=Application_Type))+geom_bar(colour="white", fill="gray55")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)
 print(grid.arrange(projectHist1, projectHist2, projectHist3, projectBar, ncol=2))
 
 
@@ -75,13 +75,13 @@ png(filename=paste(outputPath,"project_counting_statistics_for_ducp_analysis.png
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(data, aes(x=UAW))+geom_histogram(binwidth=1.5, colour="black", fill="white")+xlab("UAW")+ylab("Count")
-UCPHist2 <- ggplot(data, aes(x=UDUCW))+geom_histogram(binwidth=30, colour="black", fill="white")+xlab("UDUCW")+ylab("Count")
-UCPHist3 <- ggplot(data, aes(x=DUCP))+geom_histogram(binwidth=45, colour="black", fill="white")+xlab("DUCP")+ylab("Count")
-UCPHist4 <- ggplot(data, aes(x=UUCW))+geom_histogram(binwidth=20, colour="black", fill="white")+xlab("UUCW")+ylab("Count")
-UCPHist5 <- ggplot(data, aes(x=UCP))+geom_histogram(binwidth=30, colour="black", fill="white")+xlab("UCP")+ylab("Count")
-UCPHist6 <- ggplot(data, aes(x=TCF))+geom_histogram(binwidth=0.02, colour="black", fill="white")+xlab("TCF")+ylab("Count")
-UCPHist7 <- ggplot(data, aes(x=EF))+geom_histogram(binwidth=0.02, colour="black", fill="white")+xlab("EF")+ylab("Count")
+UCPHist1 <- ggplot(data, aes(x=UAW))+geom_histogram(binwidth=1.5, colour="white", fill="gray55")+xlab("UAW")+ylab("Number of Projects")
+UCPHist2 <- ggplot(data, aes(x=UDUCW))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UDUCW")+ylab("Number of Projects")
+UCPHist3 <- ggplot(data, aes(x=DUCP))+geom_histogram(binwidth=45, colour="white", fill="gray55")+xlab("DUCP")+ylab("Number of Projects")
+UCPHist4 <- ggplot(data, aes(x=UUCW))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCW")+ylab("Number of Projects")
+UCPHist5 <- ggplot(data, aes(x=UCP))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")
+UCPHist6 <- ggplot(data, aes(x=TCF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("TCF")+ylab("Number of Projects")
+UCPHist7 <- ggplot(data, aes(x=EF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("EF")+ylab("Number of Projects")
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, UCPHist6, UCPHist7, ncol=2))
 

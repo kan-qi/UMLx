@@ -26,13 +26,13 @@
 	var functionalPatternTreeRoot = pathPatternMatchUtil.establishPatternParseTree(functionalPatterns);
 	
 	module.exports = {
-			processDiagram: function(diagram, usecase){
-				return true;
-			},
-			processPath: function(path, diagram, usecase){
+//			processDiagram: function(diagram, usecase){
+//				return true;
+//			},
+			processPath: function(path, usecase){
 				path["FPAnalytics"] = {};
 				path["FPAnalytics"].Operations = {};
-				var functionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, diagram, functionalPatternTreeRoot);
+				var functionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, functionalPatternTreeRoot);
 				var functionalOperationStr = "";
 				for(var i=0; i < functionalOperations.length; i++){
 					if(i !== 0){
@@ -53,7 +53,7 @@
 				
 				return true;
 			},
-			processElement: function(element, diagram, usecase){
+			processElement: function(element, usecase){
 				// determine if the element is the duplicate of a existing one, if it is, keep the one that is more complex: OutboundNumber+InboundNumber
 				// some of the element may not have type. just filter out the element.
 				return true;

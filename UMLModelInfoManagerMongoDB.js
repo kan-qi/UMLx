@@ -3,7 +3,7 @@
     // Retrieve
     var mongo = require('mongodb');
     var MongoClient = mongo.MongoClient;
-    var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
+    var umlModelExtractor = require("./UMLModelExtractor.js");
     var umlEvaluator = require("./UMLEvaluator.js");
 	var url = "mongodb://127.0.0.1:27017/repo_info_schema";
     var umlFileManager = require("./UMLFileManager.js");
@@ -290,6 +290,8 @@
             ], function(err, result){
                 if (err) throw err;
                 db.close();
+                console.log("test the use case query");
+                console.log(result);
                 callbackfunc(result[0]['UseCases']);
             });
         });
@@ -1001,7 +1003,7 @@
 				//update model analytics.
 //				console.log(modelInfo);
 				return new Promise((resolve, reject) => {
-					umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
+					umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 					umlEvaluator.evaluateModel(modelInfo, function(modelInfo){
 						console.log("model analysis complete");
 //						console.log(modelInfo);
@@ -1024,7 +1026,7 @@
 			    	//create duplicate of the existing model.
 			    	var newModel = duplicateModelInfo(model);
 			    	newRepo.Models.push(newModel);
-//umlModelAnalyzer.extractModelInfo(newModel, modelReloadProcessor);
+//umlModelExtractor.extractModelInfo(newModel, modelReloadProcessor);
 			    chain = chain.then(reloadModel(newModel));
 			    })(repo.Models[i]);
 			}
