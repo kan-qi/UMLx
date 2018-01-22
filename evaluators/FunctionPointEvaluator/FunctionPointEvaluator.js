@@ -146,12 +146,12 @@
 		FN : 0
 		}
 		
-		for ( var i in useCaseInfo.Diagrams) {
-			var diagram = useCaseInfo.Diagrams[i];
-			
-			if (!diagram.DiagramAnalytics) {
-				diagram.DiagramAnalytics = {};
-			}
+//		for ( var i in useCaseInfo.Diagrams) {
+//			var diagram = useCaseInfo.Diagrams[i];
+//			
+//			if (!useCaseInfo.DiagramAnalytics) {
+//				useCaseInfo.DiagramAnalytics = {};
+//			}
 			
 			var FUNC_NA = 0;
 			var FN = 0;
@@ -159,11 +159,11 @@
 			var EO = 0;
 			var EQ = 0;
 			
-			for ( var j in diagram.Paths) {
-				var path = diagram.Paths[j];
+			for ( var j in useCaseInfo.Paths) {
+				var path = useCaseInfo.Paths[j];
 				// console.log('--------Process Path-------');
 				
-				functionPointProcessor.processPath(path, diagram, useCaseInfo);
+				functionPointProcessor.processPath(path, useCaseInfo);
 				
 				var functionalOperations = path["FPAnalytics"].Functional;
 				
@@ -187,20 +187,20 @@
 			}
 
 
-			diagram["FPEmpirics"] = {};
+//			diagram["FPEmpirics"] = {};
 			
-			diagram["FPEmpirics"].EI = EI;
-			diagram["FPEmpirics"].EO = EO;
-			diagram["FPEmpirics"].EQ = EQ;
-			diagram["FPEmpirics"].FUNC_NA = FUNC_NA;
-			diagram["FPEmpirics"].FN = FN;
+			useCaseInfo["FPAnalytics"].EI = EI;
+			useCaseInfo["FPAnalytics"].EO = EO;
+			useCaseInfo["FPAnalytics"].EQ = EQ;
+			useCaseInfo["FPAnalytics"].FUNC_NA = FUNC_NA;
+			useCaseInfo["FPAnalytics"].FN = FN;
 			
-			useCaseInfo["FPAnalytics"].EI += diagram["FPEmpirics"].EI;
-			useCaseInfo["FPAnalytics"].EO += diagram["FPEmpirics"].EO;
-			useCaseInfo["FPAnalytics"].EQ += diagram["FPEmpirics"].EQ;
-			useCaseInfo["FPAnalytics"].FUNC_NA += diagram["FPEmpirics"].FUNC_NA;
-			useCaseInfo["FPAnalytics"].FN += diagram["FPEmpirics"].FN;
-		}
+//			useCaseInfo["FPAnalytics"].EI += diagram["FPEmpirics"].EI;
+//			useCaseInfo["FPAnalytics"].EO += diagram["FPEmpirics"].EO;
+//			useCaseInfo["FPAnalytics"].EQ += diagram["FPEmpirics"].EQ;
+//			useCaseInfo["FPAnalytics"].FUNC_NA += diagram["FPEmpirics"].FUNC_NA;
+//			useCaseInfo["FPAnalytics"].FN += diagram["FPEmpirics"].FN;
+//		}
 	}
 	
 	function evaluateDomainModel(domainModelInfo){
@@ -220,9 +220,9 @@
 				[ 'y>5', '7', '10', '10' ], ];
 		
 		
-		for ( var i in domainModelInfo["FPAnalytics"].Diagrams) {
-			var diagram = domainModelInfo["FPAnalytics"].Diagrams[i];
-			var DET = diagram.AttributeNum;
+//		for ( var i in domainModelInfo["FPAnalytics"].Diagrams) {
+//			var diagram = domainModelInfo["FPAnalytics"].Diagrams[i];
+			var DET = domainModelInfo["FPAnalytics"].AttributeNum;
 			var RET = 1;
 			var ILF = 0;
 			var EIF = 0;
@@ -259,7 +259,7 @@
 			domainModelInfo["FPAnalytics"].RET += RET;
 			domainModelInfo["FPAnalytics"].ILF += ILF;
 			domainModelInfo["FPAnalytics"].EIF += EIF;
-		}
+//		}
 		
 		return domainModelInfo["FPAnalytics"];
 

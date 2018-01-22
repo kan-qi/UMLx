@@ -123,10 +123,10 @@
 		
 		
 		
-		for ( var i in useCaseInfo.Diagrams) {
-			var diagram = useCaseInfo.Diagrams[i];
+//		for ( var i in useCaseInfo.Diagrams) {
+//			var diagram = useCaseInfo.Diagrams[i];
 			
-			transactionProcessor.processDiagram(diagram);
+			transactionProcessor.processUseCase(useCaseInfo);
 			
 			var EI = 0;
 			var EQ = 0;
@@ -140,18 +140,18 @@
 			var TranLength = 0;
 
 			
-			for ( var j in diagram.Paths) {
+			for ( var j in useCaseInfo.Paths) {
 				
-				var path = diagram.Paths[j];
+				var path = useCaseInfo.Paths[j];
 				 console.log('--------Process Path-------');
 				 console.log(path);
 				 
 				 console.log(modelInfo);
 				
-				transactionProcessor.processPath(path, diagram, useCaseInfo, modelInfo);
+				transactionProcessor.processPath(path, useCaseInfo, modelInfo);
 				
-				console.log(path);
-				console.log(diagram.Paths);
+//				console.log(path);
+//				console.log(diagram.Paths);
 
 				var transactionalOperations = path['TransactionAnalytics'].Transactional;
 				
@@ -187,31 +187,31 @@
 				
 			}
 			
-			diagram['TransactionAnalytics'] = {};
-			diagram['TransactionAnalytics'].EI = EI;
-			diagram['TransactionAnalytics'].EQ = EQ;
-			diagram['TransactionAnalytics'].INT = INT;
-			diagram['TransactionAnalytics'].DM = DM;
-			diagram['TransactionAnalytics'].CTRL = CTRL;
-			diagram['TransactionAnalytics'].EXTIVK = EXTIVK;
-			diagram['TransactionAnalytics'].EXTCLL = EXTCLL;
-			diagram['TransactionAnalytics'].TRAN_NA = TRAN_NA;
-			diagram['TransactionAnalytics'].NT = NT;
-			diagram['TransactionAnalytics'].TranLength = TranLength;
+			useCaseInfo['TransactionAnalytics'] = {};
+			useCaseInfo['TransactionAnalytics'].EI = EI;
+			useCaseInfo['TransactionAnalytics'].EQ = EQ;
+			useCaseInfo['TransactionAnalytics'].INT = INT;
+			useCaseInfo['TransactionAnalytics'].DM = DM;
+			useCaseInfo['TransactionAnalytics'].CTRL = CTRL;
+			useCaseInfo['TransactionAnalytics'].EXTIVK = EXTIVK;
+			useCaseInfo['TransactionAnalytics'].EXTCLL = EXTCLL;
+			useCaseInfo['TransactionAnalytics'].TRAN_NA = TRAN_NA;
+			useCaseInfo['TransactionAnalytics'].NT = NT;
+			useCaseInfo['TransactionAnalytics'].TranLength = TranLength;
 			
-			useCaseInfo['TransactionAnalytics'].EI += diagram['TransactionAnalytics'].EI;
-			useCaseInfo['TransactionAnalytics'].EQ += diagram['TransactionAnalytics'].EQ;
-			useCaseInfo['TransactionAnalytics'].INT += diagram['TransactionAnalytics'].INT;
-			useCaseInfo['TransactionAnalytics'].DM += diagram['TransactionAnalytics'].DM;
-			useCaseInfo['TransactionAnalytics'].CTRL += diagram['TransactionAnalytics'].CTRL;
-			useCaseInfo['TransactionAnalytics'].EXTIVK += diagram['TransactionAnalytics'].EXTIVK;
-			useCaseInfo['TransactionAnalytics'].EXTCLL += diagram['TransactionAnalytics'].EXTCLL;
-			useCaseInfo['TransactionAnalytics'].TRAN_NA += diagram['TransactionAnalytics'].TRAN_NA;
-			useCaseInfo['TransactionAnalytics'].NT += diagram['TransactionAnalytics'].NT;
-			useCaseInfo['TransactionAnalytics'].TranLength += diagram['TransactionAnalytics'].TranLength;
+//			useCaseInfo['TransactionAnalytics'].EI += diagram['TransactionAnalytics'].EI;
+//			useCaseInfo['TransactionAnalytics'].EQ += diagram['TransactionAnalytics'].EQ;
+//			useCaseInfo['TransactionAnalytics'].INT += diagram['TransactionAnalytics'].INT;
+//			useCaseInfo['TransactionAnalytics'].DM += diagram['TransactionAnalytics'].DM;
+//			useCaseInfo['TransactionAnalytics'].CTRL += diagram['TransactionAnalytics'].CTRL;
+//			useCaseInfo['TransactionAnalytics'].EXTIVK += diagram['TransactionAnalytics'].EXTIVK;
+//			useCaseInfo['TransactionAnalytics'].EXTCLL += diagram['TransactionAnalytics'].EXTCLL;
+//			useCaseInfo['TransactionAnalytics'].TRAN_NA += diagram['TransactionAnalytics'].TRAN_NA;
+//			useCaseInfo['TransactionAnalytics'].NT += diagram['TransactionAnalytics'].NT;
+//			useCaseInfo['TransactionAnalytics'].TranLength += diagram['TransactionAnalytics'].TranLength;
 			
 //			console.log(useCaseInfo['TransactionAnalytics']);
-		}
+//		}
 		
 //		useCaseInfo.getPaths = function(){
 //			var paths = [];
@@ -225,14 +225,14 @@
 //		}
 		
 		var useCasePaths = [];
-		for(var i in useCaseInfo.Diagrams){
-			var diagram = useCaseInfo.Diagrams[i];
-			for(var j in diagram.Paths){
+//		for(var i in useCaseInfo.Diagrams){
+//			var diagram = useCaseInfo.Diagrams[i];
+			for(var j in useCaseInfo.Paths){
 				console.log("iterating paths");
-				console.log(diagram.Paths[j]);
-				useCasePaths.push(diagram.Paths[j]);
+				console.log(useCaseInfo.Paths[j]);
+				useCasePaths.push(useCaseInfo.Paths[j]);
 			}
-		}
+//		}
 		
 		useCaseInfo.Paths = useCasePaths;
 		
@@ -254,7 +254,7 @@
 			if(callbackfunc){
 				var useCaseTransactionDump = dumpUseCaseTransactionsInfo(useCaseInfo);
 
-				var transactionAnalyticsStr = "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,arch_diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
 				 
 						useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName = "transactionAnalytics.csv";
 						var files = [{fileName : useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -336,7 +336,7 @@
 		if(callbackfunc){
 			 var modelTransactionInfoDump = dumpModelTransactionsInfo(modelInfo);
 
-				var transactionAnalyticsStr = "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,arch_diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
 	
 				modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 				var files = [{fileName : modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -421,7 +421,7 @@
 			if(callbackfunc){
 				var repoTransactionInfoDump = dumpRepoTransactionsInfo(repoInfo);
 
-				var transactionAnalyticsStr = "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,arch_diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
 	
 					repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 					var files = [{fileName : repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -459,21 +459,21 @@
 		
 		var transactionAnalyticsStr = "";
 		
-		for ( var i in useCaseInfo.Diagrams) {
-			var diagram = useCaseInfo.Diagrams[i];
+//		for ( var i in useCaseInfo.Diagrams) {
+//			var diagram = useCaseInfo.Diagrams[i];
 			
-			for(var j in diagram.Paths){
-				var path = diagram.Paths[j];
+			for(var i in useCaseInfo.Paths){
+				var path = useCaseInfo.Paths[i];
 				
-				for(var k in path['TransactionAnalytics'].Transactional){
+				for(var j in path['TransactionAnalytics'].Transactional){
 					
-				var transactionalOperation = path['TransactionAnalytics'].Transactional[k];
+				var transactionalOperation = path['TransactionAnalytics'].Transactional[j];
 				
 				transactionNum++;
 				
 				transactionAnalyticsStr += transactionNum+","+
 				path.PathStr.replace(/,/gi, "")+","+ 
-				diagram.Name+","+ 
+//				diagram.Name+","+ 
 				useCaseInfo.Name+","+
 				transactionalOperation+","+ 
 				path['TransactionAnalytics'].TranLength+","+
@@ -482,7 +482,7 @@
 				}
 				
 			}
-		}
+//		}
 	
 		return {
 			transactionAnalyticsStr: transactionAnalyticsStr,
@@ -536,6 +536,96 @@
 		}
 		
 	}
+	
+	
+	
+//	function isCycled(path){
+//		var lastNode = path[path.length-1];
+//			for(var i=0; i < path.length-1; i++){
+//				if(path[i] == lastNode){
+//					return true;
+//				}
+//			}
+//		return false;
+//	}
+//
+//	function traverseBehavioralDiagram(diagram){
+//		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+//		var entries=diagram.Entries;// tag: elements
+//		
+//		var toExpandCollection = new Array();
+//		
+//		for (var i=0; i < entries.length; i++){
+//			var entry = entries[i];
+//			//define the node structure to keep the infor while traversing the graph
+//			var node = {
+//				//id: startElement, //ElementGUID
+//				Node: entry,
+//				PathToNode: [entry]
+//			};
+//			toExpandCollection.push(node);
+//		}
+//		
+//		var Paths = new Array();
+//		var toExpand;
+//		while((toExpand = toExpandCollection.pop()) != null){
+//			var node = toExpand.Node;
+//			var pathToNode = toExpand.PathToNode;
+////			var toExpandID = toExpand.id;
+////			var expanded = false;
+//			// test completeness of the expanded path first to decide if continue to expand
+////			var childNodes = diagram.expand(node);
+//			// if null is returned, then node is an end node.
+//			
+////			diagram.expand = function(node){
+//			// add condition on actor to prevent stop searching for message [actor, view].
+////			if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
+////				return;
+////			}
+////			if(node.outboundNum == 0){
+////				return;
+////			}
+////			else {
+//
+//				var childNodes = [];
+//				for(var i in diagram.Edges){
+//					var edge = diagram.Edges[i];
+//					if(edge.start == node){
+//						childNodes.push(edge.end);
+//					}
+//				}
+//
+////				return children;
+////			}
+//			
+////		}
+//			
+//			if(!childNodes){
+//				Paths.push({Nodes: pathToNode});
+//			}
+//			else{
+//
+//				for(var i in childNodes){
+//					var childNode = childNodes[i];
+//					var toExpandNode = {
+//							Node: childNode,
+//							PathToNode: pathToNode.concat(childNode)
+//						}
+//
+//					if(!isCycled(toExpandNode.PathToNode)){
+//					toExpandCollection.push(toExpandNode);
+//					}
+//					else{
+//					 Paths.push({Nodes: toExpandNode.PathToNode});
+//					}
+//				}		
+//			}
+//			
+//			
+//		}
+//		
+//		return Paths;
+//	}
 	
 
 	module.exports = {

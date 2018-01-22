@@ -122,11 +122,13 @@
 		//evaluate UEXUCW
 		useCaseInfo['UseCasePointData'].UEXUCW = 0;
 		// merge the analytics by the levels.
-		for(var j in useCaseInfo.Diagrams){
-			var diagramInfo = useCaseInfo.Diagrams[j];
+//		for(var j in useCaseInfo.Diagrams){
+//			var diagramInfo = useCaseInfo.Diagrams[j];
 //			console.log(diagramInfo);
-			for(var k in diagramInfo.Paths){
-				var path = diagramInfo.Paths[k];
+//			for(var k in diagramInfo.Paths){
+//				var path = diagramInfo.Paths[k];
+			for(var k in useCaseInfo.Paths){
+				var path = useCaseInfo.Paths[k];
 				var utw = 0;
 				var doN = path.length;
 				var uieN = path.boundaryNum
@@ -171,16 +173,16 @@
 
 				useCaseInfo['UseCasePointData'].UEXUCW += utw;
 			  }
-		}
+//		}
 			
 		//evaluate DUCW
 			useCaseInfo['UseCasePointData'].UDUCW = 0;
 			// merge the analytics by the levels.
-			for(var j in useCaseInfo['UseCasePointData'].Diagrams){
-				var diagramInfo = useCaseInfo['UseCasePointData'].Diagrams[j];
+//			for(var j in useCaseInfo['UseCasePointData'].Diagrams){
+//				var diagramInfo = useCaseInfo['UseCasePointData'].Diagrams[j];
 //				console.log(diagramInfo);
-				for(var k in diagramInfo.Paths){
-					var path = diagramInfo.Paths[k];
+				for(var k in useCaseInfo.Paths){
+					var path = useCaseInfo.Paths[k];
 					var utw = 0;
 					var doN = path.Elements.length;
 					var uieN = path.boundaryNum;
@@ -232,7 +234,7 @@
 
 					useCaseInfo['UseCasePointData'].UDUCW += utw;
 				  }
-			}
+//			}
 	}
 	
 

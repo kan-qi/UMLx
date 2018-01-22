@@ -1,19 +1,19 @@
-
 (function() {
     // Retrieve
     var mongo = require('mongodb');
     var MongoClient = mongo.MongoClient;
-    var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
+    var umlModelExtractor = require("./UMLModelExtractor.js");
     var umlEvaluator = require("./UMLEvaluator.js");
 	var url = "mongodb://127.0.0.1:27017/repo_info_schema";
     var umlFileManager = require("./UMLFileManager.js");
     var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
     var config = require('./config'); // get our config file
     const uuidv4 = require('uuid/v4');
-    var GitHubApi = require('github')
 
-	var github = new GitHubApi({
-	});
+    var GitHubApi = require('github')       
+            
+        var github = new GitHubApi({        
+        });
 
 	function getModelQuery(modelId, repoId){
 		var o_id = new mongo.ObjectID(repoId);
@@ -29,93 +29,93 @@
 
         return modelQuery;
     }
-	
-	
-//	var asyncToSync = getCommitsForRepo(name,owner);
 
-	function getCommitsForRepo(name,owner) {
-	    var sync = true;
-	    var result = null;
-	    github.repos.getCommits({
-			  owner: owner,
-			  repo: name,
-		}, function (err, res2) {
-			if(err)
-				result =0;
-			else{
-				result = res2.data.length;
-			}
-	        sync = false;
-	    });
-	    while(sync) {require('deasync').sleep(100);}
-	    return result;
-	}
+    //  var asyncToSync = getCommitsForRepo(name,owner);        
+            
+        function getCommitsForRepo(name,owner) {        
+            var sync = true;        
+            var result = null;      
+            github.repos.getCommits({       
+                  owner: owner,     
+                  repo: name,       
+            }, function (err, res2) {       
+                if(err)     
+                    result =0;      
+                else{       
+                    result = res2.data.length;      
+                }       
+                sync = false;       
+            });     
+            while(sync) {require('deasync').sleep(100);}        
+            return result;      
+        }       
+                
+                
+        function saveGitInfo(email, userId, callbackfunc){      
+                    
+            github.search.users({       
+                  q: email+' in:email'      
+                }, function (err, res) {        
+                  if (err) throw err        
+                        
+                  if(res && res.data.items.length > 0){     
+                      var userName = res.data.items[0].login;       
+                            
+                      github.repos.getForUser({     
+                          username: userName        
+                        }, function (err, res1) {       
+                          if (err) throw err        
+                                
+                          var repoData =[];     
+                          if(res1 && res1.data.length > 0){     
+                                    
+                              var repos = res1.data;        
+                              repoData= repos.map(function(repo, index){        
+                                 return {name : repo.name, owner : repo.owner.login, html_url : repo.html_url}      
+                              });       
+                                    
+                          }     
+                                
+                          if(repoData.length > 0){      
+                              for(var index in repoData){       
+                                  repoData[index].commits =  getCommitsForRepo(repoData[index].name,repoData[index].owner);     
+                              }     
+                          }     
+                                
+                            var userRepoInfo = {};      
+                            MongoClient.connect(url, function(err, db) {        
+                                if (err) throw err;     
+                                db.collection("gitdata").insertOne(userRepoInfo, function(err, result) {        
+                                   if (err) throw err;      
+                                        
+                                    var userRepoInfoId = userRepoInfo._id;      
+                                    userRepoInfo.userId = userId;       
+                                    userRepoInfo.gitUserName  = userName;       
+                                    userRepoInfo.repoData = repoData;       
+                
+                                    var o_id = new mongo.ObjectID(userRepoInfoId);      
+                
+                                    db.collection("gitdata").update({_id:o_id}, userRepoInfo, function(err,updateCnt){      
+                                                
+                                        if (err) throw err;     
+                                        db.close();     
+                                        callbackfunc(true, 'Git Info Saved');       
+                
+                                    });     
+                
+                                });     
+                        });     
+                        });     
+                  } else {      
+                            
+                      callbackfunc(false, 'Could not find user');       
+                  }     
+                        
+            });     
+                    
+                    
+        }
 	
-	
-	function saveGitInfo(email, userId, callbackfunc){
-		
-		github.search.users({
-			  q: email+' in:email'
-			}, function (err, res) {
-			  if (err) throw err
-			 
-			  if(res && res.data.items.length > 0){
-				  var userName = res.data.items[0].login;
-				  
-				  github.repos.getForUser({
-					  username: userName
-					}, function (err, res1) {
-					  if (err) throw err
-					  
-					  var repoData =[];
-					  if(res1 && res1.data.length > 0){
-						  
-						  var repos = res1.data;
-						  repoData= repos.map(function(repo, index){
-							 return {name : repo.name, owner : repo.owner.login, html_url : repo.html_url} 
-						  });
-						  
-					  }
-					  
-					  if(repoData.length > 0){
-						  for(var index in repoData){
-							  repoData[index].commits =  getCommitsForRepo(repoData[index].name,repoData[index].owner);
-						  }
-					  }
-					  
-					    var userRepoInfo = {};
-					    MongoClient.connect(url, function(err, db) {
-				            if (err) throw err;
-		  				    db.collection("gitdata").insertOne(userRepoInfo, function(err, result) {
-		  				       if (err) throw err;
-		  				       
-			  				    var userRepoInfoId = userRepoInfo._id;
-			  				    userRepoInfo.userId = userId;
-			  				    userRepoInfo.gitUserName  = userName;
-			  				    userRepoInfo.repoData = repoData;
-	
-			  				    var o_id = new mongo.ObjectID(userRepoInfoId);
-	
-		                        db.collection("gitdata").update({_id:o_id}, userRepoInfo, function(err,updateCnt){
-		                        	
-		                        	if (err) throw err;
-								    db.close();
-								    callbackfunc(true, 'Git Info Saved');
-	
-		                        });
-	
-		                    });
-					});
-					});
-			  } else {
-				  
-				  callbackfunc(false, 'Could not find user');
-			  }
-			 
-		});
-		
-		
-	}
 	function deleteUser(userId, callbackfunc){
 		
 		  MongoClient.connect(url, function(err, db) {
@@ -344,28 +344,27 @@
             });
         });
     }
-    
-    
-    function getGitData(userId, callbackfunc){
-    	
-    	
-    	 MongoClient.connect(url, function(err, db) {
-             if (err) throw err;
-             
-   		  	 var userQuery = {userId: userId };
-   		  	 db.collection("gitdata").findOne(userQuery,function(err,gitData){
-   			  if (err) throw err;
-   			  
-   			  if(gitData){
-   				  callbackfunc(gitData.repoData,true,'found the git Data');
-   			  } else {
-   				  callbackfunc(null ,false,'cannot find the git Data');
-   			  }
-   			  
-   		  	 });
-         });
-    	
-    }
+
+    function getGitData(userId, callbackfunc){      
+                    
+                    
+             MongoClient.connect(url, function(err, db) {       
+                 if (err) throw err;        
+                        
+                 var userQuery = {userId: userId };     
+                 db.collection("gitdata").findOne(userQuery,function(err,gitData){      
+                  if (err) throw err;       
+                        
+                  if(gitData){      
+                      callbackfunc(gitData.repoData,true,'found the git Data');     
+                  } else {      
+                      callbackfunc(null ,false,'cannot find the git Data');     
+                  }     
+                        
+                 });        
+             });        
+                    
+        }
 
 
     function queryUseCaseInfo(repoId, modelId, useCaseId, callbackfunc){
@@ -402,6 +401,8 @@
             ], function(err, result){
                 if (err) throw err;
                 db.close();
+                console.log("test the use case query");
+                console.log(result);
                 callbackfunc(result[0]['UseCases']);
             });
         });
@@ -1113,7 +1114,7 @@
 				//update model analytics.
 //				console.log(modelInfo);
 				return new Promise((resolve, reject) => {
-					umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
+					umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 					umlEvaluator.evaluateModel(modelInfo, function(modelInfo){
 						console.log("model analysis complete");
 //						console.log(modelInfo);
@@ -1136,7 +1137,7 @@
 			    	//create duplicate of the existing model.
 			    	var newModel = duplicateModelInfo(model);
 			    	newRepo.Models.push(newModel);
-//umlModelAnalyzer.extractModelInfo(newModel, modelReloadProcessor);
+//umlModelExtractor.extractModelInfo(newModel, modelReloadProcessor);
 			    chain = chain.then(reloadModel(newModel));
 			    })(repo.Models[i]);
 			}
@@ -1183,11 +1184,10 @@
         saveSurveyAnalyticsData: saveSurveyAnalyticsData,
         getSurveyData: getSurveyData,
         deleteUser: deleteUser,
-        deactivateUser:deactivateUser,
+        queryUsers: queryUsers,
         saveGitInfo:saveGitInfo,
         getGitData : getGitData,
-        queryUsers: queryUsers
+        deactivateUser:deactivateUser
 
     }
 
-}())

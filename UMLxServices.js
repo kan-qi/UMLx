@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var fs = require("fs");
 var admZip = require('adm-zip');
-var umlModelAnalyzer = require("./UMLModelAnalyzer.js");
+var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
 var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
@@ -454,7 +454,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
 		console.log('updated model info');
 		console.log(modelInfo);
-		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
+		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
@@ -538,7 +538,7 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 //		console.log('umlFileInfo');
 		umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 			var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
-			umlModelAnalyzer.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
+			umlModelExtractor.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
 			//update model analytics.
 //			console.log(modelInfo);
 			umlEvaluator.evaluateModel(modelInfoVersion, function(){
@@ -574,7 +574,7 @@ app.get('/deleteModel', function (req, res){
 		if(reanalyseRepo){
 		 queryRepoInfo(repoId, function(repoInfo){
 		      console.log(repoInfo);
-		      umlModelAnalyzer.analyseRepo(repoInfo, function(){
+		      umlEvaluator.evaluateRepo(repoInfo, function(){
 					console.log("model analysis is complete");
 				});
 				updateRepo(repoInfo, function(){
@@ -599,7 +599,7 @@ app.get('/reanalyseModel', function (req, res){
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryModelInfo(modelId, req.userInfo.repoId, function(modelInfo){
-		umlModelAnalyzer.extractModelInfo(modelInfo, function(modelInfo){
+		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
@@ -644,7 +644,7 @@ app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
 			return;
 		}
 
-//		umlModelAnalyzer.analyseRepo(repo, function(){
+//		umlEvaluator.evaluateRepo(repo, function(){
 //			console.log("repo analysis complete");
 //		});
 //		console.log(repo);
@@ -668,7 +668,7 @@ app.get('/loadEmpiricalModelDataForRepo', function (req, res){
 			return;
 		}
 
-//		umlModelAnalyzer.analyseRepo(repo, function(){
+//		umlEvaluator.evaluateRepo(repo, function(){
 //			console.log("repo analysis complete");
 //		});
 //		console.log(repo);
@@ -1119,8 +1119,15 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+var testingParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
+app.get('/testFunctions', function(req, res){
+	testingParser.extractDiagramModels("./vp_xml_export.xml/project.xml", function(data){
+		console.log ('the output data', JSON.stringify(data));
+		res.json(data);
+	})
+});
 
-var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parserv1.1.js")
+var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parser.js")
 app.get('/testSequenceDiagramExtraction', function(req, res){
 	sequenceDiagramParser.extractSequenceDiagrams("./temp/test_example.xml", function(sequenceDiagrams){
 		res.json(sequenceDiagrams);
@@ -1136,6 +1143,13 @@ app.get('/testRobustnessDiagramExtraction', function(req, res){
 app.get('/testActivityDiagramExtraction', function(req, res){
 	sequenceDiagramParser.extractActivityDiagrams("./temp/test_example.xml", function(activityDiagrams){
 		res.json(activityDiagrams);
+	});
+});
+
+app.get('/testCOCOMODataLoad', function(req, res){
+	var cocomoCalculator = require("./evaluators/COCOMOCalculator.js")
+	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
+		res.end(outputStr);
 	});
 });
 
@@ -1174,7 +1188,6 @@ app.get('/deactivateUser', function(req,res){
 		});
 	}
 });
-
 
 var server = app.listen(8081,'127.0.0.1', function () {
   var host = server.address().address

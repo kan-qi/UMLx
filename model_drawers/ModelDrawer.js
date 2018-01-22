@@ -8,7 +8,6 @@
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
 	
-
 	var dottyUtil = require("../utils/DottyUtil.js");
 	
 	function drawModel(model, filePath, callbackfunc){
