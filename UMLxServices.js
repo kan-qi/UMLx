@@ -1083,6 +1083,13 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+var testingParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
+app.get('/testFunctions', function(req, res){
+	testingParser.extractDiagramModels("./vp_xml_export.xml/project.xml", function(data){
+		console.log ('the output data', JSON.stringify(data));
+		res.json(data);
+	})
+});
 
 var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parser.js")
 app.get('/testSequenceDiagramExtraction', function(req, res){
@@ -1145,7 +1152,6 @@ app.get('/deactivateUser', function(req,res){
 		});
 	}
 });
-
 
 var server = app.listen(8081,'127.0.0.1', function () {
   var host = server.address().address
