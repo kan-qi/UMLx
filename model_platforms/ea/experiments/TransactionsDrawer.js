@@ -76,7 +76,7 @@
 //		var Nodes = diagram.Nodes;
 		for(var i in paths){
 			// add tag to every nodes, such that paths will be separated in drawing.
-			var pathTag = "_"+i;
+			var pathTag = Number(i)+1;
 
 			dotty += "subgraph cluster"+i+" {";
 			var path = paths[i];
@@ -98,7 +98,7 @@
 				
 				if(node.Stimulus){
 					nodeToDraw = drawStimulusNode(node.id+pathTag, node.Name);
-				} else if(node.outScope){
+				} else if(node.OutScope){
 					nodeToDraw = drawOutOfScopeNode(node.id+pathTag, node.Name);
 				} else if(node.Type === "fragment_start" || node.Type === "fragment_end"){
 					nodeToDraw = drawFragmentNode(node.id+pathTag, node.Name);
@@ -156,7 +156,7 @@
 			if(path.OutScope){
 				dotty += 'bgcolor = "gray";'
 			}
-			dotty += "label = \"transaction"+pathTag+"\";}";
+			dotty += "label = \"Transaction#"+pathTag+"\";}";
 		}
 		
 		dotty += 'imagepath = \"./imgs\"}';

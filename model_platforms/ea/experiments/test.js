@@ -258,7 +258,7 @@ function drawDomainObjectNode(component){
 	for (var i in component.Attributes){
 		var attribute = component.Attributes[i];
 //		componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
-		componentInternal += "|<f"+componentInternalIndex+">"+attribute.Type+" "+attribute.Name;
+		componentInternal += "|<f"+componentInternalIndex+">"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name;
 		componentInternalIndex++;
 	}
 	
@@ -266,13 +266,15 @@ function drawDomainObjectNode(component){
 		var operation = component.Operations[i];
 //		dotty += '"'+operation.Name+'"->"'+component.Name+'";';
 		var functionSignature = operation.Name+"(";
+		console.log("test parameters");
+		console.log(operation.Parameters);
 		for(var j in operation.Parameters){
 			var parameter = operation.Parameters[j];
 			if(parameter.Name === 'return'){
-				functionSignature = parameter.Type + " "+functionSignature;
+				functionSignature = parameter.Type.substring(7).replace("__", "[]") + " "+functionSignature;
 			}
 			else {
-				functionSignature += parameter.Type+" "+parameter.Name;
+				functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
 			}
 		}
 		functionSignature += ")";
