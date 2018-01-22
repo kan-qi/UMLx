@@ -30,6 +30,9 @@ workDir <- args[7]
 initial.dir<-getwd()
 setwd(workDir)
 
+
+reportPath1 <- paste(outputDir,'modelElementsAnalytics.txt', sep='/')
+sink(reportPath1)
 # cat(initial.dir)
 # change to the new directory
 cat(getwd())
@@ -60,10 +63,10 @@ pathData <- read.csv(pathAnalyticsPath, header=TRUE)
 #setwd("")
 
 
-svg(paste(outputDir,"operation_num_analysis_result.svg", sep="/"))
-print(hist(operationNumData, main="Operation Num", xlab="Operation Num", breaks=15))
-svg(paste(outputDir,"attribute_num_analysis_result.svg", sep="/"))
-print(hist(attributeNumData, main="Attribute Num", xlab="Attribute Length", breaks=15))
+#svg(paste(outputDir,"operation_num_analysis_result.svg", sep="/"))
+#print(hist(operationData, main="Operation Num", xlab="Operation Num", breaks=15))
+#svg(paste(outputDir,"attribute_num_analysis_result.svg", sep="/"))
+#print(hist(attributeData, main="Attribute Num", xlab="Attribute Length", breaks=15))
 
 #setwd(workDir)
 # warnings()

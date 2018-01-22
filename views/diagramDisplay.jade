@@ -1,14 +1,14 @@
-if diagram        
+if useCaseInfo        
   div.use-case-info
-     object.use-case(data=diagram.AccessDir+"/"+diagram.SvgGraphFile type="image/svg+xml")
+     object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg" type="image/svg+xml")
   div.use-case-info-content
    ul.nav.nav-tabs
     li.active
-     a(data-toggle='tab', href='#use-case-elements') Elements
+     a(data-toggle='tab', href='#use-case-nodes') Activities
     li
      a(data-toggle='tab', href='#use-case-paths') Paths
    div.tab-content
-    div.tab-pane.fade.in.active(id="use-case-elements")
+    div.tab-pane.fade.in.active(id="use-case-nodes")
      table.table.table-striped.use-case-info-tab
       thead
        tr
@@ -17,7 +17,7 @@ if diagram
         th TYPE
       tbody
        -var elementId = 1;
-       each element in diagram.Elements
+       each element in useCaseInfo.Activities
         tr(onclick="colorUseCaseElementAndPath('#{element.Name}', 'element')", class="usecase-tr")
          td #{elementId}
          td
@@ -34,7 +34,7 @@ if diagram
         th TYPE
       tbody
        -var pathId = 1;
-       each path in diagram.Paths
+       each path in useCaseInfo.Paths
         tr(onclick="colorUseCaseElementAndPath('#{path.PathStr}', 'path')", class="usecase-tr")
          td #{pathId}
          td

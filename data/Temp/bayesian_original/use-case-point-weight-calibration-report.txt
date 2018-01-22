@@ -1,0 +1,1033 @@
+TableGrob (2 x 2) "arrange": 4 grobs
+  z     cells    name           grob
+1 1 (1-1,1-1) arrange gtable[layout]
+2 2 (1-1,2-2) arrange gtable[layout]
+3 3 (2-2,1-1) arrange gtable[layout]
+4 4 (2-2,2-2) arrange gtable[layout]
+TableGrob (2 x 4) "arrange": 8 grobs
+  z     cells    name           grob
+1 1 (1-1,1-1) arrange gtable[layout]
+2 2 (1-1,2-2) arrange gtable[layout]
+3 3 (1-1,3-3) arrange gtable[layout]
+4 4 (1-1,4-4) arrange gtable[layout]
+5 5 (2-2,1-1) arrange gtable[layout]
+6 6 (2-2,2-2) arrange gtable[layout]
+7 7 (2-2,3-3) arrange gtable[layout]
+8 8 (2-2,4-4) arrange gtable[layout]
+[1] "apriori means"
+     Simple_UC Average_UC Complex_UC
+[1,]     5.292      8.938     14.486
+[1] "apriori variance"
+     Simple_UC Average_UC Complex_UC
+[1,]   0.16112    1.20407    1.32028
+[1] "norm factor"
+     UCP 
+5.547597 
+[1] "normalized effort"
+ [1]  28.39018 141.47095  22.89866 104.57613  48.24999  51.50934 112.46443
+ [8]  26.79810  51.60531  54.71252  28.89891 315.71067 304.10563 176.72982
+[15] 134.79088 308.26868 447.00153 104.36003  61.08737 405.16733 176.85952
+[22] 158.96711 348.90103 670.74331  86.30847
+[1] "covariance matrix for apriori data"
+           Simple_UC Average_UC Complex_UC
+Simple_UC  1.0000000  0.4392740  0.4760422
+Average_UC 0.4392740  1.0000000  0.8869427
+Complex_UC 0.4760422  0.8869427  1.0000000
+[1] "variance-covariance matrix for apriori data"
+           Simple_UC Average_UC Complex_UC
+Simple_UC    0.16112    0.19348    0.21956
+Average_UC   0.19348    1.20407    1.11829
+Complex_UC   0.21956    1.11829    1.32028
+[1] "weighted apriori calibrated parameters"
+                [,1]
+Simple_UC   23.96071
+Average_UC -13.67141
+Complex_UC  18.56711
+[1] "residual variance"
+[1] 26753.55
+            Simple_UC Average_UC Complex_UC
+Simple_UC  0.17212670 0.04107866 0.02870647
+Average_UC 0.04107866 0.02433322 0.01349354
+Complex_UC 0.02870647 0.01349354 0.01379256
+           Simple_UC Average_UC Complex_UC
+Simple_UC   10.28685  -12.00776   -9.66261
+Average_UC -12.00776  103.84584  -76.60269
+Complex_UC  -9.66261  -76.60269  167.55557
+[1] "regression calibrated parameters"
+ Simple_UC Average_UC Complex_UC 
+  6.014776  22.325915  -1.255775 
+[1] "weighted regression calibrated parameters"
+                [,1]
+Simple_UC  1.9163734
+Average_UC 0.7733955
+Complex_UC 0.4565982
+[1] "bayesian averaged coefficients"
+                [,1]
+Simple_UC   5.345605
+Average_UC  9.114169
+Complex_UC 14.651468
+[1] "bayesian variance"
+           Simple_UC Average_UC Complex_UC
+Simple_UC  0.1505976  0.1608675  0.1852135
+Average_UC 0.1608675  1.0912490  1.0001379
+Complex_UC 0.1852135  1.0001379  1.1963215
+    bayesian estimated    actual bayesian_residual   residual
+1  133.67543 175.28056  28.39018       105.2852467 146.890376
+2   68.53030 125.39231 141.47095        72.9406506  16.078639
+3  202.00995 229.48724  22.89866       179.1112975 206.588584
+4  103.98502 136.20294 104.57613         0.5911105  31.626809
+5   38.03372  79.00730  48.24999        10.2162768  30.757304
+6   74.06760 101.81063  51.50934        22.5582574  50.301281
+7   99.64137 208.68120 112.46443        12.8230561  96.216768
+8  318.99877 324.90845  26.79810       292.2006753 298.110350
+9   65.37622 145.98504  51.60531        13.7709090  94.379727
+10  93.06272  28.07659  54.71252        38.3501932  26.635930
+11  63.37639  89.78107  28.89891        34.4774848  60.882165
+12  48.72493  91.03685 315.71067       266.9857482 224.673825
+13 171.12998 242.29515 304.10563       132.9756478  61.810473
+14 213.66372 194.31657 176.72982        36.9339015  17.586746
+15 169.51762 227.68035 134.79088        34.7267430  92.889475
+16  59.60783  73.46993 308.26868       248.6608559 234.798750
+17 378.21913 356.78921 447.00153        68.7824015  90.212315
+18 110.48488  65.42102 104.36003         6.1248519  38.939001
+19 144.55425  56.93155  61.08737        83.4668791   4.155822
+20 104.17672 106.60648 405.16733       300.9906188 298.560859
+21  67.91582  88.48845 176.85952       108.9437039  88.371073
+22  96.83537 145.16983 158.96711        62.1317387  13.797274
+23 135.83164 176.97690 348.90103       213.0693869 171.924126
+24 165.74906 211.36922 670.74331       504.9942536 459.374096
+25 149.67693 168.41373  86.30847        63.3684605  82.105258
+[1] 116.5792
+[1] 117.5067
+
+Call:
+lm(formula = norm_effort ~ Simple_UC + Average_UC + Complex_UC - 
+    1, data = useCaseData)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-298.11  -82.11    4.16   88.37  459.37 
+
+Coefficients:
+           Estimate Std. Error t value Pr(>|t|)  
+Simple_UC     6.015      3.378   1.781   0.0888 .
+Average_UC   22.326     10.733   2.080   0.0494 *
+Complex_UC   -1.256     13.634  -0.092   0.9274  
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+
+Residual standard error: 172.3 on 22 degrees of freedom
+Multiple R-squared:  0.5362,	Adjusted R-squared:  0.473 
+F-statistic: 8.479 on 3 and 22 DF,  p-value: 0.0006257
+
+[1] "data frame 1"
+          dens1     lines1
+1     5.1921012    apriori
+2     5.1652090    apriori
+3     5.6231182    apriori
+4     5.1405129    apriori
+5     5.7987502    apriori
+6     5.2505985    apriori
+7     5.1338569    apriori
+8     5.1912664    apriori
+9     5.4662151    apriori
+10    5.4453339    apriori
+11    5.2438100    apriori
+12    5.2030165    apriori
+13    5.3884353    apriori
+14    5.5850549    apriori
+15    5.0149999    apriori
+16    5.2387522    apriori
+17    5.2863356    apriori
+18    5.1728251    apriori
+19    5.5279087    apriori
+20    5.0304850    apriori
+21    5.3586757    apriori
+22    5.3029366    apriori
+23    5.3509106    apriori
+24    5.1895627    apriori
+25    5.3811365    apriori
+26    5.3549843    apriori
+27    5.0759861    apriori
+28    4.9806197    apriori
+29    5.3082297    apriori
+30    5.5365715    apriori
+31    4.9775703    apriori
+32    5.3004753    apriori
+33    5.1387852    apriori
+34    5.2248045    apriori
+35    5.2297566    apriori
+36    5.3502580    apriori
+37    5.1179747    apriori
+38    5.2601139    apriori
+39    5.4882112    apriori
+40    5.4627702    apriori
+41    5.5170232    apriori
+42    5.3685726    apriori
+43    5.4605024    apriori
+44    5.3702360    apriori
+45    5.3717627    apriori
+46    5.1568263    apriori
+47    5.3948657    apriori
+48    5.1450356    apriori
+49    5.3672734    apriori
+50    5.1640924    apriori
+51    5.4679923    apriori
+52    5.2837125    apriori
+53    5.0915630    apriori
+54    5.3761753    apriori
+55    5.3066992    apriori
+56    5.2735819    apriori
+57    5.3875436    apriori
+58    5.0017889    apriori
+59    5.3007468    apriori
+60    5.5159263    apriori
+61    5.5178409    apriori
+62    5.2825230    apriori
+63    5.6417672    apriori
+64    5.1028471    apriori
+65    5.0065298    apriori
+66    5.1772756    apriori
+67    5.0483589    apriori
+68    5.4504323    apriori
+69    5.1881603    apriori
+70    5.2731590    apriori
+71    5.5347613    apriori
+72    5.3024669    apriori
+73    5.3980433    apriori
+74    5.4580145    apriori
+75    5.1935238    apriori
+76    5.5044507    apriori
+77    5.0716104    apriori
+78    5.2556103    apriori
+79    5.2695486    apriori
+80    5.1890045    apriori
+81    5.3734140    apriori
+82    5.1797851    apriori
+83    5.4533644    apriori
+84    5.4446992    apriori
+85    5.3797709    apriori
+86    5.0955908    apriori
+87    5.0370852    apriori
+88    5.2406721    apriori
+89    5.0865902    apriori
+90    5.2732828    apriori
+91    5.3426689    apriori
+92    5.2993085    apriori
+93    5.2442815    apriori
+94    5.0664042    apriori
+95    5.2431606    apriori
+96    5.2118142    apriori
+97    5.0779425    apriori
+98    5.0513037    apriori
+99    5.3654573    apriori
+100   5.2378757    apriori
+101  -3.9868102 regression
+102   5.7352486 regression
+103  -5.9880853 regression
+104 -10.0866308 regression
+105   0.4850958 regression
+106   9.2823102 regression
+107  -3.5022701 regression
+108  -2.8919105 regression
+109  17.8721967 regression
+110   6.0705993 regression
+111  14.2778444 regression
+112  21.3074174 regression
+113   4.2006688 regression
+114   4.9394396 regression
+115   6.4207284 regression
+116  -8.9831474 regression
+117   6.8811157 regression
+118  21.0578120 regression
+119   8.6137868 regression
+120   2.9834564 regression
+121  -2.9970505 regression
+122   4.7549311 regression
+123   9.7387320 regression
+124  -3.6506066 regression
+125   8.4233231 regression
+126   6.4805354 regression
+127  19.8363504 regression
+128  19.6953374 regression
+129  -0.2723145 regression
+130  17.8350849 regression
+131   7.8067526 regression
+132  11.8420550 regression
+133  16.2277517 regression
+134  12.2238880 regression
+135   9.1098710 regression
+136  17.8330379 regression
+137   0.1369374 regression
+138  -1.1159513 regression
+139  -8.2400956 regression
+140   7.7694974 regression
+141   5.8626653 regression
+142  21.5517929 regression
+143  12.0064298 regression
+144   0.4166953 regression
+145 -11.3703000 regression
+146 -11.2487209 regression
+147 -14.0549870 regression
+148   3.1765872 regression
+149   2.8052558 regression
+150  14.5106487 regression
+151  13.0954386 regression
+152   4.9209459 regression
+153  -3.6605857 regression
+154  -7.7303333 regression
+155   4.5508722 regression
+156  16.5108970 regression
+157  10.7171964 regression
+158   8.6024197 regression
+159 -13.2389657 regression
+160   7.3234740 regression
+161  -6.6873425 regression
+162   9.2534320 regression
+163   6.8185515 regression
+164   4.1807848 regression
+165  -3.6518811 regression
+166  -1.5818579 regression
+167 -13.7567253 regression
+168   3.6043735 regression
+169  -0.6896692 regression
+170  -2.8057525 regression
+171   6.4538271 regression
+172   8.3976413 regression
+173   6.0123611 regression
+174  22.7692063 regression
+175   6.2519753 regression
+176  -8.8476630 regression
+177  14.9159596 regression
+178   8.0249203 regression
+179   1.1946176 regression
+180  -1.2802661 regression
+181  13.3148348 regression
+182 -13.8458672 regression
+183  26.5407412 regression
+184  -2.1849087 regression
+185  21.0161566 regression
+186  10.3541241 regression
+187  15.4271055 regression
+188  13.6334764 regression
+189  14.5481336 regression
+190  -3.4495278 regression
+191   8.3980293 regression
+192   1.2302100 regression
+193  14.4176755 regression
+194  -7.9675826 regression
+195 -12.0324310 regression
+196   4.3200739 regression
+197  10.3316905 regression
+198   9.0262040 regression
+199   6.4048454 regression
+200  -0.2661142 regression
+201   5.1398140   bayesian
+202   5.3346744   bayesian
+203   5.3571428   bayesian
+204   5.4145373   bayesian
+205   5.3042501   bayesian
+206   5.7095343   bayesian
+207   4.9825017   bayesian
+208   5.1769471   bayesian
+209   5.1954308   bayesian
+210   5.3165505   bayesian
+211   5.4348704   bayesian
+212   5.0717973   bayesian
+213   5.3437367   bayesian
+214   5.5763723   bayesian
+215   5.4094644   bayesian
+216   5.2583376   bayesian
+217   5.6248356   bayesian
+218   5.2011544   bayesian
+219   5.1241352   bayesian
+220   5.4053048   bayesian
+221   5.6798530   bayesian
+222   5.3381737   bayesian
+223   5.6908694   bayesian
+224   5.5717187   bayesian
+225   5.1661170   bayesian
+226   5.4449773   bayesian
+227   5.3529798   bayesian
+228   5.3582908   bayesian
+229   5.3446534   bayesian
+230   5.2827921   bayesian
+231   5.5050574   bayesian
+232   5.4753577   bayesian
+233   5.4898588   bayesian
+234   5.5340616   bayesian
+235   5.2042770   bayesian
+236   5.5022159   bayesian
+237   5.4108857   bayesian
+238   5.3594025   bayesian
+239   5.6454797   bayesian
+240   5.3741025   bayesian
+241   5.6146463   bayesian
+242   5.3100254   bayesian
+243   5.5243280   bayesian
+244   5.4025780   bayesian
+245   5.2610466   bayesian
+246   5.3049334   bayesian
+247   5.1728126   bayesian
+248   5.1924091   bayesian
+249   5.2496723   bayesian
+250   5.3018320   bayesian
+251   5.4491940   bayesian
+252   5.4505023   bayesian
+253   5.4590408   bayesian
+254   5.1412319   bayesian
+255   5.4340344   bayesian
+256   5.3850565   bayesian
+257   5.2170575   bayesian
+258   5.3957388   bayesian
+259   5.4119863   bayesian
+260   5.8132121   bayesian
+261   5.2438583   bayesian
+262   5.5965936   bayesian
+263   5.4490769   bayesian
+264   5.3068493   bayesian
+265   5.4564256   bayesian
+266   5.2367920   bayesian
+267   5.2964912   bayesian
+268   5.6000793   bayesian
+269   5.3410841   bayesian
+270   5.1831923   bayesian
+271   5.2006483   bayesian
+272   5.3516759   bayesian
+273   5.3149204   bayesian
+274   5.1544869   bayesian
+275   5.4040897   bayesian
+276   5.2759746   bayesian
+277   5.2935616   bayesian
+278   5.2165846   bayesian
+279   5.4926556   bayesian
+280   5.0790675   bayesian
+281   5.2719324   bayesian
+282   5.3214890   bayesian
+283   5.0961848   bayesian
+284   5.5144579   bayesian
+285   5.2038942   bayesian
+286   5.4647705   bayesian
+287   5.0611226   bayesian
+288   5.3784049   bayesian
+289   5.3610437   bayesian
+290   5.4015608   bayesian
+291   5.2271816   bayesian
+292   5.3172358   bayesian
+293   5.2955063   bayesian
+294   5.1906362   bayesian
+295   5.2360282   bayesian
+296   5.4130048   bayesian
+297   5.5109915   bayesian
+298   5.3239141   bayesian
+299   5.4424836   bayesian
+300   5.2725657   bayesian
+TableGrob (2 x 1) "arrange": 2 grobs
+  z     cells    name              grob
+1 1 (1-1,1-1) arrange   gtable[arrange]
+2 2 (2-2,1-1) arrange gtable[guide-box]
+[1] "bayesian testing set predication"
+            Simple_UC  Average_UC  Complex_UC
+Simple_UC  0.14886893 0.033538058 0.022825902
+Average_UC 0.03353806 0.017453139 0.009844505
+Complex_UC 0.02282590 0.009844505 0.009711020
+                [,1]
+Simple_UC  1.6610791
+Average_UC 0.6628106
+Complex_UC 0.3782865
+   predicted    actual
+10  93.74734  54.71252
+9   66.03297  51.60531
+3  203.70547  22.89866
+18 111.18238 104.36003
+6   74.60526  51.50934
+[1] 1.880549
+[1] 0.2 0.2 0.6
+[1] "apriori testing set predication"
+   predicted    actual
+10    91.952  54.71252
+9     64.212  51.60531
+3    199.110  22.89866
+18   109.218 104.36003
+6     73.052  51.50934
+[1] 1.816996
+[1] 0.2 0.4 0.6
+[1] "regression testing set predication"
+   predicted    actual
+10  23.27920  54.71252
+9  194.12549  51.60531
+3  285.04453  22.89866
+18  55.15442 104.36003
+6  117.39737  51.50934
+[1] 3.306998
+[1] 0.0 0.0 0.2
+[1] "bayesian testing set predication"
+            Simple_UC Average_UC Complex_UC
+Simple_UC  0.14426665 0.03439810 0.02702708
+Average_UC 0.03439810 0.01998610 0.01268842
+Complex_UC 0.02702708 0.01268842 0.01331184
+                [,1]
+Simple_UC  1.5058304
+Average_UC 0.6691997
+Complex_UC 0.4335215
+   predicted    actual
+7   99.11416 112.46443
+23 135.08786 348.90103
+16  59.31527 308.26868
+11  63.06586  28.89891
+1  133.01335  28.39018
+[1] 1.281318
+[1] 0.2 0.2 0.2
+[1] "apriori testing set predication"
+   predicted    actual
+7     97.964 112.46443
+23   134.300 348.90103
+16    58.822 308.26868
+11    62.468  28.89891
+1    131.874  28.39018
+[1] 1.271971
+[1] 0.2 0.2 0.2
+[1] "regression testing set predication"
+   predicted    actual
+7  243.25773 112.46443
+23 150.49649 348.90103
+16  74.40518 308.26868
+11  97.78910  28.89891
+1  180.83833  28.39018
+[1] 2.04877
+[1] 0 0 0
+[1] "bayesian testing set predication"
+            Simple_UC Average_UC Complex_UC
+Simple_UC  0.15708773 0.03709337 0.02614273
+Average_UC 0.03709337 0.02244110 0.01199172
+Complex_UC 0.02614273 0.01199172 0.01222308
+                [,1]
+Simple_UC  1.6712827
+Average_UC 0.6239049
+Complex_UC 0.3676398
+   predicted   actual
+14 211.45022 176.7298
+22  95.91769 158.9671
+20 102.80379 405.1673
+12  48.12736 315.7107
+21  67.37281 176.8595
+[1] 0.5611934
+[1] 0.0 0.2 0.4
+[1] "apriori testing set predication"
+   predicted   actual
+14   210.986 176.7298
+22    95.610 158.9671
+20   102.634 405.1673
+12    47.982 315.7107
+21    67.150 176.8595
+[1] 0.561483
+[1] 0.0 0.2 0.4
+[1] "regression testing set predication"
+   predicted   actual
+14 179.74752 176.7298
+22 140.30162 158.9671
+20  81.00615 405.1673
+12  79.27942 315.7107
+21  91.96883 176.8595
+[1] 0.432687
+[1] 0.4 0.4 0.6
+[1] "bayesian testing set predication"
+            Simple_UC Average_UC Complex_UC
+Simple_UC  0.17283648 0.04159260 0.02935948
+Average_UC 0.04159260 0.03122358 0.01625257
+Complex_UC 0.02935948 0.01625257 0.01520402
+                [,1]
+Simple_UC  2.1396109
+Average_UC 0.9343663
+Complex_UC 0.5799119
+   predicted    actual
+15 171.71046 134.79088
+8  322.80866  26.79810
+19 146.47920  61.08737
+24 167.83046 670.74331
+5   38.63309  48.24999
+[1] 2.733364
+[1] 0.0 0.2 0.4
+[1] "apriori testing set predication"
+   predicted    actual
+15   167.272 134.79088
+8    315.180  26.79810
+19   142.702  61.08737
+24   163.626 670.74331
+5     37.398  48.24999
+[1] 2.66385
+[1] 0.0 0.4 0.4
+[1] "regression testing set predication"
+   predicted    actual
+15 231.37763 134.79088
+8  377.02310  26.79810
+19  96.69874  61.08737
+24 221.27517 670.74331
+5   66.58150  48.24999
+[1] 3.083716
+[1] 0.0 0.0 0.2
+[1] "bayesian testing set predication"
+            Simple_UC  Average_UC  Complex_UC
+Simple_UC  0.09439300 0.024578875 0.014835898
+Average_UC 0.02457888 0.013222612 0.006737838
+Complex_UC 0.01483590 0.006737838 0.007718463
+                [,1]
+Simple_UC  1.0808152
+Average_UC 0.3933146
+Complex_UC 0.1966138
+   predicted    actual
+2   67.71764 141.47095
+4  102.57175 104.57613
+17 374.37025 447.00153
+25 148.74320  86.30847
+13 168.85041 304.10563
+[1] 0.3742277
+[1] 0.2 0.4 0.6
+[1] "apriori testing set predication"
+   predicted    actual
+2     67.504 141.47095
+4    102.378 104.57613
+17   373.478 447.00153
+25   148.176  86.30847
+13   168.492 304.10563
+[1] 0.3742209
+[1] 0.2 0.4 0.6
+[1] "regression testing set predication"
+   predicted    actual
+2   118.3029 141.47095
+4   103.4999 104.57613
+17  324.7916 447.00153
+25  207.5344  86.30847
+13  194.6807 304.10563
+[1] 0.4423694
+[1] 0.2 0.4 0.8
+[1] "n fold cross validation results"
+     bayesian_mmre bayesian_pred15 bayesian_pred25 bayesian_pred50 apriori_mmre
+[1,]     1.8805486             0.2             0.2             0.6    1.8169955
+[2,]     1.2813183             0.2             0.2             0.2    1.2719714
+[3,]     0.5611934             0.0             0.2             0.4    0.5614830
+[4,]     2.7333639             0.0             0.2             0.4    2.6638505
+[5,]     0.3742277             0.2             0.4             0.6    0.3742209
+     apriori_pred15 apriori_pred25 apriori_pred50 regression_mmre
+[1,]            0.2            0.4            0.6       3.3069975
+[2,]            0.2            0.2            0.2       2.0487696
+[3,]            0.0            0.2            0.4       0.4326870
+[4,]            0.0            0.4            0.4       3.0837165
+[5,]            0.2            0.4            0.6       0.4423694
+     regression_pred15 regression_pred25 regression_pred50
+[1,]               0.0               0.0               0.2
+[2,]               0.0               0.0               0.0
+[3,]               0.4               0.4               0.6
+[4,]               0.0               0.0               0.2
+[5,]               0.2               0.4               0.8
+    bayesian_mmre   bayesian_pred15   bayesian_pred25   bayesian_pred50 
+         1.366130          0.120000          0.240000          0.440000 
+     apriori_mmre    apriori_pred15    apriori_pred25    apriori_pred50 
+         1.337704          0.120000          0.320000          0.440000 
+  regression_mmre regression_pred15 regression_pred25 regression_pred50 
+         1.862908          0.120000          0.160000          0.360000 
+    Pred Bayesian Apriori Regression
+1      1     0.00    0.00       0.00
+2      2     0.00    0.00       0.00
+3      3     0.04    0.00       0.08
+4      4     0.04    0.04       0.08
+5      5     0.04    0.04       0.08
+6      6     0.04    0.08       0.08
+7      7     0.04    0.08       0.08
+8      8     0.08    0.08       0.08
+9      9     0.08    0.08       0.08
+10    10     0.08    0.08       0.08
+11    11     0.08    0.08       0.08
+12    12     0.08    0.08       0.08
+13    13     0.12    0.08       0.12
+14    14     0.12    0.12       0.12
+15    15     0.12    0.12       0.12
+16    16     0.12    0.12       0.12
+17    17     0.12    0.12       0.12
+18    18     0.16    0.16       0.16
+19    19     0.16    0.16       0.16
+20    20     0.16    0.16       0.16
+21    21     0.24    0.20       0.16
+22    22     0.24    0.20       0.16
+23    23     0.24    0.20       0.16
+24    24     0.24    0.24       0.16
+25    25     0.24    0.24       0.16
+26    26     0.24    0.32       0.16
+27    27     0.24    0.32       0.16
+28    28     0.24    0.32       0.16
+29    29     0.32    0.32       0.20
+30    30     0.32    0.32       0.20
+31    31     0.32    0.32       0.20
+32    32     0.32    0.32       0.20
+33    33     0.32    0.32       0.20
+34    34     0.32    0.32       0.20
+35    35     0.32    0.32       0.20
+36    36     0.32    0.32       0.20
+37    37     0.32    0.32       0.24
+38    38     0.32    0.32       0.24
+39    39     0.32    0.32       0.28
+40    40     0.32    0.32       0.28
+41    41     0.36    0.36       0.28
+42    42     0.36    0.36       0.28
+43    43     0.36    0.40       0.28
+44    44     0.36    0.40       0.28
+45    45     0.36    0.40       0.28
+46    46     0.44    0.44       0.28
+47    47     0.44    0.44       0.28
+48    48     0.44    0.44       0.28
+49    49     0.44    0.44       0.36
+50    50     0.44    0.44       0.36
+51    51     0.44    0.44       0.36
+52    52     0.44    0.44       0.36
+53    53     0.44    0.44       0.36
+54    54     0.48    0.48       0.36
+55    55     0.48    0.48       0.36
+56    56     0.48    0.48       0.36
+57    57     0.48    0.48       0.36
+58    58     0.48    0.48       0.40
+59    59     0.48    0.48       0.44
+60    60     0.48    0.48       0.48
+61    61     0.48    0.48       0.48
+62    62     0.48    0.48       0.48
+63    63     0.56    0.52       0.48
+64    64     0.56    0.56       0.48
+65    65     0.56    0.56       0.48
+66    66     0.56    0.56       0.48
+67    67     0.56    0.56       0.48
+68    68     0.56    0.56       0.48
+69    69     0.56    0.56       0.52
+70    70     0.56    0.60       0.52
+71    71     0.56    0.60       0.52
+72    72     0.56    0.60       0.52
+73    73     0.60    0.64       0.56
+74    74     0.64    0.64       0.56
+75    75     0.64    0.64       0.56
+76    76     0.72    0.68       0.60
+77    77     0.72    0.72       0.64
+78    78     0.72    0.72       0.64
+79    79     0.72    0.72       0.64
+80    80     0.72    0.72       0.64
+81    81     0.72    0.72       0.64
+82    82     0.76    0.76       0.68
+83    83     0.76    0.76       0.68
+84    84     0.76    0.76       0.68
+85    85     0.76    0.76       0.68
+86    86     0.80    0.80       0.68
+87    87     0.80    0.80       0.68
+88    88     0.80    0.80       0.68
+89    89     0.80    0.80       0.68
+90    90     0.80    0.80       0.68
+91    91     0.80    0.80       0.68
+92    92     0.80    0.80       0.68
+93    93     0.80    0.80       0.68
+94    94     0.80    0.80       0.68
+95    95     0.80    0.80       0.68
+96    96     0.80    0.80       0.68
+97    97     0.80    0.80       0.68
+98    98     0.80    0.80       0.68
+99    99     0.80    0.80       0.68
+100  100     0.80    0.80       0.68
+[1] "melt avg preds info"
+    Pred     Method Value
+1      1   Bayesian  0.00
+2      2   Bayesian  0.00
+3      3   Bayesian  0.04
+4      4   Bayesian  0.04
+5      5   Bayesian  0.04
+6      6   Bayesian  0.04
+7      7   Bayesian  0.04
+8      8   Bayesian  0.08
+9      9   Bayesian  0.08
+10    10   Bayesian  0.08
+11    11   Bayesian  0.08
+12    12   Bayesian  0.08
+13    13   Bayesian  0.12
+14    14   Bayesian  0.12
+15    15   Bayesian  0.12
+16    16   Bayesian  0.12
+17    17   Bayesian  0.12
+18    18   Bayesian  0.16
+19    19   Bayesian  0.16
+20    20   Bayesian  0.16
+21    21   Bayesian  0.24
+22    22   Bayesian  0.24
+23    23   Bayesian  0.24
+24    24   Bayesian  0.24
+25    25   Bayesian  0.24
+26    26   Bayesian  0.24
+27    27   Bayesian  0.24
+28    28   Bayesian  0.24
+29    29   Bayesian  0.32
+30    30   Bayesian  0.32
+31    31   Bayesian  0.32
+32    32   Bayesian  0.32
+33    33   Bayesian  0.32
+34    34   Bayesian  0.32
+35    35   Bayesian  0.32
+36    36   Bayesian  0.32
+37    37   Bayesian  0.32
+38    38   Bayesian  0.32
+39    39   Bayesian  0.32
+40    40   Bayesian  0.32
+41    41   Bayesian  0.36
+42    42   Bayesian  0.36
+43    43   Bayesian  0.36
+44    44   Bayesian  0.36
+45    45   Bayesian  0.36
+46    46   Bayesian  0.44
+47    47   Bayesian  0.44
+48    48   Bayesian  0.44
+49    49   Bayesian  0.44
+50    50   Bayesian  0.44
+51    51   Bayesian  0.44
+52    52   Bayesian  0.44
+53    53   Bayesian  0.44
+54    54   Bayesian  0.48
+55    55   Bayesian  0.48
+56    56   Bayesian  0.48
+57    57   Bayesian  0.48
+58    58   Bayesian  0.48
+59    59   Bayesian  0.48
+60    60   Bayesian  0.48
+61    61   Bayesian  0.48
+62    62   Bayesian  0.48
+63    63   Bayesian  0.56
+64    64   Bayesian  0.56
+65    65   Bayesian  0.56
+66    66   Bayesian  0.56
+67    67   Bayesian  0.56
+68    68   Bayesian  0.56
+69    69   Bayesian  0.56
+70    70   Bayesian  0.56
+71    71   Bayesian  0.56
+72    72   Bayesian  0.56
+73    73   Bayesian  0.60
+74    74   Bayesian  0.64
+75    75   Bayesian  0.64
+76    76   Bayesian  0.72
+77    77   Bayesian  0.72
+78    78   Bayesian  0.72
+79    79   Bayesian  0.72
+80    80   Bayesian  0.72
+81    81   Bayesian  0.72
+82    82   Bayesian  0.76
+83    83   Bayesian  0.76
+84    84   Bayesian  0.76
+85    85   Bayesian  0.76
+86    86   Bayesian  0.80
+87    87   Bayesian  0.80
+88    88   Bayesian  0.80
+89    89   Bayesian  0.80
+90    90   Bayesian  0.80
+91    91   Bayesian  0.80
+92    92   Bayesian  0.80
+93    93   Bayesian  0.80
+94    94   Bayesian  0.80
+95    95   Bayesian  0.80
+96    96   Bayesian  0.80
+97    97   Bayesian  0.80
+98    98   Bayesian  0.80
+99    99   Bayesian  0.80
+100  100   Bayesian  0.80
+101    1    Apriori  0.00
+102    2    Apriori  0.00
+103    3    Apriori  0.00
+104    4    Apriori  0.04
+105    5    Apriori  0.04
+106    6    Apriori  0.08
+107    7    Apriori  0.08
+108    8    Apriori  0.08
+109    9    Apriori  0.08
+110   10    Apriori  0.08
+111   11    Apriori  0.08
+112   12    Apriori  0.08
+113   13    Apriori  0.08
+114   14    Apriori  0.12
+115   15    Apriori  0.12
+116   16    Apriori  0.12
+117   17    Apriori  0.12
+118   18    Apriori  0.16
+119   19    Apriori  0.16
+120   20    Apriori  0.16
+121   21    Apriori  0.20
+122   22    Apriori  0.20
+123   23    Apriori  0.20
+124   24    Apriori  0.24
+125   25    Apriori  0.24
+126   26    Apriori  0.32
+127   27    Apriori  0.32
+128   28    Apriori  0.32
+129   29    Apriori  0.32
+130   30    Apriori  0.32
+131   31    Apriori  0.32
+132   32    Apriori  0.32
+133   33    Apriori  0.32
+134   34    Apriori  0.32
+135   35    Apriori  0.32
+136   36    Apriori  0.32
+137   37    Apriori  0.32
+138   38    Apriori  0.32
+139   39    Apriori  0.32
+140   40    Apriori  0.32
+141   41    Apriori  0.36
+142   42    Apriori  0.36
+143   43    Apriori  0.40
+144   44    Apriori  0.40
+145   45    Apriori  0.40
+146   46    Apriori  0.44
+147   47    Apriori  0.44
+148   48    Apriori  0.44
+149   49    Apriori  0.44
+150   50    Apriori  0.44
+151   51    Apriori  0.44
+152   52    Apriori  0.44
+153   53    Apriori  0.44
+154   54    Apriori  0.48
+155   55    Apriori  0.48
+156   56    Apriori  0.48
+157   57    Apriori  0.48
+158   58    Apriori  0.48
+159   59    Apriori  0.48
+160   60    Apriori  0.48
+161   61    Apriori  0.48
+162   62    Apriori  0.48
+163   63    Apriori  0.52
+164   64    Apriori  0.56
+165   65    Apriori  0.56
+166   66    Apriori  0.56
+167   67    Apriori  0.56
+168   68    Apriori  0.56
+169   69    Apriori  0.56
+170   70    Apriori  0.60
+171   71    Apriori  0.60
+172   72    Apriori  0.60
+173   73    Apriori  0.64
+174   74    Apriori  0.64
+175   75    Apriori  0.64
+176   76    Apriori  0.68
+177   77    Apriori  0.72
+178   78    Apriori  0.72
+179   79    Apriori  0.72
+180   80    Apriori  0.72
+181   81    Apriori  0.72
+182   82    Apriori  0.76
+183   83    Apriori  0.76
+184   84    Apriori  0.76
+185   85    Apriori  0.76
+186   86    Apriori  0.80
+187   87    Apriori  0.80
+188   88    Apriori  0.80
+189   89    Apriori  0.80
+190   90    Apriori  0.80
+191   91    Apriori  0.80
+192   92    Apriori  0.80
+193   93    Apriori  0.80
+194   94    Apriori  0.80
+195   95    Apriori  0.80
+196   96    Apriori  0.80
+197   97    Apriori  0.80
+198   98    Apriori  0.80
+199   99    Apriori  0.80
+200  100    Apriori  0.80
+201    1 Regression  0.00
+202    2 Regression  0.00
+203    3 Regression  0.08
+204    4 Regression  0.08
+205    5 Regression  0.08
+206    6 Regression  0.08
+207    7 Regression  0.08
+208    8 Regression  0.08
+209    9 Regression  0.08
+210   10 Regression  0.08
+211   11 Regression  0.08
+212   12 Regression  0.08
+213   13 Regression  0.12
+214   14 Regression  0.12
+215   15 Regression  0.12
+216   16 Regression  0.12
+217   17 Regression  0.12
+218   18 Regression  0.16
+219   19 Regression  0.16
+220   20 Regression  0.16
+221   21 Regression  0.16
+222   22 Regression  0.16
+223   23 Regression  0.16
+224   24 Regression  0.16
+225   25 Regression  0.16
+226   26 Regression  0.16
+227   27 Regression  0.16
+228   28 Regression  0.16
+229   29 Regression  0.20
+230   30 Regression  0.20
+231   31 Regression  0.20
+232   32 Regression  0.20
+233   33 Regression  0.20
+234   34 Regression  0.20
+235   35 Regression  0.20
+236   36 Regression  0.20
+237   37 Regression  0.24
+238   38 Regression  0.24
+239   39 Regression  0.28
+240   40 Regression  0.28
+241   41 Regression  0.28
+242   42 Regression  0.28
+243   43 Regression  0.28
+244   44 Regression  0.28
+245   45 Regression  0.28
+246   46 Regression  0.28
+247   47 Regression  0.28
+248   48 Regression  0.28
+249   49 Regression  0.36
+250   50 Regression  0.36
+251   51 Regression  0.36
+252   52 Regression  0.36
+253   53 Regression  0.36
+254   54 Regression  0.36
+255   55 Regression  0.36
+256   56 Regression  0.36
+257   57 Regression  0.36
+258   58 Regression  0.40
+259   59 Regression  0.44
+260   60 Regression  0.48
+261   61 Regression  0.48
+262   62 Regression  0.48
+263   63 Regression  0.48
+264   64 Regression  0.48
+265   65 Regression  0.48
+266   66 Regression  0.48
+267   67 Regression  0.48
+268   68 Regression  0.48
+269   69 Regression  0.52
+270   70 Regression  0.52
+271   71 Regression  0.52
+272   72 Regression  0.52
+273   73 Regression  0.56
+274   74 Regression  0.56
+275   75 Regression  0.56
+276   76 Regression  0.60
+277   77 Regression  0.64
+278   78 Regression  0.64
+279   79 Regression  0.64
+280   80 Regression  0.64
+281   81 Regression  0.64
+282   82 Regression  0.68
+283   83 Regression  0.68
+284   84 Regression  0.68
+285   85 Regression  0.68
+286   86 Regression  0.68
+287   87 Regression  0.68
+288   88 Regression  0.68
+289   89 Regression  0.68
+290   90 Regression  0.68
+291   91 Regression  0.68
+292   92 Regression  0.68
+293   93 Regression  0.68
+294   94 Regression  0.68
+295   95 Regression  0.68
+296   96 Regression  0.68
+297   97 Regression  0.68
+298   98 Regression  0.68
+299   99 Regression  0.68
+300  100 Regression  0.68
+[1] "melt avg preds info as lines and smooth function"
+[1] "melt avg preds info as dots and smooth function"

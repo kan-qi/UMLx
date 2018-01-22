@@ -46,29 +46,52 @@ transactionInfo=read.csv(transactionInfoPath,header=TRUE)
 # head(umlData[, 4])
 
 #draw trending line based on version info
-svg(paste(outputDir,"use_case_weight_distributions.svg",sep="/"), width=8, height=4)
+svg(paste(outputDir,"use_case_weight_distributions.svg",sep="/"), width=10, height=3)
 print("use case weight info")
 print(useCaseWeightInfo)
 
-meltUseCaseWeightInfo = melt(useCaseWeightInfo, id.vars="Tran_Num", value.name="Value", variable.name="Weight")
+meltUseCaseWeightInfo = melt(useCaseWeightInfo, id.vars="Tran_Num", value.name="Value", variable.name="Wght.Schm")
 print("melt use case weight info")
 print(meltUseCaseWeightInfo)
 
 maxWeight <- max(meltUseCaseWeightInfo$Value)
-meltUseCaseWeightInfo$Value <- meltUseCaseWeightInfo$Value/maxWeight*0.2
+#meltUseCaseWeightInfo$Value <- meltUseCaseWeightInfo$Value/maxWeight*0.2
+meltUseCaseWeightInfo$Value <- meltUseCaseWeightInfo$Value/maxWeight*80
 
-print(ggplot() + 
-	geom_density(data=transactionInfo, aes(x=NT), colour="black")+
-	geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Weight, color=Weight),)+
-	geom_point(size=2, shape=21, fill="white")+
-	ggtitle("Use Case Weights")+
-	scale_y_continuous(sec.axis = sec_axis(~.*maxWeight/0.2, name="Weight"))+
-	labs(y = "Percentage", x = "Number of Transaction")+
-	geom_vline(xintercept=c(4,7),linetype="dashed", size=1)
+
+#print(
+#	ggplot()+
+#	geom_density(data=transactionInfo, aes(x=NT), color="gray", fill="gray",alpha=.8, adjust=1.5)+
+#	geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, linetype=Wght.Schm),size=0.5)+
+#	geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, shape=Wght.Schm), size=2, fill="white")+
+#	scale_linetype_manual(values = c(1,2,1,1,1,1)) +
+#	scale_shape_manual(values=c(0,1,2,3,1,4))+
+#	geom_vline(xintercept=c(3,7),linetype="dashed", color="gray55")+
+#	#ggtitle("Use Case Weights")+
+#	scale_y_continuous(sec.axis = sec_axis(~.*maxWeight/0.2, name="Weight"))+
+#	labs(y = "Percentage", x = "Number of Transactions (NT)")
+#)
+
+print(
+		ggplot()+
+		geom_density(data=transactionInfo, aes(x=NT), color="gray", fill="gray",alpha=.8, adjust=1.5)+
+		geom_histogram(data=transactionInfo, aes(x=NT), binwidth=.5, colour="gray55", fill="gray55")+
+		geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, linetype=Wght.Schm),size=0.5)+
+		geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, shape=Wght.Schm), size=2, fill="white")+
+		scale_linetype_manual(values = c(1,2,1,1,1,1)) +
+		scale_shape_manual(values=c(0,1,2,3,1,4))+
+		geom_vline(xintercept=c(3,7),linetype="dashed", color="gray55")+
+		#ggtitle("Use Case Weights")+
+		scale_y_continuous(sec.axis = sec_axis(~.*maxWeight*0.0125, name="Weight"), breaks = seq(0, 80, 15),
+				limits=c(0, 80))+
+		scale_x_continuous(name = "Number of Transactions (NT)",
+				breaks = seq(0, 30, 5),
+				limits=c(0, 30))+
+		labs(y = "Frequency", x = "Number of Transactions (NT)")
 )
 
-svg(paste(outputDir,"transaction_distribution.svg",sep="/"), width=8, height=4)
-print(ggplot(transactionInfo, aes(x=NT, fill=cond))+ geom_histogram(binwidth=.5, colour="black", fill="white"))
+svg(paste(outputDir,"transaction_distribution.svg",sep="/"), width=6, height=4)
+print(ggplot(transactionInfo, aes(x=NT, fill=cond))+ geom_histogram(binwidth=.5, colour="gray55", fill="gray55")+xlab("NT")+ylab("Number of Projects"))
 
 #populateFreq <- function(row){
 #	row$Freq=1
@@ -104,10 +127,10 @@ for(i in 1:nrow(tranDist)) {
 print(tranDist)
 
 #simpleTranDist <- tranDist[which(tranDist$NT>0 & tranDist$NT < 5),]
-simpleTranDist <- subset(tranDist, NT>0 & NT < 5)
+simpleTranDist <- subset(tranDist, NT>0 & NT < 4)
 simpleTranDist$Freq <- simpleTranDist$Freq/sum(simpleTranDist$Freq)
 print(simpleTranDist)
-averageTranDist <- subset(tranDist, NT>4 & NT < 8)
+averageTranDist <- subset(tranDist, NT>3 & NT < 8)
 averageTranDist$Freq <- averageTranDist$Freq/sum(averageTranDist$Freq)
 print(averageTranDist)
 complexTranDist <- subset(tranDist, NT>7)
@@ -116,28 +139,30 @@ print(complexTranDist)
 
 
 #step 2. For each each weight schema, calculate the mean and variance.
-simpleWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 0 & useCaseWeightInfo$Tran_Num < 5),]
+simpleWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 0 & useCaseWeightInfo$Tran_Num < 4),]
 print(simpleWeight)
-simpleMeans = unlist(list(t(simpleWeight$Weight1) %*% simpleTranDist$Freq,
-		t(simpleWeight$Weight2) %*% simpleTranDist$Freq,
-		t(simpleWeight$Weight3) %*% simpleTranDist$Freq,
-		t(simpleWeight$Weight4) %*% simpleTranDist$Freq,
-		t(simpleWeight$Weight5) %*% simpleTranDist$Freq
+simpleMeans = unlist(list(t(simpleWeight$Wght.1) %*% simpleTranDist$Freq,
+		t(simpleWeight$Wght.2) %*% simpleTranDist$Freq,
+		t(simpleWeight$Wght.3) %*% simpleTranDist$Freq,
+		t(simpleWeight$Wght.4) %*% simpleTranDist$Freq,
+		t(simpleWeight$Wght.5) %*% simpleTranDist$Freq,
+		t(simpleWeight$Wght.6) %*% simpleTranDist$Freq
 		))
 print("calculated means:")
 print(simpleMeans)
-print("apriori estimated mean")
+print("apriori estimated mean:")
 print(mean(simpleMeans))
 print("apriori estimated variance")
 print(var(simpleMeans))
 
-averageWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 4 & useCaseWeightInfo$Tran_Num < 8),]
+averageWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 3 & useCaseWeightInfo$Tran_Num < 8),]
 print(averageWeight)
-averageMeans = unlist(list(t(averageWeight$Weight1) %*% averageTranDist$Freq,
-				t(averageWeight$Weight2) %*% averageTranDist$Freq,
-				t(averageWeight$Weight3) %*% averageTranDist$Freq,
-				t(averageWeight$Weight4) %*% averageTranDist$Freq,
-				t(averageWeight$Weight5) %*% averageTranDist$Freq
+averageMeans = unlist(list(t(averageWeight$Wght.1) %*% averageTranDist$Freq,
+				t(averageWeight$Wght.2) %*% averageTranDist$Freq,
+				t(averageWeight$Wght.3) %*% averageTranDist$Freq,
+				t(averageWeight$Wght.4) %*% averageTranDist$Freq,
+				t(averageWeight$Wght.5) %*% averageTranDist$Freq,
+				t(averageWeight$Wght.6) %*% averageTranDist$Freq
 		))
 print(averageMeans)
 print("apriori estimated mean")
@@ -147,11 +172,12 @@ print(var(averageMeans))
 
 complexWeight = useCaseWeightInfo[which(useCaseWeightInfo$Tran_Num > 7),]
 print(complexWeight)
-complexMeans = unlist(list(t(complexWeight$Weight1) %*% complexTranDist$Freq,
-				t(complexWeight$Weight2) %*% complexTranDist$Freq,
-				t(complexWeight$Weight3) %*% complexTranDist$Freq,
-				t(complexWeight$Weight4) %*% complexTranDist$Freq,
-				t(complexWeight$Weight5) %*% complexTranDist$Freq
+complexMeans = unlist(list(t(complexWeight$Wght.1) %*% complexTranDist$Freq,
+				t(complexWeight$Wght.2) %*% complexTranDist$Freq,
+				t(complexWeight$Wght.3) %*% complexTranDist$Freq,
+				t(complexWeight$Wght.4) %*% complexTranDist$Freq,
+				t(complexWeight$Wght.5) %*% complexTranDist$Freq,
+				t(complexWeight$Wght.6) %*% complexTranDist$Freq
 		))
 print(complexMeans)
 print("apriori estimated mean")

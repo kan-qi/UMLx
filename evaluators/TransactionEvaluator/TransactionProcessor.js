@@ -1,6 +1,13 @@
 (function(){
+
+/*
+ * Adding extra processing on use cases, for example, paths traversing, and pattern matching.
+ */
 	
+//	var UMLDiagramTraverser = require("./UMLDiagramTraverser.js");
 	var pathPatternMatchUtil = require("../../utils/PathPatternMatchUtil.js");
+
+//	var diagramDrawer = require('./DiagramProfilers/DiagramDrawer.js');
 
 	 var transactionalPatterns = [
 		 ['actor', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'transactional','Data management'],
@@ -53,14 +60,185 @@
 	var transactionalPatternTreeRoot = pathPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
 	
 	module.exports = {
-			processDiagram: function(diagram, usecase){
-				return true;
+			/*
+			 * At the diagram level, the components need to associate with domain model.
+			 */
+			processUseCase: function(useCase, model, callbackfunc){
+//				var useCase = model.UseCases[i];
+				
+//				var entries=diagram.Entries;// tag: elements
+				
+				var toExpandCollection = new Array();
+				
+				for (var j in useCase.activities){
+					var activity = useCase.activities[j];
+					//define the node structure to keep the infor while traversing the graph
+					if(activity.stimulus){
+					var node = {
+						//id: startElement, //ElementGUID
+						Node: activity,
+						PathToNode: [activity],
+						OutScope: activity.outScope
+					};
+					toExpandCollection.push(node);
+					}
+				}
+				
+				var Paths = new Array();
+				var toExpand;
+				while((toExpand = toExpandCollection.pop()) != null){
+					var node = toExpand.Node;
+					var pathToNode = toExpand.PathToNode;
+//					var toExpandID = toExpand.id;
+//					var expanded = false;
+					// test completeness of the expanded path first to decide if continue to expand
+//					var childNodes = diagram.expand(node);
+					// if null is returned, then node is an end node.
+					
+//					diagram.expand = function(node){
+					// add condition on actor to prevent stop searching for message [actor, view].
+//					if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
+//						return;
+//					}
+//					if(node.outboundNum == 0){
+//						return;
+//					}
+//					else {
+
+						var childNodes = [];
+						for(var j in useCase.precedenceRelations){
+							var edge = useCase.precedenceRelations[j];
+							if(edge.start == node){
+								childNodes.push(edge.end);
+							}
+						}
+//						return children;
+//					}
+					
+//				}
+					
+					if(childNodes.length == 0){
+						Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+					}
+					else{
+						for(var j in childNodes){
+							var childNode = childNodes[j];
+							if(!childNode){
+								continue;
+							}
+							
+							//if childNode is an outside activity
+							
+							var OutScope = false;
+							if(toExpand.OutScope||childNode.outScope){
+								OutScope = true;
+							}
+							
+							var toExpandNode = {
+								Node: childNode,
+								PathToNode: pathToNode.concat(childNode),
+								OutScope: OutScope
+							}
+							
+							console.log("toExpandNode");
+							console.log(toExpandNode);
+							
+							console.log("child node");
+							console.log(childNodes);
+							console.log(childNode);
+							console.log(childNode.name);
+							console.log(childNode.group);
+
+							if(!isCycled(toExpandNode.PathToNode) && childNode.group === "System"){
+							toExpandCollection.push(toExpandNode);
+							}
+							else{
+							Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+							}
+						}		
+					}
+			}
+				return Paths;
 			},
-			processPath: function(path, diagram, usecase){
+//			processDiagram: function(diagram, usecase, model, callbackfunc){
+//				console.log("transaction process: process diagram");
+//				diagram.Paths = UMLDiagramTraverser.traverseDiagram(diagram);
+//				diagramDrawer.drawBehavioralDiagram(diagram, callbackfunc);
+//				console.log(diagram.Paths);
+//			},
+			processPath: function(path,  usecase, model){
+//				var components = [];
+//				var pathStr = "";
+				
+				//the total degree should be determined differently. If an element has a component, then the degree is the number of components associated with the current component, and if not, it is the number of messages, associated with the current messages.
+				var totalDegree = 0;
+				
+				for(var i in path.Nodes)
+				{	
+					var node = path.Nodes[i];
+//					
+//					if(i == 0){
+//						if(node.source){
+//						components.push(node.source);
+//						}
+//					}
+//	
+//					if(node.target){
+//						components.push(node.target);
+//					}
+//					
+////					var node = path[i];
+////					var elementID = path['Elements'][i];
+////					var components = diagram.allocate(node);
+////					if(!element){
+////						break;
+////					}
+////					for(var j in components){
+////						totalDegree += components[j].InboundNumber;
+////						tranLength++;	
+////					}
+//					
+//					pathStr += node.Name;
+//					if( i != path.Nodes.length - 1){
+//						pathStr += "->";
+//					}
+					
+//					var associatedComponents = model.findAssociatedComponents(node);
+					
+					//crate a few high level functions for further analysis
+//					model.findAssociatedComponents = function(node){
+//						var components = new Set();
+					totalDegree += 1;
+						if(node.target){
+							var outgoingEdges = [];
+//							for(var i in this.Diagrams){
+								var edges = usecase.precedenceRelations;
+								for(var j in edges){
+									var edge = edges[j];
+									if(edge.source == node.target){
+//										outgoingEdges.push(edge);
+										totalDegree++;
+									}
+								}
+//							}
+							
+//							for(var edge in outgoingEdges){
+//								components.add(edge.target);
+//							}		
+						}
+						
+//						return Array.from(components);
+//					}
+					
+//					totalDegree += associatedComponents.length + 1;
+				}
+				
+//				console.log(pathStr);
+//				path.PathStr = pathStr;
 
 				path['TransactionAnalytics'] = {};
 				
-				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path, diagram, transactionalPatternTreeRoot);
+				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, transactionalPatternTreeRoot);
 				var transactionalOperationStr = "";
 				for(var i=0; i < transactionalOperations.length; i++){
 					if(i !== 0){
@@ -104,38 +282,24 @@
 						path['TransactionAnalytics'].Transactional = ['TRAN_NA'];
 					}
 					
+				path['TransactionAnalytics'].TransactionalTag = "";
 				if(path['TransactionAnalytics'].Transactional.length > 0){
-					path['TransactionAnalytics'].TransactionalTag += ","+path['TransactionAnalytics'].Transactional.join(',');
+					path['TransactionAnalytics'].TransactionalTag = path['TransactionAnalytics'].Transactional.join(',');
 				}
 				
-
-				var totalDegree = 0;
-				var tranLength = 0;
 				
-				for(var i = 0; i < path.Elements.length; i++)
-				{
-					var elementID = path['Elements'][i];
-					var element = diagram.Elements[elementID];
-					if(!element){
-						break;
-					}
-					totalDegree += element.InboundNumber;
-					tranLength++;
-				}
+//				path['TransactionAnalytics'].Components = components;
+				path['TransactionAnalytics'].TranLength = path.Nodes.length;
+				//The transaction length is defined as the number of operations of a transaction, which can be the number of activities, messages, interactions.
 				
-
-				path['TransactionAnalytics'].TranLength = tranLength;
-				//need to think it through
+				
+				
 				path['TransactionAnalytics'].TotalDegree = totalDegree;
 				
-				return true;
-			},
-			processElement: function(element, diagram, usecase){
-				// determine if the element is the duplicate of a existing one, if it is, keep the one that is more complex: OutboundNumber+InboundNumber
-				// some of the element may not have type. just filter out the element.
-				return true;
-			},
-			processLink: function(link){
+				console.log("transaction process: path process");
+				console.log(path);
+				
+				
 				return true;
 			}
 	}

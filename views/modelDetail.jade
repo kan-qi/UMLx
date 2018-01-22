@@ -43,6 +43,8 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#model-evaluation') Evaluation
      li
       a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Use cases
+     li
+      a(data-toggle='tab', href='#model-representation') Representation
     div.tab-content
      div.tab-pane.fade.in.active(id="model-analytics")
       if false
@@ -128,36 +130,17 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{modelInfo.ElementAnalytics.ActorNum}
                 span Actors
-        div.col-sm-12.scatter-plot-row
-          svg(data="./#{modelInfo.AccessDir}/modelVersionInfo.csv" width="960" height="400")  
+        div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{modelInfo.AccessDir}/modelVersionInfo.csv")
         div.col-sm-12.chart-row  
           .col-sm-6
             img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
-          .col-sm-6 
-            img(src="#{modelInfo.AccessDir}/transaction_type_percentage_plot.svg" style="width:100%;")
-     div.tab-pane.fade(id="model-distributions")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/control_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/external_input_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/external_query_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/external_invocation_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/external_call_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/interface_operation_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/not_matched_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/architecture_difficulty_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/average_degree_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/average_path_length_analysis_result.svg")
-      div.stats-chart
-       img(src="#{modelInfo.AccessDir}/path_number_analysis_result.svg")
+          .col-sm-6(id="transaction-pie" data="./#{modelInfo.AccessDir}/transactionAnalytics.csv")
+     div.tab-pane.fade(id="model-distributions" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
+      div.stats-chart.col-md-12(id="chart-1")
+      div.stats-chart.col-md-6(id="chart-8")
+      div.stats-chart.col-md-6(id="chart-9")
+      div.stats-chart.col-md-6(id="chart-10")
+      div.stats-chart.col-md-6(id="chart-11")
      div.tab-pane.fade(id="model-empirical")
        div.model-evaluation
         h3 Evaluation:
@@ -202,3 +185,6 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="usecase-analysis")
       div(id="model-usecase-analysis")
        h3 loading...
+     div.tab-pane.fade(id="model-representation")
+      div(id="model-representation-frame")
+       img(src="#{modelInfo.AccessDir}/model.svg" style="width:100%;")

@@ -10,6 +10,8 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+
+
 function model_file_upload_fnc() {
 	var formData = new FormData($('#model-file-submit-form')[0]);
 	console.log("starting the ajax call to some where");
@@ -142,7 +144,7 @@ function query_model_detail_func(){
 				}
 				console.dir(e);
 			});
-			createSVG();
+			createCharts();
 		},
 		error : function() {
 			console.log("fail");
@@ -807,8 +809,7 @@ $(document).ready(function() {
 	$('form#invite-form').submit(inviteFormSubmit);
 	
 	$('[data-toggle="popover"]').popover({'html':true});
-//	drawChartBySVG();
-	createSVG();
+	createCharts();
 });
 
 function openDialogueBox(repoId, type) {
@@ -917,118 +918,331 @@ function clearSelectedPathAndEdge() {
 	}
 }
 
-/* test code */
-function createSVG() {
-	var svg = d3.select("svg"),
-		margin = {top: 20, right: 60, bottom: 30, left: 40},
-		width = +svg.attr("width") - margin.left - margin.right,
-		height = +svg.attr("height") - margin.top - margin.bottom,
-		url = $('svg')[0].attributes.getNamedItem('data').value;
+function createCharts() {
+	createTrendingLines();
+	createPieChart();
+	createHistogram();
+	creatAvgHistograms();
+	createHistogramForPathNumber();
+}
 
-	var parseTime = d3.timeFormat("%Y-%m-%d %H:%M:%S")
-		bisectDate = d3.bisector(function(d) { return d.update_time; }).left;
-
-	var x = d3.scaleTime().range([0, width]);
-	var y = d3.scaleLinear().range([height, 0]);
-
-	var line = d3.line()
-		.x(function(d) { return x(d.update_time); })
-		.y(function(d) { return y(d.number_of_paths); });
-
-	var g = svg.append("g")
-		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
+function createTrendingLines() {
+	var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
 	d3.csv(url, function(error, data) {
-		if (error) throw error;
+		if (error) {
+			console.error(error);
+			return;
+		}
 		var tempData = [];
 		data.forEach(function(d) {
-			d.update_time = new Date(d.update_time);
+			d.update_time = new Date(d.update_time).getTime();
 			d.number_of_paths = +d.number_of_paths;
-			tempData.push({'update_time': d.update_time,"number_of_paths": d.number_of_paths} )
+			tempData.push([d.update_time, d.number_of_paths])
 		});
 		data= tempData;
-		x.domain(d3.extent(data, function(d) { return d.update_time; }));
-		y.domain([d3.min(data, function(d) { return d.number_of_paths; }) / 1.005, d3.max(data, function(d) { return d.number_of_paths; }) * 1.005]);
+		console.dir(data)
+		Highcharts.chart('trending-line', {
+			chart: {
+				zoomType: 'x'
+			},
+			title: {
+				text: 'Number of Transactions'
+			},
+			subtitle: {
+				text: document.ontouchstart === undefined ?
+						'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+			},
+			xAxis: {
+				type: 'datetime',
+				title: {
+					text: 'Update Time'
+				}
+			},
+			yAxis: {
+				title: {
+					text: 'Number of Paths'
+				}
+			},
+			legend: {
+				enabled: false
+			},
+			plotOptions: {
+				area: {
+					fillColor: {
+						linearGradient: {
+							x1: 0,
+							y1: 0,
+							x2: 0,
+							y2: 1
+						},
+						stops: [
+							[0, Highcharts.getOptions().colors[0]],
+							[1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+						]
+					},
+					marker: {
+						radius: 2
+					},
+					lineWidth: 1,
+					states: {
+						hover: {
+							lineWidth: 1
+						}
+					},
+					threshold: null
+				}
+			},
+	
+			series: [{
+				type: 'line',
+				name: 'Number of Transactions',
+				data: data
+			}]
+		});
+	});
+}
+function createPieChart() {
+	var url = $('#transaction-pie')[0].attributes.getNamedItem('data').value;
+	var newData =[];
+	d3.csv(url, function(error, data) {
+		if (error) {
+			console.error(error);
+			return;
+		}
+		var counter = [], transactionLable = [];
+		data.forEach(function(d) {
+			counter[d.transactional] ?  counter[d.transactional]++ : counter[d.transactional]= 1;
+			if (transactionLable.indexOf(d.transactional) == -1) {
+				transactionLable.push(d.transactional);
+			}
+		});
+		transactionLable.forEach(function(transaction) {
+			newData.push({
+				name: transaction,
+				y: counter[transaction]
+			});
+		})
+	
+		// Build the chart :  refer highchart pie-chart for more information 
+		Highcharts.chart('transaction-pie', {
+			chart: {
+				plotBackgroundColor: null,
+				plotBorderWidth: null,
+				plotShadow: false,
+				type: 'pie'
+			},
+			title: {
+				text: 'Distribution of Types of operations'
+			},
+			tooltip: {
+				pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+			},
+			plotOptions: {
+				pie: {
+					allowPointSelect: true,
+					cursor: 'pointer',
+					dataLabels: {
+						enabled: false
+					},
+					showInLegend: true
+				}
+			},
+			series: [{
+				name: 'Transactions',
+				colorByPoint: true,
+				data: newData
+			}]
+		});
+	});
+}
 
-		g.append("g")
-			.attr("class", "axis axis--x")
-			.attr("transform", "translate(0," + height + ")")
-			.call(d3.axisBottom(x).ticks(data.length > 5 ? 5 : data.length ).tickFormat(d3.timeFormat("%Y-%m-%d %H:%M:%S")))
-			.append("text")
-			.attr("class", "axis-title")
-			.attr("x", width)
-			.attr("y", 25)
-			.attr("dx", ".71em")
-			.style("text-anchor", "end")
-			.attr("fill", "#5D6971")
-			.text("Update Time");
-
-		g.append("g")
-			.attr("class", "axis axis--y")
-			.call(d3.axisLeft(y).ticks(5).tickFormat(function(d) { return d;}))
-			.append("text")
-			.attr("class", "axis-title")
-			.attr("transform", "rotate(-90)")
-			.attr("y", -35)
-			.attr("dy", ".71em")
-			.style("text-anchor", "end")
-			.attr("fill", "#5D6971")
-			.text("Number of Paths");
-
-		g.append("path")
-			.datum(data)
-			.attr("class", "line")
-			.attr("d", line);
-
-		var focus = g.append("g")
-			.attr("class", "focus")
-			.style("display", "none");
-
-		focus.append("line")
-			.attr("class", "x-hover-line hover-line")
-			.attr("y1", 0)
-			.attr("y2", height);
-
-		focus.append("circle")
-			.attr("r", 7.5);
-
-		focus.append("text")
-			.attr("x", 15)
-			.attr("y", -10)
-			.attr("dy", ".31em");
-
-		svg.append("rect")
-			.attr("transform", "translate(" + margin.left + "," + margin.top + ")")
-			.attr("class", "overlay")
-			.attr("width", width)
-			.attr("height", height)
-			.on("mouseover", function() { focus.style("display", null); })
-			.on("mouseout", function() { focus.style("display", "none"); })
-			.on("mousemove", mousemove);
-
-		function mousemove() {
-			var x0 = x.invert(d3.mouse(this)[0]),
-				i = bisectDate(data, x0, 1),
-				d0 = data[i - 1],
-				d1 = data[i];
-			
-			if(d0.update_time && d1 && d1.update_time) {
-				d = x0 - d0.update_time > d1.update_time - x0 ? d1 : d0;
-			} else if(!d1){
-				d = d0;
-			} else {
+function createHistogram(dataList, max) {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-expandedPathURL').value : "";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
 				return;
 			}
-			focus.attr("transform", "translate(" + x(d.update_time) + "," + y(d.number_of_paths) + ")");
-			focus.select("text").text(function() { return d.number_of_paths+", "+d.update_time; });
-			if(width < x(d.update_time) + focus.select("text").node().clientWidth) {
-				focus.select("text").attr('transform', "translate(" + (-focus.select("text").node().clientWidth) + "," + 0 + ")");
-			} else {
-				focus.select("text").attr('transform', "translate(" + 0 + "," + 0 + ")");
-				
+			var newData = {
+				CTRL: {
+					list: [],
+					chartName: "Control Operation Number"
+				}, 
+				EI: {
+					list: [],
+					chartName: "Extra Input Operation Number"
+				}, 
+				EQ: {
+					list: [],
+					chartName: "Extra Query Operation Number"
+				},
+				EXTIVK: {
+					list: [],
+					chartName: "Extra Invocation Operation Number"
+				},
+				EXTCLL: {
+					list: [],
+					chartName: "Extra Call Operation Number"
+				},
+				INT: {
+					list: [],
+					chartName: "Interface Operation Number"
+				},
+				TRAN_NA: {
+					list: [],
+					chartName: "Not Matched Operation Number"
+				}
+			};
+			data.forEach(function(d) {
+				var temp = newData[d.transactional] ? newData[d.transactional] : undefined;
+				if (temp) {
+					temp.list[+d.path_length] ? temp.list[+d.path_length]++ : temp.list[+d.path_length] = 1;
+				}
+			});
+			var maxLength = 0;
+			var dataList = [];
+			for (var chartData in newData) {
+				if (newData.hasOwnProperty(chartData)) {
+					var temp = newData[chartData]; 
+					maxLength = (maxLength < temp.list.length ? temp.list.length : maxLength);
+					for(i= 0;i < temp.list.length; i++) {
+						temp.list[i] = (temp.list[i] ? temp.list[i] : 0);
+					}
+					dataList.push({
+						data: temp.list,
+						name: temp.chartName
+					})
+				}
 			}
-			focus.select(".x-hover-line").attr("y2", height - y(d.number_of_paths));
-		}
-	});
+			//refer http://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/demo/column-basic/ for sample
+			var categoriesList = [];
+			for(i= 0; i< maxLength; i++) {
+				categoriesList.push(i.toString());
+			}
+			Highcharts.chart('chart-1', {
+				chart: {
+					type: 'column'
+				},
+				title: {
+					text: 'Distribution Graph'
+				},
+				xAxis: {
+					categories: categoriesList,
+					crosshair: true,
+					title: {
+						text: 'path_length'
+					}
+				},
+				yAxis: {
+					min: 0,
+					title: {
+						text: 'Frequency'
+					}
+				},
+				tooltip: {
+					headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+					pointFormat: '<tr><td style="color:{series.color};padding:0">&#x26AB;: </td>' +
+						'<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+					footerFormat: '</table>',
+					shared: true,
+					useHTML: true
+				},
+				plotOptions: {
+					column: {
+						pointPadding: 0.2,
+						borderWidth: 0
+					}
+				},
+				series: dataList
+			});
+		});
+	}	
+}
+function creatAvgHistograms() {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-pathAnalyticsURL').value : "";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
+				return;
+			}
+			var newData = [
+				{
+					list: [],
+					id: "chart-8",
+					xAxis: "Architecture Difficulty",
+					yAxis: "Frequency",
+					chartName: "Architecture Difficulty"
+				}, {
+					list: [],
+					id: "chart-9",
+					xAxis: "Average Degree",
+					yAxis: "Frequency",
+					chartName: "Average Degree"
+				}, {
+					list: [],
+					id: "chart-10",
+					xAxis: "Average Path Length",
+					yAxis: "Frequency",
+					chartName: "Average Path Length"
+				}
+			];
+			data.forEach(function(d) {
+				newData[0].list[+d.arch_diff] ? newData[0].list[+d.arch_diff]++ : newData[0].list[+d.arch_diff] = 1;
+				newData[1].list[+d.avg_degree] ? newData[1].list[+d.avg_degree]++ : newData[1].list[+d.avg_degree] = 1;
+				newData[2].list[+d.path_length] ? newData[2].list[+d.path_length]++ : newData[2].list[+d.path_length] = 1;
+			});
+			newData.forEach(function(chartData) { 
+				for(i= 0;i < chartData.list.length; i++) {
+					chartData.list[i] = (chartData.list[i] ? chartData.list[i] : 0);
+				}
+				createHistogramIndividually(chartData.id, chartData.list , chartData.xAxis, chartData.yAxis, chartData.chartName);
+			}); 
+		});
+	}
+}
 
+function createHistogramForPathNumber() {
+	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-usecaseAnalyticsURL').value : "";
+	var	list= [],
+		id= "chart-11",
+		xAxis= "Path Number",
+		yAxis= "Frequency",
+		chartName= "Path Number";
+	if (url) {
+		d3.csv(url, function(error, data) {
+			if (error) {
+				console.error(error);
+				return;
+			}
+			data.forEach(function(d) {
+				list[+d.path_number] ? list[+d.path_number]++ : list[+d.path_number] = 1;
+			});
+			for(i= 0;i < list.length; i++) {
+				list[i] = (list[i] ? list[i] : 0);
+			}
+			createHistogramIndividually(id, list , xAxis, yAxis, chartName);
+		});
+	}
+}
+function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTitle) {
+	Highcharts.chart(id, {
+		title: {
+			text: histogramTitle
+		},
+		xAxis: [{
+			title: { text: xAxisName }
+		}],
+	
+		yAxis: [{
+			title: { text: yAxisName }
+		}],
+	
+		series: [{
+			name: xAxisName,
+			type: 'histogram',
+			data: data
+		}]
+	});
 }

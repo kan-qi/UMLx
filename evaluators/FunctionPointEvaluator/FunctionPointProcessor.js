@@ -26,13 +26,13 @@
 	var functionalPatternTreeRoot = pathPatternMatchUtil.establishPatternParseTree(functionalPatterns);
 	
 	module.exports = {
-			processDiagram: function(diagram, usecase){
-				return true;
-			},
-			processPath: function(path, diagram, usecase){
-				
-				path.Operations = {};
-				var functionalOperations = pathPatternMatchUtil.recognizePattern(path, diagram, functionalPatternTreeRoot);
+//			processDiagram: function(diagram, usecase){
+//				return true;
+//			},
+			processPath: function(path, usecase){
+				path["FPAnalytics"] = {};
+				path["FPAnalytics"].Operations = {};
+				var functionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, functionalPatternTreeRoot);
 				var functionalOperationStr = "";
 				for(var i=0; i < functionalOperations.length; i++){
 					if(i !== 0){
@@ -42,18 +42,18 @@
 				}
 				
 				if(functionalOperationStr !== ''){
-				path.Functional = functionalOperationStr.split(/,/g);
+					path["FPAnalytics"].Functional = functionalOperationStr.split(/,/g);
 				}
 				else{
-				path.Functional = ['FUNC_NA'];
+					path["FPAnalytics"].Functional = ['FUNC_NA'];
 				}
 				
 					
-				path.FunctionalTag = path.Functional.join(',');
+				path["FPAnalytics"].FunctionalTag = path["FPAnalytics"].Functional.join(',');
 				
 				return true;
 			},
-			processElement: function(element, diagram, usecase){
+			processElement: function(element, usecase){
 				// determine if the element is the duplicate of a existing one, if it is, keep the one that is more complex: OutboundNumber+InboundNumber
 				// some of the element may not have type. just filter out the element.
 				return true;

@@ -1,378 +1,734 @@
 /**
- * This module is used to parse different XMI modelf files.
+ * This module is used to parse different elements in XMI files to construct the user-system interaction model.
  */
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
-
-	function extractModelComponents(parsedResult) {
-		var components = {};
-
-		var elements = parsedResult['xmi:XMI']['xmi:Extension'][0]['elements'][0]['element'];
-		for ( var i in elements) {
-			var element = elements[i];
-			var component = {
-				Category : 'Element',
-				StereoType : element['$']['xmi:type'],
-				Name : element['$']['name']
-			};
-			if (component.StereoType === 'uml:Object') {
-				var connectors = new Array();
-				if (element['links'] && element['links'][0]) {
-					for ( var j in element['links'][0]['Association']) {
-						var association = element['links'][0]['Association'][j];
-						connectors.push({
-							ClientID : association['$']['start'],
-							SupplierID : association['$']['end']
-						});
-					}
-
-					for ( var j in element['links'][0]['Dependency']) {
-						var dependency = element['links'][0]['Dependency'][j];
-						connectors.push({
-							ClientID : dependency['$']['start'],
-							SupplierID : dependency['$']['end']
-						});
-					}
-
-					for ( var j in element['links'][0]['InformationFlow']) {
-						var informationFlow = element['links'][0]['InformationFlow'][j];
-						connectors.push({
-							ClientID : informationFlow['$']['start'],
-							SupplierID : informationFlow['$']['end']
-						});
-					}
-
-				}
-
-				component.Connectors = connectors;
-				component.Type = element['properties'][0]['$']['stereotype'];
-			} else if (component.StereoType === 'uml:Actor') {
-				var connectors = new Array();
-				if (element['links'] && element['links'][0]) {
-					for ( var j in element['links'][0]['Association']) {
-						var association = element['links'][0]['Association'][j];
-						connectors.push({
-							ClientID : association['$']['start'],
-							SupplierID : association['$']['end']
-						});
-					}
-
-					for ( var j in element['links'][0]['Dependency']) {
-						var dependency = element['links'][0]['Dependency'][j];
-						connectors.push({
-							ClientID : dependency['$']['start'],
-							SupplierID : dependency['$']['end']
-						});
-					}
-
-					for ( var j in element['links'][0]['InformationFlow']) {
-						var informationFlow = element['links'][0]['InformationFlow'][j];
-						connectors.push({
-							ClientID : informationFlow['$']['start'],
-							SupplierID : informationFlow['$']['end']
-						});
-					}
-				}
-				component.Connectors = connectors;
-				component.Type = 'actor';
-			} else if (component.StereoType === 'uml:Class') {
-				var attributes = new Array();
-				if (element['attributes']) {
-					if (element['attributes'][0]['attribute']) {
-						for (var j = 0; j < element['attributes'][0]['attribute'].length; j++) {
-							var attribute = element['attributes'][0]['attribute'][j];
-							if (!attribute['$']['name']) {
-								continue;
-							}
-							attributes.push({
-								Name : attribute['$']['name'],
-								Type : attribute['properties'][0]['$']['type']
-							});
-						}
-					}
-				}
-
-				var operations = new Array();
-				if (element['operations']) {
-					if (element['operations'][0]['operation']) {
-						for (var j = 0; j < element['operations'][0]['operation'].length; j++) {
-							var operation = element['operations'][0]['operation'][j];
-							var parameters = [];
-							for ( var k in operation['parameters'][0]['parameter']) {
-								var parameter = operation['parameters'][0]['parameter'][k];
-								parameters
-										.push({
-											Type : parameter['properties'][0]['$']['type']
-										});
-							}
-							operations.push({
-								Name : operation['$']['name'],
-								Parameters : parameters
-							});
-						}
-					}
-				}
-				//				
-				// console.log(classDiagram);
-				component.Operations = operations;
-				component.Attributes = attributes;
-				component.Type = 'class';
-			} else if (component.StereoType === 'uml:Sequence') {
-				var connectors = new Array();
-				if (element['links'] && element['links'][0]
-						&& element['links'][0]['Sequence']) {
-					for (var j = 0; j < element['links'][0]['Sequence'].length; j++) {
-						var sequence = element['links'][0]['Sequence'][j];
-						connectors.push({
-							ClientID : sequence['$']['start'],
-							SupplierID : sequence['$']['end']
-						});
-					}
-				}
-				component.Connectors = connectors;
-				component.Type = element['properties'][0]['$']['stereotype'];
-			} else if (component.Stereotype === 'uml:Requirement') {
-				console.log('requirement element: ' + component.Name);
-			}
-
-			components[element['$']['xmi:idref']] = component;
-
-		}
-
-		var connectors = parsedResult['xmi:XMI']['xmi:Extension'][0]['connectors'][0]['connector'];
-		for ( var i in connectors) {
-			var connector = connectors[i];
-			components[connector['$']['xmi:idref']] = {
-				Category : 'Connector',
-				Type : connector['properties'][0]['$']['ea_type'],
-				Name : connector['properties'][0]['$']['name'],
-				ClientID : connector['target'][0]['$']['xmi:idref'],
-				SupplierID : connector['source'][0]['$']['xmi:idref']
-			};
-		}
-
-		var diagrams = parsedResult['xmi:XMI']['xmi:Extension'][0]['diagrams'][0]['diagram'];
-		for ( var i in diagrams) {
-			var diagram = diagrams[i];
-			// elements from diagram doesn't have sufficient information.
-			var componentIDs = [];
-			if (diagram['elements']) {
-				for ( var j in diagram['elements'][0]['element']) {
-					componentIDs
-							.push(diagram['elements'][0]['element'][j]['$']['subject']);
-				}
-			}
-			components[diagram['$']['xmi:id']] = {
-				Category : 'Diagram',
-				Type : diagram['properties'][0]['$']['type'],
-				Name : diagram['properties'][0]['$']['name'],
-				ComponentIDs : componentIDs
-			};
-		}
-
-		return components;
+	var jsonQuery = require('json-query');
+	var jp = require('jsonpath');
+	/*
+	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
+	 * 
+	 * The model has the following structure:
+	 * 
+	 * model = {
+	 * 	domainModel:[]
+	 *  useCases: []
+	 * }
+	 * 
+	 * useCase = {
+					id: XMIUseCase['$']['xmi:id'],
+					Name: XMIUseCase['$']['name'],
+					precedenceRelations : [],
+					Activities : [],
+					Attachment: XMIUseCase
+	 * 
+	 * }
+	 * 
+	 * activity = {
+						Type: "message",
+						Name: XMIMessage['$']['name'],
+						id: XMIMessage['$']['xmi:id'],
+						Attachment: XMIMessage
+	 * }
+	 * 
+	 * precedenceRelations = {
+	 * 		start: preActivity,
+	 * 		end: nextActivity
+	 * 
+	 * }
+	 *
+	 *
+	 *For different stereotypes, for example 'uml:Object", 'uml:Actor', they have their specific properties.
+	 *
+	 *There are a few more tags for the activities...
+	 *user activities....and system activities...
+	 */
+	
+	function standardizeName(name){
+		return name.replace(/\s/g, '').toUpperCase();
 	}
-
-	function extractModels(parsedResult) {
-		var modelComponents = extractModelComponents(parsedResult);
-		var models = {};
-		var xmiExtension = parsedResult['xmi:XMI']['xmi:Extension'][0];
-		for ( var i in xmiExtension['diagrams'][0]['diagram']) {
-			var diagram = xmiExtension['diagrams'][0]['diagram'][i];
-			var modelPackage = models['Packages'];
-			if (!modelPackage) {
-				modelPackage = {};
-				models['Packages'] = modelPackage;
+	
+	
+	
+	function createDomainElement(XMIClass){
+		var XMIAttributes = jp.query(XMIClass, '$.ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
+		var attributes = new Array();
+		
+		for(var i in XMIAttributes){
+			var XMIAttribute = XMIAttributes[i];
+			var types = jp.query(XMIAttribute, '$.type[?(@[\'$\'][\'xmi:idref\'])]');
+			var type = "EAJava_void";
+			if(types && types.length > 0){
+				type = types[0]['$']['xmi:idref'];
 			}
-			var owner = modelPackage[diagram['model'][0]['$']['owner']];
-			if (!owner) {
-				owner = {};
-				modelPackage[diagram['model'][0]['$']['owner']] = owner;
+			
+			console.log(XMIAttribute);
+			var attribute = {
+					Name: XMIAttribute['$']['name'],
+					Type: type
 			}
-
-			var model = owner;
-
-			if (diagram['properties'][0]['$']['type'] === 'Sequence'
-					|| diagram['properties'][0]['$']['type'] === 'Analysis') {
-				if (diagram['model'][0]['$']['parent']) {
-					if (!owner['UseCases']) {
-						owner['UseCases'] = {};
-					}
-
-					useCase = owner['UseCases'][diagram['model'][0]['$']['parent']];
-					if (!useCase) {
-						var useCaseComponent = modelComponents[diagram['model'][0]['$']['parent']];
-						// console.log(useCaseComponent);
-						useCase = {
-							Name : useCaseComponent.Name
-						};
-						owner['UseCases'][diagram['model'][0]['$']['parent']] = useCase;
-					}
-					model = useCase;
-				}
-			} else if (diagram['properties'][0]['$']['type'] === 'Logical') {
-				domainModel = owner['DomainModel'];
-				if (!domainModel) {
-					domainModel = {};
-					owner['DomainModel'] = domainModel;
-				}
-				model = domainModel;
-			}
-			// console.log(modelComponents[diagram['$']['xmi:id']]);
-
-			if (!model.Diagrams) {
-				model['Diagrams'] = {};
-			}
-			model['Diagrams'][diagram['$']['xmi:id']] = modelComponents[diagram['$']['xmi:id']];
-
-			populateDiagram(model['Diagrams'][diagram['$']['xmi:id']],
-					modelComponents);
+			attributes.push(attribute);
 		}
-		return models;
+
+		var XMIOperations = jp.query(XMIClass, '$.ownedOperation[?(@[\'$\'][\'xmi:id\'])]');
+		var operations = new Array();
+		
+		for(var i in XMIOperations){
+			var XMIOperation = XMIOperations[i];
+			var XMIParameters = jp.query(XMIOperation, '$.ownedParameter[?(@[\'$\'][\'xmi:id\'])]');
+			var parameters = [];
+			for(var j in XMIParameters){
+				var XMIParameter = XMIParameters[j];
+				var parameter = {
+						Name: XMIParameter['$']['name'],
+						Type: XMIParameter['$']['type']
+				}
+				parameters.push(parameter);
+			}
+			
+			var operation = {
+					Name: XMIOperation['$']['name'],
+					Parameters: parameters
+			}
+			operations.push(operation);
+		}
+		//				
+		// console.log(classDiagram);
+//		component.Operations = operations;
+//		component.Attributes = attributes;
+//		component.Type = 'class';
+		
+		return {
+				_id: XMIClass['$']['xmi:id'],
+				Name: XMIClass['$']['name'],
+				Operations: operations,
+				Attributes: attributes,
+//				Attachment: XMIClass
+			}
 	}
+	
+	function extractUserSystermInteractionModel(filePath, callbackfunc) {
+		
+		fs.readFile(filePath, function(err, data) {
+			parser.parseString(data, function(err, xmiString) {
+		
+		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("XMIString", xmiString);
+		
+		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
+		
+		var Model = {
+				UseCases: [],
+				DomainModel: {
+					Elements: []
+				}
+		};
+		
+		console.log(XMIUMLModel);
 
-	function populateDiagram(diagram, modelComponents) {
-		if (diagram.Type === 'Sequence') {
-			var Elements = {};
-			var Messages = [];
-			// console.log(modelComponents);
-			for ( var i in diagram['ComponentIDs']) {
-				var component = modelComponents[diagram['ComponentIDs'][i]];
-				var category = component.Category;
-				var type = component.Type;
-				if (category === 'Element') { // more conditions to filter the
-					// element
-					if (type === 'actor' || type === 'boundary'
-							|| type === 'control' || type === 'entity') {
-						Elements[diagram['ComponentIDs'][i]] = component;
-					}
-				} else if (category === 'Connector') {
-					if (type === 'Sequence') {
-						Messages.push(component);
-					}
+		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+		var XMIClassesByStandardizedName = [];
+		var DomainElementsByID = [];
+		
+		for(var i in XMIClasses){
+			var XMIClass = XMIClasses[i];
+			console.log(XMIClass);
+//			var domainElement = {
+//				id: XMIClass['$']['xmi:id'],
+//				Name: XMIClass['$']['name'],
+//				Attachment: XMIClass
+//			}
+			var domainElement = createDomainElement(XMIClass);
+			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
+			DomainElementsByID[domainElement._id] = domainElement;
+//			model.DomainModel.push(domainElement);
+		}
+		console.log(XMIClasses);
+//		debug.writeJson("XMIClasses", XMIClasses);
+		
+		
+		//search for the use cases
+		var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
+		console.log(XMIUseCases);
+//		debug.writeJson("XMIUseCases", XMIUseCases);
+		
+		for(var i in XMIUseCases){
+			var XMIUseCase = XMIUseCases[i];
+			
+			var UseCase = {
+					_id: XMIUseCase['$']['xmi:id'],
+					Name: XMIUseCase['$']['name'],
+					PrecedenceRelations : [],
+					Activities : [],
+//					Attachment: XMIUseCase
+			}
+			
+			parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
+			parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
+			
+			Model.UseCases.push(UseCase);
+		}
+		
+		console.log("checking problem");
+		// search for the instance specifications that are used to represent the robustness diagrams.
+		var XMIInstanceSpecifications = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:InstanceSpecification\')]');
+		XMIInstanceSpecifications = XMIInstanceSpecifications.concat(jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]'));
+		console.log("checking problem");
+		console.log(XMIInstanceSpecifications);
+//		var XMIInstanceSpecificationsByID = [];
+
+		var ActivitiesByID = [];
+		
+		UseCase = {
+				_id: "1",
+				Name: "Use Case for Robustness diagram",
+				Activities : [],
+				PrecedenceRelations : []
+		}
+		
+		for(var i in XMIInstanceSpecifications){
+			var XMIInstanceSpecification = XMIInstanceSpecifications[i];
+		
+			var isStimulus = false;
+			var group = "System";
+			if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
+				isStimulus = true;
+				group = "User";
+			}
+			
+			var activity = {
+					Type: "instanceSpecification",
+					Name: XMIInstanceSpecification['$']['name'],
+					_id: XMIInstanceSpecification['$']['xmi:id'],
+//					Attachment: XMIInstanceSpecification,
+					Stimulus: isStimulus,
+					Group: group,
+					OutScope: false
+			}
+			
+			ActivitiesByID[activity._id] = activity;
+			UseCase.Activities.push(activity);
+		}
+		
+		for(var i in XMIInstanceSpecifications){
+			var XMIInstanceSpecification = XMIInstanceSpecifications[i];
+//			console.log(XMIUseCase);
+			console.log("XMIInstanceSpecifications");
+			var ConnectedXMIInstanceSpecifications = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
+//			XMIAttributesByID = [];
+			
+			console.log(ConnectedXMIInstanceSpecifications);
+			
+			var startActivity = ActivitiesByID[XMIInstanceSpecification['$']['xmi:id']];
+			
+			for(var j in ConnectedXMIInstanceSpecifications){
+				var ConnectedNodeId = ConnectedXMIInstanceSpecifications[j]['$']['xmi:idref'];
+//				XMIAttributesByID[XMIAttribute['$']['xmi:id']] = XMIAttribute;
+				var endActivity = ActivitiesByID[ConnectedNodeId];
+				if(endActivity){
+				UseCase.PrecedenceRelations.push({start: startActivity, end: endActivity});
 				}
 			}
-			diagram.Elements = Elements;
-			diagram.Messages = Messages;
-		} else if (diagram.Type === 'Analysis') {
-			var Elements = {};
-			for ( var i in diagram['ComponentIDs']) {
-				var component = modelComponents[diagram['ComponentIDs'][i]];
-				var category = component.Category;
-				var type = component.Type;
-				if (category === 'Element') { // more conditions to filter the
-					// element
-					if (type === 'actor' || type === 'boundary'
-							|| type === 'control' || type === 'entity') {
-						Elements[diagram['ComponentIDs'][i]] = component;
-					}
-				}
-			}
-			diagram.Elements = Elements;
+			
+			console.log(UseCase.PrecedenceRelations);
+		}
+		
+		Model.UseCases.push(UseCase);
+		
+		for(var i in DomainElementsByID){
+			Model.DomainModel.Elements.push(DomainElementsByID[i]);
+		}
+		
+//		return Model;
+		
+		if(callbackfunc){
+			callbackfunc(Model);
+		}
+		
+			});
+		});
+	}
+	
+function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
+		
+//		var XMIUseCase = UseCase.Attachment;
+//		var XMICombinedFragment = CombinedFragment.Attachment;
+	
+		var activities = [];
+		var precedenceRelations = [];
+		var startActivity = null;
+		var endActivity = null;
+		
+		console.log("process combined fragment");
+		console.log(XMICombinedFragment['$']['xmi:id']);
+		
+		var XMIFragmentOperator = XMICombinedFragment.$.interactionOperator;
+		
+		var cfStart = {
+				Type: "fragment_start",
+				Name: XMIFragmentOperator+"_start",
+				_id: XMICombinedFragment['$']['xmi:id']+"_start",
+//				Attachment: XMICombinedFragment,
+				Group: "System",
+				Stimulus: false,
+				OutScope: false
+		};
 
-		} else if (diagram.Type === "Logical") {
-			var Elements = {};
-			var elementNum = 0;
-			var attributeNum = 0;
-			var operationNum = 0;
-			for ( var i in diagram['ComponentIDs']) {
-				var component = modelComponents[diagram['ComponentIDs'][i]];
-				if (!component) {
+		var cfEnd = {
+				Type: "fragment_end",
+				Name: XMIFragmentOperator+"_end",
+				_id: XMICombinedFragment['$']['xmi:id']+"_end",
+//				Attachment: XMICombinedFragment,
+				Group: "System",
+				Stimulus: false,
+				OutScope: false
+		};
+		
+
+		var containingOperators = [XMIFragmentOperator];
+		containingOperators = containingOperators.concat(containingOperators);
+		
+		var XMIOperands = jp.query(XMICombinedFragment, '$.operand[?(@[\'$\'][\'xmi:type\']==\'uml:InteractionOperand\')]');
+		
+		for(var i in XMIOperands){
+			var XMIOperand = XMIOperands[i];
+			var XMIMessages = [];
+//			console.log("occurence")
+			var XMIOccurrences = jp.query(XMIOperand, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
+			var SDCFG = constructSDCFG(XMIOperand,XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
+			
+			console.log("process fragments");
+			console.log(SDCFG);
+			
+			//deal with the corner cases, if there are some empty fragements.
+			if(SDCFG.Activities.length > 0){
+			activities = activities.concat(SDCFG.Activities);
+			precedenceRelations.push({start: cfStart, end: SDCFG.startActivity});
+			precedenceRelations = precedenceRelations.concat(SDCFG.PrecedenceRelations);
+			precedenceRelations.push({start: SDCFG.endActivity, end: cfEnd});
+			}
+		}
+		
+		//deal with the corner cases, if there are some empty fragements.
+		if(activities.length > 0){
+		activities.push(cfStart);
+		activities.push(cfEnd);
+		
+		if(XMIFragmentOperator === "alt"
+			|| XMIFragmentOperator === "par" 
+			|| XMIFragmentOperator === "critical"
+			|| XMIFragmentOperator === "neg"
+			|| XMIFragmentOperator === "assert"
+			|| XMIFragmentOperator === "strict"
+			|| XMIFragmentOperator === "seq"
+			|| XMIFragmentOperator === "ignore"
+			|| XMIFragmentOperator === "consider"){
+			
+			startActivity = cfStart;
+			endActivity = cfEnd;
+//			console.log(XMICombinedFragments);
+		}
+		else if(XMIFragmentOperator === "loop"){
+			UseCase.PrecedenceRelations.push({start: endActivity, end: startActivity});
+			startActivity = cfStart;
+			endActivity = cfStart;
+		}
+		else if(XMIFragmentOperator === "break"){
+			startActivity = cfStart;
+			// represent that outside edges will both be connected to the start activities.
+			endActivity = cfStart;
+		}
+		else if(XMIFragmentOperator === "opt"){
+			UseCase.PrecedenceRelations.push({start: startActivity, end: endActivity});
+			startActivity = cfStart;
+			endActivity = cfEnd;
+		}
+		}
+		
+		return {Activities: activities, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
+	}
+	
+	function constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
+		
+		var activities = [];
+		var precedenceRelations = [];
+		var startActivity = null;
+		var endActivity = null;
+
+		console.log("occurence at interaction level");
+//		console.log("occurrence");
+//		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\')]');
+		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
+		console.log(XMIOccurrences);
+//		var XMIOccurrencesByID = [];
+		// for each fragment,identify the covered lifeline
+		
+		var preActivity = null;
+		
+		for(var i= 0; i<XMIOccurrences.length;){
+			var XMIOccurrence = XMIOccurrences[i++];
+			
+			if(XMIOccurrence['$']['xmi:type'] === "uml:OccurrenceSpecification"){
+				var XMIOccurrence1 = XMIOccurrence;
+				console.log(XMIOccurrence1);
+				var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
+//				XMILifeline1 = XMILifeline;
+				
+//				XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
+				
+//				var isStimulus = false;
+				var group = "System";
+				if(XMILifeline1.isUser){
+//					isStimulus = true;
+					group = "User";
+				}
+				
+				var XMIOccurrence2 = XMIOccurrences[i++];
+				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
+//				XMILifeline2 = XMILifeline;
+				
+				var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
+//				XMIMessages.push(XMIMessage);
+				
+				if(XMIMessage['$']['messageSort'] !== "synchCall"){
 					continue;
 				}
-				var category = component.Category;
-				var type = component.Type;
-				if (category === 'Element') { // more conditions to filter the
-					// element
-					if (type === 'class') {
-						Elements[diagram['ComponentIDs'][i]] = component;
-						elementNum++;
-						if (component.Operations) {
-							for ( var j in component.Operations) {
-								operationNum++;
-							}
-						}
-						if (component.Attributes) {
-							for ( var j in component.Attributes) {
-								attributeNum++;
-							}
-						}
+				
+				var outScope = false;
+				// The rules to determine if the operation is in scope or out of the scope of the system.
+				for(var j in containingOperators){
+					var operator = containingOperators[j];
+					console.log("check operator");
+					console.log(operator);
+					if(operator === "ignore" || operator === "neg"){
+						outScope = true;
+						break;
 					}
 				}
+				
+				var nextActivity = {
+						Type: "message",
+						Name: XMIMessage['$']['name'],
+						_id: XMIMessage['$']['xmi:id'],
+						Stimulus: false,
+						Group: group,
+						OutScope: outScope,
+//						Attachment: XMIMessage
+				}
+				
+				nextActivity.sender = XMILifeline1;
+				nextActivity.receiver = XMILifeline2;
+
+//				UseCase.Activities.push(nextActivity);
+				activities.push(nextActivity);
+				
+				if(preActivity){
+				if(nextActivity.sender.isUser && preActivity.receiver != nextActivity.sender){
+
+				}
+				else{
+//					UseCase.PrecedenceRelations.push({start: preActivity, end: nextActivity});
+					precedenceRelations.push({start: preActivity, end: nextActivity});
+				}
+				}
+				
+				preActivity = nextActivity;
+				
+				if(!startActivity){
+					startActivity = preActivity;
+				}
+				
 			}
-			diagram.Elements = Elements;
-			diagram.ElementNum = elementNum;
-			diagram.AttributeNum = attributeNum;
-			diagram.OperationNum = operationNum;
+			else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
+				
+				var innerCombinedFragment = processCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
+				
+				console.log("process combined fragment");
+				console.log(innerCombinedFragment);
+				
+				//deal with some corner cases, if there are some empty fragments.
+				
+				if(innerCombinedFragment.Activities.length > 0){
+				if(preActivity){
+//				UseCase.PrecedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
+				precedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
+				}
+				
+				activities = activities.concat(innerCombinedFragment.Activities);
+				precedenceRelations = precedenceRelations.concat(innerCombinedFragment.PrecedenceRelations);
+				preActivity = innerCombinedFragment.endActivity;
+				
+				if(!startActivity){
+					startActivity = innerCombinedFragment.startActivity;
+				}
+				}
+			}
 		}
+		
+		endActivity = preActivity;
+		
+		return {Activities: activities, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
 	}
 
-	function extractUseCasesFromParsedResult(parsedResult) {
+	
+	function parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID){
+//		console.log(XMIUseCase);
+		// search for the interactions that are used to describe the use cases
+		var XMIInteractions = jp.query(XMIUseCase, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Interaction\')]');
+		
+//		console.log("xmi interactions");
+		console.log(XMIInteractions);
+		for(var i in XMIInteractions){
+			var XMIInteraction = XMIInteractions[i];
+//			console.log(XMIInteraction);
+			var XMILifelines = jp.query(XMIInteraction, '$..lifeline[?(@[\'$\'][\'xmi:type\']==\'uml:Lifeline\')]');
+			console.log("life lines");
+			console.log(XMILifelines);
+			var XMILifelinesByID = [];
+			// for each life line, identify the associated classes
+			for(var j in XMILifelines){
+				var XMILifeline = XMILifelines[j];
+				// ...
+				if(XMILifeline['$']['name'] === "User"){
+					console.log("is a Stimulus source");
+					XMILifeline.isUser = true;
+				}
+				console.log(XMILifeline);
+				XMILifelinesByID[XMILifeline['$']['xmi:id']] = XMILifeline;
+				var XMIClass = XMIClassesByStandardizedName[standardizeName(XMILifeline.$.name)];
+				if(XMIClass){
+				XMILifeline.Class = XMIClass['$']['xmi:id'];
+				}
+			}
+			console.log(XMILifelinesByID);
+//			XMIUseCase.XMILifelinesByID = XMILifelinesByID;
+			
+			console.log("message")
+			var XMIMessages = jp.query(XMIInteraction, '$..message[?(@[\'$\'][\'xmi:type\']==\'uml:Message\')]');
+//			// for each message, identify the send fragment and receive fragment.
+			var XMIMessagesByOccurrences = [];
+			for(var j in XMIMessages){
+				var XMIMessage = XMIMessages[j];
+				XMIMessagesByOccurrences[XMIMessage.$.sendEvent+">"+XMIMessage.$.receiveEvent] = XMIMessage;
+			}
+			console.log(XMIMessagesByOccurrences);
+//			XMIUseCase.XMIMessagesByOccurrences = XMIMessagesByOccurrences;
+			
+			SDCFG = constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, []);
+			UseCase.Activities = UseCase.Activities.concat(SDCFG.Activities);
+			UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(SDCFG.PrecedenceRelations);
+		}
+		
+		var ActivitiesToEliminate = [];
+		//to  eliminate unnecessary activities
+		for(var i in UseCase.Activities){
+			var activity = UseCase.Activities[i];
 
+			console.log("determine fragement node");
+			console.log(UseCase.Activities);
+			console.log(activity.Name);
+			if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
+//					var activityToEliminate = activity;
+//				ActivitiesToEliminate.push(activity);
+			}
+		}
+		
+		for(var i in ActivitiesToEliminate){
+			var activityToEliminate = ActivitiesToEliminate[i];
+			var outEdges = [];
+			var inEdges = [];
+			var leftEdges = [];
+			for(var k in UseCase.PrecedenceRelations){
+				var precedenceRelation = UseCase.PrecedenceRelations[k];
+				if(precedenceRelation.end == activityToEliminate){
+					inEdges.push(precedenceRelation);
+				} else if(precedenceRelation.start == activityToEliminate){
+					outEdges.push(precedenceRelation);
+				} else {
+					leftEdges.push(precedenceRelation);
+				}
+			}
+			
+			for(var k in inEdges){
+				var  inEdge = inEdges[k];
+				for(var l in outEdges){
+					var outEdge = outEdges[l];
+					 //create a new edge by triangle rules.
+					leftEdges.push({start: inEdge.start, end: outEdge.end});
+				}
+			}
+			
+			UseCase.Activities.splice(UseCase.Activities.indexOf(activityToEliminate), 1);
+			UseCase.PrecedenceRelations = leftEdges;
+		}
+		
+
+		console.log("test use case");
+		console.log(UseCase.PrecedenceRelations);
+		
+		//logic to decide Stimulus
+		for(var i in UseCase.PrecedenceRelations){
+			var edge = UseCase.PrecedenceRelations[i];
+			console.log(edge);
+			 //create a new edge by triangle rules.
+			if(edge.start.Group !== "System" && edge.end.Group === "System"){
+				console.log("Stimulus...");
+				console.log(edge.start);
+				edge.start.Stimulus = true;
+			}
+		}
+		
+		console.log("finished sequence diagram processing");
+		
 	}
+	
+	function parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID){
 
-	function extractDomainModelFromParsedResult(parsedResult) {
+		// we are categorizing the messages for the in-scope and out-scope messages.
+		
+		//search for activities that are used to describe use cases
+		console.log("XMIActivities");
+//		console.log(XMIUseCase);
+		
+		var XMIActivities = jp.query(XMIUseCase, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\')]');
+		XMIActivities = XMIActivities.concat(jp.query(XMIUseCase, '$..node[?(@[\'$\'][\'xmi:id\'])]'));
+		XMIActivities = XMIActivities.concat(jp.query(XMIUseCase, '$..containedNode[?(@[\'$\'][\'xmi:type\'])]'));
+		XMIActivities = XMIActivities.concat(jp.query(XMIUseCase, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\')]'));
+		
+		console.log(XMIActivities);
+		
+//		UseCase.Activities = [];
+		var ActivitiesByID = [];
+		
+		ActivitiesToEliminate = [];
+//		console.log("xmi interactions");
+		console.log(XMIActivities);
+		for(var j in XMIActivities){
+			var XMIActivity = XMIActivities[j];
+//			if(XMIActivity.Name === "EA_Activity1")	{
+//				//Ea specific structure.
+//				console.log("continue");
+//			}
+//			else{
+				var activity = {
+						Type: "activity",
+						Name: XMIActivity['$']['name'],
+						_id: XMIActivity['$']['xmi:id'],
+//						Attachment: XMIActivity,
+						Stimulus: false,
+						OutScope: false,
+				};
+				
+				UseCase.Activities.push(activity);
+				ActivitiesByID[XMIActivity['$']['xmi:id']] = activity;
+				if(XMIActivity['$']['xmi:type'] === "uml:DecisionNode"){
+					ActivitiesToEliminate.push(activity);
+				}
+//			}
+		}
+		
+		var XMIEdges = jp.query(XMIUseCase, '$..edge[?(@[\'$\'][\'xmi:type\']==\'uml:ControlFlow\')]');
+		XMIEdges = XMIEdges.concat(jp.query(XMIUseCase, '$..containedEdge[?(@[\'$\'][\'xmi:type\']==\'uml:ControlFlow\')]'));
+		
+		
+//		console.log("xmi interactions");
+		console.log(XMIEdges);
+		for(var j in XMIEdges){
+			var XMIEdge = XMIEdges[j];
+			var sourceActivity = ActivitiesByID[XMIEdge['$']['source']];
+			var targetActivity = ActivitiesByID[XMIEdge['$']['target']];
+			if(sourceActivity && targetActivity){
+			UseCase.PrecedenceRelations.push({start: sourceActivity, end: targetActivity});
+			}
+		}
+		
+		for(var j in ActivitiesToEliminate){
+			var activityToEliminate = ActivitiesToEliminate[j];
+			var outEdges = [];
+			var inEdges = [];
+			var leftEdges = [];
+			for(var k in UseCase.PrecedenceRelations){
+				var precedenceRelation = UseCase.PrecedenceRelations[k];
+				if(precedenceRelation.end == activityToEliminate){
+					inEdges.push(precedenceRelation);
+				} else if(precedenceRelation.start == activityToEliminate){
+					outEdges.push(precedenceRelation);
+				} else {
+					leftEdges.push(precedenceRelation);
+				}
+			}
+			
+			for(var k in inEdges){
+				var  inEdge = inEdges[k];
+				for(var l in outEdges){
+					var outEdge = outEdges[l];
+					 //create a new edge by triangle rules.
+					leftEdges.push({start: inEdge.start, end: outEdge.end});
+				}
+			}
+			
+			UseCase.Activities.splice(UseCase.Activities.indexOf(activityToEliminate), 1);
+			UseCase.PrecedenceRelations = leftEdges;
+		}
+		
+		console.log(UseCase.PrecedenceRelations);
+//		console.log("group...");
+
+		var XMIGroups = jp.query(XMIUseCase, '$..group[?(@[\'$\'][\'xmi:type\']==\'uml:ActivityPartition\')]');
+		for(var j in XMIGroups){
+			var XMIGroup = XMIGroups[j];
+			console.log("group")
+			console.log(XMIGroup);
+			var XMIActivities = jp.query(XMIGroup, '$..node[?(@[\'$\'][\'xmi:idref\'])]');
+//			XMIActivities = XMIActivities.concat(jp.query(XMIGroup, '$..containedNode[?(@[\'$\'][\'xmi:type\'])]'));
+			for(var k in XMIActivities){
+				var XMIActivity = XMIActivities[k];
+				console.log(XMIActivity['$']['xmi:idref']);
+//				console.log(ActivitiesByID);
+				var activity = ActivitiesByID[XMIActivity['$']['xmi:idref']];
+				
+//				var activity = null;
+//				if(XMIActivity['$']['xmi:idref']){
+//					activity = ActivitiesByID[XMIActivity['$']['xmi:idref']];
+//				}
+//				else{
+//					console.log("containing activity");
+//					activity = ActivitiesByID[XMIActivity['$']['xmi:id']];
+//					console.log(activity);
+//				}
+				
+				if(activity){
+				activity.Group = XMIGroup['$']['name'];
+//				if(activity.group === "User"){
+//					activity.Stimulus=true;
+//				}
+				console.log("grouped activities");
+				console.log(activity);
+				}
+			}
+		}
+		
+		//logic to decide Stimulus
+		for(var j in UseCase.PrecedenceRelations){
+			var edge = UseCase.PrecedenceRelations[j];
+			 //create a new edge by triangle rules.
+			if(edge.start.Group !== "System" && edge.end.Group === "System"){
+				console.log("Stimulus...");
+				console.log(edge.start);
+				edge.start.Stimulus = true;
+			}
+		}
+		
+		console.log("final relations");
+		console.log(UseCase.PrecedenceRelations);
+		
+		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
 
 	}
 
 	module.exports = {
-		extractClassDiagrams : function(file, func) {
-			fs
-					.readFile(
-							file,
-							function(err, data) {
-								parser
-										.parseString(
-												data,
-												function(err, result) {
-													var classDiagrams = extractClassDiagramsFromParsedResult(result);
-													if (func) {
-														func(classDiagrams);
-													}
-												});
-							});
-		},
-		extractSequenceDiagrams : function(file, func) {
-		},
-		extractRobustnessDiagrams : function(file, func) {
-			fs
-					.readFile(
-							file,
-							function(err, data) {
-								parser
-										.parseString(
-												data,
-												function(err, result) {
-													var robustnessDiagrams = extractRobustnessDiagramsFromParsedResult(result);
-													if (func) {
-														func(robustnessDiagrams);
-													}
-												});
-							});
-		},
-		extractUseCases : function(file, func) {
-			// Use Cases include sequence diagrams, robustness diagram, and
-			// activity diagrams.
-		},
-		extractDomainModel : function(file, func) {
-			// Domain Models include class diagrams, information block
-			// diagrams
-		},
-		extractModels : function(file, func) {
-			// robustnessDiagram
-			// contained in the
-			// xmi model file
-			fs.readFile(file, function(err, data) {
-				parser.parseString(data, function(err, result) {
-					var models = extractModels(result);
-
-					if (func) {
-						func(models);
-					}
-				})
-			});
-		},
+			extractUserSystermInteractionModel : extractUserSystermInteractionModel
 	}
 }());

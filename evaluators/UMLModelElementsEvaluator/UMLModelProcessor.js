@@ -40,10 +40,10 @@
 	 
 	
 	module.exports = {
-			processDiagram: function(diagram, usecase){
-				return true;
-			},
-			processPath: function(path, diagram, usecase){
+//			processDiagram: function(diagram, usecase){
+//				return true;
+//			},
+			processPath: function(path, usecase){
 				var pathLength = 0;
 				var avgDegree = 0;
 				var archDiff = 0;
@@ -52,24 +52,27 @@
 				var entityNum = 0;
 				var actorNum = 0;
 				var PathStr = "";
-				for(var i = 0; i < path.Elements.length; i++)
+				for(var i = 0; i < path.length; i++)
 				{
-					var elementID = path['Elements'][i];
-					var element = diagram.Elements[elementID];
-					if(!element){
-						return false;
+					var node = path[i];
+//					var components = diagram.allocate(node);
+					
+					if(node.supplier){
+						var component = node.supplier;
+						avgDegree += component.InboundNumber;
+
+						if(component.Type=="actor")actorNum++;
+						if(component.Type=="boundary")boundaryNum++;
+						if(component.Type=="control")controlNum++;
+						if(component.Type=="entity")entityNum++;
 					}
-					avgDegree += element.InboundNumber;
+					
 					pathLength++;
-					PathStr += element.Name;
-					if(i != path.Elements.length - 1){
+					PathStr += node.Name;
+					if(i != path.length - 1){
 						PathStr += "->";
 					}
 					
-					if(element.Type=="actor")actorNum++;
-					if(element.Type=="boundary")boundaryNum++;
-					if(element.Type=="control")controlNum++;
-					if(element.Type=="entity")entityNum++;
 				}
 				path.PathStr = PathStr;
 				if(pathLength > 0){
@@ -90,7 +93,7 @@
 				return true;
 				
 			},
-			processElement: function(element, diagram, usecase){
+			processElement: function(element, usecase){
 				return true;
 			},
 			processLink: function(link){

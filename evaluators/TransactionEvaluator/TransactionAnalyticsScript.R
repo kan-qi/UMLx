@@ -123,8 +123,7 @@ DataFrame_External_Input_Operation$col="External_Input_Operation"
 DataFrame_External_Query_Operation$col="External_Query_Operation"
 DataFrame_External_Invocation_Operation$col="External_Invocation_Operation"
 DataFrame_Not_Matched_Operation$col="Not_Matched_Operation"
-
-
+ 
 #combine all the 6 data frames
 DataFrame_Combined=data.frame(mapply(c,DataFrame_Interface_Operation,DataFrame_Control_Operation,
 				DataFrame_External_Input_Operation,DataFrame_External_Query_Operation,DataFrame_External_Invocation_Operation,
@@ -134,6 +133,8 @@ svg(paste(outputDir,"merged_distributions_for_transactions.svg",sep="/"))
 print(ggplot(DataFrame_Combined, aes(x = intPathData,fill=col)) + geom_density(alpha = 0.5)+xlab("Number of Paths"))
 ## end of the smoothing distributions.
 
+
+print("histogram is output")
 
 transactionalPatternCounts <- table(transactionData$transactional)
 if(length(transactionalPatternCounts) == 0){
@@ -158,11 +159,13 @@ print(barplot(transactionalPatternCounts, main="Transactional Pattern Counts", x
 #draw the piechart for the types of operations
 transactionDistData <- factor(transactionData[transactionData$transactional != 'TRAN_NA' & transactionData$transactional != 'EQ' & transactionData$transactional != 'EI', 'transactional'])
 #transactionData <- data[, 'transactional']
+print(transactionDistData)
+mytable <- table(transactionDistData)
+print(mytable)
+if(length(mytable) != 0){
 svg(paste(outputDir, "transaction_type_percentage_plot.svg", sep="/"), width=5, height=5)
 # Pie Chart from data frame with Appended Sample Sizes
 #percentlabels<- round(100*transactionData/sum(transactionData), 1)
-mytable <- table(transactionDistData)
-print(mytable)
 #mytable$TRAN_NA= NULL
 #colors = c("red", "yellow", "green", "violet", "orange", "blue", "pink", "cyan") 
 #colors = c("cyan", "white", "cornsilk", "purple", "violetred1", "green3")
@@ -172,10 +175,10 @@ lbls <- names(mytable)
 pieChart <- pie(mytable, labels = percentageLbls, main="Distribution of Types of Operations", col=colors)
 print(pieChart)
 legend("topright", lbls, cex=0.8, fill=colors)
+}
 
 
 transactionArchDiffData = transactionData$arch_diff
-print("hello")
 print(transactionArchDiffData)
 if(length(transactionArchDiffData) == 0){
 	transactionArchDiffData = c(0);
