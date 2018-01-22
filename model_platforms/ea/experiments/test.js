@@ -81,7 +81,7 @@ function traverseUserSystemInterationModel(model){
 		while((toExpand = toExpandCollection.pop()) != null){
 			var node = toExpand.Node;
 			var pathToNode = toExpand.PathToNode;
-//			var toExpandID = toExpand.id;
+//			var toExpandID = toExpand._id;
 //			var expanded = false;
 			// test completeness of the expanded path first to decide if continue to expand
 //			var childNodes = diagram.expand(node);
@@ -158,7 +158,7 @@ function traverseUserSystemInterationModel(model){
 		var domainModelById = {};
 		for(var i in domainModel){
 			var domainElement = domainModel[i];
-			domainModelById[domainElement.id] = domainElement;
+			domainModelById[domainElement._id] = domainElement;
 		}
 
 		for(var i in Paths){
@@ -287,12 +287,12 @@ function drawDomainObjectNode(component){
 	console.log("domain objects");
 	console.log(component);
 	console.log(componentInternal);
-	return component.id+'[label="'+componentInternal+'" shape=Mrecord];'
-//	return component.id+'[label="'+component.Name+'" shape=Mrecord];'
+	return component._id+'[label="'+componentInternal+'" shape=Mrecord];'
+//	return component._id+'[label="'+component.Name+'" shape=Mrecord];'
 //	return "";
 	
-//	graph += dottyDraw.draw(component.id+pathTag+'[label="'+componentInternal+'" shape=Mrecord];');
-//	graph += dottyDraw.draw('"'+component.id+pathTag+'"->"'+target.id+pathTag+'";');
+//	graph += dottyDraw.draw(component._id+pathTag+'[label="'+componentInternal+'" shape=Mrecord];');
+//	graph += dottyDraw.draw('"'+component._id+pathTag+'"->"'+target._id+pathTag+'";');
 }
 
 function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
@@ -346,22 +346,22 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 			var activity = Group[k];
 			
 //			var label = activity.Name;
-//			var node = drawExternalNode(activity.id, activity.Name);
-			var node = drawNode(activity.id, activity.Name);
+//			var node = drawExternalNode(activity._id, activity.Name);
+			var node = drawNode(activity._id, activity.Name);
 			
 			if(activity.Stimulus){
-				node = drawStimulusNode(activity.id, activity.Name);
+				node = drawStimulusNode(activity._id, activity.Name);
 			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity.id, activity.Name);
+				node = drawOutOfScopeNode(activity._id, activity.Name);
 			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 				console.log("drawing fragment node");
-				node = drawFragmentNode(activity.id, activity.Name);
+				node = drawFragmentNode(activity._id, activity.Name);
 				console.log(node);
 			}
 			
 			//add edges to domain objects.
 			if(activity.receiver && activity.receiver.Class){
-				edgesToDomainObjects.push(dottyDraw.draw('"'+activity.id+'"->"'+activity.receiver.Class+'"[style = dashed];'));
+				edgesToDomainObjects.push(dottyDraw.draw('"'+activity._id+'"->"'+activity.receiver.Class+'"[style = dashed];'));
 			}
 			
 //			console.log("node...");
@@ -411,22 +411,22 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 //			node = drawInternalNode(activity.id, activity.Name);
 //		}
 		
-		var node = drawNode(activity.id, activity.Name);
+		var node = drawNode(activity._id, activity.Name);
 		
 		if(activity.Stimulus){
-			node = drawStimulusNode(activity.id, activity.Name);
+			node = drawStimulusNode(activity._id, activity.Name);
 		} else if(activity.OutScope){
-			node = drawOutOfScopeNode(activity.id, activity.Name);
+			node = drawOutOfScopeNode(activity._id, activity.Name);
 		} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 			console.log("drawing fragment node");
-			node = drawFragmentNode(activity.id, activity.Name);
+			node = drawFragmentNode(activity._id, activity.Name);
 			console.log(node);
 		}
 		
 //		var target = node.target;
 //		if(target){
-//			graph += dottyDraw.draw(target.id+pathTag+'[label="'+target.Name+'"];');
-//			graph += dottyDraw.draw('"'+target.id+pathTag+'"->"'+node.id+pathTag+'";');
+//			graph += dottyDraw.draw(target._id+pathTag+'[label="'+target.Name+'"];');
+//			graph += dottyDraw.draw('"'+target._id+pathTag+'"->"'+node._id+pathTag+'";');
 //			if(target.component){
 //				var component = target.component;
 //				var componentInternal = "{";
@@ -448,8 +448,8 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 //				}
 //				
 //				componentInternal += "}";
-//				graph += dottyDraw.draw(component.id+pathTag+'[label="'+componentInternal+'" shape=Mrecord];');
-//				graph += dottyDraw.draw('"'+component.id+pathTag+'"->"'+target.id+pathTag+'";');
+//				graph += dottyDraw.draw(component._id+pathTag+'[label="'+componentInternal+'" shape=Mrecord];');
+//				graph += dottyDraw.draw('"'+component._id+pathTag+'"->"'+target._id+pathTag+'";');
 //			}
 //		}
 		
@@ -474,8 +474,8 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 			if(precedenceRelation.start && precedenceRelation.end){
 //			dotty += '"'+start.Name+'"->"'+end.Name+'";';
 
-			var start = precedenceRelation.start.id;
-			var end = precedenceRelation.end.id;
+			var start = precedenceRelation.start._id;
+			var end = precedenceRelation.end._id;
 			graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
 			}
 	}
@@ -585,15 +585,15 @@ function drawSimplePrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, ca
 	for(var i in activities){
 		var activity = activities[i];
 		
-		var node = drawNode(activity.id, activity.Name);
+		var node = drawNode(activity._id, activity.Name);
 		
 		if(activity.Stimulus){
-			node = drawStimulusNode(activity.id, activity.Name);
+			node = drawStimulusNode(activity._id, activity.Name);
 		} else if(activity.OutScope){
-			node = drawOutOfScopeNode(activity.id, activity.Name);
+			node = drawOutOfScopeNode(activity._id, activity.Name);
 		} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 			console.log("drawing fragment node");
-			node = drawFragmentNode(activity.id, activity.Name);
+			node = drawFragmentNode(activity._id, activity.Name);
 			console.log(node);
 		}
 		
@@ -610,8 +610,8 @@ function drawSimplePrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, ca
 			if(precedenceRelation.start && precedenceRelation.end){
 //			dotty += '"'+start.Name+'"->"'+end.Name+'";';
 
-			var start = precedenceRelation.start.id;
-			var end = precedenceRelation.end.id;
+			var start = precedenceRelation.start._id;
+			var end = precedenceRelation.end._id;
 			graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
 			}
 	}

@@ -290,6 +290,8 @@
             ], function(err, result){
                 if (err) throw err;
                 db.close();
+                console.log("test the use case query");
+                console.log(result);
                 callbackfunc(result[0]['UseCases']);
             });
         });

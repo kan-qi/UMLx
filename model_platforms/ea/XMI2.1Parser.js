@@ -101,7 +101,7 @@
 //		component.Type = 'class';
 		
 		return {
-				id: XMIClass['$']['xmi:id'],
+				_id: XMIClass['$']['xmi:id'],
 				Name: XMIClass['$']['name'],
 				Operations: operations,
 				Attributes: attributes,
@@ -142,7 +142,7 @@
 //			}
 			var domainElement = createDomainElement(XMIClass);
 			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
-			DomainElementsByID[domainElement.id] = domainElement;
+			DomainElementsByID[domainElement._id] = domainElement;
 //			model.DomainModel.push(domainElement);
 		}
 		console.log(XMIClasses);
@@ -158,7 +158,7 @@
 			var XMIUseCase = XMIUseCases[i];
 			
 			var UseCase = {
-					id: XMIUseCase['$']['xmi:id'],
+					_id: XMIUseCase['$']['xmi:id'],
 					Name: XMIUseCase['$']['name'],
 					PrecedenceRelations : [],
 					Activities : [],
@@ -182,7 +182,7 @@
 		var ActivitiesByID = [];
 		
 		UseCase = {
-				id: "1",
+				_id: "1",
 				Name: "Use Case for Robustness diagram",
 				Activities : [],
 				PrecedenceRelations : []
@@ -201,14 +201,14 @@
 			var activity = {
 					Type: "instanceSpecification",
 					Name: XMIInstanceSpecification['$']['name'],
-					id: XMIInstanceSpecification['$']['xmi:id'],
+					_id: XMIInstanceSpecification['$']['xmi:id'],
 //					Attachment: XMIInstanceSpecification,
 					Stimulus: isStimulus,
 					Group: group,
 					OutScope: false
 			}
 			
-			ActivitiesByID[activity.id] = activity;
+			ActivitiesByID[activity._id] = activity;
 			UseCase.Activities.push(activity);
 		}
 		
@@ -269,7 +269,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		var cfStart = {
 				Type: "fragment_start",
 				Name: XMIFragmentOperator+"_start",
-				id: XMICombinedFragment['$']['xmi:id']+"_start",
+				_id: XMICombinedFragment['$']['xmi:id']+"_start",
 //				Attachment: XMICombinedFragment,
 				Group: "System",
 				Stimulus: false,
@@ -279,7 +279,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		var cfEnd = {
 				Type: "fragment_end",
 				Name: XMIFragmentOperator+"_end",
-				id: XMICombinedFragment['$']['xmi:id']+"_end",
+				_id: XMICombinedFragment['$']['xmi:id']+"_end",
 //				Attachment: XMICombinedFragment,
 				Group: "System",
 				Stimulus: false,
@@ -411,7 +411,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				var nextActivity = {
 						Type: "message",
 						Name: XMIMessage['$']['name'],
-						id: XMIMessage['$']['xmi:id'],
+						_id: XMIMessage['$']['xmi:id'],
 						Stimulus: false,
 						Group: group,
 						OutScope: outScope,
@@ -615,7 +615,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				var activity = {
 						Type: "activity",
 						Name: XMIActivity['$']['name'],
-						id: XMIActivity['$']['xmi:id'],
+						_id: XMIActivity['$']['xmi:id'],
 //						Attachment: XMIActivity,
 						Stimulus: false,
 						OutScope: false,

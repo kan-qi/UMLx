@@ -226,7 +226,7 @@
 			var operationNum = 0;
 			var entityNum = 0;
 
-			for ( var j in domainModelInfo.Elements[i]) {
+			for ( var i in domainModelInfo.Elements) {
 				var element = domainModelInfo.Elements[i];
 					entityNum++;
 					for ( var j in element.Attributes) {
