@@ -1190,4 +1190,6 @@
         deactivateUser:deactivateUser
 
     }
+	
+}());
 
