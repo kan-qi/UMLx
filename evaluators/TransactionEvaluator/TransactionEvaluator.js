@@ -126,7 +126,7 @@
 //		for ( var i in useCaseInfo.Diagrams) {
 //			var diagram = useCaseInfo.Diagrams[i];
 			
-			transactionProcessor.processUseCase(useCaseInfo);
+//			transactionProcessor.processUseCase(useCaseInfo);
 			
 			var EI = 0;
 			var EQ = 0;
