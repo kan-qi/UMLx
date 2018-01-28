@@ -7,6 +7,9 @@
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
 	var xmiParser = require('./model_platforms/ea/XMI2.1Parser.js');
+	var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
+	var modelDrawer = require("./model_drawers/UserSystemInteractionModelDrawer.js");
+	var domainModelDrawer = require("./model_drawers/DomainModelDrawer.js");
 	var mkdirp = require('mkdirp');
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
@@ -65,6 +68,19 @@
 								useCase.Paths = traverseUseCaseForPaths(useCase);
 								
 								debug.writeJson("useCase_"+useCase.Name, useCase);
+								
+								modelDrawer.drawPrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase.dotty", function(){
+
+									console.log("use case is drawn");
+								});
+								modelDrawer.drawSimplePrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase_simple.dotty", function(){
+
+									console.log("simple use case is drawn");
+								});
+								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
+									console.log("paths are drawn");
+								});
+								
 //								useCaseDrawer.drawUseCase(useCase, useCase.OutputDir+"/useCase.dotty", function(){
 //									console.log("use case is drawn");
 //								});
