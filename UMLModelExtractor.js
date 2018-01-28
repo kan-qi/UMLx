@@ -43,33 +43,7 @@
 //				domainModel.SvgGraphFile = 'domainModel.svg';
 //				console.log("domainModel");
 //				console.log(domainModel);
-				 for(var i in domainModel.Diagrams){
-						var diagram = domainModel.Diagrams[i];
-						diagram.OutputDir = domainModel.OutputDir;
-						diagram.AccessDir = domainModel.AccessDir;
-				}
-				 
-				// make extra processing for the domain model diagrams. To reference their elements 
-					domainModel.findElement = function(elementName){
-						if(!elementName){
-							return null;
-						}
-						console.log("checking class elments");
-						console.log(elementName);
-						for(var i in this.Diagrams){
-							var diagram = this.Diagrams[i];
-							for(var j in diagram.Elements){
-								var element = diagram.Elements[j];
-								console.log("iterating class element");
-								console.log(element.Name);
-								//apply the rules to convert to standard names, and use the standard ones to compare with each other.
-								if(standardiseName(elementName) === standardiseName(element.Name)){
-									return element;
-								}
-							}
-						}
-					}
-
+				
 				debug.writeJson("modelModel", domainModel);
 
 //				domainModelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
@@ -88,86 +62,13 @@
 								useCase.OutputDir = model.OutputDir+"/"+fileName;
 								useCase.AccessDir = model.AccessDir+"/"+fileName;
 								
-								var useCasePaths = [];
+								useCase.Paths = traverseUseCaseForPaths(useCase);
 								
-								for(var k in useCase.Diagrams){
-									var diagram = useCase.Diagrams[k];
-									diagram.OutputDir = useCase.OutputDir;
-									diagram.AccessDir = useCase.AccessDir;
-									
-									for(var j in diagram.Nodes){
-										var node = diagram.Nodes[j];
-										var source = node.source;
-										if(source){
-										var sourceComponent = model.DomainModel.findElement(source.Name);
-										source.component = sourceComponent;
-										}
-//										console.log("source component");
-//										console.log(source);
-										var target = node.target;
-										if(target){
-										var targetComponent = model.DomainModel.findElement(target.Name);
-										target.component = targetComponent;
-										}
-									}
-									
-									console.log(diagram);
-									diagram.Paths = traverseBehavioralDiagram(diagram);
-									
-								// associate information for the paths.
-									
-								for(var j in diagram.Paths){
-									var path = diagram.Paths[j];
-									var pathStr = "";
-									var components = [];
-									for(var k in path.Nodes)
-									{	
-										var node = path.Nodes[k];
-										
-										if(i == 0){
-											if(node.source){
-											components.push(node.source);
-											}
-										}
-						
-										if(node.target){
-											components.push(node.target);
-										}
-										
-//										var node = path[i];
-//										var elementID = path['Elements'][i];
-//										var components = diagram.allocate(node);
-//										if(!element){
-//											break;
-//										}
-//										for(var j in components){
-//											totalDegree += components[j].InboundNumber;
-//											tranLength++;	
-//										}
-										
-										pathStr += node.Name;
-										if( i != path.Nodes.length - 1){
-											pathStr += "->";
-										}
-									}
-									
-									path.PathStr = pathStr;
-									path.Components = components;
-									
-									useCasePaths.push(path);
-								}
-								
-//								useCasePaths = useCasePaths.concat(diagram.Paths);
-								}
-								
-
 								debug.writeJson("useCase_"+useCase.Name, useCase);
 //								useCaseDrawer.drawUseCase(useCase, useCase.OutputDir+"/useCase.dotty", function(){
 //									console.log("use case is drawn");
 //								});
 								
-								console.log("use case paths");
-								console.log(useCasePaths);
 //								pathsDrawer.drawPaths(useCasePaths, useCase.OutputDir+"/paths.dotty", function(){
 //									console.log("use case is drawn");
 //								});
@@ -187,6 +88,103 @@
 
 		});
 	}
+	
+	function traverseUseCaseForPaths(useCase){
+		
+		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+		
+
+		function isCycled(path){
+			var lastNode = path[path.length-1];
+				for(var i=0; i < path.length-1; i++){
+					if(path[i] == lastNode){
+						return true;
+					}
+				}
+			return false;
+		}
+
+			var toExpandCollection = new Array();
+			
+			for (var j in useCase.Activities){
+				var activity = useCase.Activities[j];
+				//define the node structure to keep the infor while traversing the graph
+				if(activity.Stimulus){
+				var node = {
+					//id: startElement, //ElementGUID
+					Node: activity,
+					PathToNode: [activity],
+					OutScope: activity.OutScope
+				};
+				toExpandCollection.push(node);
+				}
+			}
+			
+			var Paths = new Array();
+			var toExpand;
+			while((toExpand = toExpandCollection.pop()) != null){
+				var node = toExpand.Node;
+				var pathToNode = toExpand.PathToNode;
+
+					var childNodes = [];
+					for(var j in useCase.PrecedenceRelations){
+						var edge = useCase.PrecedenceRelations[j];
+						if(edge.start == node){
+							childNodes.push(edge.end);
+						}
+					}
+				
+				if(childNodes.length == 0){
+					Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+				}
+				else{
+					for(var j in childNodes){
+						var childNode = childNodes[j];
+						if(!childNode){
+							continue;
+						}
+						
+						//if childNode is an outside activity
+						
+						var OutScope = false;
+						if(toExpand.OutScope||childNode.OutScope){
+							OutScope = true;
+						}
+						
+						var toExpandNode = {
+							Node: childNode,
+							PathToNode: pathToNode.concat(childNode),
+							OutScope: OutScope
+						}
+						
+						console.log("toExpandNode");
+						console.log(toExpandNode);
+						
+						console.log("child node");
+						console.log(childNodes);
+						console.log(childNode);
+						console.log(childNode.Name);
+						console.log(childNode.Group);
+
+						if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
+						toExpandCollection.push(toExpandNode);
+						}
+						else{
+						Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+						}
+					}		
+				}
+				
+				
+			}
+			
+//			console.log(Paths);
+//			useCase.Paths = Paths;
+			
+			return Paths;
+			
+	}
+
 	
 	module.exports = {
 		extractModelInfo : extractModelInfo,

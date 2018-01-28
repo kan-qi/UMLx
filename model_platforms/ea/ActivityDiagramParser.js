@@ -152,6 +152,7 @@
 
 	}
 
+
 	module.exports = {
 			parseActivityDiagram : parseActivityDiagram
 	}

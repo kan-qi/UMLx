@@ -8,7 +8,7 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
-function parseCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
+function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
 		
 //		var XMIUseCase = UseCase.Attachment;
 //		var XMICombinedFragment = CombinedFragment.Attachment;
@@ -18,7 +18,7 @@ function parseCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessage
 		var startActivity = null;
 		var endActivity = null;
 		
-		console.log("parse combined fragment");
+		console.log("process combined fragment");
 		console.log(XMICombinedFragment['$']['xmi:id']);
 		
 		var XMIFragmentOperator = XMICombinedFragment.$.interactionOperator;
@@ -56,7 +56,7 @@ function parseCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessage
 			var XMIOccurrences = jp.query(XMIOperand, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
 			var SDCFG = constructSDCFG(XMIOperand,XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
 			
-			console.log("parse fragments");
+			console.log("process fragments");
 			console.log(SDCFG);
 			
 			//deal with the corner cases, if there are some empty fragements.
@@ -137,14 +137,18 @@ function parseCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessage
 				
 //				var isStimulus = false;
 				var group = "System";
-				if(XMILifeline1.isUser){
-//					isStimulus = true;
-					group = "User";
-				}
+//				if(XMILifeline1.isUser){
+////					isStimulus = true;
+//					group = "User";
+//				}
 				
 				var XMIOccurrence2 = XMIOccurrences[i++];
 				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
 //				XMILifeline2 = XMILifeline;
+				
+				if(XMILifeline2.isUser){
+					group = XMILifeline['$']['name'];
+				}
 				
 				var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
 //				XMIMessages.push(XMIMessage);
@@ -200,9 +204,9 @@ function parseCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessage
 			}
 			else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
 				
-				var innerCombinedFragment = parseCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
+				var innerCombinedFragment = processCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
 				
-				console.log("parse combined fragment");
+				console.log("process combined fragment");
 				console.log(innerCombinedFragment);
 				
 				//deal with some corner cases, if there are some empty fragments.
@@ -247,11 +251,14 @@ function parseCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessage
 			// for each life line, identify the associated classes
 			for(var j in XMILifelines){
 				var XMILifeline = XMILifelines[j];
-				// ...
+				// use name to determine isUser. Just temporary.
 				if(XMILifeline['$']['name'] === "User"){
 					console.log("is a Stimulus source");
 					XMILifeline.isUser = true;
 				}
+				
+				// use represents to determine is a lifeline is a user.
+//				var lifelineRepresentType = jp.query(XMIInteraction, '$.packagedElement[?(@[\'$\'][\'xmi:id\']==\''++'\')]');
 				console.log(XMILifeline);
 				XMILifelinesByID[XMILifeline['$']['xmi:id']] = XMILifeline;
 				var XMIClass = XMIClassesByStandardizedName[standardizeName(XMILifeline.$.name)];
@@ -288,7 +295,7 @@ function parseCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessage
 			console.log(activity.Name);
 			if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 //					var activityToEliminate = activity;
-//				ActivitiesToEliminate.push(activity);
+				ActivitiesToEliminate.push(activity);
 			}
 		}
 		
@@ -326,21 +333,36 @@ function parseCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessage
 		console.log(UseCase.PrecedenceRelations);
 		
 		//logic to decide Stimulus
-		for(var i in UseCase.PrecedenceRelations){
-			var edge = UseCase.PrecedenceRelations[i];
-			console.log(edge);
+		for(var i in UseCase.Activities){
+			var activity = UseCase.Activities[i];
+			console.log(activity);
 			 //create a new edge by triangle rules.
-			if(edge.start.Group !== "System" && edge.end.Group === "System"){
-				console.log("Stimulus...");
-				console.log(edge.start);
-				edge.start.Stimulus = true;
+//			if(edge.start.Group !== "System" && edge.end.Group === "System"){
+//				console.log("Stimulus...");
+//				console.log(edge.start);
+//				edge.start.Stimulus = true;
+//			}
+			
+			//if activity's sendevent's lifeline is an actor, acreate an stimulus node
+			if(activity.Name == "onSearch"){
+				var stimulus = {
+						Type: "Stimulus",
+						Name: "stl#1",
+						_id: "12345678",
+//						Attachment: XMIActivity,
+						Stimulus: true,
+						OutScope: false,
+						Group: "User"
+				}
+				
+				UseCase.Activities.push(stimulus);
+				UseCase.PrecedenceRelations.push({start: stimulus, end: activity});
 			}
 		}
 		
-		console.log("finished sequence diagram parseing");
+		console.log("finished sequence diagram processing");
 		
 	}
-	
 	
 	module.exports = {
 			parseSequenceDiagram : parseSequenceDiagram

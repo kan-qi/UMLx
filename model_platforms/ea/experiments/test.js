@@ -21,15 +21,15 @@ var pathsDrawer = require("./TransactionsDrawer.js");
 //	});
 //});
 
-xmiParser.extractUserSystermInteractionModel("./model_platforms/ItemManagerExample.xml", function(Model){
+xmiParser.extractUserSystermInteractionModel("./model_platforms/ea/experiments/ItemManagerExample.xml", function(Model){
 
 	traverseUserSystemInterationModel(Model);
 	for(var i in Model.UseCases){
 		var UseCase = Model.UseCases[i];
 		console.log("output use case");
-		drawPrecedenceDiagramFunc(UseCase, Model.DomainModel, "./model_platforms/usecase_"+i+".dotty");
-		drawSimplePrecedenceDiagramFunc(UseCase, Model.DomainModel, "./model_platforms/usecase_simple_"+i+".dotty");
-		pathsDrawer.drawPaths(UseCase.Paths, "./model_platforms/usecase_"+i+"_paths.dotty", function(){
+		drawPrecedenceDiagramFunc(UseCase, Model.DomainModel, "./model_platforms/ea/experiments/usecase_"+i+".dotty");
+		drawSimplePrecedenceDiagramFunc(UseCase, Model.DomainModel, "./model_platforms/ea/experiments/usecase_simple_"+i+".dotty");
+		pathsDrawer.drawPaths(UseCase.Paths, "./model_platforms/ea/experiments/usecase_"+i+"_paths.dotty", function(){
 			console.log("paths are drawn");
 		});
 	}
@@ -197,16 +197,16 @@ function standardizeName(Name){
 function drawStimulusNode(id, label){
 	return id+'[label=<\
 		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="Stimulus_icon.png"/></TD></TR>\
-	  <TR><TD>'+label+'</TD></TR>\
+		<TR><TD><IMG SRC="stimulus_icon.png"/></TD></TR>\
+	 <TR><TD>'+label+'</TD></TR>\
 	</TABLE>>];';
 }
 
 function drawNode(id, label){
 	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
 		<TR><TD><IMG SRC="activity_icon.png"/></TD></TR>\
-	  <TR><TD>'+label+'</TD></TR>\
+	 <TR><TD>'+label+'</TD></TR>\
 	</TABLE>>];';
 }
 
@@ -214,15 +214,17 @@ function drawOutOfScopeNode(id, label){
 	return id+'[label=<\
 		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 		<TR><TD><IMG SRC="out_of_scope_activity_icon.png"/></TD></TR>\
-	  <TR><TD>'+label+'</TD></TR>\
+	 <TR><TD>'+label+'</TD></TR>\
 	</TABLE>>];';
+	
+//	 <TR><TD><FONT POINT-SIZE="20">'+label+'</FONT></TD></TR>\
 }
 
 function drawFragmentNode(id, label){
 	return id+'[label=<\
 		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 		<TR><TD><IMG SRC="fragment_node_icon.png"/></TD></TR>\
-	  <TR><TD>'+label+'</TD></TR>\
+	 <TR><TD>'+label+'</TD></TR>\
 	</TABLE>>];';
 }
 
@@ -248,8 +250,8 @@ function drawDomainObjectNode(component){
 	//temporarily eliminate some unnecessary nodes
 	console.log("domain objects");
 	console.log(component);
-	if(component.Name === "System Boundary" || component.Name.startsWith('$')){
-		return "";
+	if(component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
+		return null;
 	}
 	var componentInternal = "{";
 	var componentInternalIndex = 0;
@@ -274,7 +276,7 @@ function drawDomainObjectNode(component){
 				functionSignature = parameter.Type.substring(7).replace("__", "[]") + " "+functionSignature;
 			}
 			else {
-				functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
+//				functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
 			}
 		}
 		functionSignature += ")";
@@ -481,10 +483,33 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 	}
 	
 	graph += "subgraph cluster"+1000+" {";
+	var j = 0;
 	for(var i in DomainModel.Elements){
+		//arrange the nodes in the subgraph
+		
+		
+		
 		var domainObject = DomainModel.Elements[i];
-		graph += dottyDraw.draw(drawDomainObjectNode(domainObject));
+		var domainObjectToDraw = drawDomainObjectNode(domainObject);
+		
+		if(domainObjectToDraw){
+//			if(j%3 == 0){
+//				graph += "{rank=same;";
+//				var index = 1001+j;
+//				graph += "subgraph cluster"+index+" {";
+//			}
+			graph += dottyDraw.draw(domainObjectToDraw);
+			
+//			if(j%3 == 2){
+//				graph += "};";
+//			}
+//			j++;
+		}
 	}
+	
+//	if(j % 3 != 0){
+//		graph +="};";
+//	}
 	graph += "label = \"Domain Model\";};";
 	
 	for(var i in edgesToDomainObjects){
@@ -523,6 +548,8 @@ function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callback
 //	}';
 	
 	dottyUtil = require("../../../utils/DottyUtil.js");
+	console.log("test graph");
+	console.log(graph);
 	dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 		console.log("drawing is down");
 	});
@@ -563,7 +590,8 @@ function drawSimplePrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, ca
 	var precedenceRelations = UseCase.PrecedenceRelations;
 	console.log(precedenceRelations);
 	var graph = 'digraph g {\
-		node [shape=plaintext]';
+		fontsize=24\
+		node [shape=plaintext fontsize=24]';
 //		node [margin=0 fontcolor=blue fontsize=12 width=0.01 shape=circle style=filled]';
 	
 	// used to get rid of duplicates.

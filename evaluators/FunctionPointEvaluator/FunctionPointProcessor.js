@@ -32,7 +32,7 @@
 			processPath: function(path, usecase){
 				path["FPAnalytics"] = {};
 				path["FPAnalytics"].Operations = {};
-				var functionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, functionalPatternTreeRoot);
+				var functionalOperations = pathPatternMatchUtil.recognizePattern(path, functionalPatternTreeRoot);
 				var functionalOperationStr = "";
 				for(var i=0; i < functionalOperations.length; i++){
 					if(i !== 0){

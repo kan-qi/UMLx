@@ -42,7 +42,6 @@
 
 	function toUseCaseEvaluationRow(useCase, index) {
 //		var useCaseEmpirics = useCase.UseCaseEmpirics;
-//		var useCase["ElementAnalytics"] = useCase.UseCaseAnalytics;
 
 		return useCase["ElementAnalytics"].PathNum + ","
 		+ useCase["ElementAnalytics"].UseCaseNum + ","
@@ -89,7 +88,6 @@
 //		DiagramNum:0,
 		};
 		
-		useCase.UseCaseAnalytics = useCase["ElementAnalytics"];
 //		console.log(useCase);
 
 //		for ( var i in useCase.Diagrams) {
@@ -141,7 +139,6 @@
 					pathNum++;
 				}
 
-				useCase["ElementAnalytics"] = {};
 				useCase["ElementAnalytics"].TotalDegree = totalDegree;
 				useCase["ElementAnalytics"].TotalLinks = totalLinks;
 				useCase["ElementAnalytics"].ActorNum = actorNum;
@@ -175,6 +172,9 @@
 		useCase["ElementAnalytics"].PathAnalyticsFileName = "pathAnalytics.csv";
 		useCase["ElementAnalytics"].ElementAnalyticsFileName = "elementAnalytics.csv";
 //		useCase["ElementAnalytics"].DiagramAnalyticsFileName = "diagramAnalytics.csv";
+		
+		console.log("test use case element analytics");
+		console.log(useCase);
 		dumpUseCaseElementsInfo(useCase, function(err){
 			
 				if(err){
@@ -474,8 +474,6 @@
 			}
 			
 
-			useCase["ElementAnalytics"] = useCase.UseCaseAnalytics;
-
 			for ( var i in useCase.Activities) {
 				var element = useCase.Activities[i];
 				var elementName = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
@@ -681,7 +679,6 @@
 			pathNum: pathNum,
 		}
 
-		
 	}
 
 	function dumpRepoElementsInfo(repoInfo, callbackfunc) {
