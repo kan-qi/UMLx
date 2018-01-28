@@ -74,7 +74,7 @@
 //								});
 						}
 			
-				debug.writeJson("mode", model);
+				debug.writeJson("model", model);
 //				modelDrawer.drawModel(model, model.OutputDir+"/model.dotty", function(){
 //					console.log("model is drawn");
 //				});

@@ -8,9 +8,9 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
-	var sequenceDiagramProcessor = require("./SequenceDiagramParser.js");
-	var activityDiagramProcessor = require("./ActivityDiagramParser.js");
-	var analysisDiagramProcessor = require("./AnalysisDiagramParser.js");
+	var sequenceDiagramParser= require("./SequenceDiagramParser.js");
+	var activityDiagramParser= require("./ActivityDiagramParser.js");
+	var analysisDiagramParser= require("./AnalysisDiagramParser.js");
 	/*
 	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
 	 * 
@@ -119,10 +119,12 @@
 			parser.parseString(data, function(err, xmiString) {
 		
 		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("XMIString", xmiString);
+		debug.writeJson("XMIString", xmiString);
 		
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
+		
+		
 		
 		var Model = {
 				UseCases: [],
@@ -172,7 +174,7 @@
 			
 			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
 			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
-			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID, XMIExtension);
+			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID, XMIExtension, XMIUMLModel);
 			
 			Model.UseCases.push(UseCase);
 		}

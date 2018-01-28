@@ -8,6 +8,11 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
+	function standardizeName(name){
+		return name.replace(/\s/g, '').toUpperCase();
+	}
+	
+	
 function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
 		
 //		var XMIUseCase = UseCase.Attachment;

@@ -8,8 +8,25 @@
 //	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
-	function parseAnalysisDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID, XMIExtension){
-		console.log("checking problem");
+	function queryUseCaseElementsInExtension(XMIExtension, UseCaseID){
+		var extensionAnalysisElements = jp.query(XMIExtension, '$..element[?(@[\'$\'][\'xmi:type\']==\'uml:Object\' || @[\'$\'][\'xmi:type\']==\'uml:Abject\')]');
+		console.log("extension elements");
+		console.log(extensionAnalysisElements);
+		console.log(UseCaseID);
+		var useCaseElementsInExtension = [];
+		for(var i in extensionAnalysisElements){
+			var analysisElement = extensionAnalysisElements[i];
+			if(analysisElement['model'] && analysisElement['model'][0]['$']['owner'] == UseCaseID){
+				console.log("found use case element");
+				useCaseElementsInExtension.push(analysisElement);
+			}
+		}
+		
+		return useCaseElementsInExtension;
+	}
+	
+	function parseAnalysisDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID, XMIExtension, XMIUMLModel){
+		console.log("parse analysis diagram");
 		// search for the instance specifications that are used to represent the robustness diagrams.
 		
 		// two steps to establish the association between the elements and the use cases.
@@ -18,11 +35,22 @@
 
 		var ActivitiesByID = [];
 		var XMIInstanceSpecifications =[];
-		var extensionElements = jp.query(XMIExtension, '$.element[?(@[\'model\'][\'$\'][\'package\']==\''+UseCase._id+'\')]');
+		
+		//the nested chacking has not succeeded
+//		console.log('$..element[?(@.model[?(@.$.owner ==\''+UseCase._id+'\')])]');
+//		var extensionElements = jp.query(XMIExtension, '$..element[?(@.model[?(@.$.owner ==\''+UseCase._id+'\')])]');
+
+//		var extensionElements = jp.query(XMIExtension, '$..element[?(@[\'model\'][\'$\'][\'owner\']==\''+UseCase._id+'\')]');
+		
+		var extensionElements = queryUseCaseElementsInExtension(XMIExtension, UseCase._id);
+		
+		console.log("check extension elements");
+		console.log(extensionElements);
+//		console.log(XMIExtension[0]['elements']);
 		for(var i in extensionElements){
 			var extensionElement = extensionElements[i];
 
-			var XMIInstanceSpecification = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+extensionElement['$']['idref']+'\')]')[0];
+			var XMIInstanceSpecification = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+extensionElement['$']['xmi:idref']+'\')]')[0];
 //			XMIInstanceSpecifications = XMIInstanceSpecifications.concat(jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]'));
 			console.log("checking derived instance specification");
 			console.log(XMIInstanceSpecification);
@@ -52,6 +80,9 @@
 				UseCase.Activities.push(activity);
 			}
 		}
+		
+		console.log("check instance specifications");
+		console.log(XMIInstanceSpecifications);
 		
 		for(var i in XMIInstanceSpecifications){
 			var XMIInstanceSpecification = XMIInstanceSpecifications[i];
