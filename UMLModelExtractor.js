@@ -47,7 +47,7 @@
 //				console.log("domainModel");
 //				console.log(domainModel);
 				
-				debug.writeJson("modelModel", domainModel);
+				debug.writeJson("domainModel", domainModel);
 
 //				domainModelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
 //					console.log("domain model drawn");
