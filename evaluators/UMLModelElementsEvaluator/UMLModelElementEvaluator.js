@@ -1,11 +1,61 @@
 /**
  * http://usejsdoc.org/
  * 
- * This is evaluator module works as a filter mostly to output the necessary
- * information from model analysis to model evaluation.
+ * This evaluator will be responsible for evaluating the basic elements of UML diagrams: class diagrams, sequence diagrams, activity diagrams, etc.
  * 
+ * The basic elements, for example, include:
  * 
+ * Number of Class (NOC)
+ * Number of Attributes (NOA)
+ * Number of external methods (NEM)
+ * Number of actors (NOA)
+ * Number of use cases.(NUC)
+ * Number of roles (NOR)
+ * Average number of actors per use case (ANA_UC)
+ * Average number of roles per use case (ANR_UC)
+ * Number of inheritance relationships (NOIR)
+ * Number of use relationships (NOUR)
+ * Number of realize relationships (NORR)
+ * Number of methods (NOM)
+ * Number of parameters (NOP)
+ * Number of class attributes (NOCA)
+ * Number of associations (NOASSOC)
+ * Average number of methods per class (ANM_CLS)
+ * Average Number of parameters per class (ANP_CLS)
+ * Average number of class attributes per class (ANCA_CLS)
+ * Average number of associations per class (ANASSOC_CLS)
+ * Average number of relationships per class (ANREL_CLS)
+ * Number of transactions (NOT)
+ * EI
+ * EO
+ * EQ
+ * ILF
+ * EIF
+ * DETs
+ * FTRs
+ * Number of use cases/scenario scripts
+ * Weighted methods per class (WMC)
+ * Methods per class
+ * Number of children (NOC)
+ * Depth in Inheritance tree (DIT)
+ * Method size (LOC)
+ * Coupling Between Objects (CBO)
+ * Number of instance variables per class (NIV)
+ * Number of unique messages sent (NUM)
+ * Number of classes inherited (derived classes)
+ * Number of classes inherited from (base classes)
+ * reuse ration. (RR)
+ * Number of Top Level Classes (TLC)
+ * Average number of weighted methods per classes(WMC)
+ * Average Depth of Inheritance Tree (DIT)
+ * Average number of children per base class (NOC)
+ * Input services (IS)
+ * Output services (OS)
+ * Inquiry services (IQS)
+ * Object data (OD)
+ * External interface files (EIF)
  * 
+ * We need to generalize a profile for those basic elements.
  */
 
 (function() {
@@ -42,7 +92,6 @@
 
 	function toUseCaseEvaluationRow(useCase, index) {
 //		var useCaseEmpirics = useCase.UseCaseEmpirics;
-//		var useCase["ElementAnalytics"] = useCase.UseCaseAnalytics;
 
 		return useCase["ElementAnalytics"].PathNum + ","
 		+ useCase["ElementAnalytics"].UseCaseNum + ","
@@ -89,7 +138,6 @@
 //		DiagramNum:0,
 		};
 		
-		useCase.UseCaseAnalytics = useCase["ElementAnalytics"];
 //		console.log(useCase);
 
 //		for ( var i in useCase.Diagrams) {
@@ -141,7 +189,6 @@
 					pathNum++;
 				}
 
-				useCase["ElementAnalytics"] = {};
 				useCase["ElementAnalytics"].TotalDegree = totalDegree;
 				useCase["ElementAnalytics"].TotalLinks = totalLinks;
 				useCase["ElementAnalytics"].ActorNum = actorNum;
@@ -175,6 +222,9 @@
 		useCase["ElementAnalytics"].PathAnalyticsFileName = "pathAnalytics.csv";
 		useCase["ElementAnalytics"].ElementAnalyticsFileName = "elementAnalytics.csv";
 //		useCase["ElementAnalytics"].DiagramAnalyticsFileName = "diagramAnalytics.csv";
+		
+		console.log("test use case element analytics");
+		console.log(useCase);
 		dumpUseCaseElementsInfo(useCase, function(err){
 			
 				if(err){
@@ -474,8 +524,6 @@
 			}
 			
 
-			useCase["ElementAnalytics"] = useCase.UseCaseAnalytics;
-
 			for ( var i in useCase.Activities) {
 				var element = useCase.Activities[i];
 				var elementName = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
@@ -681,7 +729,6 @@
 			pathNum: pathNum,
 		}
 
-		
 	}
 
 	function dumpRepoElementsInfo(repoInfo, callbackfunc) {
