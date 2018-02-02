@@ -1,530 +1,435 @@
 {
   "UseCases": [
     {
-      "_id": "EAID_AB6258A1_1655_485a_A400_12A233A0D380",
-      "Name": "Algorithm",
-      "PrecedenceRelations": [],
-      "Activities": [
+      "_id": "EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "Name": "Query Item",
+      "PrecedenceRelations": [
         {
-          "Type": "instanceSpecification",
-          "Name": "Algortihm to scale",
-          "_id": "EAID_C3EA7336_1F2F_47ea_BB66_D95DECA96D04",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "onSearch",
+            "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+            "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          }
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Score",
-          "_id": "EAID_7A9F7AAA_21CF_46ab_B935_50233D9A25F0",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displayItemList",
+            "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Show Rank",
-          "_id": "EAID_974FB299_6A5A_4951_B5B5_F51B0C4B8267",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displayEmptyListNotice",
+            "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": true,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Update Rank",
-          "_id": "EAID_28F91D5A_D37D_4529_904A_4F6CD35B38D4",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displaySearchInvalidMsg",
+            "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
+        },
+        {
+          "start": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          }
+        },
+        {
+          "start": {
+            "Type": "Stimulus",
+            "Name": "stl#1",
+            "_id": "12345678",
+            "Stimulus": true,
+            "OutScope": false,
+            "Group": "User"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "onSearch",
+            "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+            "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+          }
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_AB6258A1_1655_485a_A400_12A233A0D380",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_AB6258A1_1655_485a_A400_12A233A0D380",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 4,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_ADD3F535_7075_4cc8_82CF_0274267CB467",
-      "Name": "Calculate score ",
-      "PrecedenceRelations": [],
       "Activities": [
         {
-          "Type": "instanceSpecification",
-          "Name": "Calculate Score",
-          "_id": "EAID_9CB93018_00A2_426a_8F22_E9E887C91092",
+          "Type": "message",
+          "Name": "onSearch",
+          "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+          "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Count the number of enemies killed",
-          "_id": "EAID_5B2568A1_712C_4e12_B51B_6281E5B501F8",
+          "Type": "message",
+          "Name": "searchItemByKeywords",
+          "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+          "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Display score at end of battle",
-          "_id": "EAID_FEAB27D4_69ED_4c75_B770_C9D08EF1E7A5",
+          "Type": "message",
+          "Name": "displaySearchInvalidMsg",
+          "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Update Database",
-          "_id": "EAID_8273AF7D_78C3_45c3_8CD8_F1443CD6978C",
+          "Type": "message",
+          "Name": "queryCatalog",
+          "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "User Account",
-          "_id": "EAID_815FC945_FF32_4183_B38B_D41FB5931098",
+          "Type": "message",
+          "Name": "displayEmptyListNotice",
+          "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": true,
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+        },
+        {
+          "Type": "message",
+          "Name": "displayItemList",
+          "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
+          "Stimulus": false,
+          "Group": "System",
+          "OutScope": false,
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+        },
+        {
+          "Type": "Stimulus",
+          "Name": "stl#1",
+          "_id": "12345678",
+          "Stimulus": true,
+          "OutScope": false,
+          "Group": "User"
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_ADD3F535_7075_4cc8_82CF_0274267CB467",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_ADD3F535_7075_4cc8_82CF_0274267CB467",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 5,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_59C8B5E2_F466_47cb_AEF8_61C36F652683",
-      "Name": "Change Weapon",
-      "PrecedenceRelations": [],
-      "Activities": [
+      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/fef9a23d7e0fce9c6c31efd286cf01f4/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/fef9a23d7e0fce9c6c31efd286cf01f4/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "Paths": [
         {
-          "Type": "instanceSpecification",
-          "Name": "Check if weapon availble",
-          "_id": "EAID_7B29AF08_8A85_48dc_8472_5675A1C42DC1",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "Nodes": [
+            {
+              "Type": "Stimulus",
+              "Name": "stl#1",
+              "_id": "12345678",
+              "Stimulus": true,
+              "OutScope": false,
+              "Group": "User"
+            },
+            {
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+            },
+            {
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+            },
+            {
+              "Type": "message",
+              "Name": "queryCatalog",
+              "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+            },
+            {
+              "Type": "message",
+              "Name": "displayEmptyListNotice",
+              "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": true,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+            }
+          ],
+          "OutScope": true,
+          "PathStr": "",
+          "pathLength": 0,
+          "avgDegree": 0,
+          "archDiff": 0,
+          "boundaryNum": 0,
+          "controlNum": 0,
+          "entityNum": 0,
+          "actorNum": 0,
+          "FPAnalytics": {
+            "Operations": {},
+            "Functional": [
+              "FUNC_NA"
+            ],
+            "FunctionalTag": "FUNC_NA"
+          },
+          "TransactionAnalytics": {
+            "Transactional": [
+              "TRAN_NA"
+            ],
+            "TransactionalTag": "TRAN_NA",
+            "TranLength": 5,
+            "TotalDegree": 5
+          },
+          "utw": 4
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Choose a main weapon",
-          "_id": "EAID_0B2CBACC_9468_40ec_A653_37F554DCCF44",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "Nodes": [
+            {
+              "Type": "Stimulus",
+              "Name": "stl#1",
+              "_id": "12345678",
+              "Stimulus": true,
+              "OutScope": false,
+              "Group": "User"
+            },
+            {
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+            },
+            {
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+            },
+            {
+              "Type": "message",
+              "Name": "queryCatalog",
+              "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+            },
+            {
+              "Type": "message",
+              "Name": "displayItemList",
+              "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+            }
+          ],
+          "OutScope": false,
+          "PathStr": "",
+          "pathLength": 0,
+          "avgDegree": 0,
+          "archDiff": 0,
+          "boundaryNum": 0,
+          "controlNum": 0,
+          "entityNum": 0,
+          "actorNum": 0,
+          "FPAnalytics": {
+            "Operations": {},
+            "Functional": [
+              "FUNC_NA"
+            ],
+            "FunctionalTag": "FUNC_NA"
+          },
+          "TransactionAnalytics": {
+            "Transactional": [
+              "TRAN_NA"
+            ],
+            "TransactionalTag": "TRAN_NA",
+            "TranLength": 5,
+            "TotalDegree": 5
+          },
+          "utw": 4
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Display weapons",
-          "_id": "EAID_F8FC9F11_AD19_4307_93B6_C018FCD1A791",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Single weapon",
-          "_id": "EAID_07A7CEE6_8A8C_4a3b_90F0_46EA39FE9CD9",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "User Account",
-          "_id": "EAID_ED6DD413_4D7E_4f8c_8E59_566FBB43BCC4",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Weapons Bar",
-          "_id": "EAID_71EA0632_D78E_4bed_B86E_A2C9291B33E3",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "Nodes": [
+            {
+              "Type": "Stimulus",
+              "Name": "stl#1",
+              "_id": "12345678",
+              "Stimulus": true,
+              "OutScope": false,
+              "Group": "User"
+            },
+            {
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+            },
+            {
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+            },
+            {
+              "Type": "message",
+              "Name": "displaySearchInvalidMsg",
+              "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+            }
+          ],
+          "OutScope": false,
+          "PathStr": "",
+          "pathLength": 0,
+          "avgDegree": 0,
+          "archDiff": 0,
+          "boundaryNum": 0,
+          "controlNum": 0,
+          "entityNum": 0,
+          "actorNum": 0,
+          "FPAnalytics": {
+            "Operations": {},
+            "Functional": [
+              "FUNC_NA"
+            ],
+            "FunctionalTag": "FUNC_NA"
+          },
+          "TransactionAnalytics": {
+            "Transactional": [
+              "TRAN_NA"
+            ],
+            "TransactionalTag": "TRAN_NA",
+            "TranLength": 4,
+            "TotalDegree": 4
+          },
+          "utw": 4
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_59C8B5E2_F466_47cb_AEF8_61C36F652683",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_59C8B5E2_F466_47cb_AEF8_61C36F652683",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 6,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_B44EB7CC_57BE_4e51_A707_72380BE4DE71",
-      "Name": "Choose Avatar",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Avatar's Page",
-          "_id": "EAID_5F6420DF_7B22_457c_ADA4_D9D9D55CB879",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Avatars",
-          "_id": "EAID_4FEB3057_F4ED_45c7_9B80_80A297FDA96E",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Render Avatar",
-          "_id": "EAID_815B6503_525D_4a8e_93D8_2A28354CD2AE",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Select Avatar",
-          "_id": "EAID_150C5FC1_2C91_443f_983F_666B158B05AC",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_B44EB7CC_57BE_4e51_A707_72380BE4DE71",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_B44EB7CC_57BE_4e51_A707_72380BE4DE71",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 4,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_BA62978C_E4B1_48ee_9C59_E73BF64A5DAA",
-      "Name": "Choose Weapon",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Weapon inventory",
-          "_id": "EAID_0A980C9C_7C99_4aba_B8F9_CCC238B8EA58",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Weapons Bar",
-          "_id": "EAID_961C1606_3C28_4491_AC50_64E63F419B28",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "display greyed out weapon icon",
-          "_id": "EAID_B82B0E92_1FA6_4039_93EF_5696E4C439DB",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "display weapon icon",
-          "_id": "EAID_84133E17_C525_475d_B35B_C3284BE6AD58",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "display weapons bar",
-          "_id": "EAID_C1B51128_100F_4445_9A46_4C916D6CACC0",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "weapon available?",
-          "_id": "EAID_C45F45DA_3002_4a29_95B9_A9B8977858E3",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_BA62978C_E4B1_48ee_9C59_E73BF64A5DAA",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_BA62978C_E4B1_48ee_9C59_E73BF64A5DAA",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 6,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_E82259AB_129E_43b0_8B7D_B7D0E4415D16",
-      "Name": "Create Account",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Account Creation Page",
-          "_id": "EAID_70A71EB0_0967_48ec_99FD_9B8B4325B6AF",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Create Account",
-          "_id": "EAID_D4E83467_C18E_4d0e_A6A6_835B19111874",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Specify Credentials",
-          "_id": "EAID_931A4E3F_F432_4fd1_927C_C030F3D9737B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "check if account name is unique",
-          "_id": "EAID_133AD34E_0C78_4e16_801F_EFEA5F77F88E",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "check if passwords match",
-          "_id": "EAID_E0F0AB4A_38E9_4619_904C_044A3D8160F2",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "check password format",
-          "_id": "EAID_3E20DA63_525B_4224_BB9E_9534D0359C8D",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "display error message",
-          "_id": "EAID_BAC2C899_D68C_4b3d_96FE_76FE42F8D95B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_E82259AB_129E_43b0_8B7D_B7D0E4415D16",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_E82259AB_129E_43b0_8B7D_B7D0E4415D16",
-      "Paths": [],
       "ElementAnalytics": {
         "TotalDegree": 0,
         "ElementNum": 7,
@@ -534,9 +439,9 @@
         "BoundaryNum": 0,
         "ControlNum": 0,
         "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
+        "TotalPathLength": 14,
+        "PathNum": 3,
+        "AvgPathLength": 4.666666666666667,
         "PathAnalyticsFileName": "pathAnalytics.csv",
         "ElementAnalyticsFileName": "elementAnalytics.csv"
       },
@@ -544,7 +449,7 @@
         "EI": 0,
         "EO": 0,
         "EQ": 0,
-        "FUNC_NA": 0,
+        "FUNC_NA": 3,
         "FN": 0
       },
       "TransactionAnalytics": {
@@ -555,7 +460,7 @@
         "CTRL": 0,
         "EXTIVK": 0,
         "EXTCLL": 0,
-        "TRAN_NA": 0,
+        "TRAN_NA": 3,
         "NT": 0,
         "TranLength": 0,
         "AvgTranLength": 0,
@@ -569,370 +474,435 @@
       }
     },
     {
-      "_id": "EAID_3307E08E_9423_4643_9874_5AA12FCF71BE",
-      "Name": "Determine AR/ VR mode",
-      "PrecedenceRelations": [],
-      "Activities": [
+      "_id": "EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "Name": "Query Item",
+      "PrecedenceRelations": [
         {
-          "Type": "instanceSpecification",
-          "Name": "AR mode",
-          "_id": "EAID_4DD41B17_9B81_4dce_A227_999219CC82AB",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "onSearch",
+            "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+            "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          }
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Check If In hawaii",
-          "_id": "EAID_7A828811_6F7E_4a72_83BE_7EB1729B48B0",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displayItemList",
+            "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Location",
-          "_id": "EAID_4998CE95_6BF0_42b7_8984_BA5E8944C781",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displayEmptyListNotice",
+            "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": true,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Not in Hawaii Mode",
-          "_id": "EAID_C516DCEB_2D4B_445c_BE6C_A9B2022A3DE9",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displaySearchInvalidMsg",
+            "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Render Mode",
-          "_id": "EAID_A4ED9F85_A0C6_4a99_AA18_46FCB3A6017A",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "start": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          }
+        },
+        {
+          "start": {
+            "Type": "Stimulus",
+            "Name": "stl#1",
+            "_id": "12345678",
+            "Stimulus": true,
+            "OutScope": false,
+            "Group": "User"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "onSearch",
+            "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+            "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+          }
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_3307E08E_9423_4643_9874_5AA12FCF71BE",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_3307E08E_9423_4643_9874_5AA12FCF71BE",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 5,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_F0763D78_98CE_4662_BEA5_0E800D44F614",
-      "Name": "Fight Battle",
-      "PrecedenceRelations": [],
       "Activities": [
         {
-          "Type": "instanceSpecification",
-          "Name": "Achievements",
-          "_id": "EAID_DEC4CBC8_431D_423f_8E49_8464ADD21C8F",
+          "Type": "message",
+          "Name": "onSearch",
+          "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+          "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Battle",
-          "_id": "EAID_132D9836_83AF_46f8_9045_676944C77B65",
+          "Type": "message",
+          "Name": "searchItemByKeywords",
+          "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+          "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Battle Scene",
-          "_id": "EAID_48E718DE_1796_4024_838F_49E94DF2B3DE",
+          "Type": "message",
+          "Name": "displaySearchInvalidMsg",
+          "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Calculate Score",
-          "_id": "EAID_2023B554_BE69_4d56_8F12_D246E89B837D",
+          "Type": "message",
+          "Name": "queryCatalog",
+          "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Check if weapon hit the army",
-          "_id": "EAID_5F238761_4830_4bb7_AFFF_06FDA2C27AF7",
+          "Type": "message",
+          "Name": "displayEmptyListNotice",
+          "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": true,
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Destroy armyMan",
-          "_id": "EAID_F10EE142_4DED_4516_A85F_B3AAF60DF08E",
+          "Type": "message",
+          "Name": "displayItemList",
+          "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Minimap",
-          "_id": "EAID_1360F0FD_5A98_4737_AA9D_60C3BCC89876",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Move Army Closer",
-          "_id": "EAID_74850761_CC3A_4b36_8EF5_6BCBA352F326",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Update Minimap",
-          "_id": "EAID_8F1E9C8E_3217_4231_B878_9CA70DF2BC6E",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "Type": "Stimulus",
+          "Name": "stl#1",
+          "_id": "12345678",
+          "Stimulus": true,
+          "OutScope": false,
+          "Group": "User"
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_F0763D78_98CE_4662_BEA5_0E800D44F614",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_F0763D78_98CE_4662_BEA5_0E800D44F614",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 9,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_CF9B700F_8BA6_43a6_A6DA_DC46172DCD22",
-      "Name": "Get Score",
-      "PrecedenceRelations": [],
-      "Activities": [
+      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/fef9a23d7e0fce9c6c31efd286cf01f4/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/fef9a23d7e0fce9c6c31efd286cf01f4/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "Paths": [
         {
-          "Type": "instanceSpecification",
-          "Name": "Battle",
-          "_id": "EAID_1751024B_90DD_4968_AF86_3F38AF21F805",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "Nodes": [
+            {
+              "Type": "Stimulus",
+              "Name": "stl#1",
+              "_id": "12345678",
+              "Stimulus": true,
+              "OutScope": false,
+              "Group": "User"
+            },
+            {
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+            },
+            {
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+            },
+            {
+              "Type": "message",
+              "Name": "queryCatalog",
+              "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+            },
+            {
+              "Type": "message",
+              "Name": "displayEmptyListNotice",
+              "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": true,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+            }
+          ],
+          "OutScope": true,
+          "PathStr": "",
+          "pathLength": 0,
+          "avgDegree": 0,
+          "archDiff": 0,
+          "boundaryNum": 0,
+          "controlNum": 0,
+          "entityNum": 0,
+          "actorNum": 0,
+          "FPAnalytics": {
+            "Operations": {},
+            "Functional": [
+              "FUNC_NA"
+            ],
+            "FunctionalTag": "FUNC_NA"
+          },
+          "TransactionAnalytics": {
+            "Transactional": [
+              "TRAN_NA"
+            ],
+            "TransactionalTag": "TRAN_NA",
+            "TranLength": 5,
+            "TotalDegree": 5
+          },
+          "utw": 4
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "Retrieve Score",
-          "_id": "EAID_5EB28D2C_F80F_4e81_889C_F35E554BC0E4",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "Nodes": [
+            {
+              "Type": "Stimulus",
+              "Name": "stl#1",
+              "_id": "12345678",
+              "Stimulus": true,
+              "OutScope": false,
+              "Group": "User"
+            },
+            {
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+            },
+            {
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+            },
+            {
+              "Type": "message",
+              "Name": "queryCatalog",
+              "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+            },
+            {
+              "Type": "message",
+              "Name": "displayItemList",
+              "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+            }
+          ],
+          "OutScope": false,
+          "PathStr": "",
+          "pathLength": 0,
+          "avgDegree": 0,
+          "archDiff": 0,
+          "boundaryNum": 0,
+          "controlNum": 0,
+          "entityNum": 0,
+          "actorNum": 0,
+          "FPAnalytics": {
+            "Operations": {},
+            "Functional": [
+              "FUNC_NA"
+            ],
+            "FunctionalTag": "FUNC_NA"
+          },
+          "TransactionAnalytics": {
+            "Transactional": [
+              "TRAN_NA"
+            ],
+            "TransactionalTag": "TRAN_NA",
+            "TranLength": 5,
+            "TotalDegree": 5
+          },
+          "utw": 4
         },
         {
-          "Type": "instanceSpecification",
-          "Name": "ScoreCards",
-          "_id": "EAID_2D2B2816_3AED_42e8_A712_6299445FAAC6",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "USer Master",
-          "_id": "EAID_2FB21A8F_E9FC_48d2_9217_64A38A6F5B18",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
+          "Nodes": [
+            {
+              "Type": "Stimulus",
+              "Name": "stl#1",
+              "_id": "12345678",
+              "Stimulus": true,
+              "OutScope": false,
+              "Group": "User"
+            },
+            {
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF"
+            },
+            {
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+            },
+            {
+              "Type": "message",
+              "Name": "displaySearchInvalidMsg",
+              "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
+              "Stimulus": false,
+              "Group": "System",
+              "OutScope": false,
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+            }
+          ],
+          "OutScope": false,
+          "PathStr": "",
+          "pathLength": 0,
+          "avgDegree": 0,
+          "archDiff": 0,
+          "boundaryNum": 0,
+          "controlNum": 0,
+          "entityNum": 0,
+          "actorNum": 0,
+          "FPAnalytics": {
+            "Operations": {},
+            "Functional": [
+              "FUNC_NA"
+            ],
+            "FunctionalTag": "FUNC_NA"
+          },
+          "TransactionAnalytics": {
+            "Transactional": [
+              "TRAN_NA"
+            ],
+            "TransactionalTag": "TRAN_NA",
+            "TranLength": 4,
+            "TotalDegree": 4
+          },
+          "utw": 4
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_CF9B700F_8BA6_43a6_A6DA_DC46172DCD22",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_CF9B700F_8BA6_43a6_A6DA_DC46172DCD22",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 4,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_825DCD75_368C_4458_9273_69BB01EF35E8",
-      "Name": "Increase Difficulty accordingly",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Achievements",
-          "_id": "EAID_06412EDA_8C09_4ad2_9E55_DB9B38A1A373",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Battle",
-          "_id": "EAID_37FB2A71_9B25_483c_BA47_96B1D3F1D29F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Battle Scene",
-          "_id": "EAID_90FDB689_D824_4176_9DAD_21247DC1816B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Increase Closing-in speed",
-          "_id": "EAID_8CFD3BF0_6F89_402d_9B4A_5D1BD28B4B70",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Increase Number of Army",
-          "_id": "EAID_C3BAE0FC_804A_438d_BF2E_9467F9373F41",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Increase Opponenent Weapons",
-          "_id": "EAID_341F00D9_4A14_4295_89F9_6B515B4334C0",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "User Master",
-          "_id": "EAID_08AE082F_60FD_4fb5_8CD7_EAC08CB19A1B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_825DCD75_368C_4458_9273_69BB01EF35E8",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_825DCD75_368C_4458_9273_69BB01EF35E8",
-      "Paths": [],
       "ElementAnalytics": {
         "TotalDegree": 0,
         "ElementNum": 7,
@@ -942,9 +912,9 @@
         "BoundaryNum": 0,
         "ControlNum": 0,
         "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
+        "TotalPathLength": 14,
+        "PathNum": 3,
+        "AvgPathLength": 4.666666666666667,
         "PathAnalyticsFileName": "pathAnalytics.csv",
         "ElementAnalyticsFileName": "elementAnalytics.csv"
       },
@@ -952,7 +922,7 @@
         "EI": 0,
         "EO": 0,
         "EQ": 0,
-        "FUNC_NA": 0,
+        "FUNC_NA": 3,
         "FN": 0
       },
       "TransactionAnalytics": {
@@ -963,1495 +933,7 @@
         "CTRL": 0,
         "EXTIVK": 0,
         "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_26E3539D_A9B9_4b42_AF35_12DF0D052EE8",
-      "Name": "Increase difficulty ",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Algorithm",
-          "_id": "EAID_90B14569_0D51_431b_BFFE_025EB01067C6",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Army Men",
-          "_id": "EAID_F78BF1CF_9C14_4723_9B86_4FC9201E3BA3",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Get Number of tikimen killed in that round",
-          "_id": "EAID_BA0AC805_1D4C_4be1_90B6_D4415331DA01",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Get level",
-          "_id": "EAID_83740E8F_D7B1_408d_9DCA_AAAFB7279B39",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Increase Number of spawn",
-          "_id": "EAID_FE1955F3_3C73_4977_932B_BA034C6FDB58",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Increase Speed",
-          "_id": "EAID_EF74927D_557E_4f3b_8AED_C3F1F2805E44",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Make Difficult to hit",
-          "_id": "EAID_D3CFF9D9_16DE_42ba_A3E4_A49314E45EA2",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Time Elapsed",
-          "_id": "EAID_0CEAFE9C_24D5_4399_883C_CA6EB019CA02",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "User Account",
-          "_id": "EAID_FF1E294F_9F59_4ce4_AF2E_FBA8F141C5F6",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_26E3539D_A9B9_4b42_AF35_12DF0D052EE8",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_26E3539D_A9B9_4b42_AF35_12DF0D052EE8",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 9,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_1A8BB5EA_510F_4e36_8493_BAFD32314B90",
-      "Name": "Link the tourist spot to Doug's E-book",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check Location",
-          "_id": "EAID_F6164F4A_5C90_4110_BCD0_FEC9BF44AD5A",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Doug's E-book",
-          "_id": "EAID_4A2D3301_D9B3_4d72_A6EF_6134F3CC78A3",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "E-book",
-          "_id": "EAID_FF02C977_8A3A_453e_A9CD_E53F5638543F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Location",
-          "_id": "EAID_C66E3CD3_486D_4e40_96B5_36645EA3308F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Render the e-cook link",
-          "_id": "EAID_21D071CC_40A3_4794_B72B_D45D99920100",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_1A8BB5EA_510F_4e36_8493_BAFD32314B90",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_1A8BB5EA_510F_4e36_8493_BAFD32314B90",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 5,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_DE162F2B_04FA_48dd_8214_0BD4B7EA18EF",
-      "Name": "Login",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check Password",
-          "_id": "EAID_2B3D91BF_E6CE_42d0_9903_DFFE4934FBB6",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "DIsplay error ",
-          "_id": "EAID_D39445E6_C803_4a0d_B6CE_38C423FD5061",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Enter Username and Password",
-          "_id": "EAID_D6B16BB8_B9B6_489c_9863_96E552B97795",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Login Page",
-          "_id": "EAID_0F7C913D_804A_4dab_868E_A028E7F5172B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_DE162F2B_04FA_48dd_8214_0BD4B7EA18EF",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_DE162F2B_04FA_48dd_8214_0BD4B7EA18EF",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 4,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_F1F3BCAA_FFF6_4141_8D3A_476C5D4C4B78",
-      "Name": "Navigate in AR Mode",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check if the location is inside a geofence",
-          "_id": "EAID_0500AD05_3145_42e6_BCCE_34A3BB60A67C",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Get Location",
-          "_id": "EAID_8EF2F93F_B310_4693_92AB_0C872F3F5601",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Location",
-          "_id": "EAID_46111FF3_0CBA_49bf_9B85_F39D3A8A7482",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Map",
-          "_id": "EAID_D8C42AFA_CEFB_40b7_A674_DE63589A8B19",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Places",
-          "_id": "EAID_43838F35_58A6_4e13_A05C_EAFE96ED98FA",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_F1F3BCAA_FFF6_4141_8D3A_476C5D4C4B78",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_F1F3BCAA_FFF6_4141_8D3A_476C5D4C4B78",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 5,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_93B8468E_B0EA_4618_ADA8_34B3FBB318B8",
-      "Name": "Navigate in VR Mode",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Object1",
-          "_id": "EAID_FCC39600_D016_47a9_A1B7_C728CC6B4BB3",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Select battle location",
-          "_id": "EAID_8625FB3A_5EFC_45e9_9CCD_ECBCC7641039",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "VR Map",
-          "_id": "EAID_A9482750_AC36_48b9_8FB4_44DE7EFD7C46",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "VR scene library",
-          "_id": "EAID_89F2B8DC_A83A_45e8_BB81_B0AA3F7182CD",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_93B8468E_B0EA_4618_ADA8_34B3FBB318B8",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_93B8468E_B0EA_4618_ADA8_34B3FBB318B8",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 4,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_3DDD259B_7184_444b_B742_4094020D46C3",
-      "Name": "Play Ar mode",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Fetch Lat Lon",
-          "_id": "EAID_872F5E29_C29B_44ae_A23E_3B4D6065F306",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "GPS",
-          "_id": "EAID_971A2E65_E86B_4791_A05C_69F32AF0A809",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Location",
-          "_id": "EAID_1B2804C4_DE35_4339_A6A2_FCBBDABEB618",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Update Database",
-          "_id": "EAID_FC57AAE3_F82B_447b_A1FF_3A57C261601B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_3DDD259B_7184_444b_B742_4094020D46C3",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_3DDD259B_7184_444b_B742_4094020D46C3",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 4,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_EF189A49_DAB1_412b_8920_8264C8E49E52",
-      "Name": "Render Army",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Army men ",
-          "_id": "EAID_BBD7D168_13E5_4669_8F7D_D359AEDCCFD6",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Enemy",
-          "_id": "EAID_5852D7F0_6168_4f58_B6C1_53E9EAC06CAA",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Get army information",
-          "_id": "EAID_5B7F40A2_B245_45ee_AB5F_E028399124E6",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_EF189A49_DAB1_412b_8920_8264C8E49E52",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_EF189A49_DAB1_412b_8920_8264C8E49E52",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 3,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_467A6D25_6131_4d66_9779_12E701027461",
-      "Name": "Render Battle Scene",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Army",
-          "_id": "EAID_41F53DFD_5B06_41dc_BC68_58831729F908",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Battle Scene",
-          "_id": "EAID_AB1E41A3_72F9_49da_83D7_B5F65CB36E81",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check Location\n",
-          "_id": "EAID_B847D3A9_E693_4b12_86A4_5988444A941B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Control1",
-          "_id": "EAID_0E047E5F_EFBB_443a_B5C4_590746E9B8CE",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Control2",
-          "_id": "EAID_BF863923_2854_4567_9324_F1B8B48F716B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Location",
-          "_id": "EAID_12614B94_D8A6_4ca0_90F8_62C802837B3C",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Render Army around 360",
-          "_id": "EAID_FDCCF2C9_4B2B_4258_BA59_277F9B49C2CE",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Render Background of the location",
-          "_id": "EAID_8D6350BC_8000_49c7_AC97_D2A16F2BB304",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Render Weapons Bar",
-          "_id": "EAID_83A5264F_2830_4629_8A3D_B9459A9D549A",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_467A6D25_6131_4d66_9779_12E701027461",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_467A6D25_6131_4d66_9779_12E701027461",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 9,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_618A5E03_47A1_4c07_AFAC_747C79127447",
-      "Name": "Render Battle scene",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Ar Mode",
-          "_id": "EAID_0C4634F8_621E_4652_B303_A89683A6212C",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check Location",
-          "_id": "EAID_4F4B280D_AEB9_4a52_90D9_99A740F5FA54",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "If not in Hawaii",
-          "_id": "EAID_B2D6F5CE_B362_40ad_9D09_E70387BA04D5",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Location",
-          "_id": "EAID_08111734_68BB_419b_8F1E_F45F0DFFE07F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "VR mode",
-          "_id": "EAID_990363C3_CAD5_4a07_830C_3085D061676A",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "if in Hawaii",
-          "_id": "EAID_EF32C35B_857E_42e0_BFCA_CEFD99C67258",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_618A5E03_47A1_4c07_AFAC_747C79127447",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_618A5E03_47A1_4c07_AFAC_747C79127447",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 6,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_AA74A91F_AE12_4461_B30F_4B8EB39E7328",
-      "Name": "Render Intial Mode",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check if in Hawaii or not",
-          "_id": "EAID_A2A7998E_EAD1_4139_8546_376D9C89DE8D",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Get Location",
-          "_id": "EAID_B637D3E5_7F88_46b8_AC5A_29D80426229A",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "In Hawaii Mode",
-          "_id": "EAID_259F7008_3579_4273_B780_6C1C813AE7B4",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Location",
-          "_id": "EAID_E6238CF3_1EE0_434e_88D3_864007FD952F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Not In Hawaii Mode",
-          "_id": "EAID_D4A41A95_3E84_4e75_8B1B_E752C63CF74B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_AA74A91F_AE12_4461_B30F_4B8EB39E7328",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_AA74A91F_AE12_4461_B30F_4B8EB39E7328",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 5,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_779DAEB3_D5D7_4f0f_8AFC_545DE302D171",
-      "Name": "Render Minimap",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check if the enemy is hit with the balll",
-          "_id": "EAID_5EAF6615_F4C0_439f_BF98_87A9689C51F8",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Minimap ",
-          "_id": "EAID_844973BA_C797_409d_A3F5_1C83D001F0D5",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Update Minimap",
-          "_id": "EAID_A82D6353_C2E0_4338_96C9_E49E9241368E",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_779DAEB3_D5D7_4f0f_8AFC_545DE302D171",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_779DAEB3_D5D7_4f0f_8AFC_545DE302D171",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 3,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_CE84F169_DF5F_45fd_B69F_5D6B8F35E8A2",
-      "Name": "Update Database",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Achivements",
-          "_id": "EAID_4A577807_AA4A_4c30_99C2_F9A15F0651EC",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Battle",
-          "_id": "EAID_C1E19684_7CD4_4912_B011_39F9F82D9685",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Map view",
-          "_id": "EAID_DF3808E1_7893_4da3_8848_BB53F379C80D",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Update the Database with all values",
-          "_id": "EAID_0064AA1F_8163_401f_BA14_147515DE032F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "User Master",
-          "_id": "EAID_85538FC1_BD9C_4d7c_BFAE_5F5743A14253",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "User Master",
-          "_id": "EAID_9D01D4FF_7210_47a7_A9D0_AAF842F80303",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_CE84F169_DF5F_45fd_B69F_5D6B8F35E8A2",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_CE84F169_DF5F_45fd_B69F_5D6B8F35E8A2",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 6,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_A970C999_5A0E_445a_8567_F54EE9CDD511",
-      "Name": "Update Screen",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check for the number of tikimen killed",
-          "_id": "EAID_EC15E4C0_9B20_4f1c_BECF_47F48F44EA5B",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Destroy Enemy",
-          "_id": "EAID_AFE78006_F05A_4670_AA35_619E55F5ADA5",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Updated Army",
-          "_id": "EAID_C30AB5E5_7B84_4dab_9B7A_42ED5C22EACD",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Updated Minimap",
-          "_id": "EAID_9E2C290A_5BEC_47dc_9FD1_ABC6341CF9D8",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_A970C999_5A0E_445a_8567_F54EE9CDD511",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_A970C999_5A0E_445a_8567_F54EE9CDD511",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 4,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_127B590F_9F14_4c85_BC7B_D3EF120C35F7",
-      "Name": "Use Weapon",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Check if weapon availble",
-          "_id": "EAID_A7C96F88_1384_4667_AD09_9FE4BA383E91",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Decrease inventory count",
-          "_id": "EAID_C26D31BA_8EB5_4151_92CC_1AC738DCC02F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Flick Weapon",
-          "_id": "EAID_6A0DCF31_849B_48fa_8B1C_7390390C2E24",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Single Weapon ",
-          "_id": "EAID_C7EAC280_7454_4a4f_A15E_6E7A94D684D2",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Weapons Inventory",
-          "_id": "EAID_071C5A68_A3E8_4996_8404_29CD781D3980",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_127B590F_9F14_4c85_BC7B_D3EF120C35F7",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_127B590F_9F14_4c85_BC7B_D3EF120C35F7",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 5,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_DAFAECF8_9185_4b6c_8508_9E81FC1E69DA",
-      "Name": "Use Weapon",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Battle Scene",
-          "_id": "EAID_DE447965_5E92_418f_851C_8DDE20BB09EE",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Flick Weapon",
-          "_id": "EAID_9F6D036B_3016_4e2d_B7AE_4621F320B31E",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Reduce Weapon Count",
-          "_id": "EAID_730FDB5F_1F62_4b09_BCE7_1C1071B938BC",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Show in-App purchases",
-          "_id": "EAID_368208E2_6D3C_45b1_B984_A44A665CF430",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Weapon",
-          "_id": "EAID_4D820193_02D1_4c04_AE6D_B5D66CC6A70F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_DAFAECF8_9185_4b6c_8508_9E81FC1E69DA",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_DAFAECF8_9185_4b6c_8508_9E81FC1E69DA",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 5,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
-        "NT": 0,
-        "TranLength": 0,
-        "AvgTranLength": 0,
-        "ArchDiff": null,
-        "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
-      },
-      "UseCasePointData": {
-        "UEUCW": 15,
-        "UEXUCW": 0,
-        "UDUCW": 0
-      }
-    },
-    {
-      "_id": "EAID_DAFAECF8_9185_4b6c_8508_9E81FC1E69DA",
-      "Name": "Use Weapon",
-      "PrecedenceRelations": [],
-      "Activities": [
-        {
-          "Type": "instanceSpecification",
-          "Name": "Battle Scene",
-          "_id": "EAID_DE447965_5E92_418f_851C_8DDE20BB09EE",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Flick Weapon",
-          "_id": "EAID_9F6D036B_3016_4e2d_B7AE_4621F320B31E",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Reduce Weapon Count",
-          "_id": "EAID_730FDB5F_1F62_4b09_BCE7_1C1071B938BC",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Show in-App purchases",
-          "_id": "EAID_368208E2_6D3C_45b1_B984_A44A665CF430",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        },
-        {
-          "Type": "instanceSpecification",
-          "Name": "Weapon",
-          "_id": "EAID_4D820193_02D1_4c04_AE6D_B5D66CC6A70F",
-          "Stimulus": false,
-          "Group": "System",
-          "OutScope": false
-        }
-      ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_DAFAECF8_9185_4b6c_8508_9E81FC1E69DA",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/EAID_DAFAECF8_9185_4b6c_8508_9E81FC1E69DA",
-      "Paths": [],
-      "ElementAnalytics": {
-        "TotalDegree": 0,
-        "ElementNum": 5,
-        "AvgDegree": 0,
-        "TotalLinks": 0,
-        "ActorNum": 0,
-        "BoundaryNum": 0,
-        "ControlNum": 0,
-        "EntityNum": 0,
-        "TotalPathLength": 0,
-        "PathNum": 0,
-        "AvgPathLength": 0,
-        "PathAnalyticsFileName": "pathAnalytics.csv",
-        "ElementAnalyticsFileName": "elementAnalytics.csv"
-      },
-      "FPAnalytics": {
-        "EI": 0,
-        "EO": 0,
-        "EQ": 0,
-        "FUNC_NA": 0,
-        "FN": 0
-      },
-      "TransactionAnalytics": {
-        "EI": 0,
-        "EQ": 0,
-        "INT": 0,
-        "DM": 0,
-        "CTRL": 0,
-        "EXTIVK": 0,
-        "EXTCLL": 0,
-        "TRAN_NA": 0,
+        "TRAN_NA": 3,
         "NT": 0,
         "TranLength": 0,
         "AvgTranLength": 0,
@@ -2466,13 +948,202 @@
     }
   ],
   "DomainModel": {
-    "Elements": [],
-    "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/domainModel",
-    "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19/domainModel",
+    "Elements": [
+      {
+        "_id": "EAID_0B4542EA_7874_4160_ABD6_532328320AA3",
+        "Name": "$help://domain_model_pattern.htm",
+        "Operations": [],
+        "Attributes": []
+      },
+      {
+        "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+        "Name": "Catalog",
+        "Operations": [
+          {
+            "Name": "queryCatalog",
+            "Parameters": [
+              {
+                "Name": "query",
+                "Type": "EAJava_String"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_ItemList"
+              }
+            ]
+          }
+        ],
+        "Attributes": []
+      },
+      {
+        "_id": "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA",
+        "Name": "ItemList",
+        "Operations": [],
+        "Attributes": [
+          {
+            "Name": "list",
+            "Type": "EAJava_Item__"
+          }
+        ]
+      },
+      {
+        "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+        "Name": "ItemManager",
+        "Operations": [
+          {
+            "Name": "searchItemsByKeywords",
+            "Parameters": [
+              {
+                "Name": "keywords",
+                "Type": "EAJava_String__"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          }
+        ],
+        "Attributes": []
+      },
+      {
+        "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
+        "Name": "ItemSearchPage",
+        "Operations": [
+          {
+            "Name": "onSearch",
+            "Parameters": [
+              {
+                "Name": "keywords",
+                "Type": "EAJava_String"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          }
+        ],
+        "Attributes": [
+          {
+            "Name": "pageID",
+            "Type": "EAJava_int"
+          },
+          {
+            "Name": "searchBox",
+            "Type": "EAJava_InputField"
+          },
+          {
+            "Name": "searchButton",
+            "Type": "EAJava_Button"
+          }
+        ]
+      },
+      {
+        "_id": "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6",
+        "Name": "SearchInvalidMessage",
+        "Operations": [],
+        "Attributes": [
+          {
+            "Name": "errorCode",
+            "Type": "EAJava_int"
+          },
+          {
+            "Name": "message",
+            "Type": "EAJava_String"
+          }
+        ]
+      },
+      {
+        "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+        "Name": "SearchResultsPage",
+        "Operations": [
+          {
+            "Name": "displaySearchInvalidMsg",
+            "Parameters": [
+              {
+                "Name": "msg",
+                "Type": "EAJava_SearchInvalidMsg"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          },
+          {
+            "Name": "displayItemList",
+            "Parameters": [
+              {
+                "Name": "itemList",
+                "Type": "EAJava_ItemList"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          },
+          {
+            "Name": "displayEmptyListNotice",
+            "Parameters": [
+              {
+                "Name": "notice",
+                "Type": "EAJava_String"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          }
+        ],
+        "Attributes": [
+          {
+            "Name": "pageID",
+            "Type": "EAJava_String"
+          },
+          {
+            "Name": "title",
+            "Type": "EAJava_String"
+          },
+          {
+            "Name": "searchResultList",
+            "Type": "EAJava_ListView"
+          }
+        ]
+      },
+      {
+        "_id": "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B",
+        "Name": "$help://actor.htm",
+        "Operations": [],
+        "Attributes": []
+      },
+      {
+        "_id": "EAID_7484FEB6_9172_4a75_A006_D536283338C6",
+        "Name": "$help://use_case_model_pattern.htm",
+        "Operations": [],
+        "Attributes": []
+      },
+      {
+        "_id": "EAID_83879976_7FDE_4975_BC69_3210EA75FF09",
+        "Name": "$help://usecasediagram.htm",
+        "Operations": [],
+        "Attributes": []
+      },
+      {
+        "_id": "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5",
+        "Name": "System Boundary",
+        "Operations": [],
+        "Attributes": []
+      }
+    ],
+    "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/fef9a23d7e0fce9c6c31efd286cf01f4/domainModel",
+    "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/fef9a23d7e0fce9c6c31efd286cf01f4/domainModel",
     "ElementAnalytics": {
-      "AttributeNum": 0,
-      "OperationNum": 0,
-      "EntityNum": 0,
+      "AttributeNum": 9,
+      "OperationNum": 6,
+      "EntityNum": 11,
       "EntityAnalyticsFileName": "entityAnalytics.csv",
       "AttributeAnalyticsFileName": "attributeAnalytics.csv",
       "OperationAnalyticsFileName": "operationAnalytics.csv"
@@ -2484,20 +1155,20 @@
       "EIF": 0
     }
   },
-  "fileId": "2b29aa4171fc9e0fda1a191b7414fd19",
-  "fileSize": 0.922727,
-  "creationTime": "2018-01-28 14:42:30",
-  "fileUrl": "uploads/2018-0-28@1517150550050/2b29aa4171fc9e0fda1a191b7414fd19",
-  "umlFilePath": "public/uploads/2018-0-28@1517150550050/2b29aa4171fc9e0fda1a191b7414fd19",
+  "fileId": "fef9a23d7e0fce9c6c31efd286cf01f4",
+  "fileSize": 0.150072,
+  "creationTime": "2018-02-01 18:34:45",
+  "fileUrl": "uploads/2018-1-1@1517510085406/fef9a23d7e0fce9c6c31efd286cf01f4",
+  "umlFilePath": "public/uploads/2018-1-1@1517510085406/fef9a23d7e0fce9c6c31efd286cf01f4",
   "umlModelType": "uml",
   "formInfo": {
-    "uml-model-name": "test4",
+    "uml-model-name": "test2",
     "uml-model-type": "uml",
     "repo-id": "598c93a9a9813b12105c953e",
-    "project-desc": "",
+    "project-desc": "test2",
     "project-effort": "",
     "project-duration": "",
-    "uuid-page1": "6db2c700-0439-11e8-80c1-138681931338",
+    "uuid-page1": "8f74f280-077e-11e8-a323-3385f8963be3",
     "distributed-system": "1",
     "response-time": "1",
     "end-user-efficiency": "1",
@@ -2511,7 +1182,7 @@
     "includes-special-security-objectives": "1",
     "provides-direct-access-for-third-parties": "1",
     "special-user-training-facilities-are-required": "1",
-    "uuid-page2": "6db2c701-0439-11e8-80c1-138681931338",
+    "uuid-page2": "8f74f281-077e-11e8-a323-3385f8963be3",
     "familiar-with-the-project-model-that-is-used": "1",
     "application-experience": "1",
     "object-oriented-experience": "1",
@@ -2520,21 +1191,21 @@
     "stable-requirements": "1",
     "part-time-staff": "1",
     "difficult-programming-language": "1",
-    "uuid-page3": "6db2c702-0439-11e8-80c1-138681931338",
-    "uuid-page4": "6db2c703-0439-11e8-80c1-138681931338"
+    "uuid-page3": "8f74f282-077e-11e8-a323-3385f8963be3",
+    "uuid-page4": "8f74f283-077e-11e8-a323-3385f8963be3"
   },
-  "_id": "2b29aa4171fc9e0fda1a191b7414fd191517150550346",
-  "Name": "test4",
-  "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19",
-  "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/2b29aa4171fc9e0fda1a191b7414fd19",
+  "_id": "fef9a23d7e0fce9c6c31efd286cf01f41517510085466",
+  "Name": "test2",
+  "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/fef9a23d7e0fce9c6c31efd286cf01f4",
+  "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/fef9a23d7e0fce9c6c31efd286cf01f4",
   "ElementAnalytics": {
-    "AttributeNum": 0,
-    "OperationNum": 0,
-    "EntityNum": 0,
-    "ElementNum": 139,
-    "TotalPathLength": 0,
-    "PathNum": 0,
-    "UseCaseNum": 26,
+    "AttributeNum": 9,
+    "OperationNum": 6,
+    "EntityNum": 11,
+    "ElementNum": 14,
+    "TotalPathLength": 28,
+    "PathNum": 6,
+    "UseCaseNum": 2,
     "TotalLinks": 0,
     "ActorNum": 0,
     "BoundaryNum": 0,
@@ -2545,14 +1216,14 @@
     "OperationAnalyticsFileName": "operationAnalytics.csv",
     "ElementAnalyticsFileName": "elementAnalytics.csv",
     "PathAnalyticsFileName": "pathAnalytics.csv",
-    "AvgPathLength": 0,
+    "AvgPathLength": 4.666666666666667,
     "AvgDegree": 0
   },
   "FPAnalytics": {
     "EI": 0,
     "EO": 0,
     "EQ": 0,
-    "FUNC_NA": 0,
+    "FUNC_NA": 3,
     "FN": 0,
     "DET": null,
     "RET": 1,
@@ -2567,7 +1238,7 @@
     "CTRL": 0,
     "EXTIVK": 0,
     "EXTCLL": 0,
-    "TRAN_NA": 0,
+    "TRAN_NA": 6,
     "NT": 0,
     "TranLength": null,
     "AVgTranLength": 0,
@@ -2585,7 +1256,7 @@
     "NormalizedUCEffort": 0,
     "SimpleUC": 0,
     "AverageUC": 0,
-    "ComplexUC": 26
+    "ComplexUC": 2
   },
   "UseCasePointData": {
     "COCOMONormalizedEffort": 0,
@@ -2594,7 +1265,7 @@
     "TCF": 0,
     "EF": 0,
     "Effort_Norm_UCP": 0,
-    "UEUCW": 390,
+    "UEUCW": 30,
     "EUCP": 0,
     "UEXUCW": 0,
     "EXUCP": 0,

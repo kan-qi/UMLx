@@ -135,7 +135,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			if(XMIOccurrence['$']['xmi:type'] === "uml:OccurrenceSpecification"){
 				var XMIOccurrence1 = XMIOccurrence;
 				console.log(XMIOccurrence1);
-				var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
+//				var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
+				var XMILifelineID1 = XMIOccurrence1.$.covered;
 //				XMILifeline1 = XMILifeline;
 				
 //				XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
@@ -148,10 +149,11 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //				}
 				
 				var XMIOccurrence2 = XMIOccurrences[i++];
-				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
+//				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
+				var XMILifelineID2 = XMIOccurrence2.$.covered;
 //				XMILifeline2 = XMILifeline;
 				
-				if(XMILifeline2.isUser){
+				if(XMILifelinesByID[XMILifelineID2].isUser){
 					group = XMILifeline['$']['name'];
 				}
 				
@@ -184,14 +186,17 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //						Attachment: XMIMessage
 				}
 				
-				nextActivity.sender = XMILifeline1;
-				nextActivity.receiver = XMILifeline2;
+//				nextActivity.sender = XMILifeline1;
+//				nextActivity.receiver = XMILifeline2;
+				
+				nextActivity.sender = XMILifelineID1;
+				nextActivity.receiver = XMILifelineID2;
 
 //				UseCase.Activities.push(nextActivity);
 				activities.push(nextActivity);
 				
 				if(preActivity){
-				if(nextActivity.sender.isUser && preActivity.receiver != nextActivity.sender){
+				if(XMILifelinesByID[nextActivity.sender].isUser && preActivity.receiver != nextActivity.sender){
 
 				}
 				else{

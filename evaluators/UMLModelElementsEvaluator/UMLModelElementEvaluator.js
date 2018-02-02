@@ -86,10 +86,12 @@
 				+ modelInfo["ElementAnalytics"].EneityNum;
 	}
 
+	// to output the header for data for the use cases.
 	function toUseCaseEvaluationHeader() {
 		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Avg_Degree,Avg_Path_Length,Actor_Num,Boundary_Num,Control_Num,Entity_Num";
 	}
 
+	// to output each row of the data for the use cases.
 	function toUseCaseEvaluationRow(useCase, index) {
 //		var useCaseEmpirics = useCase.UseCaseEmpirics;
 
