@@ -36,7 +36,6 @@
 					model[i] = umlModelInfo[i];
 				}
 				
-				
 				// set up the domain model
 				var domainModel = model.DomainModel;
 //				var domainModel = model.DomainModel;
@@ -77,6 +76,7 @@
 
 									console.log("simple use case is drawn");
 								});
+								
 								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
 									console.log("paths are drawn");
 								});
@@ -88,12 +88,12 @@
 //								pathsDrawer.drawPaths(useCasePaths, useCase.OutputDir+"/paths.dotty", function(){
 //									console.log("use case is drawn");
 //								});
-						}
+				}
 			
 				debug.writeJson("model", model);
-//				modelDrawer.drawModel(model, model.OutputDir+"/model.dotty", function(){
-//					console.log("model is drawn");
-//				});
+				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
+					console.log("domain model is drawn");
+				});
 
 				if(callbackfunc){
 					callbackfunc(model);

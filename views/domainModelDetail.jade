@@ -28,8 +28,7 @@ if domainModel
          th Attribute
          th TYPE
        tbody
-        each diagram in domainModel.Diagrams
-         each element in diagram.Elements
+        each element in domainModel.Elements
           if element.Attributes
            each attribute,key in element.Attributes
             tr
@@ -46,8 +45,7 @@ if domainModel
          th OPERATION
          th TYPE
        tbody
-        each diagram in domainModel.Diagrams
-         each element in diagram.Elements
+         each element in domainModel.Elements
           if element.Operations
            each operation,key in element.Operations
             tr

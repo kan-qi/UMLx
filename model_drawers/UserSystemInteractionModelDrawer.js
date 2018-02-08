@@ -220,7 +220,7 @@
 		}
 		
 		graph += "subgraph cluster"+1000+" {";
-		var j = 0;
+//		var j = 0;
 		for(var i in DomainModel.Elements){
 			//arrange the nodes in the subgraph
 			
@@ -334,12 +334,69 @@
 			console.log("drawing is down");
 		});
 
-		return graph
+		return graph;
+	}
+	
+	function drawDomainModelFunc(DomainModel, graphFilePath, callbackfunc){
+
+
+		var graph = 'digraph g {';
+		graph += "node[shape=record]";
+
+		var drawnObjects = [];
+		function DottyDraw(){
+			this.drawnObjects = [];
+			this.draw = function(dottyObject){
+				if(drawnObjects[dottyObject]){
+					return "";
+				}
+				else{
+					drawnObjects[dottyObject] = 1;
+					return dottyObject;
+				}
+			}
+		}
+		var dottyDraw = new DottyDraw();
+		
+		
+//		var j = 0;
+		for(var i in DomainModel.Elements){
+			//arrange the nodes in the subgraph
+			
+			
+			
+			var domainObject = DomainModel.Elements[i];
+			var domainObjectToDraw = drawDomainObjectNode(domainObject);
+			
+			if(domainObjectToDraw){
+//				if(j%3 == 0){
+//					graph += "{rank=same;";
+//					var index = 1001+j;
+//					graph += "subgraph cluster"+index+" {";
+//				}
+				graph += dottyDraw.draw(domainObjectToDraw);
+				
+//				if(j%3 == 2){
+//					graph += "};";
+//				}
+//				j++;
+			}
+		}
+		
+		graph += 'imagepath = \"./public\"}';
+		
+		dottyUtil = require("../utils/DottyUtil.js");
+		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+			console.log("drawing is down");
+		});
+
+		return graph;
 		
 	}
 	
 	module.exports = {
 			drawSimplePrecedenceDiagram:drawSimplePrecedenceDiagramFunc,
-			drawPrecedenceDiagram: drawPrecedenceDiagramFunc
+			drawPrecedenceDiagram: drawPrecedenceDiagramFunc,
+			drawDomainModel: drawDomainModelFunc
 	}
 }())
