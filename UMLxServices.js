@@ -627,7 +627,7 @@ app.get('/requestDomainModelDetail', function (req, res){
 			res.end('delete error!');
 			return;
 		}
-//		console.log(domainModel);
+		console.log(domainModel);
 		res.render('domainModelDetail',{domainModel: domainModel});
 	});
 })
@@ -851,9 +851,26 @@ app.get('/requestUseCaseDetail', function(req, res){
 	umlModelInfoManager.queryUseCaseInfo(repoId, modelId, useCaseId, function(useCaseInfo){
 //				console.log('use case detail');
 //				console.log(useCaseInfo);
-		for(var i in useCaseInfo.Diagrams){
+//		for(var i in useCaseInfo.Diagrams){
 //		console.log(useCaseInfo.Diagrams[i]['Paths']);
+//		}
+		
+		//create the displayable paths
+		var displayablePaths = [];
+		for(var i in useCaseInfo.Paths){
+			var path = useCaseInfo.Paths[i];
+			var pathStr = "";
+			for(var j in path.Nodes){
+				var node = path.Nodes[j];
+				pathStr += node.Name;
+				if( i != path.Nodes.length - 1){
+					pathStr += "->";
+				}
+			}
+			displayablePaths.push({id: i, PathStr: pathStr, Tag: "undefined"});
 		}
+		console.log(useCaseInfo);
+		useCaseInfo.DisplayablePaths = displayablePaths;
 				res.render('useCaseDetail', {useCaseInfo:useCaseInfo, modelId:modelId,repoId:repoId});
 	    });
 })

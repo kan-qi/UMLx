@@ -53,8 +53,8 @@ data <- read.csv(dataUrl, header=TRUE)
 #output the project descriptive data for number valued data
 png(filename=paste(outputPath,"project_descriptive_statistics_for_ducp_analysis.png", sep="/"),
 		units="in",
-		width=4*2, 
-		height=3*2, 
+		width=3*2, 
+		height=2*2, 
 		pointsize=12,
 		res=96)
 
@@ -70,12 +70,15 @@ print(grid.arrange(projectHist1, projectHist2, projectHist3, projectBar, ncol=2)
 
 png(filename=paste(outputPath,"project_counting_statistics_for_ducp_analysis.png", sep="/"),
 		units="in",
-		width=4*2, 
-		height=3*4, 
+		width=3*4, 
+		height=2*2, 
 		pointsize=12,
 		res=96)
 
 UCPHist1 <- ggplot(data, aes(x=UAW))+geom_histogram(binwidth=1.5, colour="white", fill="gray55")+xlab("UAW")+ylab("Number of Projects")
+#UCPHist1 <- hist(data[c("UDUCW")][-1,], xlim=range(data[c("UDUCW")][-1,]),
+#		xlab= "Variable Lable", ylab="density", main="Title of plot", prob=TRUE, 
+#		cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
 UCPHist2 <- ggplot(data, aes(x=UDUCW))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UDUCW")+ylab("Number of Projects")
 UCPHist3 <- ggplot(data, aes(x=DUCP))+geom_histogram(binwidth=45, colour="white", fill="gray55")+xlab("DUCP")+ylab("Number of Projects")
 UCPHist4 <- ggplot(data, aes(x=UUCW))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCW")+ylab("Number of Projects")
@@ -83,8 +86,9 @@ UCPHist5 <- ggplot(data, aes(x=UCP))+geom_histogram(binwidth=30, colour="white",
 UCPHist6 <- ggplot(data, aes(x=TCF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("TCF")+ylab("Number of Projects")
 UCPHist7 <- ggplot(data, aes(x=EF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("EF")+ylab("Number of Projects")
 
-print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, UCPHist6, UCPHist7, ncol=2))
+print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, UCPHist6, UCPHist7, ncol=4))
 
+#print(UCPHist1);
 useCaseData <- data[c("Real_Effort", "DUCP", "UCP")]
 #useCaseDataMelt <- gather(useCaseData, key=variable, value=value, DUCP, UCP, WTNDC_ALY)
 useCaseDataMelt <- melt(useCaseData, id=c("Real_Effort"))

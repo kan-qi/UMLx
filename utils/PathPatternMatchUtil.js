@@ -36,8 +36,6 @@
 	//# represents tags for the elements within the same pattern. To distinguish an element in the pattern.
 	//Building patterns with exact representation, but parsing the condition when matching
 	 
-	
-	 
 	 function establishPatternParseTree(patterns)
 	 {
 		 var patternRoot = {
