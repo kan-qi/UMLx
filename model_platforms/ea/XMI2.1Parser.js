@@ -136,8 +136,8 @@
 		console.log(XMIUMLModel);
 
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
-		var XMIClassesByStandardizedName = [];
-		var DomainElementsByID = [];
+//		var XMIClassesByStandardizedName = [];
+		var DomainElementsBySN = [];
 		
 		for(var i in XMIClasses){
 			var XMIClass = XMIClasses[i];
@@ -148,8 +148,8 @@
 //				Attachment: XMIClass
 //			}
 			var domainElement = createDomainElement(XMIClass);
-			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
-			DomainElementsByID[domainElement._id] = domainElement;
+//			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
+			DomainElementsBySN[standardizeName(XMIClass['$']['name'])] = domainElement;
 //			model.DomainModel.push(domainElement);
 		}
 		console.log(XMIClasses);
@@ -172,17 +172,17 @@
 //					Attachment: XMIUseCase
 			}
 			
-			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
-			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
-			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID, XMIExtension, XMIUMLModel);
+			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN);
+			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN);
+			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, XMIExtension, XMIUMLModel);
 			
 			Model.UseCases.push(UseCase);
 		}
 		
 		Model.UseCases.push(UseCase);
 		
-		for(var i in DomainElementsByID){
-			Model.DomainModel.Elements.push(DomainElementsByID[i]);
+		for(var i in DomainElementsBySN){
+			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
 		}
 		
 //		return Model;

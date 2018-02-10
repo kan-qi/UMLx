@@ -8,7 +8,7 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
-	function parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID){
+	function parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN){
 
 		// we are categorizing the messages for the in-scope and out-scope messages.
 		

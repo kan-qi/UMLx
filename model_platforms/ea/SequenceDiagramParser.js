@@ -112,7 +112,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		return {Activities: activities, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
 	}
 	
-	function constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
+	function constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN){
 		
 		var activities = [];
 		var precedenceRelations = [];
@@ -154,7 +154,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //				XMILifeline2 = XMILifeline;
 				
 				if(XMILifelinesByID[XMILifelineID2].isUser){
-					group = XMILifeline['$']['name'];
+					group = XMILifelinesByID[XMILifelineID2]['$']['name'];
 				}
 				
 				var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
@@ -176,6 +176,12 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					}
 				}
 				
+//				
+//				var DomainElement = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
+//				if(DomainElement){
+//				XMILifeline.Class = XMIClass['$']['xmi:id'];
+//				}
+				
 				var nextActivity = {
 						Type: "message",
 						Name: XMIMessage['$']['name'],
@@ -183,6 +189,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 						Stimulus: false,
 						Group: group,
 						OutScope: outScope,
+						Component: DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])]
 //						Attachment: XMIMessage
 				}
 				
@@ -244,7 +251,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 	}
 
 	
-	function parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID){
+	function parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN){
 //		console.log(XMIUseCase);
 		// search for the interactions that are used to describe the use cases
 		var XMIInteractions = jp.query(XMIUseCase, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Interaction\')]');
@@ -271,10 +278,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //				var lifelineRepresentType = jp.query(XMIInteraction, '$.packagedElement[?(@[\'$\'][\'xmi:id\']==\''++'\')]');
 				console.log(XMILifeline);
 				XMILifelinesByID[XMILifeline['$']['xmi:id']] = XMILifeline;
-				var XMIClass = XMIClassesByStandardizedName[standardizeName(XMILifeline.$.name)];
-				if(XMIClass){
-				XMILifeline.Class = XMIClass['$']['xmi:id'];
-				}
+//				var XMIClass = XMIClassesByStandardizedName[standardizeName(XMILifeline.$.name)];
 			}
 			console.log(XMILifelinesByID);
 //			XMIUseCase.XMILifelinesByID = XMILifelinesByID;

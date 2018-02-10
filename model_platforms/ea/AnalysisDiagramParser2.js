@@ -25,7 +25,7 @@
 		return useCaseElementsInExtension;
 	}
 	
-	function parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, XMIExtension, XMIUMLModel){
+	function parseAnalysisDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID, XMIExtension, XMIUMLModel){
 		console.log("parse analysis diagram");
 		// search for the instance specifications that are used to represent the robustness diagrams.
 		
@@ -34,7 +34,7 @@
 		// 2. use the UUID to reference related elements in the extension and identify the elements from the packaged elements array.
 
 		var ActivitiesByID = [];
-		var XMIInstanceSpecificationsByID = {};
+		var XMIInstanceSpecifications =[];
 		
 		//the nested chacking has not succeeded
 //		console.log('$..element[?(@.model[?(@.$.owner ==\''+UseCase._id+'\')])]');
@@ -55,37 +55,37 @@
 			console.log("checking derived instance specification");
 			console.log(XMIInstanceSpecification);
 			
-			XMIInstanceSpecificationsByID[XMIInstanceSpecification['$']['xmi:id']] = XMIInstanceSpecification;
+			XMIInstanceSpecifications.push(XMIInstanceSpecification);
 //			var XMIInstanceSpecificationsByID = [];
 			
-//			if(XMIInstanceSpecification){
-//				var isStimulus = false;
-//				var group = "System";
-//				if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
-//					isStimulus = true;
-//					group = "User";
-//				}
-//				
-//				var activity = {
-//						Type: "instanceSpecification",
-//						Name: XMIInstanceSpecification['$']['name'],
-//						_id: XMIInstanceSpecification['$']['xmi:id'],
-////						Attachment: XMIInstanceSpecification,
-//						Stimulus: isStimulus,
-//						Group: group,
-//						OutScope: false
-//				}
-//				
-//				ActivitiesByID[activity._id] = activity;
-//				UseCase.Activities.push(activity);
-//			}
+			if(XMIInstanceSpecification){
+				var isStimulus = false;
+				var group = "System";
+				if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
+					isStimulus = true;
+					group = "User";
+				}
+				
+				var activity = {
+						Type: "instanceSpecification",
+						Name: XMIInstanceSpecification['$']['name'],
+						_id: XMIInstanceSpecification['$']['xmi:id'],
+//						Attachment: XMIInstanceSpecification,
+						Stimulus: isStimulus,
+						Group: group,
+						OutScope: false
+				}
+				
+				ActivitiesByID[activity._id] = activity;
+				UseCase.Activities.push(activity);
+			}
 		}
 		
 		console.log("check instance specifications");
-		console.log(XMIInstanceSpecificationsByID);
+		console.log(XMIInstanceSpecifications);
 		
-		for(var i in XMIInstanceSpecificationsByID){
-			var XMIInstanceSpecification = XMIInstanceSpecificationsByID[i];
+		for(var i in XMIInstanceSpecifications){
+			var XMIInstanceSpecification = XMIInstanceSpecifications[i];
 //			console.log(XMIUseCase);
 			console.log("XMIInstanceSpecifications");
 			var ConnectedXMIInstanceSpecifications = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
@@ -93,55 +93,19 @@
 			
 			console.log(ConnectedXMIInstanceSpecifications);
 			
-//			var startComponent = ActivitiesByID[XMIInstanceSpecification['$']['xmi:id']];
+			var startActivity = ActivitiesByID[XMIInstanceSpecification['$']['xmi:id']];
 			
 			for(var j in ConnectedXMIInstanceSpecifications){
-				var ConnectedXMIInstanceSpecificationID = ConnectedXMIInstanceSpecifications[j]['$']['xmi:idref'];
-				var ConnectedXMIInstanceSpecification = XMIInstanceSpecificationsByID[ConnectedXMIInstanceSpecificationID];
+				var ConnectedNodeId = ConnectedXMIInstanceSpecifications[j]['$']['xmi:idref'];
 //				XMIAttributesByID[XMIAttribute['$']['xmi:id']] = XMIAttribute;
-//				var endComponent = ActivitiesByID[ConnectedNodeId];
-//				if(endComponent){
-//				UseCase.PrecedenceRelations.push({start: startComponent, end: endComponent});
-					
-					var isStimulus = false;
-					var group = "System";
-					if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
-						isStimulus = true;
-						group = "User";
-					}
-					
-					var activity = {
-							Type: "instanceSpecificationCall",
-							Name: XMIInstanceSpecification['$']['name']+":"+ConnectedXMIInstanceSpecification['$']['name'],
-							_id: XMIInstanceSpecification['$']['xmi:id']+":"+ConnectedXMIInstanceSpecification['$']['name'],
-//							Attachment: XMIInstanceSpecification,
-							Stimulus: isStimulus,
-							Group: group,
-							OutScope: false,
-							Component: DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
-					}
-					
-					UseCase.Activities.push(activity);
-//				}
-			}
-			
-			for(var i in UseCase.Activities){
-				var activity = UseCase.Activities[i];
-				for(var j in UseCase.Activities){
-					var activityToIt = UseCase.Activities[j];
-					if(activity._id.split(':')[1] === activityToIt._id.split(':')[0]){
-						UseCase.PrecedenceRelations.push({start: activity, end: activityToIt});
-					}
+				var endActivity = ActivitiesByID[ConnectedNodeId];
+				if(endActivity){
+				UseCase.PrecedenceRelations.push({start: startActivity, end: endActivity});
 				}
 			}
 			
 			console.log(UseCase.PrecedenceRelations);
 		}
-	}
-	
-
-	function standardizeName(name){
-		return name.replace(/\s/g, '').toUpperCase();
 	}
 	
 	module.exports = {
