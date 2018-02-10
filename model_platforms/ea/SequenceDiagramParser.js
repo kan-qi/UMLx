@@ -13,7 +13,7 @@
 	}
 	
 	
-function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN){
+function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN, CustomProfiles){
 		
 //		var XMIUseCase = UseCase.Attachment;
 //		var XMICombinedFragment = CombinedFragment.Attachment;
@@ -59,7 +59,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			var XMIMessages = [];
 //			console.log("occurence")
 			var XMIOccurrences = jp.query(XMIOperand, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
-			var SDCFG = constructSDCFG(XMIOperand,XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN);
+			var SDCFG = constructSDCFG(XMIOperand,XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN, CustomProfiles);
 			
 			console.log("process fragments");
 			console.log(SDCFG);
@@ -112,7 +112,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		return {Activities: activities, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
 	}
 	
-	function constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN){
+	function constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN, CustomProfiles){
 		
 		var activities = [];
 		var precedenceRelations = [];
@@ -177,6 +177,12 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					}
 				}
 				
+				var component = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
+				if(!component){
+					component = {};
+				}
+				
+				component.Type = CustomProfiles[XMILifelineID2];
 //				
 //				var DomainElement = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
 //				if(DomainElement){
@@ -190,7 +196,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 						Stimulus: false,
 						Group: group,
 						OutScope: outScope,
-						Component: DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])]
+						Component: component
 //						Attachment: XMIMessage
 				}
 				
@@ -222,7 +228,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			}
 			else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
 				
-				var innerCombinedFragment = processCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN);
+				var innerCombinedFragment = processCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN, CustomProfiles);
 				
 				console.log("process combined fragment");
 				console.log(innerCombinedFragment);
@@ -252,7 +258,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 	}
 
 	
-	function parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN){
+	function parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles){
 //		console.log(XMIUseCase);
 		// search for the interactions that are used to describe the use cases
 		var Activities = [];
@@ -298,7 +304,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			console.log(XMIMessagesByOccurrences);
 //			XMIUseCase.XMIMessagesByOccurrences = XMIMessagesByOccurrences;
 			
-			SDCFG = constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, [], DomainElementsBySN);
+			SDCFG = constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, [], DomainElementsBySN, CustomProfiles);
 			Activities = Activities.concat(SDCFG.Activities);
 			PrecedenceRelations = PrecedenceRelations.concat(SDCFG.PrecedenceRelations);
 		}

@@ -54,8 +54,6 @@
 		return name.replace(/\s/g, '').toUpperCase();
 	}
 	
-	
-	
 	function createDomainElement(XMIClass){
 		var XMIAttributes = jp.query(XMIClass, '$.ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
 		var attributes = new Array();
@@ -123,8 +121,33 @@
 		
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
+//		$.store.book[?(@.title =~ /^.*Sword.*$/)]
+//		console.log("hello");
+		var XMICustomProfiles = jp.query(XMIUMLModel, '$..["thecustomprofile:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
+		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:control"][?(@["$"])]').map((obj) => {obj.type="control"; return obj;}));
+		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:boundary"][?(@["$"])]').map((obj) => {obj.type="boundary"; return obj;}));
 		
+		var CustomProfiles = {};
+//		console.log("custom profiles");
+//		console.log(XMICustomProfiles);
+//		debug.writeJson("XMICustomProfiles", XMICustomProfiles);
 		
+		for(var i in XMICustomProfiles){
+//			var CustomProfile = {};
+			var XMICustomProfile = XMICustomProfiles[i];
+			console.log(XMICustomProfile);
+//			var id = "";
+			if(XMICustomProfile["$"]['base_Lifeline']){
+				CustomProfiles[XMICustomProfile["$"]['base_Lifeline']] = XMICustomProfile.type;
+			}
+			else if(XMICustomProfile["$"]['base_InstanceSpecification']){
+				CustomProfiles[XMICustomProfile["$"]['base_InstanceSpecification']] = XMICustomProfile.type;
+			}
+//			CustomProfile.type = "entity";
+//			CustomProfiles[id] = "entity";
+		}
+		
+		console.log(CustomProfiles);
 		
 		var Model = {
 				UseCases: [],
@@ -133,7 +156,7 @@
 				}
 		};
 		
-		console.log(XMIUMLModel);
+//		console.log(XMIUMLModel);
 
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
 //		var XMIClassesByStandardizedName = [];
@@ -152,13 +175,13 @@
 			DomainElementsBySN[standardizeName(XMIClass['$']['name'])] = domainElement;
 //			model.DomainModel.push(domainElement);
 		}
-		console.log(XMIClasses);
+//		console.log(XMIClasses);
 //		debug.writeJson("XMIClasses", XMIClasses);
 		
 		
 		//search for the use cases
 		var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
-		console.log(XMIUseCases);
+//		console.log(XMIUseCases);
 //		debug.writeJson("XMIUseCases", XMIUseCases);
 		
 		for(var i in XMIUseCases){
@@ -172,9 +195,9 @@
 //					Attachment: XMIUseCase
 			}
 			
-			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN);
-			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN);
-			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, XMIExtension, XMIUMLModel);
+			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
+			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
+			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
 			
 			Model.UseCases.push(UseCase);
 		}

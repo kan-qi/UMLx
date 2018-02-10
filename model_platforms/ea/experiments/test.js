@@ -155,32 +155,50 @@ function traverseUserSystemInterationModel(model){
 		}
 		
 		console.log("profile paths");
-		var domainModel = model.DomainModel;
-		var domainModelById = {};
-		for(var i in domainModel){
-			var domainElement = domainModel[i];
-			domainModelById[domainElement._id] = domainElement;
-		}
+//		var domainModel = model.DomainModel;
+//		var domainModelById = {};
+//		for(var i in domainModel){
+//			var domainElement = domainModel[i];
+//			domainModelById[domainElement._id] = domainElement;
+//		}
 
 		for(var i in Paths){
 			var DET = 0;
 			var DE = 0;
 			var path = Paths[i];
+			var componentStr = "";
 			for(var j in path.Nodes){
 				var node = path.Nodes[j];
-				if(node.receiver&&node.receiver.Class && domainModelById[node.receiver.Class]){
-					var domainElement = domainModelById[node.receiver.Class];
-					for(var k in domainElement.operations){
-						var operation = domainElement.operations[k];
+//				if(node.receiver&&node.receiver.Class && domainModelById[node.receiver.Class]){
+//					var domainElement = domainModelById[node.receiver.Class];
+//					for(var k in domainElement.operations){
+//						var operation = domainElement.operations[k];
+//						if(standardizeName(node.Name) === standardizeName(operation.Name)){
+////							console.log("yes");
+//							DET += operation.parameters.length;
+//						}
+//					}
+//				}
+				
+				if(node.Component){
+					var component = node.Component;
+//					var domainElement = domainModelById[node.receiver.Class];
+					for(var k in component.operations){
+						var operation = component.operations[k];
 						if(standardizeName(node.Name) === standardizeName(operation.Name)){
 //							console.log("yes");
 							DET += operation.parameters.length;
 						}
 					}
+					
+					componentStr += component.Type;
 				}
+				
 				DE++;
 			}
 			
+			console.log("component str");
+			console.log(componentStr);
 			console.log(path);
 			console.log("DET:"+DET);
 			console.log("DE:"+DE);

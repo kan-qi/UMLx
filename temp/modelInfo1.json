@@ -69,6 +69,59 @@
         {
           "start": {
             "Type": "message",
+            "Name": "1",
+            "_id": "EAID_7B04D550_0D7D_4b1c_A57A_811B0AD69AF4",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_BA78D637_2FF8_42d4_B0CA_2B07F4EC5584",
+              "Name": "bookTicketsManagement",
+              "Operations": [
+                {
+                  "Name": "bookTicketsManagement",
+                  "Parameters": [
+                    {
+                      "Name": "ticketId",
+                      "Type": "EAJava_int"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [
+                {
+                  "Name": "ticketName",
+                  "Type": "EAJava_String"
+                },
+                {
+                  "Name": "tiketId",
+                  "Type": "EAJava_int"
+                }
+              ]
+            },
+            "sender": "EAID_3EDD8EE5_518B_4a9f_BBE3_06FD13DD8D02",
+            "receiver": "EAID_19994392_AF74_49a4_9465_EB1925772F89"
+          },
+          "end": {
+            "Type": "message",
+            "_id": "EAID_79E26183_5F8A_4150_AD46_C8A0B2BDCAB2",
+            "Stimulus": false,
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "Type": "entity"
+            },
+            "sender": "EAID_14839A14_4779_4d40_A335_BF341E9AA7F4",
+            "receiver": "EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"
+          }
+        },
+        {
+          "start": {
+            "Type": "message",
             "Name": "2",
             "_id": "EAID_41C1BF0E_522A_451c_B625_CF3217C57CC5",
             "Stimulus": false,
@@ -766,6 +819,18 @@
         },
         {
           "Type": "message",
+          "_id": "EAID_79E26183_5F8A_4150_AD46_C8A0B2BDCAB2",
+          "Stimulus": false,
+          "Group": "System",
+          "OutScope": false,
+          "Component": {
+            "Type": "entity"
+          },
+          "sender": "EAID_14839A14_4779_4d40_A335_BF341E9AA7F4",
+          "receiver": "EAID_1F0A847A_A6C4_4875_BA2E_63A3C4113631"
+        },
+        {
+          "Type": "message",
           "Name": "2",
           "_id": "EAID_41C1BF0E_522A_451c_B625_CF3217C57CC5",
           "Stimulus": false,
@@ -1068,12 +1133,12 @@
           "receiver": "EAID_14839A14_4779_4d40_A335_BF341E9AA7F4"
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C",
+      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C",
+      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_41A6C75C_3E4F_4f25_B9C2_9AB2CF856B5C",
       "Paths": [],
       "ElementAnalytics": {
         "TotalDegree": 0,
-        "ElementNum": 13,
+        "ElementNum": 14,
         "AvgDegree": 0,
         "TotalLinks": 0,
         "ActorNum": 0,
@@ -2358,8 +2423,8 @@
           "receiver": "EAID_FC3FF47A_7475_494a_BA4A_BE777480C1D4"
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_B3CA0599_A67C_49cf_A642_8840FA403ECD",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_B3CA0599_A67C_49cf_A642_8840FA403ECD",
+      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_B3CA0599_A67C_49cf_A642_8840FA403ECD",
+      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_B3CA0599_A67C_49cf_A642_8840FA403ECD",
       "Paths": [],
       "ElementAnalytics": {
         "TotalDegree": 0,
@@ -2415,7 +2480,10 @@
             "_id": "EAID_D74B2E4B_A09B_490c_8A63_FD182DD29007:EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "control"
+            }
           },
           "end": {
             "Type": "instanceSpecificationCall",
@@ -2423,7 +2491,10 @@
             "_id": "EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427:EAID_1A829F8F_037D_4396_9248_AB80B239B2AE",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "boundary"
+            }
           }
         },
         {
@@ -2433,7 +2504,10 @@
             "_id": "EAID_D74B2E4B_A09B_490c_8A63_FD182DD29007:EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "control"
+            }
           },
           "end": {
             "Type": "instanceSpecificationCall",
@@ -2441,7 +2515,10 @@
             "_id": "EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427:EAID_FB752BC8_2742_4b54_A120_66A641D914CC",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "entity"
+            }
           }
         },
         {
@@ -2451,7 +2528,10 @@
             "_id": "EAID_D74B2E4B_A09B_490c_8A63_FD182DD29007:EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "control"
+            }
           },
           "end": {
             "Type": "instanceSpecificationCall",
@@ -2459,7 +2539,10 @@
             "_id": "EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427:EAID_1A829F8F_037D_4396_9248_AB80B239B2AE",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "boundary"
+            }
           }
         },
         {
@@ -2469,7 +2552,10 @@
             "_id": "EAID_D74B2E4B_A09B_490c_8A63_FD182DD29007:EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "control"
+            }
           },
           "end": {
             "Type": "instanceSpecificationCall",
@@ -2477,7 +2563,10 @@
             "_id": "EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427:EAID_FB752BC8_2742_4b54_A120_66A641D914CC",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "entity"
+            }
           }
         },
         {
@@ -2487,7 +2576,10 @@
             "_id": "EAID_D74B2E4B_A09B_490c_8A63_FD182DD29007:EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "control"
+            }
           },
           "end": {
             "Type": "instanceSpecificationCall",
@@ -2495,7 +2587,10 @@
             "_id": "EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427:EAID_1A829F8F_037D_4396_9248_AB80B239B2AE",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "boundary"
+            }
           }
         },
         {
@@ -2505,7 +2600,10 @@
             "_id": "EAID_D74B2E4B_A09B_490c_8A63_FD182DD29007:EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "control"
+            }
           },
           "end": {
             "Type": "instanceSpecificationCall",
@@ -2513,7 +2611,10 @@
             "_id": "EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427:EAID_FB752BC8_2742_4b54_A120_66A641D914CC",
             "Stimulus": false,
             "Group": "System",
-            "OutScope": false
+            "OutScope": false,
+            "Component": {
+              "Type": "entity"
+            }
           }
         }
       ],
@@ -2524,7 +2625,10 @@
           "_id": "EAID_D74B2E4B_A09B_490c_8A63_FD182DD29007:EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "Component": {
+            "Type": "control"
+          }
         },
         {
           "Type": "instanceSpecificationCall",
@@ -2532,7 +2636,10 @@
           "_id": "EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427:EAID_1A829F8F_037D_4396_9248_AB80B239B2AE",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "Component": {
+            "Type": "boundary"
+          }
         },
         {
           "Type": "instanceSpecificationCall",
@@ -2540,11 +2647,14 @@
           "_id": "EAID_4016A4E4_FD98_4efd_A851_B7B01AC79427:EAID_FB752BC8_2742_4b54_A120_66A641D914CC",
           "Stimulus": false,
           "Group": "System",
-          "OutScope": false
+          "OutScope": false,
+          "Component": {
+            "Type": "entity"
+          }
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_795748A7_D610_433a_B7DA_7CDAA8E98F2D",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_795748A7_D610_433a_B7DA_7CDAA8E98F2D",
+      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_795748A7_D610_433a_B7DA_7CDAA8E98F2D",
+      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_795748A7_D610_433a_B7DA_7CDAA8E98F2D",
       "Paths": [],
       "ElementAnalytics": {
         "TotalDegree": 0,
@@ -2794,8 +2904,8 @@
           "Group": "User"
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_561EFE96_62BA_4a1c_A32F_99775A8B9664",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_561EFE96_62BA_4a1c_A32F_99775A8B9664",
+      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_561EFE96_62BA_4a1c_A32F_99775A8B9664",
+      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_561EFE96_62BA_4a1c_A32F_99775A8B9664",
       "Paths": [
         {
           "Nodes": [
@@ -3329,8 +3439,8 @@
           "Group": "User"
         }
       ],
-      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_561EFE96_62BA_4a1c_A32F_99775A8B9664",
-      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/EAID_561EFE96_62BA_4a1c_A32F_99775A8B9664",
+      "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_561EFE96_62BA_4a1c_A32F_99775A8B9664",
+      "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/EAID_561EFE96_62BA_4a1c_A32F_99775A8B9664",
       "Paths": [
         {
           "Nodes": [
@@ -3744,8 +3854,8 @@
         "Attributes": []
       }
     ],
-    "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/domainModel",
-    "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed/domainModel",
+    "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/domainModel",
+    "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab/domainModel",
     "ElementAnalytics": {
       "AttributeNum": 4,
       "OperationNum": 1,
@@ -3761,20 +3871,20 @@
       "EIF": 0
     }
   },
-  "fileId": "44855b63526a538f7996b460523a9aed",
-  "fileSize": 0.244067,
-  "creationTime": "2018-02-10 08:02:40",
-  "fileUrl": "uploads/2018-1-10@1518249760083/44855b63526a538f7996b460523a9aed",
-  "umlFilePath": "public/uploads/2018-1-10@1518249760083/44855b63526a538f7996b460523a9aed",
+  "fileId": "d2b6a0488066106a5d54a5f8bcb75eab",
+  "fileSize": 0.248428,
+  "creationTime": "2018-02-10 20:09:52",
+  "fileUrl": "uploads/2018-1-10@1518293392436/d2b6a0488066106a5d54a5f8bcb75eab",
+  "umlFilePath": "public/uploads/2018-1-10@1518293392436/d2b6a0488066106a5d54a5f8bcb75eab",
   "umlModelType": "uml",
   "formInfo": {
-    "uml-model-name": "test2",
+    "uml-model-name": "test",
     "uml-model-type": "uml",
     "repo-id": "598c93a9a9813b12105c953e",
-    "project-desc": "",
+    "project-desc": "test",
     "project-effort": "",
     "project-duration": "",
-    "uuid-page1": "933bb000-0e38-11e8-9ee1-a79ffcc3120d",
+    "uuid-page1": "5059e390-0e9e-11e8-9da7-8177ffd2487d",
     "distributed-system": "1",
     "response-time": "1",
     "end-user-efficiency": "1",
@@ -3788,7 +3898,7 @@
     "includes-special-security-objectives": "1",
     "provides-direct-access-for-third-parties": "1",
     "special-user-training-facilities-are-required": "1",
-    "uuid-page2": "933bd710-0e38-11e8-9ee1-a79ffcc3120d",
+    "uuid-page2": "5059e391-0e9e-11e8-9da7-8177ffd2487d",
     "familiar-with-the-project-model-that-is-used": "1",
     "application-experience": "1",
     "object-oriented-experience": "1",
@@ -3797,18 +3907,18 @@
     "stable-requirements": "1",
     "part-time-staff": "1",
     "difficult-programming-language": "1",
-    "uuid-page3": "933bd711-0e38-11e8-9ee1-a79ffcc3120d",
-    "uuid-page4": "933bd712-0e38-11e8-9ee1-a79ffcc3120d"
+    "uuid-page3": "5059e392-0e9e-11e8-9da7-8177ffd2487d",
+    "uuid-page4": "5059e393-0e9e-11e8-9da7-8177ffd2487d"
   },
-  "_id": "44855b63526a538f7996b460523a9aed1518249760187",
-  "Name": "test2",
-  "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed",
-  "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/44855b63526a538f7996b460523a9aed",
+  "_id": "d2b6a0488066106a5d54a5f8bcb75eab1518293392686",
+  "Name": "test",
+  "OutputDir": "public/output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab",
+  "AccessDir": "output/repo5a6dd53399ebf553d4fbe3a2/d2b6a0488066106a5d54a5f8bcb75eab",
   "ElementAnalytics": {
     "AttributeNum": 4,
     "OperationNum": 1,
     "EntityNum": 8,
-    "ElementNum": 49,
+    "ElementNum": 50,
     "TotalPathLength": 30,
     "PathNum": 12,
     "UseCaseNum": 5,

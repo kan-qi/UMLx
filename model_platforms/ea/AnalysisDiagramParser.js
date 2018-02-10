@@ -25,7 +25,7 @@
 		return useCaseElementsInExtension;
 	}
 	
-	function parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, XMIExtension, XMIUMLModel){
+	function parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel){
 		console.log("parse analysis diagram");
 		// search for the instance specifications that are used to represent the robustness diagrams.
 		
@@ -86,6 +86,13 @@
 						group = "User";
 					}
 					
+					var component = DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
+					if(!component){
+						component = {};
+					}
+					
+					component.Type = CustomProfiles[ConnectedXMIInstanceSpecificationID];
+					
 					var activity = {
 							Type: "instanceSpecificationCall",
 							Name: XMIInstanceSpecification['$']['name']+":"+ConnectedXMIInstanceSpecification['$']['name'],
@@ -94,7 +101,7 @@
 							Stimulus: isStimulus,
 							Group: group,
 							OutScope: false,
-							Component: DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
+							Component: component
 					}
 					
 					Activities.push(activity);
