@@ -32,7 +32,10 @@
 		// two steps to establish the association between the elements and the use cases.
 		// 1. use the use case UUID to identify the extension element Use Case.
 		// 2. use the UUID to reference related elements in the extension and identify the elements from the packaged elements array.
-
+		
+		var Activities = [];
+		var PrecedenceRelations = [];
+		
 		var ActivitiesByID = [];
 		var XMIInstanceSpecificationsByID = {};
 		
@@ -86,7 +89,7 @@
 					var activity = {
 							Type: "instanceSpecificationCall",
 							Name: XMIInstanceSpecification['$']['name']+":"+ConnectedXMIInstanceSpecification['$']['name'],
-							_id: XMIInstanceSpecification['$']['xmi:id']+":"+ConnectedXMIInstanceSpecification['$']['name'],
+							_id: XMIInstanceSpecification['$']['xmi:id']+":"+ConnectedXMIInstanceSpecification['$']['xmi:id'],
 //							Attachment: XMIInstanceSpecification,
 							Stimulus: isStimulus,
 							Group: group,
@@ -94,22 +97,25 @@
 							Component: DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
 					}
 					
-					UseCase.Activities.push(activity);
+					Activities.push(activity);
 //				}
 			}
 			
-			for(var i in UseCase.Activities){
-				var activity = UseCase.Activities[i];
-				for(var j in UseCase.Activities){
-					var activityToIt = UseCase.Activities[j];
+			for(var i in Activities){
+				var activity = Activities[i];
+				for(var j in Activities){
+					var activityToIt = Activities[j];
 					if(activity._id.split(':')[1] === activityToIt._id.split(':')[0]){
-						UseCase.PrecedenceRelations.push({start: activity, end: activityToIt});
+						PrecedenceRelations.push({start: activity, end: activityToIt});
 					}
 				}
 			}
 			
-			console.log(UseCase.PrecedenceRelations);
+			console.log(PrecedenceRelations);
 		}
+		
+		UseCase.Activities = UseCase.Activities.concat(Activities);
+		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 	}
 	
 

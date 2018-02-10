@@ -13,7 +13,7 @@
 	}
 	
 	
-function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
+function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN){
 		
 //		var XMIUseCase = UseCase.Attachment;
 //		var XMICombinedFragment = CombinedFragment.Attachment;
@@ -59,7 +59,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			var XMIMessages = [];
 //			console.log("occurence")
 			var XMIOccurrences = jp.query(XMIOperand, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
-			var SDCFG = constructSDCFG(XMIOperand,XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
+			var SDCFG = constructSDCFG(XMIOperand,XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN);
 			
 			console.log("process fragments");
 			console.log(SDCFG);
@@ -93,7 +93,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //			console.log(XMICombinedFragments);
 		}
 		else if(XMIFragmentOperator === "loop"){
-			UseCase.PrecedenceRelations.push({start: endActivity, end: startActivity});
+			precedenceRelations.push({start: endActivity, end: startActivity});
 			startActivity = cfStart;
 			endActivity = cfStart;
 		}
@@ -103,7 +103,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			endActivity = cfStart;
 		}
 		else if(XMIFragmentOperator === "opt"){
-			UseCase.PrecedenceRelations.push({start: startActivity, end: endActivity});
+			precedenceRelations.push({start: startActivity, end: endActivity});
 			startActivity = cfStart;
 			endActivity = cfEnd;
 		}
@@ -120,6 +120,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		var endActivity = null;
 
 		console.log("occurence at interaction level");
+		console.log(DomainElementsBySN);
 //		console.log("occurrence");
 //		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\')]');
 		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
@@ -221,7 +222,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			}
 			else if(XMIOccurrence['$']['xmi:type'] === "uml:CombinedFragment"){
 				
-				var innerCombinedFragment = processCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators);
+				var innerCombinedFragment = processCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN);
 				
 				console.log("process combined fragment");
 				console.log(innerCombinedFragment);
@@ -254,6 +255,9 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 	function parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN){
 //		console.log(XMIUseCase);
 		// search for the interactions that are used to describe the use cases
+		var Activities = [];
+		var PrecedenceRelations = [];
+		
 		var XMIInteractions = jp.query(XMIUseCase, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Interaction\')]');
 		
 //		console.log("xmi interactions");
@@ -294,18 +298,18 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			console.log(XMIMessagesByOccurrences);
 //			XMIUseCase.XMIMessagesByOccurrences = XMIMessagesByOccurrences;
 			
-			SDCFG = constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, []);
-			UseCase.Activities = UseCase.Activities.concat(SDCFG.Activities);
-			UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(SDCFG.PrecedenceRelations);
+			SDCFG = constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, [], DomainElementsBySN);
+			Activities = Activities.concat(SDCFG.Activities);
+			PrecedenceRelations = PrecedenceRelations.concat(SDCFG.PrecedenceRelations);
 		}
 		
 		var ActivitiesToEliminate = [];
 		//to  eliminate unnecessary activities
-		for(var i in UseCase.Activities){
-			var activity = UseCase.Activities[i];
+		for(var i in Activities){
+			var activity = Activities[i];
 
 			console.log("determine fragement node");
-			console.log(UseCase.Activities);
+			console.log(Activities);
 			console.log(activity.Name);
 			if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 //					var activityToEliminate = activity;
@@ -318,8 +322,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			var outEdges = [];
 			var inEdges = [];
 			var leftEdges = [];
-			for(var k in UseCase.PrecedenceRelations){
-				var precedenceRelation = UseCase.PrecedenceRelations[k];
+			for(var k in PrecedenceRelations){
+				var precedenceRelation = PrecedenceRelations[k];
 				if(precedenceRelation.end == activityToEliminate){
 					inEdges.push(precedenceRelation);
 				} else if(precedenceRelation.start == activityToEliminate){
@@ -338,17 +342,17 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				}
 			}
 			
-			UseCase.Activities.splice(UseCase.Activities.indexOf(activityToEliminate), 1);
-			UseCase.PrecedenceRelations = leftEdges;
+			Activities.splice(Activities.indexOf(activityToEliminate), 1);
+			PrecedenceRelations = leftEdges;
 		}
 		
 
 		console.log("test use case");
-		console.log(UseCase.PrecedenceRelations);
+		console.log(PrecedenceRelations);
 		
 		//logic to decide Stimulus
-		for(var i in UseCase.Activities){
-			var activity = UseCase.Activities[i];
+		for(var i in Activities){
+			var activity = Activities[i];
 			console.log(activity);
 			 //create a new edge by triangle rules.
 //			if(edge.start.Group !== "System" && edge.end.Group === "System"){
@@ -369,10 +373,13 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 						Group: "User"
 				}
 				
-				UseCase.Activities.push(stimulus);
-				UseCase.PrecedenceRelations.push({start: stimulus, end: activity});
+				Activities.push(stimulus);
+				PrecedenceRelations.push({start: stimulus, end: activity});
 			}
 		}
+		
+		UseCase.Activities = UseCase.Activities.concat(Activities);
+		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 		
 		console.log("finished sequence diagram processing");
 		

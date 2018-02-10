@@ -137,7 +137,7 @@
 
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
 //		var XMIClassesByStandardizedName = [];
-		var DomainElementsBySN = [];
+		var DomainElementsBySN = {};
 		
 		for(var i in XMIClasses){
 			var XMIClass = XMIClasses[i];
