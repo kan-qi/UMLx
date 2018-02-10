@@ -56,29 +56,6 @@
 			console.log(XMIInstanceSpecification);
 			
 			XMIInstanceSpecificationsByID[XMIInstanceSpecification['$']['xmi:id']] = XMIInstanceSpecification;
-//			var XMIInstanceSpecificationsByID = [];
-			
-//			if(XMIInstanceSpecification){
-//				var isStimulus = false;
-//				var group = "System";
-//				if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
-//					isStimulus = true;
-//					group = "User";
-//				}
-//				
-//				var activity = {
-//						Type: "instanceSpecification",
-//						Name: XMIInstanceSpecification['$']['name'],
-//						_id: XMIInstanceSpecification['$']['xmi:id'],
-////						Attachment: XMIInstanceSpecification,
-//						Stimulus: isStimulus,
-//						Group: group,
-//						OutScope: false
-//				}
-//				
-//				ActivitiesByID[activity._id] = activity;
-//				UseCase.Activities.push(activity);
-//			}
 		}
 		
 		console.log("check instance specifications");
@@ -98,10 +75,6 @@
 			for(var j in ConnectedXMIInstanceSpecifications){
 				var ConnectedXMIInstanceSpecificationID = ConnectedXMIInstanceSpecifications[j]['$']['xmi:idref'];
 				var ConnectedXMIInstanceSpecification = XMIInstanceSpecificationsByID[ConnectedXMIInstanceSpecificationID];
-//				XMIAttributesByID[XMIAttribute['$']['xmi:id']] = XMIAttribute;
-//				var endComponent = ActivitiesByID[ConnectedNodeId];
-//				if(endComponent){
-//				UseCase.PrecedenceRelations.push({start: startComponent, end: endComponent});
 					
 					var isStimulus = false;
 					var group = "System";
