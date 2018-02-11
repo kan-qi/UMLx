@@ -123,6 +123,8 @@
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
 //		$.store.book[?(@.title =~ /^.*Sword.*$/)]
 //		console.log("hello");
+		
+		//create a catalog for the different types of the elements.
 		var XMICustomProfiles = jp.query(XMIUMLModel, '$..["thecustomprofile:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
 		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:control"][?(@["$"])]').map((obj) => {obj.type="control"; return obj;}));
 		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:boundary"][?(@["$"])]').map((obj) => {obj.type="boundary"; return obj;}));
@@ -148,6 +150,18 @@
 		}
 		
 		console.log(CustomProfiles);
+		
+		//create a catelog for the actors.
+		var XMIActors = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
+		var ActorsByID = {};
+		for(var i in XMIActors){
+			var XMIActor = XMIActors[i];
+			ActorsByID[XMIActor['$']['xmi:id']] = {
+					Name: XMIActor['$']['name'],
+					_id: XMIActor['$']['xmi:id']
+			}
+		}
+		
 		
 		var Model = {
 				UseCases: [],
@@ -195,7 +209,7 @@
 //					Attachment: XMIUseCase
 			}
 			
-			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
+			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, ActorsByID);
 			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
 			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
 			

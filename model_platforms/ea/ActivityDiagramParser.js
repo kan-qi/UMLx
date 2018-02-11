@@ -166,7 +166,6 @@
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 		
 		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
-
 	}
 
 

@@ -9,7 +9,7 @@
 	var jp = require('jsonpath');
 	
 	function queryUseCaseElementsInExtension(XMIExtension, UseCaseID){
-		var extensionAnalysisElements = jp.query(XMIExtension, '$..element[?(@[\'$\'][\'xmi:type\']==\'uml:Object\' || @[\'$\'][\'xmi:type\']==\'uml:Abject\')]');
+		var extensionAnalysisElements = jp.query(XMIExtension, '$..element[?(@[\'$\'][\'xmi:type\']==\'uml:Object\' || @[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
 		console.log("extension elements");
 		console.log(extensionAnalysisElements);
 		console.log(UseCaseID);
@@ -52,12 +52,10 @@
 //		console.log(XMIExtension[0]['elements']);
 		for(var i in extensionElements){
 			var extensionElement = extensionElements[i];
-
 			var XMIInstanceSpecification = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+extensionElement['$']['xmi:idref']+'\')]')[0];
 //			XMIInstanceSpecifications = XMIInstanceSpecifications.concat(jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]'));
 			console.log("checking derived instance specification");
 			console.log(XMIInstanceSpecification);
-			
 			XMIInstanceSpecificationsByID[XMIInstanceSpecification['$']['xmi:id']] = XMIInstanceSpecification;
 		}
 		
@@ -72,19 +70,11 @@
 //			XMIAttributesByID = [];
 			
 			console.log(ConnectedXMIInstanceSpecifications);
-			
 //			var startComponent = ActivitiesByID[XMIInstanceSpecification['$']['xmi:id']];
 			
 			for(var j in ConnectedXMIInstanceSpecifications){
 				var ConnectedXMIInstanceSpecificationID = ConnectedXMIInstanceSpecifications[j]['$']['xmi:idref'];
 				var ConnectedXMIInstanceSpecification = XMIInstanceSpecificationsByID[ConnectedXMIInstanceSpecificationID];
-					
-					var isStimulus = false;
-					var group = "System";
-					if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
-						isStimulus = true;
-						group = "User";
-					}
 					
 					var component = DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
 					if(!component){
@@ -96,33 +86,67 @@
 					var activity = {
 							Type: "instanceSpecificationCall",
 							Name: XMIInstanceSpecification['$']['name']+":"+ConnectedXMIInstanceSpecification['$']['name'],
-							_id: XMIInstanceSpecification['$']['xmi:id']+":"+ConnectedXMIInstanceSpecification['$']['xmi:id'],
+							_id: XMIInstanceSpecification['$']['xmi:id']+"___"+ConnectedXMIInstanceSpecification['$']['xmi:id'],
 //							Attachment: XMIInstanceSpecification,
-							Stimulus: isStimulus,
-							Group: group,
+							Group: "System",
 							OutScope: false,
 							Component: component
 					}
 					
+					//decide the reponse node and group.
+					if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
+						activity.isResponse = true;
+						activity.stimulusGroup = XMIInstanceSpecification['$']['name'];
+					}
+					
+					if(ConnectedXMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
+						activity.Group = XMIInstanceSpecification['$']['name'];
+						activity.Component.Type = "actor";
+					}
+					
+					
 					Activities.push(activity);
 //				}
 			}
-			
-			for(var i in Activities){
-				var activity = Activities[i];
-				for(var j in Activities){
-					var activityToIt = Activities[j];
-					if(activity._id.split(':')[1] === activityToIt._id.split(':')[0]){
-						PrecedenceRelations.push({start: activity, end: activityToIt});
-					}
+		}
+		
+		var Stimuli = [];
+		for(var i in Activities){
+			var activity = Activities[i];
+			for(var j in Activities){
+				var activityToIt = Activities[j];
+				if(activity._id.split('___')[1] === activityToIt._id.split('___')[0]){
+					PrecedenceRelations.push({start: activity, end: activityToIt});
 				}
 			}
 			
-			console.log(PrecedenceRelations);
+			if(activity.isResponse){
+				//create a stimulus nodes for the activity.
+				var stimulus = {
+						Type: "Stimulus",
+						Name: "stl#"+activity.Name,
+						_id: activity._id+"_STL",
+//						Attachment: XMIActivity,
+						Stimulus: true,
+						OutScope: false,
+						Group:  activity.stimulusGroup
+				}
+				
+				Stimuli.push(stimulus);
+				PrecedenceRelations.push({start: stimulus, end: activity});
+			}
 		}
+		
+		Activities = Activities.concat(Stimuli);
+		
+		console.log(PrecedenceRelations);
 		
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
+		
+		console.log("checking analysis activities");
+		console.log(Activities);
+		console.log(PrecedenceRelations);
 	}
 	
 

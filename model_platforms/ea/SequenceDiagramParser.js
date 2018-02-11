@@ -34,7 +34,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				_id: XMICombinedFragment['$']['xmi:id']+"_start",
 //				Attachment: XMICombinedFragment,
 				Group: "System",
-				Stimulus: false,
+//				Stimulus: false,
 				OutScope: false
 		};
 
@@ -44,7 +44,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				_id: XMICombinedFragment['$']['xmi:id']+"_end",
 //				Attachment: XMICombinedFragment,
 				Group: "System",
-				Stimulus: false,
+//				Stimulus: false,
 				OutScope: false
 		};
 		
@@ -143,8 +143,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //				XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
 				
 //				var isStimulus = false;
-				var group = "System";
-//				if(XMILifeline1.isUser){
+//				var group = "System";
+//				if(XMILifeline1.isActor){
 ////					isStimulus = true;
 //					group = "User";
 //				}
@@ -154,7 +154,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				var XMILifelineID2 = XMIOccurrence2.$.covered;
 //				XMILifeline2 = XMILifeline;
 				
-				if(XMILifelinesByID[XMILifelineID2].isUser){
+				if(XMILifelinesByID[XMILifelineID2].isActor){
 					group = XMILifelinesByID[XMILifelineID2]['$']['name'];
 				}
 				
@@ -193,8 +193,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 						Type: "message",
 						Name: XMIMessage['$']['name'],
 						_id: XMIMessage['$']['xmi:id'],
-						Stimulus: false,
-						Group: group,
+//						Stimulus: false,
+						Group: "System",
 						OutScope: outScope,
 						Component: component
 //						Attachment: XMIMessage
@@ -205,12 +205,22 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				
 				nextActivity.sender = XMILifelineID1;
 				nextActivity.receiver = XMILifelineID2;
+				
+				if(XMILifelinesByID[nextActivity.sender].isActor){
+					nextActivity.isResponse = true;
+					nextActivity.stimulusGroup = XMILifelinesByID[nextActivity.sender]['$']['name'];
+				}
+				
+				if(XMILifelinesByID[nextActivity.receiver].isActor){
+					nextActivity.Group = XMILifelinesByID[nextActivity.receiver]['$']['name'];
+					nextActivity.Component.Type = "actor";
+				}
 
 //				UseCase.Activities.push(nextActivity);
 				activities.push(nextActivity);
 				
 				if(preActivity){
-				if(XMILifelinesByID[nextActivity.sender].isUser && preActivity.receiver != nextActivity.sender){
+				if(XMILifelinesByID[nextActivity.sender].isActor && preActivity.receiver != nextActivity.sender){
 
 				}
 				else{
@@ -257,10 +267,30 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		return {Activities: activities, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
 	}
 
+	var ActorsByID = {};
+	var OwnedAttributesByID = {};
 	
-	function parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles){
+	function parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, ActorsByID){
 //		console.log(XMIUseCase);
 		// search for the interactions that are used to describe the use cases
+		ActorsByID = ActorsByID;
+		
+		//to establish the attributes catalog
+		var XMIOwnedAttributes = jp.query(XMIUseCase, '$..ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
+		for(var i in XMIOwnedAttributes){
+			var XMIOwnedAttribute = XMIOwnedAttributes[i];
+			var XMIOwnedAttributeType = jp.query(XMIOwnedAttribute, '$.type[?(@[\'$\'][\'xmi:idref\'])]')[0];
+			var typeID = null;
+			if(XMIOwnedAttributeType){
+				typeID = XMIOwnedAttributeType['$']["xmi:idref"];
+			}
+			OwnedAttributesByID[XMIOwnedAttribute['$']["xmi:id"]] = {
+					id : XMIOwnedAttribute['$']["xmi:id"],
+					Type: typeID
+			}
+		}
+		
+		
 		var Activities = [];
 		var PrecedenceRelations = [];
 		
@@ -279,9 +309,14 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			for(var j in XMILifelines){
 				var XMILifeline = XMILifelines[j];
 				// use name to determine isUser. Just temporary.
-				if(XMILifeline['$']['name'] === "User"){
-					console.log("is a Stimulus source");
-					XMILifeline.isUser = true;
+//				if(XMILifeline['$']['name'] === "User"){
+//					console.log("is a Stimulus source");
+//					XMILifeline.isActor = true;
+//				}
+				
+				if(OwnedAttributesByID[XMILifeline['$']['represents']].Type && ActorsByID[OwnedAttributesByID[XMILifeline['$']['represents']].Type]){
+//					console.log("is a Stimulus source");
+					XMILifeline.isActor = true;
 				}
 				
 				// use represents to determine is a lifeline is a user.
@@ -368,15 +403,17 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //			}
 			
 			//if activity's sendevent's lifeline is an actor, acreate an stimulus node
-			if(activity.Name == "onSearch"){
+
+			if(activity.isResponse){
+				//create a stimulus nodes for the activity.
 				var stimulus = {
 						Type: "Stimulus",
-						Name: "stl#1",
-						_id: "12345678",
+						Name: "stl#"+activity.Name,
+						_id: activity._id+"_STL",
 //						Attachment: XMIActivity,
 						Stimulus: true,
 						OutScope: false,
-						Group: "User"
+						Group:  activity.stimulusGroup
 				}
 				
 				Activities.push(stimulus);
