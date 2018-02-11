@@ -3,6 +3,7 @@ var parser = new xml2js.Parser();
 var xmiParser = require('../XMI2.1Parser.js');
 var pathsDrawer = require("../../../model_drawers/TransactionsDrawer.js");
 var modelDrawer = require("../../../model_drawers/UserSystemInteractionModelDrawer.js");
+var pathPatternMatchUtil = require("../../../utils/PathPatternMatchUtil.js");
 //var xmiParser = require('./XMI2.1ActivityDiagramParser.js');
 //var xmiParser = require('./XMI2.1RobustnessDiagramParser.js');
 //var fs = require("fs");
@@ -51,6 +52,18 @@ function isCycled(path){
 		}
 	return false;
 }
+
+var transactionalPatterns = [
+	 ['boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'transactional','Data management'],
+	 ['boundary', 'control[+]', 'entity', 'control[+]', 'boundary','pattern#2','EQ,INT', 'transactional', 'Data management with feedback or inquiry'],
+	 ['boundary', 'control[+]', 'boundary', 'pattern#3', 'INT', 'transactional', 'validation or interface management'],
+	 ['boundary', 'control[+]', 'actor', 'pattern#4', 'EXTIVK', 'transactional','Invocation from external system'],
+	 ['control[+]', 'actor', 'pattern#5', 'EXTIVK', 'transactional','Invocation from external system'],
+	 ['boundary', 'control[+]', 'entity', 'control[+]', 'actor', 'pattern#6', 'EXTIVK,EQ', 'transactional','Invocation from external system'],
+	 ['control[+]', 'entity','pattern#7', 'EXTCLL,EI', 'transactional', 'Invocation of services provided by external system'],
+	 ['control[+]', 'boundary','pattern#8', 'EXTCLL,INT', 'transactional', 'Invocation of services provided by external system'],
+	 ['control[+]', 'pattern#9', 'CTRL', 'transactional','Control flow without operating on any entities or interfaces'],
+];
 
 function traverseUserSystemInterationModel(model){
 	
@@ -155,37 +168,62 @@ function traverseUserSystemInterationModel(model){
 		}
 		
 		console.log("profile paths");
-		var domainModel = model.DomainModel;
-		var domainModelById = {};
-		for(var i in domainModel){
-			var domainElement = domainModel[i];
-			domainModelById[domainElement._id] = domainElement;
-		}
+//		var domainModel = model.DomainModel;
+//		var domainModelById = {};
+//		for(var i in domainModel){
+//			var domainElement = domainModel[i];
+//			domainModelById[domainElement._id] = domainElement;
+//		}
 
 		for(var i in Paths){
 			var DET = 0;
 			var DE = 0;
 			var path = Paths[i];
+			var componentStr = "";
 			for(var j in path.Nodes){
 				var node = path.Nodes[j];
-				if(node.receiver&&node.receiver.Class && domainModelById[node.receiver.Class]){
-					var domainElement = domainModelById[node.receiver.Class];
-					for(var k in domainElement.operations){
-						var operation = domainElement.operations[k];
+//				if(node.receiver&&node.receiver.Class && domainModelById[node.receiver.Class]){
+//					var domainElement = domainModelById[node.receiver.Class];
+//					for(var k in domainElement.operations){
+//						var operation = domainElement.operations[k];
+//						if(standardizeName(node.Name) === standardizeName(operation.Name)){
+////							console.log("yes");
+//							DET += operation.parameters.length;
+//						}
+//					}
+//				}
+				
+				if(node.Component){
+					var component = node.Component;
+//					var domainElement = domainModelById[node.receiver.Class];
+					for(var k in component.operations){
 						if(standardizeName(node.Name) === standardizeName(operation.Name)){
+						var operation = component.operations[k];
 //							console.log("yes");
 							DET += operation.parameters.length;
 						}
 					}
+					
+					componentStr += component.Type+"->";
 				}
+				
 				DE++;
 			}
 			
+			console.log("component str");
+			console.log(componentStr);
 			console.log(path);
 			console.log("DET:"+DET);
 			console.log("DE:"+DE);
+			
+			var transactionalPatternTreeRoot = pathPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
+			var matchedPatterns = pathPatternMatchUtil.recognizePattern(path, transactionalPatternTreeRoot);
+			console.log("matched patterns");
+			console.log(matchedPatterns);
 		}
-//		console.log(Paths);
+		console.log("checking paths");
+		console.log(Paths);
+		
 		useCase.Paths = Paths;
 	}
 	

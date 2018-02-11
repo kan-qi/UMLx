@@ -8,9 +8,12 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
-	function parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID){
+	function parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN){
 
 		// we are categorizing the messages for the in-scope and out-scope messages.
+
+		var Activities = [];
+		var PrecedenceRelations = [];
 		
 		//search for activities that are used to describe use cases
 		console.log("XMIActivities");
@@ -23,7 +26,7 @@
 		
 		console.log(XMIActivities);
 		
-//		UseCase.Activities = [];
+//		Activities = [];
 		var ActivitiesByID = [];
 		
 		ActivitiesToEliminate = [];
@@ -45,7 +48,7 @@
 						OutScope: false,
 				};
 				
-				UseCase.Activities.push(activity);
+				Activities.push(activity);
 				ActivitiesByID[XMIActivity['$']['xmi:id']] = activity;
 				if(XMIActivity['$']['xmi:type'] === "uml:DecisionNode"){
 					ActivitiesToEliminate.push(activity);
@@ -64,17 +67,21 @@
 			var sourceActivity = ActivitiesByID[XMIEdge['$']['source']];
 			var targetActivity = ActivitiesByID[XMIEdge['$']['target']];
 			if(sourceActivity && targetActivity){
-			UseCase.PrecedenceRelations.push({start: sourceActivity, end: targetActivity});
+			PrecedenceRelations.push({start: sourceActivity, end: targetActivity});
 			}
 		}
+
+		console.log("checking edges1");
+		console.log(PrecedenceRelations);
+		
 		
 		for(var j in ActivitiesToEliminate){
 			var activityToEliminate = ActivitiesToEliminate[j];
 			var outEdges = [];
 			var inEdges = [];
 			var leftEdges = [];
-			for(var k in UseCase.PrecedenceRelations){
-				var precedenceRelation = UseCase.PrecedenceRelations[k];
+			for(var k in PrecedenceRelations){
+				var precedenceRelation = PrecedenceRelations[k];
 				if(precedenceRelation.end == activityToEliminate){
 					inEdges.push(precedenceRelation);
 				} else if(precedenceRelation.start == activityToEliminate){
@@ -93,11 +100,13 @@
 				}
 			}
 			
-			UseCase.Activities.splice(UseCase.Activities.indexOf(activityToEliminate), 1);
-			UseCase.PrecedenceRelations = leftEdges;
+			Activities.splice(Activities.indexOf(activityToEliminate), 1);
+			PrecedenceRelations = leftEdges;
 		}
 		
-		console.log(UseCase.PrecedenceRelations);
+//		console.log(PrecedenceRelations);
+		
+		
 //		console.log("group...");
 
 		var XMIGroups = jp.query(XMIUseCase, '$..group[?(@[\'$\'][\'xmi:type\']==\'uml:ActivityPartition\')]');
@@ -134,9 +143,13 @@
 			}
 		}
 		
+
+		console.log("checking edges");
+		console.log(PrecedenceRelations);
+		
 		//logic to decide Stimulus
-		for(var j in UseCase.PrecedenceRelations){
-			var edge = UseCase.PrecedenceRelations[j];
+		for(var j in PrecedenceRelations){
+			var edge = PrecedenceRelations[j];
 			 //create a new edge by triangle rules.
 			if(edge.start.Group !== "System" && edge.end.Group === "System"){
 				console.log("Stimulus...");
@@ -146,10 +159,13 @@
 		}
 		
 		console.log("final relations");
-		console.log(UseCase.PrecedenceRelations);
+		console.log(PrecedenceRelations);
+		
+
+		UseCase.Activities = UseCase.Activities.concat(Activities);
+		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 		
 		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
-
 	}
 
 

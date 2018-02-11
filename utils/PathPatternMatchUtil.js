@@ -133,8 +133,12 @@
 			var searchIndex = 0;
 			
 //			console.log('===========Search Pattern============');
-			while(searchIndex < path.length){
-				var matchingTarget = path[searchIndex];
+			while(searchIndex < path.Nodes.length){
+				var node = path.Nodes[searchIndex];
+				var matchingTarget = "control";
+				if(node && node.Component && node.Component.Type){
+					matchingTarget = node.Component.Type;
+				}
 //				console.log(matchingTarget);
 				var patternElement = null;
 				var matchedPatternElementArray = [];
