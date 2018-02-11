@@ -9,26 +9,36 @@ html
     
   body.signUp
    div.clear
-   div#profileDiv
-    div.panel.panel-default
-     div.panel-body
-      div
-       img(src="img/anonymous.png" height="310px" width="310px")
-       div.name-card
-        span.user-name-span #{profileInfo.userName}
-       div.email-card
-        span(class="glyphicon glyphicon-envelope") 
-        span.email-span 
-         a(href="mailto:#{profileInfo.email}") #{profileInfo.email}
-    if profileInfo.isEnterprise
-     div#messageDiv
-     div.panel.panel-default
-      div.panel-heading(style="font-size:20px;text-align:center;") Invite a User
-      div.panel-body
-       div
-         form(id='invite-form')
-          label.formLabel Email
-          br
-          input.signUp(type='text', name='email', id='email')
-          br
-          input.btn.btn-primary.signUpButton(type='submit',value='Invite')
+   div.container
+    div.row
+     div.col-sm-4
+      div#profileDiv
+       div.panel-body
+        div
+         img(src="img/anonymous.png" height="310px" width="310px")
+         div.name-card
+           span.user-name-span #{profileInfo.userName}
+         div.email-card
+           span(class="glyphicon glyphicon-envelope") 
+           span.email-span 
+             a(href="mailto:#{profileInfo.email}") #{profileInfo.email}
+       if profileInfo.isEnterprise
+        div#messageDiv
+        div.panel.panel-default
+         div.panel-heading(style="font-size:20px;text-align:center;") Invite a User
+         div.panel-body
+          div
+            form(id='invite-form')
+              label.formLabel Email
+              br
+              input.signUp(type='text', name='email', id='email')
+              br
+              input.btn.btn-primary.signUpButton(type='submit',value='Invite')
+     div.col-sm-8
+      h1 Repositories
+      ul
+      if profileInfo.gitData
+       each repo in profileInfo.gitData
+        h3
+         a(href="#{repo.html_url}") #{repo.name}
+        span #{repo.commits} commits
