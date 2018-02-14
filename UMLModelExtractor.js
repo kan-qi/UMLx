@@ -54,9 +54,10 @@
 					
 				//set up the use cases.
 //				console.log("use cases");
-//				console.log(useCases);
+//				console.log(model);
 				for(var i in model.UseCases) {
 								var useCase = model.UseCases[i];
+//								console.log(model.UseCases[i]);
 //								console.log(useCase);
 //								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;

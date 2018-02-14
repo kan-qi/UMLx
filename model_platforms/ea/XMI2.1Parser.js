@@ -216,7 +216,6 @@
 			Model.UseCases.push(UseCase);
 		}
 		
-		Model.UseCases.push(UseCase);
 		
 		for(var i in DomainElementsBySN){
 			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
