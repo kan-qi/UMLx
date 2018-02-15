@@ -872,6 +872,24 @@ app.get('/requestUseCaseDetail', function(req, res){
 		console.log(useCaseInfo);
 		useCaseInfo.DisplayablePaths = displayablePaths;
 				res.render('useCaseDetail', {useCaseInfo:useCaseInfo, modelId:modelId,repoId:repoId});
+
+		//create img directory so icons can be displayed
+		var fs_extra = require('fs-extra');
+		var mkdirp = require('mkdirp');
+		var imgDirectory = "public/output/repo" + repoId + "/" + modelId.substring(0, 32) + "/" + useCaseId + "/img";
+		mkdirp(imgDirectory, function(err) {
+			if(err) {
+				console.log(err);
+				return;
+			}
+		});
+		fs_extra.copy('public/img', imgDirectory, function(err) {
+			if(err) {
+				console.log(err);
+				return;
+			}
+		});
+
 	    });
 })
 
