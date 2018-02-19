@@ -329,18 +329,31 @@
     }
 
     function queryModelInfo(modelId, repoId, callbackfunc){
-//		console.log(modelId);
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var modelQuery = getModelQuery(modelId,repoId);
             var projections = getModelQueryProjections(modelId, repoId);
 
-            db.collection("repos").findOne(modelQuery, projections, function(err, repo) {
+            db.collection("modelInfo").findOne(modelQuery, projections, function(err, repo) {
                 if (err) throw err;
-//				console.log('==============selected repo============');
-//				console.log(repo);
+                var useCaseID = repo.useCaseUUIDs;
+                var domainModelIDQuery = {domainModelUUID: repo.domainModelUUID};
+
+                db.collection("domainModelInfo").find(domainModelIDQuery, function(err, repo2) {
+                    if (err) throw err;
+                    console.log(repo2);
+                });
+
+                for (int i = 0; i < useCaseID.length; i++) {
+                    var useCaseIDQuery = {useCaseUUIDs:useCaseID[i]};
+                    db.collection("useCaseInfo").find(useCaseIDQuery, function(err, repo3) {
+                        if (err) throw err;
+                        console.log(repo3);
+                    });
+                }
+
                 db.close();
-                callbackfunc(repo["Models"][0]);
+                //callbackfunc(repo["Models"][0]);
             });
         });
     }
