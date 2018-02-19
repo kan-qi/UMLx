@@ -329,31 +329,18 @@
     }
 
     function queryModelInfo(modelId, repoId, callbackfunc){
+//		console.log(modelId);
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             var modelQuery = getModelQuery(modelId,repoId);
             var projections = getModelQueryProjections(modelId, repoId);
 
-            db.collection("modelInfo").findOne(modelQuery, projections, function(err, repo) {
+            db.collection("repos").findOne(modelQuery, projections, function(err, repo) {
                 if (err) throw err;
-                var useCaseID = repo.useCaseUUIDs;
-                var domainModelIDQuery = {domainModelUUID: repo.domainModelUUID};
-
-                db.collection("domainModelInfo").find(domainModelIDQuery, function(err, repo2) {
-                    if (err) throw err;
-                    console.log(repo2);
-                });
-
-                for (int i = 0; i < useCaseID.length; i++) {
-                    var useCaseIDQuery = {useCaseUUIDs:useCaseID[i]};
-                    db.collection("useCaseInfo").find(useCaseIDQuery, function(err, repo3) {
-                        if (err) throw err;
-                        console.log(repo3);
-                    });
-                }
-
+//				console.log('==============selected repo============');
+//				console.log(repo);
                 db.close();
-                //callbackfunc(repo["Models"][0]);
+                callbackfunc(repo["Models"][0]);
             });
         });
     }
@@ -511,15 +498,33 @@
 
     */
 
-    function saveModelInfo(modelInfo, repoId, callbackfunc) {
+    function saveModelInfo(modelInfo, useCaseInfo, domainModelInfo, modelId, useCaseId, domainModelId, callbackfunc) {
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
 //			console.log(modelInfo);
             var fs = require("fs");
             fs.writeFile('./temp/modelInfo1.json', JSON.stringify(modelInfo, null, 2) , 'utf-8');
             console.log(repoId);
-            var o_id = new mongo.ObjectID(repoId);
-            db.collection("repos").update({_id:o_id}, {$push: {Models: modelInfo}}, function(err, res) {
+            var model_id = new mongo.ObjectID(modelId);
+			var UseCaseUUID= new mongo.ObjectID(useCaseId);
+			var domainModelUUID = new mongo.ObjectID(domainModelId);
+            db.collection("modelInfo").update({_id:model_id}, {$push: {Model_id: modelInfo[formInfo][_id]}}, function(err, res) {
+                if (err) throw err;
+                console.log("1 record inserted");
+                db.close();
+                if(callbackfunc !== null){
+                    callbackfunc(modelInfo);
+                }
+            });
+			db.collection("useCaseInfo").update({_id:UseCaseUUID}, {$push: {Models: useCaseInfo}}, function(err, res) {
+                if (err) throw err;
+                console.log("1 record inserted");
+                db.close();
+                if(callbackfunc !== null){
+                    callbackfunc(modelInfo);
+                }
+            });
+			db.collection("domainModelInfo").update({_id:domainModelUUID}, {$push: {Models: domainModelInfo}}, function(err, res) {
                 if (err) throw err;
                 console.log("1 record inserted");
                 db.close();
