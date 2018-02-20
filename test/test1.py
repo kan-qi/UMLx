@@ -22,7 +22,7 @@ from selenium.webdriver.common.keys import Keys
 class PythonOrgSearch(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome('C:\Users\SatyaAnanya\Downloads\chromedriver.exe')  # Optional argument, if not specified will search path.
+        self.driver = webdriver.Chrome('path to your chromedriver file')  # Optional argument, if not specified will search path.
 
     def test_search_in_python_org(self):
         driver = self.driver
