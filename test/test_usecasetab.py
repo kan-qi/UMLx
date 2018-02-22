@@ -22,13 +22,13 @@ from selenium.webdriver.common.keys import Keys
 class PythonOrgSearch(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome('/Users/xianhechen/Documents/CSCI-590/chromedriver')  # Optional argument, if not specified will search path.
+        self.driver = webdriver.Chrome('path to your chromedriver file')  # Optional argument, if not specified will search path.
 
     def test_search_in_python_org(self):
         driver = self.driver
         driver.get('http:/localhost:8081/')
         self.assertIn("UMLx", driver.title)
-        
+
         #Tests login button
         elem = driver.find_element_by_name("username")
         elem.send_keys("umlxteam")
@@ -39,10 +39,10 @@ class PythonOrgSearch(unittest.TestCase):
         time.sleep(3)
 
 
-        #check usecase tab  
+        #check usecase tab
         usecase_tab=driver.find_element_by_xpath('//*[@id="repo-stats-chart"]/div/ul/li[4]/a')
         usecase_tab.click()
-        time.sleep(3)        
+        time.sleep(3)
         project_tab=driver.find_element_by_xpath('//*[@id="project_list"]/div/div[1]/div/div/a')
         project_tab.click()
         time.sleep(3)
@@ -83,7 +83,7 @@ class PythonOrgSearch(unittest.TestCase):
         '''func11=driver.find_element_by_xpath('//*[@id="model-use-cases-panel"]/div[2]/div[11]/a')
         func11.click()
         time.sleep(3)'''
-        
+
         #time.sleep(5)
         assert "No results found." not in driver.page_source
 
@@ -93,6 +93,3 @@ class PythonOrgSearch(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-
-
-

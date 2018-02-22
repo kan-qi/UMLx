@@ -37,7 +37,7 @@ class PythonOrgSearch(unittest.TestCase):
         username_signup = driver.find_element_by_xpath('//*[@id="username"]')
         username_signup.send_keys('ABC1')
         password_signup = driver.find_element_by_xpath('//*[@id="password"]')
-        password_signup.send_keys('abcdefgA1.') 
+        password_signup.send_keys('abcdefgA1.')
         enterprise_signup=driver.find_element_by_xpath('//*[@id="enterpriseUser"]')
         enterprise_signup.click()
         button_signup=driver.find_element_by_xpath('//*[@id="sign-up"]/input[5]')
@@ -54,4 +54,3 @@ class PythonOrgSearch(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

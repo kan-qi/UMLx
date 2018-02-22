@@ -37,7 +37,7 @@ class PythonOrgSearch(unittest.TestCase):
         #elem.send_keys(Keys.RETURN)
         time.sleep(5)
         #repo-stats-chart > div > ul > li.active > a
-        #//*[@id="login-form"]/input[3] 
+        #//*[@id="login-form"]/input[3]
         distr_link=driver.find_element_by_xpath('//*[@id="repo-stats-chart"]/div/ul/li[1]/a')
         distr_link.click()
         time.sleep(5)
