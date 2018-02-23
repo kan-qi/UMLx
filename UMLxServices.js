@@ -13,7 +13,6 @@ var jade = require('jade');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
-//var sleep = require('sleep');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
 var bodyParser = require('body-parser');
@@ -115,7 +114,7 @@ app.get('/testgitapiuser', function(req,response){
 	})
 
 	github.search.users({
-	  q: 'kritikavd'
+	  q: 'kvaid@usc.edu in:email'
 	}, function (err, res) {
 	  if (err) throw err
 	  response.json(res);
@@ -150,7 +149,24 @@ app.get('/testgitapiallcommit', function(req,response){
 
 	github.repos.getCommits({
 		owner: 'kritikavd',
-		  repo: 'Web-Tech-Assignments',
+		  repo: 'node-github',
+	}, function (err, res) {
+	  if (err) throw err
+	  response.json(res);
+	});
+	
+});
+
+app.get('/testgitapiallcommitlast', function(req,response){
+	var GitHubApi = require('github')
+
+	var github = new GitHubApi({
+	})
+	
+	github.repos.getCommits({
+		owner: 'kritikavd',
+		  repo: 'node-github',
+		  page : 36,
 	}, function (err, res) {
 	  if (err) throw err
 	  response.json(res);
@@ -327,6 +343,19 @@ app.use(function(req, res, next) {
 
 });
 
+app.get('/savegitinfo', function(req,res){
+	
+	var email = req.userInfo.email;
+	var userId = req.userInfo._id;
+	umlModelInfoManager.saveGitInfo(email,userId, function(success,msg){
+		var result = {
+		          success: success,
+		          message: msg,
+	   };
+		res.json(result);
+	});
+});
+
 app.get('/profile',function(req,res){
 
 	var profileInfo = {}
@@ -334,7 +363,13 @@ app.get('/profile',function(req,res){
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;
 	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
+	
+	umlModelInfoManager.getGitData(req.userInfo._id, function(gitData, success, msg){
+		if(success==true){
+			profileInfo.gitData = gitData;
+		}
 	res.render('profile', {profileInfo:profileInfo});
+	});
 
 })
 
@@ -350,8 +385,8 @@ app.post('/inviteUser', upload.fields([{name:'email',maxCount:1}]),  function (r
 	    service: "gmail",
 	    host: "smtp.gmail.com",
 	    auth: {
-	        user: "kritikavaid123@gmail.com",
-	        pass: "Strong123"
+	        user: "teamumlx@gmail.com",
+	        pass: "teamumlx123"
 	    }
 	});
 
@@ -592,7 +627,7 @@ app.get('/requestDomainModelDetail', function (req, res){
 			res.end('delete error!');
 			return;
 		}
-//		console.log(domainModel);
+		console.log(domainModel);
 		res.render('domainModelDetail',{domainModel: domainModel});
 	});
 })
@@ -816,10 +851,45 @@ app.get('/requestUseCaseDetail', function(req, res){
 	umlModelInfoManager.queryUseCaseInfo(repoId, modelId, useCaseId, function(useCaseInfo){
 //				console.log('use case detail');
 //				console.log(useCaseInfo);
-		for(var i in useCaseInfo.Diagrams){
+//		for(var i in useCaseInfo.Diagrams){
 //		console.log(useCaseInfo.Diagrams[i]['Paths']);
+//		}
+		
+		//create the displayable paths
+		var displayablePaths = [];
+		for(var i in useCaseInfo.Paths){
+			var path = useCaseInfo.Paths[i];
+			var pathStr = "";
+			for(var j in path.Nodes){
+				var node = path.Nodes[j];
+				pathStr += node.Name;
+				if( i != path.Nodes.length - 1){
+					pathStr += "->";
+				}
+			}
+			displayablePaths.push({id: i, PathStr: pathStr, Tag: "undefined"});
 		}
+		console.log(useCaseInfo);
+		useCaseInfo.DisplayablePaths = displayablePaths;
 				res.render('useCaseDetail', {useCaseInfo:useCaseInfo, modelId:modelId,repoId:repoId});
+
+		//create img directory so icons can be displayed
+		var fs_extra = require('fs-extra');
+		var mkdirp = require('mkdirp');
+		var imgDirectory = "public/output/repo" + repoId + "/" + modelId.substring(0, 32) + "/" + useCaseId + "/img";
+		mkdirp(imgDirectory, function(err) {
+			if(err) {
+				console.log(err);
+				return;
+			}
+		});
+		fs_extra.copy('public/img', imgDirectory, function(err) {
+			if(err) {
+				console.log(err);
+				return;
+			}
+		});
+
 	    });
 })
 
@@ -1083,6 +1153,13 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+var testingParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
+app.get('/testFunctions', function(req, res){
+	testingParser.extractDiagramModels("./vp_xml_export.xml/project.xml", function(data){
+		console.log ('the output data', JSON.stringify(data));
+		res.json(data);
+	})
+});
 
 var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parser.js")
 app.get('/testSequenceDiagramExtraction', function(req, res){
@@ -1145,7 +1222,6 @@ app.get('/deactivateUser', function(req,res){
 		});
 	}
 });
-
 
 var server = app.listen(8081,'127.0.0.1', function () {
   var host = server.address().address

@@ -150,38 +150,7 @@ div.block.panel.panel-default
         div.stats-chart
          img(src="#{repoInfo.AccessDir}/path_number_analysis_result.svg")
      div.tab-pane.fade(id="repo_estimation")
-      if repoInfo
-       div(id="estimation-models-panel")
-        div(id="model-query-box")
-         div.row-item(id='estimator-selector-box')
-          div.dropdown
-           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Estimator
-            span.caret
-           ul.dropdown-menu
-            li
-             a.estimator-selector(data-estimator='OLSR') Linear Regression
-            li
-             a.estimator-selector(data-estimator='RR') Ridge Regression
-            li
-             a.estimator-selector(data-estimator='LS') Linear Spline
-         div.row-item(id='model-selector-box')
-          div.dropdown
-           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Model
-            span.caret
-           ul.dropdown-menu
-            li
-             a.estimator-selector(data-model='EUCP') EUCP
-            li
-             a.estimator-selector(data-model='EXUCP') EXUCP
-            li
-             a.estimator-selector(data-model='DUCP') DUCP
-         div.checkbox.row-item
-          label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-           input(type='checkbox' value='simulation-data')
-         button.btn.btn-primary.row-item(id='query-model-btn', data-repo-id="#{repoInfo._id}") Query
-         img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
-         div.clear
-       div(id='estimation-model-detail')
+      include estimationPanel
      div.tab-pane.fade(id="project_list")
       div.card-deck
        each model in repoInfo.Models

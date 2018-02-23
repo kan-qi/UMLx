@@ -10,15 +10,15 @@
 //	var diagramDrawer = require('./DiagramProfilers/DiagramDrawer.js');
 
 	 var transactionalPatterns = [
-		 ['actor', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'transactional','Data management'],
-		 ['actor', 'boundary', 'control[+]', 'entity', 'control[+]', 'boundary','pattern#2','EQ,INT', 'transactional', 'Data management with feedback or inquiry'],
-		 ['actor', 'boundary', 'control[+]', 'boundary', 'pattern#3', 'INT', 'transactional', 'validation or interface management'],
-		 ['actor', 'boundary', 'control[+]', 'actor', 'pattern#4', 'EXTIVK', 'transactional','Invocation from external system'],
-		 ['actor', 'control[+]', 'actor', 'pattern#5', 'EXTIVK', 'transactional','Invocation from external system'],
-		 ['actor', 'boundary', 'control[+]', 'entity', 'control[+]', 'actor', 'pattern#6', 'EXTIVK,EQ', 'transactional','Invocation from external system'],
-		 ['actor', 'control[+]', 'entity','pattern#7', 'EXTCLL,EI', 'transactional', 'Invocation of services provided by external system'],
-		 ['actor', 'control[+]', 'boundary','pattern#8', 'EXTCLL,INT', 'transactional', 'Invocation of services provided by external system'],
-		 ['actor', 'control[+]', 'pattern#9', 'CTRL', 'transactional','Control flow without operating on any entities or interfaces'],
+		 ['boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'transactional','Data management'],
+		 ['boundary', 'control[+]', 'entity', 'control[+]', 'boundary','pattern#2','EQ,INT', 'transactional', 'Data management with feedback or inquiry'],
+		 ['boundary', 'control[+]', 'boundary', 'pattern#3', 'INT', 'transactional', 'validation or interface management'],
+		 ['boundary', 'control[+]', 'actor', 'pattern#4', 'EXTIVK', 'transactional','Invocation from external system'],
+		 ['control[+]', 'actor', 'pattern#5', 'EXTIVK', 'transactional','Invocation from external system'],
+		 ['boundary', 'control[+]', 'entity', 'control[+]', 'actor', 'pattern#6', 'EXTIVK,EQ', 'transactional','Invocation from external system'],
+		 ['control[+]', 'entity','pattern#7', 'EXTCLL,EI', 'transactional', 'Invocation of services provided by external system'],
+		 ['control[+]', 'boundary','pattern#8', 'EXTCLL,INT', 'transactional', 'Invocation of services provided by external system'],
+		 ['control[+]', 'pattern#9', 'CTRL', 'transactional','Control flow without operating on any entities or interfaces'],
 	];
 	 
 	function matchCategories(categories, characteristic){
@@ -63,103 +63,103 @@
 			/*
 			 * At the diagram level, the components need to associate with domain model.
 			 */
-			processUseCase: function(useCase, model, callbackfunc){
-//				var useCase = model.UseCases[i];
-				
-//				var entries=diagram.Entries;// tag: elements
-				
-				var toExpandCollection = new Array();
-				
-				for (var j in useCase.activities){
-					var activity = useCase.activities[j];
-					//define the node structure to keep the infor while traversing the graph
-					if(activity.stimulus){
-					var node = {
-						//id: startElement, //ElementGUID
-						Node: activity,
-						PathToNode: [activity],
-						OutScope: activity.outScope
-					};
-					toExpandCollection.push(node);
-					}
-				}
-				
-				var Paths = new Array();
-				var toExpand;
-				while((toExpand = toExpandCollection.pop()) != null){
-					var node = toExpand.Node;
-					var pathToNode = toExpand.PathToNode;
-//					var toExpandID = toExpand.id;
-//					var expanded = false;
-					// test completeness of the expanded path first to decide if continue to expand
-//					var childNodes = diagram.expand(node);
-					// if null is returned, then node is an end node.
-					
-//					diagram.expand = function(node){
-					// add condition on actor to prevent stop searching for message [actor, view].
-//					if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
-//						return;
+//			processUseCase: function(useCase, model, callbackfunc){
+////				var useCase = model.UseCases[i];
+//				
+////				var entries=diagram.Entries;// tag: elements
+//				
+//				var toExpandCollection = new Array();
+//				
+//				for (var j in useCase.activities){
+//					var activity = useCase.activities[j];
+//					//define the node structure to keep the infor while traversing the graph
+//					if(activity.stimulus){
+//					var node = {
+//						//id: startElement, //ElementGUID
+//						Node: activity,
+//						PathToNode: [activity],
+//						OutScope: activity.outScope
+//					};
+//					toExpandCollection.push(node);
 //					}
-//					if(node.outboundNum == 0){
-//						return;
-//					}
-//					else {
-
-						var childNodes = [];
-						for(var j in useCase.precedenceRelations){
-							var edge = useCase.precedenceRelations[j];
-							if(edge.start == node){
-								childNodes.push(edge.end);
-							}
-						}
-//						return children;
-//					}
-					
 //				}
-					
-					if(childNodes.length == 0){
-						Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
-					}
-					else{
-						for(var j in childNodes){
-							var childNode = childNodes[j];
-							if(!childNode){
-								continue;
-							}
-							
-							//if childNode is an outside activity
-							
-							var OutScope = false;
-							if(toExpand.OutScope||childNode.outScope){
-								OutScope = true;
-							}
-							
-							var toExpandNode = {
-								Node: childNode,
-								PathToNode: pathToNode.concat(childNode),
-								OutScope: OutScope
-							}
-							
-							console.log("toExpandNode");
-							console.log(toExpandNode);
-							
-							console.log("child node");
-							console.log(childNodes);
-							console.log(childNode);
-							console.log(childNode.name);
-							console.log(childNode.group);
-
-							if(!isCycled(toExpandNode.PathToNode) && childNode.group === "System"){
-							toExpandCollection.push(toExpandNode);
-							}
-							else{
-							Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
-							}
-						}		
-					}
-			}
-				return Paths;
-			},
+//				
+//				var Paths = new Array();
+//				var toExpand;
+//				while((toExpand = toExpandCollection.pop()) != null){
+//					var node = toExpand.Node;
+//					var pathToNode = toExpand.PathToNode;
+////					var toExpandID = toExpand.id;
+////					var expanded = false;
+//					// test completeness of the expanded path first to decide if continue to expand
+////					var childNodes = diagram.expand(node);
+//					// if null is returned, then node is an end node.
+//					
+////					diagram.expand = function(node){
+//					// add condition on actor to prevent stop searching for message [actor, view].
+////					if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
+////						return;
+////					}
+////					if(node.outboundNum == 0){
+////						return;
+////					}
+////					else {
+//
+//						var childNodes = [];
+//						for(var j in useCase.precedenceRelations){
+//							var edge = useCase.precedenceRelations[j];
+//							if(edge.start == node){
+//								childNodes.push(edge.end);
+//							}
+//						}
+////						return children;
+////					}
+//					
+////				}
+//					
+//					if(childNodes.length == 0){
+//						Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+//					}
+//					else{
+//						for(var j in childNodes){
+//							var childNode = childNodes[j];
+//							if(!childNode){
+//								continue;
+//							}
+//							
+//							//if childNode is an outside activity
+//							
+//							var OutScope = false;
+//							if(toExpand.OutScope||childNode.outScope){
+//								OutScope = true;
+//							}
+//							
+//							var toExpandNode = {
+//								Node: childNode,
+//								PathToNode: pathToNode.concat(childNode),
+//								OutScope: OutScope
+//							}
+//							
+//							console.log("toExpandNode");
+//							console.log(toExpandNode);
+//							
+//							console.log("child node");
+//							console.log(childNodes);
+//							console.log(childNode);
+//							console.log(childNode.name);
+//							console.log(childNode.group);
+//
+//							if(!isCycled(toExpandNode.PathToNode) && childNode.group === "System"){
+//							toExpandCollection.push(toExpandNode);
+//							}
+//							else{
+//							Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+//							}
+//						}		
+//					}
+//			}
+//				return Paths;
+//			},
 //			processDiagram: function(diagram, usecase, model, callbackfunc){
 //				console.log("transaction process: process diagram");
 //				diagram.Paths = UMLDiagramTraverser.traverseDiagram(diagram);
@@ -238,7 +238,7 @@
 
 				path['TransactionAnalytics'] = {};
 				
-				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, transactionalPatternTreeRoot);
+				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path, transactionalPatternTreeRoot);
 				var transactionalOperationStr = "";
 				for(var i=0; i < transactionalOperations.length; i++){
 					if(i !== 0){

@@ -34,7 +34,7 @@ if useCaseInfo
         th TYPE
       tbody
        -var pathId = 1;
-       each path in useCaseInfo.Paths
+       each path in useCaseInfo.DisplayablePaths
         tr(onclick="colorUseCaseElementAndPath('#{path.PathStr}', 'path')", class="usecase-tr")
          td #{pathId}
          td

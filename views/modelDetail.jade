@@ -37,69 +37,16 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#model-analytics') Analytics
      li
       a(data-toggle='tab', href='#model-distributions') Distributions
-     li
-      a(data-toggle='tab', href='#model-empirical') Empirical
+     //li
+      //a(data-toggle='tab', href='#model-empirical') Empirical
      li
       a(data-toggle='tab', href='#model-evaluation') Evaluation
      li
-      a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Use cases
-     li
-      a(data-toggle='tab', href='#model-representation') Representation
+      a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Model Info
+     //li
+      //a(data-toggle='tab', href='#model-representation') Representation
     div.tab-content
      div.tab-pane.fade.in.active(id="model-analytics")
-      if false
-       h3 Calculated:
-       ul
-        li
-         span.statistical-item Number of Interface Management Transactions: #{modelInfo.INT}
-        li
-         span.statistical-item Number of Data Management Transactions: #{modelInfo.DM}
-        li
-         span.statistical-item Number of Control Transactions: #{modelInfo.CTRL}
-        li
-         span.statistical-item Number of External Inovations: #{modelInfo.EXTIVK}
-        li
-         span.statistical-item Number of External Calls: #{modelInfo.EXTCLL}
-        li
-         span.statistical-item Number of Not Matched Transactions: #{modelInfo.TRAN_NA}
-        li
-         span.statistical-item Number of EI: #{modelInfo.EI}
-        li
-         span.statistical-item Number of EO: #{modelInfo.EO}
-        li
-         span.statistical-item Number of EQ: #{modelInfo.EQ}
-        li
-         span.statistical-item Number of Not Matched Functions: #{modelInfo.FUNC_NA}
-        li
-         span.statistical-item Average Path Length: #{modelInfo.AvgPathLength}
-        li
-         span.statistical-item Average Element Degree: #{modelInfo.AvgDegree}
-        li
-         span.statistical-item Number of Paths: #{modelInfo.PathNum}
-        li
-         span.statistical-item Number of Elements: #{modelInfo.ElementNum}
-        li
-         span.statistical-item Number of Actors: #{modelInfo.ActorNum}
-        li
-         span.statistical-item Number of Boundary Elements: #{modelInfo.BoundaryNum}
-        li
-         span.statistical-item Number of Control Elements: #{modelInfo.ControlNum}
-        li
-         span.statistical-item Number of Entity Elements: #{modelInfo.EntityNum}
-        li
-         span.statistical-item Number of Attributes: #{modelInfo.AttributeNum}
-        li
-         span.statistical-item Number of Operations: #{modelInfo.OperationNum}
-        li
-         span.statistical-item Number of Use Cases: #{modelInfo.UseCaseNum}
-        li
-         span.statistical-item Number of Diagrams: #{modelInfo.DiagramNum}
-        li
-         span.statistical-item Number of Classes: #{modelInfo.ClassNum}
-        li
-         span.statistical-item ILF: #{modelInfo.ILF}
-        li
-         span.statistical-item EIF: #{modelInfo.EIF}
       if modelInfo
         div.col-sm-12.status-row
           div.col-sm-3
@@ -141,50 +88,132 @@ div.block.panel.panel-default
       div.stats-chart.col-md-6(id="chart-9")
       div.stats-chart.col-md-6(id="chart-10")
       div.stats-chart.col-md-6(id="chart-11")
-     div.tab-pane.fade(id="model-empirical")
-       div.model-evaluation
-        h3 Evaluation:
-        form(id="model-evaluation-form", onsubmit="return false;", class="form-horizontal")
-         div(class="form-group")
-          label(for="uexucw" class="col-sm-3 control-label") Unadjusted Extended Use Case Weight (#{modelInfo.UEXUCW}):
-          div(class="col-sm-4")
-            input(type='text', name='uexucw', id='uexucw', class="form-control")
-         div(class="form-group")
-          label(for="uaw" class="col-sm-3 control-label") Unadjusted Actor Weight (#{modelInfo.UAW}):
-          div(class="col-sm-4")
-            input(type='text', name='uaw', id='uaw', class="form-control")
-         div(class="form-group")
-          label(for="tcf" class="col-sm-3 control-label") Technical Complexity Factor (#{modelInfo.TCF}):
-          div(class="col-sm-4")
-           input(type='text', name='tcf', id='tcf', class="form-control")
-         div(class="form-group")
-          label(for="ef" class="col-sm-3 control-label") Environmental Complexity Factor (#{modelInfo.ECF}):
-          div(class="col-sm-4")
-           input(type='text', name='ef', id='ef', class="form-control")
-         div(class="form-group")
-          label(for="afp" class="col-sm-3 control-label") Adjusted Function Point (#{modelInfo.AFP}):
-          div(class="col-sm-4")
-           input(type='text', name='afp', id='afp', class="form-control")
-         div(class="form-group")
-          label(for="vaf" class="col-sm-3 control-label") Value Adjustment Factor (#{modelInfo.VAF}):
-          div(class="col-sm-4")
-           input(type='text', name='vaf', id='vaf', class="form-control")
-         div(class="form-group")
-          label(for="ph" class="col-sm-3 control-label") Effort (PH) (#{modelInfo.PH}):
-          div(class="col-sm-4")
-           input(type='text', name='ph', id='ph', class="form-control")
-           input(type='hidden', name='model-id', id='model-id' value='#{modelInfo._id}')
-         div(class="form-group")
-          div.col-sm-offset-3.col-sm-4
-           button(id='model-evaluation-form-submit-button', class="btn btn-primary") Submit
      div.tab-pane.fade(id="model-evaluation")
-       div.model-evaluation-ops
+       div.model-evaluation
+           h3 Calculated:
+           ul
+            li
+             span.statistical-item Number of Interface Management Transactions: #{modelInfo.INT}
+            li
+             span.statistical-item Number of Data Management Transactions: #{modelInfo.DM}
+            li
+             span.statistical-item Number of Control Transactions: #{modelInfo.CTRL}
+            li
+             span.statistical-item Number of External Inovations: #{modelInfo.EXTIVK}
+            li
+             span.statistical-item Number of External Calls: #{modelInfo.EXTCLL}
+            li
+             span.statistical-item Number of Not Matched Transactions: #{modelInfo.TRAN_NA}
+            li
+             span.statistical-item Number of EI: #{modelInfo.EI}
+            li
+             span.statistical-item Number of EO: #{modelInfo.EO}
+            li
+             span.statistical-item Number of EQ: #{modelInfo.EQ}
+            li
+             span.statistical-item ILF: #{modelInfo.ILF}
+            li
+             span.statistical-item EIF: #{modelInfo.EIF}
+            li
+             span.statistical-item Number of Not Matched Functions: #{modelInfo.FUNC_NA}
+            li
+             span.statistical-item Average Path Length: #{modelInfo.AvgPathLength}
+            li
+             span.statistical-item Average Element Degree: #{modelInfo.AvgDegree}
+            li
+             span.statistical-item Number of Paths: #{modelInfo.PathNum}
+            li
+             span.statistical-item Number of Elements: #{modelInfo.ElementNum}
+            li
+             span.statistical-item Number of Actors: #{modelInfo.ActorNum}
+            li
+             span.statistical-item Number of Boundary Elements: #{modelInfo.BoundaryNum}
+            li
+             span.statistical-item Number of Control Elements: #{modelInfo.ControlNum}
+            li
+             span.statistical-item Number of Entity Elements: #{modelInfo.EntityNum}
+            li
+             span.statistical-item Number of Attributes: #{modelInfo.AttributeNum}
+            li
+             span.statistical-item Number of Operations: #{modelInfo.OperationNum}
+            li
+             span.statistical-item Number of Use Cases: #{modelInfo.UseCaseNum}
+            li
+             span.statistical-item Number of Diagrams: #{modelInfo.DiagramNum}
+            li
+             span.statistical-item Number of Classes: #{modelInfo.ClassNum}
+       div.model-evaluation
+        h3 Evaluationd:
+         table#dataTable.table.table-striped
+            tbody
+                tr
+                    td Distributed System
+                    td 1
+                tr
+                    td Response time or throughput performance objectives
+                    td 1
+                tr
+                    td End user efficiency
+                    td 1
+                tr
+                    td Complex internal processing
+                    td 1
+                tr
+                    td Code must be reusable
+                    td 1
+                tr
+                    td Easy to install
+                    td 1
+                tr
+                    td Easy to use
+                    td 1
+                tr
+                    td Portable
+                    td 1
+                tr
+                    td Easy to change
+                    td 1
+                tr
+                    td Concurrent
+                    td 1
+                tr
+                    td Includes special security objectives
+                    td 1
+                tr
+                    td Provides direct access for third parties
+                    td 1
+                tr
+                    td Special user training facilities are required
+                    td 1
+                tr
+                    td Familiar with the project model that is used
+                    td 1
+                tr
+                    td Application experience
+                    td 1
+                tr
+                    td Object-oriented experience
+                    td 1
+                tr
+                    td Lead analyst capability
+                    td 1
+                tr
+                    td Motivation
+                    td 1
+                tr
+                    td Stable requirements
+                    td 1
+                tr
+                    td Part-time staff
+                    td 1
+                tr
+                    td Difficult programming language
+                    td 1
+     //div.tab-pane.fade(id="model-evaluation")
+      div.model-evaluation-ops
          div
           a(id="dump-model-evaluation-for-use-cases-btn" href='evaluateModelForUseCases?model_id=#{modelInfo._id}') Dump Model Evaluation For Use Cases
          div(id="model-evaluation-dump-display")
      div.tab-pane.fade(id="usecase-analysis")
       div(id="model-usecase-analysis")
        h3 loading...
-     div.tab-pane.fade(id="model-representation")
-      div(id="model-representation-frame")
-       img(src="#{modelInfo.AccessDir}/model.svg" style="width:100%;")

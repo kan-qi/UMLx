@@ -184,7 +184,7 @@
 				for(var k in useCaseInfo.Paths){
 					var path = useCaseInfo.Paths[k];
 					var utw = 0;
-					var doN = path.Elements.length;
+					var doN = path.length;
 					var uieN = path.boundaryNum;
 					
 					if(doN <= 0){
