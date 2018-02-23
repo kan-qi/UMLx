@@ -22,13 +22,13 @@ from selenium.webdriver.common.keys import Keys
 class PythonOrgSearch(unittest.TestCase):
 
     def setUp(self):
-        self.driver = webdriver.Chrome('C:\Users\SatyaAnanya\Downloads\chromedriver.exe')  # Optional argument, if not specified will search path.
+        self.driver = webdriver.Chrome('path to your chromedriver file')  # Optional argument, if not specified will search path.
 
     def test_search_in_python_org(self):
         driver = self.driver
         driver.get('http:/localhost:8081/')
         self.assertIn("UMLx", driver.title)
-        
+
         #Tests login button
         elem = driver.find_element_by_name("username")
         elem.send_keys("umlxteam")
@@ -37,7 +37,7 @@ class PythonOrgSearch(unittest.TestCase):
         loginbutton = driver.find_element_by_css_selector('#login-form > input.btn.btn-primary.signUpButton')
         loginbutton.click()
         time.sleep(3)
-        
+
         #tests the nav tabs
         distr_link=driver.find_element_by_xpath('//*[@id="repo-stats-chart"]/div/ul/li[1]/a')
         distr_link.click()
