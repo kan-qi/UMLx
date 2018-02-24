@@ -1,1 +1,0 @@
-Latest Sample Database Structure
