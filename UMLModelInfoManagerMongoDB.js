@@ -4,7 +4,7 @@
     var MongoClient = mongo.MongoClient;
     var umlModelExtractor = require("./UMLModelExtractor.js");
     var umlEvaluator = require("./UMLEvaluator.js");
-	var url = "mongodb://127.0.0.1:27017/repo_info_schema";
+	  var url = "mongodb://127.0.0.1:27017/repo_info_schema";
     var umlFileManager = require("./UMLFileManager.js");
     var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
     var config = require('./config'); // get our config file
@@ -331,29 +331,63 @@
     function queryModelInfo(modelId, repoId, callbackfunc){
        MongoClient.connect(url, function(err, db) {
            if (err) throw err;
-           var modelQuery = getModelQuery(modelId,repoId);
-           var projections = getModelQueryProjections(modelId, repoId);
+           //var modelQuery = getModelQuery(modelId,repoId);
+           //var projections = getModelQueryProjections(modelId, repoId);
+           var o_id = new mongo.ObjectID(repoId);
 
-           db.collection(“modelInfo”).findOne(modelQuery, projections, function(err, repo) {
-               if (err) throw err;
-               var useCaseID = repo.useCaseUUIDs;
-               var domainModelIDQuery = {domainModelUUID: repo.domainModelUUID};
+           db.collection("modelInfo").aggregate([
+              {
+                  "$match":{
+                      "_id":o_id
+                  }
+              },
+              { 
+                  "$lookup": {
+                      "from": "domainModelInfo",
+                      "localField": "domainModelUUID",
+                      "foreignField": "_id",
+                      "as": "domainModel"
+                  }
+              },
+              { 
+                  "$unwind": "$domainModel" 
+              },
+              {
+                  "$unwind": "$useCaseUUIDs"
+              },
+              {
+                  "$lookup": {
+                      "from": "useCaseInfo",
+                      "localField": "useCaseUUIDs",
+                      "foreignField": "_id",
+                      "as": "useCases"
+                  }
+              },
+              {
+                  "$unwind":"$useCases"
+              },
+              { 
+                  "$group": {
+                      "_id": o_id,
+                      "modelInfo": { "$push": "$$ROOT" },
+                      "useCases": { "$push": "$useCases" },
+                      "domainModel": { "$push": "$domainModel" }
+                  }
+            },
+           ], function(err, result) {
+              if (err) throw err;
 
-               db.collection(“domainModelInfo”).find(domainModelIDQuery, function(err, repo2) {
-                   if (err) throw err;
-                   console.log(repo2);
-               });
-
-               for (int i = 0; i < useCaseID.length; i++) {
-                   var useCaseIDQuery = {useCaseUUIDs:useCaseID[i]};
-                   db.collection(“useCaseInfo”).find(useCaseIDQuery, function(err, repo3) {
-                       if (err) throw err;
-                       console.log(repo3);
-                   });
-               }
-
-               db.close();
-               //callbackfunc(repo[“Models”][0]);
+              var modelInfo = result[0].modelInfo[0];
+              modelInfo.useCases = [];
+              
+              for(var i in result[0].useCases){
+                  var useCase = result[0].useCases[i];
+                  modelInfo.useCases.push(useCase);
+              }
+              modelInfo.domainModel = result[0].domainModel[0];
+              
+              callbackfunc(modelInfo);
+              db.close();
            });
        });
    }
