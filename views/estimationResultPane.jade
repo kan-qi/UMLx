@@ -1,0 +1,31 @@
+p estimation result
+if error
+ p error
+if modelInfo
+ div.effort-estimation result
+    table.table.table-striped.use-case-info-tab
+      thead
+       tr
+        th Use Case
+        th Activities
+        th Transactions
+        th EUCP
+        th EXUCP
+        th DUCP
+        th Est. Effort
+        th Est. Duration
+      tbody
+        //-var pathId = 1;
+       each useCase in modelInfo.UseCases
+        tr
+         td useCase.Name
+         td useCase.nActivities
+         td useCase.nTransactions
+         td useCase.EUCP
+         td useCase.Excp
+         td useCase.DUCP
+         td useCase.estimate_effort
+         td usecase.duration
+ div(id='estimation-results-charts')
+   h display a chart for the distributiosn on use cass.
+     

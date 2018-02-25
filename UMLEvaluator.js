@@ -25,10 +25,10 @@
 	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 	var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
 	var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
-	var useCasePointCalculator = require('./evaluators/UseCasePointCalculator.js');
-	var cocomoCalculator = require('./evaluators/COCOMOCalculator.js');
+	var useCasePointCalculator = require('./evaluators/UseCasePointEvaluator/UseCasePointCalculator.js');
+	var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
 	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
-	var useCasePointWeightEvaluator = require('./evaluators/UseCasePointWeightEvaluator.js');
+	var useCasePointWeightEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointWeightEvaluator.js');
 	
 //	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
 	var evaluators = [umlModelElementEvaluator,functionPointEvaluator, transactionEvaluator,modelVersionEvaluator, projectTypeEvaluator, cocomoCalculator,useCasePointWeightEvaluator,useCasePointCalculator];

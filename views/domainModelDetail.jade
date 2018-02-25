@@ -4,11 +4,11 @@ if domainModel
    li.active
     a(data-toggle='tab', href='#domain-model-info-pane') Domain Model Info
    li
-    a(data-toggle='tab', href='#domain-model-analytics') 
-   li
-    a(data-toggle='tab', href='#domain-model-distributions') Distributions
-   li
-    a(data-toggle='tab', href='#domain-model-evaluation') Evaluation
+    a(data-toggle='tab', href='#domain-model-analytics') Analysis
+   //li
+    //a(data-toggle='tab', href='#domain-model-distributions') Distributions
+   //li
+    //a(data-toggle='tab', href='#domain-model-evaluation') Evaluation
  div.tab-content
   div.tab-pane.fade.in.active(id="domain-model-info-pane")
    div.domain-model-info
@@ -67,12 +67,17 @@ if domainModel
           span.statistical-item ILF: #{domainModel.ILF}
          li
           span.statistical-item EIF: #{domainModel.EIF}
+     div.domain-model-analytics-detail
+        div.stats-chart
+         img(src="#{domainModel.AccessDir}/attribute_num_analysis_result.svg")
+  if false
   div.tab-pane.fade(id="domain-model-distributions")
     div.domain-model-distributions
         div.stats-chart
          img(src="#{domainModel.AccessDir}/attribute_num_analysis_result.svg")
         div.stats-chart
          img(src="#{domainModel.AccessDir}/operation_num_analysis_result.svg")
+  if false
   div.tab-pane.fade(id="domain-model-evaluation")
      div.domain-model-evaluation
         h3 Evaluation:
@@ -99,4 +104,4 @@ if domainModel
            button(id='domain-model-evaluation-form-submit-button') Submit
         div
           a(id='delete-domain-model-btn' href='deleteDomainModel?model_id=#{modelId}') Delete Model
-  div.clear
+ div.clear
