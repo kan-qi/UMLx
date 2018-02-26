@@ -166,6 +166,57 @@
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 		
 		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
+
+		//create dotty graph of activity diagram
+		var activitiesID = []; //array of IDs
+		var activityEdges = {}; //maps activity ID to number of outgoing edges
+		var graphOutput = "digraph ActivityDiagram { rankdir=TD\n";
+
+		for(var node in Activities) {
+			activitiesID.push(Activities[node]._id);
+		}
+
+		for(var edge in PrecedenceRelations) {
+			if(activitiesID.indexOf(PrecedenceRelations[edge].start._id) != -1 && activitiesID.indexOf(PrecedenceRelations[edge].end._id) != -1) {
+				graphOutput += (PrecedenceRelations[edge].start._id + " -> " + PrecedenceRelations[edge].end._id) + ";\n";
+			}
+			if(PrecedenceRelations[edge].start._id in activityEdges) {
+				activityEdges[PrecedenceRelations[edge].start._id] += 1;
+			}
+			else {
+				activityEdges[PrecedenceRelations[edge].start._id] = 1;
+			}
+		}
+
+		for(var node in Activities) {
+			//starting node
+			if(Activities[node].Name == "ActivityInitial") {
+				graphOutput += (Activities[node]._id + "[shape=circle, style=filled, label=\"\"];\n");
+				continue;
+			}
+			//ending node
+			else if(Activities[node].Name == "ActivityFinal") {
+				graphOutput += (Activities[node]._id + "[shape=doublecircle, style=filled, label=\"\"];\n");
+				continue;
+			}
+			if(activityEdges[Activities[node]._id] >= 2) {
+				graphOutput += (Activities[node]._id + "[shape=diamond, label=\"" + Activities[node].Name + "\"];\n");
+			}
+			else {
+				graphOutput += (Activities[node]._id + "[shape=box, style=rounded, label=\"" + Activities[node].Name + "\"];\n");
+			}
+		}
+
+		graphOutput += "}";
+
+		var fs = require('fs');
+		fs.writeFile("ActivityDiagram.dotty", graphOutput, function(err) {
+			if(err) {
+				console.log(err);
+				return;
+			}
+		});
+
 	}
 
 
