@@ -202,7 +202,7 @@
 			if(activityEdges[Activities[node]._id] >= 2) {
 				graphOutput += (Activities[node]._id + "[shape=diamond, label=\"" + Activities[node].Name + "\"];\n");
 			}
-			else {
+			else if(activityEdges[Activities[node]._id] == 1) {
 				graphOutput += (Activities[node]._id + "[shape=box, style=rounded, label=\"" + Activities[node].Name + "\"];\n");
 			}
 		}
