@@ -1,5 +1,6 @@
 if repoInfo
  div
+  form#project-effort-estimation-form.form-horizontal(novalidate='', onsubmit='estimate_project_effort_func()', method='post', action='/')
        #sec-1
           .alert.alert-info Technical Complexity Factor
           .form-group
@@ -106,7 +107,7 @@ if repoInfo
               option 3
               option 4
               option 5
-          input#uuid_page2(type='hidden', name='uuid_page2', value='')
+          //input#uuid_page2(type='hidden', name='uuid_page2', value='')
         // Page 3
        #sec-2
           .alert.alert-info Environmental Factors
@@ -174,9 +175,10 @@ if repoInfo
               option 3
               option 4
               option 5
-          input#uuid_page3(type='hidden', name='uuid_page3', value='')
+          //input#uuid_page3(type='hidden', name='uuid_page3', value='')
         // Page4
        #sec-3
+         div.estimator-form
           .alert.alert-info Project model file and documents
           .form-group
             label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
@@ -186,64 +188,77 @@ if repoInfo
             label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
             .col-xs-8
               input#uml_other.form-control(type='file', name='uml_other')
-          input#uuid_page4(type='hidden', name='uuid_page4', value='')
-          input#survey_date(type='hidden', name='survey_date', value='')
+          //input#uuid_page4(type='hidden', name='uuid_page4', value='')
+          //input#survey_date(type='hidden', name='survey_date', value='')
+        div.clear
        #sec-4
             .alert.alert-info Select Estimator
             div(id="model-query-box")
              div.row-item(id='estimator-selector-box')
-              div.dropdown
-               button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Estimator
-                span.caret
-               ul.dropdown-menu
-                li
-                 a.estimator-selector(data-estimator='OLSR') Linear Regression
-                li
-                 a.estimator-selector(data-estimator='RR') Ridge Regression
-                li
-                 a.estimator-selector(data-estimator='LS') Linear Spline
+                 select#part_time_staff.form-control(name='estimator')
+                  option Select Estimator
+                  option Linear Regression
+                  option Ridge Regression
+                  option Linear Spline
              div.row-item(id='model-selector-box')
-              div.dropdown
-               button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Model
-                span.caret
-               ul.dropdown-menu
-                li
-                 a.estimator-selector(data-model='EUCP') EUCP
-                li
-                 a.estimator-selector(data-model='EXUCP') EXUCP
-                li
-                 a.estimator-selector(data-model='DUCP') DUCP
+                 select#part_time_staff.form-control(name='model')
+                  option Select Model
+                  option EUCP
+                  option EXUCP
+                  option DUCP
              div.checkbox.row-item
               label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                input(type='checkbox' value='simulation-data')
-             button.btn.btn-primary.row-item(id='query-model-btn', data-repo-id="#{repoInfo._id}") Query
+             //button.btn.btn-primary.row-item(id='estimate-project-effort-button', type="submit") Query
+             button.btn.btn-success.pull-right(type='submit') Submit
              img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
-             div.clear
-      #sec-5
-       div(id='estimation-results-tables')
-        table.table.table-striped.use-case-info-tab
-          thead
-           tr
-            th Use Case
-            th Activities
-            th Transactions
-            th EUCP
-            th EXUCP
-            th DUCP
-            th Est. Effort
-            th Est. Duration
-          tbody
-            //-var pathId = 1;
-            //each path in useCaseInfo.DisplayablePaths
-            tr
-             td UC1
-             td 3
-             td 4
-             td 23
-             td 23
-             td 20
-             td 12
-             td 87
-     div(id='estimation-results-charts')
-       h display a chart for the distributiosn on use cass.
+             input(type='hidden', name='repo-id', value='#{repoInfo._id}')
+           div.clear
+       #sec-5
+         .alert.alert-info Estimation Results
+         div(id='estimation-results-tables')
+           if false
+            table.table.table-striped.use-case-info-tab
+              thead
+               tr
+                th Use Case
+                th Activities
+                th Transactions
+                th EUCP
+                th EXUCP
+                th DUCP
+                th Est. Effort
+                th Est. Duration
+              tbody
+                //-var pathId = 1;
+                //each path in useCaseInfo.DisplayablePaths
+                tr
+                 td UC1
+                 td 3
+                 td 4
+                 td 23
+                 td 23
+                 td 20
+                 td 12
+                 td 87
+               tr
+                 td UC2
+                 td 3
+                 td 4
+                 td 23
+                 td 23
+                 td 20
+                 td 12
+                 td 87
+               tr
+                 td UC3
+                 td 3
+                 td 4
+                 td 23
+                 td 23
+                 td 20
+                 td 12
+                 td 87
+         div(id='estimation-results-charts')
+           h display a chart for the distributiosn on use cass.
              

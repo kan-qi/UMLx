@@ -110,6 +110,34 @@ function model_file_update_fnc(){
 	
 }
 
+function estimate_project_effort_func(){
+	var formData = new FormData($('#project-effort-estimation-form')[0]);
+	
+	console.log("starting the ajax call to some where");
+	
+	console.log(formData);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$.ajax({
+		type : 'POST',
+		url : "estimateProjectEffort",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : formData,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#estimation-results-tables").html(response);
+		},
+		error : function() {
+			console.log("fail");
+			console.log(err);
+			alert("There was an error submitting commentA");
+		}
+	});
+	
+}
+
 function query_exist_models_fnc(projectId) {
 	$.ajax({
 		type : 'GET',
@@ -417,6 +445,33 @@ function query_estimation_models_func(){
 
 	return false;
 }
+
+//function estimate_project_effort_func(){
+////	alert($(this).closest('.dropdown').find('.dropdown-toggle').data('query-url'));
+//	var estimator = $('#estimator-selector-box').data('estimator');
+//	var model = $('#model-selector-box').data('model');
+//	var simulation = $('#model-query-box input[type="checkbox"]').is(":checked");
+//	var repoId = $(this).data('repo-id');
+//	$('#model-query-progressing').removeClass('hidden').addClass('shown');
+//	$.ajax({
+//		type : 'GET',
+//		url : "queryEstimationModel?estimator="+estimator+"&model="+model+"&repo_id="+repoId+"&simulation="+simulation,
+////		url: $(this).closest('.dropdown').find('.dropdown-toggle').data('query-url'),
+//		success : function(response) {
+//			console.log(response);
+//			$("#estimation-model-detail").html("");
+//			$("#estimation-model-detail").append(response);
+//			$('#model-query-progressing').removeClass('shown').addClass('hidden');
+//		},
+//		error : function() {
+//			console.log("fail");
+//			$('#model-query-progressing').removeClass('shown').addClass('hidden');
+//			alert("There was an error");
+//		}
+//	});
+//
+//	return false;
+//}
 
 
 function validateEmail(email) {
@@ -783,6 +838,7 @@ $(document).ready(function() {
 	$(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
 	$(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);
 	$(document).on('click','#query-model-btn', query_estimation_models_func);
+//	$(document).on('click','#estimate-project-effort-button', estimate_project_effor_func);
 	$(document).on('click','#delete-use-case-btn', delete_use_case_func);
 	$(document).on('click','#reanalyse-model', reanalyse_model_func);
 	$(document).on('click','#dump-model-evaluation-for-use-cases-btn', dump_model_evaluation_for_use_cases_func);
@@ -1057,7 +1113,7 @@ function createPieChart() {
 }
 
 function createHistogram(dataList, max) {
-	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-expandedPathURL').value : "";
+	var url = $('#model-analysis')[0] ? $('#model-analysis')[0].attributes.getNamedItem('data-expandedPathURL').value : "";
 	if (url) {
 		d3.csv(url, function(error, data) {
 			if (error) {
@@ -1160,7 +1216,7 @@ function createHistogram(dataList, max) {
 	}	
 }
 function creatAvgHistograms() {
-	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-pathAnalyticsURL').value : "";
+	var url = $('#model-analysis')[0] ? $('#model-analysis')[0].attributes.getNamedItem('data-pathAnalyticsURL').value : "";
 	if (url) {
 		d3.csv(url, function(error, data) {
 			if (error) {
@@ -1204,7 +1260,7 @@ function creatAvgHistograms() {
 }
 
 function createHistogramForPathNumber() {
-	var url = $('#model-distributions')[0] ? $('#model-distributions')[0].attributes.getNamedItem('data-usecaseAnalyticsURL').value : "";
+	var url = $('#model-analysis')[0] ? $('#model-analysis')[0].attributes.getNamedItem('data-usecaseAnalyticsURL').value : "";
 	var	list= [],
 		id= "chart-11",
 		xAxis= "Path Number",
