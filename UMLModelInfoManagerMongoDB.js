@@ -333,60 +333,49 @@
            if (err) throw err;
            //var modelQuery = getModelQuery(modelId,repoId);
            //var projections = getModelQueryProjections(modelId, repoId);
-           var o_id = new mongo.ObjectID(repoId);
-
-           db.collection("modelInfo").aggregate([
+           db.collection("repos").aggregate([
               {
                   "$match":{
-                      "_id":o_id
+                      "_id":new mongo.ObjectID(repoId)
                   }
+              },
+              { 
+                "$lookup": {
+                    "from": "modelInfo",
+                    "localField": "_id",
+                    "foreignField": "rep_id",
+                    "as": "modelInfo"
+                }
               },
               { 
                   "$lookup": {
                       "from": "domainModelInfo",
-                      "localField": "domainModelUUID",
-                      "foreignField": "_id",
+                      "localField": "_id",
+                      "foreignField": "model_id",
                       "as": "domainModel"
                   }
-              },
-              { 
-                  "$unwind": "$domainModel" 
-              },
-              {
-                  "$unwind": "$useCaseUUIDs"
               },
               {
                   "$lookup": {
                       "from": "useCaseInfo",
-                      "localField": "useCaseUUIDs",
-                      "foreignField": "_id",
+                      "localField": "_id",
+                      "foreignField": "model_id",
                       "as": "useCases"
                   }
-              },
-              {
-                  "$unwind":"$useCases"
-              },
-              { 
-                  "$group": {
-                      "_id": o_id,
-                      "modelInfo": { "$push": "$$ROOT" },
-                      "useCases": { "$push": "$useCases" },
-                      "domainModel": { "$push": "$domainModel" }
-                  }
-            },
+              }
            ], function(err, result) {
               if (err) throw err;
 
-              var modelInfo = result[0].modelInfo[0];
-              modelInfo.useCases = [];
+              // var modelInfo = result[0].modelInfo[0];
+              // modelInfo.useCases = [];
               
-              for(var i in result[0].useCases){
-                  var useCase = result[0].useCases[i];
-                  modelInfo.useCases.push(useCase);
-              }
-              modelInfo.domainModel = result[0].domainModel[0];
+              // for(var i in result[0].useCases){
+              //     var useCase = result[0].useCases[i];
+              //     modelInfo.useCases.push(useCase);
+              // }
+              //modelInfo.domainModel = result[0].domainModel[0];
               
-              callbackfunc(modelInfo);
+              callbackfunc(result[0]);
               db.close();
            });
        });
