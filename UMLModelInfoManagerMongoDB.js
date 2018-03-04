@@ -606,11 +606,30 @@
 
     function deleteModel(repoId, modelId, callbackfunc){
         MongoClient.connect(url, function(err, db) {
-            if (err) throw err;
-//			  console.log(modelInfo);
-            var o_id = new mongo.ObjectID(repoId);
-            db.collection("repos").update({_id:o_id}, {$pull: {'Models': {'_id': modelId}}}, function(err){
-                if (err) {
+            if (err) throw err;            
+            db.collection('domainModelInfo').remove({model_id: mongo.ObjectID(repoId)}, function(err) {
+                   if (err) {
+                    console.log(err);
+                    if(callbackfunc){
+                        callbackfunc(false);
+                    }
+                    return;
+                }
+            });
+
+            db.collection('useCaseInfo').remove({model_id: mongo.ObjectID(repoId)}, function(err) {
+                   if (err) {
+                    console.log(err);
+                    if(callbackfunc){
+                        callbackfunc(false);
+                    }
+                    return;
+                }
+            });
+                               
+
+          db.collection('modelInfo').remove({rep_id: mongo.ObjectID(repoId)}, function(err) {
+                  if (err) {
                     console.log(err);
                     if(callbackfunc){
                         callbackfunc(false);
@@ -618,11 +637,11 @@
                     return;
                 }
 
-                if(callbackfunc){
+                  if(callbackfunc){
                     callbackfunc(modelId, repoId);
                 }
-
-            });
+          });
+           
         });
     }
 
