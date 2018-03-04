@@ -505,11 +505,6 @@
             {_id:new mongo.ObjectID("5a939b35f919171c7cb07098"),Name:"usecase4"}
             ] 
     }
-    
-    saveModelInfo(modelInfo, "5a8e109c13a5974144158d99", function(result)
-    {
-        console.log(result);
-    })
 
     function saveModelInfo(modelInfo, repoId, callbackfunc)
     {
@@ -536,7 +531,7 @@
                 var modelId=modelInfo._id;
 
 
-                console.log("modelId: "+modelId);
+               // console.log("modelId: "+modelId);
                 // console.log("modelId"+modelId);
                 //retrieve domainModelId’s of modelInfo
                 //var domainModelId = modelInfo.domainModel._id;
@@ -546,8 +541,8 @@
                 var domainModelInfo = modelInfo.domainModel;
                 
 
-                console.log("useCases: "+useCases);
-                console.log("domainModelInfo: "+domainModelInfo);
+                //console.log("useCases: "+useCases);
+                //console.log("domainModelInfo: "+domainModelInfo);
 
                 for(var i in modelInfo.useCases)
                 {
@@ -578,7 +573,7 @@
                 db.collection("modelInfo").insertOne(modelInfo, function(err, res) 
                 {
                         if (err) throw err;
-                        console.log("modelInfo 1 record inserted");
+                        //console.log("modelInfo 1 record inserted");
 
 
 
@@ -594,7 +589,7 @@
                 
                 domainModelInfo.model_id=modelId;
     
-                console.log("domainModelInfo.model_id"+domainModelInfo.model_id);
+                //console.log("domainModelInfo.model_id"+domainModelInfo.model_id);
                 db.collection("domainModelInfo").insertOne(domainModelInfo, function(err, res) 
                 {
                     if (err) throw err;
