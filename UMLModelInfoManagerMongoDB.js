@@ -644,9 +644,9 @@
 	//}
 
     function deleteModel(repoId, modelId, callbackfunc){
-        MongoClient.connect(url, function(err, db) {
+      MongoClient.connect(url, function(err, db) {
             if (err) throw err;            
-            db.collection('domainModelInfo').remove({model_id: mongo.ObjectID(repoId)}, function(err) {
+            db.collection('domainModelInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
                    if (err) {
                     console.log(err);
                     if(callbackfunc){
@@ -656,7 +656,7 @@
                 }
             });
 
-            db.collection('useCaseInfo').remove({model_id: mongo.ObjectID(repoId)}, function(err) {
+            db.collection('useCaseInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
                    if (err) {
                     console.log(err);
                     if(callbackfunc){
@@ -667,7 +667,7 @@
             });
                                
 
-          db.collection('modelInfo').remove({rep_id: mongo.ObjectID(repoId)}, function(err) {
+          db.collection('modelInfo').remove({_id: mongo.ObjectID(modelId)}, function(err) {
                   if (err) {
                     console.log(err);
                     if(callbackfunc){
