@@ -654,7 +654,6 @@
                     }
                     return;
                 }
-            });
 
             db.collection('useCaseInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
                    if (err) {
@@ -663,9 +662,7 @@
                         callbackfunc(false);
                     }
                     return;
-                }
-            });
-                               
+                }                                           
 
           db.collection('modelInfo').remove({_id: mongo.ObjectID(modelId)}, function(err) {
                   if (err) {
@@ -676,13 +673,18 @@
                     return;
                 }
 
-                  if(callbackfunc){
-                    callbackfunc(modelId, repoId);
-                }
+                  
           });
-           
-        });
-    }
+
+          if(callbackfunc){
+                    callbackfunc(modelId, repoId);
+        }
+
+      });
+
+    });
+    });
+  }
 
     function deleteUseCase(repoId, modelId, useCaseId, callbackfunc){
         MongoClient.connect(url, function(err, db) {
