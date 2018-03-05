@@ -4,7 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 # arg1: element statistics file path
 # arg2: path staitstics file path
 # arg3: expanded path statistics file path
-# arg4: diagram statistics file path
+# arg4: use case statistics file path
 # arg5: model version info file path
 # arg6: output dir
 # arg7: working directory
