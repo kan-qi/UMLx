@@ -30,7 +30,7 @@
             });
             
             //updating useCaseInfo to add model_id element
-                db.collection("useCaseInfo").update({}, {$set : {"model_id": o_id}}, function(err, res) {
+                db.collection("useCaseInfo").update({}, {$set : {"model_id": o_id}}, {multi:true}, function(err, res) {
                     if (err) throw err;
                     console.log("updating useCaseInfo");
                     
