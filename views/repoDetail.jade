@@ -168,9 +168,19 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="repo_estimation")
       include estimationPanel
      div.tab-pane.fade(id="project_list")
-      div.card-deck
-       each model in repoInfo.Models
-        div.card.col-md-2(data-model-id=model._id)
-          div(class="card-block")
-            div.card-title.model-name(title= model.Name)
-              a.model-title(href="queryModelInfo?model_id="+model._id) #{model.Name}
+         table#infoTable.table.table-striped
+             thead
+                 tr
+                    th Index
+                    th Project Name
+                    th Date
+             tbody
+                - for (var i = 0; i < repoInfo.Models.length; i++) {
+                    - var model = repoInfo.Models[i]
+                    tr
+                        td #{i+1}
+                        td
+                            a.model-title(href="queryModelInfo?model_id="+model._id) #{model.Name}
+                        td #{model.creationTime}
+
+                - }
