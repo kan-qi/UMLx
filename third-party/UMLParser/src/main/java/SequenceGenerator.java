@@ -101,15 +101,15 @@ public class SequenceGenerator {
 	    	
 	        compilationunits = UtilityHelper.getCuArray(in);
 	        for (CompilationUnit compilationUnit : compilationunits) {
-	            String className = "";
 	            List<TypeDeclaration> typeDeclaration = compilationUnit.getTypes();
 	            for(Node node : typeDeclaration) {
 	            	searchClassesAndMethods(node, methodMapClass, methodCalls);
 	            }
 	        }
 	        
-	        for(String className1 : methodMapClass.values()) {
-	        	System.out.println(className1);
+	        for(String method : methodMapClass.keySet()) {
+	        	System.out.println("method names");
+	        	System.out.println(method);
 	        }
 	        
 	        yUML = yUML + "actor user #red\n";
@@ -135,7 +135,9 @@ public class SequenceGenerator {
 	    private void searchClassesAndMethods(Node node, HashMap<String, String> methodMapClass, HashMap<String, ArrayList<MethodCallExpr>> methodCalls) {
 	    	 if (node instanceof ClassOrInterfaceDeclaration) {
 	                ClassOrInterfaceDeclaration classOrInterface = (ClassOrInterfaceDeclaration) node;
-	                className = classOrInterface.getName();
+	                String className = classOrInterface.getName();
+	                System.out.println("class name");
+	                System.out.println(className);
 	                for (BodyDeclaration bodyDeclaration : ((TypeDeclaration) classOrInterface).getMembers()) {
 	                    if (bodyDeclaration instanceof MethodDeclaration) {
 	                        MethodDeclaration methodDeclaration = (MethodDeclaration) bodyDeclaration;
@@ -161,10 +163,18 @@ public class SequenceGenerator {
 	                }
 	           }
 	    }
+	    
+	    private Map<String, MethodCallExpr> iteratedMethodCallExpressions = new HashMap<String, MethodCallExpr>();
 
 	    private void parse(String callerMethod) {	    	
 	        for (MethodCallExpr methodCallExpression : methodCalls.get(callerMethod)) {
-	            
+//	        	if(iteratedMethodCallExpressions.containsKey(methodCallExpression.toString())) {
+//	        		continue;
+//	        	}
+//	        	else {
+//	        	iteratedMethodCallExpressions.put(methodCallExpression.toString(), methodCallExpression);
+//	        	}
+	        	
 	        	String classCaller = methodMapClass.get(callerMethod), methodCalled = methodCallExpression.getName(), classCalled = methodMapClass.get(methodCalled);	            
 	            if (methodMapClass.containsKey(methodCalled)) {
 	                yUML = yUML + classCaller + " -> " + classCalled + " : " + methodCallExpression.toStringWithoutComments() + "\n";

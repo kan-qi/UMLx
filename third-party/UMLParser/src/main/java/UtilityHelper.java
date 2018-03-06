@@ -34,7 +34,7 @@ public class UtilityHelper {
         ArrayList<CompilationUnit> cunits = new ArrayList<CompilationUnit>();
         File folder = new File(in);
 				
-        for ( File f : listOfJavaFiles(folder)) {
+        for ( File f : listOfJavaFilesRecursive(folder)) {
             if (f.isFile() && f.getName().endsWith(".java")) {
                 FileInputStream streamin = new FileInputStream(f);
                 CompilationUnit cUnit;
@@ -48,6 +48,7 @@ public class UtilityHelper {
         }
         return cunits;
     }
+	
 	
 	public static void buildMapOfIntAndClasses(ArrayList<CompilationUnit> cunits) {
         for (CompilationUnit cu : cunits) {
@@ -67,6 +68,21 @@ public class UtilityHelper {
 		});
 		
 		return listOfFiles;
+	}
+	
+	public static List<File> listOfJavaFilesRecursive(File folder){
+		File[] files = folder.listFiles();
+		List<File> javaFiles = new ArrayList<File>();
+		for(File file : files) {
+			if(file.isDirectory()) {
+				javaFiles.addAll(listOfJavaFilesRecursive(file));
+			}
+			else if(file.getName().toLowerCase().endsWith(".java")) {
+				javaFiles.add(file);
+			}
+		}
+		
+		return javaFiles;
 	}
 	
 	public static void buildAst(ArrayList<CompilationUnit> cunits){
