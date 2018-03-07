@@ -280,15 +280,15 @@
                                 NumberOfClassesInheritedFrom :0,
                                 NumberOfChildren :0,
                                 DepthInheritanceTree :0,
-                                CouplingBetweenObjects :0,
-	}
+                                CouplingBetweenObjects :0
+	        }
 				// ILF += diagram["ElementAnalytics"].ILF;
 				// EIF += diagram["ElementAnalytics"].EIF;
 //				DiagramNum :0,
-				EntityAnalyticsFileName : 'entityAnalytics.csv',
-				AttributeAnalyticsFileName :  'attributeAnalytics.csv',
-				OperationAnalyticsFileName : 'operationAnalytics.csv'
-		}
+				//EntityAnalyticsFileName : 'entityAnalytics.csv',
+				//AttributeAnalyticsFileName :  'attributeAnalytics.csv',
+				//OperationAnalyticsFileName : 'operationAnalytics.csv'
+		//}
 
 // console.log('-----------domain model------------');
 //		for ( var i in domainModelInfo.Diagrams) {
@@ -312,31 +312,25 @@
 			for ( var i in domainModelInfo.Elements) {
                             var element = domainModelInfo.Elements[i];
                             entityNum++;
-                            for (var j in element.Properties) {
-                                var property = element.Properties[j];
-                                if (property.isRoot === "true") {
-                                    topLevelClasses++;
-                                } else {
-                                    depthInheritanceTree++;
-                                    numberOfChildren++;
-                                    numberOfClassesInherited++;
-                                    numberOfInheritanceRelationships++;
-                                    // TODO: Add code to calculate numberOfClassesInheritedFrom
-                                    // TODO: Add code to calculate numberOfDerivedClasses
-                                }
-                            }
                             for ( var j in element.Attributes) {
                                 var attribute = element.Attributes[j];
                                 attributeNum++;
 
                             }
-                            averageDepthInheritanceTree = (depthInheritanceTree === 0) ? 0 : depthInheritanceTree / entityNum;
-                            averageNumberOfChildrenPerBaseClass = (numberOfChildren === 0) ? 0 : numberOfChildren / entityNum;
 
                             for ( var j in element.Operations) {
                                 var operation = element.Operations[j];
                                 operationNum++;
                             }
+                            inheritanceStats = element.InheritanceStats;
+                            topLevelClasses += inheritanceStats['topLevelClasses'];
+                            numberOfInheritanceRelationships += inheritanceStats['children'].size;
+                            numberOfClassesInherited += inheritanceStats['children'].size;
+                            numberOfClassesInheritedFrom += inheritanceStats['numInheritedFrom'];
+                            numberOfChildren += inheritanceStats['numOfChildren'];
+                            depthInheritanceTree += inheritanceStats['depth'];
+                            averageDepthInheritanceTree = (depthInheritanceTree === 0) ? 0 : depthInheritanceTree / entityNum;
+                            averageNumberOfChildrenPerBaseClass = (numberOfChildren === 0) ? 0 : numberOfChildren / entityNum;
 			}
 
 //			diagram["ElementAnalytics"] = {};
@@ -351,6 +345,7 @@
                         domainModelInfo["ElementAnalytics"].NumberOfClassesInherited = numberOfClassesInherited;
                         domainModelInfo["ElementAnalytics"].NumberOfChildren = numberOfChildren;
                         domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
+                        domainModelInfo["ElementAnalytics"].CouplingBetweenObjects = couplingBetweenObjects;
 //
 //			domainModelInfo["ElementAnalytics"].AttributeNum += diagram["ElementAnalytics"].AttributeNum;
 //			domainModelInfo["ElementAnalytics"].OperationNum += diagram["ElementAnalytics"].OperationNum;

@@ -74,7 +74,7 @@
 
 		var XMIOperations = jp.query(XMIClass, '$.ownedOperation[?(@[\'$\'][\'xmi:id\'])]');
 		var operations = new Array();
-		
+
 		for(var i in XMIOperations){
 			var XMIOperation = XMIOperations[i];
 			var XMIParameters = jp.query(XMIOperation, '$.ownedParameter[?(@[\'$\'][\'xmi:id\'])]');
@@ -94,7 +94,38 @@
 			}
 			operations.push(operation);
 		}
-		//				
+               
+                var inheritanceStats = {
+                        'depth': 0,
+                        'numInheritedFrom': 0,
+                        'numDerivedClass': 0,
+                        'coupling': 0,
+                        'children': new Set([]),
+                        'topLevelClasses': 0,
+                        'numOfChildren': 0,
+                }
+
+                function traverseClass(XMIClass, level) {
+                        var children = jp.query(XMIClass, '$.nestedClassifier[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+                        // console.log('Exploring children, level: ');
+                        // console.log(level);
+                        inheritanceStats['depth'] = Math.max(inheritanceStats['depth'], level);
+                        if (children.length != 0) { 
+                                console.log('------------ Children Present ------------')
+                                inheritanceStats['numInheritedFrom']++;
+                                for (j in children) {
+                                    var child = children[j];
+                                    inheritanceStats['children'].add(child['$']['name']);
+                                    inheritanceStats['numOfChildren']++;
+                                    traverseClass(child, level + 1);
+                                }
+                        }
+                }
+
+                inheritanceStats['topLevelClasses']++;
+                traverseClass(XMIClass, 0);
+                // console.log(inheritanceStats);
+
 		// console.log(classDiagram);
 //		component.Operations = operations;
 //		component.Attributes = attributes;
@@ -105,6 +136,7 @@
 				Name: XMIClass['$']['name'],
 				Operations: operations,
 				Attributes: attributes,
+                                InheritanceStats: inheritanceStats,
 //				Attachment: XMIClass
 			}
 	}
