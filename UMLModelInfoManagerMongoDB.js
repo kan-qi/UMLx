@@ -385,22 +385,47 @@ function deleteRepo(repoId, callbackfunc) {
         });
     }
 	
-    function queryModelInfo(modelId, userepoId, callbackfunc){
-//		console.log(modelId);
-        MongoClient.connect(url, function(err, db) {
-            if (err) throw err;
-            var modelQuery = getModelQuery(modelId,repoId);
-            var projections = getModelQueryProjections(modelId, repoId);
+    //testing queryModelInfo
+    // queryModelInfo("5a8fab8f91d51f915e5c29ae", "5a8e109c13a5974144158d99", function(result){
+    //  console.log(result);
+    // });
 
-            db.collection("repos").findOne(modelQuery, projections, function(err, repo) {
-                if (err) throw err;
-//				console.log('==============selected repo============');
-//				console.log(repo);
-                db.close();
-                callbackfunc(repo["Models"][0]);
-            });
-        });
-    }
+    function queryModelInfo(modelId, repoId, callbackfunc){
+       MongoClient.connect(url, function(err, db) {
+           if (err) throw err;
+           //var modelQuery = getModelQuery(modelId,repoId);
+           //var projections = getModelQueryProjections(modelId, repoId);
+           db.collection("modelInfo").aggregate([
+              {
+                  "$match":{
+                      "_id":new mongo.ObjectID(modelId)
+                  }
+              },
+              { 
+                  "$lookup": {
+                      "from": "domainModelInfo",
+                      "localField": "_id",
+                      "foreignField": "model_id",
+                      "as": "domainModel"
+                  }
+              },
+              {
+                  "$lookup": {
+                      "from": "useCaseInfo",
+                      "localField": "_id",
+                      "foreignField": "model_id",
+                      "as": "useCases"
+                  }
+              }
+           ], function(err, result) {
+              if (err) throw err;
+              console.log("*******Shown result for ModelInfo*******");
+              db.close();
+              callbackfunc(result[0]);
+           });
+       });
+   }
+
 
     function getGitData(userId, callbackfunc){      
                     
