@@ -116,6 +116,63 @@
                     
         }
 	
+function deleteRepo(repoId, callbackfunc) {  
+  var modelQuery = {rep_id: mongo.ObjectID(repoId)};        
+  MongoClient.connect(url, function(err, db) {
+    if (err) throw err;     
+    db.collection("modelInfo").findOne(modelQuery,function(err,repo){
+      if (err) throw err;   
+      if(repo){
+        var modelId = repo._id ;           
+        db.collection('domainModelInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
+          if (err) {
+            console.log(err);
+            if(callbackfunc){
+              callbackfunc(false);
+            }
+            return;
+          }
+
+          db.collection('useCaseInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
+            if (err) {
+              console.log(err);
+              if(callbackfunc){
+                callbackfunc(false);
+              }
+              return;
+            }                                           
+
+            db.collection('modelInfo').remove({_id: mongo.ObjectID(modelId)}, function(err) {
+              if (err) {
+                console.log(err);
+                if(callbackfunc){
+                  callbackfunc(false);
+                }
+                return;
+              }
+              db.collection('repos').remove({_id: mongo.ObjectID(repoId)}, function(err) {
+              if (err) {
+                console.log(err);
+                if(callbackfunc){
+                  callbackfunc(false);
+                }
+                return;
+              }                          
+              if(callbackfunc){
+                callbackfunc(modelId, repoId);
+              }
+            });
+            });
+          });
+      });
+     }   
+   });
+  });   
+}
+    
+
+
+
 	function deleteUser(userId, callbackfunc){
 		
 		  MongoClient.connect(url, function(err, db) {
