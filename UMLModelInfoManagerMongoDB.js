@@ -390,41 +390,40 @@ function deleteRepo(repoId, callbackfunc) {
     //  console.log(result);
     // });
 
-    function queryModelInfo(modelId, repoId, callbackfunc){
-       MongoClient.connect(url, function(err, db) {
-           if (err) throw err;
-           //var modelQuery = getModelQuery(modelId,repoId);
-           //var projections = getModelQueryProjections(modelId, repoId);
-           db.collection("modelInfo").aggregate([
-              {
-                  "$match":{
-                      "_id":new mongo.ObjectID(modelId)
-                  }
-              },
-              { 
-                  "$lookup": {
-                      "from": "domainModelInfo",
-                      "localField": "_id",
-                      "foreignField": "model_id",
-                      "as": "domainModel"
-                  }
-              },
-              {
-                  "$lookup": {
-                      "from": "useCaseInfo",
-                      "localField": "_id",
-                      "foreignField": "model_id",
-                      "as": "useCases"
-                  }
-              }
-           ], function(err, result) {
-              if (err) throw err;
-              console.log("*******Shown result for ModelInfo*******");
-              db.close();
-              callbackfunc(result[0]);
-           });
-       });
-   }
+    function queryRepoInfo(repoId, callbackfunc)
+    {
+        MongoClient.connect(url, function(err, db)
+        {
+            if (err) throw err;
+           
+            var repoid=new mongo.ObjectID(repoId);
+
+           
+            db.collection("repos").aggregate([
+               {
+                   "$match":
+                   {
+                       "_id":new mongo.ObjectID(repoid)
+                   }
+               },
+               { 
+                    "$lookup":
+                    {
+                        "from": "modelInfo",
+                        "localField": "_id",
+                        "foreignField": "rep_id",
+                        "as": "modelInfo"
+                    }
+                }
+            ], function(err, result) 
+            {
+               if (err) throw err;
+               console.log("*******Shown result for ModelInfo*******");
+               db.close();
+               callbackfunc(result[0]);
+            });
+		});
+	}
 
 
     function getGitData(userId, callbackfunc){      
