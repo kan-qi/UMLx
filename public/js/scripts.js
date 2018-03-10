@@ -5,8 +5,8 @@ function setCookie(cname, cvalue, exdays) {
 	    var d = new Date();
 	    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
 	    expires = "expires="+d.toUTCString();
-	} 
-    
+	}
+
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
@@ -107,14 +107,14 @@ function model_file_update_fnc(){
 	});
 
 	return false;
-	
+
 }
 
 function estimate_project_effort_func(){
 	var formData = new FormData($('#project-effort-estimation-form')[0]);
-	
+
 	console.log("starting the ajax call to some where");
-	
+
 	console.log(formData);
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
 	$.ajax({
@@ -135,7 +135,7 @@ function estimate_project_effort_func(){
 			alert("There was an error submitting commentA");
 		}
 	});
-	
+
 }
 
 function query_exist_models_fnc(projectId) {
@@ -371,7 +371,7 @@ function dump_model_evaluation_for_use_cases_func(){
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
 	                        .text(function(d) { return d == "undefined" ? "-" : d; });
-			
+
 		},
 		error : function() {
 			console.log("fail");
@@ -386,14 +386,14 @@ function request_display_data(){
 	var url = $(this).attr("href");
 	$('#overlay-frame').modal();
 	$("#overlay-frame .modal-body").html("");
-	$("#overlay-frame .modal-body").html("<img class='progress-bar-icon' src='img/progress-bar.gif'\> Requesting data ...");  
+	$("#overlay-frame .modal-body").html("<img class='progress-bar-icon' src='img/progress-bar.gif'\> Requesting data ...");
 	console.log(url);
 	$.ajax({
 		type : 'GET',
 		url : url,
 		success : function(response) {
 //			console.log(response);
-					
+
 					var parsedCSV = d3.csvParseRows(response);
 					$('.modal-title')[0].innerHTML = "Report";
 	                $("#overlay-frame .modal-body").html("");
@@ -408,7 +408,7 @@ function request_display_data(){
 	                        .data(function(d) { return d; }).enter()
 	                        .append("td")
 	                        .text(function(d) { return d == "undefined" ? "-" : d; });
-			
+
 		},
 		error : function() {
 			console.log("fail");
@@ -480,7 +480,7 @@ function validateEmail(email) {
     if (!filter.test(email.value)) {
     return false;
     }
-    
+
     return true;
 }
 
@@ -491,25 +491,25 @@ function signUpFormSubmit (e){
 	var usernameMissing  = $('#sign-up #username').val().length>0 ? false : true;
 	var emailMissing  = $('#sign-up #email').val().length>0 ? false : true;
 	var pwdMissing = $('#sign-up #password').val().length > 0 ? false : true;
-	
+
 	var successDiv = '<div class="alert alert-success alert-dismissible">'+
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-   
+
     var alertDiv = '<div class="alert alert-danger alert-dismissible">'+
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-	
+
 	if(emailMissing){
 		alertDiv+='Please enter your email </div>'
 		$('#messageDiv').html(alertDiv);
 		return false;
-	} 
-	
+	}
+
 	if(!validateEmail(email)){
 		alertDiv+='Please enter a valid email </div>'
 		$('#messageDiv').html(alertDiv);
 		return false;
 	}
-	
+
 	if(usernameMissing){
 		alertDiv+='Please choose a username </div>'
 		$('#messageDiv').html(alertDiv);
@@ -530,20 +530,20 @@ function signUpFormSubmit (e){
 		data : formData,
 		enctype : 'multipart/form-data',
 		success : function(response) {
-			
+
 			if(response.success==true){
 				setCookie("appToken",response.token,0);
 				// redirect to home url with this token set
 				window.location ="/";
 				return false;
-				
+
 			} else {
-				
+
 				console.log('failure');
 				alertDiv+=response.message+' </div>';
 				$('#messageDiv').html(alertDiv);
 				return false;
-				
+
 			}
 		},
 		error : function() {
@@ -558,16 +558,16 @@ function signUpFormSubmit (e){
 function loginFormSubmit (e){
 	e.preventDefault();
 	var formData = new FormData($('#login-form')[0]);
-	
+
 	var usernameMissing  = $('#login-form #username').val().length>0 ? false : true;
 	var pwdMissing = $('#login-form #password').val().length > 0 ? false : true;
-	
+
 	var successDiv = '<div class="alert alert-success alert-dismissible">'+
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-    
+
     var alertDiv = '<div class="alert alert-danger alert-dismissible">'+
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-	
+
 	if(usernameMissing && pwdMissing){
 		alertDiv+='Please enter the Username and Password </div>'
 		$('#messageDiv').html(alertDiv);
@@ -591,7 +591,7 @@ function loginFormSubmit (e){
 		data : formData,
 		enctype : 'multipart/form-data',
 		success : function(response) {
-			if(response.success==true){				
+			if(response.success==true){
 				setCookie("appToken",response.token,0);
 				// redirect to home url with this token set
 				window.location ="/";
@@ -613,27 +613,27 @@ function inviteFormSubmit (e){
 	e.preventDefault();
 	var formData = new FormData($('#invite-form')[0]);
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
-	
+
 	var emailMissing  = $('#invite-form #email').val().length>0 ? false : true;
-	
+
 	var successDiv = '<div class="alert alert-success alert-dismissible">'+
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-   
+
     var alertDiv = '<div class="alert alert-danger alert-dismissible">'+
     '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
-	
+
 	if(emailMissing){
 		alertDiv+='Please enter your email </div>'
 		$('#messageDiv').html(alertDiv);
 		return false;
-	} 
-	
+	}
+
 	if(!validateEmail(email)){
 		alertDiv+='Please enter a valid email </div>'
 		$('#messageDiv').html(alertDiv);
 		return false;
 	}
-	
+
 
 	$.ajax({
 		type : 'POST',
@@ -644,21 +644,21 @@ function inviteFormSubmit (e){
 		data : formData,
 		enctype : 'multipart/form-data',
 		success : function(response) {
-			
+
 			if(response.success==true){
 				console.log('success');
 				successDiv+=response.message+' </div>';
 				$('#messageDiv').html(successDiv);
-				
+
 				return false;
-				
+
 			} else {
-				
+
 				console.log('failure');
 				alertDiv+=response.message+' </div>';
 				$('#messageDiv').html(alertDiv);
 				return false;
-				
+
 			}
 		},
 		error : function() {
@@ -689,24 +689,24 @@ function drawChartBySVG(){
 	var yValue = function(d) { return d.ph;}; // data -> value
 	var y = d3.scaleLinear().range([height, 0]);
 	var yMap = function(d) { return y(yValue(d));}; // data -> display
-	
+
 	var lineData = [],
 	n = 100,
 	a = 1,
 	b = 2;
-	
+
 	for (var k = 0; k < 1000; k++) {
 	lineData.push({x: k, y: a * k+300});
 	}
-	
+
 	console.log(lineData);
-	
+
 	var line = d3.line()
 	.x(function(d) { return x(d.x); })
 	.y(function(d) { return y(d.y); });
-	
-	
-	
+
+
+
 ////setup fill color
 	var cValue = function(d) { return d.metric;},
 	    color = d3.scaleOrdinal(d3.schemeCategory10);
@@ -748,9 +748,9 @@ function drawChartBySVG(){
 	      .call(d3.axisBottom(x));
 
 	  // text label for the x axis
-	  svg.append("text")             
+	  svg.append("text")
 	      .attr("transform",
-	            "translate(" + (width/2) + " ," + 
+	            "translate(" + (width/2) + " ," +
 	                           (height + margin.top + 20) + ")")
 	      .style("text-anchor", "middle")
 	      .text("Measurement");
@@ -767,7 +767,7 @@ function drawChartBySVG(){
 	      .attr("dy", "1em")
 	      .style("text-anchor", "middle")
 	      .text("Effort");
-	  
+
 	//  // draw dots
 	  svg.selectAll(".dot")
 	      .data(data)
@@ -776,12 +776,12 @@ function drawChartBySVG(){
 	      .attr("r", 3.5)
 	      .attr("cx", xMap)
 	      .attr("cy", yMap)
-	      .style("fill", function(d) { return color(cValue(d));}) 
+	      .style("fill", function(d) { return color(cValue(d));})
 	      .on("mouseover", function(d) {
 	          tooltip.transition()
 	               .duration(200)
 	               .style("opacity", .9);
-	          tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d) 
+	          tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d)
 		        + ", " + yValue(d) + ")")
 	               .style("left", (d3.event.pageX + 5) + "px")
 	               .style("top", (d3.event.pageY - 28) + "px");
@@ -791,7 +791,7 @@ function drawChartBySVG(){
 	               .duration(500)
 	               .style("opacity", 0);
 	      });
-	  
+
 
 	  svg.append("path")
 	      .datum(lineData)
@@ -801,10 +801,10 @@ function drawChartBySVG(){
 	      .attr("stroke-linecap", "round")
 	      .attr("stroke-width", 1.5)
 	      .attr("d", line);
-	  
+
 	});
-	
-	
+
+
 
 
 $('#repo-stats-chart').append('<div id="model-selection-panel"> \
@@ -844,26 +844,26 @@ $(document).ready(function() {
 	$(document).on('click','#dump-model-evaluation-for-use-cases-btn', dump_model_evaluation_for_use_cases_func);
 	$(document).on('click','.dumpEvaluationData', request_display_data);
 	$(document).on('click','.dumpAnalyticsData', request_display_data);
-	
+
 	$(document).on('click', '#estimator-selector-box .dropdown-menu li a', function(){
 //		 alert($(this).closest('.dropdown').find('.btn').text());
 		$(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
 		$('#estimator-selector-box').data('estimator', $(this).data('estimator'));
 	});
-	
+
 	$(document).on('click', '#model-selector-box .dropdown-menu li a', function(){
 //		  alert($(this).closest('.dropdown').find('.btn').text());
 		$(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text()+'<span class="caret"></span>');
 		$('#model-selector-box').data('model', $(this).data('model'));
-		
+
 	});
 
 	$('.nav.nav-tabs').tab();
-	
+
 	$('form#sign-up').submit(signUpFormSubmit);
 	$('form#login-form').submit(loginFormSubmit);
 	$('form#invite-form').submit(inviteFormSubmit);
-	
+
 	$('[data-toggle="popover"]').popover({'html':true});
 	createCharts();
 });
@@ -883,7 +883,7 @@ function openDialogueBox(repoId, type) {
 	} else {
 		form = formCOCOMO;
 	}
-	$("#dialog-frame .modal-body").html(form);  	
+	$("#dialog-frame .modal-body").html(form);
 }
 
 function openDialogueBoxForModelFileUpdate(repoId, modelId) {
@@ -892,7 +892,7 @@ function openDialogueBoxForModelFileUpdate(repoId, modelId) {
 	$('#dialog-frame').modal();
 	$("#dialog-frame .modal-title").html("Upload File");
 	$("#dialog-frame .modal-body").html("");
-	$("#dialog-frame .modal-body").html(form);  	
+	$("#dialog-frame .modal-body").html(form);
 }
 
 function load_file_upload_fnc(type) {
@@ -934,7 +934,16 @@ function load_file_upload_fnc(type) {
 	});
 }
 
-var activatedItem, activatedPath = []; 
+function toggleQueryDiagram() {
+	$("#use-case-diagram").slideToggle();
+}
+
+function toggleDomainDiagram() {
+	$("#domain-model-diagram").slideToggle();
+}
+
+
+var activatedItem, activatedPath = [];
 function colorUseCaseElementAndPath(name, type) {
 	clearSelectedPathAndEdge();
 	var svg = $('.use-case')[0].getSVGDocument();
@@ -1048,7 +1057,7 @@ function createTrendingLines() {
 					threshold: null
 				}
 			},
-	
+
 			series: [{
 				type: 'line',
 				name: 'Number of Transactions',
@@ -1078,8 +1087,8 @@ function createPieChart() {
 				y: counter[transaction]
 			});
 		})
-	
-		// Build the chart :  refer highchart pie-chart for more information 
+
+		// Build the chart :  refer highchart pie-chart for more information
 		Highcharts.chart('transaction-pie', {
 			chart: {
 				plotBackgroundColor: null,
@@ -1124,11 +1133,11 @@ function createHistogram(dataList, max) {
 				CTRL: {
 					list: [],
 					chartName: "Control Operation Number"
-				}, 
+				},
 				EI: {
 					list: [],
 					chartName: "Extra Input Operation Number"
-				}, 
+				},
 				EQ: {
 					list: [],
 					chartName: "Extra Query Operation Number"
@@ -1160,7 +1169,7 @@ function createHistogram(dataList, max) {
 			var dataList = [];
 			for (var chartData in newData) {
 				if (newData.hasOwnProperty(chartData)) {
-					var temp = newData[chartData]; 
+					var temp = newData[chartData];
 					maxLength = (maxLength < temp.list.length ? temp.list.length : maxLength);
 					for(i= 0;i < temp.list.length; i++) {
 						temp.list[i] = (temp.list[i] ? temp.list[i] : 0);
@@ -1213,7 +1222,7 @@ function createHistogram(dataList, max) {
 				series: dataList
 			});
 		});
-	}	
+	}
 }
 function creatAvgHistograms() {
 	var url = $('#model-analysis')[0] ? $('#model-analysis')[0].attributes.getNamedItem('data-pathAnalyticsURL').value : "";
@@ -1249,12 +1258,12 @@ function creatAvgHistograms() {
 				newData[1].list[+d.avg_degree] ? newData[1].list[+d.avg_degree]++ : newData[1].list[+d.avg_degree] = 1;
 				newData[2].list[+d.path_length] ? newData[2].list[+d.path_length]++ : newData[2].list[+d.path_length] = 1;
 			});
-			newData.forEach(function(chartData) { 
+			newData.forEach(function(chartData) {
 				for(i= 0;i < chartData.list.length; i++) {
 					chartData.list[i] = (chartData.list[i] ? chartData.list[i] : 0);
 				}
 				createHistogramIndividually(chartData.id, chartData.list , chartData.xAxis, chartData.yAxis, chartData.chartName);
-			}); 
+			});
 		});
 	}
 }
@@ -1290,11 +1299,11 @@ function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTi
 		xAxis: [{
 			title: { text: xAxisName }
 		}],
-	
+
 		yAxis: [{
 			title: { text: yAxisName }
 		}],
-	
+
 		series: [{
 			name: xAxisName,
 			type: 'histogram',
