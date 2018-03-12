@@ -412,7 +412,7 @@ function deleteRepo(repoId, callbackfunc) {
                         "from": "modelInfo",
                         "localField": "_id",
                         "foreignField": "rep_id",
-                        "as": "modelInfo"
+                        "as": "models"
                     }
                 }
             ], function(err, result) 
@@ -489,33 +489,6 @@ function deleteRepo(repoId, callbackfunc) {
         });
     }
 
-    function queryRepoInfo(repoId, callbackfunc, update){
-		if(update !== true){
-		update == false;
-		}
-        MongoClient.connect(url, function(err, db) {
-            if (err) throw err;
-            var o_id = new mongo.ObjectID(repoId);
-//			db.collection("repos").find({}, {umlModelType:1}).toArray(function(err, result) {
-            db.collection("repos").findOne({_id:o_id}, {}, function(err, repo) {
-                if (err) throw err;
-//				console.log(repo);
-				db.close();
-				if(!update){callbackfunc(repo);} else{
-//					console.log('Repo Analytics doesn\'t exist');
-					umlEvaluator.evaluateRepo(repo, function(){
-						console.log("evaluate repo finished");
-					});
-//					repo.RepoAnalytics = repoAnalytics;
-					updateRepoInfo(repo, function(repoInfo){
-						if(callbackfunc !== null){
-							callbackfunc(repo);
-						}
-					});
-				}
-			});
-		});
-	}
 
     function queryRepoInfoForAdmin(repoIds, callbackfunc){
         MongoClient.connect(url, function(err, db) {
@@ -564,8 +537,6 @@ function deleteRepo(repoId, callbackfunc) {
 
     /*
     shekhars: on model update, we see this error intermittently, not fixed yet,
-
-
     D:\git\UMLx\node_modules\mongodb\lib\utils.js:123
     process.nextTick(function() { throw err; });
                                   ^
@@ -576,7 +547,6 @@ function deleteRepo(repoId, callbackfunc) {
         at D:\git\UMLx\node_modules\mongodb-core\lib\connection\pool.js:469:18
         at _combinedTickCallback (internal/process/next_tick.js:67:7)
         at process._tickCallback (internal/process/next_tick.js:98:9)
-
     */
     var modelInfo = {
         _id: new mongo.ObjectID("5a8fab8f91d51f915e5c29af"),
@@ -1407,4 +1377,3 @@ function deleteRepo(repoId, callbackfunc) {
     }
 	
 }());
-
