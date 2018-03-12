@@ -168,19 +168,16 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="repo_estimation")
       include estimationPanel
      div.tab-pane.fade(id="project_list")
-         table#infoTable.table.table-striped
-             thead
-                 tr
-                    th Index
-                    th Project Name
-                    th Date
-             tbody
-                - for (var i = 0; i < repoInfo.Models.length; i++) {
+         .container
+             h3.row
+                .col-sm-2 Index
+                .col-sm-8 Project Name
+                .col-sm-2 Date
+             .list-group
+                 - for (var i = 0; i < repoInfo.Models.length; i++) {
                     - var model = repoInfo.Models[i]
-                    tr
-                        td #{i+1}
-                        td
-                            a.model-title(href="queryModelInfo?model_id="+model._id) #{model.Name}
-                        td #{model.creationTime}
-
-                - }
+                    a.list-group-item.row#model-title(href="queryModelInfo?model_id="+model._id)
+                        .col-sm-2 #{i+1}
+                        .col-sm-8 #{model.Name}
+                        .col-sm-2 #{model.creationTime}
+                 - }
