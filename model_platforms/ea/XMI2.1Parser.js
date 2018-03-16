@@ -50,6 +50,15 @@
 		return name.replace(/\s/g, '').toUpperCase();
 	}
 	
+	function contains(arr, obj) {  
+	    var i = arr.length;  
+	    while (i--) {  
+	        if (arr[i] === obj) {  
+	            return true;  
+	        }  
+	    }  
+	    return false;  
+	}  
 	
 	
 	function createDomainElement(XMIClass){
@@ -136,7 +145,7 @@
 				Name: XMIClass['$']['name'],
 				Operations: operations,
 				Attributes: attributes,
-                                InheritanceStats: inheritanceStats,
+                InheritanceStats: inheritanceStats,
 //				Attachment: XMIClass
 			}
 	}
@@ -155,9 +164,37 @@
 				UseCases: [],
 				DomainModel: {
 					Elements: []
-				}
+				},
+				 UseCaseModel:{
+		        	UseCaseNum:0,
+		        	ActorsNum:0,
+		        	RoleNum:0,
+		        	AvgActor:0,
+		        	AvgRole:0
+		        }
+				
 		};
 		
+		//create a catelog for the actors.
+		var XMIActors = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
+		var ActorsByID = {};
+		var Roles = [];
+		var actorNum = 0;
+		var roleNum = 0;
+		for(var i in XMIActors){
+			var XMIActor = XMIActors[i];
+			actorNum ++;
+			if(!contains(Roles, XMIActor['$']['name'])){
+				Roles.push(XMIActor['$']['name']);
+				roleNum ++;
+			}
+			ActorsByID[XMIActor['$']['xmi:id']] = {
+					Name: XMIActor['$']['name'],
+					_id: XMIActor['$']['xmi:id']
+			}		
+		}
+		Model.UseCaseModel.ActorsNum = actorNum;
+		Model.UseCaseModel.RoleNum = roleNum;
 		console.log(XMIUMLModel);
 
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
@@ -185,10 +222,10 @@
 		var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
 		console.log(XMIUseCases);
 //		debug.writeJson("XMIUseCases", XMIUseCases);
-		
+		var useCaseNum = 0;
 		for(var i in XMIUseCases){
 			var XMIUseCase = XMIUseCases[i];
-			
+			useCaseNum++;
 			var UseCase = {
 					_id: XMIUseCase['$']['xmi:id'],
 					Name: XMIUseCase['$']['name'],
@@ -202,6 +239,15 @@
 			
 			Model.UseCases.push(UseCase);
 		}
+		Model.UseCaseModel.UseCaseNum = useCaseNum;
+		var avgActor = 0;
+		var avgRole = 0;
+	    if(useCaseNum != 0){
+	    	avgActor = actorNum / useCaseNum;
+	    	avgRole = roleNum / useCaseNum;
+	    }
+		Model.UseCaseModel.AvgActor = avgActor;
+		Model.UseCaseModel.AvgRole = avgRole;
 		
 		console.log("checking problem");
 		// search for the instance specifications that are used to represent the robustness diagrams.
@@ -267,7 +313,6 @@
 			console.log(UseCase.PrecedenceRelations);
 		}
 		
-		Model.UseCases.push(UseCase);
 		
 		for(var i in DomainElementsByID){
 			Model.DomainModel.Elements.push(DomainElementsByID[i]);
