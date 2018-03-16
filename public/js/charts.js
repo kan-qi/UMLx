@@ -68,4 +68,27 @@ function display()
 
     });
     });
+
+$('.statistical-item').click(function() {
+  //console.log(this.innerHTML);
+  var url ="http://localhost:3000/result?metric_name="+ this.innerHTML.substr(0, this.innerHTML.length-2);
+  $( ".statistical-item" ).removeClass( "bolder" );
+   $(this).addClass('bolder');
+  //console.log(url);
+      $.ajax({
+        url: url,
+        type:"GET",
+        dataType: "json",
+        success: function(response){
+          console.log(response);
+          document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><table class='table table-hover table-bordered'><tbody><tr><th>Metric Name</th><td>"+response[0].metric_name+"</td></tr><tr><th>Mean</th><td>"+response[0].mean+"</td></tr><tr><th>Variance</th><td>"+response[0].variance+"</td></tr><tr><th>1-quartile</th><td>"+response[0].one_quartile+"</td></tr><tr><th>Median</th><td>"+response[0].median+"</td></tr><tr><th>3-quartile</th><td>"+response[0].three_quartile+"</td></tr><tr><th>4-quartile</th><td>"+response[0].four_quartile+"</td></tr></tbody></table><img src='"+response[0].distribution_chart_path+"'>'";
+        },
+        error:function(error){
+          console.log("failed");
+        }
+
+
+      });
+});
+
 }
