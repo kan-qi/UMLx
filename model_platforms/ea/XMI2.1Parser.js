@@ -163,43 +163,37 @@
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		
 		var Model = {
-				UseCases: [],
+				UseCases: {
+					Elements:[],
+					Actors:[],
+					Roles:[]
+				},
 				DomainModel: {
 					Elements: [],
 					Usages: [],
 					Realization:[],
 					Assoc: []
-				},
-				 UseCaseModel:{
-		        	UseCaseNum:0,
-		        	ActorsNum:0,
-		        	RoleNum:0,
-		        	AvgActor:0,
-		        	AvgRole:0
-		        }
+				}
 				
 		};
 		
 		//create a catelog for the actors.
 		var XMIActors = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
 		var ActorsByID = {};
-		var Roles = [];
-		var actorNum = 0;
-		var roleNum = 0;
+		var actors =[];
+		var roles = [];
 		for(var i in XMIActors){
 			var XMIActor = XMIActors[i];
-			actorNum ++;
-			if(!contains(Roles, XMIActor['$']['name'])){
-				Roles.push(XMIActor['$']['name']);
-				roleNum ++;
+			actors.push(XMIActor['$']);
+			if(!contains(roles, XMIActor['$']['name'])){
+				roles.push(XMIActor['$']['name']);
 			}
 			ActorsByID[XMIActor['$']['xmi:id']] = {
 					Name: XMIActor['$']['name'],
 					_id: XMIActor['$']['xmi:id']
 			}		
 		}
-		Model.UseCaseModel.ActorsNum = actorNum;
-		Model.UseCaseModel.RoleNum = roleNum;
+		
 		console.log(XMIUMLModel);
 
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
@@ -238,21 +232,12 @@
 					Activities : [],
 //					Attachment: XMIUseCase
 			}
-			
+			Model.UseCases.Actors = actors;
+			Model.UseCases.Roles= roles;
 			parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
 			parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
-			
-			Model.UseCases.push(UseCase);
+			Model.UseCases.Elements.push(UseCase);
 		}
-		Model.UseCaseModel.UseCaseNum = useCaseNum;
-		var avgActor = 0;
-		var avgRole = 0;
-	    if(useCaseNum != 0){
-	    	avgActor = actorNum / useCaseNum;
-	    	avgRole = roleNum / useCaseNum;
-	    }
-		Model.UseCaseModel.AvgActor = avgActor;
-		Model.UseCaseModel.AvgRole = avgRole;
 		
 		console.log("checking problem");
 		// search for the instance specifications that are used to represent the robustness diagrams.
