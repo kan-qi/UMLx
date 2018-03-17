@@ -15,7 +15,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/stimulus_icon.png"/></TD></TR>\
-		 <TR><TD>'+label+'</TD></TR>\
+		 <TR><TD><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 
@@ -23,7 +23,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
 			<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
-		 <TR><TD>'+label+'</TD></TR>\
+		 <TR><TD><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 
@@ -31,7 +31,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/out_of_scope_activity_icon.png"/></TD></TR>\
-		 <TR><TD>'+label+'</TD></TR>\
+		 <TR><TD><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 		
 //		 <TR><TD><FONT POINT-SIZE="20">'+label+'</FONT></TD></TR>\
@@ -40,8 +40,8 @@
 	function drawFragmentNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-			<TR><TD><IMG SRC="fragment_node_icon.png"/></TD></TR>\
-		 <TR><TD>'+label+'</TD></TR>\
+			<TR><TD><IMG SRC="img/fragment_node_icon.png"/></TD></TR>\
+		 <TR><TD><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 
@@ -55,12 +55,15 @@
 	//}
 
 	function getGroupDrawable(Group){
-		if(Group === "System"){
-			return "label = \""+Group+"\";style=\"bold\";";
-		}
-		else{
-			return "label = \""+Group+"\";";
-		}
+//		if(Group === "System"){
+//			return "label = <<B>"+Group+"</B>>;style=\"bold\";";
+//		}
+//		else{
+////			return "label = \""+Group+"\";";
+//			return "label = <<B>"+Group+"</B>>;";
+//		}
+		
+		return "label = <<B>"+Group+"</B>>;style=\"bold\";";
 	}
 
 	function drawDomainObjectNode(component){
@@ -70,14 +73,16 @@
 		if(component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
 			return null;
 		}
-		var componentInternal = "{";
+		
+//    
+		var componentInternal = "<TABLE BORDER=\"1\" CELLBORDER=\"1\" CELLSPACING=\"0\">";
 		var componentInternalIndex = 0;
-		componentInternal += "<f"+componentInternalIndex+">"+component.Name;
+		componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+component.Name+"</B></TD></TR>";
 		componentInternalIndex++;
 		for (var i in component.Attributes){
 			var attribute = component.Attributes[i];
 //			componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
-			componentInternal += "|<f"+componentInternalIndex+">"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name;
+			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name+"</B></TD></TR>";
 			componentInternalIndex++;
 		}
 		
@@ -97,17 +102,69 @@
 				}
 			}
 			functionSignature += ")";
-			componentInternal += "|<f"+componentInternalIndex+">"+functionSignature;
+			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+functionSignature+"</B></TD></TR>";
 			componentInternalIndex++;
 		}
-		
-		componentInternal += "}";
+
+//		label =<<TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+//        <TR><TD PORT="f0"><B>title</B></TD></TR>
+//        <TR><TD PORT="f1">index</TD></TR>
+//        <TR><TD PORT="f2">field1</TD></TR>
+//        <TR><TD PORT="f3">field2</TD></TR>
+//    </TABLE>>
+		componentInternal += "</TABLE>";
 		
 		console.log("domain objects");
 		console.log(component);
 		console.log(componentInternal);
-		return component._id+'[label="'+componentInternal+'" shape=Mrecord];'
+		return component._id+'[label=<'+componentInternal+'> shape="none"];'
 	}
+	
+//	function drawDomainObjectNode(component){
+//		//temporarily eliminate some unnecessary nodes
+//		console.log("domain objects");
+//		console.log(component);
+//		if(component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
+//			return null;
+//		}
+//		var componentInternal = "{";
+//		var componentInternalIndex = 0;
+//		componentInternal += "<f"+componentInternalIndex+">"+component.Name;
+//		componentInternalIndex++;
+//		for (var i in component.Attributes){
+//			var attribute = component.Attributes[i];
+////			componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
+//			componentInternal += "|<f"+componentInternalIndex+">"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name;
+//			componentInternalIndex++;
+//		}
+//		
+//		for (var i in component.Operations){
+//			var operation = component.Operations[i];
+////			dotty += '"'+operation.Name+'"->"'+component.Name+'";';
+//			var functionSignature = operation.Name+"(";
+//			console.log("test parameters");
+//			console.log(operation.Parameters);
+//			for(var j in operation.Parameters){
+//				var parameter = operation.Parameters[j];
+//				if(parameter.Name === 'return'){
+//					functionSignature = parameter.Type.substring(7).replace("__", "[]") + " "+functionSignature;
+//				}
+//				else {
+////					functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
+//				}
+//			}
+//			functionSignature += ")";
+//			componentInternal += "|<f"+componentInternalIndex+">"+functionSignature;
+//			componentInternalIndex++;
+//		}
+//		
+//		componentInternal += "}";
+//		
+//		console.log("domain objects");
+//		console.log(component);
+//		console.log(componentInternal);
+//		return component._id+'[label="'+componentInternal+'" shape=Mrecord];'
+//	}
 
 	function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
 		var activities = UseCase.Activities;
@@ -174,8 +231,8 @@
 				}
 				
 				//add edges to domain objects.
-				if(activity.receiver && activity.receiver.Class){
-					edgesToDomainObjects.push(dottyDraw.draw('"'+activity._id+'"->"'+activity.receiver.Class+'"[style = dashed];'));
+				if(activity.Component){
+					edgesToDomainObjects.push(dottyDraw.draw('"'+activity._id+'"->"'+activity.Component._id+'"[style = dashed];'));
 				}
 				
 					graph += dottyDraw.draw(node);
@@ -247,7 +304,7 @@
 //		if(j % 3 != 0){
 //			graph +="};";
 //		}
-		graph += "label = \"Domain Model\";};";
+		graph += "label = <<B>Domain Model</B>>;style=\"bold\";};";
 		
 		for(var i in edgesToDomainObjects){
 			graph += edgesToDomainObjects[i];
