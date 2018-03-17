@@ -88,7 +88,7 @@
 
 	// to output the header for data for the use cases.
 	function toUseCaseEvaluationHeader() {
-		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Avg_Degree,Avg_Path_Length,Actor_Num,Boundary_Num,Control_Num,Entity_Num";
+		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Avg_Degree,Avg_Path_Length,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,Control_Num,Entity_Num";
 	}
 
 	// to output each row of the data for the use cases.
@@ -104,6 +104,9 @@
 		+ useCase["ElementAnalytics"].AvgDegree + ","
 		+ useCase["ElementAnalytics"].AvgPathLength + ","
 		+ useCase["ElementAnalytics"].ActorNum + ","
+		+ useCase["ElementAnalytics"].RoleNum + ","
+		+ useCase["ElementAnalytics"].AvgActor + ","
+		+ useCase["ElementAnalytics"].AvgRole + ","
 		+ useCase["ElementAnalytics"].BoundaryNum + ","
 		+ useCase["ElementAnalytics"].ControlNum + ","
 		+ useCase["ElementAnalytics"].EntityNum;
@@ -150,13 +153,16 @@
 
 	
 	// callbackfunc is called when the elements are dumped into the files?
-	function evaluateUseCase(useCase, model, callbackfunc) {
+	function evaluateUseCase(useCase, callbackfunc) {
 		useCase["ElementAnalytics"] = {
 		TotalDegree:0,
 		ElementNum:0,
 		AvgDegree:0,
 		TotalLinks:0,
 		ActorNum:0,
+		RoleNum:0,
+		AvgActor:0,
+		AvgRole:0,
 		BoundaryNum:0,
 		ControlNum:0,
 		EntityNum:0,
@@ -178,11 +184,13 @@
 				var elementNum = 0;
 				var totalLinks = 0;
 				var actorNum = 0;
+				var roleNum = 0;
 				var boundaryNum = 0;
 				var controlNum = 0;
 				var entityNum = 0;
 				var totalPathLength = 0;
 				var pathNum = 0;
+			
 
 				for ( var j in useCase.Activities) {
 					var Element = useCase.Activities[j]; // tag: elements
@@ -207,6 +215,13 @@
 					elementNum++;
 //					}
 				}
+				for(var j in useCase.Actors){
+					actorNum++;
+				}
+				for(var j in useCase.Roles){
+					roleNum++;
+				}
+				
 				
 //				totalLinks += diagram.Edges.length;
 
@@ -219,15 +234,18 @@
 				useCase["ElementAnalytics"].TotalDegree = totalDegree;
 				useCase["ElementAnalytics"].TotalLinks = totalLinks;
 				useCase["ElementAnalytics"].ActorNum = actorNum;
+				useCase["ElementAnalytics"].RoleNum = roleNum;
 				useCase["ElementAnalytics"].BoundaryNum = boundaryNum;
 				useCase["ElementAnalytics"].ControlNum = controlNum;
 				useCase["ElementAnalytics"].EntityNum = entityNum;
 				useCase["ElementAnalytics"].ElementNum = elementNum;
 				useCase["ElementAnalytics"].AvgDegree = useCase["ElementAnalytics"].ElementNum == 0 ? 0: useCase["ElementAnalytics"].TotalDegree / useCase["ElementAnalytics"].ElementNum;
 				useCase["ElementAnalytics"].PathNum = pathNum;
+				useCase["ElementAnalytics"].AvgActor = useCase["ElementAnalytics"].ElementNum == 0 ? 0: useCase["ElementAnalytics"].ActorNum / useCase["ElementAnalytics"].ElementNum;
+				useCase["ElementAnalytics"].RoleActor = useCase["ElementAnalytics"].ElementNum == 0 ? 0: useCase["ElementAnalytics"].RoleNum / useCase["ElementAnalytics"].ElementNum;
 				useCase["ElementAnalytics"].AvgPathLength = useCase["ElementAnalytics"].PathNum == 0 ? 0 : useCase["ElementAnalytics"].TotalPathLength / useCase["ElementAnalytics"].PathNum;
 				useCase["ElementAnalytics"].TotalPathLength = totalPathLength;
-
+				
 //				useCase["ElementAnalytics"].TotalDegree += diagram["ElementAnalytics"].TotalDegree;
 //				useCase["ElementAnalytics"].ElementNum += diagram["ElementAnalytics"].ElementNum;
 //				useCase["ElementAnalytics"].AvgDegree += diagram["ElementAnalytics"].AvgDegree;
