@@ -111,7 +111,7 @@
 	}
 
 	function toDomainModelEvaluationHeader() {
-		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects";
+		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
@@ -120,7 +120,7 @@
 //		console.log(domainModelInfo);
 		return domainModelInfo["ElementAnalytics"].AttributeNum + ","
 		+ domainModelInfo["ElementAnalytics"].OperationNum + ","
-		+ domainModelInfo["ElementAnalytics"].EntityNum;
+		+ domainModelInfo["ElementAnalytics"].EntityNum  + ","
                 + domainModelInfo["ElementAnalytics"].TopLevelClasses + ","
                 + domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree + ","
                 + domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass + ","
@@ -130,7 +130,22 @@
                 + domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom + ","
                 + domainModelInfo["ElementAnalytics"].NumberOfChildren + ","
                 + domainModelInfo["ElementAnalytics"].DepthInheritanceTree + ","
-                + domainModelInfo["ElementAnalytics"].CouplingBetweenObjects;
+                + domainModelInfo["ElementAnalytics"].CouplingBetweenObjects + ","
+        + domainModelInfo["ElementAnalytics"].ParameterNum + ","
+		+ domainModelInfo["ElementAnalytics"].UsageNum + ","
+		+ domainModelInfo["ElementAnalytics"].RealNum + ","
+		+ domainModelInfo["ElementAnalytics"].AssocNum + ","
+		+ domainModelInfo["ElementAnalytics"].ExternalOperNum + ","
+		+ domainModelInfo["ElementAnalytics"].ObjectDataNum + ","
+		+ domainModelInfo["ElementAnalytics"].AvgOperation + ","
+		+ domainModelInfo["ElementAnalytics"].AvgAttribute  + ","
+		+ domainModelInfo["ElementAnalytics"].AvgParameter + ","
+		+ domainModelInfo["ElementAnalytics"].AvgUsage + ","
+		+ domainModelInfo["ElementAnalytics"].AvgReal + ","
+		+ domainModelInfo["ElementAnalytics"].AvgAssoc + ","
+		+ domainModelInfo["ElementAnalytics"].AvgInstVar + ","
+		+ domainModelInfo["ElementAnalytics"].WeightedOperNum + ","
+		+ domainModelInfo["ElementAnalytics"].MethodSize;
 	}
 
 	
@@ -280,7 +295,26 @@
                                 NumberOfClassesInheritedFrom :0,
                                 NumberOfChildren :0,
                                 DepthInheritanceTree :0,
-                                CouplingBetweenObjects :0
+                                CouplingBetweenObjects :0,
+
+                ParameterNum :0,
+				UsageNum: 0,
+				RealNum: 0,
+				AssocNum: 0,
+				ExternalOperNum: 0,
+				ObjectDataNum: 0,
+				AvgOperation :0,
+				AvgAttribute :0,
+				AvgParameter :0,
+				AvgUsage: 0,
+				AvgReal: 0,
+				AvgAssoc: 0,
+				AvgInstVar: 0,
+				WeightedOperNum: 0,
+				MethodSize: 0,
+				EntityAnalyticsFileName : 'entityAnalytics.csv',
+				AttributeAnalyticsFileName :  'attributeAnalytics.csv',
+				OperationAnalyticsFileName : 'operationAnalytics.csv'
 	        }
 				// ILF += diagram["ElementAnalytics"].ILF;
 				// EIF += diagram["ElementAnalytics"].EIF;
@@ -309,19 +343,37 @@
                         var depthInheritanceTree = 0;
                         var couplingBetweenObjects = 0;
 
+            var parameterNum = 0;
+			var instanceVarNum = 0;
+			var externalOperNum = 0;
+			var objectdataNum = 0;
+
 			for ( var i in domainModelInfo.Elements) {
                             var element = domainModelInfo.Elements[i];
                             entityNum++;
                             for ( var j in element.Attributes) {
                                 var attribute = element.Attributes[j];
                                 attributeNum++;
+                                if ( attribute['isStatic'] == "false"){
+									instanceVarNum++;
+								}
 
                             }
 
                             for ( var j in element.Operations) {
                                 var operation = element.Operations[j];
                                 operationNum++;
+                                if (operation['Visibility'] == "public"){
+									externalOperNum++;
+								}
+								for ( var k in operation.Parameters){
+									var parameter = operation.Parameters[k];
+									parameterNum++;
+								}
                             }
+                            if(element.Attributes.length>0 && element.Operations.length==0){
+								objectdataNum++;
+							}
                             inheritanceStats = element.InheritanceStats;
                             topLevelClasses += inheritanceStats['topLevelClasses'];
                             numberOfInheritanceRelationships += inheritanceStats['children'].size;
@@ -331,6 +383,23 @@
                             depthInheritanceTree += inheritanceStats['depth'];
                             averageDepthInheritanceTree = (depthInheritanceTree === 0) ? 0 : depthInheritanceTree / entityNum;
                             averageNumberOfChildrenPerBaseClass = (numberOfChildren === 0) ? 0 : numberOfChildren / entityNum;
+			}
+
+			var usageNum = 0;
+			var realNum = 0;
+			var assocNum = 0;
+
+			for ( var i in domainModelInfo.Usages) {
+				var usage = domainModelInfo.Usages[i];
+					usageNum++;
+			}
+			for ( var i in domainModelInfo.Realization) {
+				var realization = domainModelInfo.Realization[i];
+					realNum++;
+			}
+			for ( var i in domainModelInfo.Assoc) {
+				var association = domainModelInfo.Assoc[i];
+					assocNum++;
 			}
 
 //			diagram["ElementAnalytics"] = {};
@@ -346,6 +415,22 @@
                         domainModelInfo["ElementAnalytics"].NumberOfChildren = numberOfChildren;
                         domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
                         domainModelInfo["ElementAnalytics"].CouplingBetweenObjects = couplingBetweenObjects;
+
+            domainModelInfo["ElementAnalytics"].ObjectDataNum = objectdataNum;
+			domainModelInfo["ElementAnalytics"].ParameterNum = parameterNum;
+			domainModelInfo["ElementAnalytics"].ExternalOperNum = externalOperNum;
+			domainModelInfo["ElementAnalytics"].AvgInstVar = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : instanceVarNum / domainModelInfo["ElementAnalytics"].EntityNum;
+			domainModelInfo["ElementAnalytics"].UsageNum = usageNum;
+			domainModelInfo["ElementAnalytics"].RealNum = realNum;
+			domainModelInfo["ElementAnalytics"].AssocNum = assocNum;
+			domainModelInfo["ElementAnalytics"].AvgOperation = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].OperationNum / domainModelInfo["ElementAnalytics"].EntityNum;
+			domainModelInfo["ElementAnalytics"].AvgAttribute = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].AttributeNum / domainModelInfo["ElementAnalytics"].EntityNum;
+			domainModelInfo["ElementAnalytics"].AvgParameter = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].ParameterNum / domainModelInfo["ElementAnalytics"].EntityNum;
+			domainModelInfo["ElementAnalytics"].AvgUsage = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].UsageNum / domainModelInfo["ElementAnalytics"].EntityNum;
+			domainModelInfo["ElementAnalytics"].AvgReal = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].RealNum / domainModelInfo["ElementAnalytics"].EntityNum;
+			domainModelInfo["ElementAnalytics"].AvgAssoc = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].AssocNum / domainModelInfo["ElementAnalytics"].EntityNum;
+
+
 //
 //			domainModelInfo["ElementAnalytics"].AttributeNum += diagram["ElementAnalytics"].AttributeNum;
 //			domainModelInfo["ElementAnalytics"].OperationNum += diagram["ElementAnalytics"].OperationNum;

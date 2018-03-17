@@ -76,7 +76,8 @@
 			console.log(XMIAttribute);
 			var attribute = {
 					Name: XMIAttribute['$']['name'],
-					Type: type
+					Type: type,
+					isStatic: XMIAttribute['$']['isStatic']
 			}
 			attributes.push(attribute);
 		}
@@ -99,6 +100,7 @@
 			
 			var operation = {
 					Name: XMIOperation['$']['name'],
+					Visibility: XMIOperation['$']['visibility'],
 					Parameters: parameters
 			}
 			operations.push(operation);
@@ -163,7 +165,10 @@
 		var Model = {
 				UseCases: [],
 				DomainModel: {
-					Elements: []
+					Elements: [],
+					Usages: [],
+					Realization:[],
+					Assoc: []
 				},
 				 UseCaseModel:{
 		        	UseCaseNum:0,
@@ -318,6 +323,54 @@
 			Model.DomainModel.Elements.push(DomainElementsByID[i]);
 		}
 		
+		
+		var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
+		var DomainUsagesByID = [];
+		for(var i in XMIUsages){
+			var XMIUsage = XMIUsages[i];
+			//      console.log(XMIUsage);
+			var domainUsage = {
+				_id: XMIUsage['$']['xmi:id'],
+				Supplier: XMIUsage['$']['supplier'],
+				Client: XMIUsage['$']['client']
+			}
+			DomainUsagesByID[domainUsage._id] = domainUsage;
+		}
+
+		for(var i in DomainUsagesByID){
+			Model.DomainModel.Usages.push(DomainUsagesByID[i]);
+		}
+
+		var XMIReals = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Realization\')]');
+		var DomainRealizationByID = [];
+		for(var i in XMIReals){
+			var XMIReal = XMIReals[i];
+			//      console.log(XMIReal);
+			var domainRealization = {
+				_id: XMIReal['$']['xmi:id']
+			}
+			DomainRealizationByID[domainRealization._id] = domainRealization;
+		}
+
+		for(var i in DomainRealizationByID){
+			Model.DomainModel.Realization.push(DomainRealizationByID[i]);
+		}
+
+		var XMIAssocs = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
+		var DomainAssociationByID = [];
+		for(var i in XMIAssocs){
+			var XMIAssoc = XMIAssocs[i];
+			//      console.log(XMIAssoc);
+			var domainAssociation = {
+				_id: XMIAssoc['$']['xmi:id']
+			}
+			DomainAssociationByID[domainAssociation._id] = domainAssociation;
+		}
+
+		for(var i in DomainAssociationByID){
+			Model.DomainModel.Assoc.push(DomainAssociationByID[i]);
+		}
+
 //		return Model;
 		
 		if(callbackfunc){
