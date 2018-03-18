@@ -40,9 +40,9 @@ div.block.panel.panel-default
    div.repo-info-content
     ul.nav.nav-tabs
      li.active
-      a(data-toggle='tab', href='#repo_analytics') Analytics
-     li
-      a(data-toggle='tab', href='#repo_distributions') Distributions
+      a(data-toggle='tab', href='#repo_analytics') Overview
+     //li
+      //a(data-toggle='tab', href='#repo_distributions') Analysis
      li
       a(data-toggle='tab', href='#repo_estimation') Estimation
      li
@@ -50,45 +50,6 @@ div.block.panel.panel-default
         span(class="badge") #{repoInfo.Models.length}
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
-      if false
-       h3 Calculated:
-       ul
-        li
-         span.statistical-item Average Path Length: #{repoInfo.AvgPathLength}
-        li
-         span.statistical-item Number of Paths: #{repoInfo.PathNum}
-        li
-         span.statistical-item Total Number of Links: #{repoInfo.TotalLinks}
-        li
-         span.statistical-item Number of Actors: #{repoInfo.ActorNum}
-        li
-         span.statistical-item Number of Boundaries: #{repoInfo.BoundaryNum}
-        li
-         span.statistical-item Number of Actors: #{repoInfo.ControlNum}
-        li
-         span.statistical-item Number of Boundaries: #{repoInfo.EntityNum}
-        li
-         span.statistical-item Number of Elements: #{repoInfo.ElementNum}
-        li
-         span.statistical-item Average Element Degree: #{repoInfo.AvgDegree}
-        li
-         span.statistical-item Number of Interface Management: #{repoInfo.INT}
-        li
-         span.statistical-item Number of Data Management: #{repoInfo.DM}
-        li
-         span.statistical-item Number of Control Flows: #{repoInfo.CTRL}
-        li
-         span.statistical-item Number of External Invocations: #{repoInfo.EXTIVK}
-        li
-         span.statistical-item Number of External Calls: #{repoInfo.EXTCLL}
-        li
-         span.statistical-item Number of External Inputs: #{repoInfo.EI}
-        li
-         span.statistical-item Number of External Inquiries: #{repoInfo.EQ}
-        li
-         span.statistical-item Number of External Outputs: #{repoInfo.EO}
-        li
-         span.statistical-item Number of Transactions: #{repoInfo.TN}
       if repoInfo
         div.col-sm-12.status-row
           div.col-sm-3
@@ -119,11 +80,66 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{repoInfo.Models.length}
                 span Classes
-        div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
-        div.col-sm-12.chart-row  
-          .col-sm-6
-            img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
-          .col-sm-6(id="transaction-pie" data="./#{repoInfo.AccessDir}/transactionAnalytics.csv")                      
+       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
+        //div.col-sm-12.chart-row  
+          //.col-sm-6
+            //img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
+          //.col-sm-6(id="transaction-pie" data="./#{repoInfo.AccessDir}/transactionAnalytics.csv")
+       div.repo-analysis-detail
+          div.repo-metrics
+           h3 Calculated:
+           ul
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Average Path Length: #{repoInfo.AvgPathLength}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Paths: #{repoInfo.PathNum}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Total Number of Links: #{repoInfo.TotalLinks}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Actors: #{repoInfo.ActorNum}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Boundaries: #{repoInfo.BoundaryNum}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Controls: #{repoInfo.ControlNum}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Entities: #{repoInfo.EntityNum}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Elements: #{repoInfo.ElementNum}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Average Element Degree: #{repoInfo.AvgDegree}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Interface Management: #{repoInfo.INT}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Data Management: #{repoInfo.DM}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Control Flows: #{repoInfo.CTRL}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_invocation_operation_analysis_result.svg") Number of External Invocations: #{repoInfo.EXTIVK}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_call_operation_analysis_result.svg") Number of External Calls: #{repoInfo.EXTCLL}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_input_operation_analysis_result.svg") Number of External Inputs: #{repoInfo.EI}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_query_operation_analysis_result.svg") Number of External Inquiries: #{repoInfo.EQ}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_call_operation_analysis_result.svg") Number of External Outputs: #{repoInfo.EO}
+            li
+             span.statistical-item(data-url="#{repoInfo.AccessDir}/path_number_analysis_result.svg") Number of Transactions: #{repoInfo.TN}
+          div.stats-chart
+            //example diagram. click the items in the curresponding statistics will be returned and displayed.           
+            img(src="#{repoInfo.AccessDir}/control_operation_analysis_result.svg")
+            div.stats-detail
+             p.max-value max value:1
+             p.75-quantile 75% quantile: 2
+             p.media-quantile media-quantile: 3
+             p.25-quantile 25% quantile: 4
+             p.min-value min-value: 5
+             p.mean-value mean-value: 6
+             p.std-dev std-dev: 7
+             p.kurtosis kurtosis: 8
+             p.skewness skewness: 9
+     if false
+     //skip this
      div.tab-pane.fade(id="repo_distributions")
       if repoInfo
        div(id="repo-stats-chart")
@@ -150,42 +166,18 @@ div.block.panel.panel-default
         div.stats-chart
          img(src="#{repoInfo.AccessDir}/path_number_analysis_result.svg")
      div.tab-pane.fade(id="repo_estimation")
-      if repoInfo
-       div(id="estimation-models-panel")
-        div(id="model-query-box")
-         div.row-item(id='estimator-selector-box')
-          div.dropdown
-           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Estimator
-            span.caret
-           ul.dropdown-menu
-            li
-             a.estimator-selector(data-estimator='OLSR') Linear Regression
-            li
-             a.estimator-selector(data-estimator='RR') Ridge Regression
-            li
-             a.estimator-selector(data-estimator='LS') Linear Spline
-         div.row-item(id='model-selector-box')
-          div.dropdown
-           button.btn.btn-primary.dropdown-toggle(type='button', data-toggle='dropdown') Select Model
-            span.caret
-           ul.dropdown-menu
-            li
-             a.estimator-selector(data-model='EUCP') EUCP
-            li
-             a.estimator-selector(data-model='EXUCP') EXUCP
-            li
-             a.estimator-selector(data-model='DUCP') DUCP
-         div.checkbox.row-item
-          label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-           input(type='checkbox' value='simulation-data')
-         button.btn.btn-primary.row-item(id='query-model-btn', data-repo-id="#{repoInfo._id}") Query
-         img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
-         div.clear
-       div(id='estimation-model-detail')
+      include estimationPanel
      div.tab-pane.fade(id="project_list")
-      div.card-deck
-       each model in repoInfo.Models
-        div.card.col-md-2(data-model-id=model._id)
-          div(class="card-block")
-            div.card-title.model-name(title= model.Name)
-              a.model-title(href="queryModelInfo?model_id="+model._id) #{model.Name}
+         .container
+             h3.row
+                .col-sm-2 Index
+                .col-sm-8 Project Name
+                .col-sm-2 Date
+             .list-group
+                 - for (var i = 0; i < repoInfo.Models.length; i++) {
+                    - var model = repoInfo.Models[i]
+                    a.list-group-item.row#model-title(href="queryModelInfo?model_id="+model._id)
+                        .col-sm-2 #{i+1}
+                        .col-sm-8 #{model.Name}
+                        .col-sm-2 #{model.creationTime}
+                 - }
