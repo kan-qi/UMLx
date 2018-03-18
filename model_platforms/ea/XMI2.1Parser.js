@@ -163,11 +163,9 @@
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		
 		var Model = {
-				UseCases: {
-					Elements:[],
-					Actors:[],
-					Roles:[]
-				},
+				Actors:[],
+				Roles:[],
+				UseCases: [],
 				DomainModel: {
 					Elements: [],
 					Usages: [],
@@ -236,7 +234,7 @@
 			Model.UseCases.Roles= roles;
 			parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
 			parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
-			Model.UseCases.Elements.push(UseCase);
+			Model.UseCases.push(UseCase);
 		}
 		
 		console.log("checking problem");

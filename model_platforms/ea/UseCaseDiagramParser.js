@@ -18,7 +18,7 @@
 	    return false;  
 	}  
 	
-	function parseUsecaseDiagram(XMIUseCases, XMIUMLModel, Model){
+	function parseUseCaseDiagram(XMIUseCases, XMIUMLModel, Model){
 
 		//create a catelog for the actors.
 		var XMIActors = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
@@ -50,11 +50,11 @@
 					Activities : [],
 //					Attachment: XMIUseCase
 			}
-			Model.UseCases.Actors = actors;
-			Model.UseCases.Roles= roles;
+			Model.Actors = actors;
+			Model.Roles= roles;
 //			parseSequenceDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
 //			parseActivityDiagram(UseCase, XMIUseCase, XMIClassesByStandardizedName, DomainElementsByID);
-			Model.UseCases.Elements.push(UseCase);
+		
 		}
 		
 	}

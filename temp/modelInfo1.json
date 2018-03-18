@@ -1,4 +1,21 @@
 {
+  "Actors": [
+    {
+      "xmi:type": "uml:Actor",
+      "xmi:id": "EAID_D8669452_2151_4ffb_87E4_412B65A1090B",
+      "name": "User",
+      "visibility": "public"
+    },
+    {
+      "xmi:type": "uml:Actor",
+      "xmi:id": "EAID_4900789A_C08B_45c8_A019_169CA47F50E4",
+      "name": "User",
+      "visibility": "public"
+    }
+  ],
+  "Roles": [
+    "User"
+  ],
   "UseCases": [
     {
       "_id": "EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
@@ -17,6 +34,7 @@
               "Operations": [
                 {
                   "Name": "onSearch",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "keywords",
@@ -32,17 +50,29 @@
               "Attributes": [
                 {
                   "Name": "pageID",
-                  "Type": "EAJava_int"
+                  "Type": "EAJava_int",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "searchBox",
-                  "Type": "EAJava_InputField"
+                  "Type": "EAJava_InputField",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "searchButton",
-                  "Type": "EAJava_Button"
+                  "Type": "EAJava_Button",
+                  "isStatic": "false"
                 }
-              ]
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
             "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
@@ -61,6 +91,7 @@
               "Operations": [
                 {
                   "Name": "searchItemsByKeywords",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "keywords",
@@ -73,7 +104,16 @@
                   ]
                 }
               ],
-              "Attributes": []
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
             "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
@@ -92,6 +132,7 @@
               "Operations": [
                 {
                   "Name": "queryCatalog",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "query",
@@ -104,7 +145,16 @@
                   ]
                 }
               ],
-              "Attributes": []
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
             "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
@@ -121,6 +171,7 @@
               "Operations": [
                 {
                   "Name": "displaySearchInvalidMsg",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "msg",
@@ -134,6 +185,7 @@
                 },
                 {
                   "Name": "displayItemList",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "itemList",
@@ -147,6 +199,7 @@
                 },
                 {
                   "Name": "displayEmptyListNotice",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "notice",
@@ -162,17 +215,29 @@
               "Attributes": [
                 {
                   "Name": "pageID",
-                  "Type": "EAJava_String"
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "title",
-                  "Type": "EAJava_String"
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "searchResultList",
-                  "Type": "EAJava_ListView"
+                  "Type": "EAJava_ListView",
+                  "isStatic": "false"
                 }
-              ]
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
             "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -191,6 +256,7 @@
               "Operations": [
                 {
                   "Name": "queryCatalog",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "query",
@@ -203,7 +269,16 @@
                   ]
                 }
               ],
-              "Attributes": []
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
             "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
@@ -220,6 +295,7 @@
               "Operations": [
                 {
                   "Name": "displaySearchInvalidMsg",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "msg",
@@ -233,6 +309,7 @@
                 },
                 {
                   "Name": "displayItemList",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "itemList",
@@ -246,6 +323,7 @@
                 },
                 {
                   "Name": "displayEmptyListNotice",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "notice",
@@ -261,17 +339,29 @@
               "Attributes": [
                 {
                   "Name": "pageID",
-                  "Type": "EAJava_String"
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "title",
-                  "Type": "EAJava_String"
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "searchResultList",
-                  "Type": "EAJava_ListView"
+                  "Type": "EAJava_ListView",
+                  "isStatic": "false"
                 }
-              ]
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
             "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -290,6 +380,7 @@
               "Operations": [
                 {
                   "Name": "searchItemsByKeywords",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "keywords",
@@ -302,7 +393,16 @@
                   ]
                 }
               ],
-              "Attributes": []
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
             "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
@@ -319,6 +419,7 @@
               "Operations": [
                 {
                   "Name": "displaySearchInvalidMsg",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "msg",
@@ -332,6 +433,7 @@
                 },
                 {
                   "Name": "displayItemList",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "itemList",
@@ -345,6 +447,7 @@
                 },
                 {
                   "Name": "displayEmptyListNotice",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "notice",
@@ -360,17 +463,29 @@
               "Attributes": [
                 {
                   "Name": "pageID",
-                  "Type": "EAJava_String"
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "title",
-                  "Type": "EAJava_String"
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "searchResultList",
-                  "Type": "EAJava_ListView"
+                  "Type": "EAJava_ListView",
+                  "isStatic": "false"
                 }
-              ]
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
             "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -389,6 +504,7 @@
               "Operations": [
                 {
                   "Name": "searchItemsByKeywords",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "keywords",
@@ -401,7 +517,16 @@
                   ]
                 }
               ],
-              "Attributes": []
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
             "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
@@ -418,6 +543,7 @@
               "Operations": [
                 {
                   "Name": "queryCatalog",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "query",
@@ -430,7 +556,16 @@
                   ]
                 }
               ],
-              "Attributes": []
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
             "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
@@ -457,6 +592,7 @@
               "Operations": [
                 {
                   "Name": "onSearch",
+                  "Visibility": "public",
                   "Parameters": [
                     {
                       "Name": "keywords",
@@ -472,17 +608,29 @@
               "Attributes": [
                 {
                   "Name": "pageID",
-                  "Type": "EAJava_int"
+                  "Type": "EAJava_int",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "searchBox",
-                  "Type": "EAJava_InputField"
+                  "Type": "EAJava_InputField",
+                  "isStatic": "false"
                 },
                 {
                   "Name": "searchButton",
-                  "Type": "EAJava_Button"
+                  "Type": "EAJava_Button",
+                  "isStatic": "false"
                 }
-              ]
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 1,
+                "numOfChildren": 0
+              }
             },
             "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
             "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
@@ -504,6 +652,7 @@
             "Operations": [
               {
                 "Name": "onSearch",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "keywords",
@@ -519,17 +668,29 @@
             "Attributes": [
               {
                 "Name": "pageID",
-                "Type": "EAJava_int"
+                "Type": "EAJava_int",
+                "isStatic": "false"
               },
               {
                 "Name": "searchBox",
-                "Type": "EAJava_InputField"
+                "Type": "EAJava_InputField",
+                "isStatic": "false"
               },
               {
                 "Name": "searchButton",
-                "Type": "EAJava_Button"
+                "Type": "EAJava_Button",
+                "isStatic": "false"
               }
-            ]
+            ],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 1,
+              "numOfChildren": 0
+            }
           },
           "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
           "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
@@ -548,6 +709,7 @@
             "Operations": [
               {
                 "Name": "searchItemsByKeywords",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "keywords",
@@ -560,7 +722,16 @@
                 ]
               }
             ],
-            "Attributes": []
+            "Attributes": [],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 1,
+              "numOfChildren": 0
+            }
           },
           "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
           "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
@@ -577,6 +748,7 @@
             "Operations": [
               {
                 "Name": "displaySearchInvalidMsg",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "msg",
@@ -590,6 +762,7 @@
               },
               {
                 "Name": "displayItemList",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "itemList",
@@ -603,6 +776,7 @@
               },
               {
                 "Name": "displayEmptyListNotice",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "notice",
@@ -618,17 +792,29 @@
             "Attributes": [
               {
                 "Name": "pageID",
-                "Type": "EAJava_String"
+                "Type": "EAJava_String",
+                "isStatic": "false"
               },
               {
                 "Name": "title",
-                "Type": "EAJava_String"
+                "Type": "EAJava_String",
+                "isStatic": "false"
               },
               {
                 "Name": "searchResultList",
-                "Type": "EAJava_ListView"
+                "Type": "EAJava_ListView",
+                "isStatic": "false"
               }
-            ]
+            ],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 1,
+              "numOfChildren": 0
+            }
           },
           "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
           "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -645,6 +831,7 @@
             "Operations": [
               {
                 "Name": "queryCatalog",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "query",
@@ -657,7 +844,16 @@
                 ]
               }
             ],
-            "Attributes": []
+            "Attributes": [],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 1,
+              "numOfChildren": 0
+            }
           },
           "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
           "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
@@ -674,6 +870,7 @@
             "Operations": [
               {
                 "Name": "displaySearchInvalidMsg",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "msg",
@@ -687,6 +884,7 @@
               },
               {
                 "Name": "displayItemList",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "itemList",
@@ -700,6 +898,7 @@
               },
               {
                 "Name": "displayEmptyListNotice",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "notice",
@@ -715,17 +914,29 @@
             "Attributes": [
               {
                 "Name": "pageID",
-                "Type": "EAJava_String"
+                "Type": "EAJava_String",
+                "isStatic": "false"
               },
               {
                 "Name": "title",
-                "Type": "EAJava_String"
+                "Type": "EAJava_String",
+                "isStatic": "false"
               },
               {
                 "Name": "searchResultList",
-                "Type": "EAJava_ListView"
+                "Type": "EAJava_ListView",
+                "isStatic": "false"
               }
-            ]
+            ],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 1,
+              "numOfChildren": 0
+            }
           },
           "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
           "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -742,6 +953,7 @@
             "Operations": [
               {
                 "Name": "displaySearchInvalidMsg",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "msg",
@@ -755,6 +967,7 @@
               },
               {
                 "Name": "displayItemList",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "itemList",
@@ -768,6 +981,7 @@
               },
               {
                 "Name": "displayEmptyListNotice",
+                "Visibility": "public",
                 "Parameters": [
                   {
                     "Name": "notice",
@@ -783,17 +997,29 @@
             "Attributes": [
               {
                 "Name": "pageID",
-                "Type": "EAJava_String"
+                "Type": "EAJava_String",
+                "isStatic": "false"
               },
               {
                 "Name": "title",
-                "Type": "EAJava_String"
+                "Type": "EAJava_String",
+                "isStatic": "false"
               },
               {
                 "Name": "searchResultList",
-                "Type": "EAJava_ListView"
+                "Type": "EAJava_ListView",
+                "isStatic": "false"
               }
-            ]
+            ],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 1,
+              "numOfChildren": 0
+            }
           },
           "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
           "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -807,8 +1033,8 @@
           "Group": "User"
         }
       ],
-      "OutputDir": "public/output/repo5aa33deff393911e1cd7d276/7de069334eb8fc932f7f2a8f84d2104f/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
-      "AccessDir": "output/repo5aa33deff393911e1cd7d276/7de069334eb8fc932f7f2a8f84d2104f/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "OutputDir": "public/output/repo5aae7cd0f8289842f00b529e/4b444996d6702cd8eb63963d0446b6c8/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "AccessDir": "output/repo5aae7cd0f8289842f00b529e/4b444996d6702cd8eb63963d0446b6c8/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
       "Paths": [
         {
           "Nodes": [
@@ -832,6 +1058,7 @@
                 "Operations": [
                   {
                     "Name": "onSearch",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "keywords",
@@ -847,17 +1074,29 @@
                 "Attributes": [
                   {
                     "Name": "pageID",
-                    "Type": "EAJava_int"
+                    "Type": "EAJava_int",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchBox",
-                    "Type": "EAJava_InputField"
+                    "Type": "EAJava_InputField",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchButton",
-                    "Type": "EAJava_Button"
+                    "Type": "EAJava_Button",
+                    "isStatic": "false"
                   }
-                ]
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
               "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
@@ -876,6 +1115,7 @@
                 "Operations": [
                   {
                     "Name": "searchItemsByKeywords",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "keywords",
@@ -888,7 +1128,16 @@
                     ]
                   }
                 ],
-                "Attributes": []
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
               "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
@@ -905,6 +1154,7 @@
                 "Operations": [
                   {
                     "Name": "queryCatalog",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "query",
@@ -917,7 +1167,16 @@
                     ]
                   }
                 ],
-                "Attributes": []
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
               "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
@@ -934,6 +1193,7 @@
                 "Operations": [
                   {
                     "Name": "displaySearchInvalidMsg",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "msg",
@@ -947,6 +1207,7 @@
                   },
                   {
                     "Name": "displayItemList",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "itemList",
@@ -960,6 +1221,7 @@
                   },
                   {
                     "Name": "displayEmptyListNotice",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "notice",
@@ -975,17 +1237,29 @@
                 "Attributes": [
                   {
                     "Name": "pageID",
-                    "Type": "EAJava_String"
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "title",
-                    "Type": "EAJava_String"
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchResultList",
-                    "Type": "EAJava_ListView"
+                    "Type": "EAJava_ListView",
+                    "isStatic": "false"
                   }
-                ]
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
               "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -1039,6 +1313,7 @@
                 "Operations": [
                   {
                     "Name": "onSearch",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "keywords",
@@ -1054,17 +1329,29 @@
                 "Attributes": [
                   {
                     "Name": "pageID",
-                    "Type": "EAJava_int"
+                    "Type": "EAJava_int",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchBox",
-                    "Type": "EAJava_InputField"
+                    "Type": "EAJava_InputField",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchButton",
-                    "Type": "EAJava_Button"
+                    "Type": "EAJava_Button",
+                    "isStatic": "false"
                   }
-                ]
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
               "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
@@ -1083,6 +1370,7 @@
                 "Operations": [
                   {
                     "Name": "searchItemsByKeywords",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "keywords",
@@ -1095,7 +1383,16 @@
                     ]
                   }
                 ],
-                "Attributes": []
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
               "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
@@ -1112,6 +1409,7 @@
                 "Operations": [
                   {
                     "Name": "queryCatalog",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "query",
@@ -1124,7 +1422,16 @@
                     ]
                   }
                 ],
-                "Attributes": []
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
               "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
@@ -1141,6 +1448,7 @@
                 "Operations": [
                   {
                     "Name": "displaySearchInvalidMsg",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "msg",
@@ -1154,6 +1462,7 @@
                   },
                   {
                     "Name": "displayItemList",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "itemList",
@@ -1167,6 +1476,7 @@
                   },
                   {
                     "Name": "displayEmptyListNotice",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "notice",
@@ -1182,17 +1492,29 @@
                 "Attributes": [
                   {
                     "Name": "pageID",
-                    "Type": "EAJava_String"
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "title",
-                    "Type": "EAJava_String"
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchResultList",
-                    "Type": "EAJava_ListView"
+                    "Type": "EAJava_ListView",
+                    "isStatic": "false"
                   }
-                ]
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
               "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -1246,6 +1568,7 @@
                 "Operations": [
                   {
                     "Name": "onSearch",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "keywords",
@@ -1261,17 +1584,29 @@
                 "Attributes": [
                   {
                     "Name": "pageID",
-                    "Type": "EAJava_int"
+                    "Type": "EAJava_int",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchBox",
-                    "Type": "EAJava_InputField"
+                    "Type": "EAJava_InputField",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchButton",
-                    "Type": "EAJava_Button"
+                    "Type": "EAJava_Button",
+                    "isStatic": "false"
                   }
-                ]
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
               "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
@@ -1290,6 +1625,7 @@
                 "Operations": [
                   {
                     "Name": "searchItemsByKeywords",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "keywords",
@@ -1302,7 +1638,16 @@
                     ]
                   }
                 ],
-                "Attributes": []
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
               "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
@@ -1319,6 +1664,7 @@
                 "Operations": [
                   {
                     "Name": "displaySearchInvalidMsg",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "msg",
@@ -1332,6 +1678,7 @@
                   },
                   {
                     "Name": "displayItemList",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "itemList",
@@ -1345,6 +1692,7 @@
                   },
                   {
                     "Name": "displayEmptyListNotice",
+                    "Visibility": "public",
                     "Parameters": [
                       {
                         "Name": "notice",
@@ -1360,17 +1708,29 @@
                 "Attributes": [
                   {
                     "Name": "pageID",
-                    "Type": "EAJava_String"
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "title",
-                    "Type": "EAJava_String"
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
                   },
                   {
                     "Name": "searchResultList",
-                    "Type": "EAJava_ListView"
+                    "Type": "EAJava_ListView",
+                    "isStatic": "false"
                   }
-                ]
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 1,
+                  "numOfChildren": 0
+                }
               },
               "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
               "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
@@ -1409,11 +1769,15 @@
         "AvgDegree": 0,
         "TotalLinks": 0,
         "ActorNum": 0,
+        "RoleNum": 0,
+        "AvgActor": 0,
+        "AvgRole": 0,
         "BoundaryNum": 0,
         "ControlNum": 0,
         "EntityNum": 0,
         "TotalPathLength": 14,
         "PathNum": 3,
+        "RoleActor": 0,
         "AvgPathLength": 4.666666666666667,
         "PathAnalyticsFileName": "pathAnalytics.csv",
         "ElementAnalyticsFileName": "elementAnalytics.csv"
@@ -1453,7 +1817,16 @@
         "_id": "EAID_0B4542EA_7874_4160_ABD6_532328320AA3",
         "Name": "$help://domain_model_pattern.htm",
         "Operations": [],
-        "Attributes": []
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
@@ -1461,6 +1834,7 @@
         "Operations": [
           {
             "Name": "queryCatalog",
+            "Visibility": "public",
             "Parameters": [
               {
                 "Name": "query",
@@ -1473,7 +1847,16 @@
             ]
           }
         ],
-        "Attributes": []
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA",
@@ -1482,9 +1865,19 @@
         "Attributes": [
           {
             "Name": "list",
-            "Type": "EAJava_Item__"
+            "Type": "EAJava_Item__",
+            "isStatic": "false"
           }
-        ]
+        ],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
@@ -1492,6 +1885,7 @@
         "Operations": [
           {
             "Name": "searchItemsByKeywords",
+            "Visibility": "public",
             "Parameters": [
               {
                 "Name": "keywords",
@@ -1504,7 +1898,16 @@
             ]
           }
         ],
-        "Attributes": []
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
@@ -1512,6 +1915,7 @@
         "Operations": [
           {
             "Name": "onSearch",
+            "Visibility": "public",
             "Parameters": [
               {
                 "Name": "keywords",
@@ -1527,17 +1931,29 @@
         "Attributes": [
           {
             "Name": "pageID",
-            "Type": "EAJava_int"
+            "Type": "EAJava_int",
+            "isStatic": "false"
           },
           {
             "Name": "searchBox",
-            "Type": "EAJava_InputField"
+            "Type": "EAJava_InputField",
+            "isStatic": "false"
           },
           {
             "Name": "searchButton",
-            "Type": "EAJava_Button"
+            "Type": "EAJava_Button",
+            "isStatic": "false"
           }
-        ]
+        ],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6",
@@ -1546,13 +1962,24 @@
         "Attributes": [
           {
             "Name": "errorCode",
-            "Type": "EAJava_int"
+            "Type": "EAJava_int",
+            "isStatic": "false"
           },
           {
             "Name": "message",
-            "Type": "EAJava_String"
+            "Type": "EAJava_String",
+            "isStatic": "false"
           }
-        ]
+        ],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
@@ -1560,6 +1987,7 @@
         "Operations": [
           {
             "Name": "displaySearchInvalidMsg",
+            "Visibility": "public",
             "Parameters": [
               {
                 "Name": "msg",
@@ -1573,6 +2001,7 @@
           },
           {
             "Name": "displayItemList",
+            "Visibility": "public",
             "Parameters": [
               {
                 "Name": "itemList",
@@ -1586,6 +2015,7 @@
           },
           {
             "Name": "displayEmptyListNotice",
+            "Visibility": "public",
             "Parameters": [
               {
                 "Name": "notice",
@@ -1601,49 +2031,156 @@
         "Attributes": [
           {
             "Name": "pageID",
-            "Type": "EAJava_String"
+            "Type": "EAJava_String",
+            "isStatic": "false"
           },
           {
             "Name": "title",
-            "Type": "EAJava_String"
+            "Type": "EAJava_String",
+            "isStatic": "false"
           },
           {
             "Name": "searchResultList",
-            "Type": "EAJava_ListView"
+            "Type": "EAJava_ListView",
+            "isStatic": "false"
           }
-        ]
+        ],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B",
         "Name": "$help://actor.htm",
         "Operations": [],
-        "Attributes": []
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_7484FEB6_9172_4a75_A006_D536283338C6",
         "Name": "$help://use_case_model_pattern.htm",
         "Operations": [],
-        "Attributes": []
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_83879976_7FDE_4975_BC69_3210EA75FF09",
         "Name": "$help://usecasediagram.htm",
         "Operations": [],
-        "Attributes": []
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       },
       {
         "_id": "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5",
         "Name": "System Boundary",
         "Operations": [],
-        "Attributes": []
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 1,
+          "numOfChildren": 0
+        }
       }
     ],
-    "OutputDir": "public/output/repo5aa33deff393911e1cd7d276/7de069334eb8fc932f7f2a8f84d2104f/domainModel",
-    "AccessDir": "output/repo5aa33deff393911e1cd7d276/7de069334eb8fc932f7f2a8f84d2104f/domainModel",
+    "Usages": [
+      {
+        "_id": "EAID_99126EC6_D0FC_405d_A024_6FE695B00B14",
+        "Supplier": "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA",
+        "Client": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB"
+      },
+      {
+        "_id": "EAID_1B0D3FCF_A008_4713_9083_AAA0DBE0FD33",
+        "Supplier": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+        "Client": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA"
+      },
+      {
+        "_id": "EAID_B00C11BC_0265_4b14_ABDF_5C5EF6D4997F",
+        "Supplier": "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6",
+        "Client": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA"
+      },
+      {
+        "_id": "EAID_D2FCA74D_5B21_466b_887A_6C109376ED14",
+        "Supplier": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+        "Client": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA"
+      },
+      {
+        "_id": "EAID_B0014E45_8EEF_4212_A31B_5FDC8C5031E7",
+        "Supplier": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+        "Client": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD"
+      },
+      {
+        "_id": "EAID_5D6CBEE7_69ED_4592_B541_AF757534DF77",
+        "Supplier": "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6",
+        "Client": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34"
+      }
+    ],
+    "Realization": [],
+    "Assoc": [],
+    "OutputDir": "public/output/repo5aae7cd0f8289842f00b529e/4b444996d6702cd8eb63963d0446b6c8/domainModel",
+    "AccessDir": "output/repo5aae7cd0f8289842f00b529e/4b444996d6702cd8eb63963d0446b6c8/domainModel",
     "ElementAnalytics": {
       "AttributeNum": 9,
       "OperationNum": 6,
       "EntityNum": 11,
+      "TopLevelClasses": 11,
+      "AverageDepthInheritanceTree": 0,
+      "AverageNumberOfChildrenPerBaseClass": 0,
+      "NumberOfInheritanceRelationships": 0,
+      "NumberOfDerivedClasses": 0,
+      "NumberOfClassesInherited": 0,
+      "NumberOfClassesInheritedFrom": 0,
+      "NumberOfChildren": 0,
+      "DepthInheritanceTree": 0,
+      "CouplingBetweenObjects": 0,
+      "ParameterNum": 12,
+      "UsageNum": 6,
+      "RealNum": 0,
+      "AssocNum": 0,
+      "ExternalOperNum": 6,
+      "ObjectDataNum": 2,
+      "AvgOperation": 0.5454545454545454,
+      "AvgAttribute": 0.8181818181818182,
+      "AvgParameter": 1.0909090909090908,
+      "AvgUsage": 0.5454545454545454,
+      "AvgReal": 0,
+      "AvgAssoc": 0,
+      "AvgInstVar": 0.8181818181818182,
+      "WeightedOperNum": 0,
+      "MethodSize": 0,
       "EntityAnalyticsFileName": "entityAnalytics.csv",
       "AttributeAnalyticsFileName": "attributeAnalytics.csv",
       "OperationAnalyticsFileName": "operationAnalytics.csv"
@@ -1655,20 +2192,20 @@
       "EIF": 0
     }
   },
-  "fileId": "7de069334eb8fc932f7f2a8f84d2104f",
-  "fileSize": 0.154029,
-  "creationTime": "2018-03-10 03:14:12",
-  "fileUrl": "uploads/2018-2-9@1520651652464/7de069334eb8fc932f7f2a8f84d2104f",
-  "umlFilePath": "public/uploads/2018-2-9@1520651652464/7de069334eb8fc932f7f2a8f84d2104f",
+  "fileId": "4b444996d6702cd8eb63963d0446b6c8",
+  "fileSize": 0.148119,
+  "creationTime": "2018-03-18 15:11:45",
+  "fileUrl": "uploads/2018-2-18@1521385905954/4b444996d6702cd8eb63963d0446b6c8",
+  "umlFilePath": "public/uploads/2018-2-18@1521385905954/4b444996d6702cd8eb63963d0446b6c8",
   "umlModelType": "uml",
   "formInfo": {
-    "uml-model-name": "1",
+    "uml-model-name": "test",
     "uml-model-type": "uml",
     "repo-id": "598c93a9a9813b12105c953e",
-    "project-desc": "1",
+    "project-desc": "test",
     "project-effort": "",
     "project-duration": "",
-    "uuid-page1": "14c0be20-2411-11e8-99c0-d5ceee13276a",
+    "uuid-page1": "8e8d0700-2abe-11e8-a1b5-07e9a51f6f11",
     "distributed-system": "1",
     "response-time": "1",
     "end-user-efficiency": "1",
@@ -1682,7 +2219,7 @@
     "includes-special-security-objectives": "1",
     "provides-direct-access-for-third-parties": "1",
     "special-user-training-facilities-are-required": "1",
-    "uuid-page2": "14c0be21-2411-11e8-99c0-d5ceee13276a",
+    "uuid-page2": "8e8d0701-2abe-11e8-a1b5-07e9a51f6f11",
     "familiar-with-the-project-model-that-is-used": "1",
     "application-experience": "1",
     "object-oriented-experience": "1",
@@ -1691,13 +2228,13 @@
     "stable-requirements": "1",
     "part-time-staff": "1",
     "difficult-programming-language": "1",
-    "uuid-page3": "14c0be22-2411-11e8-99c0-d5ceee13276a",
-    "uuid-page4": "14c0be23-2411-11e8-99c0-d5ceee13276a"
+    "uuid-page3": "8e8d0702-2abe-11e8-a1b5-07e9a51f6f11",
+    "uuid-page4": "8e8d0703-2abe-11e8-a1b5-07e9a51f6f11"
   },
-  "_id": "7de069334eb8fc932f7f2a8f84d2104f1520651652477",
-  "Name": "1",
-  "OutputDir": "public/output/repo5aa33deff393911e1cd7d276/7de069334eb8fc932f7f2a8f84d2104f",
-  "AccessDir": "output/repo5aa33deff393911e1cd7d276/7de069334eb8fc932f7f2a8f84d2104f",
+  "_id": "4b444996d6702cd8eb63963d0446b6c81521385905995",
+  "Name": "test",
+  "OutputDir": "public/output/repo5aae7cd0f8289842f00b529e/4b444996d6702cd8eb63963d0446b6c8",
+  "AccessDir": "output/repo5aae7cd0f8289842f00b529e/4b444996d6702cd8eb63963d0446b6c8",
   "ElementAnalytics": {
     "AttributeNum": 9,
     "OperationNum": 6,

@@ -163,7 +163,7 @@
 		
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("XMIString", xmiString);
-		
+			
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
 //		$.store.book[?(@.title =~ /^.*Sword.*$/)]
@@ -209,11 +209,9 @@
 		
 		
 		var Model = {
-				UseCases: {
-					Elements:[],
-					Actors:[],
-					Roles:[]
-				},
+				Actors:[],
+				Roles:[],
+				UseCases: [],
 				DomainModel: {
 					Elements: [],
 					Usages: [],
@@ -265,6 +263,7 @@
 			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
 			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
 			
+//			Model.UseCases.push(UseCase);
 			Model.UseCases.push(UseCase);
 		}
 		

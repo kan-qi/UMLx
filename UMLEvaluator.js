@@ -185,6 +185,8 @@
 //		var useCaseEmpirics = useCase.UseCaseEmpirics;
 //		var useCaseAnalytics = useCase.UseCaseAnalytics;
 //		
+		console.log(useCase);
+		
 		useCaseEvaluationStr += useCaseNum+","+ useCase.Name.replace(/,/gi, "");
 		
 		for(var i in evaluators){
@@ -275,7 +277,7 @@
 		return modelEvaluationStr;
 	}
 	
-	function evaluateUseCase(useCase, Model, callbackfunc){
+	function evaluateUseCase(useCase, model, callbackfunc){
 		
 		if(callbackfunc){
 		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
@@ -283,7 +285,7 @@
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.evaluateUseCase){
-				evaluator.evaluateUseCase(useCase, Model, function(){
+				evaluator.evaluateUseCase(useCase, model, function(){
 					console.log("use case evaluation finishes");
 				});
 			}
