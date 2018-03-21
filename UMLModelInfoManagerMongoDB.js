@@ -285,72 +285,58 @@ function deleteRepo(repoId, callbackfunc) {
     }
 	
 	
-
-    function updateRepoInfo(repo, callbackfunc){
+	function updateModelInfo(modelInfo, repoId, callbackfunc){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
-            
-            var modelInfoObject = repo.modelInfo;
-            //var domainModelObject = repo.DomainModel;
-            //var useCaseInfoObject = repo.UseCases;
-            
-            delete repo.modelInfo;
-            //delete repo.DomainModel;
-            //delete repo.UseCases;
-            
-            db.collection("repos").update({_id: new mongo.ObjectID(repo._id)}, repo, function(err, updateCount){
-                if(err) throw err;
-                db.close();
-                if(callbackfunc){
-                    callbackfunc("updating repoInfo "+ repo);
-                }
-            });
-          
-            updateModelInfo(modelInfoObject,repo._id , callbackfunc);
-
-        });
-
-    } 
-
-
-
-
-    function updateModelInfo(modelInfo, repoId, callbackfunc){
-        MongoClient.connect(url, function(err, db) {
-            if (err) throw err;
-            
-            //var o_id = new mongo.ObjectID(modelInfo._id);
             
             var domainObject = modelInfo.DomainModel;
             var useCaseArray = modelInfo.UseCases;
-           
-            //adding model_id in domainModelInfo
-            //domainObject.mode_id = o_id;
             
             //removing domainModel and UseCase object from the model object 
             delete modelInfo.DomainModel;
             delete modelInfo.UseCases;
             
-           /* for(var useCaseObject in useCaseArray){
-                useCaseObject.model_id = new mongo.ObjectID(modelInfo._id);   
-            }*/
+            domainObject.model_id = new mongo.ObjectId(modelInfo._id);
+            
+            
+            
+            //console.log(modelInfo._id);
+            modelInfo._id = new mongo.ObjectId(modelInfo._id);
             
             //adding rep_id as an element in modelInfo
             modelInfo.rep_id = repoId;
             
+            
+            db.collection("modelInfo").update({"_id": mongo.ObjectId(modelInfo._id)}, modelInfo, function(err, res) {
+                if (err) throw err;
+                console.log("updating modelInfo");
+                         
+            });
+            
             //updating domainModelInfo to add model_id element
-            db.collection("domainModelInfo").update({}, {$set : {"mode_id": new mongo.ObjectID(modelInfo._id)}}, function(err, res) {
+            db.collection("domainModelInfo").update({"model_id": mongo.ObjectId(modelInfo._id)}, domainObject, function(err, res) {
                 if (err) throw err;
                 console.log("updating domainModelInfo");
                          
             });
             
             //updating useCaseInfo to add model_id element
-            db.collection("useCaseInfo").update({}, {$set : {"mode_id": new mongo.ObjectID(modelInfo._id)}}, {multi:true}, function(err, res) {
+            /*db.collection("useCaseInfo").update({"model_id": mongo.ObjectId(modelInfo._id)}, {$set : {useCaseArray}}, {multi:true}, function(err, res) {
+                if (err) throw err;
+                    console.log("updating useCaseInfo");
+                    
+              });*/
+            for(var i in useCaseArray){
+                console.log(useCaseArray[i]._id);
+                useCaseArray[i].model_id = new mongo.ObjectID(modelInfo._id);
+                useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
+                
+                db.collection("useCaseInfo").update({"_id": useCaseArray[i]._id}, useCaseArray[i] , function(err, res) {
                 if (err) throw err;
                     console.log("updating useCaseInfo");
                     
               });
+            }
             
              db.close();
                 if(callbackfunc !== null){
@@ -358,6 +344,38 @@ function deleteRepo(repoId, callbackfunc) {
                 }
         });         
     }
+
+    function updateRepoInfo(repo, callbackfunc){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            
+            var modelArray = repo.Models;
+            repo._id = mongo.ObjectId(repo._id);
+            
+            delete repo.Models;
+            //delete repo.DomainModel;
+            //delete repo.UseCases;
+            
+            db.collection("repos").update({_id: repo._id}, repo, function(err, updateCount){
+                if(err) throw err;
+                db.close();
+                if(callbackfunc){
+                    callbackfunc("updating repoInfo");
+                }
+            });
+          
+            for(var i in modelArray){
+                updateModelInfo(modelArray[i],repo._id , function(){
+                    console.log("Update Model Info Finished");
+                });
+            }
+
+        });
+
+    }
+	
+	
+
 
 
 	// function queryModelAnalytics(modelId, repoId, callbackfunc, update){
