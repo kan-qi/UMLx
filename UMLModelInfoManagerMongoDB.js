@@ -540,6 +540,50 @@ function deleteRepo(repoId, callbackfunc) {
 	}
 
 
+	//testing queryRepoInfoByPage 
+    /*queryRepoInfoByPage("5a8e109c13a5974144158d99", 4,1,function(result)
+    {
+        console.log(result);
+    })*/
+function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
+    {
+        //console.log("res"+stepParameter*pageParameter)
+        MongoClient.connect(url, function(err, db) 
+		{
+			if (err) throw err;
+			
+			var repoid=new mongo.ObjectID(repoId);
+			var dbo = db.db("mydb");
+			var query = { rep_id: repoid};
+			
+			db.collection("modelInfo").aggregate([
+			{
+				"$match":
+				{
+				   "rep_id":new mongo.ObjectID(repoid)
+				}
+			},
+			{
+			   $skip: stepParameter*pageParameter
+			}, // pagination skip
+			{
+				$limit: stepParameter
+			}
+			],function(err, result) 
+            {
+               if (err) throw err;
+               console.log("*******Shown result for ModelInfo*******");
+               db.close();
+               callbackfunc(result);
+            });
+			
+		});
+	}	
+	
+	
+	
+	
+	
     function getGitData(userId, callbackfunc){      
                     
                     
