@@ -444,6 +444,27 @@ function deleteRepo(repoId, callbackfunc) {
     // });
 
     
+    function saveEstimation (estimationInfo,callbackfunc) {
+   	 MongoClient.connect(url, function(err, db)
+   	            {
+   	                if (err) throw err;
+   	    //		
+   	                db.collection("estimates").insertOne(estimationInfo, function(err, res) 
+   	                		{
+   			                  if (err) throw err;
+   			                      console.log("estimates record inserted");
+   			
+   			                      db.close();
+   			                      if(callbackfunc !== null)
+   			                      {
+   			                              callbackfunc(res);
+   			                      }
+     
+   	                		});
+   	            });
+   }
+    
+    
     function queryModelInfo(modelId, repoId, callbackfunc){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
@@ -1341,6 +1362,7 @@ function deleteRepo(repoId, callbackfunc) {
 		saveModelInfo : saveModelInfo,
 		queryRepoInfo : queryRepoInfo,
 		queryUseCaseInfo: queryUseCaseInfo,
+		saveEstimation: saveEstimation,
 		//queryUseCaseAnalytics: function(repoId, modelId, useCaseId, callbackfunc){
 			//queryUseCaseInfo(repoId, modelId, useCaseId, function(useCaseInfo){
 				//var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
