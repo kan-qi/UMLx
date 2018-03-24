@@ -23,15 +23,20 @@ var pathPatternMatchUtil = require("../../../utils/PathPatternMatchUtil.js");
 //	});
 //});
 
-xmiParser.extractUserSystermInteractionModel("./model_platforms/ea/experiments/ItemManagerExample.xml", function(Model){
+//var outputDir = "./model_platforms/ea/experiments/";
+var outputDir = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\structural and behavioral analysis\\Data\\";
+//var inputFile = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\structural and behavioral analysis\\ItemManagerExample.xml";
+var inputFile = "./model_platforms/ea/experiments/ItemManagerExample.xml";
+
+xmiParser.extractUserSystermInteractionModel(inputFile, function(Model){
 
 	traverseUserSystemInterationModel(Model);
 	for(var i in Model.UseCases){
 		var UseCase = Model.UseCases[i];
 		console.log("output use case");
-		modelDrawer.drawPrecedenceDiagram(UseCase, Model.DomainModel, "./model_platforms/ea/experiments/usecase_"+i+".dotty");
-		modelDrawer.drawSimplePrecedenceDiagram(UseCase, Model.DomainModel, "./model_platforms/ea/experiments/usecase_simple_"+i+".dotty");
-		pathsDrawer.drawPaths(UseCase.Paths, "./model_platforms/ea/experiments/usecase_"+i+"_paths.dotty", function(){
+		modelDrawer.drawPrecedenceDiagram(UseCase, Model.DomainModel, outputDir+"usecase_"+i+".dotty");
+		modelDrawer.drawSimplePrecedenceDiagram(UseCase, Model.DomainModel, outputDir+"usecase_simple_"+i+".dotty");
+		pathsDrawer.drawPaths(UseCase.Paths, outputDir+"usecase_"+i+"_paths.dotty", function(){
 			console.log("paths are drawn");
 		});
 	}

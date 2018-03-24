@@ -232,6 +232,7 @@
 		});
 	}
 	
+	
 	module.exports = {
 			extractUserSystermInteractionModel : extractUserSystermInteractionModel
 	}

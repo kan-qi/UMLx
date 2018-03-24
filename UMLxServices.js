@@ -275,8 +275,37 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 
 })
 
+app.get("/getUseCaseInfoStatistics")[
+	
+]
+
 app.get('/surveyProject', function(req, res){
 	res.render('surveyProject');
+});
+
+app.get("/getModelInfoStatiscs", function(req, res){
+	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+//		var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
+//		umlModelExtractor.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
+//		//update model analytics.
+////		console.log(modelInfo);
+//		umlEvaluator.evaluateModel(modelInfoVersion, function(){
+//			console.log("model analysis complete");
+//		});
+//
+//		umlModelInfoManager.pushModelInfoVersion(modelId, repoId, modelInfoVersion, function(modelInfo){
+////			console.log(modelInfo);
+			if(!modelInfo){
+				res.end('model doesn\'t exist!');
+			}
+////			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:repoId});
+//		});
+
+	});
+});
+
+app.get("getRepoInfoStatistics", function(req, res){
+	
 });
 
 app.get('/clearDB', function(req, res){

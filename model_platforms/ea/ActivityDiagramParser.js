@@ -113,6 +113,7 @@
 		for(var j in XMIGroups){
 			var XMIGroup = XMIGroups[j];
 			console.log("group")
+			console.log(XMIGroup['$']['name'])
 			console.log(XMIGroup);
 			var XMIActivities = jp.query(XMIGroup, '$..node[?(@[\'$\'][\'xmi:idref\'])]');
 //			XMIActivities = XMIActivities.concat(jp.query(XMIGroup, '$..containedNode[?(@[\'$\'][\'xmi:type\'])]'));
