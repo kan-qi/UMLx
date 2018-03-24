@@ -37,7 +37,24 @@ function model_file_upload_fnc() {
 
 }
 
-
+function hightlight_diagram_element(name, elementType, diagramType) {
+  var diagramType = ""; //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+  if(diagramType === "analysisDiagram"){
+	  //call Aishwarya's method.
+  }
+  else if(diagramType === "sequenceDiagram"){
+	  //call kate's, not ready.
+  }
+  else if(diagramType === "activityDiagram"){
+	  //call Traci's method.
+  }
+  else if(diagramType === "classDiagram"){
+	  //call Lingquan's method.
+  }
+  else if(diagramType === "usim"){
+	  // leave it now.
+  }
+}
 
 function send_analytics_data(uuid, clientIpAddress, pageNumber) {
     var data = {
