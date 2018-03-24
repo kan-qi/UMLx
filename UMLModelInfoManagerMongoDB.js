@@ -444,33 +444,21 @@ function deleteRepo(repoId, callbackfunc) {
     // });
 
     
-       function queryModelInfo(modelId, repoId, callbackfunc)
-      {
-            MongoClient.connect(url, function(err, db) {
+    function queryModelInfo(modelId, repoId, callbackfunc){
+        MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
--           db.collection("repos").aggregate([
-+           db.collection("modelInfo").aggregate([
+            db.collection("modelInfo").aggregate([
                {
                    "$match":{
--                      "_id":new mongo.ObjectID(repoId)
-+                      "_id":new mongo.ObjectID(modelId)
+                       "_id":new mongo.ObjectID(modelId)
                    }
                },
--              { 
--                "$lookup": {
--                    "from": "modelInfo",
--                    "localField": "_id",
--                    "foreignField": "rep_id",
--                    "as": "modelInfo"
--                }
--              },
-               { 
+               {
                    "$lookup": {
                        "from": "domainModelInfo",
--                      "localField": "_id",
-+                      "localField": "rep_id",
+                       "localField": "_id",
                        "foreignField": "model_id",
                        "as": "domainModel"
                    }
@@ -478,37 +466,19 @@ function deleteRepo(repoId, callbackfunc) {
                {
                    "$lookup": {
                        "from": "useCaseInfo",
--                      "localField": "_id",
-+                      "localField": "rep_id",
+                       "localField": "_id",
                        "foreignField": "model_id",
                        "as": "useCases"
                    }
                }
             ], function(err, result) {
                if (err) throw err;
--
--              // var modelInfo = result[0].modelInfo[0];
--              // modelInfo.useCases = [];
--              
--              // for(var i in result[0].useCases){
--              //     var useCase = result[0].useCases[i];
--              //     modelInfo.useCases.push(useCase);
--              // }
--              //modelInfo.domainModel = result[0].domainModel[0];
--              
--              callbackfunc(result[0]);
-+              console.log("Shown result for ModelInfo");
+               console.log("*******Shown result for ModelInfo*******");
                db.close();
-+              callbackfunc(result[0]);
+               callbackfunc(result[0]);
             });
         });
     }
-	
-	
-	
-	
-	
-	
 
 	
 	
