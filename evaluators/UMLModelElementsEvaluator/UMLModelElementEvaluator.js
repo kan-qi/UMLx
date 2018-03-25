@@ -394,8 +394,8 @@
 							}
                             inheritanceStats = element.InheritanceStats;
                             topLevelClasses += inheritanceStats['topLevelClasses'];
-                            numberOfInheritanceRelationships += inheritanceStats['children'].size;
-                            numberOfClassesInherited += inheritanceStats['children'].size;
+                            numberOfInheritanceRelationships += inheritanceStats['children'].length;
+                            numberOfClassesInherited += inheritanceStats['children'].length;
                             numberOfClassesInheritedFrom += inheritanceStats['numInheritedFrom'];
                             numberOfChildren += inheritanceStats['numOfChildren'];
                             depthInheritanceTree += inheritanceStats['depth'];
@@ -431,6 +431,7 @@
                         domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses = numberOfDerivedClasses;
                         domainModelInfo["ElementAnalytics"].NumberOfClassesInherited = numberOfClassesInherited;
                         domainModelInfo["ElementAnalytics"].NumberOfChildren = numberOfChildren;
+                        domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom = numberOfClassesInheritedFrom;
                         domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
                         domainModelInfo["ElementAnalytics"].CouplingBetweenObjects = couplingBetweenObjects;
 
