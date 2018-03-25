@@ -10,37 +10,49 @@
 	
 	var dottyUtil = require("../utils/DottyUtil.js");
 	
+
 	function drawStimulusNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-			<TR><TD><IMG SRC="Stimulus_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
+			<TR><TD><IMG SRC="img/stimulus_icon.png"/></TD></TR>\
+		 <TR><TD>'+label+'</TD></TR>\
 		</TABLE>>];';
 	}
 
 	function drawNode(id, label){
 		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-			<TR><TD><IMG SRC="activity_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
+			<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
+		 <TR><TD>'+label+'</TD></TR>\
 		</TABLE>>];';
 	}
 
 	function drawOutOfScopeNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-			<TR><TD><IMG SRC="out_of_scope_activity_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
+			<TR><TD><IMG SRC="img/out_of_scope_activity_icon.png"/></TD></TR>\
+		 <TR><TD>'+label+'</TD></TR>\
 		</TABLE>>];';
+		
+//		 <TR><TD><FONT POINT-SIZE="20">'+label+'</FONT></TD></TR>\
 	}
 
 	function drawFragmentNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="fragment_node_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
+		 <TR><TD>'+label+'</TD></TR>\
 		</TABLE>>];';
 	}
+
+
+	//function drawExternalNode(id, label){
+//		return id+'[label=<\
+//			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+//			<TR><TD><IMG SRC="external_activity_icon.png"/></TD></TR>\
+//		  <TR><TD>'+label+'</TD></TR>\
+//		</TABLE>>];';
+	//}
 
 	function getGroupDrawable(Group){
 		if(Group === "System"){
@@ -55,8 +67,8 @@
 		//temporarily eliminate some unnecessary nodes
 		console.log("domain objects");
 		console.log(component);
-		if(component.Name === "System Boundary" || component.Name.startsWith('$')){
-			return "";
+		if(component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
+			return null;
 		}
 		var componentInternal = "{";
 		var componentInternalIndex = 0;
@@ -81,7 +93,7 @@
 					functionSignature = parameter.Type.substring(7).replace("__", "[]") + " "+functionSignature;
 				}
 				else {
-					functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
+//					functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
 				}
 			}
 			functionSignature += ")";
@@ -103,6 +115,8 @@
 		console.log(precedenceRelations);
 		var graph = 'digraph g {\
 			node [shape=plaintext]';
+//			node [margin=0 fontcolor=blue fontsize=12 width=0.01 shape=circle style=filled]';
+		
 
 		// used to get rid of duplicates.
 		var drawnObjects = [];
@@ -144,6 +158,9 @@
 			graph += "subgraph cluster"+GroupNum+" {";
 			for(var k in Group){
 				var activity = Group[k];
+				
+//				var label = activity.Name;
+//				var node = drawExternalNode(activity._id, activity.Name);
 				var node = drawNode(activity._id, activity.Name);
 				
 				if(activity.Stimulus){
@@ -160,16 +177,17 @@
 				if(activity.receiver && activity.receiver.Class){
 					edgesToDomainObjects.push(dottyDraw.draw('"'+activity._id+'"->"'+activity.receiver.Class+'"[style = dashed];'));
 				}
+				
 					graph += dottyDraw.draw(node);
 				
 			}
 			GroupNum ++;
+//			graph += "label = \""+j+"\";style=\"bold\"}";
 			graph += getGroupDrawable(j)+"};";
 		}
 		
 		for(var j in others){
 			var activity = others[j];
-			
 			var node = drawNode(activity._id, activity.Name);
 			
 			if(activity.Stimulus){
@@ -202,23 +220,48 @@
 		}
 		
 		graph += "subgraph cluster"+1000+" {";
+//		var j = 0;
 		for(var i in DomainModel.Elements){
+			//arrange the nodes in the subgraph
+			
+			
+			
 			var domainObject = DomainModel.Elements[i];
-			graph += dottyDraw.draw(drawDomainObjectNode(domainObject));
+			var domainObjectToDraw = drawDomainObjectNode(domainObject);
+			
+			if(domainObjectToDraw){
+//				if(j%3 == 0){
+//					graph += "{rank=same;";
+//					var index = 1001+j;
+//					graph += "subgraph cluster"+index+" {";
+//				}
+				graph += dottyDraw.draw(domainObjectToDraw);
+				
+//				if(j%3 == 2){
+//					graph += "};";
+//				}
+//				j++;
+			}
 		}
+		
+//		if(j % 3 != 0){
+//			graph +="};";
+//		}
 		graph += "label = \"Domain Model\";};";
 		
 		for(var i in edgesToDomainObjects){
 			graph += edgesToDomainObjects[i];
 		}
 		
-		graph += 'imagepath = \"./imgs\"}';
+		graph += 'imagepath = \"./public\"}';
 		
-		dottyUtil = require("../../../utils/DottyUtil.js");
+		
+		dottyUtil = require("../utils/DottyUtil.js");
+		console.log("test graph");
+		console.log(graph);
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
-
 		return graph
 		
 	}
@@ -228,7 +271,8 @@
 		var precedenceRelations = UseCase.PrecedenceRelations;
 		console.log(precedenceRelations);
 		var graph = 'digraph g {\
-			node [shape=plaintext]';
+			fontsize=24\
+			node [shape=plaintext fontsize=24]';
 //			node [margin=0 fontcolor=blue fontsize=12 width=0.01 shape=circle style=filled]';
 		
 		// used to get rid of duplicates.
@@ -282,21 +326,77 @@
 		}
 		
 		
-		graph += 'imagepath = \"./imgs\"}';
+		graph += 'imagepath = \"./public\"}';
 		
 		
-		dottyUtil = require("../../../utils/DottyUtil.js");
+		dottyUtil = require("../utils/DottyUtil.js");
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
 
-		return graph
+		return graph;
+	}
+	
+	function drawDomainModelFunc(DomainModel, graphFilePath, callbackfunc){
+
+
+		var graph = 'digraph g {';
+		graph += "node[shape=record]";
+
+		var drawnObjects = [];
+		function DottyDraw(){
+			this.drawnObjects = [];
+			this.draw = function(dottyObject){
+				if(drawnObjects[dottyObject]){
+					return "";
+				}
+				else{
+					drawnObjects[dottyObject] = 1;
+					return dottyObject;
+				}
+			}
+		}
+		var dottyDraw = new DottyDraw();
+		
+		
+//		var j = 0;
+		for(var i in DomainModel.Elements){
+			//arrange the nodes in the subgraph
+			
+			
+			
+			var domainObject = DomainModel.Elements[i];
+			var domainObjectToDraw = drawDomainObjectNode(domainObject);
+			
+			if(domainObjectToDraw){
+//				if(j%3 == 0){
+//					graph += "{rank=same;";
+//					var index = 1001+j;
+//					graph += "subgraph cluster"+index+" {";
+//				}
+				graph += dottyDraw.draw(domainObjectToDraw);
+				
+//				if(j%3 == 2){
+//					graph += "};";
+//				}
+//				j++;
+			}
+		}
+		
+		graph += 'imagepath = \"./public\"}';
+		
+		dottyUtil = require("../utils/DottyUtil.js");
+		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+			console.log("drawing is down");
+		});
+
+		return graph;
 		
 	}
 	
 	module.exports = {
-		drawModel:function(model, filePath, callbackfunc){
-			drawModel(model, filePath, callbackfunc);
-		},
+			drawSimplePrecedenceDiagram:drawSimplePrecedenceDiagramFunc,
+			drawPrecedenceDiagram: drawPrecedenceDiagramFunc,
+			drawDomainModel: drawDomainModelFunc
 	}
 }())

@@ -1,5 +1,6 @@
 if useCaseInfo        
-  div.use-case-info
+  button(onclick="toggleQueryDiagram()", class="big-button") Toggle Diagram
+  div.use-case-info(style="display: none;", id="use-case-diagram")   
      object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg" type="image/svg+xml")
   div.use-case-info-content
    ul.nav.nav-tabs
@@ -34,7 +35,7 @@ if useCaseInfo
         th TYPE
       tbody
        -var pathId = 1;
-       each path in useCaseInfo.Paths
+       each path in useCaseInfo.DisplayablePaths
         tr(onclick="colorUseCaseElementAndPath('#{path.PathStr}', 'path')", class="usecase-tr")
          td #{pathId}
          td

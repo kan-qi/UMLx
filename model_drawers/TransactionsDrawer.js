@@ -7,21 +7,21 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
-	var dottyUtil = require("../../../utils/DottyUtil.js");
+	var dottyUtil = require("../utils/DottyUtil.js");
 	
 	function drawStimulusNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" ALIGN="CENTER">\
 			<TR><TD><IMG SRC="Stimulus_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
+		  <TR><TD WIDTH="100">'+label+'</TD></TR>\
 		</TABLE>>];';
 	}
 	
 	function drawNode(id, label){
 		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" ALIGN="CENTER">\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" ALIGN="CENTER" WIDTH="100">\
 			<TR><TD><IMG SRC="activity_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
+		  <TR><TD WIDTH="100">'+label+'</TD></TR>\
 		</TABLE>>];';
 	}
 	
@@ -55,7 +55,8 @@
 		console.log(paths);
 		
 		var dotty = 'digraph g {';
-		dotty += "node[shape=plaintext]";
+		dotty += "fontsize = 24";
+		dotty += "node[shape=plaintext fontsize=24]";
 //		dotty += "node[shape=record]";
 		// used to get rid of duplicates.
 		var drawnObjects = [];
@@ -159,7 +160,7 @@
 			dotty += "label = \"Transaction#"+pathTag+"\";}";
 		}
 		
-		dotty += 'imagepath = \"./imgs\"}';
+		dotty += 'imagepath = \"./img\"}';
 		
 		if(callbackfunc){
 		dottyUtil.drawDottyGraph(dotty,graphFilePath,callbackfunc);

@@ -6,7 +6,7 @@ var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
 var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
-var umlEstimator = require("./UMLEstimator.js");
+var projectEffortEstimator = require("./model_estimator/ProjectEffortEstimator.js");
 //var COCOMOCalculator = require("./COCOMOCalculator.js");
 var multer = require('multer');
 var jade = require('jade');
@@ -16,7 +16,7 @@ var cookieParser = require('cookie-parser');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
 var bodyParser = require('body-parser');
-
+//var projectEffortEstimator = require("./model_estimator/ProjectEffortEstimator.js");
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -627,7 +627,7 @@ app.get('/requestDomainModelDetail', function (req, res){
 			res.end('delete error!');
 			return;
 		}
-//		console.log(domainModel);
+		console.log(domainModel);
 		res.render('domainModelDetail',{domainModel: domainModel});
 	});
 })
@@ -851,10 +851,45 @@ app.get('/requestUseCaseDetail', function(req, res){
 	umlModelInfoManager.queryUseCaseInfo(repoId, modelId, useCaseId, function(useCaseInfo){
 //				console.log('use case detail');
 //				console.log(useCaseInfo);
-		for(var i in useCaseInfo.Diagrams){
+//		for(var i in useCaseInfo.Diagrams){
 //		console.log(useCaseInfo.Diagrams[i]['Paths']);
+//		}
+		
+		//create the displayable paths
+		var displayablePaths = [];
+		for(var i in useCaseInfo.Paths){
+			var path = useCaseInfo.Paths[i];
+			var pathStr = "";
+			for(var j in path.Nodes){
+				var node = path.Nodes[j];
+				pathStr += node.Name;
+				if( i != path.Nodes.length - 1){
+					pathStr += "->";
+				}
+			}
+			displayablePaths.push({id: i, PathStr: pathStr, Tag: "undefined"});
 		}
+		console.log(useCaseInfo);
+		useCaseInfo.DisplayablePaths = displayablePaths;
 				res.render('useCaseDetail', {useCaseInfo:useCaseInfo, modelId:modelId,repoId:repoId});
+
+		//create img directory so icons can be displayed
+		var fs_extra = require('fs-extra');
+		var mkdirp = require('mkdirp');
+		var imgDirectory = "public/output/repo" + repoId + "/" + modelId.substring(0, 32) + "/" + useCaseId + "/img";
+		mkdirp(imgDirectory, function(err) {
+			if(err) {
+				console.log(err);
+				return;
+			}
+		});
+		fs_extra.copy('public/img', imgDirectory, function(err) {
+			if(err) {
+				console.log(err);
+				return;
+			}
+		});
+
 	    });
 })
 
@@ -929,7 +964,7 @@ app.get('/queryEstimationModel', function(req, res){
 	if(estimator === "OLSR"){
 		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
-//			var modelEvaluationData = umlFileManager.parseCSVData(modelEvaluationStr, true);
+			var modelEvaluationData = umlFileManager.parseCSVData(modelEvaluationStr, true);
 //			umlEstimator.runLinearRegression(repoInfo, modelEvaluationData, x, y, function(calibrationResults){
 //				console.log(calibrationResults);
 //				if(calibrationResults === false){
@@ -939,7 +974,6 @@ app.get('/queryEstimationModel', function(req, res){
 //					res.render('calibrationResult', {calibrationResult:calibrationResults[x], ver: new Date().getTime()});
 //				}
 //			});
-
 		}, false);
 		});
 	}
@@ -947,6 +981,55 @@ app.get('/queryEstimationModel', function(req, res){
 		res.end(estimator);
 	}
 })
+
+app.post('/estimateProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{name:'uml_other', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
+//	console.log(req.body);
+	console.log("estimate project effort");
+	var umlFilePath = req.files['uml_file'][0].path;
+//	var otherFilePath = req.files['other_file'][0].path;
+//	var umlModelName = req.body['uml-model-name'];
+//	var umlModelType = req.body['uml-model-type'];
+	var umlModelType = "uml";
+	var umlModelName = "query1";
+	var predictionModel = "eucp";
+	var repoId = req.userInfo.repoId;
+//	var uuidVal = req.body['uuid'];
+	console.log(repoId);
+	var formInfo = req.body;
+	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
+		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
+		console.log('updated model info');
+		console.log(modelInfo);
+		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+			//update model analytics.
+			console.log("model is extracted");
+			umlEvaluator.evaluateModel(modelInfo, function(){
+				console.log("model analysis complete");
+			});
+//			console.log(modelInfo);
+			
+			projectEffortEstimator.estimateProjectEffort(modelInfo, predictionModel, function(modelInfo){
+				if(!modelInfo){
+					console.log("error");
+					res.render('estimationResultPane', {error: "inter process error"});
+				}
+				else{
+				projectEffortEstimator.analyseEffortEstimationResult(modelInfo);
+				
+				umlModelInfoManager.saveEffortEstimationQueryResult(modelInfo, repoId, function(modelInfo){
+//					console.log(modelInfo);
+					console.log("estimation result is saved");
+					res.render('estimationResultPane', {modelInfo:modelInfo});
+					
+				});
+				}
+			});
+			
+		});
+	});
+});
 
 app.get('/dumpRepoDescriptiveDistributions', function(req, res){
 	var repoId = req.query.repo_id;
@@ -1146,7 +1229,7 @@ app.get('/testActivityDiagramExtraction', function(req, res){
 });
 
 app.get('/testCOCOMODataLoad', function(req, res){
-	var cocomoCalculator = require("./evaluators/COCOMOCalculator.js")
+	var cocomoCalculator = require("./evaluators/COCOMOEvaluator/COCOMOCalculator.js")
 	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
 		res.end(outputStr);
 	});

@@ -52,13 +52,13 @@
 				var entityNum = 0;
 				var actorNum = 0;
 				var PathStr = "";
-				for(var i = 0; i < path.length; i++)
+				for(var i = 0; i < path.Nodes.length; i++)
 				{
-					var node = path[i];
+					var node = path.Nodes[i];
 //					var components = diagram.allocate(node);
 					
-					if(node.supplier){
-						var component = node.supplier;
+					if(node.Component){
+						var component = node.Component;
 						avgDegree += component.InboundNumber;
 
 						if(component.Type=="actor")actorNum++;
@@ -69,7 +69,7 @@
 					
 					pathLength++;
 					PathStr += node.Name;
-					if(i != path.length - 1){
+					if(i != path.Nodes.length - 1){
 						PathStr += "->";
 					}
 					

@@ -2,7 +2,6 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var path = require('path');
-	var RExec = '\"C:/Program Files/R/R-3.2.5/bin/Rscript\"';
 	var mkdirp = require('mkdirp');
 	
 	function drawDottyGraph(dottyGraph, graphFilePath, callbackfunc){
