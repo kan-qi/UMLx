@@ -115,7 +115,7 @@
                         'numInheritedFrom': 0,
                         'numDerivedClass': 0,
                         'coupling': 0,
-                        'children': new Set([]),
+                        'children': new Set(),
                         'topLevelClasses': 0,
                         'numOfChildren': 0,
                 }

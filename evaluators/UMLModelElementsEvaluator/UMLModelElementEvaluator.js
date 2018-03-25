@@ -394,8 +394,8 @@
 							}
                             inheritanceStats = element.InheritanceStats;
                             topLevelClasses += inheritanceStats['topLevelClasses'];
-                            numberOfInheritanceRelationships += inheritanceStats['children'].length;
-                            numberOfClassesInherited += inheritanceStats['children'].length;
+                            numberOfInheritanceRelationships += inheritanceStats['children'].size;
+                            numberOfClassesInherited += inheritanceStats['children'].size;
                             numberOfClassesInheritedFrom += inheritanceStats['numInheritedFrom'];
                             numberOfChildren += inheritanceStats['numOfChildren'];
                             depthInheritanceTree += inheritanceStats['depth'];
