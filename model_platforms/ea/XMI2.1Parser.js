@@ -11,6 +11,7 @@
 	var sequenceDiagramParser= require("./SequenceDiagramParser.js");
 	var activityDiagramParser= require("./ActivityDiagramParser.js");
 	var analysisDiagramParser= require("./AnalysisDiagramParser.js");
+	var useCaseDiagramParser = require("./UseCaseDiagramParser.js");
 	/*
 	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
 	 * 
@@ -50,6 +51,16 @@
 	 *user activities....and system activities...
 	 */
 	
+	function contains(arr, obj) {  
+	    var i = arr.length;  
+	    while (i--) {  
+	        if (arr[i] === obj) {  
+	            return true;  
+	        }  
+	    }  
+	    return false;  
+	}  
+	
 	function standardizeName(name){
 		return name.replace(/\s/g, '').toUpperCase();
 	}
@@ -69,14 +80,15 @@
 			console.log(XMIAttribute);
 			var attribute = {
 					Name: XMIAttribute['$']['name'],
-					Type: type
+					Type: type,
+					isStatic: XMIAttribute['$']['isStatic']
 			}
 			attributes.push(attribute);
 		}
 
 		var XMIOperations = jp.query(XMIClass, '$.ownedOperation[?(@[\'$\'][\'xmi:id\'])]');
 		var operations = new Array();
-		
+
 		for(var i in XMIOperations){
 			var XMIOperation = XMIOperations[i];
 			var XMIParameters = jp.query(XMIOperation, '$.ownedParameter[?(@[\'$\'][\'xmi:id\'])]');
@@ -92,11 +104,43 @@
 			
 			var operation = {
 					Name: XMIOperation['$']['name'],
+					Visibility: XMIOperation['$']['visibility'],
 					Parameters: parameters
 			}
 			operations.push(operation);
 		}
-		//				
+               
+                var inheritanceStats = {
+                        'depth': 0,
+                        'numInheritedFrom': 0,
+                        'numDerivedClass': 0,
+                        'coupling': 0,
+                        'children': new Set(),
+                        'topLevelClasses': 0,
+                        'numOfChildren': 0,
+                }
+
+                function traverseClass(XMIClass, level) {
+                        var children = jp.query(XMIClass, '$.nestedClassifier[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+                        // console.log('Exploring children, level: ');
+                        // console.log(level);
+                        inheritanceStats['depth'] = Math.max(inheritanceStats['depth'], level);
+                        if (children.length != 0) { 
+                                console.log('------------ Children Present ------------')
+                                inheritanceStats['numInheritedFrom']++;
+                                for (j in children) {
+                                    var child = children[j];
+                                    inheritanceStats['children'].add(child['$']['name']);
+                                    inheritanceStats['numOfChildren']++;
+                                    traverseClass(child, level + 1);
+                                }
+                        }
+                }
+
+                inheritanceStats['topLevelClasses']++;
+                traverseClass(XMIClass, 0);
+                // console.log(inheritanceStats);
+
 		// console.log(classDiagram);
 //		component.Operations = operations;
 //		component.Attributes = attributes;
@@ -107,6 +151,7 @@
 				Name: XMIClass['$']['name'],
 				Operations: operations,
 				Attributes: attributes,
+                InheritanceStats: inheritanceStats,
 //				Attachment: XMIClass
 			}
 	}
@@ -118,7 +163,7 @@
 		
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("XMIString", xmiString);
-		
+			
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
 //		$.store.book[?(@.title =~ /^.*Sword.*$/)]
@@ -164,9 +209,14 @@
 		
 		
 		var Model = {
+				Actors:[],
+				Roles:[],
 				UseCases: [],
 				DomainModel: {
-					Elements: []
+					Elements: [],
+					Usages: [],
+					Realization:[],
+					Assoc: []
 				}
 		};
 		
@@ -213,6 +263,7 @@
 			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
 			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
 			
+//			Model.UseCases.push(UseCase);
 			Model.UseCases.push(UseCase);
 		}
 		
@@ -220,6 +271,52 @@
 		for(var i in DomainElementsBySN){
 			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
 		}
+		
+		var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
+		var DomainUsagesByID = [];
+		for(var i in XMIUsages){
+			var XMIUsage = XMIUsages[i];
+			//      console.log(XMIUsage);
+			var domainUsage = {
+				_id: XMIUsage['$']['xmi:id'],
+				Supplier: XMIUsage['$']['supplier'],
+				Client: XMIUsage['$']['client']
+			}
+			DomainUsagesByID[domainUsage._id] = domainUsage;
+		}
+
+		for(var i in DomainUsagesByID){
+			Model.DomainModel.Usages.push(DomainUsagesByID[i]);
+		}
+
+		var XMIReals = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Realization\')]');
+		var DomainRealizationByID = [];
+		for(var i in XMIReals){
+			var XMIReal = XMIReals[i];
+			//      console.log(XMIReal);
+			var domainRealization = {
+				_id: XMIReal['$']['xmi:id']
+			}
+			DomainRealizationByID[domainRealization._id] = domainRealization;
+		}
+
+		for(var i in DomainRealizationByID){
+			Model.DomainModel.Realization.push(DomainRealizationByID[i]);
+		}
+
+		var XMIAssocs = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
+		var DomainAssociationByID = [];
+		for(var i in XMIAssocs){
+			var XMIAssoc = XMIAssocs[i];
+			//      console.log(XMIAssoc);
+			var domainAssociation = {
+				_id: XMIAssoc['$']['xmi:id']
+			}
+			DomainAssociationByID[domainAssociation._id] = domainAssociation;
+		}
+		
+		useCaseDiagramParser.parseUseCaseDiagram(XMIUseCases, XMIUMLModel, Model);
+		
 		
 //		return Model;
 		
