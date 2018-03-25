@@ -275,10 +275,6 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 
 })
 
-app.get("/getUseCaseInfoStatistics")[
-	
-]
-
 app.get('/surveyProject', function(req, res){
 	res.render('surveyProject');
 });

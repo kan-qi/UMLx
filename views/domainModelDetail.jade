@@ -12,7 +12,8 @@ if domainModel
  div.tab-content
   div.tab-pane.fade.in.active(id="domain-model-info-pane")
    div.domain-model-info
-    img.domain-model(src=domainModel.AccessDir+"/domainModel.svg")
+    button(onclick="toggleDomainDiagram()", class="big-button") Toggle Diagram
+    img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
    div.domain-model-info-content
     ul.nav.nav-tabs
      li.active
