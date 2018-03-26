@@ -149,6 +149,7 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="model-evaluation")
        div.model-evaluation
         h3 Evaluation
+         button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);') Modify
          table#dataTable.table.table-striped
             tbody
                 tr
@@ -217,7 +218,7 @@ div.block.panel.panel-default
 
          button.btn.btn-default.buttonForModel#submitButton.hidden(type='button', onclick='submitEdit();') Submit
          button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel
-         button.btn.btn-default.buttonForModel(type='button', onclick='editFunction(this);') Modified
+
      //div.tab-pane.fade(id="model-evaluation")
       div.model-evaluation-ops
          div
