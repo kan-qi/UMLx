@@ -1338,6 +1338,7 @@ function editFunction(button) {
 
 	document.getElementById("submitButton").classList.remove("hidden");
     document.getElementById("cancelButton").classList.remove("hidden");
+    document.getElementById("modifyButton").classList.add("hidden");
 }
 
 function submitEdit() {
@@ -1369,4 +1370,5 @@ function cancelEdit() {
 
     document.getElementById("submitButton").classList.add("hidden");
     document.getElementById("cancelButton").classList.add("hidden");
+    document.getElementById("modifyButton").classList.remove("hidden");
 }
