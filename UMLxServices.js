@@ -218,6 +218,21 @@ app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password'
 
 })
 
+
+app.post('/updateModel', function (req, res){
+
+   // var obj = JSON.parse(JSON.stringify(req.body));
+    var modelInfo = req.body;
+    //JSON.parse(modelInfo);
+    console.log(modelInfo);
+    var repoID = modelInfo.rep_id;
+	umlModelInfoManager.updateModelInfo(modelInfo, repoID, function(result,message){
+        res.json(result);
+        console.log("UpdateModel Finished");
+    });
+})
+
+
 app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'token',maxCount : 1}]),  function (req, res){
 
 	var email = req.body['email'];
