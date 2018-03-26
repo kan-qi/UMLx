@@ -363,6 +363,7 @@
 		
 		model.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
 		model.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
+		model.StatisticsOutputDir = model.OutputDir+"/statistics";
 		
 		var files = [{fileName : model.UseCaseEvaluationFileName , content : useCaseEvaluationStr},
 			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr}];
@@ -383,10 +384,47 @@
 					}
 				}
 				
-				 if(callbackfunc){
-//						console.log(repoEvaluationsForUseCaseStr);
-				    	callbackfunc(model);
+				umlFileManager.mkDir(model.StatisticsOutputDir, function(result){
+					if(result){
+						//Needs to be upgraded soon
+						console.log("apply statistical analysis on the output evaluation");
+						var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.UseCaseEvaluationFileName+'" "'+model.StatisticsOutputDir+'" "."';
+						
+						RScriptExec.runRScript(command,function(result){
+							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.MomainModelEvaluationFileName+'" "'+model.StatisticsOutputDir+'" "."';
+							
+							if (!result) {
+								if(callbackfunc){
+									callbackfunc(false);
+								}
+								return;
+							}
+							
+							RScriptExec.runRScript(command,function(result){
+								if (!result) {
+									if(callbackfunc){
+										callbackfunc(false);
+									}
+									return;
+								}
+								if(callbackfunc){
+									callbackfunc(modelInfo);
+								}
+							});
+						});
+						
+//						 if(callbackfunc){
+////								console.log(repoEvaluationsForUseCaseStr);
+//						    	callbackfunc(model);
+//							}
 					}
+					else {
+						if(callbackfunc){
+							callbackfunc(false);
+						}
+					}
+					
+				});
 			}
 				
 		});
@@ -437,6 +475,7 @@
 			
 
 		repoInfo.ModelEvaluationFileName = "modelEvaluation.csv";
+		repoInfo.StatisticsOutputDir = model.OutputDir+"/statistics.csv";
 			
 		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr}];
 		
@@ -456,10 +495,37 @@
 					}
 				}
 				
-				 if(callbackfunc){
-//						console.log(repoEvaluationsForUseCaseStr);
-				    	callbackfunc(repoInfo);
+				umlFileManager.mkDir(repoInfo.StatisticsOutputDir, function(result){
+					if(result){
+						//Needs to be upgraded soon
+						console.log("apply statistical analysis on the output evaluation");
+						var command = './Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo.StatisticsOutputDir+'" "."';
+							
+							RScriptExec.runRScript(command,function(result){
+								if (!result) {
+									if(callbackfunc){
+										callbackfunc(false);
+									}
+									return;
+								}
+								if(callbackfunc){
+									callbackfunc(modelInfo);
+								}
+							});
+						
 					}
+					else {
+						if(callbackfunc){
+							callbackfunc(false);
+						}
+					}
+					
+				});
+				
+//				 if(callbackfunc){
+////						console.log(repoEvaluationsForUseCaseStr);
+//				    	callbackfunc(repoInfo);
+//				}
 			}
 			
 		});
@@ -468,7 +534,6 @@
 		else {
 			return repoInfo;
 		}
-		
 	}
 	
 	/*

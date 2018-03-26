@@ -163,6 +163,22 @@
 				 // should put in the repo dir.
 				 formInfo: umlFileInfo.formInfo
 			}
+		},
+		makeDir: function(dir, callbackfunc){
+			mkdirp(dir, function(err) { 
+				if(err) {
+					console.log(err);
+					if(!callbackfunc){
+						callbackfunc(false);
+					}
+					return;
+				}
+				
+				if(!callbackfunc){
+					callbackfunc(true);
+				}
+		
+			});
 		}
 	}
 }())

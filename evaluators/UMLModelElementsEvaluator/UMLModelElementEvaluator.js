@@ -590,6 +590,7 @@
 			modelInfo["ElementAnalytics"].TotalDegree += useCase["ElementAnalytics"].TotalDegree;
 			modelInfo["ElementAnalytics"].ElementNum += useCase["ElementAnalytics"].ElementNum;
 			
+			//need to recalculate here.
 			modelInfo["ElementAnalytics"].RoleNum += useCase["ElementAnalytics"].RoleNum;
 			modelInfo["ElementAnalytics"].AvgActor += useCase["ElementAnalytics"].AvgActor;
 			modelInfo["ElementAnalytics"].AvgRole += useCase["ElementAnalytics"].AvgRole;
