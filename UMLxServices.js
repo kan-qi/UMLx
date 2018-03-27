@@ -6,7 +6,7 @@ var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
 var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
-var projectEffortEstimator = require("./model_estimator/ProjectEffortEstimator.js");
+var effortPredictor = require("./model_estimator/EffortPredictor.js");
 //var COCOMOCalculator = require("./COCOMOCalculator.js");
 var multer = require('multer');
 var jade = require('jade');
@@ -16,7 +16,8 @@ var cookieParser = require('cookie-parser');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
 var bodyParser = require('body-parser');
-//var projectEffortEstimator = require("./model_estimator/ProjectEffortEstimator.js");
+var randomstring = require("randomstring");
+//var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -1010,7 +1011,7 @@ app.get('/queryEstimationModel', function(req, res){
 	}
 })
 
-app.post('/estimateProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{name:'uml_other', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
+app.post('/predictProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{name:'uml_other', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
 //	console.log(req.body);
 	console.log("estimate project effort");
 	var umlFilePath = req.files['uml_file'][0].path;
@@ -1038,20 +1039,34 @@ app.post('/estimateProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{
 			});
 //			console.log(modelInfo);
 			
-			projectEffortEstimator.estimateProjectEffort(modelInfo, predictionModel, function(modelInfo){
+			effortPredictor.predictEffort(modelInfo, predictionModel, function(modelInfo){
 				if(!modelInfo){
 					console.log("error");
 					res.render('estimationResultPane', {error: "inter process error"});
 				}
 				else{
-				projectEffortEstimator.analyseEffortEstimationResult(modelInfo);
-				
-				umlModelInfoManager.saveEffortEstimationQueryResult(modelInfo, repoId, function(modelInfo){
-//					console.log(modelInfo);
-					console.log("estimation result is saved");
-					res.render('estimationResultPane', {modelInfo:modelInfo});
-					
-				});
+					effortPredictor.predictDuration(modelInfo, modelInfo.predictedEffort, function(modelInfo){
+						if(!modelInfo){
+							console.log("error");
+							res.render('estimationResultPane', {error: "inter process error"});
+						}
+						else{
+							effortPredictor.predictPersonnel(modelInfo, modelInfo.predictedEffort, function(modelInfo){
+								if(!modelInfo){
+									console.log("error");
+									res.render('estimationResultPane', {error: "inter process error"});
+								}
+								else{
+								umlModelInfoManager.saveEffortEstimationQueryResult(modelInfo, repoId, function(modelInfo){
+//									console.log(modelInfo);
+									console.log("estimation result is saved");
+									res.render('estimationResultPane', {modelInfo:modelInfo});
+									
+								});
+								}
+							});
+						}
+					});
 				}
 			});
 			
@@ -1190,6 +1205,10 @@ app.post('/', function(req, res){
 
 app.get('/', function(req, res){
 		var message = req.query.e;
+		var requestUUID = randomstring.generate({
+			  length: 12,
+			  charset: 'alphabetic'
+			});
 
 		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
 //			console.log(req.userInfo);
@@ -1208,7 +1227,8 @@ app.get('/', function(req, res){
 							}
 
 						}
-
+						
+						repoInfo.requestUUID = requestUUID;
 						res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
 
 
@@ -1217,6 +1237,7 @@ app.get('/', function(req, res){
 
 			} else {
 
+				repoInfo.requestUUID = requestUUID;
 				res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
 			}
 
