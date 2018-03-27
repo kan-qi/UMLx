@@ -38,8 +38,6 @@ function model_file_upload_fnc() {
 }
 
 
-
-
 function send_analytics_data(uuid, clientIpAddress, pageNumber) {
     var data = {
         ip: clientIpAddress,

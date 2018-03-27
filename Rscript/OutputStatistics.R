@@ -18,6 +18,7 @@ if (length(args) < 1) {
 analyticInfoPath = args[1]
 outputDir <- args[2]
 workDir <- args[3]
+jsonOutputPath <- paste(outputDir,'statistics.json', sep='/')
 reportPath <- paste(outputDir,'analytical_info_statistics_report.txt', sep='/')
 # store the current directory
 initial.dir<-getwd()
@@ -36,7 +37,6 @@ library(ggplot2)
 library(data.table)
 library(e1071)
 library(jsonlite)
-
 
 analyticalData <- read.csv(analyticInfoPath, header=TRUE)
 var0 <- sapply(analyticalData, function(x) all(is.nan(x)))
@@ -73,6 +73,7 @@ for(i in 1:length(column_names_dataframe)){
 #reportPath <- paste(outputDir,'statistics.json', sep='/')
 #sink(reportPath)
 # write statistics in JSON format
+sink(jsonOutputPath)
 print(jsonlite::toJSON(list_column_names,pretty = TRUE,auto_unbox = TRUE))
 closeAllConnections()
 

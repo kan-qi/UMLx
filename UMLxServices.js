@@ -1183,7 +1183,6 @@ app.get('/surveyData', function(req, res){
    res.render("surveyData");
 });
 
-
 // to handle post redirect to home page
 app.post('/', function(req, res){
 	res.redirect('/')
