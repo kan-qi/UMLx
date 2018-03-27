@@ -48,10 +48,10 @@ png(filename=paste(outputPath,"project_descriptive_statistics_for_bayesian_analy
 		pointsize=12,
 		res=96)
 
-projectHist1 <- ggplot(useCaseData, aes(x=Real_Effort_Person_Hours))+geom_histogram(binwidth=350, colour="white", fill="gray55")+xlab("Effort (person-hours)")+ylab("Number of Projects")
-projectHist2 <- ggplot(useCaseData, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")
-projectHist3 <- ggplot(useCaseData, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="white", fill="gray55")+xlab("Use Case Num")+ylab("Number of Projects")
-projectBar <- ggplot(useCaseData, aes(x=Application_Type))+geom_bar(colour="white", fill="gray55")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)
+projectHist1 <- ggplot(useCaseData, aes(x=Real_Effort_Person_Hours))+geom_histogram(binwidth=350, colour="white", fill="gray55")+xlab("Effort (person-hours)")+ylab("Number of Projects")+theme_bw()
+projectHist2 <- ggplot(useCaseData, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")+theme_bw()
+projectHist3 <- ggplot(useCaseData, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="white", fill="gray55")+xlab("Use Case Num")+ylab("Number of Projects")+theme_bw()
+projectBar <- ggplot(useCaseData, aes(x=Application_Type))+geom_bar(colour="white", fill="gray55")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)+theme_bw()
 print(grid.arrange(projectHist1, projectHist2, projectHist3, projectBar, ncol=2))
 
 #output the use case related statistics
@@ -63,11 +63,11 @@ png(filename=paste(outputPath,"project_counting_statistics_for_bayesian_analysis
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(useCaseData, aes(x=UAW))+geom_histogram(binwidth=1.2, colour="white", fill="gray55")+xlab("UAW")+ylab("Number of Projects")
-UCPHist2 <- ggplot(useCaseData, aes(x=UUCW))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCW")+ylab("Number of Projects")
-UCPHist3 <- ggplot(useCaseData, aes(x=TCF))+geom_histogram(binwidth=0.05, colour="white", fill="gray55")+xlab("TCF")+ylab("Number of Projects")
-UCPHist4 <- ggplot(useCaseData, aes(x=EF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("EF")+ylab("Number of Projects")
-UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")
+UCPHist1 <- ggplot(useCaseData, aes(x=UAW))+geom_histogram(binwidth=1.2, colour="white", fill="gray55")+xlab("UAW")+ylab("Number of Projects")+theme_bw()
+UCPHist2 <- ggplot(useCaseData, aes(x=UUCW))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCW")+ylab("Number of Projects")+theme_bw()
+UCPHist3 <- ggplot(useCaseData, aes(x=TCF))+geom_histogram(binwidth=0.05, colour="white", fill="gray55")+xlab("TCF")+ylab("Number of Projects")+theme_bw()
+UCPHist4 <- ggplot(useCaseData, aes(x=EF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("EF")+ylab("Number of Projects")+theme_bw()
+UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")+theme_bw()
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, ncol=2))
 
@@ -78,11 +78,20 @@ png(filename=paste(outputPath,"project_UC_counting_statistics_for_bayesian_analy
 		pointsize=12,
 		res=96)
 
-UCHist1 <- ggplot(useCaseData, aes(x=Simple_UC))+geom_histogram(binwidth=1.3, colour="white", fill="gray55")+xlab("Simple Use Case")+ylab("Number of Projects")
-UCHist2 <- ggplot(useCaseData, aes(x=Average_UC))+geom_histogram(binwidth=1, colour="white", fill="gray55")+xlab("Average Use Case")+ylab("Number of Projects")
-UCHist3 <- ggplot(useCaseData, aes(x=Complex_UC))+geom_histogram(binwidth=1.1, colour="white", fill="gray55")+xlab("Complex Use Case")+ylab("Number of Projects")
+UCHist1 <- ggplot(useCaseData, aes(x=Simple_UC))+geom_histogram(binwidth=1.3, colour="white", fill="gray55")+xlab("Simple Use Case")+ylab("Number of Projects")+theme_bw()
+UCHist2 <- ggplot(useCaseData, aes(x=Average_UC))+geom_histogram(binwidth=1, colour="white", fill="gray55")+xlab("Average Use Case")+ylab("Number of Projects")+theme_bw()
+UCHist3 <- ggplot(useCaseData, aes(x=Complex_UC))+geom_histogram(binwidth=1.1, colour="white", fill="gray55")+xlab("Complex Use Case")+ylab("Number of Projects")+theme_bw()
 
 print(grid.arrange(UCHist1, UCHist2, UCHist3, ncol=2))
+
+png(filename=paste(outputPath,"project_comprehensive_statistics_for_bayesian_analysis.png", sep="/"),
+		units="in",
+		width=4*2, 
+		height=3*3, 
+		pointsize=12,
+		res=96)
+
+print(grid.arrange(UCHist1, UCHist2, UCHist3, projectHist1, projectHist2, projectHist3, ncol=2))
 
 #Calcualte the apriroi means and variances
 aprioriData <- aprioriData[c("Simple_UC","Average_UC", "Complex_UC")]
@@ -220,22 +229,38 @@ dat1 <- data.frame(dens1 = c(rnorm(100, aprioriMeans[,'Simple_UC'], aprioriVaria
 #print("data frame 1")
 #print(dat1)
 svg(paste(outputPath,"simple_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-simplePlot <- ggplot(dat1, aes(x = dens1, fill = lines1)) + geom_density(alpha = 0.5, adjust=1.5)+labs(x="Simple Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5, 15)))
+simplePlot <- ggplot(dat1, aes(x = dens1, fill = lines1))+geom_density(alpha = 0.5, adjust=1.5)+theme_bw()+labs(x="Simple Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5, 15)))+theme_bw()
 print(simplePlot)
 
 #Average use case bayesian averaging plot
-dat2 <- data.frame(dens2 = c(rnorm(100, aprioriMeans[,'Average_UC'], aprioriVariance[,'Average_UC']), rnorm(100, regressionCoefs[,'Average_UC'], regressionVariance[1, 'Average_UC']),rnorm(100, bayesianCoefs[1,'Average_UC'], bayesianVariance[1, 'Average_UC']))
-		, lines2 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
+dat2 <- data.frame(dens2 = c(rnorm(100, aprioriMeans[,'Average_UC'], aprioriVariance[,'Average_UC']), rnorm(100, regressionCoefs[,'Average_UC'], regressionVariance[1, 'Average_UC']),rnorm(100, bayesianCoefs[1,'Average_UC'], bayesianVariance[1, 'Average_UC'])), lines2 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
 svg(paste(outputPath,"average_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-averagePlot <- ggplot(dat2, aes(x = dens2, fill = lines2)) + geom_density(alpha = 0.5, adjust=1.5)+labs(x="Average Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-10:25)))
+averagePlot <- ggplot(dat2, aes(x = dens2, fill = lines2))+geom_density(alpha = 0.5, adjust=1.5)+theme_bw()+labs(x="Average Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-10:25)))+theme_bw()
 print(averagePlot)
 
 #Complex use case bayesian averaging plot
-dat3 <- data.frame(dens3 = c(rnorm(100, aprioriMeans[,'Complex_UC'], aprioriVariance[,'Complex_UC']), rnorm(100, regressionCoefs[,'Complex_UC'], regressionVariance[1, 'Complex_UC']),rnorm(100, bayesianCoefs[1,'Complex_UC'], bayesianVariance[1, 'Complex_UC']))
-		, lines3 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
+dat3 <- data.frame(dens3 = c(rnorm(100, aprioriMeans[,'Complex_UC'], aprioriVariance[,'Complex_UC']), rnorm(100, regressionCoefs[,'Complex_UC'], regressionVariance[1, 'Complex_UC']),rnorm(100, bayesianCoefs[1,'Complex_UC'], bayesianVariance[1, 'Complex_UC'])), lines3 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
 svg(paste(outputPath,"complex_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-complexPlot <- ggplot(dat3, aes(x = dens3, fill = lines3)) + geom_density(alpha = 0.5, adjust=1.5)+labs(x="Complex Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5:35)))
+complexPlot <- ggplot(dat3, aes(x = dens3, fill = lines3))+geom_density(alpha = 0.5, adjust=1.5)+theme_bw()+labs(x="Complex Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5:35)))+theme_bw()
 print(complexPlot)
+
+#print("output dat")
+#combDat <- cbind(dat1, dat2, dat3)
+#print horizontal diagrams
+svg(paste(outputPath,"combined_use_case_bayesian_average_horizontal_plot.svg", sep="/"), width=8.5, height=2.5)
+#print(ggplot(combDat)+geom_density(alpha = 0.5,aes(x = dens1, fill = lines1)+geom_density(alpha = 0.5,aes(x = dens2, fill = lines2))+geom_density(alpha = 0.5,aes(x = dens3, fill = lines3))))
+
+g_legend<-function(a.gplot){
+	tmp <- ggplot_gtable(ggplot_build(a.gplot))
+	leg <- which(sapply(tmp$grobs, function(x) x$name) == "guide-box")
+	legend <- tmp$grobs[[leg]]
+	return(legend)}
+
+mylegend<-g_legend(simplePlot+ theme(legend.position="bottom"))
+
+print(grid.arrange(arrangeGrob(simplePlot+guides(fill=FALSE), averagePlot+guides(fill=FALSE), complexPlot+guides(fill=FALSE), ncol=3), mylegend,nrow=2, heights=c(4, 1)))
+
+#print vitical diagrams
 
 #print("output dat")
 #combDat <- cbind(dat1, dat2, dat3)
@@ -251,6 +276,7 @@ g_legend<-function(a.gplot){
 mylegend<-g_legend(simplePlot+ theme(legend.position="bottom"))
 
 print(grid.arrange(arrangeGrob(simplePlot+guides(fill=FALSE), averagePlot+guides(fill=FALSE), complexPlot+guides(fill=FALSE), ncol=1), mylegend,nrow=2, heights=c(8, 1)))
+
 
 # 10 fold cross validation of mmre, pred(.25), pred(.50)
 # estimate the predication accuracy by n fold cross validation.
@@ -450,7 +476,6 @@ for(i in 1:nfold){
 	
 	foldResults[i,] = c(bayesian.mmre,bayesian.pred15,bayesian.pred25,bayesian.pred50,apriori.mmre,apriori.pred15,apriori.pred25,apriori.pred50,original.mmre,original.pred15,original.pred25,original.pred50,regression.mmre,regression.pred15,regression.pred25,regression.pred50)
 	foldResults1[,,i] = array(c(bayesian.pred, apriori.pred, original.pred, regression.pred),c(100,4))
-	
 }
 
 #average out the folds.
@@ -509,25 +534,24 @@ meltAvgPreds = melt(avgPreds, id.vars="Pred", value.name="Value", variable.name=
 print("melt avg preds info")
 print(meltAvgPreds)
 svg(paste(outputPath,"use_case_weight_calibration_err_plot.svg", sep="/"), width=6, height=4)
-print(ggplot(meltAvgPreds) + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
-				ylab("Percentage")+ theme(legend.position="bottom"))
+ggplot(meltAvgPreds) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
+				ylab("Percentage")+ theme(legend.position="bottom")
 
 print("melt avg preds info as lines and smooth function")
 svg(paste(outputPath,"use_case_weight_calibration_err_plot_lines_smooth.svg", sep="/"), width=6, height=4)
-ggplot(meltAvgPreds) + 
+ggplot(meltAvgPreds) +theme_bw()+
 		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
 		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage")+ theme(legend.position="bottom")
 
-
 print("melt avg preds info as dots and smooth function")
 svg(paste(outputPath,"use_case_weight_calibration_err_plot_dots_smooth.svg", sep="/"), width=6, height=4)
-ggplot(meltAvgPreds) + 
+ggplot(meltAvgPreds) +theme_bw()+
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
 		scale_shape_manual(values=c(0,1,2,3))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage")+ theme(legend.position="bottom")
-
 
 #also have linear regression on sloc and normalized effort.
 sink()

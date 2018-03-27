@@ -58,10 +58,10 @@ png(filename=paste(outputPath,"project_descriptive_statistics_for_ducp_analysis.
 		pointsize=12,
 		res=96)
 
-projectHist1 <- ggplot(data, aes(x=Real_Effort))+geom_histogram(binwidth=200, colour="white", fill="gray55")+xlab("Effort (person-hours)")+ylab("Number of Projects")
-projectHist2 <- ggplot(data, aes(x=KSLOC))+geom_histogram(binwidth=1, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")
-projectHist3 <- ggplot(data, aes(x=Use_Case_Num))+geom_histogram(binwidth=2, colour="white", fill="gray55")+xlab("Use Case Num")+ylab("Number of Projects")
-projectBar <- ggplot(data, aes(x=Application_Type))+geom_bar(colour="white", fill="gray55")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)
+projectHist1 <- ggplot(data, aes(x=Real_Effort))+geom_histogram(binwidth=120, colour="white", fill="gray55")+xlab("Effort (person-hours)")+ylab("Number of Projects")+theme_bw()
+projectHist2 <- ggplot(data, aes(x=KSLOC))+geom_histogram(binwidth=0.5, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")+theme_bw()
+projectHist3 <- ggplot(data, aes(x=Use_Case_Num))+geom_histogram(binwidth=1.6, colour="white", fill="gray55")+xlab("Use Case Num")+ylab("Number of Projects")+theme_bw()
+projectBar <- ggplot(data, aes(x=Application_Type))+geom_bar(colour="white", fill="gray55")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)+theme_bw()
 print(grid.arrange(projectHist1, projectHist2, projectHist3, projectBar, ncol=2))
 
 
@@ -70,23 +70,23 @@ print(grid.arrange(projectHist1, projectHist2, projectHist3, projectBar, ncol=2)
 
 png(filename=paste(outputPath,"project_counting_statistics_for_ducp_analysis.png", sep="/"),
 		units="in",
-		width=3*4, 
-		height=2*2, 
+		width=3*2, 
+		height=2*4, 
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(data, aes(x=UAW))+geom_histogram(binwidth=1.5, colour="white", fill="gray55")+xlab("UAW")+ylab("Number of Projects")
+UCPHist1 <- ggplot(data, aes(x=UAW))+geom_histogram(binwidth=1.5, colour="white", fill="gray55")+xlab("UAW")+ylab("Number of Projects")+theme_bw()
 #UCPHist1 <- hist(data[c("UDUCW")][-1,], xlim=range(data[c("UDUCW")][-1,]),
 #		xlab= "Variable Lable", ylab="density", main="Title of plot", prob=TRUE, 
 #		cex.lab=1.5, cex.axis=1.5, cex.main=1.5, cex.sub=1.5)
-UCPHist2 <- ggplot(data, aes(x=UDUCW))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UDUCW")+ylab("Number of Projects")
-UCPHist3 <- ggplot(data, aes(x=DUCP))+geom_histogram(binwidth=45, colour="white", fill="gray55")+xlab("DUCP")+ylab("Number of Projects")
-UCPHist4 <- ggplot(data, aes(x=UUCW))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCW")+ylab("Number of Projects")
-UCPHist5 <- ggplot(data, aes(x=UCP))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")
-UCPHist6 <- ggplot(data, aes(x=TCF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("TCF")+ylab("Number of Projects")
-UCPHist7 <- ggplot(data, aes(x=EF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("EF")+ylab("Number of Projects")
+UCPHist2 <- ggplot(data, aes(x=UDUCW))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UDUCW")+ylab("Number of Projects")+theme_bw()
+UCPHist3 <- ggplot(data, aes(x=DUCP))+geom_histogram(binwidth=45, colour="white", fill="gray55")+xlab("DUCP")+ylab("Number of Projects")+theme_bw()
+UCPHist4 <- ggplot(data, aes(x=UUCW))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCW")+ylab("Number of Projects")+theme_bw()
+UCPHist5 <- ggplot(data, aes(x=UCP))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")+theme_bw()
+UCPHist6 <- ggplot(data, aes(x=TCF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("TCF")+ylab("Number of Projects")+theme_bw()
+UCPHist7 <- ggplot(data, aes(x=EF))+geom_histogram(binwidth=0.02, colour="white", fill="gray55")+xlab("EF")+ylab("Number of Projects")+theme_bw()
 
-print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, UCPHist6, UCPHist7, ncol=4))
+print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, UCPHist6, UCPHist7, ncol=2))
 
 #print(UCPHist1);
 useCaseData <- data[c("Real_Effort", "DUCP", "UCP")]
@@ -137,13 +137,15 @@ plot1 = ggplot(data = useCaseData, aes(x = DUCP, y = Real_Effort)) +
 		geom_point(color='blue') +
 		geom_smooth(color='black', method = "lm", se = TRUE)+
 		xlab("DUCP")+
-		ylab("Effort (person-hours)")
+		ylab("Effort (person-hours)")+
+		theme_bw()
 
 plot2 = ggplot(data = useCaseData, aes(x = UCP, y = Real_Effort)) + 
 		geom_point(color='blue') +
 		geom_smooth(color='black', method = "lm", se = TRUE)+
 		xlab("UCP")+
-		ylab("Effort (person-hours)")
+		ylab("Effort (person-hours)")+
+		theme_bw()
 
 # print(grid.arrange(plot1, plot2, plot3))
 # dev.off()

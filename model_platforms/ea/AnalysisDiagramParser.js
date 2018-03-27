@@ -149,6 +149,8 @@
 		console.log(PrecedenceRelations);
 	}
 	
+	
+	
 
 	function standardizeName(name){
 		return name.replace(/\s/g, '').toUpperCase();

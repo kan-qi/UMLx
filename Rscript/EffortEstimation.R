@@ -2,25 +2,22 @@
 
 #arg1: model name
 #arg2: input file path
-#arg3: summary output path
+#arg3: output path
 
 args = commandArgs(trailingOnly=TRUE)
 
 if (length(args) < 2) {
-	stop("At least two arguments must be supplied (input file).n", call.=FALSE)
+	stop("At least two arguments must be supplied (input file).", call.=FALSE)
 } else if (length(args)==2) {
 	# default output file
-	args[3] = ".\\temp\\prediction_result.txt"
-	args[4] = ".\\temp\\prediction_report.txt"
-} else if (length(args) == 3){
-	args[4] = ".\\temp\\prediction_report.txt"
+	args[3] = "./temp"
 }
 
-modelUrl <- paste("./data", args[1], sep="/")
+modelUrl <- paste("./statistical_models", args[1], sep="/")
 dataUrl <- args[2]
-resultPath <- args[3]
-reportPath <- args[4]
-
+outputDir <- args[3]
+reportPath <- paste(outputDir, "effort_prediction_report.txt", sep="/")
+resultPath <- paste(outputDir, "effort_prediction_result.txt", sep="/")
 
 #modelUrl <- "./Model/riskPredictionModel.rds"
 
@@ -51,21 +48,23 @@ names <- colnames(df)
 #print(nn)
 
 predM <- readRDS(modelUrl)
+#close(predM)
 
 print("prediction calculation with:")
 #print(nn$model.list$variables)
-variables = predM$model.list$variables
-names <- colnames(df)
-print(df[, names[names %in% variables]])
-pr.nn <- compute(nn,df[, names[names %in% variables]])
-predictions = as.matrix(apply(pr.nn$net.result, 1, FUN=which.max))
+#variables = predM$model.list$variables
+print(predM)
+#names <- colnames(df)
+#print(df[, names[names %in% variables]])
+#prediction <- compute(predM,df[, names[names %in% variables]])
+
+prediction <- predict(predM, df)
 
 print("prediction results:")
-print(pr.nn$net.result)
-print(predictions)
+print(prediction)
 
 sink(resultPath)
-
+print(prediction)
 #plot(nn)
 
 sink()

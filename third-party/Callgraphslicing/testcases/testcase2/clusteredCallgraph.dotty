@@ -1,0 +1,35 @@
+digraph g {compound=true
+subgraph cluster_3 {"LuploadFile.js" [color=green, shape=box]
+}
+subgraph cluster_4 {"LFile.js/writeFile" [color=green, shape=box]
+}
+subgraph cluster_1 {"Lpresentation.js/printWebPage" [color=yellow]
+}
+subgraph cluster_2 {"LuploadFile.js/alert" [color=yellow]
+}
+subgraph cluster_0 {"LuploadFile.js/doCallback" [color=yellow]
+"LuploadFile.js/saveFile/uploadFile.js@757" [color=yellow]
+"LuploadFile.js/doCallback"->"LuploadFile.js/saveFile/uploadFile.js@757"
+}
+subgraph cluster_9 {"LFakeRoot" [color=red]
+}
+subgraph cluster_7 {"LtestUploadFile.js" [color=red]
+"LtestUploadFile.js/sendFile" [color=red]
+"LtestUploadFile.js"->"LtestUploadFile.js/sendFile"
+}
+subgraph cluster_8 {"LuploadFile.js/receiveFile" [color=red]
+}
+subgraph cluster_5 {"LuploadFile.js/countFileNumber" [color=green, shape=box]
+}
+subgraph cluster_6 {"LuploadFile.js/saveFile" [color=red]
+}
+"LuploadFile.js/saveFile/uploadFile.js@757"->"Lpresentation.js/printWebPage"[ltail=cluster_0,lhead=cluster_1]
+"LuploadFile.js/alert"->"LuploadFile.js/doCallback"[ltail=cluster_2,lhead=cluster_0]
+"LuploadFile.js/saveFile"->"LuploadFile.js/alert"[ltail=cluster_6,lhead=cluster_2]
+"LuploadFile.js/saveFile"->"LFile.js/writeFile"[ltail=cluster_6,lhead=cluster_4]
+"LuploadFile.js/saveFile"->"LuploadFile.js/countFileNumber"[ltail=cluster_6,lhead=cluster_5]
+"LtestUploadFile.js/sendFile"->"LuploadFile.js/receiveFile"[ltail=cluster_7,lhead=cluster_8]
+"LuploadFile.js/receiveFile"->"LuploadFile.js/saveFile"[ltail=cluster_8,lhead=cluster_6]
+"LFakeRoot"->"LuploadFile.js"[ltail=cluster_9,lhead=cluster_3]
+"LFakeRoot"->"LtestUploadFile.js"[ltail=cluster_9,lhead=cluster_7]
+}

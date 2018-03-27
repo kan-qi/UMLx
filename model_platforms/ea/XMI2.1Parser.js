@@ -263,7 +263,6 @@
 			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
 			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
 			
-//			Model.UseCases.push(UseCase);
 			Model.UseCases.push(UseCase);
 		}
 		
@@ -327,6 +326,7 @@
 			});
 		});
 	}
+	
 	
 	module.exports = {
 			extractUserSystermInteractionModel : extractUserSystermInteractionModel

@@ -19,6 +19,8 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var umlFileManager = require('./UMLFileManager');
+
+	var RScriptExec = require('./utils/RScriptUtil.js');
 	
 	// current available evaluators
 	var umlModelElementEvaluator = require('./evaluators/UMLModelElementsEvaluator/UMLModelElementEvaluator.js');
@@ -329,6 +331,9 @@
 		var domainModelNum = 1;
 		var domainModelEvaluationStr = "";
 		
+		var modelNum = 1;
+		var modelEvaluationStr = "";
+		
 		if(callbackfunc){
 		
 		for(var i in model.UseCases){
@@ -361,11 +366,18 @@
 			}
 		}
 		
+		modelEvaluationStr += toModelEvaluationStr(model, modelNum);
+		
+		
+		model.ModelEvaluationFileName = "modelEvaluation.csv";
 		model.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
 		model.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
+		model.UseCaseStatisticsOutputDir = model.OutputDir+"/use_case_evaluation_statistics";
+		model.DomainModelStatisticsOutputDir = model.OutputDir+"/domain_model_evaluation_statistics";
 		
 		var files = [{fileName : model.UseCaseEvaluationFileName , content : useCaseEvaluationStr},
-			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr}];
+			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
+			{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
 		
 		umlFileManager.writeFiles(model.OutputDir, files, function(err){
 			if(err) {
@@ -383,10 +395,49 @@
 					}
 				}
 				
-				 if(callbackfunc){
-//						console.log(repoEvaluationsForUseCaseStr);
-				    	callbackfunc(model);
+				umlFileManager.makeDirs([model.UseCaseStatisticsOutputDir, model.DomainModelStatisticsOutputDir], function(result){
+					console.log("test for model mkdir");
+					if(result){
+						//Needs to be upgraded soon
+						console.log("apply statistical analysis on the output evaluation");
+						var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.UseCaseEvaluationFileName+'" "'+model.UseCaseStatisticsOutputDir+'" "."';
+						console.log(command);
+						RScriptExec.runRScript(command,function(result){
+							
+							if (!result) {
+								if(callbackfunc){
+									callbackfunc(false);
+								}
+								return;
+							}
+							
+							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
+							
+							RScriptExec.runRScript(command,function(result){
+								if (!result) {
+									if(callbackfunc){
+										callbackfunc(false);
+									}
+									return;
+								}
+								if(callbackfunc){
+									callbackfunc(model);
+								}
+							});
+						});
+						
+//						 if(callbackfunc){
+////								console.log(repoEvaluationsForUseCaseStr);
+//						    	callbackfunc(model);
+//							}
 					}
+					else {
+						if(callbackfunc){
+							callbackfunc(false);
+						}
+					}
+					
+				});
 			}
 				
 		});
@@ -437,6 +488,7 @@
 			
 
 		repoInfo.ModelEvaluationFileName = "modelEvaluation.csv";
+		repoInfo.ModelStatisticsOutputDir = repoInfo.OutputDir+"/model_evaluation_statistics";
 			
 		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr}];
 		
@@ -456,10 +508,37 @@
 					}
 				}
 				
-				 if(callbackfunc){
-//						console.log(repoEvaluationsForUseCaseStr);
-				    	callbackfunc(repoInfo);
+				umlFileManager.makeDir(repoInfo.ModelStatisticsOutputDir, function(result){
+					if(result){
+						//Needs to be upgraded soon
+						console.log("apply statistical analysis on the repo output evaluation");
+						var command = './Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo.ModelStatisticsOutputDir+'" "."';
+							console.log(command);
+							RScriptExec.runRScript(command,function(result){
+								if (!result) {
+									if(callbackfunc){
+										callbackfunc(false);
+									}
+									return;
+								}
+								if(callbackfunc){
+									callbackfunc(repoInfo);
+								}
+							});
+						
 					}
+					else {
+						if(callbackfunc){
+							callbackfunc(false);
+						}
+					}
+					
+				});
+				
+//				 if(callbackfunc){
+////						console.log(repoEvaluationsForUseCaseStr);
+//				    	callbackfunc(repoInfo);
+//				}
 			}
 			
 		});
@@ -468,7 +547,6 @@
 		else {
 			return repoInfo;
 		}
-		
 	}
 	
 	/*

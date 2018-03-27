@@ -67,7 +67,7 @@
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
 	function toModelEvaluationHeader() {
-		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Boundary_Num,ControlNum,Entity_Num";
+		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,ControlNum,Entity_Num,attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -81,9 +81,41 @@
 				+ modelInfo["ElementAnalytics"].ElementNum + ","
 				+ modelInfo["ElementAnalytics"].TotalLinks + ","
 				+ modelInfo["ElementAnalytics"].ActorNum + ","
+				+ modelInfo["ElementAnalytics"].RoleNum + ","
+				+ modelInfo["ElementAnalytics"].AvgActor + ","
+				+ modelInfo["ElementAnalytics"].AvgRole + ","
 				+ modelInfo["ElementAnalytics"].BoundaryNum + ","
 				+ modelInfo["ElementAnalytics"].ControlNum + ","
-				+ modelInfo["ElementAnalytics"].EneityNum;
+				+ modelInfo["ElementAnalytics"].EnityNum + ","
+				//metrics for the domain model
+				+ modelInfo["ElementAnalytics"].AttributeNum + ","
+				+ modelInfo["ElementAnalytics"].OperationNum + ","
+				+ modelInfo["ElementAnalytics"].ClassNum  + ","
+		        + modelInfo["ElementAnalytics"].TopLevelClasses + ","
+		        + modelInfo["ElementAnalytics"].AverageDepthInheritanceTree + ","
+		        + modelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass + ","
+		        + modelInfo["ElementAnalytics"].NumberOfInheritanceRelationships + ","
+		        + modelInfo["ElementAnalytics"].NumberOfDerivedClasses + ","
+		        + modelInfo["ElementAnalytics"].NumberOfClassesInherited + ","
+		        + modelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom + ","
+		        + modelInfo["ElementAnalytics"].NumberOfChildren + ","
+		        + modelInfo["ElementAnalytics"].DepthInheritanceTree + ","
+		        + modelInfo["ElementAnalytics"].CouplingBetweenObjects + ","
+		        + modelInfo["ElementAnalytics"].ParameterNum + ","
+				+ modelInfo["ElementAnalytics"].UsageNum + ","
+				+ modelInfo["ElementAnalytics"].RealNum + ","
+				+ modelInfo["ElementAnalytics"].AssocNum + ","
+				+ modelInfo["ElementAnalytics"].ExternalOperNum + ","
+				+ modelInfo["ElementAnalytics"].ObjectDataNum + ","
+				+ modelInfo["ElementAnalytics"].AvgOperation + ","
+				+ modelInfo["ElementAnalytics"].AvgAttribute  + ","
+				+ modelInfo["ElementAnalytics"].AvgParameter + ","
+				+ modelInfo["ElementAnalytics"].AvgUsage + ","
+				+ modelInfo["ElementAnalytics"].AvgReal + ","
+				+ modelInfo["ElementAnalytics"].AvgAssoc + ","
+				+ modelInfo["ElementAnalytics"].AvgInstVar + ","
+				+ modelInfo["ElementAnalytics"].WeightedOperNum + ","
+				+ modelInfo["ElementAnalytics"].MethodSize;
 	}
 
 	// to output the header for data for the use cases.
@@ -502,6 +534,37 @@
 				ControlNum : 0,
 				EntityNum : 0,
 				TotalDegree : 0,
+				RoleNum : 0,
+				AvgActor : 0,
+				AvgRole : 0,
+				AttributeNum : 0,
+				OperationNum : 0,
+				ClassNum  : 0,
+		        TopLevelClasses : 0,
+		        AverageDepthInheritanceTree : 0,
+		        AverageNumberOfChildrenPerBaseClass : 0,
+		        NumberOfInheritanceRelationships : 0,
+		        NumberOfDerivedClasses : 0,
+		        NumberOfClassesInherited : 0,
+		        NumberOfClassesInheritedFrom : 0,
+		        NumberOfChildren : 0,
+		        DepthInheritanceTree : 0,
+		        CouplingBetweenObjects : 0,
+		        ParameterNum : 0,
+				UsageNum : 0,
+				RealNum : 0,
+				AssocNum : 0,
+				ExternalOperNum : 0,
+				ObjectDataNum : 0,
+				AvgOperation : 0,
+				AvgAttribute  : 0,
+				AvgParameter : 0,
+				AvgUsage : 0,
+				AvgReal : 0,
+				AvgAssoc : 0,
+				AvgInstVar : 0,
+				WeightedOperNum : 0,
+				MethodSize : 0,
 				EntityAnalyticsFileName : "entityAnalytics.csv",
 				AttributeAnalyticsFileName : "attributeAnalytics.csv",
 				OperationAnalyticsFileName : "operationAnalytics.csv",
@@ -526,6 +589,11 @@
 
 			modelInfo["ElementAnalytics"].TotalDegree += useCase["ElementAnalytics"].TotalDegree;
 			modelInfo["ElementAnalytics"].ElementNum += useCase["ElementAnalytics"].ElementNum;
+			
+			//need to recalculate here.
+			modelInfo["ElementAnalytics"].RoleNum += useCase["ElementAnalytics"].RoleNum;
+			modelInfo["ElementAnalytics"].AvgActor += useCase["ElementAnalytics"].AvgActor;
+			modelInfo["ElementAnalytics"].AvgRole += useCase["ElementAnalytics"].AvgRole;
 			}
 		}
 
@@ -541,6 +609,34 @@
 		modelInfo["ElementAnalytics"].OperationNum = domainModelInfo["ElementAnalytics"].OperationNum;
 //		modelInfo["ElementAnalytics"].DiagramNum += domainModelInfo["ElementAnalytics"].DiagramNum;
 		modelInfo["ElementAnalytics"].EntityNum = domainModelInfo["ElementAnalytics"].EntityNum;
+		modelInfo["ElementAnalytics"].AttributeNum = domainModelInfo["ElementAnalytics"].AttributeNum;
+		modelInfo["ElementAnalytics"].OperationNum = domainModelInfo["ElementAnalytics"].OperationNum
+		modelInfo["ElementAnalytics"].ClassNum  = domainModelInfo["ElementAnalytics"].ClassNum;
+                modelInfo["ElementAnalytics"].TopLevelClasses = domainModelInfo["ElementAnalytics"].TopLevelClasses;
+                modelInfo["ElementAnalytics"].AverageDepthInheritanceTree = domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree;
+                modelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass = domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass;
+                modelInfo["ElementAnalytics"].NumberOfInheritanceRelationships = domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships;
+                modelInfo["ElementAnalytics"].NumberOfDerivedClasses = domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses;
+                modelInfo["ElementAnalytics"].NumberOfClassesInherited = domainModelInfo["ElementAnalytics"].NumberOfClassesInherited;
+                modelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom = domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom;
+                modelInfo["ElementAnalytics"].NumberOfChildren = domainModelInfo["ElementAnalytics"].NumberOfChildren;
+                modelInfo["ElementAnalytics"].DepthInheritanceTree = domainModelInfo["ElementAnalytics"].DepthInheritanceTree;
+                modelInfo["ElementAnalytics"].CouplingBetweenObjects = domainModelInfo["ElementAnalytics"].CouplingBetweenObjects;
+        modelInfo["ElementAnalytics"].ParameterNum = domainModelInfo["ElementAnalytics"].ParameterNum;
+		modelInfo["ElementAnalytics"].UsageNum = domainModelInfo["ElementAnalytics"].UsageNum;
+		modelInfo["ElementAnalytics"].RealNum = domainModelInfo["ElementAnalytics"].RealNum;
+		modelInfo["ElementAnalytics"].AssocNum = domainModelInfo["ElementAnalytics"].AssocNum;
+		modelInfo["ElementAnalytics"].ExternalOperNum = domainModelInfo["ElementAnalytics"].ExternalOperNum;
+		modelInfo["ElementAnalytics"].ObjectDataNum = domainModelInfo["ElementAnalytics"].ObjectDataNum;
+		modelInfo["ElementAnalytics"].AvgOperation = domainModelInfo["ElementAnalytics"].AvgOperation;
+		modelInfo["ElementAnalytics"].AvgAttribute  = domainModelInfo["ElementAnalytics"].AvgAttribute;
+		modelInfo["ElementAnalytics"].AvgParameter = domainModelInfo["ElementAnalytics"].AvgParameter;
+		modelInfo["ElementAnalytics"].AvgUsage = domainModelInfo["ElementAnalytics"].AvgUsage;
+		modelInfo["ElementAnalytics"].AvgReal = domainModelInfo["ElementAnalytics"].AvgReal;
+		modelInfo["ElementAnalytics"].AvgAssoc = domainModelInfo["ElementAnalytics"].AvgAssoc;
+		modelInfo["ElementAnalytics"].AvgInstVar = domainModelInfo["ElementAnalytics"].AvgInstVar;
+		modelInfo["ElementAnalytics"].WeightedOperNum = domainModelInfo["ElementAnalytics"].WeightedOperNum;
+		modelInfo["ElementAnalytics"].MethodSize = domainModelInfo["ElementAnalytics"].MethodSize;
 		}
 		
 		if (callbackfunc) {

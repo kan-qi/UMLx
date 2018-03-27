@@ -38,7 +38,6 @@ function model_file_upload_fnc() {
 }
 
 
-
 function send_analytics_data(uuid, clientIpAddress, pageNumber) {
     var data = {
         ip: clientIpAddress,
@@ -110,16 +109,15 @@ function model_file_update_fnc(){
 
 }
 
-function estimate_project_effort_func(){
-	var formData = new FormData($('#project-effort-estimation-form')[0]);
-
+function predict_project_effort_func(){
+	var formData = new FormData($('#project-effort-prediction-form')[0]);
 	console.log("starting the ajax call to some where");
-
 	console.log(formData);
+	
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
 	$.ajax({
 		type : 'POST',
-		url : "estimateProjectEffort",
+		url : "predictProjectEffort",
 		cache : false,
 		processData : false, // Don't process the files
 		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
@@ -127,7 +125,7 @@ function estimate_project_effort_func(){
 		enctype : 'multipart/form-data',
 		success : function(response) {
 			console.log(response);
-			$("#estimation-results-tables").html(response);
+			$("#estimation-result-panel-body").html(response);
 		},
 		error : function() {
 			console.log("fail");
@@ -135,7 +133,7 @@ function estimate_project_effort_func(){
 			alert("There was an error submitting commentA");
 		}
 	});
-
+	return false;
 }
 
 function query_exist_models_fnc(projectId) {
@@ -1310,4 +1308,64 @@ function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTi
 			data: data
 		}]
 	});
+}
+
+function editFunction(button) {
+    document.getElementById("editNumber1").contentEditable = "true";
+    document.getElementById("editNumber2").contentEditable = "true";
+    document.getElementById("editNumber3").contentEditable = "true";
+    document.getElementById("editNumber4").contentEditable = "true";
+    document.getElementById("editNumber5").contentEditable = "true";
+    document.getElementById("editNumber6").contentEditable = "true";
+    document.getElementById("editNumber7").contentEditable = "true";
+    document.getElementById("editNumber8").contentEditable = "true";
+    document.getElementById("editNumber9").contentEditable = "true";
+    document.getElementById("editNumber10").contentEditable = "true";
+    document.getElementById("editNumber11").contentEditable = "true";
+    document.getElementById("editNumber12").contentEditable = "true";
+    document.getElementById("editNumber13").contentEditable = "true";
+    document.getElementById("editNumber14").contentEditable = "true";
+    document.getElementById("editNumber15").contentEditable = "true";
+    document.getElementById("editNumber16").contentEditable = "true";
+    document.getElementById("editNumber17").contentEditable = "true";
+    document.getElementById("editNumber18").contentEditable = "true";
+    document.getElementById("editNumber19").contentEditable = "true";
+    document.getElementById("editNumber20").contentEditable = "true";
+    document.getElementById("editNumber21").contentEditable = "true";
+
+	document.getElementById("submitButton").classList.remove("hidden");
+    document.getElementById("cancelButton").classList.remove("hidden");
+    document.getElementById("modifyButton").classList.add("hidden");
+}
+
+function submitEdit() {
+
+}
+
+function cancelEdit() {
+    document.getElementById("editNumber1").contentEditable = "false";
+    document.getElementById("editNumber2").contentEditable = "false";
+    document.getElementById("editNumber3").contentEditable = "false";
+    document.getElementById("editNumber4").contentEditable = "false";
+    document.getElementById("editNumber5").contentEditable = "false";
+    document.getElementById("editNumber6").contentEditable = "false";
+    document.getElementById("editNumber7").contentEditable = "false";
+    document.getElementById("editNumber8").contentEditable = "false";
+    document.getElementById("editNumber9").contentEditable = "false";
+    document.getElementById("editNumber10").contentEditable = "false";
+    document.getElementById("editNumber11").contentEditable = "false";
+    document.getElementById("editNumber12").contentEditable = "false";
+    document.getElementById("editNumber13").contentEditable = "false";
+    document.getElementById("editNumber14").contentEditable = "false";
+    document.getElementById("editNumber15").contentEditable = "false";
+    document.getElementById("editNumber16").contentEditable = "false";
+    document.getElementById("editNumber17").contentEditable = "false";
+    document.getElementById("editNumber18").contentEditable = "false";
+    document.getElementById("editNumber19").contentEditable = "false";
+    document.getElementById("editNumber20").contentEditable = "false";
+    document.getElementById("editNumber21").contentEditable = "false";
+
+    document.getElementById("submitButton").classList.add("hidden");
+    document.getElementById("cancelButton").classList.add("hidden");
+    document.getElementById("modifyButton").classList.remove("hidden");
 }

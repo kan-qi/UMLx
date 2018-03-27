@@ -1,0 +1,26 @@
+digraph g {"LuploadFile.js/saveFile/uploadFile.js@757" [color=yellow]
+"LuploadFile.js" [color=green, shape=box]
+"LFile.js/writeFile" [color=green, shape=box]
+"Lprologue.js/eval" [color=black]
+"LtestUploadFile.js" [color=red]
+"LuploadFile.js/receiveFile" [color=red]
+"LFakeRoot" [color=red]
+"LuploadFile.js/saveFile" [color=red]
+"LuploadFile.js/doCallback" [color=yellow]
+"Lpresentation.js/printWebPage" [color=yellow]
+"LtestUploadFile.js/sendFile" [color=red]
+"LuploadFile.js/countFileNumber" [color=green, shape=box]
+"LuploadFile.js/alert" [color=yellow]
+"LFakeRoot"->"LtestUploadFile.js"
+"LFakeRoot"->"LuploadFile.js"
+"LtestUploadFile.js"->"LtestUploadFile.js/sendFile"
+"LtestUploadFile.js/sendFile"->"LuploadFile.js/receiveFile"
+"LuploadFile.js/receiveFile"->"LuploadFile.js/saveFile"
+"LuploadFile.js/saveFile"->"Lprologue.js/eval"
+"LuploadFile.js/saveFile"->"LFile.js/writeFile"
+"LuploadFile.js/saveFile"->"LuploadFile.js/countFileNumber"
+"LuploadFile.js/saveFile"->"LuploadFile.js/alert"
+"LuploadFile.js/alert"->"LuploadFile.js/doCallback"
+"LuploadFile.js/doCallback"->"LuploadFile.js/saveFile/uploadFile.js@757"
+"LuploadFile.js/saveFile/uploadFile.js@757"->"Lpresentation.js/printWebPage"
+}
