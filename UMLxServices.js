@@ -1014,13 +1014,18 @@ app.get('/queryEstimationModel', function(req, res){
 app.post('/predictProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{name:'uml_other', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
 //	console.log(req.body);
 	console.log("estimate project effort");
+	if(!req.files['uml_file']){
+		console.log("empty uml file");
+		res.render('estimationResultPane', {error: "empty uml file"});
+		return;
+	}
 	var umlFilePath = req.files['uml_file'][0].path;
 //	var otherFilePath = req.files['other_file'][0].path;
 //	var umlModelName = req.body['uml-model-name'];
 //	var umlModelType = req.body['uml-model-type'];
 	var umlModelType = "uml";
 	var umlModelName = "query1";
-	var predictionModel = "eucp";
+	var predictionModel = "eucp_linear_model.rds";
 	var repoId = req.userInfo.repoId;
 //	var uuidVal = req.body['uuid'];
 	console.log(repoId);
@@ -1060,6 +1065,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{n
 								umlModelInfoManager.saveEffortEstimationQueryResult(modelInfo, repoId, function(modelInfo){
 //									console.log(modelInfo);
 									console.log("estimation result is saved");
+									console.log(modelInfo)
 									res.render('estimationResultPane', {modelInfo:modelInfo});
 									
 								});

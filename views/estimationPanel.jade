@@ -1,6 +1,6 @@
 if repoInfo
  div
-  form#project-effort-estimation-form.form-horizontal(novalidate='', onsubmit='estimate_project_effort_func()', method='post', action='/')
+  form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
        #sec-1
            .panel-group
                .panel.panel-default
@@ -241,7 +241,6 @@ if repoInfo
                          input(type='hidden', name='repo-id', value='#{repoInfo._id}')
                          input(type='hidden', name='requestUUID', value='#{repoInfo.requestUUID}')
                        div.clear
-       - var data = [{"Number": "1", "UC": "UC1", "EXUCP":"4", "DUCP":"8", "Effort":"4", "Schedule":"8", "Personnel":"7", "UIDeveloper":"9", "FullStack":"19", "DatabaseDeveloper":"12"},{"Number": "2", "UC": "UC2", "EXUCP":"3", "DUCP":"1", "Effort":"3", "Schedule":"8", "Personnel":"3", "UIDeveloper":"3", "FullStack":"10", "DatabaseDeveloper":"23"}];
        #sec-5
            .panel-group
                .panel.panel-default
@@ -249,38 +248,5 @@ if repoInfo
                        h4.panel-title
                            | Estimation Results
                    #collapse1.panel-collapse
-                       .panel-body
-                         div(id='estimation-results-tables')
-                               table.table.table-bordered
-                                 thead
-                                     tr
-                                         th Number
-                                         th UC
-                                         th EUCP
-                                         th EXUCP
-                                         th DUCP
-                                         th Effort
-                                         th Schedule
-                                         th Personnel
-                                         th UI Developer
-                                         th Full Stack
-                                         th Database Developer
-                                 tbody
-                                     - for (var i = 0; i < data.length; i++) {
-                                         tr
-                                             td #{data[i].Number}
-                                             td #{data[i].UC}
-                                             td #{data[i].EUCP}
-                                             td #{data[i].EXUCP}
-                                             td #{data[i].DUCP}
-                                             td #{data[i].Effort}
-                                             td #{data[i].Schedule}
-                                             td #{data[i].Personnel}
-                                             td #{data[i].UIDeveloper}
-                                             td #{data[i].FullStack}
-                                             td #{data[i].DatabaseDeveloper}
-                                     - }
-                         div(id='estimation-results-charts')
-                                img(id='project-effort-distribution-chart' src='img/progress-bar.gif')
-                                img(id='project-resource-allocation-chart' src='img/progress-bar.gif') 
+                       div(id="estimation-result-panel-body")
                              

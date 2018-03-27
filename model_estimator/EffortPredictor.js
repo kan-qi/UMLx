@@ -12,12 +12,54 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
-	var RScriptExec = require('../utils/RScriptUtil.js')
+	var RScriptExec = require('../utils/RScriptUtil.js');
+	
+	function calculateDistributedEffort(modelInfo, projectEffort){
+		
+		//distribute project effort
+		for(var i in modelInfo.UseCases){
+			var useCase = modelInfo.UseCases[i];
+			useCase.effort_dis_1 = projectEffort/modelInfo.UEUCW*useCase.UEUCW;
+			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
+			useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
+		}
+	
+    }
+	
+	function calculateDistributedDuration(modelInfo, projectDuration){
+		//distribute project effort
+		for(var i in modelInfo.UseCases){
+			var useCase = modelInfo.UseCases[i];
+			useCase.duration_dist_1 = projectDuration/modelInfo.UEUCW*useCase.UEUCW;
+			useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
+			useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
+		}
+		
+	}
+	
+	function calculateResourceAllocation(modelInfo, personnel){
+		//distribute project effort
+			modelInfo.personnel_ui = personnel*modelInfo.INT/modelInfo.NT;
+			modelInfo.personnel_db = personnel*modelInfo.DM/modelInfo.NT;
+			modelInfo.personnel_fs = personnel*modelInfo.CTRL/modelInfo.NT;
+			
+			for(var i in modelInfo.UseCases){
+				var useCase = modelInfo.UseCases[i];
+				useCase.personnel_dist_1 = personnel/modelInfo.UEUCW*useCase.UEUCW;
+				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
+				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
+				
+				useCase.personnel_ui = useCase.personnel_dist_1*useCase.INT/useCase.NT;
+				useCase.personnel_db = useCase.personnel_dist_1*useCase.DM/useCase.NT;
+				useCase.personnel_fs = useCase.personnel_dist_1*useCase.CTRL/useCase.NT;
+			}
+			
+	}
 	
 	module.exports = {
 		predictEffort: function(modelInfo, predictionModel, callbackfunc){
 		
-			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'/project_effort_estimation_result.txt"';
+			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'"';
 			
 			RScriptExec.runRScript(command,function(result){
 				if (!result) {
@@ -27,10 +69,10 @@
 						callbackfunc(false);
 					}
 				} else {
-					fs.readFile(modelInfo.OutputDir+"./project_effort_estimation_result.txt", 'utf-8', (err, str) => {
+					fs.readFile(modelInfo.OutputDir+"/effort_prediction_result.txt", 'utf-8', (err, str) => {
 						   if (err) throw err;
 						   var results = {};
-						   var lines = resultStr.split(/\r?\n/);
+						   var lines = str.split(/\r?\n/);
 						   for(var i in lines){
 							   var line = lines[i];
 							   line = line.replace(/\"/g, "");
@@ -57,39 +99,20 @@
 				}
 			});
 		},
-		calcualteDistributedEffort: function(modelInfo, projectEffort){
-			
-				//distribute project effort
-				for(var i in modelInfo.UseCases){
-					var useCase = modelInfo.UseCases[i];
-					useCase.effort_dis_1 = projectEffort/modelInfo.UEUCW*useCase.UEUCW;
-					useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
-					useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
-				}
-			
-		},
+		calculateDistributedEffort: calculateDistributedEffort,
 		predictDuration: function(modelInfo, projectEffort, callbackfunc){
 			//need to update
 			var projectDuration = projectEffort/10;
 			
 			modelInfo.predictedDuration = projectDuration;
-			calculateDistributedDuration(model, modelInfo.predictedDuration);
+			calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
 			
 			if(callbackfunc){
 				callbackfunc(modelInfo);
 			}
 			
 		},
-		calculateDistributedDuration: function(modelInfo, projectDuration){
-			//distribute project effort
-			for(var i in modelInfo.UseCases){
-				var useCase = modelInfo.UseCases[i];
-				useCase.effort_dis_1 = projectDuration/modelInfo.UEUCW*useCase.UEUCW;
-				useCase.effort_dis_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
-				useCase.effort_dis_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
-			}
-			
-		},
+		calculateDistributedDuration: calculateDistributedDuration,
 		predictPersonnel: function(modelInfo, projectEffort, callbackfunc){
 			//need to update
 			var personnel = projectEffort/12;
@@ -100,12 +123,7 @@
 				callbackfunc(modelInfo);
 			}
 		},
-		calculateResourceAllocation: function(modelInfo, personnel){
-			//distribute project effort
-				modelInfo.personnel_ui = personnel*modelInfo.INT/modelInfo.NT;
-				modelInfo.personnel_db = personnel*modelInfo.DM/modelinfo.NT;
-				modelInfo.personnel_fs = personnel.modelInfo.CTRL/modelInfo.NT;
-		}
+		calculateResourceAllocation: calculateResourceAllocation
 		
 	}
 }())

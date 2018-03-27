@@ -331,6 +331,9 @@
 		var domainModelNum = 1;
 		var domainModelEvaluationStr = "";
 		
+		var modelNum = 1;
+		var modelEvaluationStr = "";
+		
 		if(callbackfunc){
 		
 		for(var i in model.UseCases){
@@ -363,13 +366,18 @@
 			}
 		}
 		
+		modelEvaluationStr += toModelEvaluationStr(model, modelNum);
+		
+		
+		model.ModelEvaluationFileName = "modelEvaluation.csv";
 		model.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
 		model.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
 		model.UseCaseStatisticsOutputDir = model.OutputDir+"/use_case_evaluation_statistics";
 		model.DomainModelStatisticsOutputDir = model.OutputDir+"/domain_model_evaluation_statistics";
 		
 		var files = [{fileName : model.UseCaseEvaluationFileName , content : useCaseEvaluationStr},
-			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr}];
+			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
+			{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
 		
 		umlFileManager.writeFiles(model.OutputDir, files, function(err){
 			if(err) {

@@ -109,16 +109,15 @@ function model_file_update_fnc(){
 
 }
 
-function estimate_project_effort_func(){
-	var formData = new FormData($('#project-effort-estimation-form')[0]);
-
+function predict_project_effort_func(){
+	var formData = new FormData($('#project-effort-prediction-form')[0]);
 	console.log("starting the ajax call to some where");
-
 	console.log(formData);
+	
 //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
 	$.ajax({
 		type : 'POST',
-		url : "estimateProjectEffort",
+		url : "predictProjectEffort",
 		cache : false,
 		processData : false, // Don't process the files
 		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
@@ -126,7 +125,7 @@ function estimate_project_effort_func(){
 		enctype : 'multipart/form-data',
 		success : function(response) {
 			console.log(response);
-			$("#estimation-results-tables").html(response);
+			$("#estimation-result-panel-body").html(response);
 		},
 		error : function() {
 			console.log("fail");
@@ -134,7 +133,7 @@ function estimate_project_effort_func(){
 			alert("There was an error submitting commentA");
 		}
 	});
-
+	return false;
 }
 
 function query_exist_models_fnc(projectId) {
