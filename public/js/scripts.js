@@ -38,7 +38,7 @@ function model_file_upload_fnc() {
 }
 
 function hightlight_diagram_element(name, elementType, diagramType) {
-  var diagramType = ""; //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
   if(diagramType === "analysisDiagram"){
 	  //call Aishwarya's method.
   }
