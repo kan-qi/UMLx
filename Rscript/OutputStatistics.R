@@ -6,13 +6,13 @@ args = commandArgs(trailingOnly=TRUE)
 # arg3: working directory
 
 if (length(args) < 1) {
-	stop("At least 1 arguments must be supplied (input file).", call.=FALSE)
+  stop("At least 1 arguments must be supplied (input file).", call.=FALSE)
 } else if (length(args)==1) {
-	# default output file
-	args[2] = "."
-	args[3] = '.'
+  # default output file
+  args[2] = "."
+  args[3] = '.'
 } else if (length(args) == 2){
-	args[3] = '.'
+  args[3] = '.'
 }
 
 analyticInfoPath = args[1]
@@ -21,7 +21,7 @@ workDir <- args[3]
 reportPath <- paste(outputDir,'analytical_info_statistics_report.txt', sep='/')
 # store the current directory
 initial.dir<-getwd()
-setwd(workDir)
+#setwd(workDir)
 
 # cat(initial.dir)
 # change to the new directory
@@ -39,34 +39,35 @@ library(jsonlite)
 
 
 analyticalData <- read.csv(analyticInfoPath, header=TRUE)
-
-#column_names = c("usecaseData$average_degree","usecaseData$average_path_length"
-#		,"usecaseData$architecture_difficulty","usecaseData$path_number",
-#		"pathData$path_length","pathData$avg_degree","pathData$arch_diff",
-#		"expandedPathData$path_length","elementData$outboundDegree",
-#		"elementData$inboundDegree")
-
-column_names = colnames(data)
-
-list_column_names = vector("list",length(column_names))
-
+var0 <- sapply(analyticalData, function(x) all(is.nan(x)))
+analyticalDataNew <- analyticalData[,!var0] # remove columns containing NaN
+var1 <- sapply(analyticalDataNew,is.numeric)
+var2 <- analyticalDataNew[,var1]
+column_names_dataframe = vector("list")
+filename <- deparse(substitute(analyticalDataNew))
+column_names <- colnames(var2)
 for(i in 1:length(column_names)){
-	column = eval(parse(text = column_names[i]))
-	print(column)
-	mean_column = mean(as.numeric(column),na.rm = TRUE)
-	var_column = var(as.numeric(column),na.rm = TRUE)
-	quantile_column = quantile(as.numeric(column),na.rm = TRUE)
-	kurtosis_column = kurtosis(as.numeric(column),na.rm = TRUE)
-	
-	
-	distPath <- paste(outputDir, paste(column_names[i], "distribution_chart.svg", sep='/'), sep='/')
-	svg(distPath)
-	print(hist(as.numeric(column), main="Num", xlab=column_names[i], breaks=15))
-	
-	list_column_names[[i]] <- list("column name" = column_names[i],statistics = list(mean=mean_column,variance= var_column,
-					first_quartile=quantile_column[2],median=quantile_column[3],
-					third_quartile=quantile_column[4],kurtosis=kurtosis_column), "dist chart path" = distPath)
+  column_names_dataframe[[i]] = (paste(filename,column_names[[i]],sep="$"))
 }
+list_column_names = vector("list",length(column_names_dataframe))
+
+for(i in 1:length(column_names_dataframe)){
+  column = eval(parse(text = column_names_dataframe[i]))
+  #print(column)
+  mean_column = mean(as.numeric(column),na.rm = TRUE)
+  var_column = var(as.numeric(column),na.rm = TRUE)
+  quantile_column = quantile(as.numeric(column),na.rm = TRUE)
+  kurtosis_column = kurtosis(as.numeric(column),na.rm = TRUE)
+  
+  
+  distPath <- paste(outputDir, paste(column_names[i], "distribution_chart.svg", sep='_'), sep='/')
+  svg(distPath)
+  print(hist(as.numeric(column), main="Num", xlab=column_names[i],breaks = 15))
+  list_column_names[[i]] <- list("column name" = column_names[i],statistics = list(mean=mean_column,variance= var_column,
+                                                                                   first_quartile=quantile_column[2],median=quantile_column[3],
+                                                                                  third_quartile=quantile_column[4],kurtosis=kurtosis_column), "dist chart path" = distPath)
+  dev.off() # to avoid too many open devices error
+  }
 
 # print to output directory
 #reportPath <- paste(outputDir,'statistics.json', sep='/')
