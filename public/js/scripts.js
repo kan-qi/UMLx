@@ -40,7 +40,7 @@ function model_file_upload_fnc() {
 function hightlight_diagram_element(name, elementType, diagramType) {
   var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
   if(diagramType === "analysisDiagram"){
-	  //call Aishwarya's method.
+	  document.getElementById("node1").style.setProperty('fill', 'pink', '');
   }
   else if(diagramType === "sequenceDiagram"){
 	  //call kate's, not ready.
