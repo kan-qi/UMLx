@@ -1264,19 +1264,19 @@ function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTi
 	});
 }
 
-function highlightElement_ClassDia(element) {
+function highlightElement_classDia(element) {
+      clearHighlight_classDia() ;
+       var allNodes = document.getElementById(element).getElementsByTagName("text");
+       for(var i = 0; i < allNodes.length; i++) {
+               allNodes[i].style.stroke = "red";
+       }
 
-    var allNodes = document.getElementById(element).getElementsByTagName("text");
-    for(var i = 0; i < allNodes.length; i++) {
-        allNodes[i].style.stroke = "red";
-    }
+   }
 
-}
+   function clearHighlight_classDia() {
+       var allNodes = document.getElementsByTagName("text");
 
-function clearHighlight_ClassDia() {
-    var allNodes = document.getElementsByTagName("text");
-
-    for(var i = 0; i < allNodes.length; i++) {
-        allNodes[i].style.stroke = "";
-    }
-}
+       for(var i = 0; i < allNodes.length; i++) {
+               allNodes[i].style.stroke = "";
+       }
+   }
