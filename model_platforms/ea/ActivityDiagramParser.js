@@ -167,6 +167,9 @@
 		
 		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
 
+	}
+
+	function createActivityDiagram(Activities, PrecedenceRelations) {
 		//create dotty graph of activity diagram
 		var activitiesID = []; //array of IDs
 		var activityEdges = {}; //maps activity ID to list of outgoing edges
@@ -259,7 +262,6 @@
 				return;
 			}
 		});
-
 	}
 
 

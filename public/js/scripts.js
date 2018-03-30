@@ -47,7 +47,7 @@ function hightlight_diagram_element(name, elementType, diagramType) {
   }
   else if(diagramType === "activityDiagram"){
 	  //call Traci's method.
-	  highlight_activity_diagram(name);
+	  highlight_activity_diagram(name, elementType);
   }
   else if(diagramType === "classDiagram"){
 	  //call Lingquan's method.
