@@ -37,19 +37,19 @@ function model_file_upload_fnc() {
 
 }
 
-function hightlight_diagram_element(name, elementType, diagramType) {
+function highlight_diagram_element(idString, elementType, diagramType) {
   var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
-  if(diagramType === "analysisDiagram"){
+  if(diagramType === "analysis_diagram"){
 	  document.getElementById("node1").style.setProperty('fill', 'pink', '');
   }
-  else if(diagramType === "sequenceDiagram"){
+  else if(diagramType === "sequence_diagram"){
 	  //call kate's, not ready.
   }
-  else if(diagramType === "activityDiagram"){
+  else if(diagramType === "activity_diagram"){
 	  //call Traci's method.
 	  highlight_activity_diagram(name, elementType);
   }
-  else if(diagramType === "classDiagram"){
+  else if(diagramType === "class_diagram"){
 	  //call Lingquan's method.
   }
   else if(diagramType === "usim"){

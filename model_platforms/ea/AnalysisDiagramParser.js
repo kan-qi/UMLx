@@ -166,7 +166,7 @@
 		drawRobustnessDiagram({
 			Objects:Objects,
 			Dependencies: Dependencies
-		}, graphFilePath, function(){
+		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", function(){
 			console.log("outputting analysis diagram is finished.");
 		})
 	}
@@ -263,7 +263,8 @@
 
 		
 		//update the variables to the correct names.
-  function drawRobustnessDiagram(UseCase, graphFilePath, callbackfunc) {
+  function drawRobustnessDiagram(Components, UseCase, graphFilePath, callbackfunc) {
+	  		UseCase.DiagramType = "robustness_diagram";
 			let activities = UseCase.Activities;
 			let precedenceRelations = UseCase.PrecedenceRelations;
 			let graph = 'digraph g {\

@@ -21,7 +21,7 @@
 				return;
 			}
 
-			xmiParser.extractUserSystermInteractionModel(umlModelInfo.umlFilePath, function(model){
+			xmiParser.extractUserSystermInteractionModel(umlModelInfo.umlFilePath, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
 				console.log("extract model");
 				
 				var debug = require("./utils/DebuggerOutput.js");
@@ -39,8 +39,6 @@
 				// set up the domain model
 				var domainModel = model.DomainModel;
 //				var domainModel = model.DomainModel;
-				domainModel.OutputDir = model.OutputDir+"/domainModel";
-				domainModel.AccessDir = model.AccessDir+"/domainModel";
 //				domainModel.DotGraphFile = '';
 //				domainModel.SvgGraphFile = 'domainModel.svg';
 //				console.log("domainModel");
@@ -61,11 +59,19 @@
 //								console.log(useCase);
 //								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
-								var fileName = useCase._id;
-								useCase.OutputDir = model.OutputDir+"/"+fileName;
-								useCase.AccessDir = model.AccessDir+"/"+fileName;
 								
 								useCase.Paths = traverseUseCaseForPaths(useCase);
+								
+								for(var j in useCase.Paths){
+									var path = useCase.Paths[j];
+									var PathStrByIDs = "";
+									for(var k in path.Elements){
+										var node = path.Elements[k];
+										PathStrByIDs += node._id+"->";
+									}
+									path.PathStrByIDs = path.PathStrByIDs;
+								}
+								
 								
 								debug.writeJson("useCase_"+useCase.Name, useCase);
 								

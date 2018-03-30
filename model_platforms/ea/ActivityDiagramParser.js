@@ -166,12 +166,19 @@
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 		
+		createActivityDiagram(UseCase, UseCase.OutputDir+"/"+"uml_diagram.svg", function(){
+			 console.log("class diagram is output: "+ UseCase.OutputDir+"/"+"class_diagram.svg");
+		});
+		
 		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
 
 	}
 
-	function createActivityDiagram(Activities, PrecedenceRelations) {
+	function createActivityDiagram(UseCase, filePath, callbackfunc) {
 		//create dotty graph of activity diagram
+		UseCase.DiagramType = "activity_diagram";
+		var Activities = UseCase.Activities;
+		var PrecedenceRelations = UseCase.PrecedenceRelations;
 		var activitiesID = []; //array of IDs
 		var activityEdges = {}; //maps activity ID to list of outgoing edges
 		var forkNodes = []; //nodes that are forked from and should be on the same level
@@ -257,7 +264,7 @@
 		graphOutput += "}";
 
 		var fs = require('fs');
-		fs.writeFile("ActivityDiagram.dotty", graphOutput, function(err) {
+		fs.writeFile(filePath, graphOutput, function(err) {
 			if(err) {
 				console.log(err);
 				return;
