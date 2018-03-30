@@ -67,6 +67,9 @@ eucp.predict = cbind(predicted=predict(m1, data), actual=data$Effort_Real)
 print("predicted values")
 print(eucp.predict)
 
+#generate description file.
+saveRDS(m1, "./statistical_models/eucp_linear_model.rds")
+
 #correlation between effort and TN
 print("correlation between effort and EXUCP")
 #cor2 = cor(data$Effort_Real, data$EXUCP)
@@ -83,6 +86,9 @@ exucp.predict = cbind(predicted=predict(m2, data), actual=data$Effort_Real)
 print("predicted values")
 print(exucp.predict)
 
+
+saveRDS(m2, "./statistical_models/exucp_linear_model.rds")
+
 #correlation between effort and TN
 print("correlation between effort and DUCP")
 #cor2 = cor(data$Effort_Real, data$EXUCP)
@@ -98,6 +104,8 @@ print(coeff3)
 ducp.predict = cbind(predicted=predict(m3, data), actual=data$Effort_Real)
 print("predicted values")
 print(ducp.predict)
+
+saveRDS(m3, "./statistical_models/ducp_linear_model.rds")
 
 plot = xyplot(Effort_Real~ value | variable, data=useCaseDataMelt,
 		# scales = list(x = list(log = 10, equispaced.log = FALSE)),

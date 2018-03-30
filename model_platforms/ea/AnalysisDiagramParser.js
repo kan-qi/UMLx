@@ -36,6 +36,9 @@
 		var Activities = [];
 		var PrecedenceRelations = [];
 		
+		var Objects = [];
+		var Dependences = [];
+		
 		var ActivitiesByID = [];
 		var XMIInstanceSpecificationsByID = {};
 		
@@ -57,6 +60,14 @@
 			console.log("checking derived instance specification");
 			console.log(XMIInstanceSpecification);
 			XMIInstanceSpecificationsByID[XMIInstanceSpecification['$']['xmi:id']] = XMIInstanceSpecification;
+			
+			var Object = {
+					id: XMIInstanceSpecification['$']['xmi:id'],
+					name: XMIInstanceSpecification['$']['name'],
+					type: CustomProfiles(jp.query(MXMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]')['$']['xmi:idref'])
+			}
+			
+			Objects.push(Object);
 		}
 		
 		console.log("check instance specifications");
@@ -106,6 +117,10 @@
 					
 					
 					Activities.push(activity);
+					Dependencies.push({
+						start:XMIInstanceSpecification['$']['xmi:id'],
+						end: ConnectedXMIInstanceSpecification['$']['xmi:id']
+					});
 //				}
 			}
 		}
@@ -147,9 +162,17 @@
 		console.log("checking analysis activities");
 		console.log(Activities);
 		console.log(PrecedenceRelations);
+		
+		drawRobustnessDiagram({
+			Objects:Objects,
+			Dependencies: Dependencies
+		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", function(){
+			console.log("outputting analysis diagram is finished.");
+		})
 	}
 	
-		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
+
+//		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
 		
 		//Aishwarya
 		function drawBoundaryNode(id, label){
@@ -186,59 +209,62 @@
 		//Aishwarya
 
 
-			const UseCaseRobust = {
-			Activities: [
-				{
-					id: 1,
-					name: 'Actor1',
-					type: 'Actor'
-				},
-				{
-					id: 2,
-					name: 'Buy tickets interface',
-					type: 'Boundary'
-				},
-				{
-					id: 3,
-					name: 'Payments success message',
-					type: 'Boundary'
-				},
-				{
-					id: 4,
-					name: 'Pay the bill',
-					type: 'Control'
-				},
-				{
-					id: 5,
-					name: 'Save bill records',
-					type: 'Entity'
-				}
-			],
-			PrecedenceRelations: [
-				{
-					start: 1,
-					end: 2
-				},
-				{
-					start: 1,
-					end: 3
-				},
-				{
-					start: 2,
-					end: 4
-				},
-				{
-					start: 4,
-					end: 3
-				},
-				{
-					start: 4,
-					end: 5
-				}
-			]
-		};
+//			const UseCaseRobust = {
+//			Activities: [
+//				{
+//					id: 1,
+//					name: 'Actor1',
+//					type: 'Actor'
+//				},
+//				{
+//					id: 2,
+//					name: 'Buy tickets interface',
+//					type: 'Boundary'
+//				},
+//				{
+//					id: 3,
+//					name: 'Payments success message',
+//					type: 'Boundary'
+//				},
+//				{
+//					id: 4,
+//					name: 'Pay the bill',
+//					type: 'Control'
+//				},
+//				{
+//					id: 5,
+//					name: 'Save bill records',
+//					type: 'Entity'
+//				}
+//			],
+//			PrecedenceRelations: [
+//				{
+//					start: 1,
+//					end: 2
+//				},
+//				{
+//					start: 1,
+//					end: 3
+//				},
+//				{
+//					start: 2,
+//					end: 4
+//				},
+//				{
+//					start: 4,
+//					end: 3
+//				},
+//				{
+//					start: 4,
+//					end: 5
+//				}
+//			]
+//		};
 
-		function drawRobustnessDiagram(UseCase, graphFilePath, callbackfunc) {
+		
+		//update the variables to the correct names.
+  function drawRobustnessDiagram(Components, UseCase, graphFilePath, callbackfunc) {
+	  		UseCase.DiagramType = "robustness_diagram";
 			let activities = UseCase.Activities;
 			let precedenceRelations = UseCase.PrecedenceRelations;
 			let graph = 'digraph g {\

@@ -1,0 +1,25 @@
+digraph g {compound=true
+subgraph cluster_3 {"LFakeRoot" [color=green, shape=box]
+}
+subgraph cluster_1 {"Lmysql.js/createConnection" [color=green, shape=box]
+"LapkDBHelper.js" [color=green, shape=box]
+"LapkDBHelper.js"->"Lmysql.js/createConnection"
+}
+subgraph cluster_2 {"LapkDBHelper.js/removeAppInfo" [color=green, shape=box]
+"Lindex.js" [color=green, shape=box]
+"LapkDBHelper.js/removeVersionInfo" [color=green, shape=box]
+"LapkDBHelper.js/insertVersionInfo" [color=green, shape=box]
+"LapkDBHelper.js/getAppBriefInfo" [color=green, shape=box]
+"Lindex.js"->"LapkDBHelper.js/insertVersionInfo"
+"Lindex.js"->"LapkDBHelper.js/getAppBriefInfo"
+"Lindex.js"->"LapkDBHelper.js/removeAppInfo"
+"Lindex.js"->"LapkDBHelper.js/removeVersionInfo"
+}
+subgraph cluster_0 {"LapkDBHelper.js/getAppInfoList" [color=green, shape=box]
+"Lmysql.js/query" [color=green, shape=box]
+"LapkDBHelper.js/getAppInfoList"->"Lmysql.js/query"
+}
+"Lindex.js"->"LapkDBHelper.js/getAppInfoList"[ltail=cluster_2,lhead=cluster_0]
+"LFakeRoot"->"LapkDBHelper.js"[ltail=cluster_3,lhead=cluster_1]
+"LFakeRoot"->"Lindex.js"[ltail=cluster_3,lhead=cluster_2]
+}

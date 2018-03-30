@@ -209,13 +209,13 @@
 //					model.findAssociatedComponents = function(node){
 //						var components = new Set();
 					totalDegree += 1;
-						if(node.target){
+						if(node.Component){
 							var outgoingEdges = [];
 //							for(var i in this.Diagrams){
 								var edges = usecase.precedenceRelations;
 								for(var j in edges){
 									var edge = edges[j];
-									if(edge.source == node.target){
+									if(edge.end.Component == node.Component){
 //										outgoingEdges.push(edge);
 										totalDegree++;
 									}

@@ -13,7 +13,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" ALIGN="CENTER">\
 			<TR><TD><IMG SRC="Stimulus_icon.png"/></TD></TR>\
-		  <TR><TD WIDTH="100">'+label+'</TD></TR>\
+		  <TR><TD WIDTH="100"><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 	
@@ -21,7 +21,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" ALIGN="CENTER" WIDTH="100">\
 			<TR><TD><IMG SRC="activity_icon.png"/></TD></TR>\
-		  <TR><TD WIDTH="100">'+label+'</TD></TR>\
+		  <TR><TD WIDTH="100"><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 	
@@ -29,7 +29,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="out_of_scope_activity_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
+		  <TR><TD><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 	
@@ -37,7 +37,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="fragment_node_icon.png"/></TD></TR>\
-		  <TR><TD>'+label+'</TD></TR>\
+		  <TR><TD><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 
@@ -56,7 +56,7 @@
 		
 		var dotty = 'digraph g {';
 		dotty += "fontsize = 24";
-		dotty += "node[shape=plaintext fontsize=24]";
+		dotty += "node[shape=plaintext, fontsize=24]";
 //		dotty += "node[shape=record]";
 		// used to get rid of duplicates.
 		var drawnObjects = [];
@@ -155,9 +155,9 @@
 			var DE = path.Nodes.length;
 			
 			if(path.OutScope){
-				dotty += 'bgcolor = "gray";'
+				dotty += 'bgcolor = "gray92";'
 			}
-			dotty += "label = \"Transaction#"+pathTag+"\";}";
+			dotty += "label = <<B>Transaction#"+pathTag+"</B>>;style=\"bold\";}";
 		}
 		
 		dotty += 'imagepath = \"./img\"}';
