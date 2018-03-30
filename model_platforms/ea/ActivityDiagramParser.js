@@ -167,6 +167,100 @@
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 		
 		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
+
+		//create dotty graph of activity diagram
+		var activitiesID = []; //array of IDs
+		var activityEdges = {}; //maps activity ID to list of outgoing edges
+		var forkNodes = []; //nodes that are forked from and should be on the same level
+		var numDecision = 0; //number of decision nodes created
+		var decNodes = {}; //maps activity ID to decision name
+		var doneDecNodes = []; //decision nodes that are done being drawn
+		var doneForkNodes = []; //fork nodes that are done being drawn
+		var graphOutput = "digraph ActivityDiagram { rankdir=TD;\nsplines=ortho;\nnode [fontsize=11];\nedge [arrowhead=open];\n";
+
+		//get all nodes
+		for(var node in Activities) {
+			activitiesID.push(Activities[node]._id);
+		}
+
+		//get all directed edges
+		for(var edge in PrecedenceRelations) {
+			activityEdges[PrecedenceRelations[edge].start._id] = activityEdges[PrecedenceRelations[edge].start._id] || [];
+			activityEdges[PrecedenceRelations[edge].start._id].push(PrecedenceRelations[edge].end._id);
+		}
+
+		for(var node in Activities) {
+			//starting node
+			if(Activities[node].Name == "ActivityInitial") {
+				graphOutput += (Activities[node]._id + "[shape=circle, color=black, style=filled, label=\"\"];\n");
+				continue;
+			}
+			//ending node
+			else if(Activities[node].Name == "ActivityFinal") {
+				graphOutput += (Activities[node]._id + "[shape=doublecircle, color=black, style=filled, label=\"\"];\n");
+				continue;
+			}
+			//fork node
+			else if(Activities[node].Name == "fork") {
+				graphOutput += (Activities[node]._id + "[shape=rect, width=1, height=0.2, color=black, style=filled, fixedsize=true, label=\"\"];\n");
+				forkNodes.push(Activities[node]._id);
+			}
+			//node with no edges
+			else if(!(Activities[node]._id in activityEdges)) {
+				continue;
+			}
+			//decision node
+			else if(activityEdges[Activities[node]._id].length >= 2) {
+				var decisionName = "decision" + numDecision;
+				graphOutput += (Activities[node]._id + "[shape=box, style=rounded, width=3, height=1, fixedsize=true, label=\"" + Activities[node].Name + "\"];\n");
+ 				graphOutput += decisionName + "[shape=diamond, width=0.5, height=0.5, fixedsize=true, label=\"\"]\n";
+				decNodes[Activities[node]._id] = decisionName;
+				numDecision++;
+			}
+			//action node
+			else {
+				graphOutput += (Activities[node]._id + "[shape=box, style=rounded, width=3, height=1, fixedsize=true, label=\"" + Activities[node].Name + "\"];\n");
+			}
+		}
+
+		for(var edge in PrecedenceRelations) {
+			//create a decision edge
+			if(activitiesID.indexOf(PrecedenceRelations[edge].start._id) != -1 && activitiesID.indexOf(PrecedenceRelations[edge].end._id) != -1) {
+				if(PrecedenceRelations[edge].start._id in decNodes) {
+					if(doneDecNodes.indexOf(PrecedenceRelations[edge].start._id) == -1) {
+						graphOutput += PrecedenceRelations[edge].start._id + " -> " + decNodes[PrecedenceRelations[edge].start._id] + ";\n";
+						doneDecNodes.push(PrecedenceRelations[edge].start._id);
+					}
+					graphOutput += decNodes[PrecedenceRelations[edge].start._id] + " -> " + PrecedenceRelations[edge].end._id + ";\n";
+				}
+				else {
+					graphOutput += (PrecedenceRelations[edge].start._id + " -> " + PrecedenceRelations[edge].end._id) + ";\n";
+				}
+
+				//create a fork edge
+				if(forkNodes.indexOf(PrecedenceRelations[edge].start._id) != -1) {
+					if(doneForkNodes.indexOf(PrecedenceRelations[edge].start._id) == -1) {
+						doneForkNodes.push(PrecedenceRelations[edge].start._id);
+						graphOutput += "{rank = same; ";
+						for(var i in activityEdges[PrecedenceRelations[edge].start._id]) {
+							graphOutput += activityEdges[PrecedenceRelations[edge].start._id][i] + "; "
+						}
+						graphOutput += "}\n";
+					}
+				}
+			}
+		}
+
+		graphOutput += "}";
+
+		var fs = require('fs');
+		fs.writeFile("ActivityDiagram.dotty", graphOutput, function(err) {
+			if(err) {
+				console.log(err);
+				return;
+			}
+		});
+
 	}
 
 

@@ -241,6 +241,114 @@
 		}
 //		console.log(XMIClasses);
 //		debug.writeJson("XMIClasses", XMIClasses);
+		// draw the class diagram of the model
+	function createClassDiagramFunc(graphFilePath){
+           var json_obj = {
+           	   "allClass" :[
+				   {"className": "bookTicketMangement",
+			        "attributes": [
+					   	{"attributeName": "ticketName",
+				         "attributeType": "String"
+						},
+						 {"attributeName": "ticketId",
+						 "attributeType": "int"
+                         }
+                      ],
+					"operations": [
+						 {"operationName":"bookTicketsManagement(int)",
+						  "operationReturn":"void"
+						 }
+					   ],
+					"kids": ["BookTickets","bookTicketInterface"]
+				   },
+
+				   {"className": "BookTickets",
+					"attributes": [
+						{"attributeName": "BookTicketName",
+						 "attributeType": "int"
+                           }
+                       ],
+					 "operations": [],
+					 "kids": []
+                   },
+
+                   {"className": "bookTicketInterface",
+                    "attributes": [
+                       {"attributeName": "BookTicketInput",
+                        "attributeType": "int"
+					   }
+					 ],
+                     "operations": [],
+                      "kids": []
+                   }
+			   ]
+		   }
+
+			var graph = 'digraph class_diagram {';
+             graph += 'node [fontsize = 8 shape = "record"]';
+             graph += ' edge [arrowhead = "ediamond"]'
+             for(i = 0;  i < json_obj.allClass.length; i++){
+                 var curClass = json_obj.allClass[i];
+                 graph += curClass["className"];
+                 graph += '[ label = "{';
+                 graph += curClass["className"];
+
+
+                 var classAttributes = json_obj.allClass[i]["attributes"];
+                 if (classAttributes.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classAttributes.length; j++) {
+                         graph += '-   ' ;
+                         graph += classAttributes[j]["attributeName"];
+                         graph += ':'+classAttributes[j]["attributeType"];
+                         graph += '\\l';
+                     }
+                 }
+
+
+
+                 // graph += '|';
+
+                 var classOperations = json_obj.allClass[i]["operations"];
+                 if (classOperations.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classOperations.length;j++) {
+                         graph += '+   ' ;
+                         graph += classOperations[j]["operationName"];
+                         graph += ':'+classOperations[j]["operationReturn"];
+                         graph += "\\l";
+                     }
+                 }
+
+
+
+                 graph += '}"]';
+
+                 var classKids = json_obj.allClass[i]["kids"];
+                 for(j = 0; j < classKids.length;j++) {
+                     graph += curClass["className"] ;
+                     graph += '->';
+                     graph += classKids[j] + ' ';
+
+                 }
+			 }
+
+
+
+
+            graph += 'imagepath = \"./public\"}';
+            
+     		console.log("graph is:"+graph);
+     		dottyUtil = require("../../utils/DottyUtil.js");
+     		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+     			console.log("class Diagram is done");
+     		});
+
+             
+             return graph;
+		}
+		
+	createClassDiagramFunc("C:/Users/attri/UMLx/UMLx/img/class_diagram");
 		
 		
 		//search for the use cases
