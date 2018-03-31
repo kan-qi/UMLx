@@ -259,11 +259,11 @@
 		}
 //		console.log(XMIClasses);
 //		debug.writeJson("XMIClasses", XMIClasses);
-		
-	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"uml_diagram.svg", function(){
-		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.svg");
-	   });
-		
+//		
+//	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"uml_diagram.svg", function(){
+//		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.svg");
+//	   });
+//		
 		
 		//search for the use cases
 		var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
@@ -272,7 +272,7 @@
 		
 		for(var i in XMIUseCases){
 			var XMIUseCase = XMIUseCases[i];
-			var fileName = useCase._id;
+			var fileName = XMIUseCase['$']['xmi:id'];
 			
 			var UseCase = {
 					_id: XMIUseCase['$']['xmi:id'],
