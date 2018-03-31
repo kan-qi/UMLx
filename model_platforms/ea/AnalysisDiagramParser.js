@@ -37,7 +37,7 @@
 		var PrecedenceRelations = [];
 		
 		var Objects = [];
-		var Dependences = [];
+		var Dependencies = [];
 		
 		var ActivitiesByID = [];
 		var XMIInstanceSpecificationsByID = {};
@@ -61,10 +61,15 @@
 			console.log(XMIInstanceSpecification);
 			XMIInstanceSpecificationsByID[XMIInstanceSpecification['$']['xmi:id']] = XMIInstanceSpecification;
 			
+			var XMISpecificationType = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
+			var type = "Object";
+			if(XMISpecificationType[0] && CustomProfiles[XMISpecificationType[0]['$']['xmi:idref']]){
+				type = CustomProfiles[XMISpecificationType[0]['$']['xmi:idref']];
+			}
 			var Object = {
 					id: XMIInstanceSpecification['$']['xmi:id'],
 					name: XMIInstanceSpecification['$']['name'],
-					type: CustomProfiles(jp.query(MXMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]')['$']['xmi:idref'])
+					type: type
 			}
 			
 			Objects.push(Object);
@@ -163,12 +168,12 @@
 		console.log(Activities);
 		console.log(PrecedenceRelations);
 		
-		drawRobustnessDiagram({
-			Objects:Objects,
-			Dependencies: Dependencies
-		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", function(){
-			console.log("outputting analysis diagram is finished.");
-		})
+//		drawRobustnessDiagram({
+//			Objects:Objects,
+//			Dependencies: Dependencies
+//		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", function(){
+//			console.log("outputting analysis diagram is finished.");
+//		});
 	}
 	
 
