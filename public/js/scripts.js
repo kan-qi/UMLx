@@ -37,6 +37,25 @@ function model_file_upload_fnc() {
 
 }
 
+function highlight_diagram_element(idString, elementType, diagramType) {
+  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+  if(diagramType === "analysis_diagram"){
+	  document.getElementById("node1").style.setProperty('fill', 'pink', '');
+  }
+  else if(diagramType === "sequence_diagram"){
+	  //call kate's, not ready.
+  }
+  else if(diagramType === "activity_diagram"){
+	  //call Traci's method.
+	  highlight_activity_diagram(name, elementType);
+  }
+  else if(diagramType === "class_diagram"){
+	  //call Lingquan's method.
+  }
+  else if(diagramType === "usim"){
+	  // leave it now.
+  }
+}
 
 function send_analytics_data(uuid, clientIpAddress, pageNumber) {
     var data = {
@@ -1369,3 +1388,20 @@ function cancelEdit() {
     document.getElementById("cancelButton").classList.add("hidden");
     document.getElementById("modifyButton").classList.remove("hidden");
 }
+
+function highlightElement_classDia(element) {
+      clearHighlight_classDia() ;
+       var allNodes = document.getElementById(element).getElementsByTagName("text");
+       for(var i = 0; i < allNodes.length; i++) {
+               allNodes[i].style.stroke = "red";
+       }
+
+   }
+
+   function clearHighlight_classDia() {
+       var allNodes = document.getElementsByTagName("text");
+
+       for(var i = 0; i < allNodes.length; i++) {
+               allNodes[i].style.stroke = "";
+       }
+   }
