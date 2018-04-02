@@ -40,7 +40,7 @@
 //			}
 //			else{
 				var activity = {
-						Type: "activity",
+						Type: XMIActivity['$']['xmi:type'],
 						Name: XMIActivity['$']['name'],
 						_id: XMIActivity['$']['xmi:id'],
 //						Attachment: XMIActivity,
@@ -162,6 +162,53 @@
 		console.log("final relations");
 		console.log(PrecedenceRelations);
 		
+		var ActivitiesToEliminate = [];
+		//to  eliminate unnecessary activities
+		for(var i in Activities){
+			var activity = Activities[i];
+
+			console.log("determine fragement node");
+			console.log(Activities);
+			console.log(activity.Name);
+			if(activity.Type === "uml:DecisionNode" || activity.Type === "uml:ActivityFinalNode" || activity.Type === "uml:InitialNode" || activity.Type === "uml:FlowFinalNode"){
+//					var activityToEliminate = activity;
+				ActivitiesToEliminate.push(activity);
+			}
+		}
+		
+		for(var i in ActivitiesToEliminate){
+			var activityToEliminate = ActivitiesToEliminate[i];
+			var outEdges = [];
+			var inEdges = [];
+			var leftEdges = [];
+			for(var k in PrecedenceRelations){
+				var precedenceRelation = PrecedenceRelations[k];
+				if(precedenceRelation.end == activityToEliminate){
+					inEdges.push(precedenceRelation);
+				} else if(precedenceRelation.start == activityToEliminate){
+					outEdges.push(precedenceRelation);
+				} else {
+					leftEdges.push(precedenceRelation);
+				}
+			}
+			
+			for(var k in inEdges){
+				var  inEdge = inEdges[k];
+				for(var l in outEdges){
+					var outEdge = outEdges[l];
+					 //create a new edge by triangle rules.
+					leftEdges.push({start: inEdge.start, end: outEdge.end});
+				}
+			}
+			
+			Activities.splice(Activities.indexOf(activityToEliminate), 1);
+			PrecedenceRelations = leftEdges;
+		}
+		
+
+		console.log("test use case");
+		console.log(PrecedenceRelations);
+		
 
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
@@ -270,6 +317,7 @@
 				return;
 			}
 		});
+		
 	}
 
 
