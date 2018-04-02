@@ -12,6 +12,17 @@
 	var activityDiagramParser= require("./ActivityDiagramParser.js");
 	var analysisDiagramParser= require("./AnalysisDiagramParser.js");
 	var useCaseDiagramParser = require("./UseCaseDiagramParser.js");
+        var inheritanceStats = {
+                'depth': 0,
+                'numInheritedFrom': 0,
+                'numDerivedClass': 0,
+                'coupling': 0,
+                'children': {},
+                'topLevelClasses': 0,
+                'numOfChildren': {},
+                'tree':{},
+        };
+
 	/*
 	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
 	 * 
@@ -65,6 +76,7 @@
 		return name.replace(/\s/g, '').toUpperCase();
 	}
 	
+
 	function createDomainElement(XMIClass){
 		var XMIAttributes = jp.query(XMIClass, '$.ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
 		var attributes = new Array();
@@ -110,36 +122,25 @@
 			operations.push(operation);
 		}
                
-                var inheritanceStats = {
-                        'depth': 0,
-                        'numInheritedFrom': 0,
-                        'numDerivedClass': 0,
-                        'coupling': 0,
-                        'children': new Set(),
-                        'topLevelClasses': 0,
-                        'numOfChildren': 0,
-                }
 
-                function traverseClass(XMIClass, level) {
-                        var children = jp.query(XMIClass, '$.nestedClassifier[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
-                        // console.log('Exploring children, level: ');
-                        // console.log(level);
-                        inheritanceStats['depth'] = Math.max(inheritanceStats['depth'], level);
-                        if (children.length != 0) { 
-                                console.log('------------ Children Present ------------')
-                                inheritanceStats['numInheritedFrom']++;
-                                for (j in children) {
-                                    var child = children[j];
-                                    inheritanceStats['children'].add(child['$']['name']);
-                                    inheritanceStats['numOfChildren']++;
-                                    traverseClass(child, level + 1);
-                                }
+                var generalizations = jp.query(XMIClass, '$.generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Generalization\')]');
+                if (generalizations.length == 0) {
+                    inheritanceStats['topLevelClasses']++;
+                    inheritanceStats['numOfChildren'][XMIClass['$']['xmi:id']] = 0;
+                    inheritanceStats['tree'][XMIClass['$']['xmi:id']] = '#';
+                } else {
+                    inheritanceStats['children'][XMIClass['$']['xmi:id']] = null;
+                    for (i in generalizations) {
+                        inheritanceStats['coupling']++;
+                        inheritanceStats['numInheritedFrom']++;
+                        inheritanceStats['tree'][XMIClass['$']['xmi:id']] = generalizations[i]['$']['general'];
+                        if (generalizations[i]['$']['general'] in inheritanceStats['numOfChildren']) {
+                            inheritanceStats['numOfChildren'][generalizations[i]['$']['general']]++;
+                        } else {
+                            inheritanceStats['numOfChildren'][generalizations[i]['$']['general']] = 1;
                         }
+                    }
                 }
-
-                inheritanceStats['topLevelClasses']++;
-                traverseClass(XMIClass, 0);
-                // console.log(inheritanceStats);
 
 		// console.log(classDiagram);
 //		component.Operations = operations;
@@ -151,7 +152,6 @@
 				Name: XMIClass['$']['name'],
 				Operations: operations,
 				Attributes: attributes,
-                InheritanceStats: inheritanceStats,
 //				Attachment: XMIClass
 			}
 	}
@@ -216,7 +216,8 @@
 					Elements: [],
 					Usages: [],
 					Realization:[],
-					Assoc: []
+					Assoc: [],
+                                        InheritanceStats: null
 				}
 		};
 		
@@ -239,6 +240,7 @@
 			DomainElementsBySN[standardizeName(XMIClass['$']['name'])] = domainElement;
 //			model.DomainModel.push(domainElement);
 		}
+
 //		console.log(XMIClasses);
 //		debug.writeJson("XMIClasses", XMIClasses);
 		
@@ -271,6 +273,7 @@
 		for(var i in DomainElementsBySN){
 			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
 		}
+                Model.DomainModel.InheritanceStats = inheritanceStats;
 		
 		var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
 		var DomainUsagesByID = [];

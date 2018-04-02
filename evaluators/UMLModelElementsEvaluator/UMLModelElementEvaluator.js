@@ -392,16 +392,28 @@
                             if(element.Attributes.length>0 && element.Operations.length==0){
 								objectdataNum++;
 							}
-                            inheritanceStats = element.InheritanceStats;
-                            topLevelClasses += inheritanceStats['topLevelClasses'];
-                            numberOfInheritanceRelationships += inheritanceStats['children'].size;
-                            numberOfClassesInherited += inheritanceStats['children'].size;
-                            numberOfClassesInheritedFrom += inheritanceStats['numInheritedFrom'];
-                            numberOfChildren += inheritanceStats['numOfChildren'];
-                            depthInheritanceTree += inheritanceStats['depth'];
-                            averageDepthInheritanceTree = (depthInheritanceTree === 0) ? 0 : depthInheritanceTree / entityNum;
-                            averageNumberOfChildrenPerBaseClass = (numberOfChildren === 0) ? 0 : numberOfChildren / entityNum;
 			}
+                        inheritanceStats = domainModelInfo.InheritanceStats;
+                        topLevelClasses = inheritanceStats['topLevelClasses'];
+                        couplingBetweenObjects = inheritanceStats['coupling'];
+                        numberOfInheritanceRelationships = Object.keys(inheritanceStats['children']).length;
+                        numberOfClassesInherited = Object.keys(inheritanceStats['children']).length;
+                        numberOfClassesInheritedFrom = inheritanceStats['numInheritedFrom'];
+                        for (var key in inheritanceStats['numOfChildren']) {
+                            numberOfChildren += inheritanceStats['numOfChildren'][key];
+                        }
+                        numberOfDerivedClasses = numberOfChildren;
+                        averageNumberOfChildrenPerBaseClass = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : numberOfChildren / Object.keys(inheritanceStats['numOfChildren']).length;
+                        for (var key in inheritanceStats['tree']) {
+                            depth = 0;
+                            val = inheritanceStats['tree'][key];
+                            while (val !== '#') {
+                                depth++;
+                                val = inheritanceStats['tree'][val];
+                            }
+                            depthInheritanceTree += depth;
+                        }
+                        averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
 
 			var usageNum = 0;
 			var realNum = 0;
@@ -426,13 +438,13 @@
 			domainModelInfo["ElementAnalytics"].EntityNum = entityNum;
                         domainModelInfo["ElementAnalytics"].TopLevelClasses = topLevelClasses;
                         domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree = averageDepthInheritanceTree;
+                        domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
                         domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass = averageNumberOfChildrenPerBaseClass;
                         domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships = numberOfInheritanceRelationships;
                         domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses = numberOfDerivedClasses;
                         domainModelInfo["ElementAnalytics"].NumberOfClassesInherited = numberOfClassesInherited;
                         domainModelInfo["ElementAnalytics"].NumberOfChildren = numberOfChildren;
                         domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom = numberOfClassesInheritedFrom;
-                        domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
                         domainModelInfo["ElementAnalytics"].CouplingBetweenObjects = couplingBetweenObjects;
 
             domainModelInfo["ElementAnalytics"].ObjectDataNum = objectdataNum;
