@@ -13,7 +13,7 @@ if domainModel
   div.tab-pane.fade.in.active(id="domain-model-info-pane")
    div.domain-model-info
     button(onclick="toggleDomainDiagram()", class="big-button") Toggle Diagram
-    img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
+    img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/uml_diagram.svg")
    div.domain-model-info-content
     ul.nav.nav-tabs
      li.active
@@ -32,7 +32,7 @@ if domainModel
         each element in domainModel.Elements
           if element.Attributes
            each attribute,key in element.Attributes
-            tr
+            tr(onclick="highlight_diagram_element('#{attribute._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
              th #{key}
              th
               span.domain-model-attribute #{attribute.Name}
@@ -49,7 +49,7 @@ if domainModel
          each element in domainModel.Elements
           if element.Operations
            each operation,key in element.Operations
-            tr
+            tr(onclick="highlight_diagram_element('#{operation._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
              th #{key}
              th
                span.domain-model-operation #{operation.Name}

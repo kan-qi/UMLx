@@ -1,6 +1,8 @@
 -var model_id = modelInfo._id
 -var modelName = modelInfo.Name
 -var repoID = repo_id
+input(type='hidden', value=repoID)#myrepoId
+input(type='hidden', value=model_id)#mymodelId
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -70,7 +72,7 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{modelInfo.ClassNum}
                 span Classes
-          div.col-sm-3 
+          div.col-sm-3
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
@@ -79,8 +81,13 @@ div.block.panel.panel-default
                 span Actors
         //div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{modelInfo.AccessDir}/modelVersionInfo.csv")
         div(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
-         div.stats-chart.col-md-12(id="chart-1") here should be distributions.
-        div.col-sm-12.chart-row  
+         //div.stats-chart.col-md-12(id="chart-1") here should be distributions.
+        //div.col-sm-12.chart-row  
+        // div.col-sm-6(id="chart-1") here should be distributions.
+        div.stats-chart.col-md-12(id="chart-1") here should be distributions.
+        //div.col-sm-12.chart-row
+         //div.col-sm-6(id="chart-1") here should be distributions.
+        div.col-sm-12.chart-row
           .col-sm-6
             //img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
             div.model-evaluation
@@ -136,7 +143,8 @@ div.block.panel.panel-default
                  span.statistical-item Number of Diagrams: #{modelInfo.DiagramNum}
                 li
                  span.statistical-item Number of Classes: #{modelInfo.ClassNum}
-          .col-sm-6(id="transaction-pie" data="./#{modelInfo.AccessDir}/transactionAnalytics.csv")
+          .col-sm-6(id="transaction-pie")
+            div(id="details" )
      //div.tab-pane.fade(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
       //div.stats-chart.col-md-12(id="chart-1")
       //div.stats-chart.col-md-6(id="chart-8")
@@ -341,6 +349,67 @@ div.block.panel.panel-default
                             option 3
                             option 4
                             option 5
+                    td#editNumber1(contenteditable='false') 1
+                tr
+                    td Response time or throughput performance objectives
+                    td#editNumber2(contenteditable='false') 1
+                tr
+                    td End user efficiency
+                    td#editNumber3(contenteditable='false') 1
+                tr
+                    td Complex internal processing
+                    td#editNumber4(contenteditable='false') 1
+                tr
+                    td Code must be reusable
+                    td#editNumber5(contenteditable='false') 1
+                tr
+                    td Easy to install
+                    td#editNumber6(contenteditable='false') 1
+                tr
+                    td Easy to use
+                    td#editNumber7(contenteditable='false') 1
+                tr
+                    td Portable
+                    td#editNumber8(contenteditable='false') 1
+                tr
+                    td Easy to change
+                    td#editNumber9(contenteditable='false') 1
+                tr
+                    td Concurrent
+                    td#editNumber10(contenteditable='false') 1
+                tr
+                    td Includes special security objectives
+                    td#editNumber11(contenteditable='false') 1
+                tr
+                    td Provides direct access for third parties
+                    td#editNumber12(contenteditable='false') 1
+                tr
+                    td Special user training facilities are required
+                    td#editNumber13(contenteditable='false') 1
+                tr
+                    td Familiar with the project model that is used
+                    td#editNumber14(contenteditable='false') 1
+                tr
+                    td Application experience
+                    td#editNumber15(contenteditable='false') 1
+                tr
+                    td Object-oriented experience
+                    td#editNumber16(contenteditable='false') 1
+                tr
+                    td Lead analyst capability
+                    td#editNumber17(contenteditable='false') 1
+                tr
+                    td Motivation
+                    td#editNumber18(contenteditable='false') 1
+                tr
+                    td Stable requirements
+                    td#editNumber19(contenteditable='false') 1
+                tr
+                    td Part-time staff
+                    td#editNumber20(contenteditable='false') 1
+                tr
+                    td Difficult programming language
+                    td#editNumber21(contenteditable='false') 1
 
          button.btn.btn-default.buttonForModel#submitButton.hidden(type='button', onclick='submitEdit();') Submit
          button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel

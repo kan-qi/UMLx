@@ -1,6 +1,6 @@
 if repoInfo
  div
-  form#project-effort-estimation-form.form-horizontal(novalidate='', onsubmit='estimate_project_effort_func()', method='post', action='/')
+  form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
        #sec-1
            .panel-group
                .panel.panel-default
@@ -239,8 +239,8 @@ if repoInfo
                          button.btn.btn-success.pull-right(type='submit') Submit
                          img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
                          input(type='hidden', name='repo-id', value='#{repoInfo._id}')
+                         input(type='hidden', name='requestUUID', value='#{repoInfo.requestUUID}')
                        div.clear
-       - var data = [{"Number": "1", "UC": "UC1", "EXUCP":"4", "DUCP":"8", "Effort":"4", "Schedule":"8", "Personnel":"7", "UIDeveloper":"9", "FullStack":"19", "DatabaseDeveloper":"12"},{"Number": "2", "UC": "UC2", "EXUCP":"3", "DUCP":"1", "Effort":"3", "Schedule":"8", "Personnel":"3", "UIDeveloper":"3", "FullStack":"10", "DatabaseDeveloper":"23"}];
        #sec-5
            .panel-group
                .panel.panel-default
@@ -248,78 +248,5 @@ if repoInfo
                        h4.panel-title
                            | Estimation Results
                    #collapse1.panel-collapse
-                       .panel-body
-                         div(id='estimation-results-tables')
-                           if false
-                            table.table.table-striped.use-case-info-tab
-                              thead
-                               tr
-                                th Use Case
-                                th Activities
-                                th Transactions
-                                th EUCP
-                                th EXUCP
-                                th DUCP
-                                th Est. Effort
-                                th Est. Duration
-                              tbody
-                                //-var pathId = 1;
-                                //each path in useCaseInfo.DisplayablePaths
-                                tr
-                                 td UC1
-                                 td 3
-                                 td 4
-                                 td 23
-                                 td 23
-                                 td 20
-                                 td 12
-                                 td 87
-                               tr
-                                 td UC2
-                                 td 3
-                                 td 4
-                                 td 23
-                                 td 23
-                                 td 20
-                                 td 12
-                                 td 87
-                               tr
-                                 td UC3
-                                 td 3
-                                 td 4
-                                 td 23
-                                 td 23
-                                 td 20
-                                 td 12
-                                 td 87
-                         div(id='estimation-results-charts')
-                             table.table.table-bordered
-                                 thead
-                                     tr
-                                         th Number
-                                         th UC
-                                         th EUCP
-                                         th EXUCP
-                                         th DUCP
-                                         th Effort
-                                         th Schedule
-                                         th Personnel
-                                         th UI Developer
-                                         th Full Stack
-                                         th Database Developer
-                                 tbody
-                                     - for (var i = 0; i < data.length; i++) {
-                                         tr
-                                             td #{data[i].Number}
-                                             td #{data[i].UC}
-                                             td #{data[i].EUCP}
-                                             td #{data[i].EXUCP}
-                                             td #{data[i].DUCP}
-                                             td #{data[i].Effort}
-                                             td #{data[i].Schedule}
-                                             td #{data[i].Personnel}
-                                             td #{data[i].UIDeveloper}
-                                             td #{data[i].FullStack}
-                                             td #{data[i].DatabaseDeveloper}
-                                     - }
-             
+                       div(id="estimation-result-panel-body")
+                             

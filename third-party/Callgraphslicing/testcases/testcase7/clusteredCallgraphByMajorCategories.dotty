@@ -1,0 +1,36 @@
+digraph g {compound=true
+"Lsimple.js/Hello" [color=black]
+"Lsimple.js/Hello/write" [color=black]
+"Lprologue.js/eval" [color=black]
+"Lsimple.js/bar" [color=black]
+subgraph cluster_1 {"Ldatabase.js/store" [color=green, shape=box]
+"Ldatabase.js/deleteFile" [color=green, shape=box]
+}
+subgraph cluster_2 {"Lsimple.js/foo" [color=red]
+"Lsimple.js" [color=red]
+"LFakeRoot" [color=red]
+"LFakeRoot"->"Lsimple.js"
+"Lsimple.js"->"Lsimple.js/foo"
+}
+subgraph cluster_0 {"Lsimple.js/hello" [color=yellow]
+"Lsimple.js/foo/simple.js@619" [color=yellow]
+"Lsimple.js/i" [color=yellow]
+"Lsimple.js/doCallback" [color=yellow]
+"Lsimple.js/hello1" [color=yellow]
+"Lsimple.js/foo/simple.js@674" [color=yellow]
+"Lpresentation.js/display" [color=yellow]
+"Lsimple.js/i"->"Lsimple.js/foo/simple.js@619"
+"Lsimple.js/foo/simple.js@619"->"Lsimple.js/hello1"
+"Lsimple.js/hello1"->"Lpresentation.js/display"
+"Lsimple.js/hello"->"Lsimple.js/doCallback"
+"Lsimple.js/doCallback"->"Lsimple.js/foo/simple.js@674"
+"Lsimple.js/foo/simple.js@674"->"Lsimple.js/hello1"
+}
+"Lsimple.js"->"Lsimple.js/bar"
+"Lsimple.js/foo"->"Lprologue.js/eval"
+"Lsimple.js/foo"->"Ldatabase.js/store"[ltail=cluster_2,lhead=cluster_1]
+"Lsimple.js/foo"->"Lsimple.js/bar"
+"Lsimple.js/foo"->"Lsimple.js/hello"[ltail=cluster_2,lhead=cluster_0]
+"Lsimple.js/foo"->"Lsimple.js/Hello/write"
+"Lsimple.js/foo/simple.js@619"->"Lsimple.js/Hello"
+}
