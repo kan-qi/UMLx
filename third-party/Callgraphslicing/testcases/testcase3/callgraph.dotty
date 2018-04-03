@@ -1,0 +1,20 @@
+digraph g {"Lprologue.js/Error" [color=black]
+"LviewLib.js/present" [color=black]
+"Lwebsite.js/jadeify" [color=black]
+"LObject" [color=black]
+"Ltools.js" [color=black]
+"Lfiles.js/readFile" [color=black]
+"Lwebsite.js/getUnstable1" [color=black]
+"Lwebsite.js/getVersion" [color=black]
+"Lwebsite.js" [color=black]
+"LFakeRoot" [color=black]
+"LFakeRoot"->"Lwebsite.js"
+"LFakeRoot"->"Ltools.js"
+"Lwebsite.js"->"Lwebsite.js/jadeify"
+"Lwebsite.js"->"Lwebsite.js/getUnstable1"
+"Lwebsite.js"->"Lwebsite.js/getVersion"
+"Lwebsite.js/getVersion"->"Lfiles.js/readFile"
+"Lwebsite.js/getVersion"->"Lprologue.js/Error"
+"Lwebsite.js/jadeify"->"LObject"
+"Lwebsite.js/jadeify"->"LviewLib.js/present"
+}

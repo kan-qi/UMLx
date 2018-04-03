@@ -1035,6 +1035,13 @@
 
 		return false;
 	}
+	
+	function saveEffortEstimationQueryResult(modelInfo, repoId, callback){
+		//need to finish.
+		if(callback){
+			callback(modelInfo);
+		}
+	}
 
 	module.exports = {
 		setupRepoStorage : function(callbackfunc) {
@@ -1187,8 +1194,8 @@
         queryUsers: queryUsers,
         saveGitInfo:saveGitInfo,
         getGitData : getGitData,
-        deactivateUser:deactivateUser
-
+        deactivateUser:deactivateUser,
+        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult
     }
 	
 }());
