@@ -1,6 +1,7 @@
 if useCaseInfo        
-  div.use-case-info
-     object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg" type="image/svg+xml")
+  button(onclick="toggleQueryDiagram()", class="big-button") Toggle Diagram
+  div.use-case-info(style="display: none;", id="use-case-diagram")   
+     object.use-case(data=useCaseInfo.AccessDir+"/uml_diagram.svg" type="image/svg+xml" data-diagram-type="#{useCaseInfo.diagramType}")
   div.use-case-info-content
    ul.nav.nav-tabs
     li.active
@@ -18,7 +19,7 @@ if useCaseInfo
       tbody
        -var elementId = 1;
        each element in useCaseInfo.Activities
-        tr(onclick="colorUseCaseElementAndPath('#{element.Name}', 'element')", class="usecase-tr")
+        tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
          td #{elementId}
          td
           span.use-case-element #{element.Name}
@@ -34,8 +35,8 @@ if useCaseInfo
         th TYPE
       tbody
        -var pathId = 1;
-       each path in useCaseInfo.Paths
-        tr(onclick="colorUseCaseElementAndPath('#{path.PathStr}', 'path')", class="usecase-tr")
+       each path in useCaseInfo.DisplayablePaths
+        tr(onclick="highlight_diagram_element('#{path.PathStrByIDs}', 'path', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
          td #{pathId}
          td
           span.use-case-path #{path.PathStr}

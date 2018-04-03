@@ -4,15 +4,16 @@ if domainModel
    li.active
     a(data-toggle='tab', href='#domain-model-info-pane') Domain Model Info
    li
-    a(data-toggle='tab', href='#domain-model-analytics') 
-   li
-    a(data-toggle='tab', href='#domain-model-distributions') Distributions
-   li
-    a(data-toggle='tab', href='#domain-model-evaluation') Evaluation
+    a(data-toggle='tab', href='#domain-model-analytics') Analysis
+   //li
+    //a(data-toggle='tab', href='#domain-model-distributions') Distributions
+   //li
+    //a(data-toggle='tab', href='#domain-model-evaluation') Evaluation
  div.tab-content
   div.tab-pane.fade.in.active(id="domain-model-info-pane")
    div.domain-model-info
-    img.domain-model(src=domainModel.AccessDir+"/domainModel.svg")
+    button(onclick="toggleDomainDiagram()", class="big-button") Toggle Diagram
+    img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/uml_diagram.svg")
    div.domain-model-info-content
     ul.nav.nav-tabs
      li.active
@@ -28,11 +29,10 @@ if domainModel
          th Attribute
          th TYPE
        tbody
-        each diagram in domainModel.Diagrams
-         each element in diagram.Elements
+        each element in domainModel.Elements
           if element.Attributes
            each attribute,key in element.Attributes
-            tr
+            tr(onclick="highlight_diagram_element('#{attribute._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
              th #{key}
              th
               span.domain-model-attribute #{attribute.Name}
@@ -46,11 +46,10 @@ if domainModel
          th OPERATION
          th TYPE
        tbody
-        each diagram in domainModel.Diagrams
-         each element in diagram.Elements
+         each element in domainModel.Elements
           if element.Operations
            each operation,key in element.Operations
-            tr
+            tr(onclick="highlight_diagram_element('#{operation._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
              th #{key}
              th
                span.domain-model-operation #{operation.Name}
@@ -69,12 +68,17 @@ if domainModel
           span.statistical-item ILF: #{domainModel.ILF}
          li
           span.statistical-item EIF: #{domainModel.EIF}
+     div.domain-model-analytics-detail
+        div.stats-chart
+         img(src="#{domainModel.AccessDir}/attribute_num_analysis_result.svg")
+  if false
   div.tab-pane.fade(id="domain-model-distributions")
     div.domain-model-distributions
         div.stats-chart
          img(src="#{domainModel.AccessDir}/attribute_num_analysis_result.svg")
         div.stats-chart
          img(src="#{domainModel.AccessDir}/operation_num_analysis_result.svg")
+  if false
   div.tab-pane.fade(id="domain-model-evaluation")
      div.domain-model-evaluation
         h3 Evaluation:
@@ -101,4 +105,4 @@ if domainModel
            button(id='domain-model-evaluation-form-submit-button') Submit
         div
           a(id='delete-domain-model-btn' href='deleteDomainModel?model_id=#{modelId}') Delete Model
-  div.clear
+ div.clear
