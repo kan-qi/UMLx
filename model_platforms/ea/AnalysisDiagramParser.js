@@ -36,6 +36,9 @@
 		var Activities = [];
 		var PrecedenceRelations = [];
 		
+		var Objects = [];
+		var Dependencies = [];
+		
 		var ActivitiesByID = [];
 		var XMIInstanceSpecificationsByID = {};
 		
@@ -57,6 +60,19 @@
 			console.log("checking derived instance specification");
 			console.log(XMIInstanceSpecification);
 			XMIInstanceSpecificationsByID[XMIInstanceSpecification['$']['xmi:id']] = XMIInstanceSpecification;
+			
+			var XMISpecificationType = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
+			var type = "Object";
+			if(XMISpecificationType[0] && CustomProfiles[XMISpecificationType[0]['$']['xmi:idref']]){
+				type = CustomProfiles[XMISpecificationType[0]['$']['xmi:idref']];
+			}
+			var Object = {
+					id: XMIInstanceSpecification['$']['xmi:id'],
+					name: XMIInstanceSpecification['$']['name'],
+					type: type
+			}
+			
+			Objects.push(Object);
 		}
 		
 		console.log("check instance specifications");
@@ -106,6 +122,10 @@
 					
 					
 					Activities.push(activity);
+					Dependencies.push({
+						start:XMIInstanceSpecification['$']['xmi:id'],
+						end: ConnectedXMIInstanceSpecification['$']['xmi:id']
+					});
 //				}
 			}
 		}
@@ -147,9 +167,176 @@
 		console.log("checking analysis activities");
 		console.log(Activities);
 		console.log(PrecedenceRelations);
+		
+//		drawRobustnessDiagram({
+//			Objects:Objects,
+//			Dependencies: Dependencies
+//		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", function(){
+//			console.log("outputting analysis diagram is finished.");
+//		});
 	}
 	
 
+//		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
+		
+		//Aishwarya
+		function drawBoundaryNode(id, label){
+		return id+'[label=<\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+			<TR><TD><IMG SRC="img/boundary3.png"/></TD></TR>\
+		 <TR><TD>'+label+'</TD></TR>\
+		</TABLE>>];';
+		}
+
+		function drawControlNode(id, label){
+		return id+'[label=<\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+			<TR><TD><IMG SRC="img/control1.png"/></TD></TR>\
+		 <TR><TD>'+label+'</TD></TR>\
+		</TABLE>>];';
+		}
+
+		function drawEntityNode(id, label){
+		return id+'[label=<\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+			<TR><TD><IMG SRC="img/entity1.png"/></TD></TR>\
+		 <TR><TD>'+label+'</TD></TR>\
+		</TABLE>>];';
+		}
+
+		function drawActorNode(id, label){
+		return id+'[label=<\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+			<TR><TD><IMG SRC="img/actor1.png"/></TD></TR>\
+		 <TR><TD>'+label+'</TD></TR>\
+		</TABLE>>];';
+		}
+		//Aishwarya
+
+
+//			const UseCaseRobust = {
+//			Activities: [
+//				{
+//					id: 1,
+//					name: 'Actor1',
+//					type: 'Actor'
+//				},
+//				{
+//					id: 2,
+//					name: 'Buy tickets interface',
+//					type: 'Boundary'
+//				},
+//				{
+//					id: 3,
+//					name: 'Payments success message',
+//					type: 'Boundary'
+//				},
+//				{
+//					id: 4,
+//					name: 'Pay the bill',
+//					type: 'Control'
+//				},
+//				{
+//					id: 5,
+//					name: 'Save bill records',
+//					type: 'Entity'
+//				}
+//			],
+//			PrecedenceRelations: [
+//				{
+//					start: 1,
+//					end: 2
+//				},
+//				{
+//					start: 1,
+//					end: 3
+//				},
+//				{
+//					start: 2,
+//					end: 4
+//				},
+//				{
+//					start: 4,
+//					end: 3
+//				},
+//				{
+//					start: 4,
+//					end: 5
+//				}
+//			]
+//		};
+
+		
+		//update the variables to the correct names.
+  function drawRobustnessDiagram(Components, UseCase, graphFilePath, callbackfunc) {
+	  		UseCase.DiagramType = "robustness_diagram";
+			let activities = UseCase.Activities;
+			let precedenceRelations = UseCase.PrecedenceRelations;
+			let graph = 'digraph g {\
+				fontsize=26\
+				rankdir="LR"\
+				node [shape=plaintext fontsize=24]';
+			let drawnObjects = [];
+			function DottyDraw() {
+				this.drawnObjects = [];
+				this.draw = function(dottyObject) {
+					if(drawnObjects[dottyObject]){
+						return "";
+					}
+					else{
+						drawnObjects[dottyObject] = 1;
+						return dottyObject;
+					}
+				}
+			}
+			var dottyDraw = new DottyDraw();
+			
+			activities.forEach((_activity) => {
+				var node;
+				switch(_activity.type)
+				{
+					case "Actor":
+						node = drawActorNode(_activity.id, _activity.name);
+						break;
+					case "Boundary":
+						node = drawBoundaryNode(_activity.id, _activity.name);
+						break;
+					case "Control":
+						node = drawControlNode(_activity.id, _activity.name);
+						break;
+					case "Entity":
+						node = drawEntityNode(_activity.id, _activity.name);
+						break;
+					default:
+						node = drawNode(_activity.id, _activity.name);
+						break;
+				}
+				
+				graph += dottyDraw.draw(node);
+			});
+	
+			precedenceRelations.forEach((_precedenceRelation) => {
+				var start = _precedenceRelation.start;
+				var end = _precedenceRelation.end;
+				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
+			});
+	
+			graph += 'imagepath = \"./\"}';
+			dottyUtil = require("../../utils/DottyUtil.js");
+			dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+				console.log("drawing is down");
+			});
+	
+			return graph;
+		
+	
+
+		//const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
+		drawRobustnessDiagram(UseCaseRobust, 'Robuststuff.dotty', () => {
+			console.log('Aishwarya drew the diagram.');
+		});
+	}
+ 
 	function standardizeName(name){
 		return name.replace(/\s/g, '').toUpperCase();
 	}

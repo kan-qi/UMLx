@@ -1404,6 +1404,13 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
 
 		return false;
 	}
+	
+	function saveEffortEstimationQueryResult(modelInfo, repoId, callback){
+		//need to finish.
+		if(callback){
+			callback(modelInfo);
+		}
+	}
 
 	module.exports = {
 		setupRepoStorage : function(callbackfunc) {
@@ -1558,8 +1565,8 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
         queryUsers: queryUsers,
         saveGitInfo:saveGitInfo,
         getGitData : getGitData,
-        deactivateUser:deactivateUser
-
+        deactivateUser:deactivateUser,
+        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult
     }
 	
 }());

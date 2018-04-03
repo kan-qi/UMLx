@@ -13,7 +13,7 @@
 	
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
-	var RScriptExec = require('../../utils/RScriptUtil.js')
+	var RScriptExec = require('../../utils/RScriptUtil.js');
 	var umlFileManager = require('../../UMLFileManager');
 	var transactionProcessor = require('./TransactionProcessor.js');
 	

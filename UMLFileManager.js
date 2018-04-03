@@ -163,6 +163,54 @@
 				 // should put in the repo dir.
 				 formInfo: umlFileInfo.formInfo
 			}
+		},
+		makeDir: function(dir, callbackfunc){
+			mkdirp(dir, function(err) { 
+				if(err) {
+					console.log(err);
+					if(callbackfunc){
+						callbackfunc(false);
+					}
+					return;
+				}
+				
+				if(callbackfunc){
+					callbackfunc(true);
+				}
+		
+			});
+		},
+		makeDirs: function(dirs, callbackfunc){
+			function mkdir(dir){
+				return new Promise((resolve, reject) => {
+					mkdirp(dir, function(err){
+						if(err){
+							reject(err);
+							return;
+						}
+						resolve();
+					});
+				  });
+			}
+			
+			let chain = Promise.resolve();
+			
+			for(var i in dirs){
+				var dir = dirs[i];
+				chain = chain.then(mkdir(dir));
+			}
+			
+			chain.then(function(){
+				if(callbackfunc){
+					callbackfunc(true);
+				}
+			}).catch(function(err){
+				console.log(err);
+				if(callbackfunc){
+					callbackfunc(err);
+				}
+			});
+			
 		}
 	}
 }())

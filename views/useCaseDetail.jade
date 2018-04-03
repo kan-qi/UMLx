@@ -5,10 +5,10 @@ if useCaseInfo
     a(data-toggle='tab', href='#use-case-info-pane') UseCase Info
    li
     a(data-toggle='tab', href='#use-case-analytics') Analytics
-   li
-    a(data-toggle='tab', href='#use-case-distributions') Distributions
-   li
-    a(data-toggle='tab', href='#use-case-evaluation') Evaluation
+   //li
+    //a(data-toggle='tab', href='#use-case-distributions') Distributions
+   //li
+    //a(data-toggle='tab', href='#use-case-evaluation') Evaluation
  div.tab-content
   div.tab-pane.fade.in.active(id="use-case-info-pane")
    include diagramDisplay 
@@ -17,7 +17,7 @@ if useCaseInfo
         h3 Calculated:
         ul
          li
-          span.statistical-item Number of Interface Management Transactions: #{useCaseInfo.INT}
+          span.statistical-item(data-url="#{useCaseInfo.AccessDir}/control_operation_analysis_result.svg") Number of Interface Management Transactions: #{useCaseInfo.INT}
          li
           span.statistical-item Number of Data Management Transactions: #{useCaseInfo.DM}
          li
@@ -52,6 +52,9 @@ if useCaseInfo
           span.statistical-item Number of Control Elements: #{useCaseInfo.ControlNum}
          li
           span.statistical-item Number of Entity Elements: #{useCaseInfo.EntityNum}
+     div.use-case-analysis-detail
+       div.stats-chart
+         img(src="#{useCaseInfo.AccessDir}/control_operation_analysis_result.svg")
   div.tab-pane.fade(id="use-case-distributions")
     div.use-case-distributions
         div.stats-chart
@@ -72,6 +75,8 @@ if useCaseInfo
          img(src="#{useCaseInfo.AccessDir}/functional_pattern_counts.svg")
         div.stats-chart
          img(src="#{useCaseInfo.AccessDir}/trasactional_pattern_counts.svg")
+  if false
+  //skipe the below sections
   div.tab-pane.fade(id="use-case-evaluation")
      div.use-case-evaluation
         h3 Evaluation:

@@ -1,6 +1,8 @@
 -var model_id = modelInfo._id
 -var modelName = modelInfo.Name
 -var repoID = repo_id
+input(type='hidden', value=repoID)#myrepoId
+input(type='hidden', value=model_id)#mymodelId
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -34,15 +36,15 @@ div.block.panel.panel-default
    div.model-info-content
     ul.nav.nav-tabs
      li.active
-      a(data-toggle='tab', href='#model-analytics') Analytics
-     li
-      a(data-toggle='tab', href='#model-distributions') Distributions
+      a(data-toggle='tab', href='#model-analytics') Overview
+     //li
+      //a(data-toggle='tab', href='#model-analysis') Analysis
      //li
       //a(data-toggle='tab', href='#model-empirical') Empirical
      li
-      a(data-toggle='tab', href='#model-evaluation') Evaluation
+      a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Model Elements
      li
-      a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Model Info
+      a(data-toggle='tab', href='#model-evaluation') Model Info
      //li
       //a(data-toggle='tab', href='#model-representation') Representation
     div.tab-content
@@ -70,150 +72,350 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{modelInfo.ClassNum}
                 span Classes
-          div.col-sm-3 
+          div.col-sm-3
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
                 h2 #{modelInfo.ElementAnalytics.ActorNum}
                 span Actors
-        div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{modelInfo.AccessDir}/modelVersionInfo.csv")
-        div.col-sm-12.chart-row  
+        //div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{modelInfo.AccessDir}/modelVersionInfo.csv")
+        div(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
+         //div.stats-chart.col-md-12(id="chart-1") here should be distributions.
+        //div.col-sm-12.chart-row  
+        // div.col-sm-6(id="chart-1") here should be distributions.
+        div.stats-chart.col-md-12(id="chart-1") here should be distributions.
+        //div.col-sm-12.chart-row
+         //div.col-sm-6(id="chart-1") here should be distributions.
+        div.col-sm-12.chart-row
           .col-sm-6
-            img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
-          .col-sm-6(id="transaction-pie" data="./#{modelInfo.AccessDir}/transactionAnalytics.csv")
-     div.tab-pane.fade(id="model-distributions" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
-      div.stats-chart.col-md-12(id="chart-1")
-      div.stats-chart.col-md-6(id="chart-8")
-      div.stats-chart.col-md-6(id="chart-9")
-      div.stats-chart.col-md-6(id="chart-10")
-      div.stats-chart.col-md-6(id="chart-11")
+            //img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
+            div.model-evaluation
+               h3 Calculated:
+               ul
+                li
+                 span.statistical-item Number of Interface Management Transactions: #{modelInfo.INT}
+                li
+                 span.statistical-item Number of Data Management Transactions: #{modelInfo.DM}
+                li
+                 span.statistical-item Number of Control Transactions: #{modelInfo.CTRL}
+                li
+                 span.statistical-item Number of External Inovations: #{modelInfo.EXTIVK}
+                li
+                 span.statistical-item Number of External Calls: #{modelInfo.EXTCLL}
+                li
+                 span.statistical-item Number of Not Matched Transactions: #{modelInfo.TRAN_NA}
+                li
+                 span.statistical-item Number of EI: #{modelInfo.EI}
+                li
+                 span.statistical-item Number of EO: #{modelInfo.EO}
+                li
+                 span.statistical-item Number of EQ: #{modelInfo.EQ}
+                li
+                 span.statistical-item ILF: #{modelInfo.ILF}
+                li
+                 span.statistical-item EIF: #{modelInfo.EIF}
+                li
+                 span.statistical-item Number of Not Matched Functions: #{modelInfo.FUNC_NA}
+                li
+                 span.statistical-item Average Path Length: #{modelInfo.AvgPathLength}
+                li
+                 span.statistical-item Average Element Degree: #{modelInfo.AvgDegree}
+                li
+                 span.statistical-item Number of Paths: #{modelInfo.PathNum}
+                li
+                 span.statistical-item Number of Elements: #{modelInfo.ElementNum}
+                li
+                 span.statistical-item Number of Actors: #{modelInfo.ActorNum}
+                li
+                 span.statistical-item Number of Boundary Elements: #{modelInfo.BoundaryNum}
+                li
+                 span.statistical-item Number of Control Elements: #{modelInfo.ControlNum}
+                li
+                 span.statistical-item Number of Entity Elements: #{modelInfo.EntityNum}
+                li
+                 span.statistical-item Number of Attributes: #{modelInfo.AttributeNum}
+                li
+                 span.statistical-item Number of Operations: #{modelInfo.OperationNum}
+                li
+                 span.statistical-item Number of Use Cases: #{modelInfo.UseCaseNum}
+                li
+                 span.statistical-item Number of Diagrams: #{modelInfo.DiagramNum}
+                li
+                 span.statistical-item Number of Classes: #{modelInfo.ClassNum}
+          .col-sm-6(id="transaction-pie")
+            div(id="details" )
+     //div.tab-pane.fade(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
+      //div.stats-chart.col-md-12(id="chart-1")
+      //div.stats-chart.col-md-6(id="chart-8")
+      //div.stats-chart.col-md-6(id="chart-9")
+      //div.stats-chart.col-md-6(id="chart-10")
+      //div.stats-chart.col-md-6(id="chart-11")
+     div.tab-pane.fade(id="usecase-analysis")
+      div(id="model-usecase-analysis")
+       h3 loading...
      div.tab-pane.fade(id="model-evaluation")
        div.model-evaluation
-           h3 Calculated:
-           ul
-            li
-             span.statistical-item Number of Interface Management Transactions: #{modelInfo.INT}
-            li
-             span.statistical-item Number of Data Management Transactions: #{modelInfo.DM}
-            li
-             span.statistical-item Number of Control Transactions: #{modelInfo.CTRL}
-            li
-             span.statistical-item Number of External Inovations: #{modelInfo.EXTIVK}
-            li
-             span.statistical-item Number of External Calls: #{modelInfo.EXTCLL}
-            li
-             span.statistical-item Number of Not Matched Transactions: #{modelInfo.TRAN_NA}
-            li
-             span.statistical-item Number of EI: #{modelInfo.EI}
-            li
-             span.statistical-item Number of EO: #{modelInfo.EO}
-            li
-             span.statistical-item Number of EQ: #{modelInfo.EQ}
-            li
-             span.statistical-item ILF: #{modelInfo.ILF}
-            li
-             span.statistical-item EIF: #{modelInfo.EIF}
-            li
-             span.statistical-item Number of Not Matched Functions: #{modelInfo.FUNC_NA}
-            li
-             span.statistical-item Average Path Length: #{modelInfo.AvgPathLength}
-            li
-             span.statistical-item Average Element Degree: #{modelInfo.AvgDegree}
-            li
-             span.statistical-item Number of Paths: #{modelInfo.PathNum}
-            li
-             span.statistical-item Number of Elements: #{modelInfo.ElementNum}
-            li
-             span.statistical-item Number of Actors: #{modelInfo.ActorNum}
-            li
-             span.statistical-item Number of Boundary Elements: #{modelInfo.BoundaryNum}
-            li
-             span.statistical-item Number of Control Elements: #{modelInfo.ControlNum}
-            li
-             span.statistical-item Number of Entity Elements: #{modelInfo.EntityNum}
-            li
-             span.statistical-item Number of Attributes: #{modelInfo.AttributeNum}
-            li
-             span.statistical-item Number of Operations: #{modelInfo.OperationNum}
-            li
-             span.statistical-item Number of Use Cases: #{modelInfo.UseCaseNum}
-            li
-             span.statistical-item Number of Diagrams: #{modelInfo.DiagramNum}
-            li
-             span.statistical-item Number of Classes: #{modelInfo.ClassNum}
-       div.model-evaluation
-        h3 Evaluationd:
+        h3 Evaluation
+         button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);') Modify
          table#dataTable.table.table-striped
             tbody
                 tr
                     td Distributed System
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber1
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Response time or throughput performance objectives
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber2
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td End user efficiency
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber3
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Complex internal processing
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber4
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Code must be reusable
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber5
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Easy to install
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber6
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Easy to use
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber7
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Portable
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber8
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Easy to change
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber9
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Concurrent
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber10
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Includes special security objectives
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber11
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Provides direct access for third parties
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber12
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Special user training facilities are required
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber13
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Familiar with the project model that is used
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber14
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Application experience
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber15
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Object-oriented experience
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber16
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Lead analyst capability
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber17
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Motivation
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber18
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Stable requirements
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber19
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Part-time staff
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber20
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
                 tr
                     td Difficult programming language
-                    td 1
+                    td
+                        select(disabled='true').form-control#editNumber21
+                            option 1
+                            option 2
+                            option 3
+                            option 4
+                            option 5
+                    td#editNumber1(contenteditable='false') 1
+                tr
+                    td Response time or throughput performance objectives
+                    td#editNumber2(contenteditable='false') 1
+                tr
+                    td End user efficiency
+                    td#editNumber3(contenteditable='false') 1
+                tr
+                    td Complex internal processing
+                    td#editNumber4(contenteditable='false') 1
+                tr
+                    td Code must be reusable
+                    td#editNumber5(contenteditable='false') 1
+                tr
+                    td Easy to install
+                    td#editNumber6(contenteditable='false') 1
+                tr
+                    td Easy to use
+                    td#editNumber7(contenteditable='false') 1
+                tr
+                    td Portable
+                    td#editNumber8(contenteditable='false') 1
+                tr
+                    td Easy to change
+                    td#editNumber9(contenteditable='false') 1
+                tr
+                    td Concurrent
+                    td#editNumber10(contenteditable='false') 1
+                tr
+                    td Includes special security objectives
+                    td#editNumber11(contenteditable='false') 1
+                tr
+                    td Provides direct access for third parties
+                    td#editNumber12(contenteditable='false') 1
+                tr
+                    td Special user training facilities are required
+                    td#editNumber13(contenteditable='false') 1
+                tr
+                    td Familiar with the project model that is used
+                    td#editNumber14(contenteditable='false') 1
+                tr
+                    td Application experience
+                    td#editNumber15(contenteditable='false') 1
+                tr
+                    td Object-oriented experience
+                    td#editNumber16(contenteditable='false') 1
+                tr
+                    td Lead analyst capability
+                    td#editNumber17(contenteditable='false') 1
+                tr
+                    td Motivation
+                    td#editNumber18(contenteditable='false') 1
+                tr
+                    td Stable requirements
+                    td#editNumber19(contenteditable='false') 1
+                tr
+                    td Part-time staff
+                    td#editNumber20(contenteditable='false') 1
+                tr
+                    td Difficult programming language
+                    td#editNumber21(contenteditable='false') 1
+
+         button.btn.btn-default.buttonForModel#submitButton.hidden(type='button', onclick='submitEdit();') Submit
+         button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel
+
      //div.tab-pane.fade(id="model-evaluation")
       div.model-evaluation-ops
          div
           a(id="dump-model-evaluation-for-use-cases-btn" href='evaluateModelForUseCases?model_id=#{modelInfo._id}') Dump Model Evaluation For Use Cases
          div(id="model-evaluation-dump-display")
-     div.tab-pane.fade(id="usecase-analysis")
-      div(id="model-usecase-analysis")
-       h3 loading...
