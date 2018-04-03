@@ -38,6 +38,7 @@ library(ggplot2)
 library(data.table)
 library(gridExtra)
 #library(gridExtra)
+library(car)
 
 
 sink(reportPath)
@@ -58,8 +59,8 @@ png(filename=paste(outputPath,"project_characteristics.png", sep="/"),
 		res=96)
 
 UCPHist1 <- ggplot(data, aes(x=Effort_Norm))+geom_histogram(binwidth=350, colour="white", fill="gray55")+xlab("Normalized Effort (PH)")+ylab("Number of Projects")+theme_bw()
-UCPHist2 <- ggplot(data, aes(x=KSLOC))+geom_histogram(binwidth=1.5, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")+theme_bw()
-UCPHist3 <- ggplot(data, aes(x=Use_Case_Num))+geom_histogram(binwidth=3, colour="white", fill="gray55")+xlab("Use Case Number")+ylab("Number of Projects")+theme_bw()
+UCPHist2 <- ggplot(data, aes(x=KSLOC))+geom_histogram(binwidth=0.5, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")+theme_bw()
+UCPHist3 <- ggplot(data, aes(x=Use_Case_Num))+geom_histogram(binwidth=1.5, colour="white", fill="gray55")+xlab("Use Case Number")+ylab("Number of Projects")+theme_bw()
 projectBar <- ggplot(data, aes(x=Type))+geom_bar(colour="white", fill="gray55")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)+theme_bw()
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, projectBar, ncol=2))
@@ -72,23 +73,25 @@ png(filename=paste(outputPath,"project_counting_results.png", sep="/"),
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(data, aes(x=NT))+geom_histogram(binwidth=10, colour="white", fill="gray55")+xlab("NT")+ylab("Number of Projects")+theme_bw()
-UCPHist2 <- ggplot(data, aes(x=SWTI))+geom_histogram(binwidth=150, colour="white", fill="gray55")+xlab("SWTI")+ylab("Number of Projects")+theme_bw()
-UCPHist3 <- ggplot(data, aes(x=SWTII))+geom_histogram(binwidth=150, colour="white", fill="gray55")+xlab("SWTII")+ylab("Number of Projects")+theme_bw()
-UCPHist4 <- ggplot(data, aes(x=UCP))+geom_histogram(binwidth=40, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")+theme_bw()
+UCPHist1 <- ggplot(data, aes(x=NT))+geom_histogram(binwidth=5, colour="white", fill="gray55")+xlab("NT")+ylab("Number of Projects")+theme_bw()
+UCPHist2 <- ggplot(data, aes(x=SWTI))+geom_histogram(binwidth=100, colour="white", fill="gray55")+xlab("SWTI")+ylab("Number of Projects")+theme_bw()
+UCPHist3 <- ggplot(data, aes(x=SWTII))+geom_histogram(binwidth=100, colour="white", fill="gray55")+xlab("SWTII")+ylab("Number of Projects")+theme_bw()
+UCPHist4 <- ggplot(data, aes(x=UUCP))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCP")+ylab("Number of Projects")+theme_bw()
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, ncol=2))
 
 
+
+
 #analysis of the project characteristics.
-useCaseVariables <- data[c("Effort_Norm", "UAW", "TCF", "EF", "NT", "SWTI", "SWTII")]
+useCaseVariables <- data[c("Effort_Norm", "TCF", "EF", "UUCW", "UAW", "UUCP", "NT", "SWTI", "SWTII")]
 useCaseVariablesMelt <- melt(useCaseVariables, id=c("Effort_Norm"))
 
 independentVariablesScatterPlot = xyplot(Effort_Norm~ value | variable, data=useCaseVariablesMelt,
 		# scales = list(x = list(log = 10, equispaced.log = FALSE)),
 		xlab=list(label="Indepedent Variables", fontsize=10),
 		ylab=list(label="Normalized Effort (PH)", fontsize=10),
-		strip =strip.custom(factor.levels = c("UAW","TCF","EF", "NT", "SWTI", "SWTII")),
+		strip =strip.custom(factor.levels = c("TCF","EF", "UUCW", "UAW", "UUCP", "NT", "SWTI", "SWTII")),
 		#upper=data$upper,
 		#lower=data$lower,
 		scales=list(x=list(relation="free")),
@@ -136,6 +139,79 @@ newx1 <- seq(-100, max(data$NT)+100, length.out=100)
 pred1 = predict(m1,data.frame(NT=newx1), interval='confidence')
 print(round(coeff1,3))
 
+png(filename=paste(outputPath,'nt_outlier_test.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+outlierTest(m1) # Bonferonni p-value for most extreme obs
+qqPlot(m1, main="QQ Plot") #qq plot for studentized resid 
+leveragePlots(m1) # leverage plots
+
+png(filename=paste(outputPath,'nt_influential_test.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+# Influential Observations
+# added variable plots 
+avPlots(m1)
+# Cook's D plot
+# identify D values > 4/(n-k-1) 
+cutoff <- 4/((nrow(data)-length(m1$coefficients)-2)) 
+plot(m1, which=4, cook.levels=cutoff)
+# Influence Plot 
+influencePlot(m1, id.method="identify", main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+
+# Normality of Residuals
+# qq plot for studentized resid
+png(filename=paste(outputPath,'nt_non_normality.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+qqPlot(m1, main="QQ Plot") #qq plot for studentized resid 
+# distribution of studentized residuals
+library(MASS)
+
+sresid <- studres(m1) 
+hist(sresid, freq=FALSE,
+		main="Distribution of Studentized Residuals")
+xfit<-seq(min(sresid),max(sresid),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit)
+
+
+png(filename=paste(outputPath,'nt_spread_level_plot.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(m1)
+# plot studentized residuals vs. fitted values 
+
+spreadLevelPlot(m1)
+
+#png(filename=paste(outputPath,'nt_cr_plot.png', sep='/'),
+#		type="cairo",
+#		units="in", 
+#		width=4*2, 
+#		height=4*2,
+#		res=96)
+# Evaluate Nonlinearity
+# component + residual plot 
+#crPlots(m1)
+# Ceres plots 
+#ceresPlots(m1)
+
+
 #correlation between effort and SWTI
 print("correlation between effort and SWTI")
 cor2 = cor.test(data$Effort_Norm, data$SWTI)
@@ -153,6 +229,78 @@ summary(m2)$r.squared
 newx2 <- seq(-100, max(data$SWTI)+100, length.out=100)
 pred2 = predict(m2,data.frame(SWTI=newx2), interval='confidence')
 print(round(coeff2,3))
+
+png(filename=paste(outputPath,'swti_outlier_test.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+outlierTest(m2) # Bonferonni p-value for most extreme obs
+qqPlot(m2, main="QQ Plot") #qq plot for studentized resid 
+leveragePlots(m2) # leverage plots
+
+png(filename=paste(outputPath,'swti_influential_test.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+# Influential Observations
+# added variable plots 
+avPlots(m2)
+# Cook's D plot
+# identify D values > 4/(n-k-1) 
+cutoff <- 4/((nrow(data)-length(m2$coefficients)-2)) 
+plot(m2, which=4, cook.levels=cutoff)
+# Influence Plot 
+influencePlot(m2, id.method="identify", main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+
+# Normality of Residuals
+# qq plot for studentized resid
+png(filename=paste(outputPath,'swti_non_normality.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+qqPlot(m2, main="QQ Plot") #qq plot for studentized resid 
+# distribution of studentized residuals
+library(MASS)
+
+sresid <- studres(m2) 
+hist(sresid, freq=FALSE,
+		main="Distribution of Studentized Residuals")
+xfit<-seq(min(sresid),max(sresid),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit)
+
+
+png(filename=paste(outputPath,'swti_spread_level_plot.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(m2)
+# plot studentized residuals vs. fitted values 
+
+spreadLevelPlot(m2)
+
+#png(filename=paste(outputPath,'nt_cr_plot.png', sep='/'),
+#		type="cairo",
+#		units="in", 
+#		width=4*2, 
+#		height=4*2,
+#		res=96)
+# Evaluate Nonlinearity
+# component + residual plot 
+#crPlots(m1)
+# Ceres plots 
+#ceresPlots(m2)
 
 #correlation between effort and SWTII
 print("correlation between effort and SWTII")
@@ -173,6 +321,79 @@ newx3 <- seq(-100, max(data$SWTII)+100, length.out=100)
 pred3 = predict(m3, data.frame(SWTII=newx3), interval='confidence')
 #print(pred3)
 print(round(coeff3,3))
+
+
+png(filename=paste(outputPath,'swtii_outlier_test.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+outlierTest(m3) # Bonferonni p-value for most extreme obs
+qqPlot(m3, main="QQ Plot") #qq plot for studentized resid 
+leveragePlots(m3) # leverage plots
+
+png(filename=paste(outputPath,'swtii_influential_test.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+# Influential Observations
+# added variable plots 
+avPlots(m3)
+# Cook's D plot
+# identify D values > 4/(n-k-1) 
+cutoff <- 4/((nrow(data)-length(m3$coefficients)-2)) 
+plot(m3, which=4, cook.levels=cutoff)
+# Influence Plot 
+influencePlot(m3, id.method="identify", main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+
+# Normality of Residuals
+# qq plot for studentized resid
+png(filename=paste(outputPath,'swtii_non_normality.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+qqPlot(m3, main="QQ Plot") #qq plot for studentized resid 
+# distribution of studentized residuals
+library(MASS)
+
+sresid <- studres(m3) 
+hist(sresid, freq=FALSE,
+		main="Distribution of Studentized Residuals")
+xfit<-seq(min(sresid),max(sresid),length=40) 
+yfit<-dnorm(xfit) 
+lines(xfit, yfit)
+
+
+png(filename=paste(outputPath,'swtii_spread_level_plot.png', sep='/'),
+		type="cairo",
+		units="in", 
+		width=4*2, 
+		height=4*2,
+		res=96)
+
+# Evaluate homoscedasticity
+# non-constant error variance test
+ncvTest(m3)
+# plot studentized residuals vs. fitted values 
+
+spreadLevelPlot(m3)
+
+#png(filename=paste(outputPath,'nt_cr_plot.png', sep='/'),
+#		type="cairo",
+#		units="in", 
+#		width=4*2, 
+#		height=4*2,
+#		res=96)
+# Evaluate Nonlinearity
+# component + residual plot 
+#crPlots(m1)
+# Ceres plots 
+#ceresPlots(m3)
 
 corArray = c(cor1, cor2, cor3)
 mArray = c(m1, m2, m3)
@@ -263,17 +484,17 @@ folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 
 #add cocomo and original use case points into the comparison
 
-otherSizeMetricsData=data[c("Effort", "UCP", "Effort_Norm")];
-#DataFrame=data.frame(Effort,UCP)
+otherSizeMetricsData=data[c("Effort", "UUCP", "Effort_Norm")];
+#DataFrame=data.frame(Effort,UUCP)
 #Effort
-#UCP
-OriginalUseCaseModel=lm(Effort~UCP,data=otherSizeMetricsData)
+#UUCP
+OriginalUseCaseModel=lm(Effort_Norm~UUCP,data=otherSizeMetricsData)
 
 summary(OriginalUseCaseModel)
 
-w=coef(OriginalUseCaseModel)["UCP"]
+w=coef(OriginalUseCaseModel)["UUCP"]
 
-otherSizeMetricsData$UCPEffort=w*otherSizeMetricsData$UCP
+otherSizeMetricsData$UUCPEffort=w*otherSizeMetricsData$UUCP
 
 otherSizeMetricsData<-otherSizeMetricsData[sample(nrow(otherSizeMetricsData)),]
 
@@ -283,7 +504,7 @@ colnames(foldResults) <- c(
 		'nt_mmre','nt_pred15','nt_pred25','nt_pred50', 
 		'swti_mmre','swti_pred15','swti_pred25','swti_pred50',
 		'swtii_mmre','swtii_pred15','swtii_pred25','swtii_pred50',
-		'ucp_mmre','ucp_pred15','ucp_pred25','ucp_pred50'
+		'uucp_mmre','uucp_pred15','uucp_pred25','uucp_pred50'
 		)
 
 foldResults1 <- array(0,dim=c(100,4,nfold))
@@ -354,32 +575,32 @@ for(i in 1:nfold){
 		swtii.pred <- c(swtii.pred, length(swtii.mre[swtii.mre<=0.01*j])/length(swtii.mre))
 	}
 	
-	print('ucp testing set predication')
-	ucp.m = lm(Effort_Norm~UCP, data=otherTrainData)
-	ucp.predict = cbind(predicted=predict(ucp.m, otherTestData), actual=otherTestData$Effort_Norm)
-	print(ucp.predict)
-	ucp.mre = apply(ucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
-	ucp.mmre = mean(ucp.mre)
-	print(ucp.mmre)
-	#ucp.preds = sapply(ucp.mre, function(x) calculatePreds(x))
-	ucp.pred15 = length(ucp.mre[ucp.mre<=0.15])/length(ucp.mre)
-	ucp.pred25 = length(ucp.mre[ucp.mre<=0.25])/length(ucp.mre)
-	ucp.pred50 = length(ucp.mre[ucp.mre<=0.50])/length(ucp.mre)
-	print(c(ucp.pred15, ucp.pred25, ucp.pred50))
+	print('uucp testing set predication')
+	uucp.m = lm(Effort_Norm~UUCP, data=otherTrainData)
+	uucp.predict = cbind(predicted=predict(uucp.m, otherTestData), actual=otherTestData$Effort_Norm)
+	print(uucp.predict)
+	uucp.mre = apply(uucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	uucp.mmre = mean(uucp.mre)
+	print(uucp.mmre)
+	#uucp.preds = sapply(uucp.mre, function(x) calculatePreds(x))
+	uucp.pred15 = length(uucp.mre[uucp.mre<=0.15])/length(uucp.mre)
+	uucp.pred25 = length(uucp.mre[uucp.mre<=0.25])/length(uucp.mre)
+	uucp.pred50 = length(uucp.mre[uucp.mre<=0.50])/length(uucp.mre)
+	print(c(uucp.pred15, uucp.pred25, uucp.pred50))
 	
-	ucp.pred <- 0
+	uucp.pred <- 0
 	for(j in 1:99){
-		ucp.pred <- c(ucp.pred, length(ucp.mre[ucp.mre<=0.01*j])/length(ucp.mre))
+		uucp.pred <- c(uucp.pred, length(uucp.mre[uucp.mre<=0.01*j])/length(uucp.mre))
 	}
 	
 	foldResults[i,] = c(
 			nt.mmre,nt.pred15,nt.pred25,nt.pred50,
 			swti.mmre,swti.pred15,swti.pred25,swti.pred50,
 			swtii.mmre,swtii.pred15,swtii.pred25,swtii.pred50,
-			ucp.mmre,ucp.pred15,ucp.pred25,ucp.pred50
+			uucp.mmre,uucp.pred15,uucp.pred25,uucp.pred50
 			)
 	
-	foldResults1[,,i] = array(c(nt.pred,swti.pred,swtii.pred,ucp.pred),c(100,4))
+	foldResults1[,,i] = array(c(nt.pred,swti.pred,swtii.pred,uucp.pred),c(100,4))
 }
 
 #average out the folds.
@@ -398,10 +619,10 @@ cvResults <- c(
 		mean(foldResults[, 'swtii_pred15']),
 		mean(foldResults[, 'swtii_pred25']),
 		mean(foldResults[, 'swtii_pred50']),
-		mean(foldResults[, 'ucp_mmre']),
-		mean(foldResults[, 'ucp_pred15']),
-		mean(foldResults[, 'ucp_pred25']),
-		mean(foldResults[, 'ucp_pred50'])
+		mean(foldResults[, 'uucp_mmre']),
+		mean(foldResults[, 'uucp_pred15']),
+		mean(foldResults[, 'uucp_pred25']),
+		mean(foldResults[, 'uucp_pred50'])
 		);
 		
 
@@ -409,20 +630,20 @@ names(cvResults) <- c(
 		'nt_mmre','nt_pred15','nt_pred25','nt_pred50',
 		'swti_mmre','swti_pred15','swti_pred25','swti_pred50',
 		'swtii_mmre','swtii_pred15','swtii_pred25','swtii_pred50',
-		'ucp_mmre','ucp_pred15','ucp_pred25','ucp_pred50'
+		'uucp_mmre','uucp_pred15','uucp_pred25','uucp_pred50'
 		)
 print(cvResults)
 
 avgPreds <- matrix(,nrow=100,ncol=5)
-colnames(avgPreds) <- c("Pred","NT","SWTI","SWTII", "UCP")
+colnames(avgPreds) <- c("Pred","NT","SWTI","SWTII", "UUCP")
 for(i in 1:100){
 	nt_fold_mean = mean(foldResults1[i,1,]);
 	swti_fold_mean = mean(foldResults1[i,2,]);
 	swtii_fold_mean = mean(foldResults1[i,3,]);
-	ucp_fold_mean = mean(foldResults1[i,4,]);
+	uucp_fold_mean = mean(foldResults1[i,4,]);
 	#cocomo_fold_mean = mean(foldResults1[i,5,]);
 	#cocomo_apriori_fold_mean = mean(foldResults1[i,6,]);
-	avgPreds[i,] <- c(i,nt_fold_mean,swti_fold_mean,swtii_fold_mean,ucp_fold_mean)
+	avgPreds[i,] <- c(i,nt_fold_mean,swti_fold_mean,swtii_fold_mean,uucp_fold_mean)
 	#print(i)
 	#print(avgPreds[i,])
 }
@@ -433,10 +654,10 @@ print('average improvement by swti')
 print(colMeans(avgPreds[, "SWTI"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
 print('average improvement by swtii')
 print(colMeans(avgPreds[, "SWTII"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
-print('average improvement by ucp')
-print(colMeans(avgPreds[, "UCP"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by uucp')
+print(colMeans(avgPreds[, "UUCP"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
 
-#print(mean(avgPreds[, "SWTI"] - avgPreds[,"UCP"]))
+#print(mean(avgPreds[, "SWTI"] - avgPreds[,"UUCP"]))
 #print(mean(avgPreds[, "SWTI"] - avgPreds[,"COCOMO"]))
 #print(mean(avgPreds[, "SWTI"] - avgPreds[,"COCOMO Apriori"]))
 #print(mean(avgPreds[, "SWTII"] - avgPreds[,"NT"]))

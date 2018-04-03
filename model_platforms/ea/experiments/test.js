@@ -28,8 +28,8 @@ var outputDir = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Resea
 //var inputFile = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\structural and behavioral analysis\\ItemManagerExample.xml";
 var inputFile = "./model_platforms/ea/experiments/ItemManagerExample.xml";
 
-xmiParser.extractUserSystermInteractionModel(inputFile, function(Model){
-
+xmiParser.extractUserSystermInteractionModel(inputFile, outputDir, outputDir, function(Model){
+	console.log("output use case");
 	traverseUserSystemInterationModel(Model);
 	for(var i in Model.UseCases){
 		var UseCase = Model.UseCases[i];
