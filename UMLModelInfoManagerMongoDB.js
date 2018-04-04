@@ -570,11 +570,11 @@ function deleteRepo(repoId, callbackfunc) {
 
 
 	//testing queryRepoInfoByPage 
-    queryRepoInfoByPage("5a8e109c13a5974144158d99", 4,1,function(result)
+    /*queryRepoInfoByPage("5a8e109c13a5974144158d99", 1,1,function(result)
     {
         console.log(result);
-    })
-function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
+    })*/
+	function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
     {
         //console.log("res"+stepParameter*pageParameter)
         MongoClient.connect(url, function(err, db) 
@@ -582,7 +582,7 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
 			if (err) throw err;
 			
 			var repoid=new mongo.ObjectID(repoId);
-			var dbo = db.db("mydb");
+			
 			var query = { rep_id: repoid};
 			
 			db.collection("modelInfo").aggregate([
@@ -601,15 +601,112 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
 			],function(err, result) 
             {
                if (err) throw err;
-               console.log("*******Shown result for ModelInfo*******");
+               console.log("*******Shown result for queryRepoInfoByPage*******");
                db.close();
                callbackfunc(result);
             });
 			
 		});
-	}	
+	}
+	
+	/*repoDetail("5a8e109c13a5974144158d99",function(result)
+    {
+        console.log(result);
+    })*/
 	
 	
+	function repoDetail(repoId,callbackfunc)
+    {
+		
+		/*MongoClient.connect(url, function(err, db) 
+		{
+			if (err) throw err;
+			db.createCollection("noOfTransactions", function(err, collection) {
+				  db.close();
+			})
+		})*/
+		
+		
+		
+	
+		
+		
+		
+        //console.log("res"+stepParameter*pageParameter)
+        MongoClient.connect(url, function(err, db) 
+		{
+			
+			if (err) throw err;
+			var today = new Date();
+			
+			var cursor=db.collection("noOfTransactions").find();
+			
+			//db.collection("noOfTransactions").find().forEach(function(err, res) 
+			cursor.each(function(err, res)
+			{
+				if (err) throw err;
+				//console.log("res"+res);
+				
+				if(res!=null)
+				{
+					if(res.timestamp===today)
+						callbackfunc(res);
+					else
+					{
+						var repoid=new mongo.ObjectID(repoId);
+				
+						db.collection("modelInfo").find(
+						{
+							rep_id:repoid
+						},
+						{
+							TransactionAnalytics:1,_id:0
+						}).toArray(
+						function(err, result) 
+						{
+						   if (err) throw err;
+						   else
+						   {
+								//console.log("*******Shown result for ModelInfo*******");
+							   //console.log("The result size"+result.length);
+							   //(3*3+4*3+5+6)
+							   
+							   for(i=0;i<result.length;i++)
+							   {
+								   
+								   var sum_nt=0;
+								   for(i=0;i<result.length;i++)
+								   {
+										sum_nt+=result[i]['TransactionAnalytics']['NT'];
+								   }
+									//console.log("sum_nt"+sum_nt);
+							  
+								  var today = new Date();
+								  record={rep_id:repoid,NT:sum_nt,timestamp:today.getDate()}
+								  db.collection("noOfTransactions").insertOne(record, function(err, res) 
+								  {
+										if (err) throw err;
+										//console.log("*******Shown result for ModelInfo*******");
+										db.close();
+										callbackfunc();
+										console.log("1 document inserted");
+										
+								  });
+							   //callbackfunc(result);
+							   
+								}
+							}
+					
+						});
+						
+					}
+					
+				}
+					
+			});
+		});
+	} 
+
 	
 	
 	
@@ -763,26 +860,27 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
            
                 var modelId=modelInfo._id;
 
-
+				//console.log("modelInfo"+modelInfo.UseCases)
                 
-                var useCases = modelInfo.useCases;
-                var domainModelInfo = modelInfo.domainModel;
+                var useCases = modelInfo.UseCases;
+                var domainModelInfo = modelInfo.DomainModel;
                 
-                for(var i in modelInfo.useCases)
+                for(var i in modelInfo.UseCases)
                 {
-                    var useCase = modelInfo.useCases[i];
+                    var useCase = modelInfo.UseCases[i];
                     useCase.model_id=modelId;
                 }
 
-                delete modelInfo.useCases;
+                delete modelInfo.UseCases;
                
-                delete modelInfo.domainModel;
+                delete modelInfo.DomainModel;
                 
     
                 modelInfo.repo_id=o_id
 
                 
-                domainModelInfo.model_id=modelId;
+				if(domainModelInfo!=null)
+					domainModelInfo.model_id=modelId;
 
 
                 db.collection("modelInfo").insertOne(modelInfo, function(err, res) 
@@ -806,7 +904,7 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
                         db.close();
                         callbackfunc(modelInfo);
 						
-                });   
+                });
                 
             });
     }
@@ -1366,11 +1464,12 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
 			  db.createCollection('repos', function(err, collection) {
 				  db.createCollection('users', function(err, collection) {
 					  db.createCollection('surveys', function(err, collection) {
-				    console.log("Table created!");
-				    db.close();
-				    callbackfunc();
+						  db.createCollection('noOfTransactions',function(err,collection){
+								console.log("Table created!");
+								db.close();
+								callbackfunc();
 			  });});
-			  });
+			  });});
 
 				});
 			},
@@ -1385,6 +1484,7 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
 		saveModelInfo : saveModelInfo,
 		queryRepoInfo : queryRepoInfo,
 		queryUseCaseInfo: queryUseCaseInfo,
+		repoDetail:repoDetail,
 		saveEstimation: saveEstimation,
 		saveModelInfoEstimates : saveModelInfoEstimates,
 		//queryUseCaseAnalytics: function(repoId, modelId, useCaseId, callbackfunc){
