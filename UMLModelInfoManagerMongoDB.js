@@ -527,7 +527,10 @@ function deleteRepo(repoId, callbackfunc) {
         });
     }
 
-	
+	queryRepoInfo("5a8e109c13a5974144158d99", function(result)
+    {
+         console.log(result);
+    })
 	
 	
     function queryRepoInfo(repoId, callbackfunc)
@@ -741,10 +744,10 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
             ] 
     }
 
-    saveModelInfo(modelInfo, "5a8e109c13a5974144158d99", function(result)
+    /*saveModelInfo(modelInfo, "5a8e109c13a5974144158d99", function(result)
     {
          console.log(result);
-    })
+    })/*
 
     function saveModelInfo(modelInfo, repoId, callbackfunc)
     {
