@@ -1374,8 +1374,8 @@ function queryRepoInfoByPage(repoId, stepParameter, pageParameter,callbackfunc)
 
 				});
 			},
-			createRepo: createRepo,
-
+			//createRepo: createRepo,
+			
 			//queryModelAnalytics: queryModelAnalytics,
 			queryModelInfo: queryModelInfo,
 			deleteModelInfo : function(repoId, modelInfo) {
