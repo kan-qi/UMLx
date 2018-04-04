@@ -902,6 +902,7 @@ function deleteRepo(repoId, callbackfunc) {
                         });
                         
                         db.close();
+						console.log("saveModelInfo");
                         callbackfunc(modelInfo);
 						
                 });
