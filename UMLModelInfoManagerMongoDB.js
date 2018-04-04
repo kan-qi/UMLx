@@ -443,30 +443,50 @@ function deleteRepo(repoId, callbackfunc) {
     //  console.log(result);
     // });
 
-    function saveModelInfoEstimates (estimationInfo,callbackfunc){
+    function saveModelInfoCharacteristics (characteristicsInfo,callbackfunc){
     	MongoClient.connect(url, function(err, db)
    	            {
-   	                if (err) throw err;
-   	             db.collection('estimates').remove({requestUUID: estimationInfo.requestUUID}, function(err) {
-   	              if (err) {
-   	                console.log(err);   	                   	                
-   	              }
-   	             
+    		MongoClient.connect(url, function(err, db)
+    				   	            {
+    			   if (err) throw err;
+      	            
+       	           db.collection('modelInfo').update( { "formInfo.uuid-page1" : characteristicsInfo.requestUUID },
+       	        		{$set: {  
+   	        	    "formInfo.distributed-system": characteristicsInfo.distributedSystem,
+        	   	    "formInfo.response-time": characteristicsInfo.responseTime,
+   	        	    "formInfo.end-user-efficiency": characteristicsInfo.endUserEfficiency,
+   	        	   	"formInfo.alert alert-infoternal-processing": characteristicsInfo.complexInternalProcessing,
+       	        	"formInfo.code-must-be-resuable": characteristicsInfo.codeReusable,
+       	        	"formInfo.easy-to-install": characteristicsInfo.easyInstall,
+       	        	"formInfo.easy-to-use": characteristicsInfo.easyUse,
+       	        	"formInfo.portable": characteristicsInfo.portable,
+       	        	"formInfo.easy-to-change": characteristicsInfo.easyToChange,
+       	        	"formInfo.concurrent": characteristicsInfo.concurrent,
+       	        	"formInfo.includes-special-security-objectives": characteristicsInfo.specialSecurityObjectives,
+       	        	"formInfo.provides-direct-access-for-third-parties": characteristicsInfo.directAccessForThirdParties,
+       	        	"formInfo.special-user-training-facilities-are-required": characteristicsInfo.userTrainingFacilitiesRequired,
+       	        	"formInfo.familiar-with-the-project-model-that-is-used": characteristicsInfo.familiarWithProjectModel,
+       	        	"formInfo.application-experience": characteristicsInfo.applicationExperience,
+       	        	"formInfo.object-oriented-experience": characteristicsInfo.objectOrientedExperience,
+       	        	"formInfo.lead-analyst-capability": characteristicsInfo.leadAnalystCapability,
+       	        	"formInfo.motivation": characteristicsInfo.motivation,
+       	        	"formInfo.stable-requirements": characteristicsInfo.stableRequirements,
+       	        	"formInfo.part-time-staff": characteristicsInfo.partTimeStaff,
+       	        	"formInfo.difficult-programming-language": characteristicsInfo.difficultProgrammingLanguage,       	        	
+       	        	   		  }},
+       	        		   { upsert: true }, function(err, res){
+       	        			if (err) {
+       	    	                console.log(err);   	                   	                
+       	    	              }
+       	        				db.close();
+    	                      if(callbackfunc !== null)
+    	                      {
+    	                              callbackfunc(res);
+    	                      }
+       	        			
+       	        		   } );
 
-   	    //			
-   	                db.collection("estimates").insertOne(estimationInfo, function(err, res) 
-   	                		{
-   			                  if (err) throw err;
-   			                      console.log("estimates record inserted");
-   			
-   			                      db.close();
-   			                      if(callbackfunc !== null)
-   			                      {
-   			                              callbackfunc(res);
-   			                      }
-     
-   	                		});
-   	            });
+    				   	         });
    	         });
     }
     
@@ -1487,7 +1507,7 @@ function deleteRepo(repoId, callbackfunc) {
 		queryUseCaseInfo: queryUseCaseInfo,
 		repoDetail:repoDetail,
 		saveEstimation: saveEstimation,
-		saveModelInfoEstimates : saveModelInfoEstimates,
+		saveModelInfoCharacteristics : saveModelInfoCharacteristics,
 		//queryUseCaseAnalytics: function(repoId, modelId, useCaseId, callbackfunc){
 			//queryUseCaseInfo(repoId, modelId, useCaseId, function(useCaseInfo){
 				//var useCaseAnalytics = useCaseInfo.UseCaseAnalytics;
