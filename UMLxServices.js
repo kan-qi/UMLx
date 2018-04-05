@@ -1306,7 +1306,7 @@ app.get('/testCOCOMODataLoad', function(req, res){
 
 
 
-app.post('/saveModelInfoEstimates', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
+app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
 ,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
@@ -1334,7 +1334,7 @@ app.post('/saveModelInfoEstimates', upload.fields([{name:'distributed_system',ma
 	umlEstimationInfo.partTimeStaff = req.body['part_time_staff'];
 	umlEstimationInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
 	umlEstimationInfo.requestUUID = req.body['requestUUID'];	
-	umlModelInfoManager.saveModelInfoEstimates(umlEstimationInfo, function(result,message){		
+	umlModelInfoManager.saveModelInfoCharacteristics(umlEstimationInfo, function(result,message){		
 		res.json(result);
 	});
 });
