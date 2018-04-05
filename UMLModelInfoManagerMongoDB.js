@@ -603,7 +603,7 @@ function deleteRepo(repoId, callbackfunc) {
 			{
 				"$match":
 				{
-				   "rep_id":new mongo.ObjectID(repoid)
+				   "repo_id":new mongo.ObjectID(repoid)
 				}
 			},
 			{
