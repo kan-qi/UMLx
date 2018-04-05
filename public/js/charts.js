@@ -4,8 +4,8 @@ function display()
 {
   var repoID = $("#myrepoId").val();
   var modelID = $("#mymodelId").val();
-console.log(repoID);
-console.log(modelID);
+// console.log(repoID);
+// console.log(modelID);
 var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/useCaseEvaluation.csv";
   /* Parse csv file using d3.js and display the required data  */
   d3.csv(chart_url, function(data) {
@@ -76,36 +76,31 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
     });
     });
 
-$('.statistical-item').click(function() {
+
   //console.log(this.innerHTML);
-  var name =this.innerHTML.substring(0,this.innerHTML.length-2);
+  // var name =this.innerHTML.substring(0,this.innerHTML.length-2);
   //console.log(name);
-  var url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/use_case_evaluation_statistics/database.json";
-    $( ".statistical-item" ).removeClass( "bolder" );
-   $(this).addClass('bolder');
-  //console.log(url);
+  var url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/use_case_evaluation_statistics/statistics.json";
+  var domain_model_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/domain_model_evaluation_statistics/statistics.json";
+   //  $( ".statistical-item" ).removeClass( "bolder" );
+   // $(this).addClass('bolder');
+  console.log(url);
       $.ajax({
         url: url,
         type:"GET",
         dataType: "json",
+
         success: function(response)
         {
-          //  console.log(response.result[0]);
-
-            for (var i=0;i< response.result.length;i++)
+          //console.log(response[0].statistics.third_quartile);
+          document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><h3>Use case evaluation statistics</h3><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+            for (var i=0;i<response.length;i++)
             {
-              //console.log(key);
-              var obj = response.result[i];
-                console.log(obj);
-                if (obj.metric_name==name)
-                {
-                    //console.log(obj);
-                    document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><table class='table table-hover table-bordered'><tbody><tr><th>Metric Name</th><td>"+obj.metric_name+"</td></tr><tr><th>Mean</th><td>"+obj.mean+"</td></tr><tr><th>Variance</th><td>"+obj.variance+"</td></tr><tr><th>1-quartile</th><td>"+obj.one_quartile+"</td></tr><tr><th>Median</th><td>"+obj.median+"</td></tr><tr><th>3-quartile</th><td>"+obj.three_quartile+"</td></tr><tr><th>4-quartile</th><td>"+obj.four_quartile+"</td></tr></tbody></table><img src='"+obj.distribution_chart_path+"'>'";
-                    break;
-                }
-                
-            }
 
+                  document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>" ;
+
+            }
+            //document.getElementById("details").innerHTML+= "</table>";
         },
         error:function(error){
           console.log("failed");
@@ -113,6 +108,30 @@ $('.statistical-item').click(function() {
 
 
       });
-});
+      //domain model evaluation statistics
+      $.ajax({
+        url: domain_model_url,
+        type:"GET",
+        dataType: "json",
+
+        success: function(response)
+        {
+          //console.log(response[0].statistics.third_quartile);
+          document.getElementById("details").innerHTML +="<div style='height:6%'>&nbsp;</div><h3>Doamin Model evaluation statistics</h3><table class='table table-hover table-bordered'; id='domain_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+            for (var i=0;i<response.length;i++)
+            {
+
+                  document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>" ;
+
+            }
+            //document.getElementById("details").innerHTML+= "</table>";
+        },
+        error:function(error){
+          console.log("failed");
+        }
+
+
+      });
+
 
 }
