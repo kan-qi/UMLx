@@ -563,25 +563,19 @@ function deleteRepo(repoId, callbackfunc) {
 
            
             db.collection("repos").aggregate([
-               {
-                   "$match":
-                   {
-                       "_id":new mongo.ObjectID(repoid)
-                   }
-               },
                { 
                     "$lookup":
                     {
                         "from": "modelInfo",
                         "localField": "_id",
-                        "foreignField": "rep_id",
-                        "as": "models"
+                        "foreignField": "repo_id",
+                        "as": "Models"
                     }
                 }
             ], function(err, result) 
             {
                if (err) throw err;
-               console.log("*******Shown result for ModelInfo*******");
+               console.log("*******Shown result for ModelInfo*******");               
                db.close();
                callbackfunc(result[0]);
             });
