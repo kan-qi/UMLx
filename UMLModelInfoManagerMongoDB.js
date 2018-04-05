@@ -537,10 +537,12 @@ function deleteRepo(repoId, callbackfunc) {
     {
         MongoClient.connect(url, function(err, db)
         {
+			
             if (err) throw err;
            
             var repoid=new mongo.ObjectID(repoId);
 
+			
            
             db.collection("repos").aggregate([
                {
@@ -554,14 +556,15 @@ function deleteRepo(repoId, callbackfunc) {
                     {
                         "from": "modelInfo",
                         "localField": "_id",
-                        "foreignField": "rep_id",
-                        "as": "models"
+                        "foreignField": "repo_id",
+                        "as": "Models"
                     }
                 }
             ], function(err, result) 
             {
                if (err) throw err;
-               console.log("*******Shown result for ModelInfo*******");
+               console.log("*******Shown result for queryRepoInfo*******");
+			   console.log(result[0]);
                db.close();
                callbackfunc(result[0]);
             });
@@ -583,13 +586,13 @@ function deleteRepo(repoId, callbackfunc) {
 			
 			var repoid=new mongo.ObjectID(repoId);
 			
-			var query = { rep_id: repoid};
+			//var query = { rep_id: repoid};
 			
 			db.collection("modelInfo").aggregate([
 			{
 				"$match":
 				{
-				   "rep_id":new mongo.ObjectID(repoid)
+				   "repo_id":new mongo.ObjectID(repoid)
 				}
 			},
 			{
@@ -603,6 +606,7 @@ function deleteRepo(repoId, callbackfunc) {
                if (err) throw err;
                console.log("*******Shown result for queryRepoInfoByPage*******");
                db.close();
+			   
                callbackfunc(result);
             });
 			
