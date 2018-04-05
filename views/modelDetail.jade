@@ -82,69 +82,13 @@ div.block.panel.panel-default
         //div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{modelInfo.AccessDir}/modelVersionInfo.csv")
         div(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
          //div.stats-chart.col-md-12(id="chart-1") here should be distributions.
-        //div.col-sm-12.chart-row  
+        //div.col-sm-12.chart-row
         // div.col-sm-6(id="chart-1") here should be distributions.
         div.stats-chart.col-md-12(id="chart-1") here should be distributions.
         //div.col-sm-12.chart-row
          //div.col-sm-6(id="chart-1") here should be distributions.
         div.col-sm-12.chart-row
-          .col-sm-6
-            //img(src="#{modelInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
-            div.model-evaluation
-               h3 Calculated:
-               ul
-                li
-                 span.statistical-item Number of Interface Management Transactions: #{modelInfo.INT}
-                li
-                 span.statistical-item Number of Data Management Transactions: #{modelInfo.DM}
-                li
-                 span.statistical-item Number of Control Transactions: #{modelInfo.CTRL}
-                li
-                 span.statistical-item Number of External Inovations: #{modelInfo.EXTIVK}
-                li
-                 span.statistical-item Number of External Calls: #{modelInfo.EXTCLL}
-                li
-                 span.statistical-item Number of Not Matched Transactions: #{modelInfo.TRAN_NA}
-                li
-                 span.statistical-item Number of EI: #{modelInfo.EI}
-                li
-                 span.statistical-item Number of EO: #{modelInfo.EO}
-                li
-                 span.statistical-item Number of EQ: #{modelInfo.EQ}
-                li
-                 span.statistical-item ILF: #{modelInfo.ILF}
-                li
-                 span.statistical-item EIF: #{modelInfo.EIF}
-                li
-                 span.statistical-item Number of Not Matched Functions: #{modelInfo.FUNC_NA}
-                li
-                 span.statistical-item Average Path Length: #{modelInfo.AvgPathLength}
-                li
-                 span.statistical-item Average Element Degree: #{modelInfo.AvgDegree}
-                li
-                 span.statistical-item Number of Paths: #{modelInfo.PathNum}
-                li
-                 span.statistical-item Number of Elements: #{modelInfo.ElementNum}
-                li
-                 span.statistical-item Number of Actors: #{modelInfo.ActorNum}
-                li
-                 span.statistical-item Number of Boundary Elements: #{modelInfo.BoundaryNum}
-                li
-                 span.statistical-item Number of Control Elements: #{modelInfo.ControlNum}
-                li
-                 span.statistical-item Number of Entity Elements: #{modelInfo.EntityNum}
-                li
-                 span.statistical-item Number of Attributes: #{modelInfo.AttributeNum}
-                li
-                 span.statistical-item Number of Operations: #{modelInfo.OperationNum}
-                li
-                 span.statistical-item Number of Use Cases: #{modelInfo.UseCaseNum}
-                li
-                 span.statistical-item Number of Diagrams: #{modelInfo.DiagramNum}
-                li
-                 span.statistical-item Number of Classes: #{modelInfo.ClassNum}
-          .col-sm-6(id="transaction-pie")
-            div(id="details" )
+          div(id="details" )
      //div.tab-pane.fade(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
       //div.stats-chart.col-md-12(id="chart-1")
       //div.stats-chart.col-md-6(id="chart-8")
