@@ -80,6 +80,16 @@ print("linear regression of effort on EXUCP")
 #print(axis1)
 m2 = lm(Effort_Real~EXUCP, data=data)
 #summary(m1.lm)$test[c("coefficients", "sigma", "tstat", "pvalues")]
+
+
+#NUMBER of training data
+number_train <- dim(Effort_Real)[1]
+saveRDS(number_train, "./statistical_models/exucp_linear_model_train.rds")
+
+#NUMBER of testing data
+number_test <- dim(m1)[1]
+saveRDS(number_test, "./statistical_models/exucp_linear_model_test.rds")
+
 coeff2 = summary(m2)$coefficients
 summary(m2)$r.squared
 newx2 <- seq(-100, max(data$EXUCP)+100, length.out=100)
@@ -216,3 +226,4 @@ sink()
 # detach("package:nlme")
 # change back to the original directory
 # setwd(initial.dir)
+
