@@ -54,9 +54,11 @@ print(useCaseDataMelt)
 
 #correlation between effort and TN
 print("correlation between effort and EUCP")
-#cor1 = cor(data$Effort_Real, data$EUCP)
+cor1 = cor(data$Effort_Real, data$EUCP)
 print("linear regression of effort on EUCP")
 m1 = lm(Effort_Real~EUCP, data=data)
+
+
 #summary(m1.lm)$test[c("coefficients", "sigma", "tstat", "pvalues")]
 coeff1 = summary(m1)$coefficients
 summary(m1)$r.squared
@@ -68,11 +70,12 @@ print("predicted values")
 print(eucp.predict)
 
 #generate description file.
+saveRDS(cor1, "./statistical_models/eucp_linear_model_cor.rds")
 saveRDS(m1, "./statistical_models/eucp_linear_model.rds")
 
 #correlation between effort and TN
 print("correlation between effort and EXUCP")
-#cor2 = cor(data$Effort_Real, data$EXUCP)
+cor2 = cor(data$Effort_Real, data$EXUCP)
 print("linear regression of effort on EXUCP")
 #print(axis1)
 m2 = lm(Effort_Real~EXUCP, data=data)
@@ -86,12 +89,12 @@ exucp.predict = cbind(predicted=predict(m2, data), actual=data$Effort_Real)
 print("predicted values")
 print(exucp.predict)
 
-
+saveRDS(cor2, "./statistical_models/exucp_linear_model_cor.rds")
 saveRDS(m2, "./statistical_models/exucp_linear_model.rds")
 
 #correlation between effort and TN
 print("correlation between effort and DUCP")
-#cor2 = cor(data$Effort_Real, data$EXUCP)
+cor3 = cor(data$Effort_Real, data$EXUCP)
 print("linear regression of effort on DUCP")
 #print(axis1)
 m3 = lm(Effort_Real~DUCP, data=data)
@@ -105,6 +108,7 @@ ducp.predict = cbind(predicted=predict(m3, data), actual=data$Effort_Real)
 print("predicted values")
 print(ducp.predict)
 
+saveRDS(cor3, "./statistical_models/ducp_linear_model_cor.rds")
 saveRDS(m3, "./statistical_models/ducp_linear_model.rds")
 
 plot = xyplot(Effort_Real~ value | variable, data=useCaseDataMelt,
