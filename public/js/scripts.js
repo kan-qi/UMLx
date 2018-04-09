@@ -1483,16 +1483,20 @@ function cancelEdit() {
     document.getElementById("modifyButton").classList.remove("hidden");
 }
 
-function highlightElement_classDia(element) {
-      clearHighlight_classDia() ;
+function highlightClass(element) {
+      clearHighlight() ;
        var allNodes = document.getElementById(element).getElementsByTagName("text");
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "red";
        }
 
    }
+function highlightElement(id) {
+    clearHighlight() ;
+document.getElementById(id).style.stroke =  "red";
 
-   function clearHighlight_classDia() {
+}
+   function clearHighlight() {
        var allNodes = document.getElementsByTagName("text");
 
        for(var i = 0; i < allNodes.length; i++) {
