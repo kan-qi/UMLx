@@ -577,12 +577,9 @@ function deleteRepo(repoId, callbackfunc) {
             ], function(err, result) 
             {
                if (err) throw err;
-<<<<<<< HEAD
                console.log("*******Shown result for queryRepoInfo*******");
 			   console.log(result[0]);
-=======
                console.log("*******Shown result for ModelInfo*******");               
->>>>>>> 62a72e4c6a1db46a41c0c8bec0b94191ad5a4a3c
                db.close();
                callbackfunc(result[0]);
             });
@@ -635,103 +632,83 @@ function deleteRepo(repoId, callbackfunc) {
     {
         console.log(result);
     })*/
-	
-	
 	function repoDetail(repoId,callbackfunc)
-    {
-		
-		/*MongoClient.connect(url, function(err, db) 
+	{
+		MongoClient.connect(url, function(err, db) 
 		{
 			if (err) throw err;
-			db.createCollection("noOfTransactions", function(err, collection) {
-				  db.close();
-			})
-		})*/
-		
-		
-		
-	
-		
-		
-		
-        //console.log("res"+stepParameter*pageParameter)
-        MongoClient.connect(url, function(err, db) 
-		{
 			
-			if (err) throw err;
-			var today = new Date();
-			
-			var cursor=db.collection("noOfTransactions").find();
-			
-			//db.collection("noOfTransactions").find().forEach(function(err, res) 
-			cursor.each(function(err, res)
+			var repoid=new mongo.ObjectID(repoId);
+					
+			db.collection("modelInfo").find(
 			{
-				if (err) throw err;
-				//console.log("res"+res);
-				
-				if(res!=null)
-				{
-					if(res.timestamp===today)
-						callbackfunc(res);
-					else
+				rep_id:repoid
+			},
+			{
+				TransactionAnalytics:1,_id:0
+			}).toArray(
+			function(err, result) 
+			{
+			   if (err) throw err;
+			   else
+			   {
+				    var dt = new Date();
+					var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
+				   
+				   
+				   
+				   db.collection('noOfTransactions').findOne({'timestamp':today})
+					.then(function(doc) 
 					{
-						var repoid=new mongo.ObjectID(repoId);
-				
-						db.collection("modelInfo").find(
+						if(doc)
 						{
-							rep_id:repoid
-						},
+							console.log("Record exists");
+							callbackfunc(doc);
+							db.close();							
+						}
+							
+							//throw new Error('No record found.');
+						//console.log(doc);//else case
+						
+						else
 						{
-							TransactionAnalytics:1,_id:0
-						}).toArray(
-						function(err, result) 
-						{
-						   if (err) throw err;
-						   else
+							console.log("Record does not exist");
+							for(i=0;i<result.length;i++)
 						   {
-								//console.log("*******Shown result for ModelInfo*******");
-							   //console.log("The result size"+result.length);
-							   //(3*3+4*3+5+6)
 							   
+							   var sum_nt=0;
 							   for(i=0;i<result.length;i++)
 							   {
-								   
-								   var sum_nt=0;
-								   for(i=0;i<result.length;i++)
-								   {
-										sum_nt+=result[i]['TransactionAnalytics']['NT'];
-								   }
-									//console.log("sum_nt"+sum_nt);
+									sum_nt+=result[i]['TransactionAnalytics']['NT'];
+							   }
+								//console.log("sum_nt"+sum_nt);
+						  
+							  var dt = new Date();
+							  var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
 							  
-								  var today = new Date();
-								  record={rep_id:repoid,NT:sum_nt,timestamp:today.getDate()}
-								  db.collection("noOfTransactions").insertOne(record, function(err, res) 
-								  {
-										if (err) throw err;
-										//console.log("*******Shown result for ModelInfo*******");
-										db.close();
-										callbackfunc();
-										console.log("1 document inserted");
-										
-								  });
-							   //callbackfunc(result);
-							   
-								}
-							}
-					
-						});
+							  
+							  //record={repo_id:repoid,NT:sum_nt,timestamp:today.getDate()}
+							  
+							  record={repo_id:repoid,NT:sum_nt,timestamp:today}
+							  db.collection("noOfTransactions").insertOne(record, function(err, res) 
+							  {
+									if (err) throw err;
+									//console.log("*******Shown result for ModelInfo*******");
+									db.close();
+									callbackfunc(record);
+									console.log("1 document inserted");
+									
+							  });
+						   //callbackfunc(result);
+						   
+							}	
+						}
 						
-					}
-					
+					});
 				}
-					
 			});
 		});
-	} 
-
-	
-	
-	
+	}
     function getGitData(userId, callbackfunc){      
                     
                     
