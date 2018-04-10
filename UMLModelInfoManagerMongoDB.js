@@ -601,7 +601,11 @@ function deleteRepo(repoId, callbackfunc) {
 			
 			var repoid=new mongo.ObjectID(repoId);
 			
+<<<<<<< HEAD
 			//var query = { rep_id: repoid};
+=======
+			var query = { repo_id: repoid};
+>>>>>>> 1423ca1bd4e8f32340135f6aaadb50d0a541d511
 			
 			db.collection("modelInfo").aggregate([
 			{
@@ -611,7 +615,7 @@ function deleteRepo(repoId, callbackfunc) {
 				}
 			},
 			{
-			   $skip: stepParameter*pageParameter
+			   $skip: pageParameter
 			}, // pagination skip
 			{
 				$limit: stepParameter
@@ -619,7 +623,7 @@ function deleteRepo(repoId, callbackfunc) {
 			],function(err, result) 
             {
                if (err) throw err;
-               console.log("*******Shown result for queryRepoInfoByPage*******");
+               //console.log("*******Shown result for queryRepoInfoByPage*******");
                db.close();
 			   
                callbackfunc(result);
