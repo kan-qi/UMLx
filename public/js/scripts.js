@@ -1332,51 +1332,27 @@ function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTi
 }
 
 function editFunction(button) {
-//<<<<<<< HEAD
-//    document.getElementById("editNumber1").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber2").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber3").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber4").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber5").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber6").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber7").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber8").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber9").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber10").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber11").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber12").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber13").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber14").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber15").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber16").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber17").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber18").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber19").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber20").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber21").attributes.removeNamedItem("disabled");
-//=======
-    document.getElementById("editNumber1").contentEditable = "true";
-    document.getElementById("editNumber2").contentEditable = "true";
-    document.getElementById("editNumber3").contentEditable = "true";
-    document.getElementById("editNumber4").contentEditable = "true";
-    document.getElementById("editNumber5").contentEditable = "true";
-    document.getElementById("editNumber6").contentEditable = "true";
-    document.getElementById("editNumber7").contentEditable = "true";
-    document.getElementById("editNumber8").contentEditable = "true";
-    document.getElementById("editNumber9").contentEditable = "true";
-    document.getElementById("editNumber10").contentEditable = "true";
-    document.getElementById("editNumber11").contentEditable = "true";
-    document.getElementById("editNumber12").contentEditable = "true";
-    document.getElementById("editNumber13").contentEditable = "true";
-    document.getElementById("editNumber14").contentEditable = "true";
-    document.getElementById("editNumber15").contentEditable = "true";
-    document.getElementById("editNumber16").contentEditable = "true";
-    document.getElementById("editNumber17").contentEditable = "true";
-    document.getElementById("editNumber18").contentEditable = "true";
-    document.getElementById("editNumber19").contentEditable = "true";
-    document.getElementById("editNumber20").contentEditable = "true";
-    document.getElementById("editNumber21").contentEditable = "true";
-//>>>>>>> 171f48664c517f5a8b2acdbd86bf286d51b30905
+   document.getElementById("editNumber1").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber2").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber3").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber4").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber5").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber6").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber7").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber8").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber9").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber10").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber11").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber12").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber13").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber14").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber15").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber16").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber17").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber18").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber19").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber20").attributes.removeNamedItem("disabled");
+   document.getElementById("editNumber21").attributes.removeNamedItem("disabled");
 
 	document.getElementById("submitButton").classList.remove("hidden");
     document.getElementById("cancelButton").classList.remove("hidden");
@@ -1388,95 +1364,71 @@ function submitEdit() {
 }
 
 function cancelEdit() {
-//<<<<<<< HEAD
-//    var attr1 = document.createAttribute("disabled");
-//    var attr2 = document.createAttribute("disabled");
-//    var attr3 = document.createAttribute("disabled");
-//    var attr4 = document.createAttribute("disabled");
-//    var attr5 = document.createAttribute("disabled");
-//    var attr6 = document.createAttribute("disabled");
-//    var attr7 = document.createAttribute("disabled");
-//    var attr8 = document.createAttribute("disabled");
-//    var attr9 = document.createAttribute("disabled");
-//    var attr10 = document.createAttribute("disabled");
-//    var attr11 = document.createAttribute("disabled");
-//    var attr12 = document.createAttribute("disabled");
-//    var attr13 = document.createAttribute("disabled");
-//    var attr14 = document.createAttribute("disabled");
-//    var attr15 = document.createAttribute("disabled");
-//    var attr16 = document.createAttribute("disabled");
-//    var attr17 = document.createAttribute("disabled");
-//    var attr18 = document.createAttribute("disabled");
-//    var attr19 = document.createAttribute("disabled");
-//    var attr20 = document.createAttribute("disabled");
-//    var attr21 = document.createAttribute("disabled");
-//
-//    attr1.value = "disabled";
-//    attr2.value = "disabled";
-//    attr3.value = "disabled";
-//    attr4.value = "disabled";
-//    attr5.value = "disabled";
-//    attr6.value = "disabled";
-//    attr7.value = "disabled";
-//    attr8.value = "disabled";
-//    attr9.value = "disabled";
-//    attr10.value = "disabled";
-//    attr11.value = "disabled";
-//    attr12.value = "disabled";
-//    attr13.value = "disabled";
-//    attr14.value = "disabled";
-//    attr15.value = "disabled";
-//    attr16.value = "disabled";
-//    attr17.value = "disabled";
-//    attr18.value = "disabled";
-//    attr19.value = "disabled";
-//    attr20.value = "disabled";
-//    attr21.value = "disabled";
-//
-//    document.getElementById("editNumber1").attributes.setNamedItem(attr1);
-//    document.getElementById("editNumber2").attributes.setNamedItem(attr2);
-//    document.getElementById("editNumber3").attributes.setNamedItem(attr3);
-//    document.getElementById("editNumber4").attributes.setNamedItem(attr4);
-//    document.getElementById("editNumber5").attributes.setNamedItem(attr5);
-//    document.getElementById("editNumber6").attributes.setNamedItem(attr6);
-//    document.getElementById("editNumber7").attributes.setNamedItem(attr7);
-//    document.getElementById("editNumber8").attributes.setNamedItem(attr8);
-//    document.getElementById("editNumber9").attributes.setNamedItem(attr9);
-//    document.getElementById("editNumber10").attributes.setNamedItem(attr10);
-//    document.getElementById("editNumber11").attributes.setNamedItem(attr11);
-//    document.getElementById("editNumber12").attributes.setNamedItem(attr12);
-//    document.getElementById("editNumber13").attributes.setNamedItem(attr13);
-//    document.getElementById("editNumber14").attributes.setNamedItem(attr14);
-//    document.getElementById("editNumber15").attributes.setNamedItem(attr15);
-//    document.getElementById("editNumber16").attributes.setNamedItem(attr16);
-//    document.getElementById("editNumber17").attributes.setNamedItem(attr17);
-//    document.getElementById("editNumber18").attributes.setNamedItem(attr18);
-//    document.getElementById("editNumber19").attributes.setNamedItem(attr19);
-//    document.getElementById("editNumber20").attributes.setNamedItem(attr20);
-//    document.getElementById("editNumber21").attributes.setNamedItem(attr21);
-//=======
-    document.getElementById("editNumber1").contentEditable = "false";
-    document.getElementById("editNumber2").contentEditable = "false";
-    document.getElementById("editNumber3").contentEditable = "false";
-    document.getElementById("editNumber4").contentEditable = "false";
-    document.getElementById("editNumber5").contentEditable = "false";
-    document.getElementById("editNumber6").contentEditable = "false";
-    document.getElementById("editNumber7").contentEditable = "false";
-    document.getElementById("editNumber8").contentEditable = "false";
-    document.getElementById("editNumber9").contentEditable = "false";
-    document.getElementById("editNumber10").contentEditable = "false";
-    document.getElementById("editNumber11").contentEditable = "false";
-    document.getElementById("editNumber12").contentEditable = "false";
-    document.getElementById("editNumber13").contentEditable = "false";
-    document.getElementById("editNumber14").contentEditable = "false";
-    document.getElementById("editNumber15").contentEditable = "false";
-    document.getElementById("editNumber16").contentEditable = "false";
-    document.getElementById("editNumber17").contentEditable = "false";
-    document.getElementById("editNumber18").contentEditable = "false";
-    document.getElementById("editNumber19").contentEditable = "false";
-    document.getElementById("editNumber20").contentEditable = "false";
-    document.getElementById("editNumber21").contentEditable = "false";
-//>>>>>>> 171f48664c517f5a8b2acdbd86bf286d51b30905
+   var attr1 = document.createAttribute("disabled");
+   var attr2 = document.createAttribute("disabled");
+   var attr3 = document.createAttribute("disabled");
+   var attr4 = document.createAttribute("disabled");
+   var attr5 = document.createAttribute("disabled");
+   var attr6 = document.createAttribute("disabled");
+   var attr7 = document.createAttribute("disabled");
+   var attr8 = document.createAttribute("disabled");
+   var attr9 = document.createAttribute("disabled");
+   var attr10 = document.createAttribute("disabled");
+   var attr11 = document.createAttribute("disabled");
+   var attr12 = document.createAttribute("disabled");
+   var attr13 = document.createAttribute("disabled");
+   var attr14 = document.createAttribute("disabled");
+   var attr15 = document.createAttribute("disabled");
+   var attr16 = document.createAttribute("disabled");
+   var attr17 = document.createAttribute("disabled");
+   var attr18 = document.createAttribute("disabled");
+   var attr19 = document.createAttribute("disabled");
+   var attr20 = document.createAttribute("disabled");
+   var attr21 = document.createAttribute("disabled");
+
+   attr1.value = "disabled";
+   attr2.value = "disabled";
+   attr3.value = "disabled";
+   attr4.value = "disabled";
+   attr5.value = "disabled";
+   attr6.value = "disabled";
+   attr7.value = "disabled";
+   attr8.value = "disabled";
+   attr9.value = "disabled";
+   attr10.value = "disabled";
+   attr11.value = "disabled";
+   attr12.value = "disabled";
+   attr13.value = "disabled";
+   attr14.value = "disabled";
+   attr15.value = "disabled";
+   attr16.value = "disabled";
+   attr17.value = "disabled";
+   attr18.value = "disabled";
+   attr19.value = "disabled";
+   attr20.value = "disabled";
+   attr21.value = "disabled";
+
+   document.getElementById("editNumber1").attributes.setNamedItem(attr1);
+   document.getElementById("editNumber2").attributes.setNamedItem(attr2);
+   document.getElementById("editNumber3").attributes.setNamedItem(attr3);
+   document.getElementById("editNumber4").attributes.setNamedItem(attr4);
+   document.getElementById("editNumber5").attributes.setNamedItem(attr5);
+   document.getElementById("editNumber6").attributes.setNamedItem(attr6);
+   document.getElementById("editNumber7").attributes.setNamedItem(attr7);
+   document.getElementById("editNumber8").attributes.setNamedItem(attr8);
+   document.getElementById("editNumber9").attributes.setNamedItem(attr9);
+   document.getElementById("editNumber10").attributes.setNamedItem(attr10);
+   document.getElementById("editNumber11").attributes.setNamedItem(attr11);
+   document.getElementById("editNumber12").attributes.setNamedItem(attr12);
+   document.getElementById("editNumber13").attributes.setNamedItem(attr13);
+   document.getElementById("editNumber14").attributes.setNamedItem(attr14);
+   document.getElementById("editNumber15").attributes.setNamedItem(attr15);
+   document.getElementById("editNumber16").attributes.setNamedItem(attr16);
+   document.getElementById("editNumber17").attributes.setNamedItem(attr17);
+   document.getElementById("editNumber18").attributes.setNamedItem(attr18);
+   document.getElementById("editNumber19").attributes.setNamedItem(attr19);
+   document.getElementById("editNumber20").attributes.setNamedItem(attr20);
+   document.getElementById("editNumber21").attributes.setNamedItem(attr21);
 
     document.getElementById("submitButton").classList.add("hidden");
     document.getElementById("cancelButton").classList.add("hidden");
@@ -1499,3 +1451,34 @@ function highlightElement_classDia(element) {
                allNodes[i].style.stroke = "";
        }
    }
+// var filesystem = require("fs");
+// var _getAllFilesFromFolder = function(dir) {
+//     // var filesystem = require("fs");
+//     var results = [];
+//
+//     filesystem.readdirSync(dir).forEach(function(file) {
+//
+//         file = dir+'/'+file;
+//         var stat = filesystem.statSync(file);
+//
+//         if (stat && stat.isDirectory()) {
+//             results = results.concat(_getAllFilesFromFolder(file))
+//         } else results.push(file);
+//
+//     });
+//
+//     console.log(results);
+// };
+
+// _getAllFilesFromFolder(/ealing/ + "Desktop");
+
+// function walkDir() {
+//     const testFolder = './tests/';
+//     const fs = require('fs');
+//
+//     fs.readdir(testFolder, (err, files) => {
+//         files.forEach(file => {
+//         console.log(file);
+// 		});
+// 	})
+// });

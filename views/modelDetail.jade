@@ -45,6 +45,9 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Model Elements
      li
       a(data-toggle='tab', href='#model-evaluation') Model Info
+     li
+      a(data-toggle='tab', href='#repo_archive') Archive
+
      //li
       //a(data-toggle='tab', href='#model-representation') Representation
     div.tab-content
@@ -349,71 +352,11 @@ div.block.panel.panel-default
                             option 3
                             option 4
                             option 5
-                    td#editNumber1(contenteditable='false') 1
-                tr
-                    td Response time or throughput performance objectives
-                    td#editNumber2(contenteditable='false') 1
-                tr
-                    td End user efficiency
-                    td#editNumber3(contenteditable='false') 1
-                tr
-                    td Complex internal processing
-                    td#editNumber4(contenteditable='false') 1
-                tr
-                    td Code must be reusable
-                    td#editNumber5(contenteditable='false') 1
-                tr
-                    td Easy to install
-                    td#editNumber6(contenteditable='false') 1
-                tr
-                    td Easy to use
-                    td#editNumber7(contenteditable='false') 1
-                tr
-                    td Portable
-                    td#editNumber8(contenteditable='false') 1
-                tr
-                    td Easy to change
-                    td#editNumber9(contenteditable='false') 1
-                tr
-                    td Concurrent
-                    td#editNumber10(contenteditable='false') 1
-                tr
-                    td Includes special security objectives
-                    td#editNumber11(contenteditable='false') 1
-                tr
-                    td Provides direct access for third parties
-                    td#editNumber12(contenteditable='false') 1
-                tr
-                    td Special user training facilities are required
-                    td#editNumber13(contenteditable='false') 1
-                tr
-                    td Familiar with the project model that is used
-                    td#editNumber14(contenteditable='false') 1
-                tr
-                    td Application experience
-                    td#editNumber15(contenteditable='false') 1
-                tr
-                    td Object-oriented experience
-                    td#editNumber16(contenteditable='false') 1
-                tr
-                    td Lead analyst capability
-                    td#editNumber17(contenteditable='false') 1
-                tr
-                    td Motivation
-                    td#editNumber18(contenteditable='false') 1
-                tr
-                    td Stable requirements
-                    td#editNumber19(contenteditable='false') 1
-                tr
-                    td Part-time staff
-                    td#editNumber20(contenteditable='false') 1
-                tr
-                    td Difficult programming language
-                    td#editNumber21(contenteditable='false') 1
 
          button.btn.btn-default.buttonForModel#submitButton.hidden(type='button', onclick='submitEdit();') Submit
          button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel
-
+     div.tab-pane.fade(id="repo_archive")
+            button.btn.btn-default(type='button') test
      //div.tab-pane.fade(id="model-evaluation")
       div.model-evaluation-ops
          div
