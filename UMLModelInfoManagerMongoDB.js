@@ -600,12 +600,11 @@ function deleteRepo(repoId, callbackfunc) {
 			if (err) throw err;
 			
 			var repoid=new mongo.ObjectID(repoId);
-			
-<<<<<<< HEAD
+
 			//var query = { rep_id: repoid};
-=======
+
 			var query = { repo_id: repoid};
->>>>>>> 1423ca1bd4e8f32340135f6aaadb50d0a541d511
+
 			
 			db.collection("modelInfo").aggregate([
 			{
