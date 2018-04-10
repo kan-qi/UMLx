@@ -10,4 +10,6 @@ var parser = require("./SrcParser.js");
 				console.log("hello");
 				parser.extractUserSystermInteractionModel(filePath, ModelOutputDir, ModelOutputDir, function(){
 					console.log("finished");
-				})
+				});
+				
+				
