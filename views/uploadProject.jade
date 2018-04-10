@@ -28,32 +28,28 @@ html
           .alert.alert-info
             | Project Information
           .form-group
-            .row
-              label.control-label(style='text-align:left').col-xs-2.col-xs-offset-2(for='uml-model-name') Project Name
-              .col-xs-6
-                input#uml-model-name.form-control(type='text', placeholder='Project Name', name='uml-model-name')
-            input#uml-model-type(type='hidden', name='uml-model-type', value='uml')
-            input#repo-id(type='hidden', name='repo-id', value='598c93a9a9813b12105c953e')
+            label.control-label.col-xs-4(for='uml-model-name') Project Name
+            .col-xs-8
+              input#uml-model-name.form-control(type='text', placeholder='Project Name', name='uml-model-name')
+          input#uml-model-type(type='hidden', name='uml-model-type', value='uml')
+          input#repo-id(type='hidden', name='repo-id', value='598c93a9a9813b12105c953e')
           .form-group
-            .row
-              label.control-label(style='text-align:left').col-xs-2.col-xs-offset-2(for='project-desc') Project Description
-              .col-xs-6
-                textarea#project-desc.form-control(rows='5', name='project-desc', placeholder='Project description')
+            label.control-label.col-xs-4(for='project-desc') Project Description
+            .col-xs-8
+              textarea#project-desc.form-control(rows='5', name='project-desc', placeholder='Project description')
           .form-group
-            .row
-              label.control-label(style='text-align:left').col-xs-2.col-xs-offset-2(for='project-effort') Effort
-              .col-xs-6
-                input#project-effort.form-control(type='text', placeholder='Effort', name='project-effort')
+            label.control-label.col-xs-4(for='project-effort') Effort
+            .col-xs-8
+              input#project-effort.form-control(type='text', placeholder='Effort', name='project-effort')
           .form-group
-            .row
-              label.control-label(style='text-align:left').col-xs-2.col-xs-offset-2(for='project-duration') Duration
-              .col-xs-6
-                input#project-duration.form-control(type='text', placeholder='Duration', name='project-duration')
-            input#uuid-page1(type='hidden', name='uuid-page1', value='')
+            label.control-label.col-xs-4(for='project-duration') Duration
+            .col-xs-8
+              input#project-duration.form-control(type='text', placeholder='Duration', name='project-duration')
+          input#uuid-page1(type='hidden', name='uuid-page1', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.disabled.pull-left(type='button') < Previous
-              button.btn.btn-success.pull-right(type='button', onclick='showPage(2)') Next >
+              button.btn.btn-success.pull-right(type='button', onclick='showPage(2)') Next > 
         // Page 2
         #page2.hidden
           .alert.alert-info
@@ -245,15 +241,13 @@ html
           .alert.alert-info
             | Project model file and documents
           .form-group
-            .row
-              label.control-label(style='text-align:left').col-xs-3.col-xs-offset-1(for='uml-file') Model File (file types: xml are supported)
-              .col-xs-6
-                input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
+            label.control-label.col-xs-4(for='uml-file') Model File (file types: xml are supported)
+            .col-xs-8
+              input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
           .form-group
-            .row
-              label.control-label(style='text-align:left').col-xs-3.col-xs-offset-1(for='uml-other') Other Documents (file types: zip, rar, tar are supported)
-              .col-xs-6
-                input#uml-other.form-control(type='file', name='uml-other')
+            label.control-label.col-xs-4(for='uml-other') Other Documents (file types: zip, rar, tar are supported)
+            .col-xs-8
+              input#uml-other.form-control(type='file', name='uml-other')
           input#uuid-page4(type='hidden', name='uuid-page4', value='')
           .form-group
             .col-sm-offset-2.col-xs-8

@@ -1,8 +1,21 @@
 if useCaseInfo        
+<<<<<<< HEAD
+  button(onclick="toggleQueryList()", class="big-button") Toggle List 
+  button(onclick="toggleZoom()", class="big-button") Enable Zoom
+  div.use-case-info(id="use-case-diagram")  
+    object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg")
+      //- div(id="lightgallery")
+        //- div(data-src=useCaseInfo.AccessDir+"/useCase.svg")
+          //- img.use-case(src=useCaseInfo.AccessDir+"/useCase.svg", id="use-case-diagram-img" onclick="window.open('"+useCaseInfo.AccessDir+"/useCase.svg', '_blank')")
+          //- img.use-case(src=useCaseInfo.AccessDir+"/useCase.svg", id="use-case-diagram-img")
+    
+  div.use-case-info-content(style="display: none;", id="use-case-list")
+=======
   button(onclick="toggleQueryDiagram()", class="big-button") Toggle Diagram
   div.use-case-info(style="display: none;", id="use-case-diagram")   
      object.use-case(data=useCaseInfo.AccessDir+"/uml_diagram.svg" type="image/svg+xml" data-diagram-type="#{useCaseInfo.diagramType}")
   div.use-case-info-content
+>>>>>>> a1e5b88f4a5d0de870048d8c06744a275c349451
    ul.nav.nav-tabs
     li.active
      a(data-toggle='tab', href='#use-case-nodes') Activities
