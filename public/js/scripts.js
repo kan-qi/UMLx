@@ -178,7 +178,6 @@ function query_model_detail_func(){
 	$.ajax({
 		type : 'GET',
 		url : url,
-		async:false,
 		success : function(response) {
 			console.log(response);
 			$("#display-panel").html("");
@@ -190,8 +189,7 @@ function query_model_detail_func(){
 				}
 				console.dir(e);
 			});
-display();
-			//createCharts();
+			createCharts();
 		},
 		error : function() {
 			console.log("fail");
@@ -953,13 +951,38 @@ function load_file_upload_fnc(type) {
 	});
 }
 
-function toggleQueryDiagram() {
-	$("#use-case-diagram").slideToggle();
+function toggleQueryList() {
+	$("#use-case-list").slideToggle();
 }
 
-function toggleDomainDiagram() {
-	$("#domain-model-diagram").slideToggle();
+function toggleZoom() {
+	panZoomInstance = svgPanZoom('object', {
+		zoomEnabled: true,
+		controlIconsEnabled: true,
+		fit: true,
+		center: true,
+		minZoom: 0.1
+	});
+
+	// zoom out
+	panZoomInstance.zoom(1)
 }
+
+
+
+
+function toggleDomainList() {
+	$("#domain-model-list").slideToggle();
+}
+
+// added for zoom control on svg
+
+
+
+
+
+
+
 
 
 var activatedItem, activatedPath = [];
@@ -1332,29 +1355,6 @@ function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTi
 }
 
 function editFunction(button) {
-//<<<<<<< HEAD
-//    document.getElementById("editNumber1").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber2").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber3").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber4").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber5").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber6").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber7").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber8").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber9").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber10").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber11").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber12").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber13").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber14").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber15").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber16").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber17").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber18").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber19").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber20").attributes.removeNamedItem("disabled");
-//    document.getElementById("editNumber21").attributes.removeNamedItem("disabled");
-//=======
     document.getElementById("editNumber1").contentEditable = "true";
     document.getElementById("editNumber2").contentEditable = "true";
     document.getElementById("editNumber3").contentEditable = "true";
@@ -1376,7 +1376,6 @@ function editFunction(button) {
     document.getElementById("editNumber19").contentEditable = "true";
     document.getElementById("editNumber20").contentEditable = "true";
     document.getElementById("editNumber21").contentEditable = "true";
-//>>>>>>> 171f48664c517f5a8b2acdbd86bf286d51b30905
 
 	document.getElementById("submitButton").classList.remove("hidden");
     document.getElementById("cancelButton").classList.remove("hidden");
@@ -1388,73 +1387,6 @@ function submitEdit() {
 }
 
 function cancelEdit() {
-//<<<<<<< HEAD
-//    var attr1 = document.createAttribute("disabled");
-//    var attr2 = document.createAttribute("disabled");
-//    var attr3 = document.createAttribute("disabled");
-//    var attr4 = document.createAttribute("disabled");
-//    var attr5 = document.createAttribute("disabled");
-//    var attr6 = document.createAttribute("disabled");
-//    var attr7 = document.createAttribute("disabled");
-//    var attr8 = document.createAttribute("disabled");
-//    var attr9 = document.createAttribute("disabled");
-//    var attr10 = document.createAttribute("disabled");
-//    var attr11 = document.createAttribute("disabled");
-//    var attr12 = document.createAttribute("disabled");
-//    var attr13 = document.createAttribute("disabled");
-//    var attr14 = document.createAttribute("disabled");
-//    var attr15 = document.createAttribute("disabled");
-//    var attr16 = document.createAttribute("disabled");
-//    var attr17 = document.createAttribute("disabled");
-//    var attr18 = document.createAttribute("disabled");
-//    var attr19 = document.createAttribute("disabled");
-//    var attr20 = document.createAttribute("disabled");
-//    var attr21 = document.createAttribute("disabled");
-//
-//    attr1.value = "disabled";
-//    attr2.value = "disabled";
-//    attr3.value = "disabled";
-//    attr4.value = "disabled";
-//    attr5.value = "disabled";
-//    attr6.value = "disabled";
-//    attr7.value = "disabled";
-//    attr8.value = "disabled";
-//    attr9.value = "disabled";
-//    attr10.value = "disabled";
-//    attr11.value = "disabled";
-//    attr12.value = "disabled";
-//    attr13.value = "disabled";
-//    attr14.value = "disabled";
-//    attr15.value = "disabled";
-//    attr16.value = "disabled";
-//    attr17.value = "disabled";
-//    attr18.value = "disabled";
-//    attr19.value = "disabled";
-//    attr20.value = "disabled";
-//    attr21.value = "disabled";
-//
-//    document.getElementById("editNumber1").attributes.setNamedItem(attr1);
-//    document.getElementById("editNumber2").attributes.setNamedItem(attr2);
-//    document.getElementById("editNumber3").attributes.setNamedItem(attr3);
-//    document.getElementById("editNumber4").attributes.setNamedItem(attr4);
-//    document.getElementById("editNumber5").attributes.setNamedItem(attr5);
-//    document.getElementById("editNumber6").attributes.setNamedItem(attr6);
-//    document.getElementById("editNumber7").attributes.setNamedItem(attr7);
-//    document.getElementById("editNumber8").attributes.setNamedItem(attr8);
-//    document.getElementById("editNumber9").attributes.setNamedItem(attr9);
-//    document.getElementById("editNumber10").attributes.setNamedItem(attr10);
-//    document.getElementById("editNumber11").attributes.setNamedItem(attr11);
-//    document.getElementById("editNumber12").attributes.setNamedItem(attr12);
-//    document.getElementById("editNumber13").attributes.setNamedItem(attr13);
-//    document.getElementById("editNumber14").attributes.setNamedItem(attr14);
-//    document.getElementById("editNumber15").attributes.setNamedItem(attr15);
-//    document.getElementById("editNumber16").attributes.setNamedItem(attr16);
-//    document.getElementById("editNumber17").attributes.setNamedItem(attr17);
-//    document.getElementById("editNumber18").attributes.setNamedItem(attr18);
-//    document.getElementById("editNumber19").attributes.setNamedItem(attr19);
-//    document.getElementById("editNumber20").attributes.setNamedItem(attr20);
-//    document.getElementById("editNumber21").attributes.setNamedItem(attr21);
-//=======
     document.getElementById("editNumber1").contentEditable = "false";
     document.getElementById("editNumber2").contentEditable = "false";
     document.getElementById("editNumber3").contentEditable = "false";
@@ -1476,12 +1408,13 @@ function cancelEdit() {
     document.getElementById("editNumber19").contentEditable = "false";
     document.getElementById("editNumber20").contentEditable = "false";
     document.getElementById("editNumber21").contentEditable = "false";
-//>>>>>>> 171f48664c517f5a8b2acdbd86bf286d51b30905
 
     document.getElementById("submitButton").classList.add("hidden");
     document.getElementById("cancelButton").classList.add("hidden");
     document.getElementById("modifyButton").classList.remove("hidden");
 }
+<<<<<<< HEAD
+=======
 
 function highlightElement_classDia(element) {
       clearHighlight_classDia() ;
@@ -1499,3 +1432,4 @@ function highlightElement_classDia(element) {
                allNodes[i].style.stroke = "";
        }
    }
+>>>>>>> a1e5b88f4a5d0de870048d8c06744a275c349451
