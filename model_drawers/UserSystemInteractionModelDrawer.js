@@ -11,6 +11,9 @@
 	var dottyUtil = require("../utils/DottyUtil.js");
 	
 	function processLabel(label){
+		if(!label){
+			return "";
+		}
 		var terms = label.split(" ");
 		var reformattedLabel = "";
 		var lineNum = 3;
