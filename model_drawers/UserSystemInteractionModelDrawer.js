@@ -41,7 +41,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/fragment_node_icon.png"/></TD></TR>\
-		 <TR><TD><B>'+label+'</B></TD></TR>\
+		 <TR><TD FIXEDSIZE="TRUE" WIDTH="50%"><B>'+label+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 
