@@ -27,8 +27,125 @@
 //			console.log("file content");
 //			console.log(data);
 			parser.parseString(data, function(err, result) {
+				
+				var Model = {
+						Actors:[],
+						Roles:[],
+						UseCases: [],
+						DomainModel: {
+							Elements: [],
+							Usages: [],
+							Realization:[],
+							Assoc: [],
+							OutputDir : ModelOutputDir+"/domainModel",
+							AccessDir : ModelAccessDir+"/domainModel",
+							DiagramType : "class_diagram",
+		                    InheritanceStats: null
+						}
+				};
+				
 				xmiString = result;
-				constructCallGraph(xmiString);
+				graph = constructCallGraph(xmiString);
+				
+				function findNextActivities(currentActivity, activities){
+					var nextActivities = [];
+					for(var i in activities){
+						var activity = activities[i];
+						if(currentActivity.end == activity){
+							nextActivities.push(activity);
+						}
+					}
+					return nextActivities;
+				}
+				
+				var UseCase = {
+						_id: "src",
+						Name: "src",
+						PrecedenceRelations : [],
+						Activities : [],
+						OutputDir : ModelOutputDir+"/src",
+						AccessDir : ModelAccessDir+"/src",
+						DiagramType : "none"
+//						Attachment: XMIUseCase
+				}
+				
+				var ActivitiesByName = {};
+//				var StimulusByName = {};
+				
+				
+				for(var i in graph.edges){
+					var edge = graph.edges[i];
+					var nextEdges = findNextActivities(edge, graph.edges);
+					
+					activity = ActivitiesByName[edge.start.name+":"+edge.end.name];
+					if(!activity){
+					var activity = {
+							Name: edge.start.name+":"+edge.end.name,
+							_id: edge.start.name+":"+edge.end.name,
+							Type: "controlflow",
+							isResponse: edge.start.isResponse,
+							Stimulus: false,
+							OutScope: false,
+							Group: "System"
+					}
+
+					UseCase.Activities.push(activity);
+					ActivitiesByName[edge.start.name+":"+edge.end.name] = activity;
+					}
+					
+					for(var j in nextEdges){
+						var nextEdge = nextEdges[j];
+						
+						var nextActivity = ActivitiesByName[nextEdge.start.name+":"+nextEdge.end.name];
+						
+						if(!nextActivity){
+						nextActivity = {
+								Name: nextEdge.start.name+":"+nextEdge.end.name,
+								_id: nextEdge.start.name+":"+nextEdge.end.name,
+								Type: "controlflow",
+								isResponse: edge.start.isResponse,
+								Stimulus: false,
+								OutScope: false,
+								Group: "System"
+								
+						}
+
+						UseCase.Activities.push(nextActivity);
+						ActivitiesByName[nextEdge.start.name+":"+nextEdge.end.name] = nextActivity;
+						}
+						
+						UseCase.PrecedenceRelations.push({
+							start: activity,
+							end: nextActivity
+						});
+					}
+					
+					if(activity.isResponse && !ActivitiesByName["stl#"+activity.name]){
+						//create a stimulus nodes for the activity.
+						var stimulus = {
+								Type: "Stimulus",
+								Name: "stl#"+activity.Name,
+								_id: activity._id+"_STL",
+//								Attachment: XMIActivity,
+								Stimulus: true,
+								OutScope: false,
+								Group:  "User"
+						}
+						
+						UseCase.Activities.push(stimulus);
+						ActivitiesByName["stl#"+activity.Name] = stimulus;
+						UseCase.PrecedenceRelations.push({start: stimulus, end: activity});
+					}
+					
+				}
+				
+				Model.UseCases.push(UseCase);
+				
+				
+				if(callbackfunc){
+					callbackfunc(Model);
+				}
+				
 			});
 		});
 	}
@@ -86,11 +203,23 @@
 
 		var edges = [];
 		var nodes = [];
+		var nodesByName = {};
 		
 		for(var i in classUnits){
 			var classUnit = classUnits[i];
 			var calls = classUnit.Calls; 
 			var index = 0;
+			
+			var startNode = nodesByName[classUnit.name];
+			if(!startNode){
+				startNode = {
+						name: classUnit.name,
+						isResponse: isReponseClass(classUnit),
+						isWithinBoundary: classUnit.isWithinBoundary
+					};
+				nodes.push(startNode);
+			}
+			
 			for(var j in calls){
 				var call = calls[j];
 				var targetXMIMethodUnit = jp.query(xmiString, convertToJsonPath(call.to))[0];
@@ -106,17 +235,22 @@
 				console.log("located class");
 				console.log(targetClassUnit);
 
-				var start = classUnit.name;
-				var end = targetClassUnit.name;
-				edges.push({start: start, end: end});
+//				var start = startNode;
+				
+				var endNode = nodesByName[targetClassUnit.name];
+				if(!endNode){
+					endNode = {
+							name: targetClassUnit.name,
+							isResponse: isReponseClass(targetClassUnit),
+							isWithinBoundary: targetClassUnit.isWithinBoundary
+						};
+					nodes.push(endNode);
+				}
+//				var end = targetClassUnit.name;
+				edges.push({start: startNode, end: endNode});
 				
 			}
 			
-			nodes.push({
-				name: classUnit.name,
-				isResponse: isReponseClass(classUnit),
-				isWithinBoundary: classUnit.isWithinBoundary
-			});
 		}
 		
 //		var controlElements = identifyCalls(xmiString, actionElements, methodUnits);
@@ -150,7 +284,7 @@
 			
 		});
 		
-		return edges;
+		return {nodes: nodes, edges: edges};
 		
 	}
 	
@@ -861,8 +995,8 @@
 		var filter = true;
 		
 		edges.forEach((edge) => {
-			var start = edge.start;
-			var end = edge.end;
+			var start = edge.start.name;
+			var end = edge.end.name;
 			var edge = '"'+start+'"->"'+end+'";';
 			if(!drawnEdges[edge]){
 			graph += '"'+start+'"->"'+end+'";';

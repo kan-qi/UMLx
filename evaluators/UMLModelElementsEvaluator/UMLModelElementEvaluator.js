@@ -425,6 +425,8 @@
 								objectdataNum++;
 							}
 			}
+			
+			if(domainModelInfo.InheritanceStats){
                         inheritanceStats = domainModelInfo.InheritanceStats;
                         topLevelClasses = inheritanceStats['topLevelClasses'];
                         couplingBetweenObjects = inheritanceStats['coupling'];
@@ -446,7 +448,7 @@
                             depthInheritanceTree += depth;
                         }
                         averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
-
+			}
 			var usageNum = 0;
 			var realNum = 0;
 			var assocNum = 0;
