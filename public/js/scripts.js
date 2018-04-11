@@ -178,6 +178,7 @@ function query_model_detail_func(){
 	$.ajax({
 		type : 'GET',
 		url : url,
+		async: false,
 		success : function(response) {
 			console.log(response);
 			$("#display-panel").html("");
@@ -189,7 +190,8 @@ function query_model_detail_func(){
 				}
 				console.dir(e);
 			});
-			createCharts();
+//			display();
+//			createCharts();
 		},
 		error : function() {
 			console.log("fail");
