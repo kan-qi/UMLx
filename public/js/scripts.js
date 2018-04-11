@@ -1510,8 +1510,12 @@ function highlightElement_classDia(element) {
        }
 
    }
+function highlightElement(id) {
+    clearHighlight() ;
+document.getElementById(id).style.stroke =  "red";
 
-   function clearHighlight_classDia() {
+}
+   function clearHighlight() {
        var allNodes = document.getElementsByTagName("text");
 
        for(var i = 0; i < allNodes.length; i++) {
