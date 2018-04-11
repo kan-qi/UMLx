@@ -178,7 +178,6 @@ function query_model_detail_func(){
 	$.ajax({
 		type : 'GET',
 		url : url,
-		async:false,
 		success : function(response) {
 			console.log(response);
 			$("#display-panel").html("");
@@ -190,8 +189,12 @@ function query_model_detail_func(){
 				}
 				console.dir(e);
 			});
+
 			display();
 			//createCharts();
+
+			
+
 		},
 		error : function() {
 			console.log("fail");
@@ -1192,7 +1195,7 @@ function createHistogram(dataList, max) {
 				},
 				EXTCLL: {
 					list: [],
-					chartName: "Extra Call Operation Number"
+					chartName: "Extra adCall Operation Number"
 				},
 				INT: {
 					list: [],
@@ -1431,7 +1434,11 @@ function cancelEdit() {
 //    document.getElementById("editNumber19").contentEditable = "false";
 //    document.getElementById("editNumber20").contentEditable = "false";
 //    document.getElementById("editNumber21").contentEditable = "false";
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> ed6b5f0c5e63143a89f1ad69eb042089cc9ac81a
    var attr1 = document.createAttribute("disabled");
    var attr2 = document.createAttribute("disabled");
    var attr3 = document.createAttribute("disabled");

@@ -425,28 +425,31 @@
 								objectdataNum++;
 							}
 			}
-                        inheritanceStats = domainModelInfo.InheritanceStats;
-                        topLevelClasses = inheritanceStats['topLevelClasses'];
-                        couplingBetweenObjects = inheritanceStats['coupling'];
-                        numberOfInheritanceRelationships = Object.keys(inheritanceStats['children']).length;
-                        numberOfClassesInherited = Object.keys(inheritanceStats['children']).length;
-                        numberOfClassesInheritedFrom = inheritanceStats['numInheritedFrom'];
-                        for (var key in inheritanceStats['numOfChildren']) {
-                            numberOfChildren += inheritanceStats['numOfChildren'][key];
-                        }
-                        numberOfDerivedClasses = numberOfChildren;
-                        averageNumberOfChildrenPerBaseClass = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : numberOfChildren / Object.keys(inheritanceStats['numOfChildren']).length;
-                        for (var key in inheritanceStats['tree']) {
-                            depth = 0;
-                            val = inheritanceStats['tree'][key];
-                            while (val !== '#') {
-                                depth++;
-                                val = inheritanceStats['tree'][val];
+                        if (domainModelInfo.InheritanceStats) {
+                            inheritanceStats = domainModelInfo.InheritanceStats;
+                            topLevelClasses = inheritanceStats['topLevelClasses'];
+                            couplingBetweenObjects = inheritanceStats['coupling'];
+                            numberOfInheritanceRelationships = Object.keys(inheritanceStats['children']).length;
+                            numberOfClassesInherited = Object.keys(inheritanceStats['children']).length;
+                            numberOfClassesInheritedFrom = inheritanceStats['numInheritedFrom'];
+                            for (var key in inheritanceStats['numOfChildren']) {
+                                numberOfChildren += inheritanceStats['numOfChildren'][key];
                             }
-                            depthInheritanceTree += depth;
+                            numberOfDerivedClasses = numberOfChildren;
+                            averageNumberOfChildrenPerBaseClass = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : numberOfChildren / Object.keys(inheritanceStats['numOfChildren']).length;
+                            for (var key in inheritanceStats['tree']) {
+                                depth = 0;
+                                val = inheritanceStats['tree'][key];
+                                while (val !== '#') {
+                                    depth++;
+                                    val = inheritanceStats['tree'][val];
+                                }
+                                depthInheritanceTree += depth;
+                            }
+                            averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
                         }
                         averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
-
+			}
 			var usageNum = 0;
 			var realNum = 0;
 			var assocNum = 0;

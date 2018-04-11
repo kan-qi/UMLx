@@ -18,7 +18,7 @@
 	var umlFileManager = require("./UMLFileManager.js");
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
-	var umlFileManager = require('./UMLFileManager');
+//	var umlFileManager = require('./UMLFileManager');
 
 	var RScriptExec = require('./utils/RScriptUtil.js');
 	
