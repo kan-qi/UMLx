@@ -447,8 +447,7 @@
                                 depthInheritanceTree += depth;
                             }
                             averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
-                        }
-                        averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
+//                        averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
 			}
 			var usageNum = 0;
 			var realNum = 0;
