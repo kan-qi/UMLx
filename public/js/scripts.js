@@ -178,6 +178,7 @@ function query_model_detail_func(){
 	$.ajax({
 		type : 'GET',
 		url : url,
+		async:false,
 		success : function(response) {
 			console.log(response);
 			$("#display-panel").html("");
@@ -193,7 +194,7 @@ function query_model_detail_func(){
 			display();
 			//createCharts();
 
-			
+
 
 		},
 		error : function() {
@@ -1437,7 +1438,7 @@ function cancelEdit() {
 <<<<<<< HEAD
 
 =======
-	
+
 >>>>>>> ed6b5f0c5e63143a89f1ad69eb042089cc9ac81a
    var attr1 = document.createAttribute("disabled");
    var attr2 = document.createAttribute("disabled");
