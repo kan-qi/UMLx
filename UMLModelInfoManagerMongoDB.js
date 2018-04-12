@@ -1483,6 +1483,7 @@ function deleteRepo(repoId, callbackfunc) {
 		saveModelInfo : saveModelInfo,
 		queryRepoInfo : queryRepoInfo,
 		queryRepoInfoByPage:queryRepoInfoByPage,
+		queryRepoInfoByPage:queryRepoInfoByPage,
 		queryUseCaseInfo: queryUseCaseInfo,
 		repoDetail:repoDetail,
 		saveEstimation: saveEstimation,
@@ -1612,8 +1613,7 @@ function deleteRepo(repoId, callbackfunc) {
         saveGitInfo:saveGitInfo,
         getGitData : getGitData,
         deactivateUser:deactivateUser,
-        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
-        queryRepoInfoByPage: queryRepoInfoByPage
+        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult
     }
 	
 }());
