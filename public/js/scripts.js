@@ -190,7 +190,7 @@ function query_model_detail_func(){
 				}
 				console.dir(e);
 			});
-//			display();
+			display();
 //			createCharts();
 		},
 		error : function() {
