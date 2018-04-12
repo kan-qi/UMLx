@@ -1457,7 +1457,7 @@ function submitEdit(){
 	    form_data.append('stable_requirements', $("#editNumber19").text());
 	    form_data.append('part_time_staff', $("#editNumber20").text());
 	    form_data.append('difficult_programming_language', $("#editNumber21").text());
-	    form_data.append('requestUUID', $("input[name*='requestUUID']").val());
+	    form_data.append('modelID', $("#mymodelId").val());
 	    
 		$.ajax({
 			type : 'POST',
