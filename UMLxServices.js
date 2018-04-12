@@ -603,10 +603,11 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 
 
 app.get('/deleteModel', function (req, res){
-	console.log("/deleteModel");
+//	console.log("/deleteModel");
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
-	var reanalyzeRepo = req.query['reanalyse_repo'];
+	console.log("/deleteModel");
+//	var reanalyzeRepo = req.query['reanalyse_repo'];
 	var reanalyseRepo = false;
 	umlModelInfoManager.deleteModel(repoId, modelId, function(result){
 		if(!result){
@@ -1377,12 +1378,11 @@ app.get('/testCOCOMODataLoad', function(req, res){
 });
 
 
-
 app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
 ,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
-,{name:'difficult_programming_language', maxCount:1},{name:'requestUUID', maxCount:1}]), function(req,res){
+,{name:'difficult_programming_language', maxCount:1},{name:'modelID', maxCount:1}]), function(req,res){
 	var umlEstimationInfo = {};
 	umlEstimationInfo.distributedSystem = req.body['distributed_system'];
 	umlEstimationInfo.responseTime = req.body['response_time'];
@@ -1405,13 +1405,11 @@ app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_syst
 	umlEstimationInfo.stableRequirements = req.body['stable_requirements'];
 	umlEstimationInfo.partTimeStaff = req.body['part_time_staff'];
 	umlEstimationInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
-	umlEstimationInfo.requestUUID = req.body['requestUUID'];	
+	umlEstimationInfo.modelID = req.body['modelID'];	
 	umlModelInfoManager.saveModelInfoCharacteristics(umlEstimationInfo, function(result,message){		
 		res.json(result);
 	});
 });
-
-
 
 app.post('/saveEstimation', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
 ,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}

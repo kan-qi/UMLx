@@ -450,7 +450,7 @@ function deleteRepo(repoId, callbackfunc) {
     				   	            {
     			   if (err) throw err;
       	            
-       	           db.collection('modelInfo').update( { "formInfo.uuid-page1" : characteristicsInfo.requestUUID },
+    			   db.collection('modelInfo').update( { "_id" : characteristicsInfo.modelID },
        	        		{$set: {  
    	        	    "formInfo.distributed-system": characteristicsInfo.distributedSystem,
         	   	    "formInfo.response-time": characteristicsInfo.responseTime,
@@ -517,11 +517,7 @@ function deleteRepo(repoId, callbackfunc) {
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
             db.collection("modelInfo").aggregate([
-               {
-                   "$match":{
-                       "_id":new mongo.ObjectID(modelId)
-                   }
-               },
+            
                {
                    "$lookup": {
                        "from": "domainModelInfo",
@@ -546,7 +542,7 @@ function deleteRepo(repoId, callbackfunc) {
             });
         });
     }
-
+    
 	/*queryRepoInfo("5a8e109c13a5974144158d99", function(result)
     {
          console.log(result);
@@ -624,7 +620,7 @@ function deleteRepo(repoId, callbackfunc) {
                if (err) throw err;
                //console.log("*******Shown result for queryRepoInfoByPage*******");
                db.close();
-			   
+			   console.log(result);
                callbackfunc(result);
             });
 			
@@ -928,7 +924,7 @@ function deleteRepo(repoId, callbackfunc) {
     function deleteModel(repoId, modelId, callbackfunc){
       MongoClient.connect(url, function(err, db) {
             if (err) throw err;            
-            db.collection('domainModelInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
+            db.collection('domainModelInfo').remove({model_id: modelId}, function(err) {
                    if (err) {
                     console.log(err);
                     if(callbackfunc){
@@ -937,7 +933,7 @@ function deleteRepo(repoId, callbackfunc) {
                     return;
                 }
 
-            db.collection('useCaseInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
+            db.collection('useCaseInfo').remove({model_id: modelId}, function(err) {
                    if (err) {
                     console.log(err);
                     if(callbackfunc){
@@ -946,7 +942,7 @@ function deleteRepo(repoId, callbackfunc) {
                     return;
                 }                                           
 
-          db.collection('modelInfo').remove({_id: mongo.ObjectID(modelId)}, function(err) {
+          db.collection('modelInfo').remove({_id: modelId}, function(err) {
                   if (err) {
                     console.log(err);
                     if(callbackfunc){
@@ -1615,7 +1611,8 @@ function deleteRepo(repoId, callbackfunc) {
         saveGitInfo:saveGitInfo,
         getGitData : getGitData,
         deactivateUser:deactivateUser,
-        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult
+        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
+        queryRepoInfoByPage: queryRepoInfoByPage
     }
 	
 }());
