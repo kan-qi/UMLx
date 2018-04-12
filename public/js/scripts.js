@@ -190,7 +190,8 @@ function query_model_detail_func(){
 				}
 				console.dir(e);
 			});
-//			display();
+			//console.log("hi");
+			display();
 //			createCharts();
 		},
 		error : function() {
@@ -1431,7 +1432,7 @@ function cancelEdit() {
 //    document.getElementById("editNumber19").contentEditable = "false";
 //    document.getElementById("editNumber20").contentEditable = "false";
 //    document.getElementById("editNumber21").contentEditable = "false";
-	
+
    var attr1 = document.createAttribute("disabled");
    var attr2 = document.createAttribute("disabled");
    var attr3 = document.createAttribute("disabled");

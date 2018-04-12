@@ -1,5 +1,11 @@
-
-
+// function display()
+// {
+//   var repoID = $("#myrepoId").val();
+//  var modelID = $("#mymodelId").val();
+//  console.log(repoID);
+//  console.log(modelID);
+// console.log("hi");
+// }
 function display()
 {
   var repoID = $("#myrepoId").val();
