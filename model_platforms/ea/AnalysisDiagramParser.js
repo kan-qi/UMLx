@@ -36,11 +36,11 @@
 		var Activities = [];
 		var PrecedenceRelations = [];
 		
-		var Objects = [];
-		var Dependencies = [];
-		
 		var ActivitiesByID = [];
 		var XMIInstanceSpecificationsByID = {};
+
+		var Objects = [];
+		var Dependencies = [];
 		
 		//the nested chacking has not succeeded
 //		console.log('$..element[?(@.model[?(@.$.owner ==\''+UseCase._id+'\')])]');
@@ -128,6 +128,11 @@
 					});
 //				}
 			}
+			console.log("checking robustness details");
+			console.log(Objects);
+			//throw "objects checing da ting";
+			console.log(Dependencies);
+			
 		}
 		
 		var Stimuli = [];
@@ -163,23 +168,19 @@
 		
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
+		UseCase.Components = true;
 		
-		console.log("checking analysis activities");
-		console.log(Activities);
-		console.log(PrecedenceRelations);
-		
-//		drawRobustnessDiagram({
-//			Objects:Objects,
-//			Dependencies: Dependencies
-//		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", function(){
-//			console.log("outputting analysis diagram is finished.");
-//		});
-	}
+//		console.log("checking analysis activities");
+//		console.log(Activities);
+//		console.log(PrecedenceRelations);
 	
 
 //		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
 		
 		//Aishwarya
+
+
+
 		function drawBoundaryNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
@@ -204,6 +205,14 @@
 		</TABLE>>];';
 		}
 
+			function drawNode(id, label){
+		return id+'[label=<\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
+			<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
+		 <TR><TD><B>'+label+'</B></TD></TR>\
+		</TABLE>>];';
+	}
+
 		function drawActorNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
@@ -213,69 +222,69 @@
 		}
 		//Aishwarya
 
+/*
+			const UseCaseRobust = {
+			Objects: [
+				{
+					id: 1,
+					name: 'Actor1',
+					type: 'Actor'
+				},
+				{
+					id: 2,
+					name: 'Buy tickets interface',
+					type: 'Boundary'
+				},
+				{
+					id: 3,
+					name: 'Payments success message',
+					type: 'Boundary'
+				},
+				{
+					id: 4,
+					name: 'Pay the bill',
+					type: 'Control'
+				},
+				{
+					id: 5,
+					name: 'Save bill records',
+					type: 'Entity'
+				}
+			],
+			Dependencies: [
+				{
+					start: 1,
+					end: 2
+				},
+				{
+					start: 1,
+					end: 3
+				},
+				{
+					start: 2,
+					end: 4
+				},
+				{
+					start: 4,
+					end: 3
+				},
+				{
+					start: 4,
+					end: 5
+				}
+			]
+		};*/
 
-//			const UseCaseRobust = {
-//			Activities: [
-//				{
-//					id: 1,
-//					name: 'Actor1',
-//					type: 'Actor'
-//				},
-//				{
-//					id: 2,
-//					name: 'Buy tickets interface',
-//					type: 'Boundary'
-//				},
-//				{
-//					id: 3,
-//					name: 'Payments success message',
-//					type: 'Boundary'
-//				},
-//				{
-//					id: 4,
-//					name: 'Pay the bill',
-//					type: 'Control'
-//				},
-//				{
-//					id: 5,
-//					name: 'Save bill records',
-//					type: 'Entity'
-//				}
-//			],
-//			PrecedenceRelations: [
-//				{
-//					start: 1,
-//					end: 2
-//				},
-//				{
-//					start: 1,
-//					end: 3
-//				},
-//				{
-//					start: 2,
-//					end: 4
-//				},
-//				{
-//					start: 4,
-//					end: 3
-//				},
-//				{
-//					start: 4,
-//					end: 5
-//				}
-//			]
-//		};
-
-		
 		//update the variables to the correct names.
-  function drawRobustnessDiagram(Components, UseCase, graphFilePath, callbackfunc) {
+  		function drawRobustnessDiagram(Components, UseCase, graphFilePath, callbackfunc) {
 	  		UseCase.DiagramType = "robustness_diagram";
-			let activities = UseCase.Activities;
-			let precedenceRelations = UseCase.PrecedenceRelations;
+			let objects = Components.Objects;
+			let dependencies = Components.Dependencies;
 			let graph = 'digraph g {\
 				fontsize=26\
 				rankdir="LR"\
-				node [shape=plaintext fontsize=24]';
+				node [shape=plaintext fontsize=24]\
+			';
 			let drawnObjects = [];
 			function DottyDraw() {
 				this.drawnObjects = [];
@@ -291,50 +300,70 @@
 			}
 			var dottyDraw = new DottyDraw();
 			
-			activities.forEach((_activity) => {
+			objects.forEach((_object) => {
 				var node;
-				switch(_activity.type)
+				switch(_object.type)
 				{
 					case "Actor":
-						node = drawActorNode(_activity.id, _activity.name);
+						node = drawActorNode(_object.id, _object.name);
 						break;
-					case "Boundary":
-						node = drawBoundaryNode(_activity.id, _activity.name);
+					case "boundary":
+						node = drawBoundaryNode(_object.id, _object.name);
 						break;
-					case "Control":
-						node = drawControlNode(_activity.id, _activity.name);
+					case "control":
+						node = drawControlNode(_object.id, _object.name);
 						break;
-					case "Entity":
-						node = drawEntityNode(_activity.id, _activity.name);
+					case "Object":
+						node = drawEntityNode(_object.id, _object.name);
 						break;
 					default:
-						node = drawNode(_activity.id, _activity.name);
+						node = drawNode(_object.id, _object.name);
 						break;
 				}
 				
 				graph += dottyDraw.draw(node);
 			});
 	
-			precedenceRelations.forEach((_precedenceRelation) => {
-				var start = _precedenceRelation.start;
-				var end = _precedenceRelation.end;
+			dependencies.forEach((_dependency) => {
+				var start = _dependency.start;
+				var end = _dependency.end;
 				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
 			});
 	
-			graph += 'imagepath = \"./\"}';
+			//graph += 'imagepath = \"./\"}';
+			var graphImagePathVariableToWriteAfterTheOtherThingIsWritten = 'imagepath = \"./\"}';
 			dottyUtil = require("../../utils/DottyUtil.js");
-			dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-				console.log("drawing is down");
-			});
-	
+			//dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+			//	console.log("drawing is down");
+			//});
+			fs.writeFile(
+				graphFilePath,
+				graph,
+				() => fs.appendFile(
+						graphFilePath,
+						graphImagePathVariableToWriteAfterTheOtherThingIsWritten,
+						() => {
+							//the following line is actually useless
+							graph += graphImagePathVariableToWriteAfterTheOtherThingIsWritten;
+							dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+								console.log("Augmented graph and generated svg`");
+							});
+						})
+			);
 			return graph;
-		
+		}
 	
-
-		//const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
-		drawRobustnessDiagram(UseCaseRobust, 'Robuststuff.dotty', () => {
+		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
+		drawRobustnessDiagram({Objects:Objects, Dependencies: Dependencies}, UseCase, UseCase.OutputDir+"/robust_diagram.dotty", () => {
 			console.log('Aishwarya drew the diagram.');
 		});
+
+/* 		 drawRobustnessDiagram({
+			Objects:Objects,
+			Dependencies: Dependencies
+		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", () => {
+			console.log("outputting analysis diagram is finished.");
+		});  */
 	}
  
 	function standardizeName(name){
