@@ -255,37 +255,37 @@
 		for(var node in Activities) {
 			//starting node
 			if(Activities[node].Type == "uml:InitialNode") {
-				graphOutput += (Activities[node]._id + "[shape=circle, color=black, style=filled, label=\"\"];\n");
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=circle, color=black, style=filled, label=\"\"];\n");
 				continue;
 			}
 			//ending node
 			else if(Activities[node].Type == "uml:ActivityFinalNode") {
-				graphOutput += (Activities[node]._id + "[shape=doublecircle, color=black, style=filled, label=\"\"];\n");
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=doublecircle, color=black, style=filled, label=\"\"];\n");
 				continue;
 			}
 			//fork node
 			else if(Activities[node].Type == "uml:ForkNode") {
-				graphOutput += (Activities[node]._id + "[shape=rect, width=1, height=0.2, color=black, style=filled, fixedsize=true, label=\"\"];\n");
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=rect, width=1, height=0.2, color=black, style=filled, fixedsize=true, label=\"\"];\n");
 				forkNodes.push(Activities[node]._id);
 			}
 			//node with no edges
 			else if(!(Activities[node]._id in activityEdges)) {
 				if(nodesWithEdges.indexOf(Activities[node]._id) != -1) {
-					graphOutput += (Activities[node]._id + "[shape=box, style=rounded, width=3, height=1, label=\"" + (Activities[node].Name || Activities[node]._id).replace(/\"/g,'\\"') + "\"];\n");
+					graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=box, style=rounded, width=3, height=1, label=\"" + (Activities[node].Name || Activities[node]._id).replace(/\"/g,'\\"') + "\"];\n");
 				}
 				continue;
 			}
 			//decision node
 			else if(activityEdges[Activities[node]._id].length >= 2) {
 				var decisionName = "decision" + numDecision;
-				graphOutput += (Activities[node]._id + "[shape=box, style=rounded, width=3, height=1, fixedsize=true, label=\"" + Activities[node].Name.replace(/\"/g,'\\"') + "\"];\n");
- 				graphOutput += decisionName + "[shape=diamond, width=0.5, height=0.5, fixedsize=true, label=\"\"];\n";
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=box, style=rounded, width=3, height=1, fixedsize=true, label=\"" + Activities[node].Name.replace(/\"/g,'\\"') + "\"];\n");
+ 				graphOutput += decisionName + "[id=" + Activities[node]._id + ", shape=diamond, width=0.5, height=0.5, fixedsize=true, label=\"\"];\n";
 				decNodes[Activities[node]._id] = decisionName;
 				numDecision++;
 			}
 			//action node
 			else {
-				graphOutput += (Activities[node]._id + "[shape=box, style=rounded, width=3, height=1, label=\"" + Activities[node].Name + "\"];\n");
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=box, style=rounded, width=3, height=1, label=\"" + Activities[node].Name + "\"];\n");
 			}
 		}
 
