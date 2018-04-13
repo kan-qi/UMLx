@@ -263,8 +263,8 @@
 //		console.log(XMIClasses);
 //		debug.writeJson("XMIClasses", XMIClasses);
 //		
-//	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"uml_diagram.svg", function(){
-//		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.svg");
+//	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"uml_diagram.dotty", function(){
+//		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
 //	   });
 //		
 		

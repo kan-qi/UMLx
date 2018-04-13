@@ -53,8 +53,8 @@ data <- read.csv(dataUrl, header=TRUE)
 
 png(filename=paste(outputPath,"project_characteristics.png", sep="/"),
 		units="in",
-		width=4*2, 
-		height=3*2, 
+		width=3*2, 
+		height=2*2, 
 		pointsize=12,
 		res=96)
 
@@ -68,8 +68,8 @@ print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, projectBar, ncol=2))
 #analysis of the counting results.
 png(filename=paste(outputPath,"project_counting_results.png", sep="/"),
 		units="in",
-		width=4*2, 
-		height=3*2, 
+		width=3*2, 
+		height=2*2, 
 		pointsize=12,
 		res=96)
 

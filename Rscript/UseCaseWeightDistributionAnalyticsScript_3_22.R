@@ -50,7 +50,7 @@ svg(paste(outputDir,"use_case_weight_distributions.svg",sep="/"), width=10, heig
 print("use case weight info")
 print(useCaseWeightInfo)
 
-meltUseCaseWeightInfo = melt(useCaseWeightInfo, id.vars="Tran_Num", value.name="Value", variable.name="Wght.Schm")
+meltUseCaseWeightInfo = melt(useCaseWeightInfo, id.vars="Tran_Num", value.name="Value", variable.name="Wght.Schm.")
 print("melt use case weight info")
 print(meltUseCaseWeightInfo)
 
@@ -62,8 +62,8 @@ meltUseCaseWeightInfo$Value <- meltUseCaseWeightInfo$Value/maxWeight*80
 #print(
 #	ggplot()+
 #	geom_density(data=transactionInfo, aes(x=NT), color="gray", fill="gray",alpha=.8, adjust=1.5)+
-#	geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, linetype=Wght.Schm),size=0.5)+
-#	geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, shape=Wght.Schm), size=2, fill="white")+
+#	geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm., color=Wght.Schm., linetype=Wght.Schm.),size=0.5)+
+#	geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm., color=Wght.Schm., shape=Wght.Schm.), size=2, fill="white")+
 #	scale_linetype_manual(values = c(1,2,1,1,1,1)) +
 #	scale_shape_manual(values=c(0,1,2,3,1,4))+
 #	geom_vline(xintercept=c(3,7),linetype="dashed", color="gray55")+
@@ -76,11 +76,11 @@ print(
 		ggplot()+
 		geom_density(data=transactionInfo, aes(x=NT), color="gray", fill="gray",alpha=.8, adjust=1.5)+
 		geom_histogram(data=transactionInfo, aes(x=NT), binwidth=.5, colour="gray55", fill="gray55")+theme_bw()+
-		geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, linetype=Wght.Schm),size=0.5)+
-		geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm, color=Wght.Schm, shape=Wght.Schm), size=2, fill="white")+
+		geom_line(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm., color=Wght.Schm., linetype=Wght.Schm.),size=0.5)+
+		geom_point(data=meltUseCaseWeightInfo, aes(x=Tran_Num, y=Value, group=Wght.Schm., color=Wght.Schm., shape=Wght.Schm.), size=2, fill="white")+
 		scale_linetype_manual(values = c(1,2,1,1,1,1)) +
 		scale_shape_manual(values=c(0,1,2,3,1,4))+
-		geom_vline(xintercept=c(3,7),linetype="dashed", color="gray55")+
+		geom_vline(xintercept=c(3,7),linetype="dashed", color="gray30", size=1)+
 		#ggtitle("Use Case Weights")+
 		scale_y_continuous(sec.axis = sec_axis(~.*maxWeight*0.0125, name="Weight"), breaks = seq(0, 80, 15),
 				limits=c(0, 80))+
