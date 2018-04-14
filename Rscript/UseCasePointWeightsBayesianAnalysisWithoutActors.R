@@ -70,7 +70,7 @@ UCPHist4 <- ggplot(useCaseData, aes(x=EF))+geom_histogram(binwidth=0.02, colour=
 UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=30, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")+theme_bw()
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, ncol=2))
-
+print("hello");
 png(filename=paste(outputPath,"project_UC_counting_statistics_for_bayesian_analysis.png", sep="/"),
 		units="in",
 		width=4*2, 

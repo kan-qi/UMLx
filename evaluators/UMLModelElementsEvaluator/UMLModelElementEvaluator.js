@@ -155,7 +155,7 @@
 //		console.log(domainModelInfo);
 		return domainModelInfo["ElementAnalytics"].AttributeNum + ","
 		+ domainModelInfo["ElementAnalytics"].OperationNum + ","
-		+ domainModelInfo["ElementAnalytics"].EntityNum  + ","
+		+ domainModelInfo["ElementAnalytics"].ClassNum  + ","
                 + domainModelInfo["ElementAnalytics"].TopLevelClasses + ","
                 + domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree + ","
                 + domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass + ","
@@ -336,6 +336,7 @@
 				AttributeNum :0,
 				OperationNum :0,
 				EntityNum :0,
+				ClassNum: 0,
                                 TopLevelClasses :0,
                                 AverageDepthInheritanceTree :0,
                                 AverageNumberOfChildrenPerBaseClass :0,
@@ -382,6 +383,7 @@
 			var attributeNum = 0;
 			var operationNum = 0;
 			var entityNum = 0;
+			var classNum = 0;
                         var topLevelClasses = 0;
                         var averageDepthInheritanceTree = 0;
                         var averageNumberOfChildrenPerBaseClass = 0;
@@ -401,6 +403,7 @@
 			for ( var i in domainModelInfo.Elements) {
                             var element = domainModelInfo.Elements[i];
                             entityNum++;
+                            classNum++;
                             for ( var j in element.Attributes) {
                                 var attribute = element.Attributes[j];
                                 attributeNum++;
@@ -470,6 +473,7 @@
 			domainModelInfo["ElementAnalytics"].AttributeNum = attributeNum;
 			domainModelInfo["ElementAnalytics"].OperationNum = operationNum;
 			domainModelInfo["ElementAnalytics"].EntityNum = entityNum;
+			domainModelInfo["ElementAnalytics"].ClassNum = classNum;
                         domainModelInfo["ElementAnalytics"].TopLevelClasses = topLevelClasses;
                         domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree = averageDepthInheritanceTree;
                         domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
