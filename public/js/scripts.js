@@ -43,8 +43,20 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   var svgDoc = svg.contentDocument;
   var elementToHighlight = svgDoc.getElementById(idString);
 
-  if(diagramType === "analysis_diagram"){
-      document.getElementById("node1").style.setProperty('fill', 'pink', '');
+  if(diagramType === "robustness_diagram") {
+      const edges = Array.prototype.slice.apply(svgDoc.getElementsByClassName('edge'));
+      idString = idString.replace('___', '->');
+      for(var i = 0; i < edges.length; i++) {
+        if(edges[i].firstElementChild.textContent === idString) {
+            edges[i].children[1].setAttribute('stroke', 'blue');
+            edges[i].children[2].setAttribute('stroke', 'blue');
+        }
+        else {
+            edges[i].children[1].setAttribute('stroke', 'black');
+            edges[i].children[2].setAttribute('stroke', 'black');
+        }
+      }
+      //elementToHighlight.setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
   }
   else if(diagramType === "sequence_diagram"){
       //call kate's, not ready.
