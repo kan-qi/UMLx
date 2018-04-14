@@ -38,7 +38,13 @@ function model_file_upload_fnc() {
 }
 
 function highlight_diagram_element(idString, elementType, diagramType) {
-  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+	console.log("higl func")
+//  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+  
+  var svg = document.getElementsByClassName("use-case")[0];
+  var svgDoc= svg.contentDocument;
+  var elementToHighlight = svgDoc.getElementById(idString);
+  
   if(diagramType === "analysis_diagram"){
 	  document.getElementById("node1").style.setProperty('fill', 'pink', '');
   }
@@ -50,7 +56,15 @@ function highlight_diagram_element(idString, elementType, diagramType) {
 	  highlight_activity_diagram(name, elementType);
   }
   else if(diagramType === "class_diagram"){
+	  console.log("class higl func");
 	  //call Lingquan's method.
+	  if (elementToHighlight) {
+//		  highlightElement(idString); 
+//		  highlightElement(elementToHighlight); 
+		  highlightElement_classDia(elementToHighlight);
+	  }
+	  
+	  
   }
   else if(diagramType === "usim"){
 	  // leave it now.
@@ -1506,14 +1520,16 @@ function cancelEdit() {
 
 
 function highlightElement_classDia(element) {
-      clearHighlight_classDia() ;
-       var allNodes = document.getElementById(element).getElementsByTagName("text");
+      clearHighlight() ;
+       //var allNodes = document.getElementById(element).getElementsByTagName("text");
+       var allNodes = element.getElementsByTagName("text");
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "red";
        }
 
    }
 function highlightElement(id) {
+	console.log("enter highlight");
     clearHighlight() ;
 document.getElementById(id).style.stroke =  "red";
 

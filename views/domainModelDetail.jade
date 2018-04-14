@@ -13,8 +13,8 @@ if domainModel
   div.tab-pane.fade.in.active(id="domain-model-info-pane")
    div.domain-model-info
     button(onclick="toggleDomainList()", class="big-button") Toggle List
-    object.use-case(data=domainModel.AccessDir+"/domainModel.svg")
-    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
+    object.use-case(data=domainModel.AccessDir+"/uml_diagram.svg")
+    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/uml_diagram.svg")
     button(onclick="toggleZoom()", class="big-button") Enable Zoom
    div.domain-model-info-content(style="display: none;", id="domain-model-list")
     ul.nav.nav-tabs
@@ -34,7 +34,7 @@ if domainModel
         each element in domainModel.Elements
           if element.Attributes
            each attribute,key in element.Attributes
-            tr(onclick="highlight_diagram_element('#{attribute._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
+            tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
              th #{key}
              th
               span.domain-model-attribute #{attribute.Name}
@@ -51,7 +51,7 @@ if domainModel
          each element in domainModel.Elements
           if element.Operations
            each operation,key in element.Operations
-            tr(onclick="highlight_diagram_element('#{operation._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
+            tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
              th #{key}
              th
                span.domain-model-operation #{operation.Name}
