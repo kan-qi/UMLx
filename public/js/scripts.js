@@ -43,7 +43,11 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   var svgDoc = svg.contentDocument;
   var elementToHighlight = svgDoc.getElementById(idString);
 
-  if(diagramType === "robustness_diagram") {
+  if(diagramType === "analysis_diagram"){
+           //have put robustness diagram script under robustness diagram - Aishwarya
+  }
+    
+  else if(diagramType === "robustness_diagram") {
       const edges = Array.prototype.slice.apply(svgDoc.getElementsByClassName('edge'));
       idString = idString.replace('___', '->');
       for(var i = 0; i < edges.length; i++) {
@@ -56,8 +60,8 @@ function highlight_diagram_element(idString, elementType, diagramType) {
             edges[i].children[2].setAttribute('stroke', 'black');
         }
       }
-      //elementToHighlight.setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
   }
+    
   else if(diagramType === "sequence_diagram"){
       //call kate's, not ready.
   }
