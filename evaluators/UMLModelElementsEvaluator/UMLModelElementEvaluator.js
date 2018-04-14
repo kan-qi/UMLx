@@ -86,7 +86,7 @@
 				+ modelInfo["ElementAnalytics"].AvgRole + ","
 				+ modelInfo["ElementAnalytics"].BoundaryNum + ","
 				+ modelInfo["ElementAnalytics"].ControlNum + ","
-				+ modelInfo["ElementAnalytics"].EnityNum + ","
+				+ modelInfo["ElementAnalytics"].EntityNum + ","
 				//metrics for the domain model
 				+ modelInfo["ElementAnalytics"].AttributeNum + ","
 				+ modelInfo["ElementAnalytics"].OperationNum + ","
