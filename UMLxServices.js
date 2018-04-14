@@ -511,7 +511,7 @@ app.post('/uploadUseCaseFile', upload.fields([{name:'usecase-file',maxCount:1}, 
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlEvaluator.loadUseCaseEmpirics(repoInfo, function(repo){
 			if(!repo){
-				res.end('load error!');
+				res.end('lod error!');
 				return;
 			}
 			umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
@@ -539,18 +539,18 @@ app.post('/uploadModelFile', upload.fields([{name:'model-file',maxCount:1}, {nam
 	});
 })
 
-app.post('/uploadCOCOMOFile', upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
-	console.log('/uploadCOCOMOFile');
-	var COCOMOFilePath = req.files['COCOMO-file'][0].path;
-	var repoId = req.userInfo.repoId;
-	res.end('<h1>function is not implemented');
-	// COCOMOCalculator.loadCOCOMOData(repoId, function(repoInfo){
-	// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
-	// 		console.log(modelInfo);
-	// 		res.redirect('/');
-	// 	});
-	// }, COCOMOFilePath);
-})
+//app.post('/uploadCOCOMOFile', upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
+//	console.log('/uploadCOCOMOFile');
+//	var COCOMOFilePath = req.files['COCOMO-file'][0].path;
+//	var repoId = req.userInfo.repoId;
+//	res.end('<h1>function is not implemented');
+//	// COCOMOCalculator.loadCOCOMOData(repoId, function(repoInfo){
+//	// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
+//	// 		console.log(modelInfo);
+//	// 		res.redirect('/');
+//	// 	});
+//	// }, COCOMOFilePath);
+//})
 
 /*
  * To integrate the model version control system, to reflect the evolution of the architecture for certain process.
@@ -662,53 +662,53 @@ app.get('/requestDomainModelDetail', function (req, res){
 })
 
 
-app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
-	console.log("/loadEmpiricalUsecaseDataForRepo");
-	var repoId = req.userInfo.repoId
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-	umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
-		if(!repo){
-			res.end('load error!');
-			return;
-		}
-
-//		umlEvaluator.evaluateRepo(repo, function(){
-//			console.log("repo analysis complete");
+//app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
+//	console.log("/loadEmpiricalUsecaseDataForRepo");
+//	var repoId = req.userInfo.repoId
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//	umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
+//		if(!repo){
+//			res.end('load error!');
+//			return;
+//		}
+//
+////		umlEvaluator.evaluateRepo(repo, function(){
+////			console.log("repo analysis complete");
+////		});
+////		console.log(repo);
+////		console.log(modelInfo);
+//		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
+////			console.log(modelInfo);
+//				res.redirect('/');
 //		});
-//		console.log(repo);
-//		console.log(modelInfo);
-		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
-//			console.log(modelInfo);
-				res.redirect('/');
-		});
+//
+//	});
+//	});
+//})
 
-	});
-	});
-})
-
-app.get('/loadEmpiricalModelDataForRepo', function (req, res){
-	console.log("/loadEmpiricalModelDataForRepo");
-	var repoId = req.userInfo.repoId
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-	umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
-		if(!repo){
-			res.end('load error!');
-			return;
-		}
-
-//		umlEvaluator.evaluateRepo(repo, function(){
-//			console.log("repo analysis complete");
+//app.get('/loadEmpiricalModelDataForRepo', function (req, res){
+//	console.log("/loadEmpiricalModelDataForRepo");
+//	var repoId = req.userInfo.repoId
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//	umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
+//		if(!repo){
+//			res.end('load error!');
+//			return;
+//		}
+//
+////		umlEvaluator.evaluateRepo(repo, function(){
+////			console.log("repo analysis complete");
+////		});
+////		console.log(repo);
+////		console.log(modelInfo);
+//		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
+////			console.log(modelInfo);
+//				res.redirect('/');
 //		});
-//		console.log(repo);
-//		console.log(modelInfo);
-		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
-//			console.log(modelInfo);
-				res.redirect('/');
-		});
-
-	});
-	});
-})
+//
+//	});
+//	});
+//})
 
 app.get('/deleteUseCase', function (req, res){
 	console.log("/deleteUseCase");
@@ -1282,12 +1282,12 @@ app.get('/testActivityDiagramExtraction', function(req, res){
 	});
 });
 
-app.get('/testCOCOMODataLoad', function(req, res){
-	var cocomoCalculator = require("./evaluators/COCOMOEvaluator/COCOMOCalculator.js")
-	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
-		res.end(outputStr);
-	});
-});
+//app.get('/testCOCOMODataLoad', function(req, res){
+//	var cocomoCalculator = require("./evaluators/COCOMOEvaluator/COCOMOCalculator.js")
+//	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
+//		res.end(outputStr);
+//	});
+//});
 
 app.get('/deleteUser', function(req,res){
 	var userId = req.query['uid'];

@@ -80,7 +80,6 @@
 				+ modelInfo['TransactionAnalytics'].NT+ ","
 				+ modelInfo['TransactionAnalytics'].Tran_Length+ ","
 				+ modelInfo['TransactionAnalytics'].Arch_Diff;
-				;
 	}
 	
 	function toUseCaseEvaluationHeader() {

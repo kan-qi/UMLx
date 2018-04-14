@@ -14,6 +14,7 @@
 	function runRScript(command, callbackfunc){
 //		console.log('generate model Analytics');
 		console.log(command);
+		return;
 		commandPool.push({
 			command: command,
 			callbackfunc: callbackfunc
