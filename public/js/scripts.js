@@ -981,6 +981,22 @@ function toggleDomainList() {
 // added for zoom control on svg
 
 
+function toggleDiagram() {
+	var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
+	var pos = obj_data.search("/useCase.svg");
+	var new_obj_data = "";
+	if (pos != -1) {
+		new_obj_data = obj_data.slice(0, pos)+"/uml_diagram.svg";
+	} else {
+		pos = obj_data.search("uml_diagram.svg");
+		new_obj_data = obj_data.slice(0, pos)+"/useCase.svg";
+	}
+	document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
+}
+
+function get_diagram_name() {
+	return diagram_name;
+}
 
 
 
@@ -1432,7 +1448,7 @@ function cancelEdit() {
 //    document.getElementById("editNumber19").contentEditable = "false";
 //    document.getElementById("editNumber20").contentEditable = "false";
 //    document.getElementById("editNumber21").contentEditable = "false";
-  
+
    var attr1 = document.createAttribute("disabled");
    var attr2 = document.createAttribute("disabled");
    var attr3 = document.createAttribute("disabled");
