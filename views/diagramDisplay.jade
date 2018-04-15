@@ -4,7 +4,15 @@ if useCaseInfo
   button(onclick="toggleDiagram()", class="big-button") Toggle Diagram
   div.use-case-info(id="use-case-diagram")
     //Toggle Diagram should be able to toggle betwee useCase.svg and uml_diagram.svg
+<<<<<<< HEAD
     object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg")
+=======
+    object.use-case(data=useCaseInfo.AccessDir+"/robust_diagram.svg")
+      div(id="lightgallery")
+        div(data-src=useCaseInfo.AccessDir+"/robust_diagram.svg")
+          img.use-case(src=useCaseInfo.AccessDir+"/robust_diagram.svg", id="use-case-diagram-img" onclick="window.open('"+useCaseInfo.AccessDir+"/robust_diagram.svg', '_blank')")
+          img.use-case(src=useCaseInfo.AccessDir+"/robust_diagram.svg", id="use-case-diagram-img")
+>>>>>>> dd19e1fcb276247427c185b1e0287848e084b3c7
     
     
 

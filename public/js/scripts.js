@@ -46,7 +46,11 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   if(diagramType === "analysis_diagram"){
            //have put robustness diagram script under robustness diagram - Aishwarya
   }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> dd19e1fcb276247427c185b1e0287848e084b3c7
   else if(diagramType === "robustness_diagram") {
       const edges = Array.prototype.slice.apply(svgDoc.getElementsByClassName('edge'));
       idString = idString.replace('___', '->');
@@ -61,7 +65,11 @@ function highlight_diagram_element(idString, elementType, diagramType) {
         }
       }
   }
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> dd19e1fcb276247427c185b1e0287848e084b3c7
   else if(diagramType === "sequence_diagram"){
       //call kate's, not ready.
   }
@@ -675,6 +683,7 @@ function inviteFormSubmit (e){
         $('#messageDiv').html(alertDiv);
         return false;
     }
+<<<<<<< HEAD
 
     if(!validateEmail(email)){
         alertDiv+='Please enter a valid email </div>'
@@ -693,6 +702,78 @@ function inviteFormSubmit (e){
         enctype : 'multipart/form-data',
         success : function(response) {
 
+            if(response.success==true){
+                console.log('success');
+                successDiv+=response.message+' </div>';
+                $('#messageDiv').html(successDiv);
+
+                return false;
+
+            } else {
+
+                console.log('failure');
+                alertDiv+=response.message+' </div>';
+                $('#messageDiv').html(alertDiv);
+                return false;
+
+            }
+        },
+        error : function() {
+            console.log("fail");
+            alert("There was an error signing up");
+        }
+    });
+
+    return false;
+}
+=======
+>>>>>>> dd19e1fcb276247427c185b1e0287848e084b3c7
+
+    if(!validateEmail(email)){
+        alertDiv+='Please enter a valid email </div>'
+        $('#messageDiv').html(alertDiv);
+        return false;
+    }
+
+
+    $.ajax({
+        type : 'POST',
+        url : "inviteUser",
+        cache : false,
+        processData : false, // Don't process the files
+        contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+        data : formData,
+        enctype : 'multipart/form-data',
+        success : function(response) {
+
+<<<<<<< HEAD
+function drawChartBySVG(){
+    // set the dimensions and margins of the use case
+    var margin = {top: 20, right: 20, bottom: 50, left: 70},
+        width = 920 - margin.left - margin.right,
+        height = 400 - margin.top - margin.bottom;
+
+    // parse the date / time
+//  var parseTime = d3.timeParse("%d-%b-%y");
+
+    // set the ranges
+    var xValue = function(d) { return d.measurement;}; // data -> value
+    var x = d3.scaleLinear().range([0, width]);
+    var xMap = function(d) { return x(xValue(d));}; // data -> display
+    var yValue = function(d) { return d.ph;}; // data -> value
+    var y = d3.scaleLinear().range([height, 0]);
+    var yMap = function(d) { return y(yValue(d));}; // data -> display
+
+    var lineData = [],
+    n = 100,
+    a = 1,
+    b = 2;
+
+    for (var k = 0; k < 1000; k++) {
+    lineData.push({x: k, y: a * k+300});
+    }
+
+=======
             if(response.success==true){
                 console.log('success');
                 successDiv+=response.message+' </div>';
@@ -747,6 +828,7 @@ function drawChartBySVG(){
     lineData.push({x: k, y: a * k+300});
     }
 
+>>>>>>> dd19e1fcb276247427c185b1e0287848e084b3c7
     console.log(lineData);
 
     var line = d3.line()
@@ -983,8 +1065,12 @@ function load_file_upload_fnc(type) {
 }
 
 function toggleQueryList() {
+<<<<<<< HEAD
     // $("#use-case-list").slideToggle();
 		$('#use-case-list').modal('toggle');
+=======
+    $("#use-case-list").slideToggle();
+>>>>>>> dd19e1fcb276247427c185b1e0287848e084b3c7
 }
 
 function toggleZoom() {
@@ -1004,7 +1090,11 @@ function toggleZoom() {
 
 
 function toggleDomainList() {
+<<<<<<< HEAD
     $('#domain-model-list').modal('toggle');
+=======
+    $("#domain-model-list").slideToggle();
+>>>>>>> dd19e1fcb276247427c185b1e0287848e084b3c7
 }
 
 // added for zoom control on svg

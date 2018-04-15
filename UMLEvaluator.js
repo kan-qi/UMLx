@@ -45,6 +45,7 @@
 			var ModelDataFilePath = modelFile ? modelFile :repoInfo.outputDir+"/ModelDataLoad.csv";
 			console.log('loadModelEmpirics:', ModelDataFilePath);
 			umlFileManager.loadCSVFile(ModelDataFilePath, true, function(data){
+//				console.log(data);
 				var modelDataArray = {};
 				for(var i in data){
 					var dataElement = data[i];
@@ -59,7 +60,7 @@
 					}
 				}
 				
-				var models = repoInfo.models;
+				var models = repoInfo.Models;
 				var modelIndex = 0;
 				for(var i in models){
 					var model = models[i];
@@ -69,15 +70,15 @@
 						continue;
 					}
 					
-//					if(!model.ModelEmpirics){
-//						model.ModelEmpirics = {};
-//					}
+					if(!model.ModelEmpirics){
+						model.ModelEmpirics = {};
+					}
 					
-//					for(var j in modelDataArray[modelName]){
-//						model.ModelEmpirics[j] = modelDataArray[modelName][j];
-//					}
+					for(var j in modelDataArray[modelName]){
+						model.ModelEmpirics[j] = modelDataArray[modelName][j];
+					}
 					
-//					console.log(model.ModelEmpirics);
+					console.log(model.ModelEmpirics);
 					
 					for (var j in evaluators){
 						var evaluator = evaluators[j];
@@ -85,6 +86,7 @@
 							evaluator.loadModelEmpirics(modelLoad, model, modelIndex);
 						}
 					}
+					
 					modelIndex++;
 				}
 				
@@ -465,6 +467,9 @@
 		if(callbackfunc){
 			// iterate the hierarchy of the repo
 			for(var i in repoInfo.Models){
+//				if(modelNum > 1){
+//					break;
+//				}
 				var model = repoInfo.Models[i];
 				evaluateModel(model, function(){
 					console.log('model analysis is complete');
