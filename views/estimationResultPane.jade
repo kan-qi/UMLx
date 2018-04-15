@@ -1,0 +1,64 @@
+//- var data = [{"Number": "1", "UC": "UC1", "EXUCP":"4", "DUCP":"8", "Effort":"4", "Schedule":"8", "Personnel":"7", "UIDeveloper":"9", "FullStack":"19", "DatabaseDeveloper":"12"},{"Number": "2", "UC": "UC2", "EXUCP":"3", "DUCP":"1", "Effort":"3", "Schedule":"8", "Personnel":"3", "UIDeveloper":"3", "FullStack":"10", "DatabaseDeveloper":"23"}];   
+if error
+ p error
+if modelInfo
+div(id='estimation-results-tables')
+      div.model-predictions
+       table.table.table-bordered
+         thead
+             tr
+                 th EUCP
+                 th EXUCP
+                 th DUCP
+                 th Effort
+                 th Schedule
+                 th Personnel
+                 th UI Developer
+                 th Full Stack
+                 th Database Developer
+         tbody
+             tr
+                 td #{modelInfo.effort_dist_1}
+                 td #{modelInfo.effort_dist_2}
+                 td #{modelInfo.effort_dist_3}
+                 td #{modelInfo.DUCP}
+                 td #{modelInfo.Effort}
+                 td #{modelInfo.Schedule}
+                 td #{modelInfo.Personnel}
+                 td #{modelInfo.UIDeveloper}
+                 td #{modelInfo.FullStack}
+                 td #{modelInfo.DatabaseDeveloper}
+     div.use-case-predictions
+       table.table.table-bordered
+         thead
+             tr
+                 th Number
+                 th Name
+                 th UC
+                 th EUCP
+                 th EXUCP
+                 th DUCP
+                 th Effort
+                 th Schedule
+                 th Personnel
+                 th UI Developer
+                 th Full Stack
+                 th Database Developer
+         tbody
+            - for (var i = 0; i < 3; i++) {
+                 tr
+                     td #{i}
+                     td #{modelInfo.UseCases[i].Name}
+                     td #{modelInfo.UseCases[i].effort_dist_1}
+                     td #{modelInfo.UseCases[i].effort_dist_2}
+                     td #{modelInfo.UseCases[i].effort_dist_3}
+                     td #{modelInfo.UseCases[i].DUCP}
+                     td #{modelInfo.UseCases[i].Effort}
+                     td #{modelInfo.UseCases[i].Schedule}
+                     td #{modelInfo.UseCases[i].Personnel}
+                     td #{modelInfo.UseCases[i].UIDeveloper}
+                     td #{modelInfo.UseCases[i].FullStack}
+                     td #{modelInfo.UseCases[i].DatabaseDeveloper}
+             - }
+ div(id='estimation-results-charts')
+     

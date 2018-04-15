@@ -13,7 +13,7 @@
 	
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
-	var RScriptExec = require('../../utils/RScriptUtil.js')
+	var RScriptExec = require('../../utils/RScriptUtil.js');
 	var umlFileManager = require('../../UMLFileManager');
 	var transactionProcessor = require('./TransactionProcessor.js');
 	
@@ -80,7 +80,6 @@
 				+ modelInfo['TransactionAnalytics'].NT+ ","
 				+ modelInfo['TransactionAnalytics'].Tran_Length+ ","
 				+ modelInfo['TransactionAnalytics'].Arch_Diff;
-				;
 	}
 	
 	function toUseCaseEvaluationHeader() {
@@ -126,7 +125,7 @@
 //		for ( var i in useCaseInfo.Diagrams) {
 //			var diagram = useCaseInfo.Diagrams[i];
 			
-			transactionProcessor.processUseCase(useCaseInfo);
+//			transactionProcessor.processUseCase(useCaseInfo);
 			
 			var EI = 0;
 			var EQ = 0;

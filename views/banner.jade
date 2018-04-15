@@ -1,5 +1,5 @@
 div.banner
-    div.content-flex
+     div.content-flex
         div.col-md-10.banner-title
             h2 UMLx
         div.col-md-2.banner-operations
@@ -9,10 +9,12 @@ div.banner
                 data-placement="bottom", data-trigger="focus")
                     span(class="glyphicon glyphicon-envelope")
             div.add-button
-                a(href="javascript:void();",data-toggle="popover", data-content="<a href='./uploadProject'>Upload Project</a>"
-                data-placement="bottom", data-trigger="focus")
-                    span(class="glyphicon glyphicon-plus")
-                    span.caret
+                span(class="glyphicon glyphicon-plus")
+                a(href='./uploadProject', role='button')  Upload Project
+                //a(href="javascript:void();",data-toggle="popover", data-content="<a href='./uploadProject'>Upload Project</a>"
+                //data-placement="bottom", data-trigger="focus")
+                //    span(class="glyphicon glyphicon-plus")
+                //    span.caret
             div.user-operation
                 a(href="javascript:void();",data-toggle="popover", data-content="<a href='./login'>Login</a> <hr> <a href='./profile'>View Profile</a>"
                 data-placement="bottom", data-trigger="focus")

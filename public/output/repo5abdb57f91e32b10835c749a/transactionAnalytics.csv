@@ -1,0 +1,31 @@
+id,path,useCase,transactional,tran_length,arch_diff
+1,stl#2->2->3->4->5->7->8->9->10->11->12,Use Case 4,CTRL,11,11
+2,stl#2->2->3->4->5->6->10->11->12,Use Case 4,CTRL,9,9
+3,stl#bookTickets->bookTickets->1,Use Case 4,CTRL,3,3
+1,stl#2->2->3->7->13->8->null->9->10->12,Use Case1,CTRL,10,10
+2,stl#2->2->3->7->13->8->null->9->10->11,Use Case1,CTRL,10,10
+3,stl#2->2->3->4->5->6->null->9->10->12,Use Case1,CTRL,10,10
+4,stl#2->2->3->4->5->6->null->9->10->11,Use Case1,CTRL,10,10
+5,stl#bookTickets->bookTickets->1,Use Case1,CTRL,3,3
+1,stl#Actor1:payment success message->Actor1:payment success message,Use Case2,CTRL,2,2
+2,stl#Actor1:payment success message->Actor1:payment success message,Use Case2,EXTCLL,2,2
+3,stl#Actor1:payment success message->Actor1:payment success message,Use Case2,INT,2,2
+4,stl#Actor1:Buy tickets interface->Actor1:Buy tickets interface->Buy tickets interface:pay the bill->pay the bill:save bill records,Use Case2,TRAN_NA,4,4
+5,stl#Actor1:Buy tickets interface->Actor1:Buy tickets interface->Buy tickets interface:pay the bill->pay the bill:payment success message,Use Case2,TRAN_NA,4,4
+1,fork->Validate User Information->Input Username and Password->Validate User Information,Use Case3,CTRL,4,4
+2,fork->Input Username and Password->Validate User Information->Input Username and Password,Use Case3,CTRL,4,4
+1,stl#2->2->3->4->5->7->8->9->10->11->12,Use Case 4,CTRL,11,11
+2,stl#2->2->3->4->5->6->10->11->12,Use Case 4,CTRL,9,9
+3,stl#bookTickets->bookTickets->1,Use Case 4,CTRL,3,3
+1,stl#2->2->3->7->13->8->null->9->10->12,Use Case1,CTRL,10,10
+2,stl#2->2->3->7->13->8->null->9->10->11,Use Case1,CTRL,10,10
+3,stl#2->2->3->4->5->6->null->9->10->12,Use Case1,CTRL,10,10
+4,stl#2->2->3->4->5->6->null->9->10->11,Use Case1,CTRL,10,10
+5,stl#bookTickets->bookTickets->1,Use Case1,CTRL,3,3
+1,stl#Actor1:payment success message->Actor1:payment success message,Use Case2,CTRL,2,2
+2,stl#Actor1:payment success message->Actor1:payment success message,Use Case2,EXTCLL,2,2
+3,stl#Actor1:payment success message->Actor1:payment success message,Use Case2,INT,2,2
+4,stl#Actor1:Buy tickets interface->Actor1:Buy tickets interface->Buy tickets interface:pay the bill->pay the bill:save bill records,Use Case2,TRAN_NA,4,4
+5,stl#Actor1:Buy tickets interface->Actor1:Buy tickets interface->Buy tickets interface:pay the bill->pay the bill:payment success message,Use Case2,TRAN_NA,4,4
+1,fork->Validate User Information->Input Username and Password->Validate User Information,Use Case3,CTRL,4,4
+2,fork->Input Username and Password->Validate User Information->Input Username and Password,Use Case3,CTRL,4,4

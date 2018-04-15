@@ -2,7 +2,6 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var path = require('path');
-	var RExec = '\"C:/Program Files/R/R-3.2.5/bin/Rscript\"';
 	var mkdirp = require('mkdirp');
 	
 	function drawDottyGraph(dottyGraph, graphFilePath, callbackfunc){
@@ -27,6 +26,22 @@
 					console.log('exec error: ' + error);
 				}
 				 console.log('The file was saved!');
+				 /*var content;
+				 fs.readFile(dir+'/'+fileName+'.svg', "utf8", function read(err, data) {
+					if (err) {
+						throw err;
+					}
+					content = data;
+					console.log(content);
+					content = content.replace('width=\"[0-9]+px\"', 'width=\"140px\"');
+					content = content.replace('height=\"[0-9]+px\"', 'height=\"85px\"');
+					fs.writeFile(dir+'/'+fileName+'.svg', content, function(err){
+						if(err)
+						{
+							return console.log(err);
+						}
+					});
+				});*/
 				 if(callbackfunc){
 				  callbackfunc(graphFilePath);
 				 }

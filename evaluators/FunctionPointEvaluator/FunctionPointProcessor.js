@@ -3,25 +3,14 @@
 	var pathPatternMatchUtil = require("../../utils/PathPatternMatchUtil.js");
 
 	var functionalPatterns = [
-		[ 'actor', 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI',
-				'functional', 'External input' ],
-		[ 'entity', 'control[+]', 'boundary', 'actor', 'pattern#2', 'EO',
-				'functional', 'External output' ],
-		[ 'entity', 'boundary', 'actor', 'pattern#2', 'EO', 'functional',
-				'External Output' ],
-		[ 'actor', 'boundary', 'control[+]', 'boundary', 'pattern#3', 'EQ',
-				'functional', 'External inquiry' ],
-		[ 'actor', 'boundary', 'control[+]', 'boundary', 'actor',
-				'pattern#4', 'EI,EQ', 'functional',
-				'External input and inquiry' ],
-		[ 'boundary', 'entity', 'boundary', 'actor', 'pattern#4', 'EI,EQ',
-				'functional', 'External input and inquiry' ],
-		[ 'actor', 'boundary', 'control[+]', 'entity', 'control[+]',
-				'boundary', 'actor[!E]', 'pattern#5', 'EQ', 'functional',
-				'External input and inquiry' ],
-		[ 'actor', 'boundary', 'control[+]', 'entity', 'boundary',
-				'actor[!E]', 'pattern#5', 'EQ', 'functional',
-				'External input and inquiry' ] ];
+		[ 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'functional', 'External input' ],
+		[ 'entity', 'control[+]', 'boundary', 'actor', 'pattern#2', 'EO', 'functional', 'External output' ],
+		[ 'entity', 'boundary', 'actor', 'pattern#2', 'EO', 'functional', 'External Output' ],
+		[ 'boundary', 'control[+]', 'boundary', 'pattern#3', 'EQ', 'functional', 'External inquiry' ],
+		[ 'boundary', 'control[+]', 'boundary', 'actor', 'pattern#4', 'EI,EQ', 'functional', 'External input and inquiry' ],
+		[ 'boundary', 'entity', 'boundary', 'actor', 'pattern#4', 'EI,EQ', 'functional', 'External input and inquiry' ],
+		[ 'boundary', 'control[+]', 'entity', 'control[+]', 'boundary', 'actor[!E]', 'pattern#5', 'EQ', 'functional', 'External input and inquiry' ],
+		[ 'boundary', 'control[+]', 'entity', 'boundary', 'actor[!E]', 'pattern#5', 'EQ', 'functional', 'External input and inquiry' ] ];
 	 
 	var functionalPatternTreeRoot = pathPatternMatchUtil.establishPatternParseTree(functionalPatterns);
 	
@@ -32,7 +21,7 @@
 			processPath: function(path, usecase){
 				path["FPAnalytics"] = {};
 				path["FPAnalytics"].Operations = {};
-				var functionalOperations = pathPatternMatchUtil.recognizePattern(path.Components, functionalPatternTreeRoot);
+				var functionalOperations = pathPatternMatchUtil.recognizePattern(path, functionalPatternTreeRoot);
 				var functionalOperationStr = "";
 				for(var i=0; i < functionalOperations.length; i++){
 					if(i !== 0){

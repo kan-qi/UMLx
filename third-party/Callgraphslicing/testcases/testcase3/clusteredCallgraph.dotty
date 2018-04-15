@@ -1,0 +1,18 @@
+digraph g {compound=true
+subgraph cluster_3 {"Lwebsite.js" [color=red]
+}
+subgraph cluster_4 {"LFakeRoot" [color=red]
+}
+subgraph cluster_1 {"Lwebsite.js/jadeify" [color=yellow]
+}
+subgraph cluster_2 {"Lwebsite.js/getVersion" [color=green, shape=box]
+"Lfiles.js/readFile" [color=green, shape=box]
+"Lwebsite.js/getVersion"->"Lfiles.js/readFile"
+}
+subgraph cluster_0 {"LviewLib.js/present" [color=yellow]
+}
+"Lwebsite.js/jadeify"->"LviewLib.js/present"[ltail=cluster_1,lhead=cluster_0]
+"Lwebsite.js"->"Lwebsite.js/jadeify"[ltail=cluster_3,lhead=cluster_1]
+"Lwebsite.js"->"Lwebsite.js/getVersion"[ltail=cluster_3,lhead=cluster_2]
+"LFakeRoot"->"Lwebsite.js"[ltail=cluster_4,lhead=cluster_3]
+}
