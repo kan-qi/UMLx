@@ -1,4 +1,4 @@
--var repoID = repoInfo._id
+- var repoID = pResult[0].repo_id
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -174,10 +174,11 @@ div.block.panel.panel-default
                 .col-sm-8 Project Name
                 .col-sm-2 Date
              .list-group
-                 - for (var i = 0; i < repoInfo.Models.length; i++) {
-                    - var model = repoInfo.Models[i]
-                    a.list-group-item.row#model-title(href="queryModelInfo?model_id="+model._id)
-                        .col-sm-2 #{i+1}
-                        .col-sm-8 #{model.Name}
-                        .col-sm-2 #{model.creationTime}
-                 - }
+             - var pageIndex = (currentPage - 1)*(pageSize) + 1
+             div(id='page-panel')
+                each item in pResult
+                    a.list-group-item.row#model-title(href="queryModelInfo?model_id="+item._id)
+                        .col-sm-2 #{pageIndex++}
+                        .col-sm-8 #{item.Name}
+                        .col-sm-2 #{item.creationTime}
+                  include pagination.jade

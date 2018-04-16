@@ -603,10 +603,11 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 
 
 app.get('/deleteModel', function (req, res){
-	console.log("/deleteModel");
+//	console.log("/deleteModel");
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
-	var reanalyzeRepo = req.query['reanalyse_repo'];
+	console.log("/deleteModel");
+//	var reanalyzeRepo = req.query['reanalyse_repo'];
 	var reanalyseRepo = false;
 	umlModelInfoManager.deleteModel(repoId, modelId, function(result){
 		if(!result){
@@ -1224,16 +1225,90 @@ app.post('/', function(req, res){
 	res.redirect('/')
 });
 
+//Vibhanshu
+var totalRec = 0;
+var pageSize = 3;
+var pageCount = 0;
+var start = 0;
+var currentPage = 1;
+
+app.get('/pager',function(req,res){
+   
+    //var index = req.param('index');
+    var repID = req.param('repId');
+    //start = parseInt(req.param('start'));
+    //pageSize = parseInt(req.param('pageSize'));
+    
+    
+    if(req.param('currentPage') != undefined){
+        currentPage = parseInt(req.param('currentPage'));
+    }
+    
+    if(currentPage >1){
+        start = (currentPage - 1) * pageSize;
+    }else{
+        start = 0;
+    }
+    
+    console.log("repo ID "+repID+" Start "+start+" pageSize "+pageSize+" pageCount "+pageCount+" currentPage "+currentPage);
+       
+    
+    //umlModelInfoManager.queryRepoInfo(repID, function(repoInfo){
+    
+        umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
+       
+        /*totalRec = result.length;
+        pageCount =  Math.ceil(totalRec/pageSize);
+        */
+        
+        //console.log(result);
+        //console.log("Index in UMLx "+ index);
+        res.render('pagination', {pageR:result, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+       
+       // });
+    }); 
+})
+
 app.get('/', function(req, res){
-		var message = req.query.e;
-		var requestUUID = randomstring.generate({
-			  length: 12,
-			  charset: 'alphabetic'
-			});
 
-		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
+    var message = req.query.e;
+	var requestUUID = randomstring.generate({
+        length: 12,
+		charset: 'alphabetic'
+    });
+ 
+    
+    umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
 //			console.log(req.userInfo);
-
+        
+        if(req.param('step') != undefined && req.param('page') != undefined){
+            var repID = req.param('repId');
+            //var stepSize = parseInt(req.param('step'));
+            //pageSize = parseInt(req.param('page'));
+        }else{
+            repID = repoInfo._id;
+            //stepSize = repoInfo.Models.length;
+            //pageSize = 3;
+        }
+        
+        if(req.param('curremtPage') != undefined){
+            currentPage = parseInt(req.param('currentPage'));
+        }
+        
+        if(currentPage >1){
+            start = (currentPage - 1) * pageSize;
+        }
+        
+    
+        umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
+    
+            totalRec = repoInfo.Models.length;
+            pageCount =  Math.ceil(totalRec/pageSize);
+           
+            console.log("total Records"+totalRec);
+            
+    console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
+            
 			if(req.userInfo.isEnterprise){
 				// get the repoinfo for all the repo that are part of this enterprise account
 				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
@@ -1248,21 +1323,19 @@ app.get('/', function(req, res){
 							}
 
 						}
-						
+				        console.log(result);
+                       
 						repoInfo.requestUUID = requestUUID;
-						res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
-
-
-					});
+						res.render('index', {pResult:result,repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+                	});
 				});
 
 			} else {
-
-				repoInfo.requestUUID = requestUUID;
-				res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
+                repoInfo.requestUUID = requestUUID;
+				res.render('index', {pResult:result, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
 			}
 
-
+         });
 	});
 });
 
@@ -1305,12 +1378,11 @@ app.get('/testCOCOMODataLoad', function(req, res){
 });
 
 
-
 app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
 ,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
-,{name:'difficult_programming_language', maxCount:1},{name:'requestUUID', maxCount:1}]), function(req,res){
+,{name:'difficult_programming_language', maxCount:1},{name:'modelID', maxCount:1}]), function(req,res){
 	var umlEstimationInfo = {};
 	umlEstimationInfo.distributedSystem = req.body['distributed_system'];
 	umlEstimationInfo.responseTime = req.body['response_time'];
@@ -1333,13 +1405,11 @@ app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_syst
 	umlEstimationInfo.stableRequirements = req.body['stable_requirements'];
 	umlEstimationInfo.partTimeStaff = req.body['part_time_staff'];
 	umlEstimationInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
-	umlEstimationInfo.requestUUID = req.body['requestUUID'];	
+	umlEstimationInfo.modelID = req.body['modelID'];	
 	umlModelInfoManager.saveModelInfoCharacteristics(umlEstimationInfo, function(result,message){		
 		res.json(result);
 	});
 });
-
-
 
 app.post('/saveEstimation', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
 ,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}

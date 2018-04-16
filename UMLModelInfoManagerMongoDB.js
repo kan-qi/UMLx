@@ -450,7 +450,7 @@ function deleteRepo(repoId, callbackfunc) {
     				   	            {
     			   if (err) throw err;
       	            
-       	           db.collection('modelInfo').update( { "formInfo.uuid-page1" : characteristicsInfo.requestUUID },
+    			   db.collection('modelInfo').update( { "_id" : characteristicsInfo.modelID },
        	        		{$set: {  
    	        	    "formInfo.distributed-system": characteristicsInfo.distributedSystem,
         	   	    "formInfo.response-time": characteristicsInfo.responseTime,
@@ -517,11 +517,7 @@ function deleteRepo(repoId, callbackfunc) {
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
             db.collection("modelInfo").aggregate([
-               {
-                   "$match":{
-                       "_id":new mongo.ObjectID(modelId)
-                   }
-               },
+            
                {
                    "$lookup": {
                        "from": "domainModelInfo",
@@ -546,7 +542,7 @@ function deleteRepo(repoId, callbackfunc) {
             });
         });
     }
-
+    
 	/*queryRepoInfo("5a8e109c13a5974144158d99", function(result)
     {
          console.log(result);
@@ -557,10 +553,12 @@ function deleteRepo(repoId, callbackfunc) {
     {
         MongoClient.connect(url, function(err, db)
         {
+			
             if (err) throw err;
            
             var repoid=new mongo.ObjectID(repoId);
 
+			
            
             db.collection("repos").aggregate([
                { 
@@ -575,6 +573,8 @@ function deleteRepo(repoId, callbackfunc) {
             ], function(err, result) 
             {
                if (err) throw err;
+               console.log("*******Shown result for queryRepoInfo*******");
+			   console.log(result[0]);
                console.log("*******Shown result for ModelInfo*******");               
                db.close();
                callbackfunc(result[0]);
@@ -596,18 +596,21 @@ function deleteRepo(repoId, callbackfunc) {
 			if (err) throw err;
 			
 			var repoid=new mongo.ObjectID(repoId);
-			
-			var query = { rep_id: repoid};
+
+			//var query = { rep_id: repoid};
+
+			var query = { repo_id: repoid};
+
 			
 			db.collection("modelInfo").aggregate([
 			{
 				"$match":
 				{
-				   "rep_id":new mongo.ObjectID(repoid)
+				   "repo_id":new mongo.ObjectID(repoid)
 				}
 			},
 			{
-			   $skip: stepParameter*pageParameter
+			   $skip: pageParameter
 			}, // pagination skip
 			{
 				$limit: stepParameter
@@ -615,8 +618,9 @@ function deleteRepo(repoId, callbackfunc) {
 			],function(err, result) 
             {
                if (err) throw err;
-               console.log("*******Shown result for queryRepoInfoByPage*******");
+               //console.log("*******Shown result for queryRepoInfoByPage*******");
                db.close();
+			   console.log(result);
                callbackfunc(result);
             });
 			
@@ -627,103 +631,83 @@ function deleteRepo(repoId, callbackfunc) {
     {
         console.log(result);
     })*/
-	
-	
 	function repoDetail(repoId,callbackfunc)
-    {
-		
-		/*MongoClient.connect(url, function(err, db) 
+	{
+		MongoClient.connect(url, function(err, db) 
 		{
 			if (err) throw err;
-			db.createCollection("noOfTransactions", function(err, collection) {
-				  db.close();
-			})
-		})*/
-		
-		
-		
-	
-		
-		
-		
-        //console.log("res"+stepParameter*pageParameter)
-        MongoClient.connect(url, function(err, db) 
-		{
 			
-			if (err) throw err;
-			var today = new Date();
-			
-			var cursor=db.collection("noOfTransactions").find();
-			
-			//db.collection("noOfTransactions").find().forEach(function(err, res) 
-			cursor.each(function(err, res)
+			var repoid=new mongo.ObjectID(repoId);
+					
+			db.collection("modelInfo").find(
 			{
-				if (err) throw err;
-				//console.log("res"+res);
-				
-				if(res!=null)
-				{
-					if(res.timestamp===today)
-						callbackfunc(res);
-					else
+				rep_id:repoid
+			},
+			{
+				TransactionAnalytics:1,_id:0
+			}).toArray(
+			function(err, result) 
+			{
+			   if (err) throw err;
+			   else
+			   {
+				    var dt = new Date();
+					var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
+				   
+				   
+				   
+				   db.collection('noOfTransactions').findOne({'timestamp':today})
+					.then(function(doc) 
 					{
-						var repoid=new mongo.ObjectID(repoId);
-				
-						db.collection("modelInfo").find(
+						if(doc)
 						{
-							rep_id:repoid
-						},
+							console.log("Record exists");
+							callbackfunc(doc);
+							db.close();							
+						}
+							
+							//throw new Error('No record found.');
+						//console.log(doc);//else case
+						
+						else
 						{
-							TransactionAnalytics:1,_id:0
-						}).toArray(
-						function(err, result) 
-						{
-						   if (err) throw err;
-						   else
+							console.log("Record does not exist");
+							for(i=0;i<result.length;i++)
 						   {
-								//console.log("*******Shown result for ModelInfo*******");
-							   //console.log("The result size"+result.length);
-							   //(3*3+4*3+5+6)
 							   
+							   var sum_nt=0;
 							   for(i=0;i<result.length;i++)
 							   {
-								   
-								   var sum_nt=0;
-								   for(i=0;i<result.length;i++)
-								   {
-										sum_nt+=result[i]['TransactionAnalytics']['NT'];
-								   }
-									//console.log("sum_nt"+sum_nt);
+									sum_nt+=result[i]['TransactionAnalytics']['NT'];
+							   }
+								//console.log("sum_nt"+sum_nt);
+						  
+							  var dt = new Date();
+							  var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
 							  
-								  var today = new Date();
-								  record={rep_id:repoid,NT:sum_nt,timestamp:today.getDate()}
-								  db.collection("noOfTransactions").insertOne(record, function(err, res) 
-								  {
-										if (err) throw err;
-										//console.log("*******Shown result for ModelInfo*******");
-										db.close();
-										callbackfunc();
-										console.log("1 document inserted");
-										
-								  });
-							   //callbackfunc(result);
-							   
-								}
-							}
-					
-						});
+							  
+							  //record={repo_id:repoid,NT:sum_nt,timestamp:today.getDate()}
+							  
+							  record={repo_id:repoid,NT:sum_nt,timestamp:today}
+							  db.collection("noOfTransactions").insertOne(record, function(err, res) 
+							  {
+									if (err) throw err;
+									//console.log("*******Shown result for ModelInfo*******");
+									db.close();
+									callbackfunc(record);
+									console.log("1 document inserted");
+									
+							  });
+						   //callbackfunc(result);
+						   
+							}	
+						}
 						
-					}
-					
+					});
 				}
-					
 			});
 		});
-	} 
-
-	
-	
-	
+	}
     function getGitData(userId, callbackfunc){      
                     
                     
@@ -940,7 +924,7 @@ function deleteRepo(repoId, callbackfunc) {
     function deleteModel(repoId, modelId, callbackfunc){
       MongoClient.connect(url, function(err, db) {
             if (err) throw err;            
-            db.collection('domainModelInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
+            db.collection('domainModelInfo').remove({model_id: modelId}, function(err) {
                    if (err) {
                     console.log(err);
                     if(callbackfunc){
@@ -949,7 +933,7 @@ function deleteRepo(repoId, callbackfunc) {
                     return;
                 }
 
-            db.collection('useCaseInfo').remove({model_id: mongo.ObjectID(modelId)}, function(err) {
+            db.collection('useCaseInfo').remove({model_id: modelId}, function(err) {
                    if (err) {
                     console.log(err);
                     if(callbackfunc){
@@ -958,7 +942,7 @@ function deleteRepo(repoId, callbackfunc) {
                     return;
                 }                                           
 
-          db.collection('modelInfo').remove({_id: mongo.ObjectID(modelId)}, function(err) {
+          db.collection('modelInfo').remove({_id: modelId}, function(err) {
                   if (err) {
                     console.log(err);
                     if(callbackfunc){
@@ -1498,6 +1482,8 @@ function deleteRepo(repoId, callbackfunc) {
 		updateUseCaseInfo: updateUseCaseInfo,
 		saveModelInfo : saveModelInfo,
 		queryRepoInfo : queryRepoInfo,
+		queryRepoInfoByPage:queryRepoInfoByPage,
+		queryRepoInfoByPage:queryRepoInfoByPage,
 		queryUseCaseInfo: queryUseCaseInfo,
 		repoDetail:repoDetail,
 		saveEstimation: saveEstimation,
