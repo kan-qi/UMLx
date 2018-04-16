@@ -1599,20 +1599,20 @@ function walkDir(fileFolder) {
             out += "<tr><th>File Lists</th></tr>";
 
             for(var i = 0; i < data.length; i++) {
-            	var fatherUrl = data[i].parent.substring(data[i].parent.lastIndexOf("/")+1);
-            	if (fatherUrl == fileFolder) {
-            		if (data[i].isFolder == 'true') {
-            			var clickValue = data[i].parent+"/"+data[i].url;
-            			console.log(clickValue);
-                        out += "<tr><td><a href='#' onclick='walkDir(/"#{fileFolder}/")'>" +
-                            data[i].url+
-                            "</a></td>";
-					} else {
+            	// var fatherUrl = data[i].parent.substring(data[i].parent.lastIndexOf("/")+1);
+            	// if (fatherUrl == fileFolder) {
+            	// 	if (data[i].isFolder == 'true') {
+            	// 		var clickValue = data[i].parent+"/"+data[i].url;
+            	// 		console.log(clickValue);
+                 //        out += "<tr><td><a href='#'>" +
+                 //            data[i].url+
+                 //            "</a></td>";
+					// } else {
                         out += "<tr><td>" +
                             data[i].url+
                             "</td>";
-					}
-				}
+				// 	}
+				// }
             }
             out += "</table>";
             document.getElementById("displayArchive").innerHTML = out;
