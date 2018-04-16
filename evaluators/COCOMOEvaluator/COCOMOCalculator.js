@@ -180,13 +180,13 @@
 	
 	function loadModelEmpirics(modelLoad, modelInfo, modelIndex){
 				var cocomoData = covertCOCOMORatings(modelLoad);
-				modelInfo.COCOMOData = COCOMOData;
+				modelInfo.COCOMOData = cocomoData;
 				normalizeEffort(modelInfo.COCOMOData);
-				
+				console.log("cocomo load model empirics");
 	}
 	
 	function toModelEvaluationHeader(){
-		return "Effort_Norm,Norm_Factor,KSLOC";
+		return "Effort_Norm,Norm_Factor,KSLOC,Effort";
 //		return "";
 	}
 	
@@ -203,10 +203,10 @@
 //		}
 		
 		if(modelInfo.COCOMOData){
-			return modelInfo.COCOMOData.Effort_Norm+"," + modelInfo.COCOMOData.Norm_Factor+"," + modelInfo.COCOMOData.KSLOC;
+			return modelInfo.COCOMOData.Effort_Norm+"," + modelInfo.COCOMOData.Norm_Factor+"," + modelInfo.COCOMOData.KSLOC+","+modelInfo.COCOMOData.Effort;
 		}
 		else {
-			return "NA,NA,NA";
+			return "NA,NA,NA,NA";
 		}
 	}
 	
@@ -292,6 +292,7 @@
 		toModelEvaluationRow: toModelEvaluationRow,
 		loadModelEmpirics: loadModelEmpirics,
 		COCOMO: COCOMO,
+		//this function is not used for now.
 		loadCOCOMOData: function(ModelDataFilePath, callbackfunc){
 			var umlFileManager = require("../UMLFileManager.js");
 			umlFileManager.loadCSVFile(ModelDataFilePath, true, function(data){
@@ -320,6 +321,7 @@
 //				loadModelEmpirics(modelLoad, modelInfo, modelIndex);
 				
 				var cocomoData = covertCOCOMORatings(modelLoad);
+				
 				
 				console.log(modelLoad);
 				

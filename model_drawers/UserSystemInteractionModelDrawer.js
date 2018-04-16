@@ -3,27 +3,49 @@
  */
 
 (function(){
-//	var Viz = require('viz.js');
+//  var Viz = require('viz.js');
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
 	
 	var dottyUtil = require("../utils/DottyUtil.js");
 	
+	function processLabel(label){
+		if(!label){
+			return "";
+		}
+		var terms = label.split(" ");
+		var reformattedLabel = "";
+		var lineNum = 3;
+		for(var i=0; i<terms.length; i++){
+			reformattedLabel += terms[i];
+			if(i%lineNum == 2 && i != terms.length-1){
+				reformattedLabel += "<BR/>";
+			}
+			else if(i != terms.length-1){
+				reformattedLabel += " ";
+			}
+		}
+		
+		console.log("reformatted label");
+		console.log(reformattedLabel);
+		return reformattedLabel;
+	}
 
 	function drawStimulusNode(id, label){
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/stimulus_icon.png"/></TD></TR>\
-		 <TR><TD><B>'+label+'</B></TD></TR>\
+		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 
 	function drawNode(id, label){
+		
 		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
+			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
-		 <TR><TD><B>'+label+'</B></TD></TR>\
+		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 
@@ -31,7 +53,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/out_of_scope_activity_icon.png"/></TD></TR>\
-		 <TR><TD><B>'+label+'</B></TD></TR>\
+		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
 		</TABLE>>];';
 		
 //		 <TR><TD><FONT POINT-SIZE="20">'+label+'</FONT></TD></TR>\
@@ -41,7 +63,7 @@
 		return id+'[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/fragment_node_icon.png"/></TD></TR>\
-		 <TR><TD><B>'+label+'</B></TD></TR>\
+		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
 		</TABLE>>];';
 	}
 

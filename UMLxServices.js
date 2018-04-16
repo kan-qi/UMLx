@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
+var path = require('path')
 var admZip = require('adm-zip');
 var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
@@ -526,7 +527,7 @@ app.post('/uploadUseCaseFile', upload.fields([{name:'usecase-file',maxCount:1}, 
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlEvaluator.loadUseCaseEmpirics(repoInfo, function(repo){
 			if(!repo){
-				res.end('load error!');
+				res.end('lod error!');
 				return;
 			}
 			umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
@@ -554,18 +555,18 @@ app.post('/uploadModelFile', upload.fields([{name:'model-file',maxCount:1}, {nam
 	});
 })
 
-app.post('/uploadCOCOMOFile', upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
-	console.log('/uploadCOCOMOFile');
-	var COCOMOFilePath = req.files['COCOMO-file'][0].path;
-	var repoId = req.userInfo.repoId;
-	res.end('<h1>function is not implemented');
-	// COCOMOCalculator.loadCOCOMOData(repoId, function(repoInfo){
-	// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
-	// 		console.log(modelInfo);
-	// 		res.redirect('/');
-	// 	});
-	// }, COCOMOFilePath);
-})
+//app.post('/uploadCOCOMOFile', upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
+//	console.log('/uploadCOCOMOFile');
+//	var COCOMOFilePath = req.files['COCOMO-file'][0].path;
+//	var repoId = req.userInfo.repoId;
+//	res.end('<h1>function is not implemented');
+//	// COCOMOCalculator.loadCOCOMOData(repoId, function(repoInfo){
+//	// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
+//	// 		console.log(modelInfo);
+//	// 		res.redirect('/');
+//	// 	});
+//	// }, COCOMOFilePath);
+//})
 
 /*
  * To integrate the model version control system, to reflect the evolution of the architecture for certain process.
@@ -678,53 +679,53 @@ app.get('/requestDomainModelDetail', function (req, res){
 })
 
 
-app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
-	console.log("/loadEmpiricalUsecaseDataForRepo");
-	var repoId = req.userInfo.repoId
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-	umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
-		if(!repo){
-			res.end('load error!');
-			return;
-		}
-
-//		umlEvaluator.evaluateRepo(repo, function(){
-//			console.log("repo analysis complete");
+//app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
+//	console.log("/loadEmpiricalUsecaseDataForRepo");
+//	var repoId = req.userInfo.repoId
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//	umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
+//		if(!repo){
+//			res.end('load error!');
+//			return;
+//		}
+//
+////		umlEvaluator.evaluateRepo(repo, function(){
+////			console.log("repo analysis complete");
+////		});
+////		console.log(repo);
+////		console.log(modelInfo);
+//		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
+////			console.log(modelInfo);
+//				res.redirect('/');
 //		});
-//		console.log(repo);
-//		console.log(modelInfo);
-		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
-//			console.log(modelInfo);
-				res.redirect('/');
-		});
+//
+//	});
+//	});
+//})
 
-	});
-	});
-})
-
-app.get('/loadEmpiricalModelDataForRepo', function (req, res){
-	console.log("/loadEmpiricalModelDataForRepo");
-	var repoId = req.userInfo.repoId
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-	umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
-		if(!repo){
-			res.end('load error!');
-			return;
-		}
-
-//		umlEvaluator.evaluateRepo(repo, function(){
-//			console.log("repo analysis complete");
+//app.get('/loadEmpiricalModelDataForRepo', function (req, res){
+//	console.log("/loadEmpiricalModelDataForRepo");
+//	var repoId = req.userInfo.repoId
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//	umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
+//		if(!repo){
+//			res.end('load error!');
+//			return;
+//		}
+//
+////		umlEvaluator.evaluateRepo(repo, function(){
+////			console.log("repo analysis complete");
+////		});
+////		console.log(repo);
+////		console.log(modelInfo);
+//		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
+////			console.log(modelInfo);
+//				res.redirect('/');
 //		});
-//		console.log(repo);
-//		console.log(modelInfo);
-		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
-//			console.log(modelInfo);
-				res.redirect('/');
-		});
-
-	});
-	});
-})
+//
+//	});
+//	});
+//})
 
 app.get('/deleteUseCase', function (req, res){
 	console.log("/deleteUseCase");
@@ -1370,12 +1371,12 @@ app.get('/testActivityDiagramExtraction', function(req, res){
 	});
 });
 
-app.get('/testCOCOMODataLoad', function(req, res){
-	var cocomoCalculator = require("./evaluators/COCOMOEvaluator/COCOMOCalculator.js")
-	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
-		res.end(outputStr);
-	});
-});
+//app.get('/testCOCOMODataLoad', function(req, res){
+//	var cocomoCalculator = require("./evaluators/COCOMOEvaluator/COCOMOCalculator.js")
+//	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
+//		res.end(outputStr);
+//	});
+//});
 
 
 app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
@@ -1467,6 +1468,74 @@ app.get('/queryUsers', function(req,res){
 	});
 });
 
+app.get('/listFileUnderDir', function(req, res) {
+	var filePath;
+	if (req.query.fileFolder.indexOf("/") == 0) {
+		filePath = req.query.fileFolder.substring(1);
+	} else if (req.query.fileFolder.indexOf("public/uploads/") == 0) {
+		filePath = req.query.fileFolder;
+	} else {
+        filePath = "public/uploads/"+req.query.fileFolder;
+	}
+
+    function recurDir(filePath, done) {
+        var results = [];
+        fs.readdir(filePath, function(err, list){
+            if (err) {
+                return done(err);
+            } else {
+                var pending = list.length;
+                if (!pending) {
+                	return done(null, results);
+				}
+
+				list.forEach(function(file) {
+					var fileDir = path.resolve(filePath, file);
+					fs.stat(fileDir, function(err, stat){
+						if (stat && stat.isDirectory()) {
+							var entry = {};
+							entry.isFolder = 'true';
+							entry.url = file;
+                            entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							results.push(entry);
+
+							recurDir(fileDir, function(err, ans) {
+								results = results.concat(ans);
+								if (!--pending) {
+									done(null, results);
+								}
+							});
+						} else {
+							var entry = {};
+							entry.isFolder = 'false';
+							entry.url = file;
+							entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							results.push(entry);
+							if (!--pending) {
+								done(null, results);
+							}
+						}
+					});
+				});
+            }
+        });
+    }
+    recurDir(filePath, function (err, data) {
+		if (err) {
+			throw err;
+		}
+        res.json(data);
+    });
+
+    // fs.readdir(filePath, function(err, list){
+    	// if (err) {
+    	// 	throw err;
+	// 	} else {
+     //        res.json(list);
+	// 	}
+	// });
+});
+
 
 app.get('/deactivateUser', function(req,res){
 	var userId = req.query['uid'];
@@ -1489,5 +1558,5 @@ var server = app.listen(8081,'127.0.0.1', function () {
   var port = server.address().port
   console.log("Example app listening at http://%s:%s", host, port)
 
-})
+});
 

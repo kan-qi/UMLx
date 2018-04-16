@@ -7,6 +7,7 @@
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
 	var xmiParser = require('./model_platforms/ea/XMI2.1Parser.js');
+//	var xmiParser = require('./model_platforms/src/srcparser.js');
 	var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
 	var modelDrawer = require("./model_drawers/UserSystemInteractionModelDrawer.js");
 	var domainModelDrawer = require("./model_drawers/DomainModelDrawer.js");

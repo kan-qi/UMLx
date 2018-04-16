@@ -1607,6 +1607,7 @@ function deleteRepo(repoId, callbackfunc) {
         queryRepoInfoForAdmin:queryRepoInfoForAdmin,
         saveSurveyData: saveSurveyData,
         saveSurveyAnalyticsData: saveSurveyAnalyticsData,
+        createModelInfoVersion: createModelInfoVersion,
         getSurveyData: getSurveyData,
         deleteUser: deleteUser,
         queryUsers: queryUsers,

@@ -12,9 +12,12 @@ if domainModel
  div.tab-content
   div.tab-pane.fade.in.active(id="domain-model-info-pane")
    div.domain-model-info
-    button(onclick="toggleDomainDiagram()", class="big-button") Toggle Diagram
-    img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/uml_diagram.svg")
-   div.domain-model-info-content
+     button(onclick="toggleQueryList()", class="big-button") Toggle List 
+     button(onclick="toggleZoom()", class="big-button") Enable Zoom
+     button(onclick="toggleDiagram()", class="big-button") Toggle Diagram
+     object.use-case(data=domainModel.AccessDir+"/domainModel.svg")
+    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
+   div.domain-model-info-content(style="display: none;", id="domain-model-list")
     ul.nav.nav-tabs
      li.active
       a(data-toggle='tab', href='#domain-model-attributes') Attributes
