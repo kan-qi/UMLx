@@ -1,0 +1,21 @@
+{
+    "framework": "mocha",
+    "src_files": [
+        "lib/**/*.js",
+        "components/**/*.js",
+        "test/**/*.test.js"
+    ],
+    "src_files_ignore": "components/**/mocha*",
+    "launchers": {
+        "bs_opera": {
+            "command": "browserstack launch --attach opera:12.11 <url>",
+            "protocol": "browser"
+        },
+        "Node": {
+            "command": "make test-node",
+            "protocol": "tap"
+        }
+    },
+    "launch_in_dev": [ "Node", "phantomjs" ],
+    "launch_in_ci": [ "bs_opera" ]
+}
