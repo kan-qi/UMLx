@@ -421,8 +421,6 @@
                      }
                  }
 
-
-
                  // graph += '|';
 
                  var classOperations = json_obj.allClass[i]["operations"];
