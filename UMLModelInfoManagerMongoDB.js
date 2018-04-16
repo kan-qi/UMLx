@@ -548,6 +548,33 @@ function deleteRepo(repoId, callbackfunc) {
          console.log(result);
     })*/
 	
+   
+    function queryRepoFromUser(userId, callbackfunc){
+        MongoClient.connect(url, function(err, db){
+            if(err) throw err;
+            
+            var userID = mongo.ObjectID(userId);
+            
+            db.collection("users").aggregate([
+                {
+                    "$lookup":
+                    {
+                        "from": "repos",
+                        "localField": "repoId",
+                        "foreignField": "_id",
+                        "as": "Repos"
+                    }
+                }
+            ], function(err, result)
+            {
+               if(err) throw err;
+                console.log("Result RepoID: "+ result[0].Repos[0]._id);
+                db.close();
+                callbackfunc(result[0]);
+            });
+        });
+    }
+	
 	
     function queryRepoInfo(repoId, callbackfunc)
     {
@@ -1606,6 +1633,7 @@ function deleteRepo(repoId, callbackfunc) {
         queryRepoIdsForAdmin:queryRepoIdsForAdmin,
         queryRepoInfoForAdmin:queryRepoInfoForAdmin,
         saveSurveyData: saveSurveyData,
+	queryRepoFromUser:queryRepoFromUser, 	
         saveSurveyAnalyticsData: saveSurveyAnalyticsData,
         createModelInfoVersion: createModelInfoVersion,
         getSurveyData: getSurveyData,
