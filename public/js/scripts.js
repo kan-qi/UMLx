@@ -1,4 +1,3 @@
-
 function setCookie(cname, cvalue, exdays) {
 	var expires="";
 	if(exdays > 0){
@@ -1451,34 +1450,36 @@ function highlightElement_classDia(element) {
                allNodes[i].style.stroke = "";
        }
    }
-// var filesystem = require("fs");
-// var _getAllFilesFromFolder = function(dir) {
-//     // var filesystem = require("fs");
-//     var results = [];
-//
-//     filesystem.readdirSync(dir).forEach(function(file) {
-//
-//         file = dir+'/'+file;
-//         var stat = filesystem.statSync(file);
-//
-//         if (stat && stat.isDirectory()) {
-//             results = results.concat(_getAllFilesFromFolder(file))
-//         } else results.push(file);
-//
-//     });
-//
-//     console.log(results);
-// };
 
-// _getAllFilesFromFolder(/ealing/ + "Desktop");
+function walkDir(fileFolder) {
+    $.ajax({
+    	type: 'GET',
+        url: 'listFileUnderDir?fileFolder='+fileFolder,
+        success: function (data) {
+    		console.log(data);
 
-// function walkDir() {
-//     const testFolder = './tests/';
-//     const fs = require('fs');
-//
-//     fs.readdir(testFolder, (err, files) => {
-//         files.forEach(file => {
-//         console.log(file);
-// 		});
-// 	})
-// });
+            var out = "<table class='table-striped'>";
+            out += "<tr><th>File Lists</th></tr>";
+
+            for(var i = 0; i < data.length; i++) {
+            	var fatherUrl = data[i].parent.substring(data[i].parent.lastIndexOf("/")+1);
+            	if (fatherUrl == fileFolder) {
+            		if (data[i].isFolder == 'true') {
+            			var clickValue = data[i].parent+"/"+data[i].url;
+            			console.log(clickValue);
+                        out += "<tr><td><a href='#' onclick='walkDir(/"#{fileFolder}/")'>" +
+                            data[i].url+
+                            "</a></td>";
+					} else {
+                        out += "<tr><td>" +
+                            data[i].url+
+                            "</td>";
+					}
+				}
+            }
+            out += "</table>";
+            document.getElementById("displayArchive").innerHTML = out;
+        }
+    });
+}
+

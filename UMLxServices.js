@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
+var path = require('path')
 var admZip = require('adm-zip');
 var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
@@ -1308,6 +1309,74 @@ app.get('/queryUsers', function(req,res){
 	});
 });
 
+app.get('/listFileUnderDir', function(req, res) {
+	var filePath;
+	if (req.query.fileFolder.indexOf("/") == 0) {
+		filePath = req.query.fileFolder.substring(1);
+	} else if (req.query.fileFolder.indexOf("public/uploads/") == 0) {
+		filePath = req.query.fileFolder;
+	} else {
+        filePath = "public/uploads/"+req.query.fileFolder;
+	}
+
+    function recurDir(filePath, done) {
+        var results = [];
+        fs.readdir(filePath, function(err, list){
+            if (err) {
+                return done(err);
+            } else {
+                var pending = list.length;
+                if (!pending) {
+                	return done(null, results);
+				}
+
+				list.forEach(function(file) {
+					var fileDir = path.resolve(filePath, file);
+					fs.stat(fileDir, function(err, stat){
+						if (stat && stat.isDirectory()) {
+							var entry = {};
+							entry.isFolder = 'true';
+							entry.url = file;
+                            entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							results.push(entry);
+
+							recurDir(fileDir, function(err, ans) {
+								results = results.concat(ans);
+								if (!--pending) {
+									done(null, results);
+								}
+							});
+						} else {
+							var entry = {};
+							entry.isFolder = 'false';
+							entry.url = file;
+							entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							results.push(entry);
+							if (!--pending) {
+								done(null, results);
+							}
+						}
+					});
+				});
+            }
+        });
+    }
+    recurDir(filePath, function (err, data) {
+		if (err) {
+			throw err;
+		}
+        res.json(data);
+    });
+
+    // fs.readdir(filePath, function(err, list){
+    	// if (err) {
+    	// 	throw err;
+	// 	} else {
+     //        res.json(list);
+	// 	}
+	// });
+});
+
 
 app.get('/deactivateUser', function(req,res){
 	var userId = req.query['uid'];
@@ -1330,5 +1399,5 @@ var server = app.listen(8081,'127.0.0.1', function () {
   var port = server.address().port
   console.log("Example app listening at http://%s:%s", host, port)
 
-})
+});
 
