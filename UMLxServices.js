@@ -403,7 +403,9 @@ app.get('/savegitinfo', function(req,res){
 app.get('/profile',function(req,res){
 
 	var profileInfo = {}
-
+	var userID = req.userInfo._id;
+    	
+	
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;
 	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
@@ -412,9 +414,11 @@ app.get('/profile',function(req,res){
 		if(success==true){
 			profileInfo.gitData = gitData;
 		}
-	res.render('profile', {profileInfo:profileInfo});
-	});
-
+	
+		umlModelInfoManager.queryRepoFromUser(userID, function(result, message){
+        		res.render('profile', {profileInfo:profileInfo, profileRep:result.Repos[0]});
+	   	});
+    	});
 })
 
 app.get('/inviteUser',function(req,res){
