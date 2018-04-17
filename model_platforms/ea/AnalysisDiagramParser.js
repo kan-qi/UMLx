@@ -78,6 +78,10 @@
 		console.log("check instance specifications");
 		console.log(XMIInstanceSpecificationsByID);
 		
+
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("use_case_specification", Objects);
+		
 		for(var i in XMIInstanceSpecificationsByID){
 			var XMIInstanceSpecification = XMIInstanceSpecificationsByID[i];
 //			console.log(XMIUseCase);
