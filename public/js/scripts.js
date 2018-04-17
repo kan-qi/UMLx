@@ -235,10 +235,12 @@ function query_model_usecase_func(modelId) {
 	$.ajax({
 		type : 'GET',
 		url : 'requestModelUseCases?model_id='+modelId,
+		async:false,
 		success : function(response) {
 //			console.log(response);
 			$("#model-usecase-analysis").html("");
 			$("#model-usecase-analysis").append(response);
+			test();
 		},
 		error : function() {
 			console.log("fail");
@@ -355,10 +357,12 @@ function query_repo_analytics_func(){
 	$.ajax({
 		type : 'GET',
 		url : url,
+
 		success : function(response) {
 //			console.log(response);
 			$("#display-panel").html("");
 			$("#display-panel").append(response);
+
 		},
 		error : function() {
 			console.log("fail");
