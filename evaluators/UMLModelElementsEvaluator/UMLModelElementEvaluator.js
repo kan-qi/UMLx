@@ -312,7 +312,7 @@
 				console.log("evaluate uml elements for use cases");
 				//
 //				var command = './evaluators/UMLModelElementsEvaluator/UseCaseElementsAnalyticsScript.R "'+useCase.OutputDir+"/"+useCase["ElementAnalytics"].ElementAnalyticsFileName+'" "'+useCase.OutputDir+"/"+useCase["ElementAnalytics"].PathAnalyticsFileName+'" "'+useCase.OutputDir+'" "."';
-				var command1 = '"../../Rscript/OutputStatistics.R "'+useCase.OutputDir+"/"+useCase["ElementAnalytics"].ElementAnalyticsFileName+'" "'+useCase.OutputDir+" element_statistics.json";
+				var command1 = '"./Rscript/OutputStatistics.R" "'+useCase.OutputDir+"/"+useCase["ElementAnalytics"].ElementAnalyticsFileName+'" "'+useCase.OutputDir+'" "." "element_statistics.json"';
 				console.log(command1);
 				
 				RScriptExec.runRScript(command1,function(result){
@@ -323,7 +323,7 @@
 						return;
 					}
 					
-					var command2 = '"../../Rscript/OutputStatistics.R "'+useCase.OutputDir+"/"+useCase["ElementAnalytics"].PathAnalyticsFileName+'" "'+useCase.OutputDir+" path_statistics.json";
+					var command2 = '"./Rscript/OutputStatistics.R" "'+useCase.OutputDir+"/"+useCase["ElementAnalytics"].PathAnalyticsFileName+'" "'+useCase.OutputDir+'" "." "path_statistics.json"';
 					console.log(command2);
 					
 					RScriptExec.runRScript(command2,function(result){
@@ -532,7 +532,7 @@
 
 //			var command = './evaluators/UMLModelElementsEvaluator/DomainModelElementsAnalyticsScript.R "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+domainModelInfo.OutputDir+"/"+domainModelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+domainModelInfo.OutputDir+'" "."';
 
-			var command1 = '"../../Rscript/OutputStatistics.R "'+domainModelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+domainModelInfo.OutputDir+" domain_model_statistics.json";
+			var command1 = '"./Rscript/OutputStatistics.R" "'+domainModelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+domainModelInfo.OutputDir+'" "." "domain_model_statistics.json"';
 			
 			
 			RScriptExec.runRScript(command1,function(result){
@@ -542,7 +542,7 @@
 					}
 					return;
 				}
-				var command2 = '"../../Rscript/OutputStatistics.R "'+domainModelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+domainModelInfo.OutputDir+" attribute_statistics.json";
+				var command2 = '"./Rscript/OutputStatistics.R" "'+domainModelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+domainModelInfo.OutputDir+'" "." "attribute_statistics.json"';
 				
 				
 				RScriptExec.runRScript(command2,function(result){
@@ -552,7 +552,7 @@
 						}
 						return;
 					}
-					var command3 = '"../../Rscript/OutputStatistics.R "'+domainModelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+domainModelInfo.OutputDir+" operation_statistics.json";
+					var command3 = '"./Rscript/OutputStatistics.R" "'+domainModelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+domainModelInfo.OutputDir+'" "." "operation_statistics.json"';
 					
 					
 					RScriptExec.runRScript(command3,function(result){
@@ -708,7 +708,7 @@
 
 //			var command = './evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "."';
 
-			var command1 = '"../../Rscript/OutputStatistics.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+modelInfo.OutputDir+" entity_statistics.json";
+			var command1 = '"./Rscript/OutputStatistics.R" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "." "entity_statistics.json"';
 			
 			
 			RScriptExec.runRScript(command1,function(result){
@@ -718,7 +718,7 @@
 					}
 					return;
 				}
-				var command2 = '"../../Rscript/OutputStatistics.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+modelInfo.OutputDir+" attribute_statistics.json";
+				var command2 = '"./Rscript/OutputStatistics.R" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "." "attribute_statistics.json"';
 				
 				
 				RScriptExec.runRScript(command2,function(result){
@@ -728,7 +728,7 @@
 						}
 						return;
 					}
-					var command3 = '"../../Rscript/OutputStatistics.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+modelInfo.OutputDir+" element_statistics.json";
+					var command3 = '"./Rscript/OutputStatistics.R" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "." "element_statistics.json"';
 					
 					
 					RScriptExec.runRScript(command3,function(result){
@@ -738,7 +738,7 @@
 							}
 							return;
 						}
-						var command4 = '"../../Rscript/OutputStatistics.R "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+modelInfo.OutputDir+" path_statistics.json";
+						var command4 = '"./Rscript/OutputStatistics.R" "'+modelInfo.OutputDir+"/"+modelInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+modelInfo.OutputDir+'" "." "path_statistics.json"';
 						
 						
 						RScriptExec.runRScript(command4,function(result){
@@ -819,7 +819,7 @@
 			console.log("evaluate uml elements at repo level");
 //			var command = './evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].ElementAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "."';
 
-			var command1 = '"../../Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+" entity_statistics.json";
+			var command1 = '"./Rscript/OutputStatistics.R" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "." "entity_statistics.json"';
 			
 			
 			RScriptExec.runRScript(command1,function(result){
@@ -829,7 +829,7 @@
 					}
 					return;
 				}
-				var command2 = '"../../Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+repoInfo.OutputDir+" attribute_statistics.json";
+				var command2 = '"./Rscript/OutputStatistics.R" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].AttributeAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "." "attribute_statistics.json"';
 				
 				
 				RScriptExec.runRScript(command2,function(result){
@@ -839,7 +839,7 @@
 						}
 						return;
 					}
-					var command3 = '"../../Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+repoInfo.OutputDir+" operation_statistics.json";
+					var command3 = '"./Rscript/OutputStatistics.R" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].OperationAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "." "operation_statistics.json"';
 					
 					
 					RScriptExec.runRScript(command3,function(result){
@@ -849,7 +849,7 @@
 							}
 							return;
 						}
-						var command4 = '"../../Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+repoInfo.OutputDir+" path_statistics.json";
+						var command4 = '"./Rscript/OutputStatistics.R" "'+repoInfo.OutputDir+"/"+repoInfo["ElementAnalytics"].PathAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "." "path_statistics.json"';
 						
 						
 						RScriptExec.runRScript(command4,function(result){
@@ -1172,7 +1172,9 @@
 		console.log("evaluate uml elements at repo level");
 //		var command = './evaluators/UMLModelElementsEvaluator/UseCaseAnalyticsScript.R "'+modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName+'" "'+modelInfo.OutputDir+'" "."';
 		
-		var command = '"../../Rscript/OutputStatistics.R "'+modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName+'" "'+modelInfo.OutputDir+" use_case_statistics.json";
+		var command = '"./Rscript/OutputStatistics.R" "'+modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName+'" "'+modelInfo.OutputDir+'" "." "use_case_statistics.json"';
+		console.log(command);
+		console.log("analyse model")
 
 		RScriptExec.runRScript(command,function(result){
 			if (!result) {

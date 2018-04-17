@@ -12,18 +12,21 @@ if (length(args) < 1) {
   # default output file
   args[2] = "."
   args[3] = '.'
-  args[4] = "statistics.json";
+  args[4] = "statisticsaa.json";
 } else if (length(args) == 2){
   args[3] = '.'
-  args[4] = "statistics.json";
-} else{
-  args[4] = "statistics.json";
+  args[4] = "statisticsaa.json";
+} else if (length(args) == 3){
+  args[4] = "statisticsaa.json";
 }
+
+print(args[4])
 
 analyticInfoPath = args[1]
 outputDir <- args[2]
 workDir <- args[3]
-jsonOutputPath <- paste(outputDir,args[4], sep='/')
+fileName <- args[4]
+jsonOutputPath <- paste(outputDir,fileName, sep='/')
 reportPath <- paste(outputDir,'analytical_info_statistics_report.txt', sep='/')
 # store the current directory
 initial.dir<-getwd()

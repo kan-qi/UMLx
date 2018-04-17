@@ -283,19 +283,6 @@
 	
 	function evaluateUseCase(useCase, model, callbackfunc){
 		
-		var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.UseCaseEvaluationFileName+'" "'+model.UseCaseStatisticsOutputDir+'" "."';
-		console.log(command);
-		RScriptExec.runRScript(command,function(result){
-			
-			if (!result) {
-				if(callbackfunc){
-					callbackfunc(false);
-				}
-				return;
-			}
-			
-		}
-		
 		if(callbackfunc){
 		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
 		
