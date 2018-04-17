@@ -25,8 +25,8 @@
 			COCOMONormalizedEffort : 0,
 			UUCW:0,
 			UAW:0,
-			TCF:0,
-			EF:0,
+			TCF:1,
+			EF:1,
 			Effort_Norm_UCP : 0
 		};
 		
@@ -244,8 +244,8 @@
 			COCOMONormalizedEffort : 0,
 			UUCW:0,
 			UAW:0,
-			TCF:0,
-			EF:0,
+			TCF:1,
+			EF:1,
 			Effort_Norm_UCP : 0
 			}
 		}

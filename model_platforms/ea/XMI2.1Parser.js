@@ -296,6 +296,10 @@
 			Model.UseCases.push(UseCase);
 		}
 		
+
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("use_case_parsing_finished_"+Model._id, Model);
+		
 		
 //		for(var i in DomainElementsBySN){
 //			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
@@ -352,6 +356,10 @@
 		if(callbackfunc){
 			callbackfunc(Model);
 		}
+		
+
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("parsed_model_from_parser_"+Model._id, Model);
 		
 			});
 		});

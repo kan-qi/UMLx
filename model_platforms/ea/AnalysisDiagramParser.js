@@ -8,21 +8,71 @@
 //	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
-	function queryUseCaseElementsInExtension(XMIExtension, UseCaseID){
+	function queryExtensionElements(XMIExtension){
 		var extensionAnalysisElements = jp.query(XMIExtension, '$..element[?(@[\'$\'][\'xmi:type\']==\'uml:Object\' || @[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
 		console.log("extension elements");
 		console.log(extensionAnalysisElements);
-		console.log(UseCaseID);
-		var useCaseElementsInExtension = [];
+		var extensionAnalysisElementsByID = {};
 		for(var i in extensionAnalysisElements){
-			var analysisElement = extensionAnalysisElements[i];
+			var extensionAnalysisElement = extensionAnalysisElements[i];
+			extensionAnalysisElementsByID[extensionAnalysisElement['$']['xmi:idref']] = extensionAnalysisElement;
+		}
+		return extensionAnalysisElementsByID;
+	}
+	
+	function queryUseCaseInExtension(extensionAnalysisElementsByID, UseCaseID){
+		console.log(UseCaseID);
+		var useCaseElementsInExtensionByID = {};
+		var useCaseAssociationsInExtensionByID = {};
+		
+		for(var i in extensionAnalysisElementsByID){
+			var analysisElement = extensionAnalysisElementsByID[i];
 			if(analysisElement['model'] && analysisElement['model'][0]['$']['owner'] == UseCaseID){
 				console.log("found use case element");
-				useCaseElementsInExtension.push(analysisElement);
+//				useCaseElementsInExtension.push(analysisElement);
+				
+				var XMIInformationFlows = jp.query(analysisElement, '$..InformationFlow[?(@[\'$\'][\'xmi:id\'])]');
+//				for(var j in XMIInformationFlows){
+//					var XMIInformationFlow = XMIInformationFlows[j];
+//					var startElement = extensionAnalysisElementsByID[XMIInformationFlow['$']['start']];
+//					var endElement = extensionAnalysisElementsByID[XMIInformationFlow['$']['end']]
+//					useCaseAssociationsInExtensionByID[XMIInformationFlow['$']['xmi:id']] = {
+//							start: startElement,
+//							end: endElement
+//					}
+//					
+//					useCaseElementsInExtensionByID[XMIInformationFlow['$']['start']] = startElement;
+//					useCaseElementsInExtensionByID[XMIInformationFlow['$']['end']] = endElement;
+//					
+//				}
+				var XMIAssociations = jp.query(analysisElement, '$..Association[?(@[\'$\'][\'xmi:id\'])]');
+				XMIAssociations = XMIAssociations.concat(XMIInformationFlows);
+				for(var j in XMIAssociations){
+					var XMIAssociation = XMIAssociations[j];
+					
+					var startElement = extensionAnalysisElementsByID[XMIAssociation['$']['start']];
+					var endElement = extensionAnalysisElementsByID[XMIAssociation['$']['end']]
+					useCaseAssociationsInExtensionByID[XMIAssociation['$']['xmi:id']] = {
+							start: startElement,
+							end: endElement
+					}
+					
+					useCaseElementsInExtensionByID[XMIAssociation['$']['start']] = startElement;
+					useCaseElementsInExtensionByID[XMIAssociation['$']['end']] = endElement;
+				}
 			}
 		}
 		
-		return useCaseElementsInExtension;
+		var useCaseInExtension = {
+			useCaseElementsByID: useCaseElementsInExtensionByID,
+			useCaseAssociationsByID: useCaseAssociationsInExtensionByID
+		}
+		
+
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("use_case_extension_elements"+UseCaseID, useCaseInExtension);
+		
+		return useCaseInExtension;
 	}
 	
 	function parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel){
@@ -48,24 +98,36 @@
 
 //		var extensionElements = jp.query(XMIExtension, '$..element[?(@[\'model\'][\'$\'][\'owner\']==\''+UseCase._id+'\')]');
 		
-		var extensionElements = queryUseCaseElementsInExtension(XMIExtension, UseCase._id);
+		var extensionElementsByID = queryExtensionElements(XMIExtension);
+		var extensionUseCase = queryUseCaseInExtension(extensionElementsByID, UseCase._id);
 		
 		console.log("check extension elements");
-		console.log(extensionElements);
+		console.log("expanding the elements to the ones that are not in the package");
+		console.log(extensionUseCase);
 //		console.log(XMIExtension[0]['elements']);
-		for(var i in extensionElements){
-			var extensionElement = extensionElements[i];
-			var XMIInstanceSpecification = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+extensionElement['$']['xmi:idref']+'\')]')[0];
+		for(var i in extensionUseCase.useCaseElementsByID){
+			var extensionElementByUseCase = extensionUseCase.useCaseElementsByID[i];
+			
+			
+			var XMIInstanceSpecification = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+extensionElementByUseCase['$']['xmi:idref']+'\')]')[0];
 //			XMIInstanceSpecifications = XMIInstanceSpecifications.concat(jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]'));
 			console.log("checking derived instance specification");
 			console.log(XMIInstanceSpecification);
 			XMIInstanceSpecificationsByID[XMIInstanceSpecification['$']['xmi:id']] = XMIInstanceSpecification;
 			
-			var XMISpecificationType = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
+//			var XMISpecificationType = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
+			
+			
 			var type = "Object";
-			if(XMISpecificationType[0] && CustomProfiles[XMISpecificationType[0]['$']['xmi:idref']]){
-				type = CustomProfiles[XMISpecificationType[0]['$']['xmi:idref']];
+			if(CustomProfiles[XMIInstanceSpecification['$']['xmi:id']]){
+				type = CustomProfiles[XMIInstanceSpecification['$']['xmi:id']];
 			}
+			
+
+			if(XMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
+				type = "Actor";
+			}
+			
 			var Object = {
 					id: XMIInstanceSpecification['$']['xmi:id'],
 					name: XMIInstanceSpecification['$']['name'],
@@ -79,29 +141,33 @@
 		console.log(XMIInstanceSpecificationsByID);
 		
 
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("use_case_specification", Objects);
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("use_case_objects_"+UseCase._id, Objects);
 		
-		for(var i in XMIInstanceSpecificationsByID){
-			var XMIInstanceSpecification = XMIInstanceSpecificationsByID[i];
+		console.log("construct the graph based on the associations");
+		for(var i in extensionUseCase.useCaseAssociationsByID){
+			var extensionAssociationByUseCase = extensionUseCase.useCaseAssociationsByID[i];
+			
+//			var XMIInstanceSpecification = XMIInstanceSpecificationsByID[i];
 //			console.log(XMIUseCase);
-			console.log("XMIInstanceSpecifications");
-			var ConnectedXMIInstanceSpecifications = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
+//			console.log("XMIInstanceSpecifications");
+//			var ConnectedXMIInstanceSpecifications = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
 //			XMIAttributesByID = [];
 			
-			console.log(ConnectedXMIInstanceSpecifications);
+//			console.log(ConnectedXMIInstanceSpecifications);
 //			var startComponent = ActivitiesByID[XMIInstanceSpecification['$']['xmi:id']];
 			
-			for(var j in ConnectedXMIInstanceSpecifications){
-				var ConnectedXMIInstanceSpecificationID = ConnectedXMIInstanceSpecifications[j]['$']['xmi:idref'];
-				var ConnectedXMIInstanceSpecification = XMIInstanceSpecificationsByID[ConnectedXMIInstanceSpecificationID];
+//			for(var j in ConnectedXMIInstanceSpecifications){
+//				var ConnectedXMIInstanceSpecificationID = ConnectedXMIInstanceSpecifications[j]['$']['xmi:idref'];
+				var XMIInstanceSpecification = XMIInstanceSpecificationsByID[extensionAssociationByUseCase.start['$']['xmi:idref']];
+				var ConnectedXMIInstanceSpecification = XMIInstanceSpecificationsByID[extensionAssociationByUseCase.end['$']['xmi:idref']];
 					
 					var component = DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
 					if(!component){
 						component = {};
 					}
 					
-					component.Type = CustomProfiles[ConnectedXMIInstanceSpecificationID];
+					component.Type = CustomProfiles[ConnectedXMIInstanceSpecification['$']['xmi:id']];
 					
 					var activity = {
 							Type: "instanceSpecificationCall",
@@ -131,7 +197,7 @@
 						end: ConnectedXMIInstanceSpecification['$']['xmi:id']
 					});
 //				}
-			}
+//			}
 			console.log("checking robustness details");
 			console.log(Objects);
 			//throw "objects checing da ting";
@@ -168,11 +234,17 @@
 		
 		Activities = Activities.concat(Stimuli);
 		
+
 		console.log(PrecedenceRelations);
 		
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
-		UseCase.Components = true;
+//		UseCase.Components = null;
+		
+
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("use_cas_parsed_"+UseCase._id, UseCase);
+		
 		
 //		console.log("checking analysis activities");
 //		console.log(Activities);

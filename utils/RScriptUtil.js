@@ -6,7 +6,7 @@
 	var RExec = '\"C:/Program Files/R/R-3.2.5/bin/Rscript\"';
 	
 
-	var debug = require("../utils/DebuggerOutput.js");
+	var debug = require("./DebuggerOutput.js");
 	
 	//every other functions which call R script should call this function.
 	
@@ -16,8 +16,8 @@
 	
 	function runRScript(command, callbackfunc){
 //		console.log('generate model Analytics');
-		console.log(command);
-		return;
+//		console.log(command);
+//		return;
 		commandPool.push({
 			command: command,
 			callbackfunc: callbackfunc

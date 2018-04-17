@@ -628,19 +628,19 @@ app.get('/reanalyseModel', function (req, res){
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryModelInfo(modelId, req.userInfo.repoId, function(modelInfo){
-		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+		umlModelExtractor.extractModelInfo(modelInfo, function(extractedModelInfo){
 			//update model analytics.
-			umlEvaluator.evaluateModel(modelInfo, function(){
+			umlEvaluator.evaluateModel(extractedModelInfo, function(){
 				console.log("model analysis complete");
 			});
 //			console.log(modelInfo);
 			umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
 //				console.log(modelInfo);
-				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-					console.log("=============repoInfo==========");
+//				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+//					console.log("=============repoInfo==========");
 //					console.log(repoInfo);
 					res.render('modelDetail', {modelInfo:modelInfo, repo_id: repoId});
-				});
+//				});
 			});
 		});
 	});

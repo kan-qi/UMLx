@@ -12,12 +12,12 @@ if (length(args) < 1) {
   # default output file
   args[2] = "."
   args[3] = '.'
-  args[4] = "statisticsaa.json";
+  args[4] = "statistics.json";
 } else if (length(args) == 2){
   args[3] = '.'
-  args[4] = "statisticsaa.json";
+  args[4] = "statistics.json";
 } else if (length(args) == 3){
-  args[4] = "statisticsaa.json";
+  args[4] = "statistics.json";
 }
 
 print(args[4])
