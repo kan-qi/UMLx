@@ -4,6 +4,7 @@ args = commandArgs(trailingOnly=TRUE)
 # arg1: analytical info file path
 # arg2: output dir
 # arg3: working directory
+# arg4: output name
 
 if (length(args) < 1) {
   stop("At least 1 arguments must be supplied (input file).", call.=FALSE)
@@ -11,14 +12,18 @@ if (length(args) < 1) {
   # default output file
   args[2] = "."
   args[3] = '.'
+  args[4] = "statistics.json";
 } else if (length(args) == 2){
   args[3] = '.'
+  args[4] = "statistics.json";
+} else{
+  args[4] = "statistics.json";
 }
 
 analyticInfoPath = args[1]
 outputDir <- args[2]
 workDir <- args[3]
-jsonOutputPath <- paste(outputDir,'statistics.json', sep='/')
+jsonOutputPath <- paste(outputDir,args[4], sep='/')
 reportPath <- paste(outputDir,'analytical_info_statistics_report.txt', sep='/')
 # store the current directory
 initial.dir<-getwd()
