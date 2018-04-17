@@ -5,6 +5,12 @@
       "xmi:id": "EAID_D8669452_2151_4ffb_87E4_412B65A1090B",
       "name": "User",
       "visibility": "public"
+    },
+    {
+      "xmi:type": "uml:Actor",
+      "xmi:id": "EAID_4900789A_C08B_45c8_A019_169CA47F50E4",
+      "name": "User",
+      "visibility": "public"
     }
   ],
   "Roles": [
@@ -12,194 +18,1806 @@
   ],
   "UseCases": [
     {
-      "_id": "EAID_ECF9168A_8971_4a86_8326_9B48BA37EC8B",
-      "Name": "Query Item_activity",
+      "_id": "EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "Name": "Query Item",
       "PrecedenceRelations": [
         {
           "start": {
-            "Type": "uml:Activity",
-            "Name": "User inputs the keywords and clicks the search button",
-            "_id": "EAID_3F61A775_51C7_40b0_A4B0_D1EA58E7172C",
+            "Type": "message",
+            "Name": "onSearch",
+            "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
+              "Name": "ItemSearchPage",
+              "Operations": [
+                {
+                  "Name": "onSearch",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "keywords",
+                      "Type": "EAJava_String"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [
+                {
+                  "Name": "pageID",
+                  "Type": "EAJava_int",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "searchBox",
+                  "Type": "EAJava_InputField",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "searchButton",
+                  "Type": "EAJava_Button",
+                  "isStatic": "false"
+                }
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+            "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "isResponse": true,
+            "stimulusGroup": "User"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+              "Name": "ItemManager",
+              "Operations": [
+                {
+                  "Name": "searchItemsByKeywords",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "keywords",
+                      "Type": "EAJava_String__"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          }
+        },
+        {
+          "start": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+              "Name": "Catalog",
+              "Operations": [
+                {
+                  "Name": "queryCatalog",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "query",
+                      "Type": "EAJava_String"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_ItemList"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displayItemList",
+            "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+              "Name": "SearchResultsPage",
+              "Operations": [
+                {
+                  "Name": "displaySearchInvalidMsg",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "msg",
+                      "Type": "EAJava_SearchInvalidMsg"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                },
+                {
+                  "Name": "displayItemList",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "itemList",
+                      "Type": "EAJava_ItemList"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                },
+                {
+                  "Name": "displayEmptyListNotice",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "notice",
+                      "Type": "EAJava_String"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [
+                {
+                  "Name": "pageID",
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "title",
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "searchResultList",
+                  "Type": "EAJava_ListView",
+                  "isStatic": "false"
+                }
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
+        },
+        {
+          "start": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+              "Name": "Catalog",
+              "Operations": [
+                {
+                  "Name": "queryCatalog",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "query",
+                      "Type": "EAJava_String"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_ItemList"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displayEmptyListNotice",
+            "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
+            "Group": "System",
+            "OutScope": true,
+            "Component": {
+              "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+              "Name": "SearchResultsPage",
+              "Operations": [
+                {
+                  "Name": "displaySearchInvalidMsg",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "msg",
+                      "Type": "EAJava_SearchInvalidMsg"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                },
+                {
+                  "Name": "displayItemList",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "itemList",
+                      "Type": "EAJava_ItemList"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                },
+                {
+                  "Name": "displayEmptyListNotice",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "notice",
+                      "Type": "EAJava_String"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [
+                {
+                  "Name": "pageID",
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "title",
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "searchResultList",
+                  "Type": "EAJava_ListView",
+                  "isStatic": "false"
+                }
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
+        },
+        {
+          "start": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+              "Name": "ItemManager",
+              "Operations": [
+                {
+                  "Name": "searchItemsByKeywords",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "keywords",
+                      "Type": "EAJava_String__"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "displaySearchInvalidMsg",
+            "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+              "Name": "SearchResultsPage",
+              "Operations": [
+                {
+                  "Name": "displaySearchInvalidMsg",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "msg",
+                      "Type": "EAJava_SearchInvalidMsg"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                },
+                {
+                  "Name": "displayItemList",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "itemList",
+                      "Type": "EAJava_ItemList"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                },
+                {
+                  "Name": "displayEmptyListNotice",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "notice",
+                      "Type": "EAJava_String"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [
+                {
+                  "Name": "pageID",
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "title",
+                  "Type": "EAJava_String",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "searchResultList",
+                  "Type": "EAJava_ListView",
+                  "isStatic": "false"
+                }
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+          }
+        },
+        {
+          "start": {
+            "Type": "message",
+            "Name": "searchItemByKeywords",
+            "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+              "Name": "ItemManager",
+              "Operations": [
+                {
+                  "Name": "searchItemsByKeywords",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "keywords",
+                      "Type": "EAJava_String__"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+          },
+          "end": {
+            "Type": "message",
+            "Name": "queryCatalog",
+            "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+            "Group": "System",
+            "OutScope": false,
+            "Component": {
+              "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+              "Name": "Catalog",
+              "Operations": [
+                {
+                  "Name": "queryCatalog",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "query",
+                      "Type": "EAJava_String"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_ItemList"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+            "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+          }
+        },
+        {
+          "start": {
+            "Type": "Stimulus",
+            "Name": "stl#onSearch",
+            "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F_STL",
             "Stimulus": true,
             "OutScope": false,
             "Group": "User"
           },
           "end": {
-            "Type": "uml:Activity",
-            "Name": "System validates the input keywords",
-            "_id": "EAID_1D07DB93_195D_4537_B7F7_4523E095F005",
-            "Stimulus": false,
+            "Type": "message",
+            "Name": "onSearch",
+            "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+            "Group": "System",
             "OutScope": false,
-            "Group": "System"
-          }
-        },
-        {
-          "start": {
-            "Type": "uml:Activity",
-            "Name": "System validates the input keywords",
-            "_id": "EAID_1D07DB93_195D_4537_B7F7_4523E095F005",
-            "Stimulus": false,
-            "OutScope": false,
-            "Group": "System"
-          },
-          "end": {
-            "Type": "uml:Activity",
-            "Name": "System queries from the catalog by the keywords",
-            "_id": "EAID_A17AC6DE_8D4C_42fb_AD8B_59375CEFA373",
-            "Stimulus": false,
-            "OutScope": false,
-            "Group": "System"
-          }
-        },
-        {
-          "start": {
-            "Type": "uml:Activity",
-            "Name": "System validates the input keywords",
-            "_id": "EAID_1D07DB93_195D_4537_B7F7_4523E095F005",
-            "Stimulus": false,
-            "OutScope": false,
-            "Group": "System"
-          },
-          "end": {
-            "Type": "uml:Activity",
-            "Name": "System displays \"Invalid Search\" message",
-            "_id": "EAID_8C7E604F_587F_41cf_BA36_F9E9F83B4AAB",
-            "Stimulus": false,
-            "OutScope": false,
-            "Group": "System"
-          }
-        },
-        {
-          "start": {
-            "Type": "uml:Activity",
-            "Name": "System queries from the catalog by the keywords",
-            "_id": "EAID_A17AC6DE_8D4C_42fb_AD8B_59375CEFA373",
-            "Stimulus": false,
-            "OutScope": false,
-            "Group": "System"
-          },
-          "end": {
-            "Type": "uml:Activity",
-            "Name": "System displays the returned list of items",
-            "_id": "EAID_C232F586_CCBC_44e3_AB9E_418A6F0E7755",
-            "Stimulus": false,
-            "OutScope": false,
-            "Group": "System"
-          }
-        },
-        {
-          "start": {
-            "Type": "uml:Activity",
-            "Name": "System queries from the catalog by the keywords",
-            "_id": "EAID_A17AC6DE_8D4C_42fb_AD8B_59375CEFA373",
-            "Stimulus": false,
-            "OutScope": false,
-            "Group": "System"
-          },
-          "end": {
-            "Type": "uml:Activity",
-            "Name": "System displays \"list is empty\" message",
-            "_id": "EAID_2ED1F72D_AE59_4b45_B9D3_D1030A0A0DA3",
-            "Stimulus": false,
-            "OutScope": false,
-            "Group": "System"
+            "Component": {
+              "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
+              "Name": "ItemSearchPage",
+              "Operations": [
+                {
+                  "Name": "onSearch",
+                  "Visibility": "public",
+                  "Parameters": [
+                    {
+                      "Name": "keywords",
+                      "Type": "EAJava_String"
+                    },
+                    {
+                      "Name": "return",
+                      "Type": "EAJava_void"
+                    }
+                  ]
+                }
+              ],
+              "Attributes": [
+                {
+                  "Name": "pageID",
+                  "Type": "EAJava_int",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "searchBox",
+                  "Type": "EAJava_InputField",
+                  "isStatic": "false"
+                },
+                {
+                  "Name": "searchButton",
+                  "Type": "EAJava_Button",
+                  "isStatic": "false"
+                }
+              ],
+              "InheritanceStats": {
+                "depth": 0,
+                "numInheritedFrom": 0,
+                "numDerivedClass": 0,
+                "coupling": 0,
+                "children": {},
+                "topLevelClasses": 11,
+                "numOfChildren": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                },
+                "tree": {
+                  "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                  "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                  "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                  "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                  "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                  "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                  "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                  "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                  "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                  "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                  "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                }
+              },
+              "Associations": []
+            },
+            "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+            "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+            "isResponse": true,
+            "stimulusGroup": "User"
           }
         }
       ],
       "Activities": [
         {
-          "Type": "uml:Activity",
-          "Name": "Query Item_ActivityDiagram",
-          "_id": "EAID_BA8B93C2_E026_4d0e_889A_0B24BA238CF4",
-          "Stimulus": false,
-          "OutScope": false
-        },
-        {
-          "Type": "uml:Activity",
-          "Name": "System displays \"Invalid Search\" message",
-          "_id": "EAID_8C7E604F_587F_41cf_BA36_F9E9F83B4AAB",
-          "Stimulus": false,
+          "Type": "message",
+          "Name": "onSearch",
+          "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+          "Group": "System",
           "OutScope": false,
-          "Group": "System"
+          "Component": {
+            "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
+            "Name": "ItemSearchPage",
+            "Operations": [
+              {
+                "Name": "onSearch",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "keywords",
+                    "Type": "EAJava_String"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "pageID",
+                "Type": "EAJava_int",
+                "isStatic": "false"
+              },
+              {
+                "Name": "searchBox",
+                "Type": "EAJava_InputField",
+                "isStatic": "false"
+              },
+              {
+                "Name": "searchButton",
+                "Type": "EAJava_Button",
+                "isStatic": "false"
+              }
+            ],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 11,
+              "numOfChildren": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+              },
+              "tree": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+              }
+            },
+            "Associations": []
+          },
+          "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+          "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+          "isResponse": true,
+          "stimulusGroup": "User"
         },
         {
-          "Type": "uml:Activity",
-          "Name": "System displays \"list is empty\" message",
-          "_id": "EAID_2ED1F72D_AE59_4b45_B9D3_D1030A0A0DA3",
-          "Stimulus": false,
+          "Type": "message",
+          "Name": "searchItemByKeywords",
+          "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+          "Group": "System",
           "OutScope": false,
-          "Group": "System"
+          "Component": {
+            "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+            "Name": "ItemManager",
+            "Operations": [
+              {
+                "Name": "searchItemsByKeywords",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "keywords",
+                    "Type": "EAJava_String__"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              }
+            ],
+            "Attributes": [],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 11,
+              "numOfChildren": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+              },
+              "tree": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+              }
+            },
+            "Associations": []
+          },
+          "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+          "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
         },
         {
-          "Type": "uml:Activity",
-          "Name": "System displays the returned list of items",
-          "_id": "EAID_C232F586_CCBC_44e3_AB9E_418A6F0E7755",
-          "Stimulus": false,
+          "Type": "message",
+          "Name": "displaySearchInvalidMsg",
+          "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
+          "Group": "System",
           "OutScope": false,
-          "Group": "System"
+          "Component": {
+            "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+            "Name": "SearchResultsPage",
+            "Operations": [
+              {
+                "Name": "displaySearchInvalidMsg",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "msg",
+                    "Type": "EAJava_SearchInvalidMsg"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              },
+              {
+                "Name": "displayItemList",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "itemList",
+                    "Type": "EAJava_ItemList"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              },
+              {
+                "Name": "displayEmptyListNotice",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "notice",
+                    "Type": "EAJava_String"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "pageID",
+                "Type": "EAJava_String",
+                "isStatic": "false"
+              },
+              {
+                "Name": "title",
+                "Type": "EAJava_String",
+                "isStatic": "false"
+              },
+              {
+                "Name": "searchResultList",
+                "Type": "EAJava_ListView",
+                "isStatic": "false"
+              }
+            ],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 11,
+              "numOfChildren": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+              },
+              "tree": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+              }
+            },
+            "Associations": []
+          },
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
         },
         {
-          "Type": "uml:Activity",
-          "Name": "System queries from the catalog by the keywords",
-          "_id": "EAID_A17AC6DE_8D4C_42fb_AD8B_59375CEFA373",
-          "Stimulus": false,
+          "Type": "message",
+          "Name": "queryCatalog",
+          "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+          "Group": "System",
           "OutScope": false,
-          "Group": "System"
+          "Component": {
+            "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+            "Name": "Catalog",
+            "Operations": [
+              {
+                "Name": "queryCatalog",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "query",
+                    "Type": "EAJava_String"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_ItemList"
+                  }
+                ]
+              }
+            ],
+            "Attributes": [],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 11,
+              "numOfChildren": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+              },
+              "tree": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+              }
+            },
+            "Associations": []
+          },
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
         },
         {
-          "Type": "uml:Activity",
-          "Name": "System validates the input keywords",
-          "_id": "EAID_1D07DB93_195D_4537_B7F7_4523E095F005",
-          "Stimulus": false,
+          "Type": "message",
+          "Name": "displayEmptyListNotice",
+          "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
+          "Group": "System",
+          "OutScope": true,
+          "Component": {
+            "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+            "Name": "SearchResultsPage",
+            "Operations": [
+              {
+                "Name": "displaySearchInvalidMsg",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "msg",
+                    "Type": "EAJava_SearchInvalidMsg"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              },
+              {
+                "Name": "displayItemList",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "itemList",
+                    "Type": "EAJava_ItemList"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              },
+              {
+                "Name": "displayEmptyListNotice",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "notice",
+                    "Type": "EAJava_String"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "pageID",
+                "Type": "EAJava_String",
+                "isStatic": "false"
+              },
+              {
+                "Name": "title",
+                "Type": "EAJava_String",
+                "isStatic": "false"
+              },
+              {
+                "Name": "searchResultList",
+                "Type": "EAJava_ListView",
+                "isStatic": "false"
+              }
+            ],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 11,
+              "numOfChildren": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+              },
+              "tree": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+              }
+            },
+            "Associations": []
+          },
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+        },
+        {
+          "Type": "message",
+          "Name": "displayItemList",
+          "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
+          "Group": "System",
           "OutScope": false,
-          "Group": "System"
+          "Component": {
+            "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+            "Name": "SearchResultsPage",
+            "Operations": [
+              {
+                "Name": "displaySearchInvalidMsg",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "msg",
+                    "Type": "EAJava_SearchInvalidMsg"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              },
+              {
+                "Name": "displayItemList",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "itemList",
+                    "Type": "EAJava_ItemList"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              },
+              {
+                "Name": "displayEmptyListNotice",
+                "Visibility": "public",
+                "Parameters": [
+                  {
+                    "Name": "notice",
+                    "Type": "EAJava_String"
+                  },
+                  {
+                    "Name": "return",
+                    "Type": "EAJava_void"
+                  }
+                ]
+              }
+            ],
+            "Attributes": [
+              {
+                "Name": "pageID",
+                "Type": "EAJava_String",
+                "isStatic": "false"
+              },
+              {
+                "Name": "title",
+                "Type": "EAJava_String",
+                "isStatic": "false"
+              },
+              {
+                "Name": "searchResultList",
+                "Type": "EAJava_ListView",
+                "isStatic": "false"
+              }
+            ],
+            "InheritanceStats": {
+              "depth": 0,
+              "numInheritedFrom": 0,
+              "numDerivedClass": 0,
+              "coupling": 0,
+              "children": {},
+              "topLevelClasses": 11,
+              "numOfChildren": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+              },
+              "tree": {
+                "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+              }
+            },
+            "Associations": []
+          },
+          "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+          "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
         },
         {
-          "Type": "uml:Activity",
-          "Name": "User inputs the keywords and clicks the search button",
-          "_id": "EAID_3F61A775_51C7_40b0_A4B0_D1EA58E7172C",
+          "Type": "Stimulus",
+          "Name": "stl#onSearch",
+          "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F_STL",
           "Stimulus": true,
           "OutScope": false,
           "Group": "User"
         }
       ],
-      "OutputDir": "public/output/repo5ad2359665018b40bca28d54/05b5ac2f6095fee80dff94e319d37078/EAID_ECF9168A_8971_4a86_8326_9B48BA37EC8B",
-      "AccessDir": "output/repo5ad2359665018b40bca28d54/05b5ac2f6095fee80dff94e319d37078/EAID_ECF9168A_8971_4a86_8326_9B48BA37EC8B",
+      "OutputDir": "public/output/repo5ace9ef4c727a752e0728a31/9a887df68e4e24a019668f81249ec55f/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
+      "AccessDir": "output/repo5ace9ef4c727a752e0728a31/9a887df68e4e24a019668f81249ec55f/EAID_12BEE0C4_512C_4b9e_A80F_ECC44790B13A",
       "DiagramType": "robustness_diagram",
       "Components": true,
       "Paths": [
         {
           "Nodes": [
             {
-              "Type": "uml:Activity",
-              "Name": "User inputs the keywords and clicks the search button",
-              "_id": "EAID_3F61A775_51C7_40b0_A4B0_D1EA58E7172C",
+              "Type": "Stimulus",
+              "Name": "stl#onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F_STL",
               "Stimulus": true,
               "OutScope": false,
               "Group": "User"
             },
             {
-              "Type": "uml:Activity",
-              "Name": "System validates the input keywords",
-              "_id": "EAID_1D07DB93_195D_4537_B7F7_4523E095F005",
-              "Stimulus": false,
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Group": "System",
               "OutScope": false,
-              "Group": "System"
+              "Component": {
+                "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
+                "Name": "ItemSearchPage",
+                "Operations": [
+                  {
+                    "Name": "onSearch",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "keywords",
+                        "Type": "EAJava_String"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [
+                  {
+                    "Name": "pageID",
+                    "Type": "EAJava_int",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchBox",
+                    "Type": "EAJava_InputField",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchButton",
+                    "Type": "EAJava_Button",
+                    "isStatic": "false"
+                  }
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "isResponse": true,
+              "stimulusGroup": "User"
             },
             {
-              "Type": "uml:Activity",
-              "Name": "System displays \"Invalid Search\" message",
-              "_id": "EAID_8C7E604F_587F_41cf_BA36_F9E9F83B4AAB",
-              "Stimulus": false,
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Group": "System",
               "OutScope": false,
-              "Group": "System"
+              "Component": {
+                "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+                "Name": "ItemManager",
+                "Operations": [
+                  {
+                    "Name": "searchItemsByKeywords",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "keywords",
+                        "Type": "EAJava_String__"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+            },
+            {
+              "Type": "message",
+              "Name": "queryCatalog",
+              "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+              "Group": "System",
+              "OutScope": false,
+              "Component": {
+                "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+                "Name": "Catalog",
+                "Operations": [
+                  {
+                    "Name": "queryCatalog",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "query",
+                        "Type": "EAJava_String"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_ItemList"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+            },
+            {
+              "Type": "message",
+              "Name": "displayEmptyListNotice",
+              "_id": "EAID_AB51EFD8_6E60_4c81_96A9_7F5849659A41",
+              "Group": "System",
+              "OutScope": true,
+              "Component": {
+                "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+                "Name": "SearchResultsPage",
+                "Operations": [
+                  {
+                    "Name": "displaySearchInvalidMsg",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "msg",
+                        "Type": "EAJava_SearchInvalidMsg"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "displayItemList",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "itemList",
+                        "Type": "EAJava_ItemList"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "displayEmptyListNotice",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "notice",
+                        "Type": "EAJava_String"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [
+                  {
+                    "Name": "pageID",
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "title",
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchResultList",
+                    "Type": "EAJava_ListView",
+                    "isStatic": "false"
+                  }
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
             }
           ],
-          "OutScope": false,
-          "PathStr": "User inputs the keywords and clicks the search button->System validates the input keywords->System displays \"Invalid Search\" message",
-          "pathLength": 3,
-          "avgDegree": 0,
-          "archDiff": 0,
+          "OutScope": true,
+          "PathStr": "stl#onSearch->onSearch->searchItemByKeywords->queryCatalog->displayEmptyListNotice",
+          "pathLength": 5,
+          "avgDegree": null,
+          "archDiff": null,
           "boundaryNum": 0,
           "controlNum": 0,
           "entityNum": 0,
@@ -216,51 +1834,643 @@
               "CTRL"
             ],
             "TransactionalTag": "CTRL",
-            "TranLength": 3,
-            "TotalDegree": 3
+            "TranLength": 5,
+            "TotalDegree": 5
           },
-          "utw": 4
+          "utw": 5
         },
         {
           "Nodes": [
             {
-              "Type": "uml:Activity",
-              "Name": "User inputs the keywords and clicks the search button",
-              "_id": "EAID_3F61A775_51C7_40b0_A4B0_D1EA58E7172C",
+              "Type": "Stimulus",
+              "Name": "stl#onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F_STL",
               "Stimulus": true,
               "OutScope": false,
               "Group": "User"
             },
             {
-              "Type": "uml:Activity",
-              "Name": "System validates the input keywords",
-              "_id": "EAID_1D07DB93_195D_4537_B7F7_4523E095F005",
-              "Stimulus": false,
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Group": "System",
               "OutScope": false,
-              "Group": "System"
+              "Component": {
+                "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
+                "Name": "ItemSearchPage",
+                "Operations": [
+                  {
+                    "Name": "onSearch",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "keywords",
+                        "Type": "EAJava_String"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [
+                  {
+                    "Name": "pageID",
+                    "Type": "EAJava_int",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchBox",
+                    "Type": "EAJava_InputField",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchButton",
+                    "Type": "EAJava_Button",
+                    "isStatic": "false"
+                  }
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "isResponse": true,
+              "stimulusGroup": "User"
             },
             {
-              "Type": "uml:Activity",
-              "Name": "System queries from the catalog by the keywords",
-              "_id": "EAID_A17AC6DE_8D4C_42fb_AD8B_59375CEFA373",
-              "Stimulus": false,
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Group": "System",
               "OutScope": false,
-              "Group": "System"
+              "Component": {
+                "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+                "Name": "ItemManager",
+                "Operations": [
+                  {
+                    "Name": "searchItemsByKeywords",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "keywords",
+                        "Type": "EAJava_String__"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
             },
             {
-              "Type": "uml:Activity",
-              "Name": "System displays \"list is empty\" message",
-              "_id": "EAID_2ED1F72D_AE59_4b45_B9D3_D1030A0A0DA3",
-              "Stimulus": false,
+              "Type": "message",
+              "Name": "queryCatalog",
+              "_id": "EAID_051F05EC_D785_41de_B088_775A722963C3",
+              "Group": "System",
               "OutScope": false,
-              "Group": "System"
+              "Component": {
+                "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+                "Name": "Catalog",
+                "Operations": [
+                  {
+                    "Name": "queryCatalog",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "query",
+                        "Type": "EAJava_String"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_ItemList"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_91C3F854_FBF3_498d_AC62_BEABFE707B96"
+            },
+            {
+              "Type": "message",
+              "Name": "displayItemList",
+              "_id": "EAID_B891C645_35D8_4041_B74E_938604A9AE96",
+              "Group": "System",
+              "OutScope": false,
+              "Component": {
+                "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+                "Name": "SearchResultsPage",
+                "Operations": [
+                  {
+                    "Name": "displaySearchInvalidMsg",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "msg",
+                        "Type": "EAJava_SearchInvalidMsg"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "displayItemList",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "itemList",
+                        "Type": "EAJava_ItemList"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "displayEmptyListNotice",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "notice",
+                        "Type": "EAJava_String"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [
+                  {
+                    "Name": "pageID",
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "title",
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchResultList",
+                    "Type": "EAJava_ListView",
+                    "isStatic": "false"
+                  }
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
             }
           ],
           "OutScope": false,
-          "PathStr": "User inputs the keywords and clicks the search button->System validates the input keywords->System queries from the catalog by the keywords->System displays \"list is empty\" message",
+          "PathStr": "stl#onSearch->onSearch->searchItemByKeywords->queryCatalog->displayItemList",
+          "pathLength": 5,
+          "avgDegree": null,
+          "archDiff": null,
+          "boundaryNum": 0,
+          "controlNum": 0,
+          "entityNum": 0,
+          "actorNum": 0,
+          "FPAnalytics": {
+            "Operations": {},
+            "Functional": [
+              "FUNC_NA"
+            ],
+            "FunctionalTag": "FUNC_NA"
+          },
+          "TransactionAnalytics": {
+            "Transactional": [
+              "CTRL"
+            ],
+            "TransactionalTag": "CTRL",
+            "TranLength": 5,
+            "TotalDegree": 5
+          },
+          "utw": 5
+        },
+        {
+          "Nodes": [
+            {
+              "Type": "Stimulus",
+              "Name": "stl#onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F_STL",
+              "Stimulus": true,
+              "OutScope": false,
+              "Group": "User"
+            },
+            {
+              "Type": "message",
+              "Name": "onSearch",
+              "_id": "EAID_5AFF5212_D7A0_41bd_BFBA_3FD0A111293F",
+              "Group": "System",
+              "OutScope": false,
+              "Component": {
+                "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
+                "Name": "ItemSearchPage",
+                "Operations": [
+                  {
+                    "Name": "onSearch",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "keywords",
+                        "Type": "EAJava_String"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [
+                  {
+                    "Name": "pageID",
+                    "Type": "EAJava_int",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchBox",
+                    "Type": "EAJava_InputField",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchButton",
+                    "Type": "EAJava_Button",
+                    "isStatic": "false"
+                  }
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_LL000000_C08B_45c8_A019_169CA47F50E4",
+              "receiver": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "isResponse": true,
+              "stimulusGroup": "User"
+            },
+            {
+              "Type": "message",
+              "Name": "searchItemByKeywords",
+              "_id": "EAID_16B7023E_6AAB_4a2f_B199_F6EADF40E6E4",
+              "Group": "System",
+              "OutScope": false,
+              "Component": {
+                "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+                "Name": "ItemManager",
+                "Operations": [
+                  {
+                    "Name": "searchItemsByKeywords",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "keywords",
+                        "Type": "EAJava_String__"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_25AF7164_C6B8_4cbd_BE9D_0FC38FA366BF",
+              "receiver": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F"
+            },
+            {
+              "Type": "message",
+              "Name": "displaySearchInvalidMsg",
+              "_id": "EAID_46BEFB5E_3E95_41ab_9C5A_47F9E14FA8CE",
+              "Group": "System",
+              "OutScope": false,
+              "Component": {
+                "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+                "Name": "SearchResultsPage",
+                "Operations": [
+                  {
+                    "Name": "displaySearchInvalidMsg",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "msg",
+                        "Type": "EAJava_SearchInvalidMsg"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "displayItemList",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "itemList",
+                        "Type": "EAJava_ItemList"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  },
+                  {
+                    "Name": "displayEmptyListNotice",
+                    "Visibility": "public",
+                    "Parameters": [
+                      {
+                        "Name": "notice",
+                        "Type": "EAJava_String"
+                      },
+                      {
+                        "Name": "return",
+                        "Type": "EAJava_void"
+                      }
+                    ]
+                  }
+                ],
+                "Attributes": [
+                  {
+                    "Name": "pageID",
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "title",
+                    "Type": "EAJava_String",
+                    "isStatic": "false"
+                  },
+                  {
+                    "Name": "searchResultList",
+                    "Type": "EAJava_ListView",
+                    "isStatic": "false"
+                  }
+                ],
+                "InheritanceStats": {
+                  "depth": 0,
+                  "numInheritedFrom": 0,
+                  "numDerivedClass": 0,
+                  "coupling": 0,
+                  "children": {},
+                  "topLevelClasses": 11,
+                  "numOfChildren": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+                  },
+                  "tree": {
+                    "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+                    "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+                    "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+                    "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+                    "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+                    "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+                    "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+                    "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+                    "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+                    "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+                    "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+                  }
+                },
+                "Associations": []
+              },
+              "sender": "EAID_5006F2CE_5C61_465b_8CC3_0D794938406F",
+              "receiver": "EAID_0B10BC7A_C765_487f_BDC8_87A6D4AB3DF2"
+            }
+          ],
+          "OutScope": false,
+          "PathStr": "stl#onSearch->onSearch->searchItemByKeywords->displaySearchInvalidMsg",
           "pathLength": 4,
-          "avgDegree": 0,
-          "archDiff": 0,
+          "avgDegree": null,
+          "archDiff": null,
           "boundaryNum": 0,
           "controlNum": 0,
           "entityNum": 0,
@@ -280,68 +2490,7 @@
             "TranLength": 4,
             "TotalDegree": 4
           },
-          "utw": 4
-        },
-        {
-          "Nodes": [
-            {
-              "Type": "uml:Activity",
-              "Name": "User inputs the keywords and clicks the search button",
-              "_id": "EAID_3F61A775_51C7_40b0_A4B0_D1EA58E7172C",
-              "Stimulus": true,
-              "OutScope": false,
-              "Group": "User"
-            },
-            {
-              "Type": "uml:Activity",
-              "Name": "System validates the input keywords",
-              "_id": "EAID_1D07DB93_195D_4537_B7F7_4523E095F005",
-              "Stimulus": false,
-              "OutScope": false,
-              "Group": "System"
-            },
-            {
-              "Type": "uml:Activity",
-              "Name": "System queries from the catalog by the keywords",
-              "_id": "EAID_A17AC6DE_8D4C_42fb_AD8B_59375CEFA373",
-              "Stimulus": false,
-              "OutScope": false,
-              "Group": "System"
-            },
-            {
-              "Type": "uml:Activity",
-              "Name": "System displays the returned list of items",
-              "_id": "EAID_C232F586_CCBC_44e3_AB9E_418A6F0E7755",
-              "Stimulus": false,
-              "OutScope": false,
-              "Group": "System"
-            }
-          ],
-          "OutScope": false,
-          "PathStr": "User inputs the keywords and clicks the search button->System validates the input keywords->System queries from the catalog by the keywords->System displays the returned list of items",
-          "pathLength": 4,
-          "avgDegree": 0,
-          "archDiff": 0,
-          "boundaryNum": 0,
-          "controlNum": 0,
-          "entityNum": 0,
-          "actorNum": 0,
-          "FPAnalytics": {
-            "Operations": {},
-            "Functional": [
-              "FUNC_NA"
-            ],
-            "FunctionalTag": "FUNC_NA"
-          },
-          "TransactionAnalytics": {
-            "Transactional": [
-              "CTRL"
-            ],
-            "TransactionalTag": "CTRL",
-            "TranLength": 4,
-            "TotalDegree": 4
-          },
-          "utw": 4
+          "utw": 5
         }
       ],
       "ElementAnalytics": {
@@ -356,10 +2505,10 @@
         "BoundaryNum": 0,
         "ControlNum": 0,
         "EntityNum": 0,
-        "TotalPathLength": 11,
+        "TotalPathLength": 14,
         "PathNum": 3,
         "RoleActor": 0,
-        "AvgPathLength": 3.6666666666666665,
+        "AvgPathLength": 4.666666666666667,
         "PathAnalyticsFileName": "pathAnalytics.csv",
         "ElementAnalyticsFileName": "elementAnalytics.csv"
       },
@@ -380,20 +2529,444 @@
         "EXTCLL": 0,
         "TRAN_NA": 0,
         "NT": 3,
-        "TranLength": 11,
-        "AvgTranLength": 3.6666666666666665,
+        "TranLength": 14,
+        "AvgTranLength": 4.666666666666667,
         "ArchDiff": null,
         "TransactionalAnalyticsFileName": "transactionAnalytics.csv"
       },
       "UseCasePointData": {
         "UEUCW": 15,
         "UEXUCW": 15,
-        "UDUCW": 12
+        "UDUCW": 15
       }
     }
   ],
   "DomainModel": {
     "Elements": [
+      {
+        "_id": "EAID_0B4542EA_7874_4160_ABD6_532328320AA3",
+        "Name": "$help://domain_model_pattern.htm",
+        "Operations": [],
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 11,
+          "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+          },
+          "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+          }
+        },
+        "Associations": []
+      },
+      {
+        "_id": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+        "Name": "Catalog",
+        "Operations": [
+          {
+            "Name": "queryCatalog",
+            "Visibility": "public",
+            "Parameters": [
+              {
+                "Name": "query",
+                "Type": "EAJava_String"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_ItemList"
+              }
+            ]
+          }
+        ],
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 11,
+          "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+          },
+          "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+          }
+        },
+        "Associations": []
+      },
+      {
+        "_id": "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA",
+        "Name": "ItemList",
+        "Operations": [],
+        "Attributes": [
+          {
+            "Name": "list",
+            "Type": "EAJava_Item__",
+            "isStatic": "false"
+          }
+        ],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 11,
+          "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+          },
+          "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+          }
+        },
+        "Associations": []
+      },
+      {
+        "_id": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+        "Name": "ItemManager",
+        "Operations": [
+          {
+            "Name": "searchItemsByKeywords",
+            "Visibility": "public",
+            "Parameters": [
+              {
+                "Name": "keywords",
+                "Type": "EAJava_String__"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          }
+        ],
+        "Attributes": [],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 11,
+          "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+          },
+          "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+          }
+        },
+        "Associations": []
+      },
+      {
+        "_id": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD",
+        "Name": "ItemSearchPage",
+        "Operations": [
+          {
+            "Name": "onSearch",
+            "Visibility": "public",
+            "Parameters": [
+              {
+                "Name": "keywords",
+                "Type": "EAJava_String"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          }
+        ],
+        "Attributes": [
+          {
+            "Name": "pageID",
+            "Type": "EAJava_int",
+            "isStatic": "false"
+          },
+          {
+            "Name": "searchBox",
+            "Type": "EAJava_InputField",
+            "isStatic": "false"
+          },
+          {
+            "Name": "searchButton",
+            "Type": "EAJava_Button",
+            "isStatic": "false"
+          }
+        ],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 11,
+          "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+          },
+          "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+          }
+        },
+        "Associations": []
+      },
+      {
+        "_id": "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6",
+        "Name": "SearchInvalidMessage",
+        "Operations": [],
+        "Attributes": [
+          {
+            "Name": "errorCode",
+            "Type": "EAJava_int",
+            "isStatic": "false"
+          },
+          {
+            "Name": "message",
+            "Type": "EAJava_String",
+            "isStatic": "false"
+          }
+        ],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 11,
+          "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+          },
+          "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+          }
+        },
+        "Associations": []
+      },
+      {
+        "_id": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+        "Name": "SearchResultsPage",
+        "Operations": [
+          {
+            "Name": "displaySearchInvalidMsg",
+            "Visibility": "public",
+            "Parameters": [
+              {
+                "Name": "msg",
+                "Type": "EAJava_SearchInvalidMsg"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          },
+          {
+            "Name": "displayItemList",
+            "Visibility": "public",
+            "Parameters": [
+              {
+                "Name": "itemList",
+                "Type": "EAJava_ItemList"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          },
+          {
+            "Name": "displayEmptyListNotice",
+            "Visibility": "public",
+            "Parameters": [
+              {
+                "Name": "notice",
+                "Type": "EAJava_String"
+              },
+              {
+                "Name": "return",
+                "Type": "EAJava_void"
+              }
+            ]
+          }
+        ],
+        "Attributes": [
+          {
+            "Name": "pageID",
+            "Type": "EAJava_String",
+            "isStatic": "false"
+          },
+          {
+            "Name": "title",
+            "Type": "EAJava_String",
+            "isStatic": "false"
+          },
+          {
+            "Name": "searchResultList",
+            "Type": "EAJava_ListView",
+            "isStatic": "false"
+          }
+        ],
+        "InheritanceStats": {
+          "depth": 0,
+          "numInheritedFrom": 0,
+          "numDerivedClass": 0,
+          "coupling": 0,
+          "children": {},
+          "topLevelClasses": 11,
+          "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
+          },
+          "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
+            "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
+            "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
+            "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
+            "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": "#"
+          }
+        },
+        "Associations": []
+      },
       {
         "_id": "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B",
         "Name": "$help://actor.htm",
@@ -405,14 +2978,28 @@
           "numDerivedClass": 0,
           "coupling": 0,
           "children": {},
-          "topLevelClasses": 4,
+          "topLevelClasses": 11,
           "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
             "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
             "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
             "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
             "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
           },
           "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
             "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
             "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
             "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
@@ -432,14 +3019,28 @@
           "numDerivedClass": 0,
           "coupling": 0,
           "children": {},
-          "topLevelClasses": 4,
+          "topLevelClasses": 11,
           "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
             "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
             "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
             "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
             "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
           },
           "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
             "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
             "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
             "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
@@ -459,14 +3060,28 @@
           "numDerivedClass": 0,
           "coupling": 0,
           "children": {},
-          "topLevelClasses": 4,
+          "topLevelClasses": 11,
           "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
             "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
             "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
             "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
             "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
           },
           "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
             "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
             "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
             "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
@@ -486,14 +3101,28 @@
           "numDerivedClass": 0,
           "coupling": 0,
           "children": {},
-          "topLevelClasses": 4,
+          "topLevelClasses": 11,
           "numOfChildren": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
             "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
             "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
             "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
             "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
           },
           "tree": {
+            "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+            "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+            "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+            "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+            "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+            "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+            "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
             "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
             "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
             "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
@@ -503,11 +3132,42 @@
         "Associations": []
       }
     ],
-    "Usages": [],
+    "Usages": [
+      {
+        "_id": "EAID_99126EC6_D0FC_405d_A024_6FE695B00B14",
+        "Supplier": "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA",
+        "Client": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB"
+      },
+      {
+        "_id": "EAID_1B0D3FCF_A008_4713_9083_AAA0DBE0FD33",
+        "Supplier": "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB",
+        "Client": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA"
+      },
+      {
+        "_id": "EAID_B00C11BC_0265_4b14_ABDF_5C5EF6D4997F",
+        "Supplier": "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6",
+        "Client": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA"
+      },
+      {
+        "_id": "EAID_D2FCA74D_5B21_466b_887A_6C109376ED14",
+        "Supplier": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34",
+        "Client": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA"
+      },
+      {
+        "_id": "EAID_B0014E45_8EEF_4212_A31B_5FDC8C5031E7",
+        "Supplier": "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA",
+        "Client": "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD"
+      },
+      {
+        "_id": "EAID_5D6CBEE7_69ED_4592_B541_AF757534DF77",
+        "Supplier": "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6",
+        "Client": "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34"
+      }
+    ],
     "Realization": [],
     "Assoc": [],
-    "OutputDir": "public/output/repo5ad2359665018b40bca28d54/05b5ac2f6095fee80dff94e319d37078/domainModel",
-    "AccessDir": "output/repo5ad2359665018b40bca28d54/05b5ac2f6095fee80dff94e319d37078/domainModel",
+    "OutputDir": "public/output/repo5ace9ef4c727a752e0728a31/9a887df68e4e24a019668f81249ec55f/domainModel",
+    "AccessDir": "output/repo5ace9ef4c727a752e0728a31/9a887df68e4e24a019668f81249ec55f/domainModel",
     "DiagramType": "class_diagram",
     "InheritanceStats": {
       "depth": 0,
@@ -515,14 +3175,28 @@
       "numDerivedClass": 0,
       "coupling": 0,
       "children": {},
-      "topLevelClasses": 4,
+      "topLevelClasses": 11,
       "numOfChildren": {
+        "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": 0,
+        "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": 0,
+        "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": 0,
+        "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": 0,
+        "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": 0,
+        "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": 0,
+        "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": 0,
         "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": 0,
         "EAID_7484FEB6_9172_4a75_A006_D536283338C6": 0,
         "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": 0,
         "EAID_30328678_56CC_4928_9608_0E60EBFBE7E5": 0
       },
       "tree": {
+        "EAID_0B4542EA_7874_4160_ABD6_532328320AA3": "#",
+        "EAID_BD32CCE3_9A4B_4aac_B926_D0CC90123FBB": "#",
+        "EAID_382C7E50_3DF3_4902_BEF8_5241A9966BDA": "#",
+        "EAID_6F0ED3B7_B3EB_4f6d_94C9_17E9B1FE25DA": "#",
+        "EAID_CC8035CD_7CA2_4fcc_806D_98507CF458CD": "#",
+        "EAID_CB2A70B7_504A_4e5e_B727_14C5E01AD4E6": "#",
+        "EAID_95C25856_C5F6_475d_B9C2_27FA161F4E34": "#",
         "EAID_04A55827_5597_4801_8E3E_D1C36FB93A2B": "#",
         "EAID_7484FEB6_9172_4a75_A006_D536283338C6": "#",
         "EAID_83879976_7FDE_4975_BC69_3210EA75FF09": "#",
@@ -530,11 +3204,11 @@
       }
     },
     "ElementAnalytics": {
-      "AttributeNum": 0,
-      "OperationNum": 0,
-      "EntityNum": 4,
-      "ClassNum": 4,
-      "TopLevelClasses": 4,
+      "AttributeNum": 9,
+      "OperationNum": 6,
+      "EntityNum": 11,
+      "ClassNum": 11,
+      "TopLevelClasses": 11,
       "AverageDepthInheritanceTree": 0,
       "AverageNumberOfChildrenPerBaseClass": 0,
       "NumberOfInheritanceRelationships": 0,
@@ -544,19 +3218,19 @@
       "NumberOfChildren": 0,
       "DepthInheritanceTree": 0,
       "CouplingBetweenObjects": 0,
-      "ParameterNum": 0,
-      "UsageNum": 0,
+      "ParameterNum": 12,
+      "UsageNum": 6,
       "RealNum": 0,
       "AssocNum": 0,
-      "ExternalOperNum": 0,
-      "ObjectDataNum": 0,
-      "AvgOperation": 0,
-      "AvgAttribute": 0,
-      "AvgParameter": 0,
-      "AvgUsage": 0,
+      "ExternalOperNum": 6,
+      "ObjectDataNum": 2,
+      "AvgOperation": 0.5454545454545454,
+      "AvgAttribute": 0.8181818181818182,
+      "AvgParameter": 1.0909090909090908,
+      "AvgUsage": 0.5454545454545454,
       "AvgReal": 0,
       "AvgAssoc": 0,
-      "AvgInstVar": 0,
+      "AvgInstVar": 0.8181818181818182,
       "WeightedOperNum": 0,
       "MethodSize": 0,
       "EntityAnalyticsFileName": "entityAnalytics.csv",
@@ -570,20 +3244,20 @@
       "EIF": 0
     }
   },
-  "fileId": "05b5ac2f6095fee80dff94e319d37078",
-  "fileSize": 0.092255,
-  "creationTime": "2018-04-16 22:15:02",
-  "fileUrl": "uploads/2018-3-16@1523916902810/05b5ac2f6095fee80dff94e319d37078",
-  "umlFilePath": "public/uploads/2018-3-16@1523916902810/05b5ac2f6095fee80dff94e319d37078",
+  "fileId": "9a887df68e4e24a019668f81249ec55f",
+  "fileSize": 0.156039,
+  "creationTime": "2018-04-17 04:41:12",
+  "fileUrl": "uploads/2018-3-16@1523940071778/9a887df68e4e24a019668f81249ec55f",
+  "umlFilePath": "public/uploads/2018-3-16@1523940071778/9a887df68e4e24a019668f81249ec55f",
   "umlModelType": "uml",
   "formInfo": {
-    "uml-model-name": "test",
+    "uml-model-name": "test 3",
     "uml-model-type": "uml",
     "repo-id": "598c93a9a9813b12105c953e",
-    "project-desc": "test",
+    "project-desc": "",
     "project-effort": "",
     "project-duration": "",
-    "uuid-page1": "94b52dd0-41c3-11e8-8308-d3cbf85c4256",
+    "uuid-page1": "8068e3e0-41f9-11e8-9435-9150f2be476a",
     "distributed-system": "1",
     "response-time": "1",
     "end-user-efficiency": "1",
@@ -597,7 +3271,7 @@
     "includes-special-security-objectives": "1",
     "provides-direct-access-for-third-parties": "1",
     "special-user-training-facilities-are-required": "1",
-    "uuid-page2": "94b52dd1-41c3-11e8-8308-d3cbf85c4256",
+    "uuid-page2": "80690af0-41f9-11e8-9435-9150f2be476a",
     "familiar-with-the-project-model-that-is-used": "1",
     "application-experience": "1",
     "object-oriented-experience": "1",
@@ -606,19 +3280,19 @@
     "stable-requirements": "1",
     "part-time-staff": "1",
     "difficult-programming-language": "1",
-    "uuid-page3": "94b52dd2-41c3-11e8-8308-d3cbf85c4256",
-    "uuid-page4": "94b52dd3-41c3-11e8-8308-d3cbf85c4256"
+    "uuid-page3": "80690af1-41f9-11e8-9435-9150f2be476a",
+    "uuid-page4": "80690af2-41f9-11e8-9435-9150f2be476a"
   },
-  "_id": "05b5ac2f6095fee80dff94e319d370781523916902837",
-  "Name": "test",
-  "OutputDir": "public/output/repo5ad2359665018b40bca28d54/05b5ac2f6095fee80dff94e319d37078",
-  "AccessDir": "output/repo5ad2359665018b40bca28d54/05b5ac2f6095fee80dff94e319d37078",
+  "_id": "9a887df68e4e24a019668f81249ec55f1523940072202",
+  "Name": "test 3",
+  "OutputDir": "public/output/repo5ace9ef4c727a752e0728a31/9a887df68e4e24a019668f81249ec55f",
+  "AccessDir": "output/repo5ace9ef4c727a752e0728a31/9a887df68e4e24a019668f81249ec55f",
   "ElementAnalytics": {
-    "AttributeNum": 0,
-    "OperationNum": 0,
-    "EntityNum": 4,
+    "AttributeNum": 9,
+    "OperationNum": 6,
+    "EntityNum": 11,
     "ElementNum": 7,
-    "TotalPathLength": 11,
+    "TotalPathLength": 14,
     "PathNum": 3,
     "UseCaseNum": 1,
     "TotalLinks": 0,
@@ -629,8 +3303,8 @@
     "RoleNum": 0,
     "AvgActor": 0,
     "AvgRole": 0,
-    "ClassNum": 4,
-    "TopLevelClasses": 4,
+    "ClassNum": 11,
+    "TopLevelClasses": 11,
     "AverageDepthInheritanceTree": 0,
     "AverageNumberOfChildrenPerBaseClass": 0,
     "NumberOfInheritanceRelationships": 0,
@@ -640,19 +3314,19 @@
     "NumberOfChildren": 0,
     "DepthInheritanceTree": 0,
     "CouplingBetweenObjects": 0,
-    "ParameterNum": 0,
-    "UsageNum": 0,
+    "ParameterNum": 12,
+    "UsageNum": 6,
     "RealNum": 0,
     "AssocNum": 0,
-    "ExternalOperNum": 0,
-    "ObjectDataNum": 0,
-    "AvgOperation": 0,
-    "AvgAttribute": 0,
-    "AvgParameter": 0,
-    "AvgUsage": 0,
+    "ExternalOperNum": 6,
+    "ObjectDataNum": 2,
+    "AvgOperation": 0.5454545454545454,
+    "AvgAttribute": 0.8181818181818182,
+    "AvgParameter": 1.0909090909090908,
+    "AvgUsage": 0.5454545454545454,
     "AvgReal": 0,
     "AvgAssoc": 0,
-    "AvgInstVar": 0,
+    "AvgInstVar": 0.8181818181818182,
     "WeightedOperNum": 0,
     "MethodSize": 0,
     "EntityAnalyticsFileName": "entityAnalytics.csv",
@@ -660,7 +3334,7 @@
     "OperationAnalyticsFileName": "operationAnalytics.csv",
     "ElementAnalyticsFileName": "elementAnalytics.csv",
     "PathAnalyticsFileName": "pathAnalytics.csv",
-    "AvgPathLength": 3.6666666666666665,
+    "AvgPathLength": 4.666666666666667,
     "AvgDegree": 0
   },
   "FPAnalytics": {
@@ -713,12 +3387,12 @@
     "EUCP": 0,
     "UEXUCW": 15,
     "EXUCP": 0,
-    "UDUCW": 12,
+    "UDUCW": 15,
     "DUCP": 0
   },
   "ModelEvaluationFileName": "modelEvaluation.csv",
   "UseCaseEvaluationFileName": "useCaseEvaluation.csv",
   "DomainModelEvaluationFileName": "domainModelEvaluation.csv",
-  "UseCaseStatisticsOutputDir": "public/output/repo5ad2359665018b40bca28d54/05b5ac2f6095fee80dff94e319d37078/use_case_evaluation_statistics",
-  "DomainModelStatisticsOutputDir": "public/output/repo5ad2359665018b40bca28d54/05b5ac2f6095fee80dff94e319d37078/domain_model_evaluation_statistics"
+  "UseCaseStatisticsOutputDir": "public/output/repo5ace9ef4c727a752e0728a31/9a887df68e4e24a019668f81249ec55f/use_case_evaluation_statistics",
+  "DomainModelStatisticsOutputDir": "public/output/repo5ace9ef4c727a752e0728a31/9a887df68e4e24a019668f81249ec55f/domain_model_evaluation_statistics"
 }

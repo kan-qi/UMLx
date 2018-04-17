@@ -45,7 +45,7 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   if(diagramType === "analysis_diagram"){
            //have put robustness diagram script under robustness diagram - Aishwarya
   }
-    
+
   else if(diagramType === "robustness_diagram") {
       const edges = Array.prototype.slice.apply(svgDoc.getElementsByClassName('edge'));
       idString = idString.replace('___', '->');
@@ -60,7 +60,7 @@ function highlight_diagram_element(idString, elementType, diagramType) {
         }
       }
   }
-    
+
   else if(diagramType === "sequence_diagram"){
       //call kate's, not ready.
   }
@@ -252,28 +252,30 @@ function delete_use_case_func(){
 }
 
 function query_model_usecase_func(modelId) {
-//  console.log(modelId);
-//  var url = $(this).attr("href");
-//  console.log(url);
-    if ($('.model-info-content a[href="#usecase-analysis"]').parent()[0].classList.contains('active')) {
-        return;
-    }
-    console.log('query_model_usecase_func');
-    $.ajax({
-        type : 'GET',
-        url : 'requestModelUseCases?model_id='+modelId,
-        success : function(response) {
-//          console.log(response);
-            $("#model-usecase-analysis").html("");
-            $("#model-usecase-analysis").append(response);
-        },
-        error : function() {
-            console.log("fail");
-            alert("There was an error submitting commentG");
-        }
-    });
+//	console.log(modelId);
+//	var url = $(this).attr("href");
+//	console.log(url);
+	if ($('.model-info-content a[href="#usecase-analysis"]').parent()[0].classList.contains('active')) {
+		return;
+	}
+	console.log('query_model_usecase_func');
+	$.ajax({
+		type : 'GET',
+		url : 'requestModelUseCases?model_id='+modelId,
+		async:false,
+		success : function(response) {
+//			console.log(response);
+			$("#model-usecase-analysis").html("");
+			$("#model-usecase-analysis").append(response);
+			test();
+		},
+		error : function() {
+			console.log("fail");
+			alert("There was an error submitting commentG");
+		}
+	});
 
-    return false;
+	return false;
 }
 
 function reanalyse_model_func(){
@@ -378,22 +380,24 @@ function query_sub_model_detail_func(){
 
 
 function query_repo_analytics_func(){
-    var url = $(this).attr("href");
-    $.ajax({
-        type : 'GET',
-        url : url,
-        success : function(response) {
-//          console.log(response);
-            $("#display-panel").html("");
-            $("#display-panel").append(response);
-        },
-        error : function() {
-            console.log("fail");
-            alert("There was an error submitting commentL");
-        }
-    });
+	var url = $(this).attr("href");
+	$.ajax({
+		type : 'GET',
+		url : url,
 
-    return false;
+		success : function(response) {
+//			console.log(response);
+			$("#display-panel").html("");
+			$("#display-panel").append(response);
+
+		},
+		error : function() {
+			console.log("fail");
+			alert("There was an error submitting commentL");
+		}
+	});
+
+	return false;
 }
 
 function dump_model_evaluation_for_use_cases_func(){
