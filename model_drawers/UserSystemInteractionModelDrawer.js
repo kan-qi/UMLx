@@ -3,7 +3,7 @@
  */
 
 (function(){
-//	var Viz = require('viz.js');
+//  var Viz = require('viz.js');
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
@@ -11,6 +11,9 @@
 	var dottyUtil = require("../utils/DottyUtil.js");
 	
 	function processLabel(label){
+		if(!label){
+			return "";
+		}
 		var terms = label.split(" ");
 		var reformattedLabel = "";
 		var lineNum = 3;

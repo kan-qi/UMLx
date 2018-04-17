@@ -1,12 +1,14 @@
 if useCaseInfo        
   button(onclick="toggleQueryList()", class="big-button") Toggle List 
   button(onclick="toggleZoom()", class="big-button") Enable Zoom
-  div.use-case-info(id="use-case-diagram")  
-    object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg")
-      //- div(id="lightgallery")
-        //- div(data-src=useCaseInfo.AccessDir+"/useCase.svg")
-          //- img.use-case(src=useCaseInfo.AccessDir+"/useCase.svg", id="use-case-diagram-img" onclick="window.open('"+useCaseInfo.AccessDir+"/useCase.svg', '_blank')")
-          //- img.use-case(src=useCaseInfo.AccessDir+"/useCase.svg", id="use-case-diagram-img")
+  button(onclick="toggleDiagram()", class="big-button") Toggle Diagram
+  div.use-case-info(id="use-case-diagram")
+    //Toggle Diagram should be able to toggle betwee useCase.svg and uml_diagram.svg
+    object.use-case(data=useCaseInfo.AccessDir+"/robust_diagram.svg")
+      div(id="lightgallery")
+        div(data-src=useCaseInfo.AccessDir+"/robust_diagram.svg")
+          img.use-case(src=useCaseInfo.AccessDir+"/robust_diagram.svg", id="use-case-diagram-img" onclick="window.open('"+useCaseInfo.AccessDir+"/robust_diagram.svg', '_blank')")
+          img.use-case(src=useCaseInfo.AccessDir+"/robust_diagram.svg", id="use-case-diagram-img")
     
   div.use-case-info-content(style="display: none;", id="use-case-list")
    ul.nav.nav-tabs
