@@ -1,3 +1,4 @@
+
 function setCookie(cname, cvalue, exdays) {
     var expires="";
     if(exdays > 0){
@@ -252,30 +253,28 @@ function delete_use_case_func(){
 }
 
 function query_model_usecase_func(modelId) {
-//	console.log(modelId);
-//	var url = $(this).attr("href");
-//	console.log(url);
-	if ($('.model-info-content a[href="#usecase-analysis"]').parent()[0].classList.contains('active')) {
-		return;
-	}
-	console.log('query_model_usecase_func');
-	$.ajax({
-		type : 'GET',
-		url : 'requestModelUseCases?model_id='+modelId,
-		async:false,
-		success : function(response) {
-//			console.log(response);
-			$("#model-usecase-analysis").html("");
-			$("#model-usecase-analysis").append(response);
-			test();
-		},
-		error : function() {
-			console.log("fail");
-			alert("There was an error submitting commentG");
-		}
-	});
+//  console.log(modelId);
+//  var url = $(this).attr("href");
+//  console.log(url);
+    if ($('.model-info-content a[href="#usecase-analysis"]').parent()[0].classList.contains('active')) {
+        return;
+    }
+    console.log('query_model_usecase_func');
+    $.ajax({
+        type : 'GET',
+        url : 'requestModelUseCases?model_id='+modelId,
+        success : function(response) {
+//          console.log(response);
+            $("#model-usecase-analysis").html("");
+            $("#model-usecase-analysis").append(response);
+        },
+        error : function() {
+            console.log("fail");
+            alert("There was an error submitting commentG");
+        }
+    });
 
-	return false;
+    return false;
 }
 
 function reanalyse_model_func(){
@@ -380,24 +379,22 @@ function query_sub_model_detail_func(){
 
 
 function query_repo_analytics_func(){
-	var url = $(this).attr("href");
-	$.ajax({
-		type : 'GET',
-		url : url,
+    var url = $(this).attr("href");
+    $.ajax({
+        type : 'GET',
+        url : url,
+        success : function(response) {
+//          console.log(response);
+            $("#display-panel").html("");
+            $("#display-panel").append(response);
+        },
+        error : function() {
+            console.log("fail");
+            alert("There was an error submitting commentL");
+        }
+    });
 
-		success : function(response) {
-//			console.log(response);
-			$("#display-panel").html("");
-			$("#display-panel").append(response);
-
-		},
-		error : function() {
-			console.log("fail");
-			alert("There was an error submitting commentL");
-		}
-	});
-
-	return false;
+    return false;
 }
 
 function dump_model_evaluation_for_use_cases_func(){
@@ -986,7 +983,8 @@ function load_file_upload_fnc(type) {
 }
 
 function toggleQueryList() {
-    $("#use-case-list").slideToggle();
+    // $("#use-case-list").slideToggle();
+		$('#use-case-list').modal('toggle');
 }
 
 function toggleZoom() {
@@ -1006,7 +1004,7 @@ function toggleZoom() {
 
 
 function toggleDomainList() {
-    $("#domain-model-list").slideToggle();
+    $('#domain-model-list').modal('toggle');
 }
 
 // added for zoom control on svg
@@ -1592,37 +1590,7 @@ document.getElementById(id).style.stroke =  "red";
 //     console.log(results);
 // };
 
-function walkDir(fileFolder) {
-    $.ajax({
-    	type: 'GET',
-        url: 'listFileUnderDir?fileFolder='+fileFolder,
-        success: function (data) {
-    		console.log(data);
-
-            var out = "<table class='table-striped'>";
-            out += "<tr><th>File Lists</th></tr>";
-
-            for(var i = 0; i < data.length; i++) {
-            	// var fatherUrl = data[i].parent.substring(data[i].parent.lastIndexOf("/")+1);
-            	// if (fatherUrl == fileFolder) {
-            	// 	if (data[i].isFolder == 'true') {
-            	// 		var clickValue = data[i].parent+"/"+data[i].url;
-            	// 		console.log(clickValue);
-                 //        out += "<tr><td><a href='#'>" +
-                 //            data[i].url+
-                 //            "</a></td>";
-					// } else {
-                        out += "<tr><td>" +
-                            data[i].url+
-                            "</td>";
-				// 	}
-				// }
-            }
-            out += "</table>";
-            document.getElementById("displayArchive").innerHTML = out;
-        }
-    });
-}
+// _getAllFilesFromFolder(/ealing/ + "Desktop");
 
 // function walkDir() {
 //     const testFolder = './tests/';
