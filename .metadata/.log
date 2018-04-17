@@ -51,3 +51,35 @@ org.eclipse.swt.SWTException: Device is disposed
 	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.ensureResultCached(DecorationScheduler.java:367)
 	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.run(DecorationScheduler.java:327)
 	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+!SESSION 2018-04-16 21:14:27.796 -----------------------------------------------
+eclipse.buildId=4.6.2.M20161124-1400
+java.version=1.8.0_151
+java.vendor=Oracle Corporation
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Framework arguments:  -product org.eclipse.epp.package.java.product
+Command-line arguments:  -os win32 -ws win32 -arch x86_64 -product org.eclipse.epp.package.java.product
+
+!ENTRY org.eclipse.egit.ui 2 0 2018-04-16 21:17:05.120
+!MESSAGE Warning: The environment variable HOME is not set. The following directory will be used to store the Git
+user global configuration and to define the default location to store repositories: 'C:\Users\anitha'. If this is
+not correct please set the HOME environment variable and restart Eclipse. Otherwise Git for Windows and
+EGit might behave differently since they see different configuration options.
+This warning can be switched off on the Team > Git > Confirmations and Warnings preference page.
+
+!ENTRY org.eclipse.core.resources 4 568 2018-04-16 21:17:48.163
+!MESSAGE Could not write metadata for 'E:\DR\UMLx\.metadata\.plugins\org.eclipse.core.resources\.root\.indexes\properties.index'.
+!STACK 0
+java.io.FileNotFoundException: E:\DR\UMLx\.metadata\.plugins\org.eclipse.core.resources\.root\.indexes\properties.index (The requested operation cannot be performed on a file with a user-mapped section open)
+	at java.io.FileOutputStream.open0(Native Method)
+	at java.io.FileOutputStream.open(Unknown Source)
+	at java.io.FileOutputStream.<init>(Unknown Source)
+	at java.io.FileOutputStream.<init>(Unknown Source)
+	at org.eclipse.core.internal.localstore.Bucket.save(Bucket.java:347)
+	at org.eclipse.core.internal.properties.PropertyBucket.save(PropertyBucket.java:297)
+	at org.eclipse.core.internal.properties.PropertyManager2.setProperty(PropertyManager2.java:180)
+	at org.eclipse.core.internal.resources.Resource.setPersistentProperty(Resource.java:1726)
+	at org.eclipse.core.internal.resources.ContentDescriptionManager.setCacheState(ContentDescriptionManager.java:496)
+	at org.eclipse.core.internal.resources.ContentDescriptionManager.doFlushCache(ContentDescriptionManager.java:240)
+	at org.eclipse.core.internal.resources.ContentDescriptionManager$FlushJob.runInWorkspace(ContentDescriptionManager.java:77)
+	at org.eclipse.core.internal.resources.InternalWorkspaceJob.run(InternalWorkspaceJob.java:39)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
