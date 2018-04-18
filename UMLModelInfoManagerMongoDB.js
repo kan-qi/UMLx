@@ -296,26 +296,32 @@ function deleteRepo(repoId, callbackfunc) {
             delete modelInfo.DomainModel;
             delete modelInfo.UseCases;
             
-            domainObject.model_id = new mongo.ObjectId(modelInfo._id);
+//            domainObject.model_id = new mongo.ObjectId(modelInfo._id);
+            domainObject.model_id = modelInfo._id;
+//            domainObject._id = "domainModel["+modelInfo
             
             
             
             //console.log(modelInfo._id);
-            modelInfo._id = new mongo.ObjectId(modelInfo._id);
+//            modelInfo._id = new mongo.ObjectId(modelInfo._id);
             
             //adding rep_id as an element in modelInfo
-            modelInfo.rep_id = repoId;
+            modelInfo.rep_id = new mongo.ObjectId(repoId);
             
             
-            db.collection("modelInfo").update({"_id": mongo.ObjectId(modelInfo._id)}, modelInfo, function(err, res) {
+//            db.collection("modelInfo").update({"_id": mongo.ObjectId(modelInfo._id)}, modelInfo, function(err, res) {
+
+            db.collection("modelInfo").update({"_id": modelInfo._id}, modelInfo, function(err, res) {
                 if (err) throw err;
                 console.log("updating modelInfo");
                          
             });
             
             //updating domainModelInfo to add model_id element
-            db.collection("domainModelInfo").update({"model_id": mongo.ObjectId(modelInfo._id)}, domainObject, function(err, res) {
-                if (err) throw err;
+//            db.collection("domainModelInfo").update({"model_id": mongo.ObjectId(modelInfo._id)}, domainObject, function(err, res) {
+            db.collection("domainModelInfo").update({"model_id": modelInfo._id}, domainObject, function(err, res) {
+                 
+            if (err) throw err;
                 console.log("updating domainModelInfo");
                          
             });
@@ -328,8 +334,10 @@ function deleteRepo(repoId, callbackfunc) {
               });*/
             for(var i in useCaseArray){
                 console.log(useCaseArray[i]._id);
-                useCaseArray[i].model_id = new mongo.ObjectID(modelInfo._id);
-                useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
+//                useCaseArray[i].model_id = new mongo.ObjectID(modelInfo._id);
+//                useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
+                useCaseArray[i].model_id = modelInfo._id;
+                useCaseArray[i]._id = useCaseArray[i]._id+"["+modelInfo._id+"]";
                 
                 db.collection("useCaseInfo").update({"_id": useCaseArray[i]._id}, useCaseArray[i] , function(err, res) {
                 if (err) throw err;
