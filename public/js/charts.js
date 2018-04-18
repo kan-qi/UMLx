@@ -25,8 +25,8 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
       $('#chart-1').highcharts({
         chart: {
         type: 'column',
-        spacingLeft: 0,
-        width:1170
+        spacingLeft: 0
+
     },
     title: {
         text: 'Evaluation of Use Case Complexity'
@@ -132,7 +132,7 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
   var repoID = $("#myrepoId").val();
   //  console.log("found");
    //console.log($('.repo-metrics').html());
-  var repo_url = "output/repo"+ repoID + "/" +  "/model_evaluation_statistics/statistics.json";
+  var repo_url = "output/repo"+ repoID  +  "/model_evaluation_statistics/statistics.json";
   console.log(repo_url);
   $.ajax({
           url: repo_url,
@@ -165,7 +165,8 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
       //var modelID = $("#mymodelId").val();
       //console.log(use_case_id);
       //console.log(modelID);
-      var usecase_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/statistics.json" ;
+      var usecase_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/element_statistics.json" ;
+      var usecase_url2 = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/path_statistics.json" ;
       //console.log(usecase_url);
     // $('.use-case-analytics').html("hi");
       //console.log($('.use-case-analytics').html());
@@ -176,7 +177,7 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
 
               success: function(response)
               {
-                    console.log(response)
+                    //console.log(response)
 
                     $('.use-case-info').html("<div style='height:6%'>&nbsp;</div><h3>Use case statistics</h3><table class='table table-hover table-bordered'; id='usecase_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
                       for (var i=0;i<response.length;i++)
@@ -193,11 +194,35 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
 
 
       });
+      $.ajax({
+              url: usecase_url2,
+              type:"GET",
+              dataType: "json",
+
+              success: function(response)
+              {
+                    console.log(response)
+
+                    $('.use-case-info').append("<div style='height:6%'>&nbsp;</div><table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+                      for (var i=0;i<response.length;i++)
+                      {
+
+                              $('#usecase_table2').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>");
+
+                      }
+                    //  $('.repo-metrics').append( "</table>");
+              },
+              error:function(error){
+                    console.log("failed");
+              }
+
+
+      });
   }
   function populate_domainAnalysis_data()
   {
     console.log("analysis!");
-    var usecase_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" +  "/domainModel/statistics.json" ;
+    var usecase_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" +  "/domainModel/domain_model_statistics.json" ;
     $.ajax({
             url: usecase_url,
             type:"GET",

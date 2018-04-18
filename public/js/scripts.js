@@ -1169,79 +1169,225 @@ function createCharts() {
 }
 
 function createTrendingLines() {
-    var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
-    d3.csv(url, function(error, data) {
-        if (error) {
-            console.error(error);
-            return;
-        }
-        var tempData = [];
-        data.forEach(function(d) {
-            d.update_time = new Date(d.update_time).getTime();
-            d.number_of_paths = +d.number_of_paths;
-            tempData.push([d.update_time, d.number_of_paths])
-        });
-        data= tempData;
-        console.dir(data)
-        Highcharts.chart('trending-line', {
-            chart: {
-                zoomType: 'x'
-            },
-            title: {
-                text: 'Number of Transactions'
-            },
-            subtitle: {
-                text: document.ontouchstart === undefined ?
-                        'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-            },
-            xAxis: {
-                type: 'datetime',
-                title: {
-                    text: 'Update Time'
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Paths'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            plotOptions: {
-                area: {
-                    fillColor: {
-                        linearGradient: {
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 1
-                        },
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                        ]
-                    },
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    threshold: null
-                }
-            },
 
-            series: [{
-                type: 'line',
-                name: 'Number of Transactions',
-                data: data
-            }]
-        });
+    $.ajax({
+      url: "output/repo"+ repoID + "/" +  "/trending_chart.json",
+      type:"GET",
+      dataType: "json",
+
+      success: function(response)
+      {
+
+                var date = [];
+                var transaction_num = [];
+                var project_num =[];
+                var case_num =[];
+                var class_num =[];
+
+                for(var i=0;i<response.length;i++)
+                {
+                  date.push(response[i].time_stamp);
+                  transaction_num.push(response[i].transaction_num);
+                  project_num.push(response[i].project);
+                  case_num.push(response[i].case_num);
+                  class_num.push(response[i].class_num);
+
+                }
+
+                // Default chart at the repo level - Number of transactions
+                  var chart =   Highcharts.chart('trending-line', {
+                  xAxis: {
+                    title: {
+                                text: 'Time stamp'
+                            },
+                      categories: date
+                  },
+                  yAxis: {
+                    title: {
+                                text: 'Number of Transactions'
+                            },
+                      min: 0
+                  },
+
+                  series: [{
+                      type: 'line',
+                      name:'transaction_num',
+                      data: transaction_num,
+                      marker: {
+                          enabled: false
+                      },
+                      states: {
+                          hover: {
+                              lineWidth: 0
+                          }
+                      },
+                      enableMouseTracking: true
+                  }
+                  ]
+              });
+              // On click of the projects tab - update the y axis.
+
+            $('.blue-card').click(function ()
+            {
+                  console.log("blue clicked");
+
+                  chart.update({
+                    yAxis: {
+                      title: {
+                                  text: 'Project'
+                              }
+
+                    },
+                    series: [{
+                      name:'project_num',
+                      data: project_num
+                    }]
+                    });
+            });
+
+              // On click of the use cases tab - update the y axis.
+            $('.red-card').click(function ()
+            {
+                  console.log("red clicked");
+                  chart.update({
+                    yAxis: {
+                      title: {
+                                  text: 'Number of use cases'
+                              }
+
+                    },
+                    series: [{
+                      name:'usecase_num',
+                      data: case_num
+                    }]
+                    });
+            });
+
+              // On click of the transaction tab - update the y axis.
+            $('.green-card').click(function ()
+            {
+                    console.log("green clicked");
+                    var transaction_num_new = [];
+                    for(var i=0;i<response.length;i++)
+                    {
+                        transaction_num_new.push(response[i].transaction_num);
+                    }
+                    console.log(transaction_num_new);
+                    chart.update({
+                      yAxis: {
+                        title: {
+                                    text: 'Number of transactions'
+                                }
+
+                    },
+                    series: [{
+                      name:'transaction_num',
+                      data: transaction_num_new
+                    }]
+                    });
+          });
+
+            // On click of the classes tab - update the y axis.
+            $('.purple-card').click(function ()
+            {
+                console.log("purple clicked");
+                chart.update({
+                  yAxis: {
+                    title: {
+                                text: 'Number of classes'
+                            }
+
+                  },
+                  series: [{
+                    name:'class_num',
+                    data: class_num
+                  }]
+                  });
+            });
+
+      },
+      error:function(error){
+        console.log("failed");
+      }
+
+
     });
+    //  console.log(data);
+
+
+    // var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
+    // d3.csv(url, function(error, data) {
+    //     if (error) {
+    //         console.error(error);
+    //         return;
+    //     }
+    //     var tempData = [];
+    //     data.forEach(function(d) {
+    //         d.update_time = new Date(d.update_time).getTime();
+    //         d.number_of_paths = +d.number_of_paths;
+    //         tempData.push([d.update_time, d.number_of_paths])
+    //     });
+    //     data= tempData;
+    //     console.dir(data)
+    //     Highcharts.chart('trending-line', {
+    //         chart: {
+    //             zoomType: 'x'
+    //         },
+    //         title: {
+    //             text: 'Number of Transactions'
+    //         },
+    //         subtitle: {
+    //             text: document.ontouchstart === undefined ?
+    //                     'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+    //         },
+    //         xAxis: {
+    //             type: 'datetime',
+    //             title: {
+    //                 text: 'Update Time'
+    //             }
+    //         },
+    //         yAxis: {
+    //             title: {
+    //                 text: 'Number of Paths'
+    //             }
+    //         },
+    //         legend: {
+    //             enabled: false
+    //         },
+    //         plotOptions: {
+    //             area: {
+    //                 fillColor: {
+    //                     linearGradient: {
+    //                         x1: 0,
+    //                         y1: 0,
+    //                         x2: 0,
+    //                         y2: 1
+    //                     },
+    //                     stops: [
+    //                         [0, Highcharts.getOptions().colors[0]],
+    //                         [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+    //                     ]
+    //                 },
+    //                 marker: {
+    //                     radius: 2
+    //                 },
+    //                 lineWidth: 1,
+    //                 states: {
+    //                     hover: {
+    //                         lineWidth: 1
+    //                     }
+    //                 },
+    //                 threshold: null
+    //             }
+    //         },
+    //
+    //         series: [{
+    //             type: 'line',
+    //             name: 'Number of Transactions',
+    //             data: data
+    //         }]
+    //     });
+    // });
 }
 function createPieChart() {
     var url = $('#transaction-pie')[0].attributes.getNamedItem('data').value;
