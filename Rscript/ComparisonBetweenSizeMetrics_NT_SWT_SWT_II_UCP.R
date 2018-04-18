@@ -76,7 +76,7 @@ png(filename=paste(outputPath,"project_counting_results.png", sep="/"),
 UCPHist1 <- ggplot(data, aes(x=NT))+geom_histogram(binwidth=5, colour="white", fill="gray55")+xlab("NT")+ylab("Number of Projects")+theme_bw()
 UCPHist2 <- ggplot(data, aes(x=SWTI))+geom_histogram(binwidth=100, colour="white", fill="gray55")+xlab("SWTI")+ylab("Number of Projects")+theme_bw()
 UCPHist3 <- ggplot(data, aes(x=SWTII))+geom_histogram(binwidth=100, colour="white", fill="gray55")+xlab("SWTII")+ylab("Number of Projects")+theme_bw()
-UCPHist4 <- ggplot(data, aes(x=UUCP))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UCP")+ylab("Number of Projects")+theme_bw()
+UCPHist4 <- ggplot(data, aes(x=UUCP))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCP")+ylab("Number of Projects")+theme_bw()
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, ncol=2))
 

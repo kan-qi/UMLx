@@ -1,45 +1,54 @@
 if useCaseInfo        
-  button(onclick="toggleQueryDiagram()", class="big-button") Toggle Diagram
-  div.use-case-info(style="display: none;", id="use-case-diagram")   
-     object.use-case(data=useCaseInfo.AccessDir+"/uml_diagram.svg" type="image/svg+xml" data-diagram-type="#{useCaseInfo.diagramType}")
-  div.use-case-info-content
-   ul.nav.nav-tabs
-    li.active
-     a(data-toggle='tab', href='#use-case-nodes') Activities
-    li
-     a(data-toggle='tab', href='#use-case-paths') Paths
-   div.tab-content
-    div.tab-pane.fade.in.active(id="use-case-nodes")
-     table.table.table-striped.use-case-info-tab
-      thead
-       tr
-        th ID
-        th ELEMENT
-        th TYPE
-      tbody
-       -var elementId = 1;
-       each element in useCaseInfo.Activities
-        tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
-         td #{elementId}
-         td
-          span.use-case-element #{element.Name}
-         td
-          span.use-case-element-type #{element.Type}
-        - elementId++;
-    div.tab-pane.fade(id="use-case-paths")
-     table.table.table-striped.use-case-info-tab
-      thead
-       tr
-        th ID
-        th PATH
-        th TYPE
-      tbody
-       -var pathId = 1;
-       each path in useCaseInfo.DisplayablePaths
-        tr(onclick="highlight_diagram_element('#{path.PathStrByIDs}', 'path', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
-         td #{pathId}
-         td
-          span.use-case-path #{path.PathStr}
-         td
-          span.use-case-path-type #{path.Tag}
-        - pathId++;
+  button(onclick="toggleQueryList()", class="big-button") Toggle List 
+  button(onclick="toggleZoom()", class="big-button") Enable Zoom
+  button(onclick="toggleDiagram()", class="big-button") Toggle Diagram
+  div.use-case-info(id="use-case-diagram")
+    //Toggle Diagram should be able to toggle betwee useCase.svg and uml_diagram.svg
+    object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg")
+    
+    
+
+  div(class="modal fade bd-example-modal-lg", tabindex="-1", role="dialog", aria-labelledby="myLargeModalLabel", aria-hidden="true", id="use-case-list")
+    div(class="modal-dialog modal-lg")
+      div(class="modal-content")
+        div.use-case-info-content
+         ul.nav.nav-tabs
+          li.active
+           a(data-toggle='tab', href='#use-case-nodes') Activities
+          li
+           a(data-toggle='tab', href='#use-case-paths') Paths
+         div.tab-content
+          div.tab-pane.fade.in.active(id="use-case-nodes")
+           table.table.table-striped.use-case-info-tab
+            thead
+             tr
+              th ID
+              th ELEMENT
+              th TYPE
+            tbody
+             -var elementId = 1;
+             each element in useCaseInfo.Activities
+              tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
+               td #{elementId}
+               td
+                span.use-case-element #{element.Name}
+               td
+                span.use-case-element-type #{element.Type}
+              - elementId++;
+          div.tab-pane.fade(id="use-case-paths")
+           table.table.table-striped.use-case-info-tab
+            thead
+             tr
+              th ID
+              th PATH
+              th TYPE
+            tbody
+             -var pathId = 1;
+             each path in useCaseInfo.DisplayablePaths
+              tr(onclick="highlight_diagram_element('#{path.PathStrByIDs}', 'path', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
+               td #{pathId}
+               td
+                span.use-case-path #{path.PathStr}
+               td
+                span.use-case-path-type #{path.Tag}
+              - pathId++;

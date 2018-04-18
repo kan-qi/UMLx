@@ -1,5 +1,5 @@
 /**
- * This module is used to parse different elements related to Sequence Diagram in XMI files to construct the user-system interaction model.
+ * This module is used to parse different elements related to Class Diagram in XMI files to construct the user-system interaction model.
  */
 (function() {
 	var fs = require('fs');

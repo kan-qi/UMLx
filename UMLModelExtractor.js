@@ -7,6 +7,7 @@
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
 	var xmiParser = require('./model_platforms/ea/XMI2.1Parser.js');
+//	var xmiParser = require('./model_platforms/src/srcparser.js');
 	var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
 	var modelDrawer = require("./model_drawers/UserSystemInteractionModelDrawer.js");
 	var domainModelDrawer = require("./model_drawers/DomainModelDrawer.js");
@@ -24,27 +25,28 @@
 			xmiParser.extractUserSystermInteractionModel(umlModelInfo.umlFilePath, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
 				console.log("extract model");
 				
-				var debug = require("./utils/DebuggerOutput.js");
-				debug.writeJson("extratedModel", model);
+//				var debug = require("./utils/DebuggerOutput.js");
+//				debug.writeJson("extratedModel_"+model._id, model);
 				
 				if(!model){
 					return;
 				}
 				
+				
 				// set up the model info properties
-				for(var i in umlModelInfo){
-					model[i] = umlModelInfo[i];
+				for(var i in model){
+					umlModelInfo[i] = model[i];
 				}
 				
 				// set up the domain model
-				var domainModel = model.DomainModel;
+				var domainModel = umlModelInfo.DomainModel;
 //				var domainModel = model.DomainModel;
 //				domainModel.DotGraphFile = '';
 //				domainModel.SvgGraphFile = 'domainModel.svg';
 //				console.log("domainModel");
 //				console.log(domainModel);
 				
-				debug.writeJson("domainModel", domainModel);
+//				debug.writeJson("domainModel", domainModel);
 
 //				domainModelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
 //					console.log("domain model drawn");
@@ -53,14 +55,17 @@
 				//set up the use cases.
 //				console.log("use cases");
 //				console.log(model);
-				for(var i in model.UseCases) {
-								var useCase = model.UseCases[i];
-//								console.log(model.UseCases[i]);
+				for(var i in umlModelInfo.UseCases) {
+								var useCase = umlModelInfo.UseCases[i];
+//								console.log(umlModelInfo.UseCases[i]);
 //								console.log(useCase);
 //								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
 								
 								useCase.Paths = traverseUseCaseForPaths(useCase);
+								
+								var debug = require("./utils/DebuggerOutput.js");
+								debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
 								
 								for(var j in useCase.Paths){
 									var path = useCase.Paths[j];
@@ -97,13 +102,13 @@
 //								});
 				}
 			
-				debug.writeJson("model", model);
+				debug.writeJson("model_"+model._id, umlModelInfo);
 				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
 					console.log("domain model is drawn");
 				});
 
 				if(callbackfunc){
-					callbackfunc(model);
+					callbackfunc(umlModelInfo);
 				}
 
 			});
@@ -145,6 +150,10 @@
 			
 			var Paths = new Array();
 			var toExpand;
+			
+			var debug = require("./utils/DebuggerOutput.js");
+			debug.writeJson("use_cas_toExpand_"+useCase._id, toExpandCollection);
+			
 			while((toExpand = toExpandCollection.pop()) != null){
 				var node = toExpand.Node;
 				var pathToNode = toExpand.PathToNode;

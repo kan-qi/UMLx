@@ -37,27 +37,27 @@ function model_file_upload_fnc() {
 
 }
 
-function highlight_activity_diagram(element, elementType) {
-	var allElements;
-	var type;
+// function highlight_activity_diagram(element, elementType) {
+// 	var allElements;
+// 	var type;
 
-    if(elementType.toUpperCase() == "NODE") {
-    	type = "text";
-    }
-    else if(elementType.toUpperCase() == "EDGE") {
-    	type = "edge";
-    }
+//     if(elementType.toUpperCase() == "NODE") {
+//     	type = "text";
+//     }
+//     else if(elementType.toUpperCase() == "EDGE") {
+//     	type = "edge";
+//     }
 
-    allElements = document.getElementsByTagName(type);
+//     allElements = document.getElementsByTagName(type);
 
-    for(var i = 0; i < allElements.length; i++) {
-        if(allElements[i].hasAttribute("style", "stroke:yellow;")) {
-            allElements[i].removeAttribute("style", "stroke:yellow;");
-        }
-    }
+//     for(var i = 0; i < allElements.length; i++) {
+//         if(allElements[i].hasAttribute("style", "stroke:yellow;")) {
+//             allElements[i].removeAttribute("style", "stroke:yellow;");
+//         }
+//     }
         
-    document.getElementById(element).getElementsByTagName(type)[0].setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
-}
+//     document.getElementById(element).getElementsByTagName(type)[0].setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
+// }
 
 function highlightElement_ClassDia(element) {
 

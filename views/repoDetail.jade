@@ -1,4 +1,5 @@
 -var repoID = repoInfo._id
+input(type='hidden', value=repoID)#myrepoId
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -46,7 +47,7 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#repo_estimation') Estimation
      li
-      a(data-toggle='tab', href='#project_list') Projects 
+      a(data-toggle='tab', href='#project_list') Projects
         span(class="badge") #{repoInfo.Models.length}
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
@@ -73,20 +74,21 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{repoInfo.Models.length}
                 span Transactions
-          div.col-sm-3 
+          div.col-sm-3
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
                 h2 #{repoInfo.Models.length}
                 span Classes
-       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
-        //div.col-sm-12.chart-row  
+       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
+        //div.col-sm-12.chart-row
           //.col-sm-6
             //img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
           //.col-sm-6(id="transaction-pie" data="./#{repoInfo.AccessDir}/transactionAnalytics.csv")
        div.repo-analysis-detail
           div.repo-metrics
+          if false
            h3 Calculated:
            ul
             li
@@ -125,8 +127,9 @@ div.block.panel.panel-default
              span.statistical-item(data-url="#{repoInfo.AccessDir}/external_call_operation_analysis_result.svg") Number of External Outputs: #{repoInfo.EO}
             li
              span.statistical-item(data-url="#{repoInfo.AccessDir}/path_number_analysis_result.svg") Number of Transactions: #{repoInfo.TN}
+         if falses
           div.stats-chart
-            //example diagram. click the items in the curresponding statistics will be returned and displayed.           
+            //example diagram. click the items in the curresponding statistics will be returned and displayed.
             img(src="#{repoInfo.AccessDir}/control_operation_analysis_result.svg")
             div.stats-detail
              p.max-value max value:1

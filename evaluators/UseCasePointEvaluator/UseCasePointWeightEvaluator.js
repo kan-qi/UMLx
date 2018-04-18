@@ -31,8 +31,8 @@
 		//calculate the normalized use case point effort.
 		
 		modelInfo['UCWeightCal'] = {
-				EF : 0,
-				TCF : 0,
+				EF : 1,
+				TCF : 1,
 				Effort : 0,
 				NormalizedUCEffort : 0
 		}

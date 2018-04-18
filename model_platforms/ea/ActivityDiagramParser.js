@@ -40,7 +40,7 @@
 //			}
 //			else{
 				var activity = {
-						Type: "activity",
+						Type: XMIActivity['$']['xmi:type'],
 						Name: XMIActivity['$']['name'],
 						_id: XMIActivity['$']['xmi:id'],
 //						Attachment: XMIActivity,
@@ -162,13 +162,59 @@
 		console.log("final relations");
 		console.log(PrecedenceRelations);
 		
+		var ActivitiesToEliminate = [];
+		//to  eliminate unnecessary activities
+		for(var i in Activities){
+			var activity = Activities[i];
+
+			console.log("determine fragement node");
+			console.log(Activities);
+			console.log(activity.Name);
+			if(activity.Type === "uml:DecisionNode" || activity.Type === "uml:ActivityFinalNode" || activity.Type === "uml:InitialNode" || activity.Type === "uml:FlowFinalNode"){
+//					var activityToEliminate = activity;
+				ActivitiesToEliminate.push(activity);
+			}
+		}
+		
+		for(var i in ActivitiesToEliminate){
+			var activityToEliminate = ActivitiesToEliminate[i];
+			var outEdges = [];
+			var inEdges = [];
+			var leftEdges = [];
+			for(var k in PrecedenceRelations){
+				var precedenceRelation = PrecedenceRelations[k];
+				if(precedenceRelation.end == activityToEliminate){
+					inEdges.push(precedenceRelation);
+				} else if(precedenceRelation.start == activityToEliminate){
+					outEdges.push(precedenceRelation);
+				} else {
+					leftEdges.push(precedenceRelation);
+				}
+			}
+			
+			for(var k in inEdges){
+				var  inEdge = inEdges[k];
+				for(var l in outEdges){
+					var outEdge = outEdges[l];
+					 //create a new edge by triangle rules.
+					leftEdges.push({start: inEdge.start, end: outEdge.end});
+				}
+			}
+			
+			Activities.splice(Activities.indexOf(activityToEliminate), 1);
+			PrecedenceRelations = leftEdges;
+		}
+		
+
+		console.log("test use case");
+		console.log(PrecedenceRelations);
 
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 		
-//		createActivityDiagram(UseCase, UseCase.OutputDir+"/"+"uml_diagram.svg", function(){
-//			 console.log("class diagram is output: "+ UseCase.OutputDir+"/"+"class_diagram.svg");
-//		});
+		createActivityDiagram(UseCase, UseCase.OutputDir+"/"+"uml_diagram.dotty", function(){
+			 console.log("class diagram is output: "+ UseCase.OutputDir+"/"+"class_diagram.svg");
+		});
 		
 		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
 
@@ -181,6 +227,7 @@
 		var PrecedenceRelations = UseCase.PrecedenceRelations;
 		var activitiesID = []; //array of IDs
 		var activityEdges = {}; //maps activity ID to list of outgoing edges
+		var nodesWithEdges = []; //array of nodes with edges
 		var forkNodes = []; //nodes that are forked from and should be on the same level
 		var numDecision = 0; //number of decision nodes created
 		var decNodes = {}; //maps activity ID to decision name
@@ -197,39 +244,48 @@
 		for(var edge in PrecedenceRelations) {
 			activityEdges[PrecedenceRelations[edge].start._id] = activityEdges[PrecedenceRelations[edge].start._id] || [];
 			activityEdges[PrecedenceRelations[edge].start._id].push(PrecedenceRelations[edge].end._id);
+			if(nodesWithEdges.indexOf(PrecedenceRelations[edge].start._id) == -1) {
+				nodesWithEdges.push(PrecedenceRelations[edge].start._id);
+			}
+			if(nodesWithEdges.indexOf(PrecedenceRelations[edge].end._id) == -1) {
+				nodesWithEdges.push(PrecedenceRelations[edge].end._id);
+			}
 		}
 
 		for(var node in Activities) {
 			//starting node
-			if(Activities[node].Name == "ActivityInitial") {
-				graphOutput += (Activities[node]._id + "[shape=circle, color=black, style=filled, label=\"\"];\n");
+			if(Activities[node].Type == "uml:InitialNode") {
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=circle, color=black, style=filled, label=\"\"];\n");
 				continue;
 			}
 			//ending node
-			else if(Activities[node].Name == "ActivityFinal") {
-				graphOutput += (Activities[node]._id + "[shape=doublecircle, color=black, style=filled, label=\"\"];\n");
+			else if(Activities[node].Type == "uml:ActivityFinalNode") {
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=doublecircle, color=black, style=filled, label=\"\"];\n");
 				continue;
 			}
 			//fork node
-			else if(Activities[node].Name == "fork") {
-				graphOutput += (Activities[node]._id + "[shape=rect, width=1, height=0.2, color=black, style=filled, fixedsize=true, label=\"\"];\n");
+			else if(Activities[node].Type == "uml:ForkNode") {
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=rect, width=1, height=0.2, color=black, style=filled, fixedsize=true, label=\"\"];\n");
 				forkNodes.push(Activities[node]._id);
 			}
 			//node with no edges
 			else if(!(Activities[node]._id in activityEdges)) {
+				if(nodesWithEdges.indexOf(Activities[node]._id) != -1) {
+					graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=box, style=rounded, width=3, height=1, label=\"" + (Activities[node].Name || Activities[node]._id).replace(/\"/g,'\\"') + "\"];\n");
+				}
 				continue;
 			}
 			//decision node
 			else if(activityEdges[Activities[node]._id].length >= 2) {
 				var decisionName = "decision" + numDecision;
-				graphOutput += (Activities[node]._id + "[shape=box, style=rounded, width=3, height=1, fixedsize=true, label=\"" + Activities[node].Name + "\"];\n");
- 				graphOutput += decisionName + "[shape=diamond, width=0.5, height=0.5, fixedsize=true, label=\"\"]\n";
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=box, style=rounded, width=3, height=1, fixedsize=true, label=\"" + Activities[node].Name.replace(/\"/g,'\\"') + "\"];\n");
+ 				graphOutput += decisionName + "[id=" + Activities[node]._id + ", shape=diamond, width=0.5, height=0.5, fixedsize=true, label=\"\"];\n";
 				decNodes[Activities[node]._id] = decisionName;
 				numDecision++;
 			}
 			//action node
 			else {
-				graphOutput += (Activities[node]._id + "[shape=box, style=rounded, width=3, height=1, fixedsize=true, label=\"" + Activities[node].Name + "\"];\n");
+				graphOutput += (Activities[node]._id + "[id=" + Activities[node]._id + ", shape=box, style=rounded, width=3, height=1, label=\"" + Activities[node].Name + "\"];\n");
 			}
 		}
 
@@ -263,13 +319,20 @@
 
 		graphOutput += "}";
 
-		var fs = require('fs');
-		fs.writeFile(filePath, graphOutput, function(err) {
-			if(err) {
-				console.log(err);
-				return;
-			}
+		dottyUtil = require("../../utils/DottyUtil.js");
+		dottyUtil.drawDottyGraph(graphOutput, filePath, function(){
+			console.log("ACTIVITY DIAGRAM SAVED!");
 		});
+
+		// var fs = require('fs');
+		// fs.writeFile(filePath, graphOutput, function(err) {
+		// 	if(err) {
+		// 		console.log(err);
+		// 		return;
+		// 	}
+		// 	console.log("ACTIVITY DIAGRAM SAVED!");
+		// });
+		
 	}
 
 
