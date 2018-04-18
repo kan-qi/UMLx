@@ -102,7 +102,7 @@
 //								});
 				}
 			
-				debug.writeJson("model_"+model._id, umlModelInfo);
+//				debug.writeJson("model_"+model._id, umlModelInfo);
 				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
 					console.log("domain model is drawn");
 				});
