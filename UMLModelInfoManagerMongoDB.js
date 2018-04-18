@@ -668,7 +668,7 @@ function deleteRepo(repoId, callbackfunc) {
 					
 			db.collection("modelInfo").find(
 			{
-				rep_id:repoid
+				repo_id:repoid
 			},
 			{
 				TransactionAnalytics:1,ElementAnalytics:1,_id:0
