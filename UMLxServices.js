@@ -648,19 +648,19 @@ app.get('/reanalyseModel', function (req, res){
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryModelInfo(modelId, req.userInfo.repoId, function(modelInfo){
-		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+		umlModelExtractor.extractModelInfo(modelInfo, function(extractedModelInfo){
 			//update model analytics.
-			umlEvaluator.evaluateModel(modelInfo, function(){
+			umlEvaluator.evaluateModel(extractedModelInfo, function(){
 				console.log("model analysis complete");
 			});
 //			console.log(modelInfo);
 			umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
 //				console.log(modelInfo);
-				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-					console.log("=============repoInfo==========");
+//				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+//					console.log("=============repoInfo==========");
 //					console.log(repoInfo);
 					res.render('modelDetail', {modelInfo:modelInfo, repo_id: repoId});
-				});
+//				});
 			});
 		});
 	});
@@ -677,6 +677,7 @@ app.get('/requestDomainModelDetail', function (req, res){
 			res.end('delete error!');
 			return;
 		}
+		console.log("domain model");
 		console.log(domainModel);
 		res.render('domainModelDetail',{domainModel: domainModel});
 	});
@@ -904,6 +905,11 @@ app.get('/requestUseCaseDetail', function(req, res){
 //		for(var i in useCaseInfo.Diagrams){
 //		console.log(useCaseInfo.Diagrams[i]['Paths']);
 //		}
+		
+		if(!useCaseInfo){
+			res.send("error");
+			return;
+		}
 		
 		//create the displayable paths
 		var displayablePaths = [];
@@ -1285,6 +1291,8 @@ app.get('/', function(req, res){
     
     umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
 //			console.log(req.userInfo);
+    	
+    	console.log(repoInfo);
         
         if(req.param('step') != undefined && req.param('page') != undefined){
             var repID = req.param('repId');
@@ -1303,9 +1311,9 @@ app.get('/', function(req, res){
         if(currentPage >1){
             start = (currentPage - 1) * pageSize;
         }
-        
-    
+
         umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
+        	
     
             totalRec = repoInfo.Models.length;
             pageCount =  Math.ceil(totalRec/pageSize);

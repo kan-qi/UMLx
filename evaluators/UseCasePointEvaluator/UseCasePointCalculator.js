@@ -25,8 +25,8 @@
 			COCOMONormalizedEffort : 0,
 			UUCW:0,
 			UAW:0,
-			TCF:0,
-			EF:0,
+			TCF:1,
+			EF:1,
 			Effort_Norm_UCP : 0
 		};
 		
@@ -65,7 +65,7 @@
 	
 	function toModelEvaluationHeader(){
 //		return "UEUCW,UEUCW_ALY,UEXUCW,UEXUCW_ALY,UDUCW,UDUCW_ALY,UAW,UAW_ALY,TCF,TCF_ALY,EF,EF_ALY,EUCP,EUCP_ALY,EXUCP,EXUCP_ALY,DUCP_ALY,Effort_Norm_UCP";
-		return "UEUCW,UEXUCW,UDUCW,UAW,TCF,EF,EUCP,EXUCP,DUCP,Effort_Norm_UCP";
+		return "UEUCW,UEXUCW,UDUCW,UAW,TCF,EF,EUCP,EXUCP,DUCP,SWTI,SWTII,SWTIII,Effort_Norm_UCP";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
@@ -79,12 +79,15 @@
 		modelInfo['UseCasePointData'].EUCP.toFixed(2)+","+
 		modelInfo['UseCasePointData'].EXUCP.toFixed(2)+","+
 		modelInfo['UseCasePointData'].DUCP.toFixed(2)+","+ //replace DUCP
+		modelInfo['UseCasePointData'].SWTI.toFixed(2)+","+
+		modelInfo['UseCasePointData'].SWTII.toFixed(2)+","+
+		modelInfo['UseCasePointData'].SWTIII.toFixed(2)+","+ //replace DUCP
 		modelInfo['UseCasePointData'].Effort_Norm_UCP.toFixed(2);
 	}
 	
 	function toUseCaseEvaluationHeader(){
 //		return "UEUCW_EMP,UEUCW_ALY,UEXUCW_EMP,UEXUCW_ALY, Effort,Effort_ALY";
-		return "UEUCW,UEXUCW,UDUCW,Effort";
+		return "UEUCW,UEXUCW,UDUCW,Effort,SWTI,SWTII,SWTIII,";
 	}
 	
 	function toUseCaseEvaluationRow(useCaseInfo, index){
@@ -96,7 +99,10 @@
 //			useCaseEmpirics.UEXUCW+","+
 			useCaseInfo['UseCasePointData'].UDUCW+","+
 //			useCaseEmpirics.Effort+","+
-			useCaseInfo['UseCasePointData'].Effort;
+			useCaseInfo['UseCasePointData'].Effort+","+
+			useCaseInfo['UseCasePointData'].SWTI+","+
+			useCaseInfo['UseCasePointData'].SWTII+","+
+			useCaseInfo['UseCasePointData'].SWTIII;
 	}
 	
 	function evaluateUseCase(useCaseInfo){
@@ -130,7 +136,7 @@
 			for(var k in useCaseInfo.Paths){
 				var path = useCaseInfo.Paths[k];
 				var utw = 0;
-				var doN = path.length;
+				var doN = path.pathLength;
 				var uieN = path.boundaryNum
 				
 				
@@ -184,7 +190,7 @@
 				for(var k in useCaseInfo.Paths){
 					var path = useCaseInfo.Paths[k];
 					var utw = 0;
-					var doN = path.length;
+					var doN = path.pathLength;
 					var uieN = path.boundaryNum;
 					
 					if(doN <= 0){
@@ -235,6 +241,27 @@
 					useCaseInfo['UseCasePointData'].UDUCW += utw;
 				  }
 //			}
+
+				useCaseInfo['UseCasePointData'].SWTI = 0;
+				useCaseInfo['UseCasePointData'].SWTII = 0;
+				useCaseInfo['UseCasePointData'].SWTIII = 0;
+				
+				
+				evaluateSWT(useCaseInfo);
+	}
+	
+	function evaluateSWT(useCaseInfo){
+//		useCaseInfo['UseCasePointData'].SWTI = 10*useCaseInfo['UseCasePointData'].NT;
+		
+			for(var i in useCaseInfo.Paths){
+				var path = useCaseInfo.Paths[i];
+				if(path['TransactionAnalytics']){
+				useCaseInfo['UseCasePointData'].SWTI += path['TransactionAnalytics'].swti;
+				useCaseInfo['UseCasePointData'].SWTII += path['TransactionAnalytics'].swtii;
+				useCaseInfo['UseCasePointData'].SWTIII += path['TransactionAnalytics'].swtiii;
+				}
+			  }
+		
 	}
 	
 
@@ -244,8 +271,8 @@
 			COCOMONormalizedEffort : 0,
 			UUCW:0,
 			UAW:0,
-			TCF:0,
-			EF:0,
+			TCF:1,
+			EF:1,
 			Effort_Norm_UCP : 0
 			}
 		}
@@ -256,6 +283,11 @@
 		modelInfo['UseCasePointData'].EXUCP = 0;
 		modelInfo['UseCasePointData'].UDUCW = 0;
 		modelInfo['UseCasePointData'].DUCP = 0;
+		
+
+		modelInfo['UseCasePointData'].SWTI = 0;
+		modelInfo['UseCasePointData'].SWTII = 0;
+		modelInfo['UseCasePointData'].SWTIII = 0;
 		
 		
 		//calculate EUCP
@@ -318,6 +350,18 @@
 
 		modelInfo['UseCasePointData'].UDUCW = UDUCW;
 		modelInfo['UseCasePointData'].DUCP = DUCP;
+		
+		//calcualte swti, swtii, swtiii
+		for(var i in modelInfo.UseCases){
+		var useCaseInfo = modelInfo.UseCases[i];
+//		var useCaseAnalytics = useCase.UseCaseAnalytics;
+
+		if(useCaseInfo['UseCasePointData']){
+			modelInfo['UseCasePointData'].SWTI += useCaseInfo['UseCasePointData'].SWTI;
+			modelInfo['UseCasePointData'].SWTII += useCaseInfo['UseCasePointData'].SWTII;
+			modelInfo['UseCasePointData'].SWTIII += useCaseInfo['UseCasePointData'].SWTIII;
+		}
+		}
 	}
 	
 	function analyseRepoEvaluation(repoInfo){

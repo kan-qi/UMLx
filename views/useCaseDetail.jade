@@ -1,17 +1,19 @@
 if useCaseInfo
- div.use-case-detail-content(data-use-case-title=useCaseInfo.Name)
+ -var useCase_id = useCaseInfo._id
+   input(type='hidden', value=useCase_id)#UseCaseId
+   div.use-case-detail-content(data-use-case-title=useCaseInfo.Name)
   ul.nav.nav-tabs
    li.active
     a(data-toggle='tab', href='#use-case-info-pane') UseCase Info
    li
-    a(data-toggle='tab', href='#use-case-analytics') Analytics
+    a(data-toggle='tab', onclick='populate_usecase_data();') Analytics
    //li
     //a(data-toggle='tab', href='#use-case-distributions') Distributions
    //li
     //a(data-toggle='tab', href='#use-case-evaluation') Evaluation
  div.tab-content
   div.tab-pane.fade.in.active(id="use-case-info-pane")
-   include diagramDisplay 
+   include diagramDisplay
   div.tab-pane.fade(id="use-case-analytics")
      div.use-case-analytics
         h3 Calculated:

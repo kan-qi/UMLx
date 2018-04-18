@@ -1,3 +1,4 @@
+
 function setCookie(cname, cvalue, exdays) {
     var expires="";
     if(exdays > 0){
@@ -76,7 +77,7 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   if(diagramType === "analysis_diagram"){
            //have put robustness diagram script under robustness diagram - Aishwarya
   }
-    
+
   else if(diagramType === "robustness_diagram") {
       const edges = Array.prototype.slice.apply(svgDoc.getElementsByClassName('edge'));
       idString = idString.replace('___', '->');
@@ -91,7 +92,7 @@ function highlight_diagram_element(idString, elementType, diagramType) {
         }
       }
   }
-    
+
   else if(diagramType === "sequence_diagram"){
       //call kate's, not ready.
   }
@@ -1064,7 +1065,8 @@ function load_file_upload_fnc(type) {
 }
 
 function toggleQueryList() {
-    $("#use-case-list").slideToggle();
+    // $("#use-case-list").slideToggle();
+		$('#use-case-list').modal('toggle');
 }
 
 function toggleZoom() {
@@ -1084,7 +1086,7 @@ function toggleZoom() {
 
 
 function toggleDomainList() {
-    $("#domain-model-list").slideToggle();
+    $('#domain-model-list').modal('toggle');
 }
 
 // added for zoom control on svg
@@ -1710,37 +1712,7 @@ document.getElementById(id).style.stroke =  "red";
 //     console.log(results);
 // };
 
-function walkDir(fileFolder) {
-    $.ajax({
-    	type: 'GET',
-        url: 'listFileUnderDir?fileFolder='+fileFolder,
-        success: function (data) {
-    		console.log(data);
-
-            var out = "<table class='table-striped'>";
-            out += "<tr><th>File Lists</th></tr>";
-
-            for(var i = 0; i < data.length; i++) {
-            	// var fatherUrl = data[i].parent.substring(data[i].parent.lastIndexOf("/")+1);
-            	// if (fatherUrl == fileFolder) {
-            	// 	if (data[i].isFolder == 'true') {
-            	// 		var clickValue = data[i].parent+"/"+data[i].url;
-            	// 		console.log(clickValue);
-                 //        out += "<tr><td><a href='#'>" +
-                 //            data[i].url+
-                 //            "</a></td>";
-					// } else {
-                        out += "<tr><td>" +
-                            data[i].url+
-                            "</td>";
-				// 	}
-				// }
-            }
-            out += "</table>";
-            document.getElementById("displayArchive").innerHTML = out;
-        }
-    });
-}
+// _getAllFilesFromFolder(/ealing/ + "Desktop");
 
 // function walkDir() {
 //     const testFolder = './tests/';
