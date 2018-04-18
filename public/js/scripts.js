@@ -9,6 +9,37 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+function pagination_call(repoId, currentPage) {
+	
+    console.log("Inside Script" + repoId);
+    
+    var data = {
+        repId: repoId,
+        //pageSize: pageSize,
+        //start: start,
+        currentPage:currentPage
+        //index:index,
+    };
+    
+    //console.log("StepSize "+stepSize);
+    	$.ajax({
+		type : 'GET',
+		url : "/pager",
+		data : data,
+		contentType: "application/json",
+		success : function(response) {
+			//console.log(response);
+          //  $('#pResult').append(response);
+            $("#page-panel").html("");
+			$("#page-panel").append($(response));
+            
+		},
+		error : function() {
+			console.log("fail");
+		}
+	});
+    
+}
 
 
 function model_file_upload_fnc() {
