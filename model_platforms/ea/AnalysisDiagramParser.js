@@ -7,6 +7,7 @@
 //	var parser = new xml2js.Parser();
 //	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
+	var stringSimilarity = require('string-similarity');
 	
 	function queryExtensionElements(XMIExtension){
 		var extensionAnalysisElements = jp.query(XMIExtension, '$..element[?(@[\'$\'][\'xmi:type\']==\'uml:Object\' || @[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
@@ -73,6 +74,55 @@
 //		debug.writeJson("use_case_extension_elements"+UseCaseID, useCaseInExtension);
 		
 		return useCaseInExtension;
+	}
+	
+	function matchComponent(activityName, DomainElementsBySN){
+		//flatout the domainModel
+		
+		var domainElementStrings = [];
+		var domainElementsByString = {};
+		for(var i in DomainElementsBySN){
+			var domainElement = DomainElementsBySN[i];
+			var stringRepresentation = i;
+			for(var j in domainElement.Operations){
+				var operation = domainElement.Operations[j];
+				stringRepresentation += operation.Name;
+			}
+			domainElementStrings.push(stringRepresentation);
+			domainElementsByString[stringRepresentation] = domainElement;
+		}
+		
+		console.log(activityName);
+		console.log(DomainElementsBySN);
+		console.log(domainElementStrings);
+		
+		var matchedDomainElement = {};
+		if(domainElementStrings.length>0){
+		var matches = stringSimilarity.findBestMatch(activityName, domainElementStrings);
+		matchedDomainElement = domainElementsByString[matches.bestMatch.target];
+		}
+		
+		console.log(matchedDomainElement);
+		
+		var operations = [];
+		for(var i in matchedDomainElement.Operations){
+			var operation = matchedDomainElement.Operations[i];
+			operations.push(operation.Name);
+		}
+		
+		console.log(operations);
+		
+		var matchedOperation = ""
+		if(operations.length > 0){
+		var operationMatches = stringSimilarity.findBestMatch(activityName, operations);
+		matchedOperation = operationMatches.bestMatch.target;
+		}
+		
+		return {
+			component: matchedDomainElement,
+			method: matchedOperation
+		}
+
 	}
 	
 	function parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel){
@@ -162,7 +212,13 @@
 				var XMIInstanceSpecification = XMIInstanceSpecificationsByID[extensionAssociationByUseCase.start['$']['xmi:idref']];
 				var ConnectedXMIInstanceSpecification = XMIInstanceSpecificationsByID[extensionAssociationByUseCase.end['$']['xmi:idref']];
 					
-					var component = DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
+//					var component = DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
+					
+					//matching with components
+					
+					var matchedResult = matchComponent(standardizeName(ConnectedXMIInstanceSpecification['$']['name']), DomainElementsBySN);
+					
+					var component = matchedResult.component;
 					if(!component){
 						component = {};
 					}
@@ -176,7 +232,8 @@
 //							Attachment: XMIInstanceSpecification,
 							Group: "System",
 							OutScope: false,
-							Component: component
+							Component: component,
+							MatchedMethod: matchedResult.method
 					}
 					
 					//decide the reponse node and group.
