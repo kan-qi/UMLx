@@ -1085,9 +1085,9 @@ function toggleZoom() {
 
 
 
-function toggleDomainList() {
-    $('#domain-model-list').modal('toggle');
-}
+// function toggleDomainList() {
+//     $('#domain-model-list').modal('toggle');
+// }
 
 // added for zoom control on svg
 
@@ -1110,7 +1110,12 @@ function get_diagram_name() {
 }
 
 
-
+function openList() {
+    document.getElementById("mySidenav").style.height = "30%";
+}
+function closeList() {
+    document.getElementById("mySidenav").style.height = "0";
+}
 
 
 
