@@ -654,10 +654,10 @@ function deleteRepo(repoId, callbackfunc) {
 		});
 	}
 	
-	/*repoDetail("5a8e109c13a5974144158d99",function(result)
+	repoDetail("5a8e109c13a5974144158d99",function(result)
     {
         console.log(result);
-    })*/
+    })
 	function repoDetail(repoId,callbackfunc)
 	{
 		MongoClient.connect(url, function(err, db) 
@@ -671,7 +671,7 @@ function deleteRepo(repoId, callbackfunc) {
 				rep_id:repoid
 			},
 			{
-				TransactionAnalytics:1,_id:0
+				TransactionAnalytics:1,ElementAnalytics:1,_id:0
 			}).toArray(
 			function(err, result) 
 			{
@@ -703,9 +703,13 @@ function deleteRepo(repoId, callbackfunc) {
 						   {
 							   
 							   var sum_nt=0;
+							   var sum_useCase=0;
+							   var sum_entityNum=0;
 							   for(i=0;i<result.length;i++)
 							   {
 									sum_nt+=result[i]['TransactionAnalytics']['NT'];
+									sum_useCase+=result[i]['ElementAnalytics']['EntityNum'];
+									sum_entityNum+=result[i]['ElementAnalytics']['UseCaseNum'];
 							   }
 								//console.log("sum_nt"+sum_nt);
 						  
@@ -715,7 +719,7 @@ function deleteRepo(repoId, callbackfunc) {
 							  
 							  //record={repo_id:repoid,NT:sum_nt,timestamp:today.getDate()}
 							  
-							  record={repo_id:repoid,NT:sum_nt,timestamp:today}
+							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum,timestamp:today}
 							  db.collection("noOfTransactions").insertOne(record, function(err, res) 
 							  {
 									if (err) throw err;
