@@ -654,10 +654,10 @@ function deleteRepo(repoId, callbackfunc) {
 		});
 	}
 	
-	repoDetail("5a8e109c13a5974144158d99",function(result)
+	/*repoDetail("5a8e109c13a5974144158d99",function(result)
     {
         console.log(result);
-    })
+    })*/
 	function repoDetail(repoId,callbackfunc)
 	{
 		MongoClient.connect(url, function(err, db) 
