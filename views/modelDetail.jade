@@ -1,6 +1,10 @@
 -var model_id = modelInfo._id
 -var modelName = modelInfo.Name
 -var repoID = repo_id
+-var filePath = modelInfo.umlFilePath
+-var index = filePath.lastIndexOf("/");
+-var fileFolder = filePath.substring(15, index);
+
 input(type='hidden', value=repoID)#myrepoId
 input(type='hidden', value=model_id)#mymodelId
 div.block.panel.panel-default
@@ -46,7 +50,7 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#model-evaluation') Model Info
      li
-      a(data-toggle='tab', href='#repo_archive') Archive
+      a(data-toggle='tab', href='#repo_archive', onclick="walkDir('#{fileFolder}');") Archive
 
      //li
       //a(data-toggle='tab', href='#model-representation') Representation
@@ -300,7 +304,8 @@ div.block.panel.panel-default
          button.btn.btn-default.buttonForModel#submitButton.hidden(type='button', onclick='submitEdit();') Submit
          button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel
      div.tab-pane.fade(id="repo_archive")
-            button.btn.btn-default(type='button') test
+        div#displayArchive
+
      //div.tab-pane.fade(id="model-evaluation")
       div.model-evaluation-ops
          div

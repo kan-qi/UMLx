@@ -260,11 +260,13 @@
 			Model.DomainModel.Elements.push(domainElement);
 		}
 
+
 		console.log(XMIClasses);
 		debug.writeJson("XMIClasses", XMIClasses);
 		
-	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"uml_diagram.dotty", function(){
-		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"uml_diagram.dotty");
+		Model.DomainModel.DiagramType = "class_diagram";
+	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
+		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
 	   });
 //		
 		
@@ -295,6 +297,10 @@
 			
 			Model.UseCases.push(UseCase);
 		}
+		
+
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("use_case_parsing_finished_"+Model._id, Model);
 		
 		
 //		for(var i in DomainElementsBySN){
@@ -352,6 +358,10 @@
 		if(callbackfunc){
 			callbackfunc(Model);
 		}
+		
+
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("parsed_model_from_parser_"+Model._id, Model);
 		
 			});
 		});
@@ -424,8 +434,6 @@
                          graph += '\\l';
                      }
                  }
-
-
 
                  // graph += '|';
 

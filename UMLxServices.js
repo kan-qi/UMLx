@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
+var path = require('path')
 var admZip = require('adm-zip');
 var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
@@ -222,6 +223,21 @@ app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password'
 
 })
 
+
+app.post('/updateModel', function (req, res){
+
+   // var obj = JSON.parse(JSON.stringify(req.body));
+    var modelInfo = req.body;
+    //JSON.parse(modelInfo);
+    console.log(modelInfo);
+    var repoID = modelInfo.rep_id;
+	umlModelInfoManager.updateModelInfo(modelInfo, repoID, function(result,message){
+        res.json(result);
+        console.log("UpdateModel Finished");
+    });
+})
+
+
 app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'token',maxCount : 1}]),  function (req, res){
 
 	var email = req.body['email'];
@@ -388,7 +404,9 @@ app.get('/savegitinfo', function(req,res){
 app.get('/profile',function(req,res){
 
 	var profileInfo = {}
-
+	var userID = req.userInfo._id;
+    	
+	
 	profileInfo.userName = req.userInfo.userName;
 	profileInfo.email = req.userInfo.email;
 	profileInfo.isEnterprise = req.userInfo.isEnterprise?true:false;
@@ -397,9 +415,11 @@ app.get('/profile',function(req,res){
 		if(success==true){
 			profileInfo.gitData = gitData;
 		}
-	res.render('profile', {profileInfo:profileInfo});
-	});
-
+	
+		umlModelInfoManager.queryRepoFromUser(userID, function(result, message){
+        		res.render('profile', {profileInfo:profileInfo, profileRep:result.Repos[0]});
+	   	});
+    	});
 })
 
 app.get('/inviteUser',function(req,res){
@@ -511,7 +531,7 @@ app.post('/uploadUseCaseFile', upload.fields([{name:'usecase-file',maxCount:1}, 
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlEvaluator.loadUseCaseEmpirics(repoInfo, function(repo){
 			if(!repo){
-				res.end('load error!');
+				res.end('lod error!');
 				return;
 			}
 			umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
@@ -539,18 +559,18 @@ app.post('/uploadModelFile', upload.fields([{name:'model-file',maxCount:1}, {nam
 	});
 })
 
-app.post('/uploadCOCOMOFile', upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
-	console.log('/uploadCOCOMOFile');
-	var COCOMOFilePath = req.files['COCOMO-file'][0].path;
-	var repoId = req.userInfo.repoId;
-	res.end('<h1>function is not implemented');
-	// COCOMOCalculator.loadCOCOMOData(repoId, function(repoInfo){
-	// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
-	// 		console.log(modelInfo);
-	// 		res.redirect('/');
-	// 	});
-	// }, COCOMOFilePath);
-})
+//app.post('/uploadCOCOMOFile', upload.fields([{name:'COCOMO-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
+//	console.log('/uploadCOCOMOFile');
+//	var COCOMOFilePath = req.files['COCOMO-file'][0].path;
+//	var repoId = req.userInfo.repoId;
+//	res.end('<h1>function is not implemented');
+//	// COCOMOCalculator.loadCOCOMOData(repoId, function(repoInfo){
+//	// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
+//	// 		console.log(modelInfo);
+//	// 		res.redirect('/');
+//	// 	});
+//	// }, COCOMOFilePath);
+//})
 
 /*
  * To integrate the model version control system, to reflect the evolution of the architecture for certain process.
@@ -588,10 +608,11 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 
 
 app.get('/deleteModel', function (req, res){
-	console.log("/deleteModel");
+//	console.log("/deleteModel");
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
-	var reanalyzeRepo = req.query['reanalyse_repo'];
+	console.log("/deleteModel");
+//	var reanalyzeRepo = req.query['reanalyse_repo'];
 	var reanalyseRepo = false;
 	umlModelInfoManager.deleteModel(repoId, modelId, function(result){
 		if(!result){
@@ -627,19 +648,19 @@ app.get('/reanalyseModel', function (req, res){
 	var modelId = req.query['model_id'];
 	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryModelInfo(modelId, req.userInfo.repoId, function(modelInfo){
-		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+		umlModelExtractor.extractModelInfo(modelInfo, function(extractedModelInfo){
 			//update model analytics.
-			umlEvaluator.evaluateModel(modelInfo, function(){
+			umlEvaluator.evaluateModel(extractedModelInfo, function(){
 				console.log("model analysis complete");
 			});
 //			console.log(modelInfo);
 			umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
 //				console.log(modelInfo);
-				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-					console.log("=============repoInfo==========");
+//				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+//					console.log("=============repoInfo==========");
 //					console.log(repoInfo);
 					res.render('modelDetail', {modelInfo:modelInfo, repo_id: repoId});
-				});
+//				});
 			});
 		});
 	});
@@ -656,59 +677,60 @@ app.get('/requestDomainModelDetail', function (req, res){
 			res.end('delete error!');
 			return;
 		}
+		console.log("domain model");
 		console.log(domainModel);
 		res.render('domainModelDetail',{domainModel: domainModel});
 	});
 })
 
 
-app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
-	console.log("/loadEmpiricalUsecaseDataForRepo");
-	var repoId = req.userInfo.repoId
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-	umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
-		if(!repo){
-			res.end('load error!');
-			return;
-		}
-
-//		umlEvaluator.evaluateRepo(repo, function(){
-//			console.log("repo analysis complete");
+//app.get('/loadEmpiricalUsecaseDataForRepo', function (req, res){
+//	console.log("/loadEmpiricalUsecaseDataForRepo");
+//	var repoId = req.userInfo.repoId
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//	umlEvaluator.loadUseCaseEmpiricsForRepo(repoInfo, function(repo){
+//		if(!repo){
+//			res.end('load error!');
+//			return;
+//		}
+//
+////		umlEvaluator.evaluateRepo(repo, function(){
+////			console.log("repo analysis complete");
+////		});
+////		console.log(repo);
+////		console.log(modelInfo);
+//		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
+////			console.log(modelInfo);
+//				res.redirect('/');
 //		});
-//		console.log(repo);
-//		console.log(modelInfo);
-		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
-//			console.log(modelInfo);
-				res.redirect('/');
-		});
+//
+//	});
+//	});
+//})
 
-	});
-	});
-})
-
-app.get('/loadEmpiricalModelDataForRepo', function (req, res){
-	console.log("/loadEmpiricalModelDataForRepo");
-	var repoId = req.userInfo.repoId
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-	umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
-		if(!repo){
-			res.end('load error!');
-			return;
-		}
-
-//		umlEvaluator.evaluateRepo(repo, function(){
-//			console.log("repo analysis complete");
+//app.get('/loadEmpiricalModelDataForRepo', function (req, res){
+//	console.log("/loadEmpiricalModelDataForRepo");
+//	var repoId = req.userInfo.repoId
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//	umlEvaluator.loadModelEmpiricsForRepo(repoInfo, function(repo){
+//		if(!repo){
+//			res.end('load error!');
+//			return;
+//		}
+//
+////		umlEvaluator.evaluateRepo(repo, function(){
+////			console.log("repo analysis complete");
+////		});
+////		console.log(repo);
+////		console.log(modelInfo);
+//		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
+////			console.log(modelInfo);
+//				res.redirect('/');
 //		});
-//		console.log(repo);
-//		console.log(modelInfo);
-		umlModelInfoManager.updateRepoInfo(repo, function(repoInfo){
-//			console.log(modelInfo);
-				res.redirect('/');
-		});
-
-	});
-	});
-})
+//
+//	});
+//	});
+//})
 
 app.get('/deleteUseCase', function (req, res){
 	console.log("/deleteUseCase");
@@ -883,6 +905,11 @@ app.get('/requestUseCaseDetail', function(req, res){
 //		for(var i in useCaseInfo.Diagrams){
 //		console.log(useCaseInfo.Diagrams[i]['Paths']);
 //		}
+		
+		if(!useCaseInfo){
+			res.send("error");
+			return;
+		}
 		
 		//create the displayable paths
 		var displayablePaths = [];
@@ -1209,16 +1236,92 @@ app.post('/', function(req, res){
 	res.redirect('/')
 });
 
+//Vibhanshu
+var totalRec = 0;
+var pageSize = 3;
+var pageCount = 0;
+var start = 0;
+var currentPage = 1;
+
+app.get('/pager',function(req,res){
+   
+    //var index = req.param('index');
+    var repID = req.param('repId');
+    //start = parseInt(req.param('start'));
+    //pageSize = parseInt(req.param('pageSize'));
+    
+    
+    if(req.param('currentPage') != undefined){
+        currentPage = parseInt(req.param('currentPage'));
+    }
+    
+    if(currentPage >1){
+        start = (currentPage - 1) * pageSize;
+    }else{
+        start = 0;
+    }
+    
+    console.log("repo ID "+repID+" Start "+start+" pageSize "+pageSize+" pageCount "+pageCount+" currentPage "+currentPage);
+       
+    
+    //umlModelInfoManager.queryRepoInfo(repID, function(repoInfo){
+    
+        umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
+       
+        /*totalRec = result.length;
+        pageCount =  Math.ceil(totalRec/pageSize);
+        */
+        
+        //console.log(result);
+        //console.log("Index in UMLx "+ index);
+        res.render('pagination', {pageR:result, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+       
+       // });
+    }); 
+})
+
 app.get('/', function(req, res){
-		var message = req.query.e;
-		var requestUUID = randomstring.generate({
-			  length: 12,
-			  charset: 'alphabetic'
-			});
 
-		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
+    var message = req.query.e;
+	var requestUUID = randomstring.generate({
+        length: 12,
+		charset: 'alphabetic'
+    });
+ 
+    
+    umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
 //			console.log(req.userInfo);
+    	
+    	console.log(repoInfo);
+        
+        if(req.param('step') != undefined && req.param('page') != undefined){
+            var repID = req.param('repId');
+            //var stepSize = parseInt(req.param('step'));
+            //pageSize = parseInt(req.param('page'));
+        }else{
+            repID = repoInfo._id;
+            //stepSize = repoInfo.Models.length;
+            //pageSize = 3;
+        }
+        
+        if(req.param('curremtPage') != undefined){
+            currentPage = parseInt(req.param('currentPage'));
+        }
+        
+        if(currentPage >1){
+            start = (currentPage - 1) * pageSize;
+        }
 
+        umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
+        	
+    
+            totalRec = repoInfo.Models.length;
+            pageCount =  Math.ceil(totalRec/pageSize);
+           
+            console.log("total Records"+totalRec);
+            
+    console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
+            
 			if(req.userInfo.isEnterprise){
 				// get the repoinfo for all the repo that are part of this enterprise account
 				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
@@ -1233,21 +1336,19 @@ app.get('/', function(req, res){
 							}
 
 						}
-						
+				        console.log(result);
+                       
 						repoInfo.requestUUID = requestUUID;
-						res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
-
-
-					});
+						res.render('index', {pResult:result,repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+                	});
 				});
 
 			} else {
-
-				repoInfo.requestUUID = requestUUID;
-				res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise});
+                repoInfo.requestUUID = requestUUID;
+				res.render('index', {pResult:result, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
 			}
 
-
+         });
 	});
 });
 
@@ -1282,10 +1383,81 @@ app.get('/testActivityDiagramExtraction', function(req, res){
 	});
 });
 
-app.get('/testCOCOMODataLoad', function(req, res){
-	var cocomoCalculator = require("./evaluators/COCOMOEvaluator/COCOMOCalculator.js")
-	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
-		res.end(outputStr);
+//app.get('/testCOCOMODataLoad', function(req, res){
+//	var cocomoCalculator = require("./evaluators/COCOMOEvaluator/COCOMOCalculator.js")
+//	cocomoCalculator.loadCOCOMOData("./temp/COCOMOData.csv", function(outputStr){
+//		res.end(outputStr);
+//	});
+//});
+
+
+app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
+,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}
+,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
+,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
+,{name:'difficult_programming_language', maxCount:1},{name:'modelID', maxCount:1}]), function(req,res){
+	var umlEstimationInfo = {};
+	umlEstimationInfo.distributedSystem = req.body['distributed_system'];
+	umlEstimationInfo.responseTime = req.body['response_time'];
+	umlEstimationInfo.endUserEfficiency = req.body['end_user_efficiency'];
+	umlEstimationInfo.complexInternalProcessing = req.body['complex_internal_processing'];
+	umlEstimationInfo.codeReusable = req.body['code_must_be_reusable'];
+	umlEstimationInfo.easyInstall = req.body['easy_to_install'];
+	umlEstimationInfo.easyUse = req.body['easy_to_use'];
+	umlEstimationInfo.portable = req.body['portable'];
+	umlEstimationInfo.easyToChange = req.body['easy_to_change'];
+	umlEstimationInfo.concurrent = req.body['concurrent'];
+	umlEstimationInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
+	umlEstimationInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
+	umlEstimationInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
+	umlEstimationInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
+	umlEstimationInfo.applicationExperience = req.body['application_experience'];
+	umlEstimationInfo.objectOrientedExperience = req.body['object_oriented_experience'];
+	umlEstimationInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
+	umlEstimationInfo.motivation = req.body['motivation'];
+	umlEstimationInfo.stableRequirements = req.body['stable_requirements'];
+	umlEstimationInfo.partTimeStaff = req.body['part_time_staff'];
+	umlEstimationInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+	umlEstimationInfo.modelID = req.body['modelID'];	
+	umlModelInfoManager.saveModelInfoCharacteristics(umlEstimationInfo, function(result,message){		
+		res.json(result);
+	});
+});
+
+app.post('/saveEstimation', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
+,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}
+,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
+,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
+,{name:'difficult_programming_language', maxCount:1},{name:'uml_file', maxCount:1},{name:'estimator', maxCount:1},{name:'model', maxCount:1},{name:'simulation', maxCount:1}]), function(req,res){
+	var umlEstimationInfo = {};
+	umlEstimationInfo.distributedSystem = req.body['distributed_system'];
+	umlEstimationInfo.responseTime = req.body['response_time'];
+	umlEstimationInfo.endUserEfficiency = req.body['end_user_efficiency'];
+	umlEstimationInfo.complexInternalProcessing = req.body['complex_internal_processing'];
+	umlEstimationInfo.codeReusable = req.body['code_must_be_reusable'];
+	umlEstimationInfo.easyInstall = req.body['easy_to_install'];
+	umlEstimationInfo.easyUse = req.body['easy_to_use'];
+	umlEstimationInfo.portable = req.body['portable'];
+	umlEstimationInfo.easyToChange = req.body['easy_to_change'];
+	umlEstimationInfo.concurrent = req.body['concurrent'];
+	umlEstimationInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
+	umlEstimationInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
+	umlEstimationInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
+	umlEstimationInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
+	umlEstimationInfo.applicationExperience = req.body['application_experience'];
+	umlEstimationInfo.objectOrientedExperience = req.body['object_oriented_experience'];
+	umlEstimationInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
+	umlEstimationInfo.motivation = req.body['motivation'];
+	umlEstimationInfo.stableRequirements = req.body['stable_requirements'];
+	umlEstimationInfo.partTimeStaff = req.body['part_time_staff'];
+	umlEstimationInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+	umlEstimationInfo.umlFile = req.body['uml_file'];
+	umlEstimationInfo.estimator = req.body['estimator'];
+	umlEstimationInfo.model = req.body['model'];
+	umlEstimationInfo.simulation = req.body['simulation'];
+	
+	umlModelInfoManager.saveEstimation(umlEstimationInfo, function(result,message){		
+		res.json(result);
 	});
 });
 
@@ -1306,6 +1478,74 @@ app.get('/queryUsers', function(req,res){
 		console.log(users);
 		res.render('userList', {users: users});
 	});
+});
+
+app.get('/listFileUnderDir', function(req, res) {
+	var filePath;
+	if (req.query.fileFolder.indexOf("/") == 0) {
+		filePath = req.query.fileFolder.substring(1);
+	} else if (req.query.fileFolder.indexOf("public/uploads/") == 0) {
+		filePath = req.query.fileFolder;
+	} else {
+        filePath = "public/uploads/"+req.query.fileFolder;
+	}
+
+    function recurDir(filePath, done) {
+        var results = [];
+        fs.readdir(filePath, function(err, list){
+            if (err) {
+                return done(err);
+            } else {
+                var pending = list.length;
+                if (!pending) {
+                	return done(null, results);
+				}
+
+				list.forEach(function(file) {
+					var fileDir = path.resolve(filePath, file);
+					fs.stat(fileDir, function(err, stat){
+						if (stat && stat.isDirectory()) {
+							var entry = {};
+							entry.isFolder = 'true';
+							entry.url = file;
+                            entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							results.push(entry);
+
+							recurDir(fileDir, function(err, ans) {
+								results = results.concat(ans);
+								if (!--pending) {
+									done(null, results);
+								}
+							});
+						} else {
+							var entry = {};
+							entry.isFolder = 'false';
+							entry.url = file;
+							entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							results.push(entry);
+							if (!--pending) {
+								done(null, results);
+							}
+						}
+					});
+				});
+            }
+        });
+    }
+    recurDir(filePath, function (err, data) {
+		if (err) {
+			throw err;
+		}
+        res.json(data);
+    });
+
+    // fs.readdir(filePath, function(err, list){
+    	// if (err) {
+    	// 	throw err;
+	// 	} else {
+     //        res.json(list);
+	// 	}
+	// });
 });
 
 
@@ -1330,5 +1570,5 @@ var server = app.listen(8081,'127.0.0.1', function () {
   var port = server.address().port
   console.log("Example app listening at http://%s:%s", host, port)
 
-})
+});
 

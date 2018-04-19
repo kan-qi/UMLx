@@ -4,60 +4,70 @@ if domainModel
    li.active
     a(data-toggle='tab', href='#domain-model-info-pane') Domain Model Info
    li
-    a(data-toggle='tab', href='#domain-model-analytics') Analysis
+    a(data-toggle='tab', onclick='populate_domainAnalysis_data();') Analysis
    //li
     //a(data-toggle='tab', href='#domain-model-distributions') Distributions
    //li
     //a(data-toggle='tab', href='#domain-model-evaluation') Evaluation
- div.tab-content
-  div.tab-pane.fade.in.active(id="domain-model-info-pane")
-   div.domain-model-info
-    button(onclick="toggleDomainList()", class="big-button") Toggle List
-    object.use-case(data=domainModel.AccessDir+"/uml_diagram.svg")
-    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/uml_diagram.svg")
+
+div.tab-content
+div.tab-pane.fade.in.active(id="domain-model-info-pane")
+  div.domain-model-info
+    button(onclick="openList()", class="big-button") Toggle List 
     button(onclick="toggleZoom()", class="big-button") Enable Zoom
-   div.domain-model-info-content(style="display: none;", id="domain-model-list")
-    ul.nav.nav-tabs
-     li.active
-      a(data-toggle='tab', href='#domain-model-attributes') Attributes
-     li
-      a(data-toggle='tab', href='#domain-model-operations') Operations
-    div.tab-content
-     div.tab-pane.fade.in.active(id="domain-model-attributes")
-      table.table.table-striped.domain-model-info-tab
-       thead
-        tr
-         th ID
-         th Attribute
-         th TYPE
-       tbody
-        each element in domainModel.Elements
-          if element.Attributes
-           each attribute,key in element.Attributes
-            tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
-             th #{key}
-             th
-              span.domain-model-attribute #{attribute.Name}
-             th
-              span.domain-model-attribute-type #{attribute.Type}
-     div.tab-pane.fade(id="domain-model-operations")
-      table.table.table-striped.domain-model-info-tab
-       thead
-        tr
-         th ID
-         th OPERATION
-         th TYPE
-       tbody
-         each element in domainModel.Elements
-          if element.Operations
-           each operation,key in element.Operations
-            tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
-             th #{key}
-             th
-               span.domain-model-operation #{operation.Name}
-             th operation
+    button(onclick="toggleDiagram('#{domainModel.DiagramType}')", class="big-button") Toggle Diagram
+    object.use-case(data=domainModel.AccessDir+"/domainModel.svg")
+    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
+    
+    div(id="mySidenav",class="sidenav")
+      a(href="javascript:void(0)",class="closebtn",onclick="closeList()") &times
+        div.use-case-info-content
+          div.domain-model-info-content
+            ul.nav.nav-tabs
+             li.active
+              a(data-toggle='tab', href='#domain-model-attributes') Attributes
+             li
+              a(data-toggle='tab', href='#domain-model-operations') Operations
+          div.tab-content
+           div.tab-pane.fade.in.active(id="domain-model-attributes")
+            table.table.table-striped.domain-model-info-tab
+             thead
+              tr
+               th ID
+               th Attribute
+               th TYPE
+             tbody
+              each element in domainModel.Elements
+                if element.Attributes
+                 each attribute,key in element.Attributes
+                  tr(onclick="highlight_diagram_element('#{attribute._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
+                   th #{key}
+                   th
+                    span.domain-model-attribute #{attribute.Name}
+                   th
+                    span.domain-model-attribute-type #{attribute.Type}
+           div.tab-pane.fade(id="domain-model-operations")
+            table.table.table-striped.domain-model-info-tab
+             thead
+              tr
+               th ID
+               th OPERATION
+               th TYPE
+             tbody
+               each element in domainModel.Elements
+                if element.Operations
+                 each operation,key in element.Operations
+                  tr(onclick="highlight_diagram_element('#{operation._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
+                   th #{key}
+                   th
+                     span.domain-model-operation #{operation.Name}
+                   th operation
+                   
+                     
+                     
+                     
   div.tab-pane.fade(id="domain-model-analytics")
-     div.domain-model-analytics
+     div.domain-model-analytics(id="show_Domain_JsonData")
         h3 Calculated:
         ul
          li
