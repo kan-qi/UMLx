@@ -1163,6 +1163,9 @@
 				{fileName : repoInfo["ElementAnalytics"].AttributeAnalyticsFileName, content : attributeAnalyticsStr},
 				{fileName : repoInfo["ElementAnalytics"].EntityAnalyticsFileName, content : entityAnalyticsStr}
 			];
+			
+			
+			console.log(repoInfo[0]);
 
 		umlFileManager.writeFiles(repoInfo.OutputDir, files, callbackfunc);
 

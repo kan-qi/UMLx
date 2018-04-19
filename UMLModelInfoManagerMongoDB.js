@@ -346,6 +346,25 @@ function deleteRepo(repoId, callbackfunc) {
               });
             }
             
+//            db.collection('useCaseInfo').remove({model_id: modelInfo._id}, function(err) {
+//                if (err) {
+//                  console.log(err);
+//                  if(callbackfunc){
+//                    callbackfunc(false);
+//                  }
+//                  return;
+//                }
+//                
+//                db.collection("useCaseInfo").insertMany(useCaseArray, function(err, res)
+//                        {
+//                            if (err) throw err;
+//                                console.log("useCaseInfo 1 record inserted");
+//                                
+//                        });
+//                
+//                
+//            });
+            
              db.close();
                 if(callbackfunc !== null){
                     callbackfunc(modelInfo);
@@ -381,10 +400,8 @@ function deleteRepo(repoId, callbackfunc) {
         });
 
     }
-	
-	
-
-
+    
+    
 
 	// function queryModelAnalytics(modelId, repoId, callbackfunc, update){
 			//			/*
@@ -1085,6 +1102,15 @@ function deleteRepo(repoId, callbackfunc) {
             });
         });
     }
+    
+    function initRepoEntity(repoId){
+    	  var repoInfo = {};
+    	  repoInfo._id = repoId;
+    	  repoInfo.Models = [];
+		  repoInfo.OutputDir = "public/output/repo"+repoId;
+		  repoInfo.AccessDir = "output/repo"+repoId;
+		  return repoInfo;
+    }
 
     function createRepo(username,pwd,callbackfunc){
         MongoClient.connect(url, function(err, db) {
@@ -1109,10 +1135,10 @@ function deleteRepo(repoId, callbackfunc) {
   				    if (err) throw err;
   				    console.log("1 record inserted");
 //init reqo information
+
   				    var repoId = repoInfo._id;
-  				    repoInfo.Models = [];
-  					repoInfo.OutputDir = "public/output/repo"+repoId;
-  					repoInfo.AccessDir = "output/repo"+repoId;
+
+  				    repoInfo  = initRepoEntity(repoId);
 
   				    var o_id = new mongo.ObjectID(repoId);
 
@@ -1534,7 +1560,7 @@ function deleteRepo(repoId, callbackfunc) {
 			var umlFileInfo = umlFileManager.duplicateUMLFileInfo(umlModelInfo);
 			umlFileInfo._id = umlModelInfo._id;
 			umlFileInfo.Name = umlModelInfo.Name;
-			umlFileInfo.Outputdir = umlModelInfo.OutputDir;
+			umlFileInfo.OutputDir = umlModelInfo.OutputDir;
 			umlFileInfo.AccessDir = umlModelInfo.AccessDir;
 			return umlFileInfo;
 		}
@@ -1619,66 +1645,108 @@ function deleteRepo(repoId, callbackfunc) {
 			});
 },
 		// this method will reanalyse the models in the repo entirely. Can be used when there is a change in the schema of repo_info_schema.
-		reloadRepo: function(repo, callback){
+		reloadRepo: function(repo, callbackfunc){
 			//create a replica of the existing repo.
-			var newRepo = {
-					_id:repo._id,
-					Models: [],
-					OutputDir: repo.OutputDir,
-					AccessDir: repo.AccessDir
-			};
+//			var newRepo = {
+//					_id:repo._id,
+//					Models: [],
+//					OutputDir: repo.OutputDir,
+//					AccessDir: repo.AccessDir
+//			};
+			
+			var newRepo  = initRepoEntity(repo._id);
 
-			function reloadModel(modelInfo){
+			var debug = require("./utils/DebuggerOutput.js");
+			debug.writeJson("new_repo_info_"+newRepo._id, newRepo);
+
+			function reloadModel(model, newRepo){
 				//update model analytics.
+				console.log("reload model");
 //				console.log(modelInfo);
 				return new Promise((resolve, reject) => {
-					umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
-					umlEvaluator.evaluateModel(modelInfo, function(modelInfo){
+					console.log("promise");
+					var newModel = duplicateModelInfo(model);
+			    	newRepo.Models.push(newModel);
+					umlModelExtractor.extractModelInfo(newModel, function(newModel){
+//						console.log("extract model");
+//						var debug = require("./utils/DebuggerOutput.js");
+//						debug.writeJson("new_model_info_"+modelInfo._id, modelInfo);
+						if(!newModel){
+							reject("error");
+						}
+					umlEvaluator.evaluateModel(newModel, function(newModel){
 						console.log("model analysis complete");
-//						console.log(modelInfo);
-//						umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
-								if(err){
-									reject(err);
-									return;
+//						console.log(newModel);
+//						umlModelInfoManager.updateModelInfo(newModel, repoId, function(newModel){
+								if(!newModel){
+								reject("error");
 								}
-								resolve();
+								else{
+								resolve(newRepo);
+								}
 //						});
 					});
 					});
+//					 setTimeout(function() {
+//						 console.log(modelInfo._id);
+//					      resolve();
+//					    }, 1000);
 				  });
 			}
+			
+//			var debug = require("./utils/DebuggerOutput.js");
+//			debug.writeJson("new_repo_info_"+repo._id, newRepo);
 
-		let chain = Promise.resolve();
+//		let chain = Promise.resolve();
 
-			for (var i in repo.Models) { //for multiple files
-			    (function(model) {
-			    	//create duplicate of the existing model.
-			    	var newModel = duplicateModelInfo(model);
-			    	newRepo.Models.push(newModel);
-//umlModelExtractor.extractModelInfo(newModel, modelReloadProcessor);
-			    chain = chain.then(reloadModel(newModel));
-			    })(repo.Models[i]);
-			}
+//			for (var i in repo.Models) { //for multiple files
+//			    (function(model) {
+//			    	//create duplicate of the existing model.
+//			    	var newModel = duplicateModelInfo(model);
+//			    	newRepo.Models.push(newModel);
+////umlModelExtractor.extractModelInfo(newModel, modelReloadProcessor);
+//			    chain = chain.then(reloadModel(newModel));
+//			    console.log("iterate");
+//			    })(repo.Models[i]);
+//			}
+		
+//		Promise.all
 
-		chain.then(function(){
-				umlEvaluator.evaluateRepo(repo, function(repo){
+		return Promise.all(repo.Models.map(model=>{
+	    	return reloadModel(model,newRepo);
+		})).then(
+				function(){
+//					var newRepo
+					console.log("hello");
+					console.log(newRepo);
+				return new Promise((resolve, reject) => {
+					setTimeout(function(){	
+					umlEvaluator.evaluateRepo(newRepo, function(newRepo){
+
+						console.log("start repo analysis");
+						console.log(newRepo);
 					console.log("model analysis complete");
 //					console.log(modelInfo);
 //					umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
 
 					if(callbackfunc){
-						callbackfunc(repo);
+						callbackfunc(newRepo);
 					}
+					
+					resolve();
 //						});
+				});}, 0);
 				});
-
-			}).catch(function(err){
+			}
+		
+		).catch(function(err){
 				console.log(err);
 				if(callbackfunc){
 					callbackfunc(false);
 				}
 			});
-		},updateModelInfo: updateModelInfo,
+		},
+		updateModelInfo: updateModelInfo,
 		updateRepoInfo: updateRepoInfo,
 		//queryRepoAnalytics: queryRepoAnalytics,
 		deleteModel:deleteModel,

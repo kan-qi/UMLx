@@ -991,7 +991,7 @@ app.get('/queryRepoInfo', function(req, res){
 
 app.get('/reloadRepo', function(req, res){
 	//temporary analysis
-	var repoId = req.query.repo_id;
+	var repoId = req.userInfo.repoId;
 
 //	console.log(refresh);
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
@@ -1000,7 +1000,7 @@ app.get('/reloadRepo', function(req, res){
 				res.end("error");
 				return;
 			}
-			umlModelInfoManager.updateRepo(repoInfo, function(repoInfo){
+			umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
 				res.end("success");
 			});
 		});

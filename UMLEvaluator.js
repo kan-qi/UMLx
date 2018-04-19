@@ -464,6 +464,10 @@
 //			useCaseNum = index;
 //		}
 		
+		console.log("hello3");
+		console.log(repoInfo);
+	console.log("model analysis complete");
+		
 		if(callbackfunc){
 			// iterate the hierarchy of the repo
 			for(var i in repoInfo.Models){
