@@ -107,6 +107,8 @@ div.block.panel.panel-default
        h3 loading...
      div.tab-pane.fade(id="model-evaluation")
        div.model-evaluation
+        div
+          p #{modelInfo.OutputDir}
         h3 Evaluation
          button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);') Modify
          table#dataTable.table.table-striped
