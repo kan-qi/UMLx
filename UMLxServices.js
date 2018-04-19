@@ -642,6 +642,20 @@ app.get('/deleteModel', function (req, res){
 	});
 })
 
+app.get('/reanalyseRepo', function (req, res){
+	console.log("/reanalyseRepo");
+	app.get('/queryRepoInfo', function(req, res){
+		//temporary analysis
+		var repoId = req.query.repo_id;
+
+//		console.log(refresh);
+		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
+//			console.log(repoInfo);
+			res.end("done");
+		});
+	})
+})
+
 
 app.get('/reanalyseModel', function (req, res){
 	console.log("/reanalyseModel");
