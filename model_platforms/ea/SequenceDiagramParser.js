@@ -421,11 +421,22 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			}
 		}
 		
+		if(Activities.length > 0){
+		drawSequenceDiagram(UseCase, UseCase.OutputDir+"/"+"sequence_diagram.dotty", function(){
+			 console.log("class diagram is output: "+ UseCase.OutputDir+"/"+"sequence_diagram.svg");
+		});
+		}
+		
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 		
+		
 		console.log("finished sequence diagram processing");
 		
+	}
+	
+	function drawSequenceDiagram(UseCase, graphFilePath, callbackfunc) {
+		UseCase.DiagramType = "sequence_diagram";
 	}
 	
 	module.exports = {

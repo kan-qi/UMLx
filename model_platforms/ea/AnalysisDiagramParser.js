@@ -294,8 +294,6 @@
 
 		console.log(PrecedenceRelations);
 		
-		UseCase.Activities = UseCase.Activities.concat(Activities);
-		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 //		UseCase.Components = null;
 		
 
@@ -312,191 +310,195 @@
 		
 		//Aishwarya
 
-
-
-		function drawBoundaryNode(id, label){
-		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-			<TR><TD><IMG SRC="img/boundary3.png"/></TD></TR>\
-		 <TR><TD>'+label+'</TD></TR>\
-		</TABLE>>];';
-		}
-
-		function drawControlNode(id, label){
-		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-			<TR><TD><IMG SRC="img/control1.png"/></TD></TR>\
-		 <TR><TD>'+label+'</TD></TR>\
-		</TABLE>>];';
-		}
-
-		function drawEntityNode(id, label){
-		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-			<TR><TD><IMG SRC="img/entity1.png"/></TD></TR>\
-		 <TR><TD>'+label+'</TD></TR>\
-		</TABLE>>];';
-		}
-
-			function drawNode(id, label){
-		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
-			<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
-		 <TR><TD><B>'+label+'</B></TD></TR>\
-		</TABLE>>];';
-	}
-
-		function drawActorNode(id, label){
-		return id+'[label=<\
-			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-			<TR><TD><IMG SRC="img/actor1.png"/></TD></TR>\
-		 <TR><TD>'+label+'</TD></TR>\
-		</TABLE>>];';
-		}
-		//Aishwarya
-
-/*
-			const UseCaseRobust = {
-			Objects: [
-				{
-					id: 1,
-					name: 'Actor1',
-					type: 'Actor'
-				},
-				{
-					id: 2,
-					name: 'Buy tickets interface',
-					type: 'Boundary'
-				},
-				{
-					id: 3,
-					name: 'Payments success message',
-					type: 'Boundary'
-				},
-				{
-					id: 4,
-					name: 'Pay the bill',
-					type: 'Control'
-				},
-				{
-					id: 5,
-					name: 'Save bill records',
-					type: 'Entity'
-				}
-			],
-			Dependencies: [
-				{
-					start: 1,
-					end: 2
-				},
-				{
-					start: 1,
-					end: 3
-				},
-				{
-					start: 2,
-					end: 4
-				},
-				{
-					start: 4,
-					end: 3
-				},
-				{
-					start: 4,
-					end: 5
-				}
-			]
-		};*/
-
-		//update the variables to the correct names.
-  		function drawRobustnessDiagram(Components, UseCase, graphFilePath, callbackfunc) {
-	  		UseCase.DiagramType = "robustness_diagram";
-			let objects = Components.Objects;
-			let dependencies = Components.Dependencies;
-			let graph = 'digraph g {\
-				fontsize=26\
-				rankdir="LR"\
-				node [shape=plaintext fontsize=24]\
-			';
-			let drawnObjects = [];
-			function DottyDraw() {
-				this.drawnObjects = [];
-				this.draw = function(dottyObject) {
-					if(drawnObjects[dottyObject]){
-						return "";
-					}
-					else{
-						drawnObjects[dottyObject] = 1;
-						return dottyObject;
-					}
-				}
-			}
-			var dottyDraw = new DottyDraw();
-			
-			objects.forEach((_object) => {
-				var node;
-				switch(_object.type)
-				{
-					case "Actor":
-						node = drawActorNode(_object.id, _object.name);
-						break;
-					case "boundary":
-						node = drawBoundaryNode(_object.id, _object.name);
-						break;
-					case "control":
-						node = drawControlNode(_object.id, _object.name);
-						break;
-					case "Object":
-						node = drawEntityNode(_object.id, _object.name);
-						break;
-					default:
-						node = drawNode(_object.id, _object.name);
-						break;
-				}
-				
-				graph += dottyDraw.draw(node);
-			});
+		if(Activities.length > 0){
 	
-			dependencies.forEach((_dependency) => {
-				var start = _dependency.start;
-				var end = _dependency.end;
-				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
-			});
-	
-			//graph += 'imagepath = \"./\"}';
-			var graphImagePathVariableToWriteAfterTheOtherThingIsWritten = 'imagepath = \"./\"}';
-			dottyUtil = require("../../utils/DottyUtil.js");
-			//dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-			//	console.log("drawing is down");
-			//});
-			fs.writeFile(
-				graphFilePath,
-				graph,
-				() => fs.appendFile(
-						graphFilePath,
-						graphImagePathVariableToWriteAfterTheOtherThingIsWritten,
-						() => {
-							//the following line is actually useless
-							graph += graphImagePathVariableToWriteAfterTheOtherThingIsWritten;
-							dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-								console.log("Augmented graph and generated svg`");
-							});
-						})
-			);
-			return graph;
-		}
-	
-		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
-		drawRobustnessDiagram({Objects:Objects, Dependencies: Dependencies}, UseCase, UseCase.OutputDir+"/robust_diagram.dotty", () => {
+//		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
+		drawRobustnessDiagram({Objects:Objects, Dependencies: Dependencies}, UseCase, UseCase.OutputDir+"/robustness_diagram.dotty", () => {
 			console.log('Aishwarya drew the diagram.');
 		});
+		}
 
+		UseCase.Activities = UseCase.Activities.concat(Activities);
+		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
 /* 		 drawRobustnessDiagram({
 			Objects:Objects,
 			Dependencies: Dependencies
 		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", () => {
 			console.log("outputting analysis diagram is finished.");
 		});  */
+	}
+	
+
+	function drawBoundaryNode(id, label){
+	return id+'[label=<\
+		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+		<TR><TD><IMG SRC="img/boundary3.png"/></TD></TR>\
+	 <TR><TD>'+label+'</TD></TR>\
+	</TABLE>>];';
+	}
+
+	function drawControlNode(id, label){
+	return id+'[label=<\
+		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+		<TR><TD><IMG SRC="img/control1.png"/></TD></TR>\
+	 <TR><TD>'+label+'</TD></TR>\
+	</TABLE>>];';
+	}
+
+	function drawEntityNode(id, label){
+	return id+'[label=<\
+		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+		<TR><TD><IMG SRC="img/entity1.png"/></TD></TR>\
+	 <TR><TD>'+label+'</TD></TR>\
+	</TABLE>>];';
+	}
+
+		function drawNode(id, label){
+	return id+'[label=<\
+		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
+		<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
+	 <TR><TD><B>'+label+'</B></TD></TR>\
+	</TABLE>>];';
+}
+
+	function drawActorNode(id, label){
+	return id+'[label=<\
+		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+		<TR><TD><IMG SRC="img/actor1.png"/></TD></TR>\
+	 <TR><TD>'+label+'</TD></TR>\
+	</TABLE>>];';
+	}
+	//Aishwarya
+
+/*
+		const UseCaseRobust = {
+		Objects: [
+			{
+				id: 1,
+				name: 'Actor1',
+				type: 'Actor'
+			},
+			{
+				id: 2,
+				name: 'Buy tickets interface',
+				type: 'Boundary'
+			},
+			{
+				id: 3,
+				name: 'Payments success message',
+				type: 'Boundary'
+			},
+			{
+				id: 4,
+				name: 'Pay the bill',
+				type: 'Control'
+			},
+			{
+				id: 5,
+				name: 'Save bill records',
+				type: 'Entity'
+			}
+		],
+		Dependencies: [
+			{
+				start: 1,
+				end: 2
+			},
+			{
+				start: 1,
+				end: 3
+			},
+			{
+				start: 2,
+				end: 4
+			},
+			{
+				start: 4,
+				end: 3
+			},
+			{
+				start: 4,
+				end: 5
+			}
+		]
+	};*/
+
+	//update the variables to the correct names.
+		function drawRobustnessDiagram(Components, UseCase, graphFilePath, callbackfunc) {
+  		UseCase.DiagramType = "robustness_diagram";
+		let objects = Components.Objects;
+		let dependencies = Components.Dependencies;
+		let graph = 'digraph g {\
+			fontsize=26\
+			rankdir="LR"\
+			node [shape=plaintext fontsize=24]\
+		';
+		let drawnObjects = [];
+		function DottyDraw() {
+			this.drawnObjects = [];
+			this.draw = function(dottyObject) {
+				if(drawnObjects[dottyObject]){
+					return "";
+				}
+				else{
+					drawnObjects[dottyObject] = 1;
+					return dottyObject;
+				}
+			}
+		}
+		var dottyDraw = new DottyDraw();
+		
+		objects.forEach((_object) => {
+			var node;
+			switch(_object.type)
+			{
+				case "Actor":
+					node = drawActorNode(_object.id, _object.name);
+					break;
+				case "boundary":
+					node = drawBoundaryNode(_object.id, _object.name);
+					break;
+				case "control":
+					node = drawControlNode(_object.id, _object.name);
+					break;
+				case "Object":
+					node = drawEntityNode(_object.id, _object.name);
+					break;
+				default:
+					node = drawNode(_object.id, _object.name);
+					break;
+			}
+			
+			graph += dottyDraw.draw(node);
+		});
+
+		dependencies.forEach((_dependency) => {
+			var start = _dependency.start;
+			var end = _dependency.end;
+			graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
+		});
+
+		//graph += 'imagepath = \"./\"}';
+		var graphImagePathVariableToWriteAfterTheOtherThingIsWritten = 'imagepath = \"./\"}';
+		dottyUtil = require("../../utils/DottyUtil.js");
+		//dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+		//	console.log("drawing is down");
+		//});
+		fs.writeFile(
+			graphFilePath,
+			graph,
+			() => fs.appendFile(
+					graphFilePath,
+					graphImagePathVariableToWriteAfterTheOtherThingIsWritten,
+					() => {
+						//the following line is actually useless
+						graph += graphImagePathVariableToWriteAfterTheOtherThingIsWritten;
+						dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+							console.log("Augmented graph and generated svg`");
+						});
+					})
+		);
+		return graph;
 	}
  
 	function standardizeName(name){

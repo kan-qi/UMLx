@@ -1,7 +1,7 @@
 if useCaseInfo        
   button(onclick="openList()", class="big-button") Toggle List 
   button(onclick="toggleZoom()", class="big-button") Enable Zoom
-  button(onclick="toggleDiagram()", class="big-button") Toggle Diagram
+  button(onclick="toggleDiagram('#{useCaseInfo.DiagramType}')", class="big-button") Toggle Diagram
   div.use-case-info(id="use-case-diagram")
     //Toggle Diagram should be able to toggle betwee useCase.svg and uml_diagram.svg
     object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg")

@@ -69,9 +69,12 @@ function model_file_upload_fnc() {
 }
 
 function highlight_diagram_element(idString, elementType, diagramType) {
-  //var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+
+	console.log("higlight function");
+//  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+  
   var svg = document.getElementsByClassName("use-case")[0];
-  var svgDoc = svg.contentDocument;
+  var svgDoc= svg.contentDocument;
   var elementToHighlight = svgDoc.getElementById(idString);
 
   if(diagramType === "analysis_diagram"){
@@ -103,6 +106,14 @@ function highlight_diagram_element(idString, elementType, diagramType) {
     }
   }
   else if(diagramType === "class_diagram"){
+	  console.log("class higl func");
+	  //call Lingquan's method.
+	  if (elementToHighlight) {
+//		  highlightElement(idString); 
+//		  highlightElement(elementToHighlight); 
+		  highlightElement_classDia(elementToHighlight);
+	  }
+	  
       //call Lingquan's method.
   }
   else if(diagramType === "usim"){
@@ -1092,14 +1103,31 @@ function toggleZoom() {
 // added for zoom control on svg
 
 
-function toggleDiagram() {
+function toggleDiagram(diagramType) {
 	var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
 	var pos = obj_data.search("/useCase.svg");
 	var new_obj_data = "";
+	var umlDiagram = "";
+	 if(diagramType === "activity_diagram"){
+        umlDiagram = "/activity_diagram.svg";
+        }
+        else if(diagramType === "robustness_diagram"){
+        umlDiagram = "/robustness_diagram.svg";
+        }
+        else if(diagramType === "class_diagram"){
+        umlDiagram = "/class_diagram.svg";
+        }
+        else if(diagramType === "sequence_diagram"){
+        umlDiagram = "/sequence_diagram.svg";
+        }
+        else{
+        umlDiagram = "/uml_diagram.svg";
+        }
+        
 	if (pos != -1) {
-		new_obj_data = obj_data.slice(0, pos)+"/uml_diagram.svg";
+        new_obj_data = obj_data.slice(0, pos)+umlDiagram;
 	} else {
-		pos = obj_data.search("uml_diagram.svg");
+		pos = obj_data.search(umlDiagram);
 		new_obj_data = obj_data.slice(0, pos)+"/useCase.svg";
 	}
 	document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
@@ -1824,14 +1852,16 @@ function cancelEdit() {
 
 
 function highlightElement_classDia(element) {
-      clearHighlight_classDia() ;
-       var allNodes = document.getElementById(element).getElementsByTagName("text");
+      clearHighlight() ;
+       //var allNodes = document.getElementById(element).getElementsByTagName("text");
+       var allNodes = element.getElementsByTagName("text");
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "red";
        }
 
    }
 function highlightElement(id) {
+	console.log("enter highlight");
     clearHighlight() ;
 document.getElementById(id).style.stroke =  "red";
 
