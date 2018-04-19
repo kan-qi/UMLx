@@ -11,9 +11,9 @@ function setCookie(cname, cvalue, exdays) {
 }
 
 function pagination_call(repoId, currentPage) {
-	
+
     console.log("Inside Script" + repoId);
-    
+
     var data = {
         repId: repoId,
         //pageSize: pageSize,
@@ -21,7 +21,7 @@ function pagination_call(repoId, currentPage) {
         currentPage:currentPage
         //index:index,
     };
-    
+
     //console.log("StepSize "+stepSize);
     	$.ajax({
 		type : 'GET',
@@ -33,13 +33,13 @@ function pagination_call(repoId, currentPage) {
           //  $('#pResult').append(response);
             $("#page-panel").html("");
 			$("#page-panel").append($(response));
-            
+
 		},
 		error : function() {
 			console.log("fail");
 		}
 	});
-    
+
 }
 
 
@@ -72,7 +72,7 @@ function highlight_diagram_element(idString, elementType, diagramType) {
 
 	console.log("higlight function");
 //  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
-  
+
   var svg = document.getElementsByClassName("use-case")[0];
   var svgDoc= svg.contentDocument;
   var elementToHighlight = svgDoc.getElementById(idString);
@@ -109,11 +109,11 @@ function highlight_diagram_element(idString, elementType, diagramType) {
 	  console.log("class higl func");
 	  //call Lingquan's method.
 	  if (elementToHighlight) {
-//		  highlightElement(idString); 
-//		  highlightElement(elementToHighlight); 
+//		  highlightElement(idString);
+//		  highlightElement(elementToHighlight);
 		  highlightElement_classDia(elementToHighlight);
 	  }
-	  
+
       //call Lingquan's method.
   }
   else if(diagramType === "usim"){
@@ -245,7 +245,7 @@ function query_exist_models_fnc(projectId) {
 
 function estimate_project_effort_func(){
 	//var formData = new FormData($('#project-effort-estimation-form')[0]);
-	var form_data = new FormData();                  
+	var form_data = new FormData();
     form_data.append('distributed_system',1);
     form_data.append('response_time', 2);
     form_data.append('end_user_efficiency', 3);
@@ -287,7 +287,7 @@ function estimate_project_effort_func(){
 		},
 		error : function(err) {
 			console.log("fail");
-			console.log(err);			
+			console.log(err);
 		}
 	});
 
@@ -1080,21 +1080,33 @@ function toggleQueryList() {
 		$('#use-case-list').modal('toggle');
 }
 
+var panZoomInstance;
 function toggleZoom() {
-    panZoomInstance = svgPanZoom('object', {
-        zoomEnabled: true,
-        controlIconsEnabled: true,
-        fit: true,
-        center: true,
-        minZoom: 0.1
+    var panZoom = svgPanZoom('object', {
+      zoomEnabled: true,
+      mouseWheelZoomEnabled: false,
+      controlIconsEnabled: false
     });
 
-    // zoom out
-    panZoomInstance.zoom(1)
+    document.getElementById('zoom-in').style.display="inline";
+    document.getElementById('zoom-out').style.display="inline";
+    document.getElementById('reset').style.display="inline";
+
+    document.getElementById('zoom-in').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.zoomIn()
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.zoomOut()
+    });
+
+    document.getElementById('reset').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.resetZoom()
+    });
 }
-
-
-
 
 // function toggleDomainList() {
 //     $('#domain-model-list').modal('toggle');
@@ -1123,7 +1135,7 @@ function toggleDiagram(diagramType) {
         else{
         umlDiagram = "/uml_diagram.svg";
         }
-        
+
 	if (pos != -1) {
         new_obj_data = obj_data.slice(0, pos)+umlDiagram;
 	} else {
@@ -1713,7 +1725,7 @@ function editFunction(button) {
 }
 
 function submitEdit(){
-		var form_data = new FormData();                  
+		var form_data = new FormData();
 	    form_data.append('distributed_system',$("#editNumber1").text());
 	    form_data.append('response_time', $("#editNumber2").text());
 	    form_data.append('end_user_efficiency', $("#editNumber3").text());
@@ -1736,7 +1748,7 @@ function submitEdit(){
 	    form_data.append('part_time_staff', $("#editNumber20").text());
 	    form_data.append('difficult_programming_language', $("#editNumber21").text());
 	    form_data.append('modelID', $("#mymodelId").val());
-	    
+
 		$.ajax({
 			type : 'POST',
 			url : "saveModelInfoCharacteristics",
@@ -1751,9 +1763,9 @@ function submitEdit(){
 			},
 			error : function(err) {
 				console.log("fail");
-				console.log(err);			
+				console.log(err);
 			}
-		});	
+		});
 	}
 
 function cancelEdit() {
