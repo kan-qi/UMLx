@@ -4,7 +4,7 @@ if domainModel
    li.active
     a(data-toggle='tab', href='#domain-model-info-pane') Domain Model Info
    li
-    a(data-toggle='tab', onclick='populate_domainAnalysis_data();') Analysis
+    a(data-toggle='tab', href='#domain-model-analytics',onclick='populate_domainAnalysis_data();') Analysis
    //li
     //a(data-toggle='tab', href='#domain-model-distributions') Distributions
    //li
@@ -63,6 +63,7 @@ if domainModel
                      th operation
   div.tab-pane.fade(id="domain-model-analytics")
      div.domain-model-analytics(id="show_Domain_JsonData")
+      div(id ="show_Domain_JsonData")
         h3 Calculated:
         ul
          li

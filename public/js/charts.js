@@ -170,6 +170,7 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
       //console.log(usecase_url);
     // $('.use-case-analytics').html("hi");
       //console.log($('.use-case-analytics').html());
+      console.log("div data" + $('#analysis-data').html())
       $.ajax({
               url: usecase_url,
               type:"GET",
@@ -178,8 +179,8 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
               success: function(response)
               {
                     //console.log(response)
-
-                    $('.use-case-info').html("<div style='height:6%'>&nbsp;</div><h3>Use case statistics</h3><table class='table table-hover table-bordered'; id='usecase_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+                    $('#analysis-data').css("display","block");
+                    $('#analysis-data').html("<div style='height:6%'>&nbsp;</div><h3>Use case statistics</h3><table class='table table-hover table-bordered'; id='usecase_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
                       for (var i=0;i<response.length;i++)
                       {
 
@@ -203,7 +204,7 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
               {
                     console.log(response)
 
-                    $('.use-case-info').append("<div style='height:6%'>&nbsp;</div><table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+                    $('#analysis-data').append("<div style='height:6%'>&nbsp;</div><table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
                       for (var i=0;i<response.length;i++)
                       {
 
@@ -231,8 +232,8 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
             success: function(response)
             {
                   console.log(response)
-
-                  $('.domain-model-info').append("<div style='height:6%'>&nbsp;</div><h3>Domain Model statistics</h3><table class='table table-hover table-bordered'; id='domainAnalysis_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+                  //$('#domainAnalysis_table').css("display", "none");
+                  $('#show_Domain_JsonData').html("<div style='height:6%'>&nbsp;</div><h3>Domain Model statistics</h3><table class='table table-hover table-bordered'; id='domainAnalysis_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
                     for (var i=0;i<response.length;i++)
                     {
 

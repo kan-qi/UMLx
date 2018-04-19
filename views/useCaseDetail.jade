@@ -6,7 +6,7 @@ if useCaseInfo
    li.active
     a(data-toggle='tab', href='#use-case-info-pane') UseCase Info
    li
-    a(data-toggle='tab', onclick='populate_usecase_data();') Analytics
+    a(data-toggle='tab', href='#use-case-analytics',onclick='populate_usecase_data();') Analytics
    //li
     //a(data-toggle='tab', href='#use-case-distributions') Distributions
    //li
@@ -15,7 +15,7 @@ if useCaseInfo
   div.tab-pane.fade.in.active(id="use-case-info-pane")
    include diagramDisplay
   div.tab-pane.fade(id="use-case-analytics")
-     div.use-case-analytics
+     div.use-case-analytics(id="analysis-data")
         h3 Calculated:
         ul
          li
