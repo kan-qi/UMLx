@@ -1577,7 +1577,6 @@ function deleteRepo(repoId, callbackfunc) {
 		saveModelInfo : saveModelInfo,
 		queryRepoInfo : queryRepoInfo,
 		queryRepoInfoByPage:queryRepoInfoByPage,
-		queryRepoInfoByPage:queryRepoInfoByPage,
 		queryUseCaseInfo: queryUseCaseInfo,
 		repoDetail:repoDetail,
 		saveEstimation: saveEstimation,
