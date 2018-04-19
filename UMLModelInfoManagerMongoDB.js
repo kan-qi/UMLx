@@ -117,7 +117,7 @@
         }
 	
 function deleteRepo(repoId, callbackfunc) {  
-  var modelQuery = {rep_id: mongo.ObjectID(repoId)};        
+  var modelQuery = {repo_id: mongo.ObjectID(repoId)};        
   MongoClient.connect(url, function(err, db) {
     if (err) throw err;     
     db.collection("modelInfo").findOne(modelQuery,function(err,repo){
@@ -305,8 +305,8 @@ function deleteRepo(repoId, callbackfunc) {
             //console.log(modelInfo._id);
 //            modelInfo._id = new mongo.ObjectId(modelInfo._id);
             
-            //adding rep_id as an element in modelInfo
-            modelInfo.rep_id = new mongo.ObjectId(repoId);
+            //adding repo_id as an element in modelInfo
+            modelInfo.repo_id = new mongo.ObjectId(repoId);
             
             
 //            db.collection("modelInfo").update({"_id": mongo.ObjectId(modelInfo._id)}, modelInfo, function(err, res) {
@@ -675,7 +675,7 @@ function deleteRepo(repoId, callbackfunc) {
 			
 			var repoid=new mongo.ObjectID(repoId);
 
-			//var query = { rep_id: repoid};
+			//var query = { repo_id: repoid};
 
 			var query = { repo_id: repoid};
 
@@ -1647,12 +1647,6 @@ function deleteRepo(repoId, callbackfunc) {
 		// this method will reanalyse the models in the repo entirely. Can be used when there is a change in the schema of repo_info_schema.
 		reloadRepo: function(repo, callbackfunc){
 			//create a replica of the existing repo.
-//			var newRepo = {
-//					_id:repo._id,
-//					Models: [],
-//					OutputDir: repo.OutputDir,
-//					AccessDir: repo.AccessDir
-//			};
 			
 			var newRepo  = initRepoEntity(repo._id);
 
@@ -1687,54 +1681,24 @@ function deleteRepo(repoId, callbackfunc) {
 //						});
 					});
 					});
-//					 setTimeout(function() {
-//						 console.log(modelInfo._id);
-//					      resolve();
-//					    }, 1000);
 				  });
 			}
 			
-//			var debug = require("./utils/DebuggerOutput.js");
-//			debug.writeJson("new_repo_info_"+repo._id, newRepo);
 
-//		let chain = Promise.resolve();
-
-//			for (var i in repo.Models) { //for multiple files
-//			    (function(model) {
-//			    	//create duplicate of the existing model.
-//			    	var newModel = duplicateModelInfo(model);
-//			    	newRepo.Models.push(newModel);
-////umlModelExtractor.extractModelInfo(newModel, modelReloadProcessor);
-//			    chain = chain.then(reloadModel(newModel));
-//			    console.log("iterate");
-//			    })(repo.Models[i]);
-//			}
-		
-//		Promise.all
 
 		return Promise.all(repo.Models.map(model=>{
 	    	return reloadModel(model,newRepo);
 		})).then(
 				function(){
-//					var newRepo
-					console.log("hello");
-					console.log(newRepo);
 				return new Promise((resolve, reject) => {
 					setTimeout(function(){	
 					umlEvaluator.evaluateRepo(newRepo, function(newRepo){
-
-						console.log("start repo analysis");
-						console.log(newRepo);
-					console.log("model analysis complete");
-//					console.log(modelInfo);
-//					umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
-
+						
 					if(callbackfunc){
 						callbackfunc(newRepo);
 					}
 					
 					resolve();
-//						});
 				});}, 0);
 				});
 			}
