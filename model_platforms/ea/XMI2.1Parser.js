@@ -260,12 +260,14 @@
 			Model.DomainModel.Elements.push(domainElement);
 		}
 
-//		console.log(XMIClasses);
-//		debug.writeJson("XMIClasses", XMIClasses);
-//		
-//	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"uml_diagram.dotty", function(){
-//		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
-//	   });
+
+		console.log(XMIClasses);
+		debug.writeJson("XMIClasses", XMIClasses);
+		
+		Model.DomainModel.DiagramType = "class_diagram";
+	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
+		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
+	   });
 //		
 		
 		//search for the use cases
@@ -367,7 +369,10 @@
 	
 	// draw the class diagram of the model
 	function createClassDiagramFunc(classElements, graphFilePath, callbackfunc){
-//           var json_obj = {
+		      console.log("run the create class dia");
+              console.log("class diagram model is"+classElements);
+              console.log("class diagram model is"+JSON.stringify(classElements));
+		//           var json_obj = {
 //           	   "allClass" :[
 //				   {"className": "bookTicketMangement",
 //			        "attributes": [
@@ -411,33 +416,40 @@
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
              graph += ' edge [arrowhead = "ediamond"]'
-             for(i = 0;  i < json_obj.allClass.length; i++){
-                 var curClass = json_obj.allClass[i];
-                 graph += curClass["className"];
-                 graph += '[ label = "{';
-                 graph += curClass["className"];
+             for(i = 0;  i < classElements.length; i++){
+                 var curClass = classElements[i];
+                 graph += curClass["_id"];
+                 graph += '[ id = ' + curClass["_id"];
+                 graph += ' label = "{';
+                 graph += curClass["Name"];
 
 
-                 var classAttributes = json_obj.allClass[i]["attributes"];
+                 var classAttributes = classElements[i]["Attributes"];
                  if (classAttributes.length != 0){
                      graph += '|';
                      for(j = 0; j < classAttributes.length; j++) {
                          graph += '-   ' ;
-                         graph += classAttributes[j]["attributeName"];
-                         graph += ':'+classAttributes[j]["attributeType"];
+                         graph += classAttributes[j]["Name"];
+                         graph += ':'+classAttributes[j]["Type"];
                          graph += '\\l';
                      }
                  }
 
                  // graph += '|';
 
-                 var classOperations = json_obj.allClass[i]["operations"];
+                 var classOperations = classElements[i]["Operations"];
                  if (classOperations.length != 0){
                      graph += '|';
                      for(j = 0; j < classOperations.length;j++) {
-                         graph += '+   ' ;
-                         graph += classOperations[j]["operationName"];
-                         graph += ':'+classOperations[j]["operationReturn"];
+                         
+                    	 graph += '+   ' ;
+                         graph += classOperations[j]["Name"] + '(';
+                         var para_len = classOperations[j]["Parameters"].length;
+                         for (k = 0; k < classOperations[j]["Parameters"].length - 1; k++) {
+                        	 graph += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
+                         }
+                         graph += ')';
+                         graph += ':'+classOperations[j]["Parameters"][para_len - 1]["Type"];
                          graph += "\\l";
                      }
                  }
@@ -446,11 +458,11 @@
 
                  graph += '}"]';
 
-                 var classKids = json_obj.allClass[i]["kids"];
-                 for(j = 0; j < classKids.length;j++) {
-                     graph += curClass["className"] ;
+                 var classAss = classElements[i]["Associations"];
+                 for(j = 0; j < classAss.length;j++) {
+                     graph += curClass["_id"] ;
                      graph += '->';
-                     graph += classKids[j] + ' ';
+                     graph += classAss[j]["id"] + ' ';
 
                  }
 			 }
