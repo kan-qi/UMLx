@@ -14,9 +14,13 @@ div.tab-content
  div.tab-pane.fade.in.active(id="domain-model-info-pane")
   div.domain-model-info
     button(onclick="openList()", class="big-button") Toggle List 
+    button(onclick="toggleDiagram('#{useCaseInfo.DiagramType}')", class="big-button") Toggle Diagram
     button(onclick="toggleZoom()", class="big-button") Enable Zoom
-    button(onclick="toggleDiagram('#{domainModel.DiagramType}')", class="big-button") Toggle Diagram
+    button(id="zoom-in", class="big-button" style="display: none;") +
+    button(id="zoom-out", class="big-button" style="display: none;") -
+    button(id="reset", class="big-button" style="display: none;") Reset
     object.use-case(data=domainModel.AccessDir+"/domainModel.svg")
+    
     //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
     
     div(id="mySidenav",class="sidenav")
