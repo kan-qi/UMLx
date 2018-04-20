@@ -581,7 +581,9 @@ function deleteRepo(repoId, callbackfunc) {
                if(modelInfo.DomainModels&&modelInfo.DomainModels[0]){
 
                    var domainModel = modelInfo.DomainModels[0];
+                   delete modelInfo.DomainModels;
             	   delete domainModel._id;
+            	   modelInfo.DomainModel = domainModel;
                }
                
                
@@ -707,7 +709,7 @@ function deleteRepo(repoId, callbackfunc) {
                if (err) throw err;
                console.log("*******Shown result for ModelInfo*******");
                db.close();
-               
+//               
 //   			var debug = require("./utils/DebuggerOutput.js");
 //   			debug.writeJson("full_repo_info_"+repoId, result);
 
@@ -729,8 +731,8 @@ function deleteRepo(repoId, callbackfunc) {
                if(modelInfo.DomainModels && modelInfo.DomainModels[0]){
             	   domainModel = modelInfo.DomainModels[0];
             	   delete domainModel._id;
-            	   delete modelInfo.DomainModels;
-            	   modelInfo.DomainModel = domainModel;
+//            	   delete modelInfo.DomainModels;
+//            	   modelInfo.DomainModel = domainModel;
                }
                
                repoInfo.Models.push(modelInfo);
@@ -1825,7 +1827,7 @@ function deleteRepo(repoId, callbackfunc) {
 		queryDomainModelDetail:function(modelId, repoId, callbackfunc){
 			 queryModelInfo(modelId, repoId, function(modelInfo){
 				 	if(callbackfunc){
-				    callbackfunc(modelInfo['DomainModel'][0]);
+				    callbackfunc(modelInfo['DomainModel']);
 				 	}
 			 });
 		},
