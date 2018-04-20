@@ -21,6 +21,8 @@
 //	var umlFileManager = require('./UMLFileManager');
 
 	var RScriptExec = require('./utils/RScriptUtil.js');
+
+	var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
 	
 	// current available evaluators
 	var umlModelElementEvaluator = require('./evaluators/UMLModelElementsEvaluator/UMLModelElementEvaluator.js');
@@ -285,7 +287,12 @@
 		
 		if(callbackfunc){
 		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
-		
+
+			if(!useCase){
+				callbackfunc(false);
+				return;
+			}
+			
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.evaluateUseCase){
@@ -307,6 +314,11 @@
 		if(callbackfunc){
 			// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
 			
+			if(!domainModel){
+				callbackfunc(false);
+				return;
+			}
+			
 			for(var i in evaluators){
 				var evaluator = evaluators[i];
 				if(evaluator.evaluateDomainModel){
@@ -325,6 +337,7 @@
 	}
 	
 	function evaluateModel(model, callbackfunc){
+		
 
 		var useCaseNum = 1;
 //		var useCaseEmpiricss = [];
@@ -337,6 +350,12 @@
 		var modelEvaluationStr = "";
 		
 		if(callbackfunc){
+			
+
+			if(!model){
+				callbackfunc(false);
+				return;
+			}
 		
 		for(var i in model.UseCases){
 			var useCase = model.UseCases[i];
@@ -350,15 +369,19 @@
 		}
 		
 		var domainModel = model.DomainModel;
-		console.log("output model");
-		console.log(model);
+//		console.log("output model");
+//		console.log(model);
+		
+		if(domainModel){
 		evaluateDomainModel(domainModel, function(){
 					console.log('doamin model analysis is complete');
-		});
-		
 		domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
 //		useCaseEmpiricss.push(useCaseEmpirics);
 //		domainModelNum ++;
+
+		});
+		
+		}
 		
 		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
 		for(var i in evaluators){
@@ -453,6 +476,11 @@
 		
 	}
 	
+	
+//	function evaluateModelArray(){
+//		
+//	}
+//	
 /*
  * callbackfunc is the function called when the analysis is finished.
  */
@@ -471,8 +499,8 @@
 	console.log("model analysis complete1");
 	
 
-	var debug = require("./utils/DebuggerOutput.js");
-	debug.writeJson("new_new_repo_info_"+repoInfo._id, repoInfo);
+//	var debug = require("./utils/DebuggerOutput.js");
+//	debug.writeJson("new_new_repo_info_"+repoInfo._id, repoInfo);
 
 		
 		if(callbackfunc){
@@ -571,6 +599,80 @@
 	 */
 	
 	
+/*
+ * This function exists becasue of the limit on the documents stored is 16mb
+ * This methods is done with collaboration with db operations.
+ */
+//	
+//	function evaluateRepoByID(repoId, callbackfunc){
+////		console.log(refresh);
+//		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//		
+////			var newRepo  = initRepoEntity(repo._id);
+//
+////			var debug = require("./utils/DebuggerOutput.js");
+////			debug.writeJson("new_repo_info_"+newRepo._id, newRepo);
+//
+//			function reanalyseModel(model, repoInfo){
+//				//update model analytics.
+//				console.log("reanalyse model");
+////				console.log(modelInfo);
+//				return new Promise((resolve, reject) => {
+//					console.log("promise");
+////					var newModel = duplicateModelInfo(model);
+////			    	repoInfo.Models.push(newModel);
+//					umlModelInfoManager.queryModelInfo(model._id, function(modelInfo){
+////						console.log("extract model");
+////						var debug = require("./utils/DebuggerOutput.js");
+////						debug.writeJson("new_model_info_"+modelInfo._id, modelInfo);
+//						if(!modelInfo){
+//							reject("error");
+//						}
+////					umlEvaluator.evaluateModel(newModel, function(newModel){
+//						console.log("model analysis complete");
+////						console.log(newModel);
+////						umlModelInfoManager.updateModelInfo(newModel, repoId, function(newModel){
+//								if(!newModel){
+//								reject("error");
+//								}
+//								else{
+//								resolve();
+//								}
+////						});
+////					});
+//					});
+//				  });
+//			}
+//			
+//
+//
+//		return Promise.all(repoInfo.Models.map(model=>{
+//	    	return reanalyseModel(model,repoInfo);
+//		})).then(
+//				function(){
+//				return new Promise((resolve, reject) => {
+//					setTimeout(function(){	
+//					umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+//						
+//					if(callbackfunc){
+//						callbackfunc(repoInfo);
+//					}
+//					
+//					resolve();
+//				});}, 0);
+//				});
+//			}
+//		
+//		).catch(function(err){
+//				console.log(err);
+//				if(callbackfunc){
+//					callbackfunc(false);
+//				}
+//			});
+//		
+//	});
+//	}
+	
 	
 	module.exports = {
 			loadUseCaseEmpirics: loadUseCaseEmpirics,
@@ -578,6 +680,7 @@
 			evaluateUseCase: evaluateUseCase,
 			evaluateDomainModel: evaluateDomainModel,
 			evaluateModel: evaluateModel,
-			evaluateRepo: evaluateRepo
+			evaluateRepo: evaluateRepo,
+//			evaluateRepoByID: evaluateRepoByID
 	}
 }());

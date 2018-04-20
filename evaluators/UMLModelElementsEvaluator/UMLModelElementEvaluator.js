@@ -661,7 +661,7 @@
 		var domainModelInfo = modelInfo.DomainModel;
 
 
-		if(domainModelInfo["ElementAnalytics"]){
+		if(domainModelInfo && domainModelInfo["ElementAnalytics"]){
 		modelInfo["ElementAnalytics"].AttributeNum = domainModelInfo["ElementAnalytics"].AttributeNum;
 		modelInfo["ElementAnalytics"].OperationNum = domainModelInfo["ElementAnalytics"].OperationNum;
 //		modelInfo["ElementAnalytics"].DiagramNum += domainModelInfo["ElementAnalytics"].DiagramNum;
@@ -1072,15 +1072,18 @@
 
 //		console.log("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
 //		console.log(model);
-
+		
+		if(modelInfo.DomainModel){
 	    domainModelDump = dumpDomainModelElementsInfo(modelInfo.DomainModel);
-
+		
 	    entityNum = domainModelDump.entityNum;
 	    entityAnalyticsStr += domainModelDump.entityAnalyticsStr;
 	    attributeNum = domainModelDump.attributeNum;
 	    attributeAnalyticsStr += domainModelDump.attributeAnalyticsStr;
 	    operationNum = domainModelDump.operationNum;
 	    operationAnalyticsStr += domainModelDump.operationAnalyticsStr;
+		}
+		
 
 		// console.log(domainModelInfo["ElementAnalytics"]);
 

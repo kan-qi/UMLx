@@ -296,11 +296,6 @@ function deleteRepo(repoId, callbackfunc) {
             delete modelInfo.DomainModel;
             delete modelInfo.UseCases;
             
-//            domainObject.model_id = new mongo.ObjectId(modelInfo._id);
-            domainObject.model_id = modelInfo._id;
-//            domainObject._id = "domainModel["+modelInfo
-            
-            
             
             //console.log(modelInfo._id);
 //            modelInfo._id = new mongo.ObjectId(modelInfo._id);
@@ -317,6 +312,12 @@ function deleteRepo(repoId, callbackfunc) {
                          
             });
             
+          if(domainObject){
+
+//          domainObject.model_id = new mongo.ObjectId(modelInfo._id);
+          domainObject.model_id = modelInfo._id;
+//          domainObject._id = "domainModel["+modelInfo
+          
             //updating domainModelInfo to add model_id element
 //            db.collection("domainModelInfo").update({"model_id": mongo.ObjectId(modelInfo._id)}, domainObject, function(err, res) {
             db.collection("domainModelInfo").update({"model_id": modelInfo._id}, domainObject, function(err, res) {
@@ -325,6 +326,8 @@ function deleteRepo(repoId, callbackfunc) {
                 console.log("updating domainModelInfo");
                          
             });
+            
+            }
             
             //updating useCaseInfo to add model_id element
             /*db.collection("useCaseInfo").update({"model_id": mongo.ObjectId(modelInfo._id)}, {$set : {useCaseArray}}, {multi:true}, function(err, res) {
@@ -398,7 +401,11 @@ function deleteRepo(repoId, callbackfunc) {
             }
 
         });
-
+    }
+    
+    
+    function updateRepoInfoOnly(repo, callbackfunc){
+    	
     }
     
     
@@ -663,16 +670,111 @@ function deleteRepo(repoId, callbackfunc) {
 		});
 	}
     
+    /*
+     * cannot use aggregation since the issue with 16mb limit
+     */
+    
+//    function queryFullRepoInfo(repoId, callbackfunc)
+//    {
+//        MongoClient.connect(url, function(err, db)
+//        {
+//			
+//            if (err) throw err;
+//            var repo_id = new mongo.ObjectID(repoId);
+//            
+//       	 db.collection("repos").findOne({_id: repo_id}, function(err, repoInfo) {
+//			 console.log(repoInfo);
+//			if (err) throw err;
+//			
+//			if(!repoInfo){
+//				callbackfunc(false);
+//				return;
+//			}
+//			
+//           
+//            db.collection("modelInfo").aggregate([
+//            	{
+//    				"$match":
+//    				{
+//    				   "repo_id":repo_id
+//    				}
+//    			},
+//            
+//               {
+//                   "$lookup": {
+//                       "from": "domainModelInfo",
+//                       "localField": "_id",
+//                       "foreignField": "model_id",
+//                       "as": "DomainModels"
+//                   }
+//               },
+//               {
+//            	   "$unwind": '$DomainModels'
+//               },
+//               {
+//                   "$lookup": {
+//                       "from": "useCaseInfo",
+//                       "localField": "_id",
+//                       "foreignField": "model_id",
+//                       "as": "UseCases"
+//                   }
+//               },
+//               {
+//            	   "$unwind": '$UseCases'
+//               }
+//               
+//            ], {
+//                allowDiskUse: true
+//            }, function(err, result) {
+//               if (err) throw err;
+//               console.log("*******Shown result for ModelInfo*******");
+//               db.close();
+////               
+////   			var debug = require("./utils/DebuggerOutput.js");
+////   			debug.writeJson("full_repo_info_"+repoId, result);
+//
+//             repoInfo.Models = [];  
+////               restore the ids
+//   			for(var i in result){
+//               var modelInfo = result[i];
+//               for(var i in modelInfo.UseCases){
+//            	   var useCase = modelInfo.UseCases[i];
+//            	   if(useCase){
+//                	   useCase._id = useCase._id.replace(/\[.*\]/g, "");
+//                   }
+//               }
+//               
+//               	console.log("queried model info");
+//               	console.log(modelInfo);
+//               
+////               var domainModel = modelInfo.DomainModels[0];
+//               if(modelInfo.DomainModels && modelInfo.DomainModels[0]){
+//            	   domainModel = modelInfo.DomainModels[0];
+//            	   delete domainModel._id;
+//            	   delete modelInfo.DomainModels;
+//            	   modelInfo.DomainModel = domainModel;
+//               }
+//               
+//               repoInfo.Models.push(modelInfo);
+//   			} 
+//               
+//               callbackfunc(repoInfo);
+//            });
+//       	 });
+//		});
+//	}
+    
     
     function queryFullRepoInfo(repoId, callbackfunc)
     {
+//    	console.log("hello");
         MongoClient.connect(url, function(err, db)
         {
 			
             if (err) throw err;
             var repo_id = new mongo.ObjectID(repoId);
             
-       	 db.collection("repos").findOne({_id: repo_id}, function(err, repoInfo) {
+       	queryRepoInfo(repoId, function(repoInfo) {
 			 console.log(repoInfo);
 			if (err) throw err;
 			
@@ -680,12 +782,15 @@ function deleteRepo(repoId, callbackfunc) {
 				callbackfunc(false);
 				return;
 			}
-           
+			
+			//use promise to construct the repo objects
+			function loadModel(model_id, repoInfo){
+				return new Promise((resolve, reject) => {
             db.collection("modelInfo").aggregate([
             	{
     				"$match":
     				{
-    				   "repo_id":repo_id
+    				   "_id":model_id
     				}
     			},
             
@@ -705,18 +810,22 @@ function deleteRepo(repoId, callbackfunc) {
                        "as": "UseCases"
                    }
                }
+               
             ], function(err, result) {
-               if (err) throw err;
+               if (err) reject(err);
+
+               console.log("hello");
                console.log("*******Shown result for ModelInfo*******");
                db.close();
+               
 //               
 //   			var debug = require("./utils/DebuggerOutput.js");
 //   			debug.writeJson("full_repo_info_"+repoId, result);
 
-             repoInfo.Models = [];  
+//             repoInfo.Models = [];  
 //               restore the ids
-   			for(var i in result){
-               var modelInfo = result[i];
+   			if(result && result[0]){
+               var modelInfo = result[0];
                for(var i in modelInfo.UseCases){
             	   var useCase = modelInfo.UseCases[i];
             	   if(useCase){
@@ -724,22 +833,72 @@ function deleteRepo(repoId, callbackfunc) {
                    }
                }
                
-               	console.log("queried model info");
-               	console.log(modelInfo);
                
 //               var domainModel = modelInfo.DomainModels[0];
-               if(modelInfo.DomainModels && modelInfo.DomainModels[0]){
+               if(modelInfo.DomainModels){
             	   domainModel = modelInfo.DomainModels[0];
+            	   delete modelInfo.DomainModels;
+            	   if(domainModel){
             	   delete domainModel._id;
-//            	   delete modelInfo.DomainModels;
-//            	   modelInfo.DomainModel = domainModel;
-               }
+            	   modelInfo.DomainModel = domainModel;
+            	   }
+               } 
+//               else {
+//            		   modelInfo.DomainModel = {
+//            				   _id: "domainModel_["+modelInfo._id+"]",
+//            				   Elements: [],
+//            				   model_id: modelInfo._id
+//            		   }
+//               }
                
-               repoInfo.Models.push(modelInfo);
+
+              	console.log("queried model info");
+              	console.log(modelInfo);	
+               
+               repoInfo.UnfoldedModels.push(modelInfo);
    			} 
                
-               callbackfunc(repoInfo);
+//               callbackfunc(repoInfo);
+               resolve();
             });
+				});
+				}
+			
+			
+			repoInfo.UnfoldedModels = [];
+			
+		return Promise.all(repoInfo.Models.map(model=>{
+	    	return loadModel(model._id,repoInfo);
+		})).then(
+				function(){
+				return new Promise((resolve, reject) => {
+					setTimeout(function(){	
+					
+//					umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+					repoInfo.Models = repoInfo.UnfoldedModels;
+						
+					if(callbackfunc){
+					
+						callbackfunc(repoInfo);
+					}
+					
+					 
+					resolve();
+					
+//				});
+					
+				}, 0);
+				});
+			}
+		
+		).catch(function(err){
+				console.log(err);
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+			});
+		
+			
        	 });
 		});
 	}
@@ -899,6 +1058,8 @@ function deleteRepo(repoId, callbackfunc) {
 			});
 		});
 	}
+	
+	
     function getGitData(userId, callbackfunc){      
                     
                     
@@ -1851,7 +2012,8 @@ function deleteRepo(repoId, callbackfunc) {
         deactivateUser:deactivateUser,
         saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
         queryModelNumByRepoID: queryModelNumByRepoID,
-        queryFullRepoInfo: queryFullRepoInfo
+        queryFullRepoInfo: queryFullRepoInfo,
+        requestRepoBrief: repoDetail
     }
 	
 }());
