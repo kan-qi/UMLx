@@ -1126,9 +1126,9 @@ function toggleDiagram(diagramType) {
         else if(diagramType === "robustness_diagram"){
         umlDiagram = "/robustness_diagram.svg";
         }
-        else if(diagramType === "class_diagram"){
-        umlDiagram = "/class_diagram.svg";
-        }
+        //else if(diagramType === "class_diagram"){
+        //umlDiagram = "/class_diagram.svg";
+        //}
         else if(diagramType === "sequence_diagram"){
         umlDiagram = "/sequence_diagram.svg";
         }
@@ -1143,6 +1143,28 @@ function toggleDiagram(diagramType) {
 		new_obj_data = obj_data.slice(0, pos)+"/useCase.svg";
 	}
 	document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
+}
+
+
+function toggleDomainModelDiagram(diagramType) {
+    var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
+    var pos = obj_data.search("/domainModel.svg");
+    var new_obj_data = "";
+    var umlDiagram = "";
+     if(diagramType === "class_diagram"){
+        umlDiagram = "/class_diagram.svg";
+        }
+        else{
+        umlDiagram = "/uml_diagram.svg";
+        }
+
+    if (pos != -1) {
+        new_obj_data = obj_data.slice(0, pos)+umlDiagram;
+    } else {
+        pos = obj_data.search(umlDiagram);
+        new_obj_data = obj_data.slice(0, pos)+"/domainModel.svg";
+    }
+    document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
 }
 
 function get_diagram_name() {
