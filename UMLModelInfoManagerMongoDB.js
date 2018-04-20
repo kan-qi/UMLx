@@ -674,35 +674,60 @@ function deleteRepo(repoId, callbackfunc) {
 			if (err) throw err;
 			
 			var repoid=new mongo.ObjectID(repoId);
-
-			//var query = { repo_id: repoid};
-
-			var query = { repo_id: repoid};
-
 			
-			db.collection("modelInfo").aggregate([
-			{
-				"$match":
-				{
-				   "repo_id":new mongo.ObjectID(repoid)
+			console.log(repoId);
+
+			 db.collection("repos").findOne({_id: repoid}, function(err, repoInfo) {
+				 console.log(repoInfo);
+				if (err) throw err;
+				
+				if(!repoInfo){
+					callbackfunc(false);
+					return;
 				}
-			},
-			{
-			   $skip: pageParameter
-			}, // pagination skip
-			{
-				$limit: stepParameter
-			}
-			],function(err, result) 
-            {
-               if (err) throw err;
-               //console.log("*******Shown result for queryRepoInfoByPage*******");
-               db.close();
-			   console.log(result);
-               callbackfunc(result);
-            });
+				db.collection("modelInfo").aggregate([
+					{
+						"$match":
+						{
+						   "repo_id":new mongo.ObjectID(repoid)
+						}
+					},
+					{
+					   $skip: pageParameter
+					}, // pagination skip
+					{
+						$limit: stepParameter
+					}
+					],function(err, result) 
+		            {
+		               if (err) throw err;
+		               //console.log("*******Shown result for queryRepoInfoByPage*******");
+		               db.close();
+		               repoInfo.Models = result;
+					   console.log(repoInfo);
+		               callbackfunc(repoInfo);
+		            });
+					
+				});
+			    	
+		  });
 			
-		});
+	}
+	
+	
+	function queryModelNumByRepoID(repoId, callbackfunc){
+		MongoClient.connect(url, function(err, db) 
+				{
+					if (err) throw err;
+		 db.collection("modelInfo").find({repo_id: new mongo.ObjectID(repoId)}).toArray(function(err, repos) {
+             if (err) throw err;
+             db.close();
+
+             callbackfunc(repos.length);
+
+         });
+				});
+		
 	}
 	
 	/*repoDetail("5a8e109c13a5974144158d99",function(result)
@@ -1668,7 +1693,7 @@ function deleteRepo(repoId, callbackfunc) {
 						if(!newModel){
 							reject("error");
 						}
-					umlEvaluator.evaluateModel(newModel, function(newModel){
+//					umlEvaluator.evaluateModel(newModel, function(newModel){
 						console.log("model analysis complete");
 //						console.log(newModel);
 //						umlModelInfoManager.updateModelInfo(newModel, repoId, function(newModel){
@@ -1676,10 +1701,10 @@ function deleteRepo(repoId, callbackfunc) {
 								reject("error");
 								}
 								else{
-								resolve(newRepo);
+								resolve();
 								}
 //						});
-					});
+//					});
 					});
 				  });
 			}
@@ -1740,7 +1765,8 @@ function deleteRepo(repoId, callbackfunc) {
         saveGitInfo:saveGitInfo,
         getGitData : getGitData,
         deactivateUser:deactivateUser,
-        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult
+        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
+        queryModelNumByRepoID: queryModelNumByRepoID
     }
 	
 }());

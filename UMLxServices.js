@@ -1252,7 +1252,7 @@ app.post('/', function(req, res){
 
 //Vibhanshu
 var totalRec = 0;
-var pageSize = 3;
+var pageSize = 10;
 var pageCount = 0;
 var start = 0;
 var currentPage = 1;
@@ -1301,41 +1301,45 @@ app.get('/', function(req, res){
         length: 12,
 		charset: 'alphabetic'
     });
- 
+	
+	var repoId = req.userInfo.repoId;
+	
+//    if(req.param('step') != undefined && req.param('page') != undefined){
+//        var repID = req.param('repId');
+//        //var stepSize = parseInt(req.param('step'));
+//        //pageSize = parseInt(req.param('page'));
+//    }else{
+//        repID = repoInfo._id;
+//        //stepSize = repoInfo.Models.length;
+//        //pageSize = 3;
+//    }
     
-    umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
-//			console.log(req.userInfo);
-    	
-    	console.log(repoInfo);
-        
-        if(req.param('step') != undefined && req.param('page') != undefined){
-            var repID = req.param('repId');
-            //var stepSize = parseInt(req.param('step'));
-            //pageSize = parseInt(req.param('page'));
-        }else{
-            repID = repoInfo._id;
-            //stepSize = repoInfo.Models.length;
-            //pageSize = 3;
-        }
-        
-        if(req.param('curremtPage') != undefined){
-            currentPage = parseInt(req.param('currentPage'));
-        }
-        
-        if(currentPage >1){
-            start = (currentPage - 1) * pageSize;
-        }
+    if(req.param('curremtPage') != undefined){
+        currentPage = parseInt(req.param('currentPage'));
+    }
+    
+    if(currentPage >1){
+        start = (currentPage - 1) * pageSize;
+    }
 
-        umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
-        	
+//    umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
+    umlModelInfoManager.queryModelNumByRepoID(repoId, function(modelNum){
+
+        totalRec = modelNum;
+        pageCount =  Math.ceil(totalRec/pageSize);
+       
+        console.log("total Records"+totalRec);
+        
+console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
     
-            totalRec = repoInfo.Models.length;
-            pageCount =  Math.ceil(totalRec/pageSize);
-           
-            console.log("total Records"+totalRec);
-            
-    console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
-            
+//    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
+  umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
+//			console.log(req.userInfo);
+		console.log(repoInfo);
+		if(!repoInfo){
+			res.send("error");
+			return;
+		}
 			if(req.userInfo.isEnterprise){
 				// get the repoinfo for all the repo that are part of this enterprise account
 				umlModelInfoManager.queryRepoIdsForAdmin(req.userInfo._id, function(repoIds){
@@ -1353,13 +1357,13 @@ app.get('/', function(req, res){
 				        console.log(result);
                        
 						repoInfo.requestUUID = requestUUID;
-						res.render('index', {pResult:result,repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+						res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
                 	});
 				});
 
 			} else {
                 repoInfo.requestUUID = requestUUID;
-				res.render('index', {pResult:result, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+				res.render('index', {repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
 			}
 
          });
