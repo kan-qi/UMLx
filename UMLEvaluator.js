@@ -350,6 +350,8 @@
 		}
 		
 		var domainModel = model.DomainModel;
+		console.log("output model");
+		console.log(model);
 		evaluateDomainModel(domainModel, function(){
 					console.log('doamin model analysis is complete');
 		});
@@ -464,9 +466,14 @@
 //			useCaseNum = index;
 //		}
 		
-		console.log("hello3");
-		console.log(repoInfo);
-	console.log("model analysis complete");
+//		console.log("hello3");
+//		console.log(repoInfo);
+	console.log("model analysis complete1");
+	
+
+	var debug = require("./utils/DebuggerOutput.js");
+	debug.writeJson("new_new_repo_info_"+repoInfo._id, repoInfo);
+
 		
 		if(callbackfunc){
 			// iterate the hierarchy of the repo

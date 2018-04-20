@@ -629,14 +629,14 @@ function deleteRepo(repoId, callbackfunc) {
 			
             if (err) throw err;
            
-            var repoid=new mongo.ObjectID(repoId);
+//            var repoid=new mongo.ObjectID(repoId);
 
 			
            
             db.collection("repos").aggregate([{
 				"$match":
 				{
-				   "_id":new mongo.ObjectID(repoid)
+				   "_id":new mongo.ObjectID(repoId)
 				}
 			},
                { 	
@@ -657,6 +657,84 @@ function deleteRepo(repoId, callbackfunc) {
                db.close();
                callbackfunc(result[0]);
             });
+		});
+	}
+    
+    
+    function queryFullRepoInfo(repoId, callbackfunc)
+    {
+        MongoClient.connect(url, function(err, db)
+        {
+			
+            if (err) throw err;
+            var repo_id = new mongo.ObjectID(repoId);
+            
+       	 db.collection("repos").findOne({_id: repo_id}, function(err, repoInfo) {
+			 console.log(repoInfo);
+			if (err) throw err;
+			
+			if(!repoInfo){
+				callbackfunc(false);
+				return;
+			}
+           
+            db.collection("modelInfo").aggregate([
+            	{
+    				"$match":
+    				{
+    				   "repo_id":repo_id
+    				}
+    			},
+            
+               {
+                   "$lookup": {
+                       "from": "domainModelInfo",
+                       "localField": "_id",
+                       "foreignField": "model_id",
+                       "as": "DomainModels"
+                   }
+               },
+               {
+                   "$lookup": {
+                       "from": "useCaseInfo",
+                       "localField": "_id",
+                       "foreignField": "model_id",
+                       "as": "UseCases"
+                   }
+               }
+            ], function(err, result) {
+               if (err) throw err;
+               console.log("*******Shown result for ModelInfo*******");
+               db.close();
+               
+//   			var debug = require("./utils/DebuggerOutput.js");
+//   			debug.writeJson("full_repo_info_"+repoId, result);
+
+             repoInfo.Models = [];  
+//               restore the ids
+   			for(var i in result){
+               var modelInfo = result[0];
+               for(var i in modelInfo.UseCases){
+            	   var useCase = modelInfo.UseCases[i];
+            	   if(useCase){
+                	   useCase._id = useCase._id.replace(/\[.*\]/g, "");
+                   }
+               }
+               
+               
+               var domainModel = modelInfo.DomainModels[0];
+               if(domainModel){
+            	   delete domainModel._id;
+            	   delete modelInfo.DomainModels;
+            	   modelInfo.DomainModel = domainModel;
+               }
+               
+               repoInfo.Models.push(modelInfo);
+   			} 
+               
+               callbackfunc(repoInfo);
+            });
+       	 });
 		});
 	}
 
@@ -1675,8 +1753,8 @@ function deleteRepo(repoId, callbackfunc) {
 			
 			var newRepo  = initRepoEntity(repo._id);
 
-			var debug = require("./utils/DebuggerOutput.js");
-			debug.writeJson("new_repo_info_"+newRepo._id, newRepo);
+//			var debug = require("./utils/DebuggerOutput.js");
+//			debug.writeJson("new_repo_info_"+newRepo._id, newRepo);
 
 			function reloadModel(model, newRepo){
 				//update model analytics.
@@ -1756,7 +1834,7 @@ function deleteRepo(repoId, callbackfunc) {
         queryRepoIdsForAdmin:queryRepoIdsForAdmin,
         queryRepoInfoForAdmin:queryRepoInfoForAdmin,
         saveSurveyData: saveSurveyData,
-	queryRepoFromUser:queryRepoFromUser, 	
+        queryRepoFromUser:queryRepoFromUser, 	
         saveSurveyAnalyticsData: saveSurveyAnalyticsData,
         createModelInfoVersion: createModelInfoVersion,
         getSurveyData: getSurveyData,
@@ -1766,7 +1844,8 @@ function deleteRepo(repoId, callbackfunc) {
         getGitData : getGitData,
         deactivateUser:deactivateUser,
         saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
-        queryModelNumByRepoID: queryModelNumByRepoID
+        queryModelNumByRepoID: queryModelNumByRepoID,
+        queryFullRepoInfo: queryFullRepoInfo
     }
 	
 }());

@@ -621,12 +621,12 @@ app.get('/deleteModel', function (req, res){
 		}
 
 		if(reanalyseRepo){
-		 queryRepoInfo(repoId, function(repoInfo){
+			umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		      console.log(repoInfo);
 		      umlEvaluator.evaluateRepo(repoInfo, function(){
 					console.log("model analysis is complete");
 				});
-				updateRepo(repoInfo, function(){
+		      umlModelInfoManager.updateRepoInfo(repoInfo, function(){
 //					umlFileManager.deleteDir(function(result){
 
 //					});
@@ -643,16 +643,29 @@ app.get('/deleteModel', function (req, res){
 })
 
 app.get('/reanalyseRepo', function (req, res){
-	console.log("/reanalyseRepo");
-	app.get('/queryRepoInfo', function(req, res){
+//	console.log("/reanalyseRepo");
+//	app.get('/queryRepoInfo', function(req, res){
 		//temporary analysis
-		var repoId = req.query.repo_id;
+		var repoId = req.userInfo.repoId;
 
 //		console.log(refresh);
-		umlModelInfoManager.queryRepoInfo(req.userInfo.repoId, function(repoInfo){
+		umlModelInfoManager.queryFullRepoInfo(repoId, function(repoInfo){
 //			console.log(repoInfo);
-			res.end("done");
-		});
+//			res.end("done");		
+			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+				//this repofo information only has repo structure but no actual data.
+				
+				umlModelInfoManager.updateRepoInfo(repoInfo, function(){
+//					umlFileManager.deleteDir(function(result){
+
+//					});
+
+					res.redirect('/');
+//					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
+
+				});
+			});
+//		});
 	})
 })
 
@@ -1001,7 +1014,7 @@ app.get('/reloadRepo', function(req, res){
 				return;
 			}
 			umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
-				res.end("success");
+				res.redirect('/');
 			});
 		});
 	});

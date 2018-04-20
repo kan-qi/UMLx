@@ -338,7 +338,7 @@
 						}
 					});
 				});
-		});
+		});	
 		}
 
 		return useCase["ElementAnalytics"];
