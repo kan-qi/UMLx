@@ -554,7 +554,7 @@ function deleteRepo(repoId, callbackfunc) {
                        "from": "domainModelInfo",
                        "localField": "_id",
                        "foreignField": "model_id",
-                       "as": "DomainModel"
+                       "as": "DomainModels"
                    }
                },
                {
@@ -578,13 +578,14 @@ function deleteRepo(repoId, callbackfunc) {
                    }
                }
                
-               var domainModel = modelInfo.DomainModel;
-               if(domainModel){
+               if(modelInfo.DomainModels&&modelInfo.DomainModels[0]){
+
+                   var domainModel = modelInfo.DomainModels[0];
             	   delete domainModel._id;
                }
                
                
-               callbackfunc(result[0]);
+               callbackfunc(modelInfo);
             });
         });
     }
@@ -713,7 +714,7 @@ function deleteRepo(repoId, callbackfunc) {
              repoInfo.Models = [];  
 //               restore the ids
    			for(var i in result){
-               var modelInfo = result[0];
+               var modelInfo = result[i];
                for(var i in modelInfo.UseCases){
             	   var useCase = modelInfo.UseCases[i];
             	   if(useCase){
@@ -721,9 +722,12 @@ function deleteRepo(repoId, callbackfunc) {
                    }
                }
                
+               	console.log("queried model info");
+               	console.log(modelInfo);
                
-               var domainModel = modelInfo.DomainModels[0];
-               if(domainModel){
+//               var domainModel = modelInfo.DomainModels[0];
+               if(modelInfo.DomainModels && modelInfo.DomainModels[0]){
+            	   domainModel = modelInfo.DomainModels[0];
             	   delete domainModel._id;
             	   delete modelInfo.DomainModels;
             	   modelInfo.DomainModel = domainModel;
