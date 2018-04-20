@@ -33,7 +33,7 @@ div.block.panel.panel-default
             span.caret
           ul.dropdown-menu
             li
-              a.request-repo-analytics.dropdown-item(href='queryRepoInfo?repo_id=#{repoInfo._id}&refresh=true') Reanalyse Repo
+              a.request-repo-analytics.dropdown-item(href='reanalyseRepo?repo_id=#{repoInfo._id}') Reanalyse Repo
             li
               a.dropdown-item(href='reloadRepo?repo_id=#{repoInfo._id}') Reload Repo
    div.clearFix
@@ -101,7 +101,7 @@ div.block.panel.panel-default
              .list-group
              - var pageIndex = (currentPage - 1)*(pageSize) + 1
              div(id='page-panel')
-                each item in pResult
+                each item in repoInfo.Models
                     a.list-group-item.row#model-title(href="queryModelInfo?model_id="+item._id)
                         .col-sm-2 #{pageIndex++}
                         .col-sm-8 #{item.Name}

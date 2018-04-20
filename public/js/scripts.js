@@ -975,7 +975,7 @@ $(document).ready(function() {
     $(document).on('click','a.sub-model-title', query_sub_model_detail_func);
 //  $(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
     $(document).on('click','#model-title', query_model_detail_func);
-    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
+//    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
     $(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
     $(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);
     $(document).on('click','#query-model-btn', query_estimation_models_func);
