@@ -91,7 +91,7 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
                 {
                       var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                       $('.modal-body').html('<img src="' + img_link + '">');
-                      document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' data-toggle='modal' data-target='#myModal1'>Display Chart</button></td></tr>" ;
+                      document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light'onclick = 'showModalDetails(\"" + img_link +  "\")'> Display Chart</button></td></tr>" ;
 
                 }
 
@@ -284,6 +284,12 @@ function showDomainModal(chart_url)
 }
 function showModal(svg_url)
 {
+  console.log(svg_url);
   $('.modal-body').html('<img class="img-responsive" src="' + svg_url + '">');
   $('#myModal2').modal('toggle');
+}
+function showModalDetails(domainurl)
+{
+  $('.modal-body').html('<img class="img-responsive" src="' + domainurl + '">');
+  $('#myModal1').modal('toggle');
 }
