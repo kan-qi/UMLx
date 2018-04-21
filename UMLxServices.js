@@ -1262,7 +1262,6 @@ app.get('/pager',function(req,res){
     }
     
     console.log("repo ID "+repID+" Start "+start+" pageSize "+pageSize+" pageCount "+pageCount+" currentPage "+currentPage);
-       
     
     //umlModelInfoManager.queryRepoInfo(repID, function(repoInfo){
     
@@ -1274,7 +1273,7 @@ app.get('/pager',function(req,res){
         
         //console.log(result);
         //console.log("Index in UMLx "+ index);
-        res.render('pagination', {pageR:result, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+        res.render('pagination', {repoId: repID, pageR:result, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
        
        // });
     }); 
