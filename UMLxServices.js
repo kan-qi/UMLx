@@ -1238,7 +1238,7 @@ app.post('/', function(req, res){
 
 //Vibhanshu
 var totalRec = 0;
-var pageSize = 3;
+var pageSize = 10;
 var pageCount = 0;
 var start = 0;
 var currentPage = 1;
