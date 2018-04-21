@@ -1233,28 +1233,29 @@ function createCharts() {
 function createTrendingLines() {
 
     $.ajax({
-      url: "output/repo"+ repoID + "/" +  "/trending_chart.json",
+      url: "http://127.0.0.1:8081/requestRepoBrief",
       type:"GET",
       dataType: "json",
 
       success: function(response)
       {
-
+                //console.log(response);
                 var date = [];
                 var transaction_num = [];
                 var project_num =[];
                 var case_num =[];
                 var class_num =[];
-
+                console.log(response);
                 for(var i=0;i<response.length;i++)
                 {
-                  date.push(response[i].time_stamp);
-                  transaction_num.push(response[i].transaction_num);
+                  date.push(response[i].timestamp);
+                  transaction_num.push(response[i].NT);
                   project_num.push(response[i].project);
-                  case_num.push(response[i].case_num);
-                  class_num.push(response[i].class_num);
+                  case_num.push(response[i].UseCaseNum);
+                  class_num.push(response[i].EntityNum);
 
                 }
+                console.log(response.timestamp);
 
                 // Default chart at the repo level - Number of transactions
                   var chart =   Highcharts.chart('trending-line', {

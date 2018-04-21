@@ -86,11 +86,12 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
         success: function(response)
         {
 
-              document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><h3>Use case evaluation statistics</h3><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+              document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal1' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div<h3>Use case evaluation statistics</h3><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
                 for (var i=0;i<response.length;i++)
                 {
-
-                      document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>" ;
+                      var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
+                      $('.modal-body').html('<img src="' + img_link + '">');
+                      document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' data-toggle='modal' data-target='#myModal1'>Display Chart</button></td></tr>" ;
 
                 }
 
@@ -110,11 +111,12 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
         success: function(response)
         {
 
-                document.getElementById("details").innerHTML +="<div style='height:6%'>&nbsp;</div><h3>Doamin Model evaluation statistics</h3><table class='table table-hover table-bordered'; id='domain_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+                document.getElementById("details").innerHTML +="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal2' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><h3>Domain Model evaluation statistics</h3><table class='table table-hover table-bordered'; id='domain_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
                   for (var i=0;i<response.length;i++)
                   {
-
-                        document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>" ;
+                    var img_link2 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
+                    $('.modal-body').html('<img src="' + img_link2 + '">');
+                        document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' data-toggle='modal' data-target='#myModal2'>Display Chart</button></td></tr>" ;
 
                   }
 
@@ -143,11 +145,12 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
           {
                 //console.log(response)
 
-                $('.repo-metrics').html("<div style='height:6%'>&nbsp;</div><h3>statistics</h3><table class='table table-hover table-bordered'; id='repo_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+                $('.repo-metrics').html("<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><h3>Statistics</h3><table class='table table-hover table-bordered'; id='repo_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
                   for (var i=0;i<response.length;i++)
                   {
-
-                          $('#repo_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>");
+                          var img_link3 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
+                          $('.modal-body').html('<img src="' + img_link3 + '">');
+                          $('#repo_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' data-toggle='modal' data-target='#myModal'>Display Chart</button></td></tr>");
 
                   }
                   $('.repo-metrics').append( "</table>");
@@ -180,11 +183,12 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
               {
                     //console.log(response)
                     $('#analysis-data').css("display","block");
-                    $('#analysis-data').html("<div style='height:6%'>&nbsp;</div><h3>Use case statistics</h3><table class='table table-hover table-bordered'; id='usecase_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+                    $('#analysis-data').html("<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal3' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><h3>Use case statistics</h3><table class='table table-hover table-bordered'; id='usecase_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
                       for (var i=0;i<response.length;i++)
                       {
-
-                              $('#usecase_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>");
+                              var img_link4 =  response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
+                              $('.modal-body').html('<img src="' + img_link4 + '">');
+                              $('#usecase_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' data-toggle='modal' data-target='#myModal3'>Display Chart</button></td></tr>");
 
                       }
                     //  $('.repo-metrics').append( "</table>");
@@ -204,11 +208,12 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
               {
                     console.log(response)
 
-                    $('#analysis-data').append("<div style='height:6%'>&nbsp;</div><table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+                    $('#analysis-data').append("<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal4' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div><table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
                       for (var i=0;i<response.length;i++)
                       {
-
-                              $('#usecase_table2').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>");
+                              var img_link5 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
+                              $('.modal-body').html('<img src="' + img_link5 + '">');
+                              $('#usecase_table2').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' data-toggle='modal' data-target='#myModal4'>Display Chart</button></td></tr>");
 
                       }
                     //  $('.repo-metrics').append( "</table>");
@@ -233,11 +238,12 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
             {
                   console.log(response)
                   //$('#domainAnalysis_table').css("display", "none");
-                  $('#show_Domain_JsonData').html("<div style='height:6%'>&nbsp;</div><h3>Domain Model statistics</h3><table class='table table-hover table-bordered'; id='domainAnalysis_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+                  $('#show_Domain_JsonData').html("<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal5' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div><h3>Domain Model statistics</h3><table class='table table-hover table-bordered'; id='domainAnalysis_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
                     for (var i=0;i<response.length;i++)
                     {
-
-                            $('#domainAnalysis_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><img src='" + response[i]['dist chart path'] +"'></td></tr>");
+                            var img_link6 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
+                            $('.modal-body').html('<img src="' + img_link6 + '">');
+                            $('#domainAnalysis_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' data-toggle='modal' data-target='#myModal5'>Display Chart</button></td></tr>");
 
                     }
                   //  $('.repo-metrics').append( "</table>");
