@@ -876,6 +876,7 @@ function deleteRepo(repoId, callbackfunc) {
 					
 //					umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
 					repoInfo.Models = repoInfo.UnfoldedModels;
+					delete repoInfo.UnfoldedModels;
 						
 					if(callbackfunc){
 					
@@ -1262,23 +1263,31 @@ function deleteRepo(repoId, callbackfunc) {
 				}
 
 
-                db.collection("modelInfo").insertOne(modelInfo, function(err, res) 
+                db.collection("modelInfo").save(modelInfo, function(err, res) 
                 {
                         if (err) throw err;
                         //console.log("modelInfo 1 record inserted");
                         
-                        db.collection("useCaseInfo").insertMany(useCases, function(err, res)
+//                        if(useCases.length > 0){
+                        
+                        for(var i in useCases){
+                        db.collection("useCaseInfo").save(useCases[i], function(err, res)
                         {
                             if (err) throw err;
                                 //console.log("useCaseInfo 1 record inserted");
                                 
                         });
-                        db.collection("domainModelInfo").insertOne(domainModelInfo, function(err, res) 
+                        }
+//                        }
+                        
+                        if(domainModelInfo){
+                        db.collection("domainModelInfo").save(domainModelInfo, function(err, res) 
                         {
                             if (err) throw err;
                                 //console.log("domainModelInfo 1 record inserted");
                                 
                         });
+                        }
                         
                         db.close();
 						console.log("saveModelInfo");

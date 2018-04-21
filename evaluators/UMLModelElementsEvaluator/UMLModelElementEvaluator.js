@@ -1149,7 +1149,7 @@
 			pathAnalyticsStr += modelDump.pathAnalyticsStr;
 			elementNum = modelDump.elementNum;
 			elementAnalyticsStr += modelDump.elementAnalyticsStr;
-			entityNum = domainModelDump.entityNum;
+			entityNum = modelDump.entityNum;
 			entityAnalyticsStr += modelDump.entityAnalyticsStr;
 			attributeNum = modelDump.attributeNum;
 			attributeAnalyticsStr += modelDump.attributeAnalyticsStr;
