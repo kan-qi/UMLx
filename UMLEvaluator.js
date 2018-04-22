@@ -364,7 +364,6 @@
 				});
 //			
 			useCaseEvaluationStr += toUseCaseEvaluationStr(useCase, useCaseNum);
-//			useCaseEmpiricss.push(useCaseEmpirics);
 			useCaseNum ++;
 		}
 		
@@ -374,12 +373,12 @@
 		
 		if(domainModel){
 		evaluateDomainModel(domainModel, function(){
-					console.log('doamin model analysis is complete');
-		domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
-//		useCaseEmpiricss.push(useCaseEmpirics);
-//		domainModelNum ++;
-
+		console.log('doamin model analysis is complete');
 		});
+		
+
+		domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
+		domainModelNum ++;
 		
 		}
 		
@@ -490,6 +489,15 @@
 		var modelEvaluationStr = "";
 //		var repoEvaluationsForUseCase = [];
 		var modelNum = 1;
+		
+
+		var useCaseNum = 1;
+//		var useCaseEmpiricss = [];
+		var useCaseEvaluationStr = "";
+		
+		var domainModelNum = 1;
+		var domainModelEvaluationStr = "";
+		
 //		if(index !== undefined){
 //			useCaseNum = index;
 //		}
@@ -518,6 +526,35 @@
 				modelEvaluationStr += toModelEvaluationStr(model, modelNum);
 //				console.log(useCaseEvaluationStr);
 				modelNum ++;
+				
+				
+				for(var i in model.UseCases){
+					var useCase = model.UseCases[i];
+//					evaluateUseCase(useCase, model, function(){
+//							console.log('use case analysis is complete');
+//						});
+//					
+					useCaseEvaluationStr += toUseCaseEvaluationStr(useCase, useCaseNum);
+//					useCaseEmpiricss.push(useCaseEmpirics);
+					useCaseNum ++;
+				}
+				
+				var domainModel = model.DomainModel;
+//				console.log("output model");
+//				console.log(model);
+				
+				if(domainModel){
+//				evaluateDomainModel(domainModel, function(){
+//				console.log('doamin model analysis is complete');
+////				useCaseEmpiricss.push(useCaseEmpirics);
+//
+//				});
+//				
+
+				domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
+
+				domainModelNum ++;
+				}
 			}
 			
 			// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
@@ -532,9 +569,13 @@
 			
 
 		repoInfo.ModelEvaluationFileName = "modelEvaluation.csv";
+		repoInfo.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
+		repoInfo.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
 		repoInfo.ModelStatisticsOutputDir = repoInfo.OutputDir+"/model_evaluation_statistics";
 			
-		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr}];
+		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr},
+			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
+			{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
 		
 		umlFileManager.writeFiles(repoInfo.OutputDir, files, function(err){
 			if(err) {

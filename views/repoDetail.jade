@@ -11,13 +11,21 @@ div.block.panel.panel-default
           span.caret
         ul.dropdown-menu
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoInfo._id}&simulation=false&refresh=true') Evaluation For Models
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoInfo._id}&simulation=true&refresh=true') Evaluation For Models (simulation)
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models (simulation)
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForUseCases?repo_id=#{repoInfo._id}&simulation=false') Evaluation For Use Cases
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
           li
-            a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
+          //li
+            //a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
       div.dropdown
         button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
           span.caret
@@ -26,8 +34,8 @@ div.block.panel.panel-default
             a.dropdown-item(id="open_btn" onclick="openDialogueBox('#{repoInfo._id}', '1');" href="javaScript:void(0);") Empirical Data For Use Cases
           li
             a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '2');" href="javaScript:void(0);") Empirical Data For Models
-          li
-            a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '3');" href="javaScript:void(0);") COCOMO Data
+          //li
+            //a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '3');" href="javaScript:void(0);") COCOMO Data
       div.dropdown
           button.btn.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
             span.caret

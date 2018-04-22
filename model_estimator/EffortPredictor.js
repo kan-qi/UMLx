@@ -14,25 +14,25 @@
 	var mkdirp = require('mkdirp');
 	var RScriptExec = require('../utils/RScriptUtil.js');
 	
-	function calculateDistributedEffort(modelInfo, projectEffort){
+	function calculateDistributedEffort(modelInfo, projectEffort, model){
 		
 		//distribute project effort
 		for(var i in modelInfo.UseCases){
 			var useCase = modelInfo.UseCases[i];
-			useCase.effort_dis_1 = projectEffort/modelInfo.UEUCW*useCase.UEUCW;
-			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
-			useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
+			useCase.effort_dis_1 = projectEffort/modelInfo[model]*useCase[model];
+//			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
+//			useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
 		}
 	
     }
 	
-	function calculateDistributedDuration(modelInfo, projectDuration){
+	function calculateDistributedDuration(modelInfo, projectDuration, model){
 		//distribute project effort
 		for(var i in modelInfo.UseCases){
 			var useCase = modelInfo.UseCases[i];
 			useCase.duration_dist_1 = projectDuration/modelInfo.UEUCW*useCase.UEUCW;
-			useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
-			useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
+//			useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
+//			useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
 		}
 		
 	}
@@ -57,7 +57,9 @@
 	}
 	
 	module.exports = {
-		predictEffort: function(modelInfo, predictionModel, callbackfunc){
+		predictEffort: function(modelInfo, estimator, model, callbackfunc){
+			
+			var predictionModel = model+"_"+estimator+"_model.rds";
 		
 			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'"';
 			

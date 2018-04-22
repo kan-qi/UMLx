@@ -296,30 +296,30 @@ app.get('/surveyProject', function(req, res){
 	res.render('surveyProject');
 });
 
-app.get("/getModelInfoStatiscs", function(req, res){
-	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-//		var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
-//		umlModelExtractor.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
-//		//update model analytics.
-////		console.log(modelInfo);
-//		umlEvaluator.evaluateModel(modelInfoVersion, function(){
-//			console.log("model analysis complete");
-//		});
+//app.get("/getModelInfoStatiscs", function(req, res){
+//	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+////		var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
+////		umlModelExtractor.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
+////		//update model analytics.
+//////		console.log(modelInfo);
+////		umlEvaluator.evaluateModel(modelInfoVersion, function(){
+////			console.log("model analysis complete");
+////		});
+////
+////		umlModelInfoManager.pushModelInfoVersion(modelId, repoId, modelInfoVersion, function(modelInfo){
+//////			console.log(modelInfo);
+//			if(!modelInfo){
+//				res.end('model doesn\'t exist!');
+//			}
+//////			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:repoId});
+////		});
 //
-//		umlModelInfoManager.pushModelInfoVersion(modelId, repoId, modelInfoVersion, function(modelInfo){
-////			console.log(modelInfo);
-			if(!modelInfo){
-				res.end('model doesn\'t exist!');
-			}
-////			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:repoId});
-//		});
-
-	});
-});
-
-app.get("getRepoInfoStatistics", function(req, res){
-	
-});
+//	});
+//});
+//
+//app.get("getRepoInfoStatistics", function(req, res){
+//	
+//});
 
 app.get('/clearDB', function(req, res){
 	var userId = req.query.user_id;
@@ -796,19 +796,19 @@ app.get('/deleteUseCase', function (req, res){
 })
 
 
-app.get('/getUseCaseAnalyticsForModelCSV', function (req, res){
-	console.log("/getUseCaseAnalyticsForModelCSV");
-	var modelId = req.query['model_id'];
-	var repoId = req.userInfo.repoId;
-
-		umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-			umlFileManager.loadCSVFileAsString(modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName, function(csvData){
-				if(csvData){
-					res.end(csvData);
-				}
-			})
-	});
-})
+//app.get('/getUseCaseAnalyticsForModelCSV', function (req, res){
+//	console.log("/getUseCaseAnalyticsForModelCSV");
+//	var modelId = req.query['model_id'];
+//	var repoId = req.userInfo.repoId;
+//
+//		umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+//			umlFileManager.loadCSVFileAsString(modelInfo.OutputDir+"/"+modelInfo.UseCaseEvaluationFileName, function(csvData){
+//				if(csvData){
+//					res.end(csvData);
+//				}
+//			})
+//	});
+//})
 
 app.post('/uploadUseCaseEvaluation', upload.fields([{name:'ccss',maxCount:1},{name:'it', maxCount:1},{name:'ilf', maxCount:1}, {name:'elf', maxCount:1},{name:'ei', maxCount:1}, {name:'eo', maxCount:1}, {name:'eq', maxCount:1}, {name:'ph', maxCount:1}, {name:'useCase-id',maxCount:1}]),  function (req, res){
 	console.log("/uploadUseCaseEvaluation");
@@ -1097,8 +1097,11 @@ app.post('/predictProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{n
 //	var umlModelType = req.body['uml-model-type'];
 	var umlModelType = "uml";
 	var umlModelName = "query1";
-	var predictionModel = "eucp_linear_model.rds";
 	var repoId = req.userInfo.repoId;
+	var model = req.query['model'];
+	var estimator = req.query['estimator'];
+
+//	var predictionModel = model+"_"+estimator+"_model.rds";
 //	var uuidVal = req.body['uuid'];
 	console.log(repoId);
 	var formInfo = req.body;
@@ -1116,7 +1119,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{n
 			});
 //			console.log(modelInfo);
 			
-			effortPredictor.predictEffort(modelInfo, predictionModel, function(modelInfo){
+			effortPredictor.predictEffort(modelInfo, estimator, model, function(modelInfo){
 				if(!modelInfo){
 					console.log("error");
 					res.render('estimationResultPane', {error: "inter process error"});
@@ -1152,114 +1155,103 @@ app.post('/predictProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{n
 	});
 });
 
-app.get('/dumpRepoDescriptiveDistributions', function(req, res){
-	var repoId = req.query.repo_id;
-	var refresh = false;
-
-	if(req.query.refresh === 'true'){
-	refresh = true;
-	}
-
-//	var repoId = "595b50d4aebbbd2c4c4c6b58";
-	console.log(repoId);
+//app.get('/dumpRepoDescriptiveDistributions', function(req, res){
 //	var repoId = req.query.repo_id;
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-				umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
-					var command = './Rscript/RepoDiscriptiveAnalysis.R "'+repoInfo.OutputDir+"/"+repoInfo.RepoEvaluationForUseCasesFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo.RepoEvaluationForModelsFileName+'" "'+repoInfo.OutputDir+'" "."';
+//	var refresh = false;
+//
+//	if(req.query.refresh === 'true'){
+//	refresh = true;
+//	}
+//
+////	var repoId = "595b50d4aebbbd2c4c4c6b58";
+//	console.log(repoId);
+////	var repoId = req.query.repo_id;
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//				umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+//					var command = './Rscript/RepoDiscriptiveAnalysis.R "'+repoInfo.OutputDir+"/"+repoInfo.RepoEvaluationForUseCasesFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo.RepoEvaluationForModelsFileName+'" "'+repoInfo.OutputDir+'" "."';
+//
+//					//	console.log('generate model Analytics');
+////					console.log(command);
+//					RScriptUtil.runRScript(command, function(result){
+//						if(result){
+//							res.end('success');
+//						}
+//						else {
+//							res.end('error');
+//						}
+//					});
+//				});
+//		});
+//})
 
-					//	console.log('generate model Analytics');
-//					console.log(command);
-					RScriptUtil.runRScript(command, function(result){
-						if(result){
-							res.end('success');
-						}
-						else {
-							res.end('error');
-						}
-					});
-				});
-		});
-})
-
-app.get('/evaluateRepoForModels', function(req, res){
-	var repoId = req.query.repo_id;
-	var simulation = false;
-	var refresh = false;
-	if(req.query.simulation === 'true'){
-	 simulation = true ;
-	}
-
-	if(req.query.refresh === 'true'){
-	refresh = true;
-	}
-//	var repoId = "595b50d4aebbbd2c4c4c6b58";
-	console.log(repoId);
+//simplify the whole process by just loading the generate csv files.
+//remove it just request the files.
+//app.get('/evaluateRepoForModels', function(req, res){
 //	var repoId = req.query.repo_id;
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
-//				if(modelEvaluationStr){
-//				console.log(repoEvaluationResult.repoEvaluationStr);
-//				res.end(modelEvaluationStr);
-//				}
-			}, refresh);
-		});
-})
+//	console.log(repoId);
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//		umlFileManager.loadCSVFileAsString(repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName, function(modelEvaluationCSVFile){
+//				res.end(modelEvaluationCSVFile);
+//			})
+//		});
+//	
+//})
 
-app.get('/evaluateRepoForUseCases', function(req, res){
-	var repoId = req.query.repo_id;
-	var simulation = false;
-//	var repoId = "595b50d4aebbbd2c4c4c6b58";
-	console.log(repoId);
+//app.get('/evaluateRepoForUseCases', function(req, res){
 //	var repoId = req.query.repo_id;
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
-//				if(useCaseEvaluationStr){
-//				console.log(repoEvaluationResult.repoEvaluationStr);
-//				res.end(useCaseEvaluationStr);
-//				}
-			});
-		});
-})
+//	var simulation = false;
+////	var repoId = "595b50d4aebbbd2c4c4c6b58";
+//	console.log(repoId);
+////	var repoId = req.query.repo_id;
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+////				if(useCaseEvaluationStr){
+////				console.log(repoEvaluationResult.repoEvaluationStr);
+////				res.end(useCaseEvaluationStr);
+////				}
+//			});
+//		});
+//})
 
-app.get('/evaluateModelForUseCases', function(req, res){
-	var modelId = req.query.model_id;
-//	var modelId = "a08440f186a8d13192784845c7301f981499148138239";
-	var repoId = req.userInfo.repoId;
-	var simulation = false;
-	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-			umlEvaluator.evaluateModel(modelInfo, function(modelInfo){
-
-				umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
-//					console.log(modelInfo);
-					if(useCaseEvaluationStr){
-						// calculateObserluteDifferences
-
-//					console.log(modelEvaluationResult.usecaseEvaluationStr);
-//					var modelAnalytics = modelInfo.ModelAnalytics;
-					useCaseEvaluationStr += "this part nees to improve";
-//				    useCaseEvaluationStr += "CCSS_SAD: "+modelAnalytics.CCSS_DIFF+"\n";
-////				    useCaseEvaluationStr += "IT_SAD: "+modelAnalytics.IT_DIFF+"\n";
-//				    useCaseEvaluationStr += "EI_SAD: "+modelAnalytics.EI_DIFF+"\n";
-//				    useCaseEvaluationStr += "EO_SAD: "+modelAnalytics.EO_DIFF+"\n";
-//				    useCaseEvaluationStr += "EQ_SAD: "+modelAnalytics.EQ_DIFF+"\n";
-//				    useCaseEvaluationStr += "FUNC_NA: "+modelAnalytics.FUNC_NA+"\n";
-//				    useCaseEvaluationStr += "FN_ALY: "+modelAnalytics.FN+"\n";
-//				    useCaseEvaluationStr += "FN_SAD: "+modelAnalytics.FN_DIFF+"\n";
-//				    useCaseEvaluationStr += "DM_SAD: "+modelAnalytics.DM_DIFF+"\n";
-//				    useCaseEvaluationStr += "INT_SAD: "+modelAnalytics.INT_DIFF+"\n";
-//				    useCaseEvaluationStr += "CTRL_SAD: "+modelAnalytics.CTRL_DIFF+"\n";
-//				    useCaseEvaluationStr += "EXTIVK_SAD: "+modelAnalytics.EXTIVK_DIFF+"\n";
-//				    useCaseEvaluationStr += "EXTCLL_SAD: "+modelAnalytics.EXTCLL_DIFF+"\n";
-//				    useCaseEvaluationStr += "TRAN_NA: "+modelAnalytics.TRAN_NA+"\n";
-//				    useCaseEvaluationStr += "TN_ALY: "+modelAnalytics.TN+"\n";
-//				    useCaseEvaluationStr += "TN_SAD: "+modelAnalytics.TN_DIFF+"\n";
-//				    useCaseEvaluationStr += "Effort_SAD: "+modelAnalytics.Effort_DIFF+"\n";
-				    res.end(useCaseEvaluationStr);
-					}
-				});
-			});
-		}, true);
-});
+//app.get('/evaluateModelForUseCases', function(req, res){
+//	var modelId = req.query.model_id;
+////	var modelId = "a08440f186a8d13192784845c7301f981499148138239";
+//	var repoId = req.userInfo.repoId;
+//	var simulation = false;
+//	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+//			umlEvaluator.evaluateModel(modelInfo, function(modelInfo){
+//
+//				umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
+////					console.log(modelInfo);
+//					if(useCaseEvaluationStr){
+//						// calculateObserluteDifferences
+//
+////					console.log(modelEvaluationResult.usecaseEvaluationStr);
+////					var modelAnalytics = modelInfo.ModelAnalytics;
+//					useCaseEvaluationStr += "this part nees to improve";
+////				    useCaseEvaluationStr += "CCSS_SAD: "+modelAnalytics.CCSS_DIFF+"\n";
+//////				    useCaseEvaluationStr += "IT_SAD: "+modelAnalytics.IT_DIFF+"\n";
+////				    useCaseEvaluationStr += "EI_SAD: "+modelAnalytics.EI_DIFF+"\n";
+////				    useCaseEvaluationStr += "EO_SAD: "+modelAnalytics.EO_DIFF+"\n";
+////				    useCaseEvaluationStr += "EQ_SAD: "+modelAnalytics.EQ_DIFF+"\n";
+////				    useCaseEvaluationStr += "FUNC_NA: "+modelAnalytics.FUNC_NA+"\n";
+////				    useCaseEvaluationStr += "FN_ALY: "+modelAnalytics.FN+"\n";
+////				    useCaseEvaluationStr += "FN_SAD: "+modelAnalytics.FN_DIFF+"\n";
+////				    useCaseEvaluationStr += "DM_SAD: "+modelAnalytics.DM_DIFF+"\n";
+////				    useCaseEvaluationStr += "INT_SAD: "+modelAnalytics.INT_DIFF+"\n";
+////				    useCaseEvaluationStr += "CTRL_SAD: "+modelAnalytics.CTRL_DIFF+"\n";
+////				    useCaseEvaluationStr += "EXTIVK_SAD: "+modelAnalytics.EXTIVK_DIFF+"\n";
+////				    useCaseEvaluationStr += "EXTCLL_SAD: "+modelAnalytics.EXTCLL_DIFF+"\n";
+////				    useCaseEvaluationStr += "TRAN_NA: "+modelAnalytics.TRAN_NA+"\n";
+////				    useCaseEvaluationStr += "TN_ALY: "+modelAnalytics.TN+"\n";
+////				    useCaseEvaluationStr += "TN_SAD: "+modelAnalytics.TN_DIFF+"\n";
+////				    useCaseEvaluationStr += "Effort_SAD: "+modelAnalytics.Effort_DIFF+"\n";
+//				    res.end(useCaseEvaluationStr);
+//					}
+//				});
+//			});
+//		}, true);
+//});
 
 app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');
