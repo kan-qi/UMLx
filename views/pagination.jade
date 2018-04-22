@@ -6,9 +6,11 @@
 if repoID
   -var repID = repoID
 else
-  -var repID = "5ac64f3a88fba42714c1cb7f" 
+   -var repID = repoId 
+
+//-var repID = #{repoID}
 div 
-- console.log("Inside Pagination "+ repoID)
+- console.log("Inside Pagination "+ repID)
 div
 - var pageIndex = (currentPage - 1)*(pageSize) + 1
 
@@ -43,12 +45,8 @@ div
                                       a(href="#"+x onclick="pagination_call('#{repID}','#{x}')")
                                         = x
 
-                                   if x == (currentPage + 4)
-                                       li.disabled
-                                        a(href="#") ...
-                                        - break
-                                if currentPage != pageCount
-                                li
-                                    a(href= "#"+4 onclick="pagination_call('#{repID}','#{Math.floor(pageCount)}')") &raquo;
+                                  if currentPage != pageCount
+                                  li
+                                    a(href= "#"+pageCount onclick="pagination_call('#{repID}','#{Math.floor(pageCount)}')") &raquo;
 
                                     
