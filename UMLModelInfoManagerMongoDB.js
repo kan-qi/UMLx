@@ -522,11 +522,10 @@ function deleteRepo(repoId, callbackfunc) {
    	         });
     }
     
-    function saveEstimation (estimationInfo,callbackfunc) {
+    function saveEstimation (estimationInfo, callbackfunc) {
    	 MongoClient.connect(url, function(err, db)
    	            {
    	                if (err) throw err;
-   	    //		
    	                db.collection("estimates").insertOne(estimationInfo, function(err, res) 
    	                		{
    			                  if (err) throw err;
@@ -535,7 +534,7 @@ function deleteRepo(repoId, callbackfunc) {
    			                      db.close();
    			                      if(callbackfunc !== null)
    			                      {
-   			                              callbackfunc(res);
+   			                              callbackfunc(estimationInfo);
    			                      }
      
    	                		});
@@ -1847,12 +1846,12 @@ function deleteRepo(repoId, callbackfunc) {
 		return false;
 	}
 	
-	function saveEffortEstimationQueryResult(modelInfo, repoId, callback){
-		//need to finish.
-		if(callback){
-			callback(modelInfo);
-		}
-	}
+//	function saveEffortEstimationQueryResult(estimationResults, modelInfo, repoId, callback){
+//		//need to finish.
+//		if(callback){
+//			callback(modelInfo);
+//		}
+//	}
 
 	module.exports = {
 		setupRepoStorage : function(callbackfunc) {
@@ -2019,7 +2018,7 @@ function deleteRepo(repoId, callbackfunc) {
         saveGitInfo:saveGitInfo,
         getGitData : getGitData,
         deactivateUser:deactivateUser,
-        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
+//        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
         queryModelNumByRepoID: queryModelNumByRepoID,
         queryFullRepoInfo: queryFullRepoInfo,
         requestRepoBrief: repoDetail

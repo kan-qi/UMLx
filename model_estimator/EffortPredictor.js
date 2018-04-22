@@ -14,52 +14,12 @@
 	var mkdirp = require('mkdirp');
 	var RScriptExec = require('../utils/RScriptUtil.js');
 	
-	function calculateDistributedEffort(modelInfo, projectEffort, model){
-		
-		//distribute project effort
-		for(var i in modelInfo.UseCases){
-			var useCase = modelInfo.UseCases[i];
-			useCase.effort_dis_1 = projectEffort/modelInfo[model]*useCase[model];
-//			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
-//			useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
-		}
-	
-    }
-	
-	function calculateDistributedDuration(modelInfo, projectDuration, model){
-		//distribute project effort
-		for(var i in modelInfo.UseCases){
-			var useCase = modelInfo.UseCases[i];
-			useCase.duration_dist_1 = projectDuration/modelInfo.UEUCW*useCase.UEUCW;
-//			useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
-//			useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
-		}
-		
-	}
-	
-	function calculateResourceAllocation(modelInfo, personnel){
-		//distribute project effort
-			modelInfo.personnel_ui = personnel*modelInfo.INT/modelInfo.NT;
-			modelInfo.personnel_db = personnel*modelInfo.DM/modelInfo.NT;
-			modelInfo.personnel_fs = personnel*modelInfo.CTRL/modelInfo.NT;
-			
-			for(var i in modelInfo.UseCases){
-				var useCase = modelInfo.UseCases[i];
-				useCase.personnel_dist_1 = personnel/modelInfo.UEUCW*useCase.UEUCW;
-				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
-				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
-				
-				useCase.personnel_ui = useCase.personnel_dist_1*useCase.INT/useCase.NT;
-				useCase.personnel_db = useCase.personnel_dist_1*useCase.DM/useCase.NT;
-				useCase.personnel_fs = useCase.personnel_dist_1*useCase.CTRL/useCase.NT;
-			}
-			
-	}
-	
 	module.exports = {
-		predictEffort: function(modelInfo, estimator, model, callbackfunc){
+		predictEffort: function(modelInfo, umlEstimationInfo, callbackfunc){
+			var estimator = umlEstimationInfo.estimator;
+			var model = umlEstimationInfo.model;
 			
-			var predictionModel = model+"_"+estimator+"_model.rds";
+			var predictionModel = model.replace(" ", "_")+"_"+estimator.replace(" ", "_")+"_model.rds";
 		
 			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'"';
 			
@@ -71,28 +31,28 @@
 						callbackfunc(false);
 					}
 				} else {
-					fs.readFile(modelInfo.OutputDir+"/effort_prediction_result.txt", 'utf-8', (err, str) => {
+					fs.readFile(modelInfo.OutputDir+"/effort_prediction_result.json", 'utf-8', (err, str) => {
 						   if (err) throw err;
-						   var results = {};
-						   var lines = str.split(/\r?\n/);
-						   for(var i in lines){
-							   var line = lines[i];
-							   line = line.replace(/\"/g, "");
-							   var valueSet = line.split(/\s+/);
-							   if(valueSet.length > 2){
-							   console.log(valueSet);
-							   results[valueSet[1]] = valueSet[2];
-							   }
-						   }
+//						   var results = {};
+//						   var lines = str.split(/\r?\n/);
+//						   for(var i in lines){
+//							   var line = lines[i];
+//							   line = line.replace(/\"/g, "");
+//							   var valueSet = line.split(/\s+/);
+//							   if(valueSet.length > 2){
+//							   console.log(valueSet);
+//							   results[valueSet[1]] = valueSet[2];
+//							   }
+//						   }
 						   
-						   modelInfo.EffortEstimationResults = results;
-						   modelInfo.predicted_effort = 1302;
+//						   modelInfo.EffortEstimationResults = JSON.parse(str);
+//						   modelInfo.predicted_effort = 1302;
 						   
 						   
-						   calculateDistributedEffort(modelInfo, modelInfo.predicted_effort);
+//						   calculateProjectDecisions(modelInfo, modelInfo.predicted_effort);
 //						    console.log(data);
 						   if(callbackfunc){
-							   callbackfunc(modelInfo);
+							   callbackfunc(JSON.parse(str).result);
 						   }
 					});
 //					if(callbackfunc){
@@ -101,31 +61,69 @@
 				}
 			});
 		},
-		calculateDistributedEffort: calculateDistributedEffort,
-		predictDuration: function(modelInfo, projectEffort, callbackfunc){
+		
+		makeProjectManagementDecisions: function(modelInfo, umlEstimationInfo, projectEffort){
+			//predict presonnel, schedule based on predicted effort
+			//need to update
+			var sizeMetric = umlEstimationInfo.sizeMetric;
+			
+			var estimationResults = {
+					Effort: projectEffort,
+					UseCases: [],
+					SizeMeasurement: modelInfo['UseCasePointData'][sizeMetric]
+			};
+			
+			var personnel = projectEffort/12;
+//			calculateResourceAllocation(modelInfo, personnel);
+//			modelInfo.predictedPersonnel = personnel;
+			estimationResults.Personnel = personnel;
+			estimationResults.Personnel_UI = personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
+			estimationResults.Personnel_DB = personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
+			estimationResults.Personnel_FS = personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
+			
 			//need to update
 			var projectDuration = projectEffort/10;
 			
-			modelInfo.predictedDuration = projectDuration;
-			calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
+//			modelInfo.predictedDuration = projectDuration;
+//			calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
+			estimationResults.Duration = projectDuration;
 			
-			if(callbackfunc){
-				callbackfunc(modelInfo);
+			//calculate distributions
+
+			//distribute project effort
+			for(var i in modelInfo.UseCases){
+				var useCase = modelInfo.UseCases[i];
+				var useCaseEstimates = {
+						Name: useCase.Name,
+						_id: useCase._id,
+						SizeMeasurement: useCase['UseCasePointData'][sizeMetric]
+				};
+				
+				useCaseEstimates.Effort = projectEffort/modelInfo['UseCasePointData'][sizeMetric]*useCase['UseCasePointData'][sizeMetric];
+//				useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
+//				useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
+				
+//				var useCase = modelInfo.UseCases[i];
+				useCaseEstimates.Duration = projectDuration/modelInfo['UseCasePointData'][sizeMetric]*useCase['UseCasePointData'][sizeMetric];
+//				useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
+//				useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
+				
+				//distribute project effort
+				
+					useCaseEstimates.Personnel = personnel/modelInfo['UseCasePointData'][sizeMetric]*useCase['UseCasePointData'][sizeMetric];
+//					useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
+//					useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
+					
+					useCaseEstimates.Personnel_UI = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
+					useCaseEstimates.Personnel_DB = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
+					useCaseEstimates.Personnel_FS = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+					
+					estimationResults.UseCases.push(useCaseEstimates);
 			}
 			
-		},
-		calculateDistributedDuration: calculateDistributedDuration,
-		predictPersonnel: function(modelInfo, projectEffort, callbackfunc){
-			//need to update
-			var personnel = projectEffort/12;
-			calculateResourceAllocation(modelInfo, personnel);
-			modelInfo.predictedPersonnel = personnel;
+			return estimationResults;
 			
-			if(callbackfunc){
-				callbackfunc(modelInfo);
-			}
-		},
-		calculateResourceAllocation: calculateResourceAllocation
+		}
 		
 	}
 }())

@@ -17,7 +17,7 @@ modelUrl <- paste("./statistical_models", args[1], sep="/")
 dataUrl <- args[2]
 outputDir <- args[3]
 reportPath <- paste(outputDir, "effort_prediction_report.txt", sep="/")
-resultPath <- paste(outputDir, "effort_prediction_result.txt", sep="/")
+resultPath <- paste(outputDir, "effort_prediction_result.json", sep="/")
 
 #modelUrl <- "./Model/riskPredictionModel.rds"
 
@@ -28,7 +28,7 @@ resultPath <- paste(outputDir, "effort_prediction_result.txt", sep="/")
 library(lattice)
 library(ggplot2)
 library(neuralnet)
-
+library(jsonlite)
 # setwd("E:/WorkSpace/Huawei/R/Risk_Prediction_Model_Calibration")
 #sink(reportPath, append=TRUE, split=TRUE)
 sink(reportPath)
@@ -64,7 +64,9 @@ print("prediction results:")
 print(prediction)
 
 sink(resultPath)
-print(prediction)
+#print(prediction)
+
+print(jsonlite::toJSON(list(result= prediction),pretty = TRUE,auto_unbox = TRUE))
 #plot(nn)
 
 sink()
