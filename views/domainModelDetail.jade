@@ -17,7 +17,7 @@ div.tab-pane.fade.in.active(id="domain-model-info-pane")
     button(onclick="toggleZoom()", class="big-button") Enable Zoom
     button(onclick="toggleDiagram('#{domainModel.DiagramType}')", class="big-button") Toggle Diagram
     object.use-case(data=domainModel.AccessDir+"/domainModel.svg")
-    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
+    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/class_diagram.svg")
     
     div(id="mySidenav",class="sidenav")
       a(href="javascript:void(0)",class="closebtn",onclick="closeList()") &times
@@ -40,7 +40,7 @@ div.tab-pane.fade.in.active(id="domain-model-info-pane")
               each element in domainModel.Elements
                 if element.Attributes
                  each attribute,key in element.Attributes
-                  tr(onclick="highlight_diagram_element('#{attribute._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
+                  tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
                    th #{key}
                    th
                     span.domain-model-attribute #{attribute.Name}
@@ -57,7 +57,7 @@ div.tab-pane.fade.in.active(id="domain-model-info-pane")
                each element in domainModel.Elements
                 if element.Operations
                  each operation,key in element.Operations
-                  tr(onclick="highlight_diagram_element('#{operation._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
+                  tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
                    th #{key}
                    th
                      span.domain-model-operation #{operation.Name}

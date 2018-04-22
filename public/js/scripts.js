@@ -75,8 +75,9 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   
   var svg = document.getElementsByClassName("use-case")[0];
   var svgDoc= svg.contentDocument;
+  console.log(idString);
   var elementToHighlight = svgDoc.getElementById(idString);
-
+   console.log(elementToHighlight);
   if(diagramType === "analysis_diagram"){
            //have put robustness diagram script under robustness diagram - Aishwarya
   }
@@ -106,11 +107,11 @@ function highlight_diagram_element(idString, elementType, diagramType) {
     }
   }
   else if(diagramType === "class_diagram"){
-	  console.log("class higl func");
+	  console.log("class highlight func");
 	  //call Lingquan's method.
 	  if (elementToHighlight) {
-//		  highlightElement(idString); 
-//		  highlightElement(elementToHighlight); 
+
+		  console.log("enter if statement");
 		  highlightElement_classDia(elementToHighlight);
 	  }
 	  
@@ -1106,6 +1107,9 @@ function toggleZoom() {
 function toggleDiagram(diagramType) {
 	var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
 	var pos = obj_data.search("/useCase.svg");
+	if (diagramType==="class_diagram") {
+		pos = obj_data.search("/domainModel.svg");
+	}
 	var new_obj_data = "";
 	var umlDiagram = "";
 	 if(diagramType === "activity_diagram"){
@@ -1124,11 +1128,15 @@ function toggleDiagram(diagramType) {
         umlDiagram = "/uml_diagram.svg";
         }
         
-	if (pos != -1) {
+	if (pos != -1) {//find the positon
+		
         new_obj_data = obj_data.slice(0, pos)+umlDiagram;
 	} else {
 		pos = obj_data.search(umlDiagram);
 		new_obj_data = obj_data.slice(0, pos)+"/useCase.svg";
+		if (diagramType === "class_diagram"){
+			new_obj_data = obj_data.slice(0, pos)+"/domainModel.svg";
+		}
 	}
 	document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
 }
@@ -1853,6 +1861,7 @@ function cancelEdit() {
 
 function highlightElement_classDia(element) {
       clearHighlight() ;
+      console.log(element);
        //var allNodes = document.getElementById(element).getElementsByTagName("text");
        var allNodes = element.getElementsByTagName("text");
        for(var i = 0; i < allNodes.length; i++) {
