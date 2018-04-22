@@ -135,7 +135,7 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
   //  console.log("found");
    //console.log($('.repo-metrics').html());
   var repo_url = "output/repo"+ repoID  +  "/model_evaluation_statistics/statistics.json";
-  console.log(repo_url);
+  //console.log(repo_url);
   $.ajax({
           url: repo_url,
           type:"GET",
@@ -292,4 +292,98 @@ function showModalDetails(domainurl)
 {
   $('.modal-body').html('<img class="img-responsive" src="' + domainurl + '">');
   $('#myModal1').modal('toggle');
+}
+// This function displays the chart for the estimation result (estimation tab)
+function showEstimationChart()
+{
+            console.log("inside estimation chart function");
+            console.log($('#estimation-result-panel-body').html());
+            var effort_estimation_url = "output/repo"+ repoID  +  "/estimationResult.json";
+              $.ajax({
+                    url: effort_estimation_url,
+                    type:"GET",
+                    dataType: "json",
+
+                    success: function(response)
+                    {
+                            console.log(response);
+                            var SizeMeasurement = [];
+                            var Effort = [];
+                            var Duration =[];
+                            var Personnel=[];
+                            var name = [];
+                            for(var i=0;i<response.UseCases.length;i++)
+                            {
+                                SizeMeasurement.push([parseFloat(response.UseCases[i].SizeMeasurement)]);
+                                Effort.push([parseFloat(response.UseCases[i].Effort)]);
+                                Duration.push([parseFloat(response.UseCases[i].Duration)]);
+                                Personnel.push([parseFloat(response.UseCases[i].Personnel)]);
+                                name.push(response.UseCases[i].Name);
+                            }
+                            console.log(Effort);
+                            $('#estimation-charts').highcharts({
+                              chart: {
+                              type: 'column',
+                              spacingLeft: 0
+
+                          },
+                          title: {
+                              text: 'Estimation Results'
+                          },
+
+                          xAxis: {
+                              categories: name,
+                              crosshair: true
+                          },
+                          yAxis: {
+                              min: 0,
+                              title: {
+                                  text: 'Frequency'
+                              }
+                          },
+                          tooltip: {
+                              headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                              pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                                  '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                              footerFormat: '</table>',
+                              shared: true,
+                              useHTML: true
+                          },
+                          plotOptions: {
+                              column: {
+                                  pointPadding: 0.2,
+                                  borderWidth: 0
+                              }
+                          },
+                          series: [ {
+                              name: 'SizeMeasurement',
+                              data: SizeMeasurement
+
+                          }, {
+                              name: 'Duration',
+                              data: Duration
+
+                          },
+                          {
+                              name: 'Effort',
+                              data: Effort
+
+                          },
+                           {
+                              name: 'Personnel',
+                              data: Personnel
+
+                          }]
+
+                          });
+                          //});
+
+                    },
+                    error:function(error){
+                      console.log("failed");
+                    }
+
+
+                  });
+
 }
