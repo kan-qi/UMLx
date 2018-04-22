@@ -298,7 +298,8 @@ function showEstimationChart()
 {
             console.log("inside estimation chart function");
             console.log($('#estimation-result-panel-body').html());
-            var effort_estimation_url = "output/repo"+ repoID  +  "/estimationResult.json";
+//            var effort_estimation_url = "output/repo"+ repoID  +  "/estimationResult.json";
+            var effort_estimation_url = $('#estimation-results-charts').data('url');
               $.ajax({
                     url: effort_estimation_url,
                     type:"GET",

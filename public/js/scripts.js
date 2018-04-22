@@ -212,9 +212,11 @@ function predict_project_effort_func(){
         contentType : false, // Set content type to false as jQuery will tell the server its a query string request
         data : formData,
         enctype : 'multipart/form-data',
+        async :false,
         success : function(response) {
             console.log(response);
             $("#estimation-result-panel-body").html(response);
+            showEstimationChart();
         },
         error : function() {
             console.log("fail");
