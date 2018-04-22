@@ -209,14 +209,14 @@
 		console.log("test use case");
 		console.log(PrecedenceRelations);
 
-		if(Activities.length >0){
-		createActivityDiagram(UseCase, UseCase.OutputDir+"/"+"activity_diagram.dotty", function(){
-			 console.log("class diagram is output: "+ UseCase.OutputDir+"/"+"activty_diagram.svg");
-		});
-		}
-
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
+
+		if(Activities.length >0){
+		createActivityDiagram(UseCase, UseCase.OutputDir+"/"+"activity_diagram.dotty", function(){
+			 console.log("class diagram is output: "+ UseCase.OutputDir+"/"+"activity_diagram.svg");
+		});
+		}
 		
 		
 		//to eliminate the activities that are not included in the user-system interaction model, for example, decision node.
