@@ -17,10 +17,16 @@ div.block.panel.panel-default
       button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Model
         span.caret
       ul.dropdown-menu
-        li
-          a.dumpAnalyticsData.dropdown-item(href='getUseCaseAnalyticsForModelCSV?model_id=#{modelInfo._id}') Analytics
-        li
-          a.dumpAnalyticsData.dropdown-item(href='evaluateModelForUseCases?model_id=#{modelInfo._id}') Evaluation For Use Cases
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{modelInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
      div.dropdown
       button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
         span.caret
@@ -107,6 +113,8 @@ div.block.panel.panel-default
        h3 loading...
      div.tab-pane.fade(id="model-evaluation")
        div.model-evaluation
+        div
+          p #{modelInfo.OutputDir}
         h3 Evaluation
          button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);') Modify
          table#dataTable.table.table-striped

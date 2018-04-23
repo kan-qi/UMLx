@@ -4,20 +4,26 @@ if domainModel
    li.active
     a(data-toggle='tab', href='#domain-model-info-pane') Domain Model Info
    li
-    a(data-toggle='tab', onclick='populate_domainAnalysis_data();') Analysis
+    a(data-toggle='tab', href='#domain-model-analytics',onclick='populate_domainAnalysis_data();') Analysis
    //li
     //a(data-toggle='tab', href='#domain-model-distributions') Distributions
    //li
     //a(data-toggle='tab', href='#domain-model-evaluation') Evaluation
 
 div.tab-content
-div.tab-pane.fade.in.active(id="domain-model-info-pane")
+ div.tab-pane.fade.in.active(id="domain-model-info-pane")
   div.domain-model-info
-    button(onclick="openList()", class="big-button") Toggle List 
+    button(onclick="openList()", class="big-button") Open List 
+    button(onclick="toggleDomainModelDiagram('#{domainModel.DiagramType}')", class="big-button") Toggle Diagram
     button(onclick="toggleZoom()", class="big-button") Enable Zoom
-    button(onclick="toggleDiagram('#{domainModel.DiagramType}')", class="big-button") Toggle Diagram
+    button(id="zoom-in", class="big-button" style="display: none;") +
+    button(id="zoom-out", class="big-button" style="display: none;") -
+    button(id="reset", class="big-button" style="display: none;") Reset
     object.use-case(data=domainModel.AccessDir+"/domainModel.svg")
-    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/class_diagram.svg")
+
+    
+    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
+
     
     div(id="mySidenav",class="sidenav")
       a(href="javascript:void(0)",class="closebtn",onclick="closeList()") &times
@@ -62,59 +68,6 @@ div.tab-pane.fade.in.active(id="domain-model-info-pane")
                    th
                      span.domain-model-operation #{operation.Name}
                    th operation
-                   
-                     
-                     
-                     
-  div.tab-pane.fade(id="domain-model-analytics")
+ div.tab-pane.fade(id="domain-model-analytics")
      div.domain-model-analytics(id="show_Domain_JsonData")
-        h3 Calculated:
-        ul
-         li
-          span.statistical-item Number of Attributes: #{domainModel.AttributeNum}
-         li
-          span.statistical-item Number of Operations: #{domainModel.OperationNum}
-         li
-          span.statistical-item Number of Elements: #{domainModel.ElementNum}
-         li
-          span.statistical-item ILF: #{domainModel.ILF}
-         li
-          span.statistical-item EIF: #{domainModel.EIF}
-     div.domain-model-analytics-detail
-        div.stats-chart
-         img(src="#{domainModel.AccessDir}/attribute_num_analysis_result.svg")
-  if false
-  div.tab-pane.fade(id="domain-model-distributions")
-    div.domain-model-distributions
-        div.stats-chart
-         img(src="#{domainModel.AccessDir}/attribute_num_analysis_result.svg")
-        div.stats-chart
-         img(src="#{domainModel.AccessDir}/operation_num_analysis_result.svg")
-  if false
-  div.tab-pane.fade(id="domain-model-evaluation")
-     div.domain-model-evaluation
-        h3 Evaluation:
-        form(id="domain-model-evaluation-form", onsubmit="return false;")
-         div
-          div Cyclomatic coplexity of structured scenarios (#{domainModel.CCSS}):
-           input(type='text', name='ccss', id='ccss')
-          div Number of transactions (#{domainModel.IT}):
-           input(type='text', name='it', id='it')
-          div Internal logical files (#{domainModel.ILF}):
-           input(type='text', name='ilf', id='ilf')
-          div External logical files (#{domainModel.ELF}):
-           input(type='text', name='elf', id='elf')
-          div External input (#{domainModel.EI}):
-           input(type='text', name='ei', id='ei')
-          div External output (#{domainModel.EO}):
-           input(type='text', name='eo', id='eo')
-          div External query (#{domainModel.EQ}):
-           input(type='text', name='eq', id='eq')
-          div Effort (person-hours) (#{domainModel.PH}):
-           input(type='text', name='ph', id='ph')
-           input(type='hidden', name='model-id', value='#{modelId}')
-          div
-           button(id='domain-model-evaluation-form-submit-button') Submit
-        div
-          a(id='delete-domain-model-btn' href='deleteDomainModel?model_id=#{modelId}') Delete Model
  div.clear

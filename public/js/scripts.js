@@ -11,9 +11,9 @@ function setCookie(cname, cvalue, exdays) {
 }
 
 function pagination_call(repoId, currentPage) {
-	
+
     console.log("Inside Script" + repoId);
-    
+
     var data = {
         repId: repoId,
         //pageSize: pageSize,
@@ -21,7 +21,7 @@ function pagination_call(repoId, currentPage) {
         currentPage:currentPage
         //index:index,
     };
-    
+
     //console.log("StepSize "+stepSize);
     	$.ajax({
 		type : 'GET',
@@ -33,13 +33,13 @@ function pagination_call(repoId, currentPage) {
           //  $('#pResult').append(response);
             $("#page-panel").html("");
 			$("#page-panel").append($(response));
-            
+
 		},
 		error : function() {
 			console.log("fail");
 		}
 	});
-    
+
 }
 
 
@@ -72,7 +72,7 @@ function highlight_diagram_element(idString, elementType, diagramType) {
 
 	console.log("higlight function");
 //  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
-  
+
   var svg = document.getElementsByClassName("use-case")[0];
   var svgDoc= svg.contentDocument;
   console.log(idString);
@@ -111,10 +111,9 @@ function highlight_diagram_element(idString, elementType, diagramType) {
 	  //call Lingquan's method.
 	  if (elementToHighlight) {
 
-		  console.log("enter if statement");
 		  highlightElement_classDia(elementToHighlight);
 	  }
-	  
+
       //call Lingquan's method.
   }
   else if(diagramType === "usim"){
@@ -213,9 +212,11 @@ function predict_project_effort_func(){
         contentType : false, // Set content type to false as jQuery will tell the server its a query string request
         data : formData,
         enctype : 'multipart/form-data',
+        async :false,
         success : function(response) {
             console.log(response);
             $("#estimation-result-panel-body").html(response);
+            showEstimationChart();
         },
         error : function() {
             console.log("fail");
@@ -246,7 +247,7 @@ function query_exist_models_fnc(projectId) {
 
 function estimate_project_effort_func(){
 	//var formData = new FormData($('#project-effort-estimation-form')[0]);
-	var form_data = new FormData();                  
+	var form_data = new FormData();
     form_data.append('distributed_system',1);
     form_data.append('response_time', 2);
     form_data.append('end_user_efficiency', 3);
@@ -288,7 +289,7 @@ function estimate_project_effort_func(){
 		},
 		error : function(err) {
 			console.log("fail");
-			console.log(err);			
+			console.log(err);
 		}
 	});
 
@@ -976,7 +977,7 @@ $(document).ready(function() {
     $(document).on('click','a.sub-model-title', query_sub_model_detail_func);
 //  $(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
     $(document).on('click','#model-title', query_model_detail_func);
-    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
+//    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
     $(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
     $(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);
     $(document).on('click','#query-model-btn', query_estimation_models_func);
@@ -1081,21 +1082,33 @@ function toggleQueryList() {
 		$('#use-case-list').modal('toggle');
 }
 
+var panZoomInstance;
 function toggleZoom() {
-    panZoomInstance = svgPanZoom('object', {
-        zoomEnabled: true,
-        controlIconsEnabled: true,
-        fit: true,
-        center: true,
-        minZoom: 0.1
+    var panZoom = svgPanZoom('object', {
+      zoomEnabled: true,
+      mouseWheelZoomEnabled: false,
+      controlIconsEnabled: false
     });
 
-    // zoom out
-    panZoomInstance.zoom(1)
+    document.getElementById('zoom-in').style.display="inline";
+    document.getElementById('zoom-out').style.display="inline";
+    document.getElementById('reset').style.display="inline";
+
+    document.getElementById('zoom-in').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.zoomIn()
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.zoomOut()
+    });
+
+    document.getElementById('reset').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.resetZoom()
+    });
 }
-
-
-
 
 // function toggleDomainList() {
 //     $('#domain-model-list').modal('toggle');
@@ -1118,18 +1131,20 @@ function toggleDiagram(diagramType) {
         else if(diagramType === "robustness_diagram"){
         umlDiagram = "/robustness_diagram.svg";
         }
-        else if(diagramType === "class_diagram"){
-        umlDiagram = "/class_diagram.svg";
-        }
+        //else if(diagramType === "class_diagram"){
+        //umlDiagram = "/class_diagram.svg";
+        //}
         else if(diagramType === "sequence_diagram"){
         umlDiagram = "/sequence_diagram.svg";
         }
         else{
         umlDiagram = "/uml_diagram.svg";
         }
+
         
-	if (pos != -1) {//find the positon
+	if (pos != -1) {
 		
+
         new_obj_data = obj_data.slice(0, pos)+umlDiagram;
 	} else {
 		pos = obj_data.search(umlDiagram);
@@ -1139,6 +1154,28 @@ function toggleDiagram(diagramType) {
 		}
 	}
 	document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
+}
+
+
+function toggleDomainModelDiagram(diagramType) {
+    var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
+    var pos = obj_data.search("/domainModel.svg");
+    var new_obj_data = "";
+    var umlDiagram = "";
+     if(diagramType === "class_diagram"){
+        umlDiagram = "/class_diagram.svg";
+        }
+        else{
+        umlDiagram = "/uml_diagram.svg";
+        }
+
+    if (pos != -1) {
+        new_obj_data = obj_data.slice(0, pos)+umlDiagram;
+    } else {
+        pos = obj_data.search(umlDiagram);
+        new_obj_data = obj_data.slice(0, pos)+"/domainModel.svg";
+    }
+    document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
 }
 
 function get_diagram_name() {
@@ -1207,28 +1244,29 @@ function createCharts() {
 function createTrendingLines() {
 
     $.ajax({
-      url: "output/repo"+ repoID + "/" +  "/trending_chart.json",
+      url: "http://127.0.0.1:8081/requestRepoBrief",
       type:"GET",
       dataType: "json",
 
       success: function(response)
       {
-
+                //console.log(response);
                 var date = [];
                 var transaction_num = [];
                 var project_num =[];
                 var case_num =[];
                 var class_num =[];
-
+                console.log(response);
                 for(var i=0;i<response.length;i++)
                 {
-                  date.push(response[i].time_stamp);
-                  transaction_num.push(response[i].transaction_num);
+                  date.push(response[i].timestamp);
+                  transaction_num.push(response[i].NT);
                   project_num.push(response[i].project);
-                  case_num.push(response[i].case_num);
-                  class_num.push(response[i].class_num);
+                  case_num.push(response[i].UseCaseNum);
+                  class_num.push(response[i].EntityNum);
 
                 }
+                console.log(response.timestamp);
 
                 // Default chart at the repo level - Number of transactions
                   var chart =   Highcharts.chart('trending-line', {
@@ -1721,7 +1759,7 @@ function editFunction(button) {
 }
 
 function submitEdit(){
-		var form_data = new FormData();                  
+		var form_data = new FormData();
 	    form_data.append('distributed_system',$("#editNumber1").text());
 	    form_data.append('response_time', $("#editNumber2").text());
 	    form_data.append('end_user_efficiency', $("#editNumber3").text());
@@ -1744,7 +1782,7 @@ function submitEdit(){
 	    form_data.append('part_time_staff', $("#editNumber20").text());
 	    form_data.append('difficult_programming_language', $("#editNumber21").text());
 	    form_data.append('modelID', $("#mymodelId").val());
-	    
+
 		$.ajax({
 			type : 'POST',
 			url : "saveModelInfoCharacteristics",
@@ -1759,9 +1797,9 @@ function submitEdit(){
 			},
 			error : function(err) {
 				console.log("fail");
-				console.log(err);			
+				console.log(err);
 			}
-		});	
+		});
 	}
 
 function cancelEdit() {

@@ -58,7 +58,7 @@ png(filename=paste(outputPath,"project_characteristics.png", sep="/"),
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(data, aes(x=Effort_Norm))+geom_histogram(binwidth=350, colour="white", fill="gray55")+xlab("Normalized Effort (PH)")+ylab("Number of Projects")+theme_bw()
+UCPHist1 <- ggplot(data, aes(x=Effort_Norm))+geom_histogram(binwidth=150, colour="white", fill="gray55")+xlab("Normalized Effort (PH)")+ylab("Number of Projects")+theme_bw()
 UCPHist2 <- ggplot(data, aes(x=KSLOC))+geom_histogram(binwidth=0.5, colour="white", fill="gray55")+xlab("KSLOC")+ylab("Number of Projects")+theme_bw()
 UCPHist3 <- ggplot(data, aes(x=Use_Case_Num))+geom_histogram(binwidth=1.5, colour="white", fill="gray55")+xlab("Use Case Number")+ylab("Number of Projects")+theme_bw()
 projectBar <- ggplot(data, aes(x=Type))+geom_bar(colour="white", fill="gray55")+xlab("Application Type")+ylab("Number of Projects")+ scale_x_discrete(label=abbreviate)+theme_bw()
@@ -73,9 +73,9 @@ png(filename=paste(outputPath,"project_counting_results.png", sep="/"),
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(data, aes(x=SWTI))+geom_histogram(binwidth=70, colour="white", fill="gray55")+xlab("SWTI")+ylab("Number of Projects")+theme_bw()
-UCPHist2 <- ggplot(data, aes(x=SWTII))+geom_histogram(binwidth=100, colour="white", fill="gray55")+xlab("SWTII")+ylab("Number of Projects")+theme_bw()
-UCPHist3 <- ggplot(data, aes(x=SWTIII))+geom_histogram(binwidth=100, colour="white", fill="gray55")+xlab("SWTIII")+ylab("Number of Projects")+theme_bw()
+UCPHist1 <- ggplot(data, aes(x=SWTI))+geom_histogram(binwidth=90, colour="white", fill="gray55")+xlab("SWTI")+ylab("Number of Projects")+theme_bw()
+UCPHist2 <- ggplot(data, aes(x=SWTII))+geom_histogram(binwidth=105, colour="white", fill="gray55")+xlab("SWTII")+ylab("Number of Projects")+theme_bw()
+UCPHist3 <- ggplot(data, aes(x=SWTIII))+geom_histogram(binwidth=90, colour="white", fill="gray55")+xlab("SWTIII")+ylab("Number of Projects")+theme_bw()
 UCPHist4 <- ggplot(data, aes(x=UUCP))+geom_histogram(binwidth=20, colour="white", fill="gray55")+xlab("UUCP")+ylab("Number of Projects")+theme_bw()
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, ncol=2))

@@ -14,7 +14,10 @@
 	var mkdirp = require('mkdirp');
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
+		console.log("extract model info");
+		console.log(umlModelInfo);
 		mkdirp(umlModelInfo.OutputDir, function(err) {
+			console.log("create dir");
 			// path exists unless there was an error
 			if(err) {
 				callbackfunc(false);
