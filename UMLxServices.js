@@ -1412,6 +1412,8 @@ app.get('/', function(req, res){
       
 //    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
   umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
+	  
+	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
       
         totalRec = modelNum;
         pageCount =  Math.ceil(totalRec/pageSize);
@@ -1445,14 +1447,16 @@ console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Cu
 						}
 				        
 						repoInfo.requestUUID = requestUUID;
-						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
                 	});
 				});
 
 			} else {
                 repoInfo.requestUUID = requestUUID;
-				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage});
+				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
 			}
+
+		});
 
          });
 	});
