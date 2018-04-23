@@ -1,8 +1,9 @@
 if reppID
   - var repoID = reppID
-div 
+input(type='hidden', value=repoID)#myrepoId
+div
 - console.log("RepoDetail:   "+ totalRec )
-div  
+div
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -58,7 +59,7 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#repo_estimation') Estimation
      li
-      a(data-toggle='tab', href='#project_list') Projects 
+      a(data-toggle='tab', href='#project_list') Projects
         span(class="badge") #{totalRec}
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
@@ -85,15 +86,15 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{repoInfoBrief.NT}
                 span Transactions
-          div.col-sm-3 
+          div.col-sm-3
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
                 h2 #{repoInfoBrief.EntityNum}
                 span Classes
-       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
-        //div.col-sm-12.chart-row  
+       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
+        //div.col-sm-12.chart-row
           //.col-sm-6
             //img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
           //.col-sm-6(id="transaction-pie" data="./#{repoInfo.AccessDir}/transactionAnalytics.csv")
@@ -102,7 +103,7 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="repo_estimation")
       include estimationPanel
      div.tab-pane.fade(id="project_list")
-         div    
+         div
            p #{repoInfo.OutputDir}
          .container
              h3.row
@@ -118,5 +119,3 @@ div.block.panel.panel-default
                         .col-sm-8 #{item.Name}
                         .col-sm-2 #{item.creationTime}
                   include pagination.jade
-
-
