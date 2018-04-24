@@ -1,8 +1,9 @@
 if reppID
   - var repoID = reppID
-div 
+input(type='hidden', value=repoID)#myrepoId
+div
 - console.log("RepoDetail:   "+ totalRec )
-div  
+div
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -14,13 +15,21 @@ div.block.panel.panel-default
           span.caret
         ul.dropdown-menu
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoInfo._id}&simulation=false&refresh=true') Evaluation For Models
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoInfo._id}&simulation=true&refresh=true') Evaluation For Models (simulation)
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models (simulation)
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForUseCases?repo_id=#{repoInfo._id}&simulation=false') Evaluation For Use Cases
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
           li
-            a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
+          //li
+            //a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
       div.dropdown
         button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
           span.caret
@@ -36,7 +45,7 @@ div.block.panel.panel-default
             span.caret
           ul.dropdown-menu
             li
-              a.request-repo-analytics.dropdown-item(href='queryRepoInfo?repo_id=#{repoInfo._id}&refresh=true') Reanalyse Repo
+              a.request-repo-analytics.dropdown-item(href='reanalyseRepo?repo_id=#{repoInfo._id}') Reanalyse Repo
             li
               a.dropdown-item(href='reloadRepo?repo_id=#{repoInfo._id}') Reload Repo
    div.clearFix
@@ -50,7 +59,7 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#repo_estimation') Estimation
      li
-      a(data-toggle='tab', href='#project_list') Projects 
+      a(data-toggle='tab', href='#project_list') Projects
         span(class="badge") #{totalRec}
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
@@ -68,110 +77,34 @@ div.block.panel.panel-default
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{totalRec}
+                h2 #{repoInfoBrief.UseCaseNum}
                 span Use Cases
           div.col-sm-3
             div.green-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{totalRec}
+                h2 #{repoInfoBrief.NT}
                 span Transactions
-          div.col-sm-3 
+          div.col-sm-3
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{totalRec}
+                h2 #{repoInfoBrief.EntityNum}
                 span Classes
-       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
-        //div.col-sm-12.chart-row  
+       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
+        //div.col-sm-12.chart-row
           //.col-sm-6
             //img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
           //.col-sm-6(id="transaction-pie" data="./#{repoInfo.AccessDir}/transactionAnalytics.csv")
        div.repo-analysis-detail
           div.repo-metrics
-           h3 Calculated:
-           ul
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Average Path Length: #{repoInfo.AvgPathLength}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Paths: #{repoInfo.PathNum}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Total Number of Links: #{repoInfo.TotalLinks}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Actors: #{repoInfo.ActorNum}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Boundaries: #{repoInfo.BoundaryNum}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Controls: #{repoInfo.ControlNum}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Entities: #{repoInfo.EntityNum}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Elements: #{repoInfo.ElementNum}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Average Element Degree: #{repoInfo.AvgDegree}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Interface Management: #{repoInfo.INT}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Data Management: #{repoInfo.DM}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/control_operation_analysis_result.svg") Number of Control Flows: #{repoInfo.CTRL}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_invocation_operation_analysis_result.svg") Number of External Invocations: #{repoInfo.EXTIVK}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_call_operation_analysis_result.svg") Number of External Calls: #{repoInfo.EXTCLL}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_input_operation_analysis_result.svg") Number of External Inputs: #{repoInfo.EI}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_query_operation_analysis_result.svg") Number of External Inquiries: #{repoInfo.EQ}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/external_call_operation_analysis_result.svg") Number of External Outputs: #{repoInfo.EO}
-            li
-             span.statistical-item(data-url="#{repoInfo.AccessDir}/path_number_analysis_result.svg") Number of Transactions: #{repoInfo.TN}
-          div.stats-chart
-            //example diagram. click the items in the curresponding statistics will be returned and displayed.           
-            img(src="#{repoInfo.AccessDir}/control_operation_analysis_result.svg")
-            div.stats-detail
-             p.max-value max value:1
-             p.75-quantile 75% quantile: 2
-             p.media-quantile media-quantile: 3
-             p.25-quantile 25% quantile: 4
-             p.min-value min-value: 5
-             p.mean-value mean-value: 6
-             p.std-dev std-dev: 7
-             p.kurtosis kurtosis: 8
-             p.skewness skewness: 9
-     if false
-     //skip this
-     div.tab-pane.fade(id="repo_distributions")
-      if repoInfo
-       div(id="repo-stats-chart")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/control_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/external_input_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/external_query_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/external_invocation_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/external_call_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/interface_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/not_matched_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/architecture_difficulty_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/average_degree_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/average_path_length_analysis_result.svg")
-        div.stats-chart
-         img(src="#{repoInfo.AccessDir}/path_number_analysis_result.svg")
      div.tab-pane.fade(id="repo_estimation")
       include estimationPanel
      div.tab-pane.fade(id="project_list")
+         div
+           p #{repoInfo.OutputDir}
          .container
              h3.row
                 .col-sm-2 Index
@@ -186,5 +119,3 @@ div.block.panel.panel-default
                         .col-sm-8 #{item.Name}
                         .col-sm-2 #{item.creationTime}
                   include pagination.jade
-
-
