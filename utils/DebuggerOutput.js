@@ -14,8 +14,18 @@
 		});
 	}
 	
+	function appendFile(token, message, callbackfunc){
+		mkdirp(OutputDir, function(err) { 
+			fs.appendFile(OutputDir+'/'+token+'.txt', message,function (err) {
+				  if (err) throw err;
+				  console.log('Saved!');
+				});
+			});
+	}
+	
 	module.exports = {
-			writeJson: writeJson
+			writeJson: writeJson,
+			appendFile:appendFile
 	}
 	
 	

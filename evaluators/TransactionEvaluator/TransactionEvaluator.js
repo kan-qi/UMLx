@@ -120,8 +120,6 @@
 				ArchDiff: 0
 		}
 		
-		
-		
 //		for ( var i in useCaseInfo.Diagrams) {
 //			var diagram = useCaseInfo.Diagrams[i];
 			
@@ -137,7 +135,6 @@
 			var TRAN_NA = 0;
 			var NT = 0;
 			var TranLength = 0;
-
 			
 			for ( var j in useCaseInfo.Paths) {
 				
@@ -184,6 +181,93 @@
 					TranLength += path['TransactionAnalytics'].TranLength;
 				}
 				
+//				var path = useCaseInfo.Paths[i];
+				
+				var TL = path.pathLength;
+				var DETs = 0;
+				var TD = 0;
+				
+				var componentNum = 0;
+				var totalOps = 0;
+				
+				for(var j in path.Nodes){
+					var node = path.Nodes[j];
+					var component = node.Component;
+					if(component){
+						componentNum++;
+						var matchedMethod = node.MatchedMethod;
+						for(var k in component.Operations){
+							var operation = component.Operations[k];
+							totalOps++;
+							if(operation.Name === matchedMethod){
+								for(var l in operation.Parameters){
+									DETs++;
+								}
+							}
+						}
+					}
+				}
+				
+				if(componentNum == 0){
+					componentNum = 3;
+				}
+				
+				if(totalOps == 0){
+						totalOps = 15;
+					}
+				
+				TD = totalOps/componentNum;
+				if(DETs == 0){
+					DETs = 10;
+				}
+				
+				var archDiff = TL*TD;
+				
+				var swti = 10;
+				
+				var swtii = 10;
+				if(archDiff <= 4){
+					swtii = 4;
+				} else if (archDiff < 7){
+					swtii = 10;
+				} else {
+					swtii = 15;
+				}
+				
+				var swtiii = 10;
+				
+				if(archDiff <= 4){
+					if(DETs <= 14){
+						swtiii = 2;
+					} else if (DETs < 20){
+						swtiii = 4;
+					} else {
+						swtiii = 6;
+					}
+				} else if (archDiff < 7){
+					if(DETs <= 14){
+						swtiii = 8;
+					} else if (DETs < 20){
+						swtiii = 10;
+					} else {
+						swtiii = 14;
+					}
+				} else {
+					if(DETs <= 14){
+						swtiii = 12;
+					} else if (DETs < 20){
+						swtiii = 15;
+					} else {
+						swtiii = 18;
+					}
+				}
+				
+
+				path['TransactionAnalytics'].swti = swti;
+				path['TransactionAnalytics'].swtii = swtii;
+				path['TransactionAnalytics'].swtiii = swtiii;
+				
+				useCaseInfo['TransactionAnalytics'].ArchDiff += archDiff;
 			}
 			
 			useCaseInfo['TransactionAnalytics'] = {};
@@ -197,6 +281,7 @@
 			useCaseInfo['TransactionAnalytics'].TRAN_NA = TRAN_NA;
 			useCaseInfo['TransactionAnalytics'].NT = NT;
 			useCaseInfo['TransactionAnalytics'].TranLength = TranLength;
+			useCaseInfo['TransactionAnalytics'].ArchDiff = useCaseInfo.Paths.length == 0? 0: useCaseInfo['TransactionAnalytics'].ArchDiff/useCaseInfo.Paths.length
 			
 //			useCaseInfo['TransactionAnalytics'].EI += diagram['TransactionAnalytics'].EI;
 //			useCaseInfo['TransactionAnalytics'].EQ += diagram['TransactionAnalytics'].EQ;

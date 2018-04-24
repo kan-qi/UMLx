@@ -1,4 +1,8 @@
-//- var repoID = pResult[0].repo_id
+if pResult[0]
+  - var repoID = pResult[0].repo_id
+div 
+- console.log("RepoDetail:"+repoID)
+div  
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left

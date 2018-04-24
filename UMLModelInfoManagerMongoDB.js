@@ -296,26 +296,32 @@ function deleteRepo(repoId, callbackfunc) {
             delete modelInfo.DomainModel;
             delete modelInfo.UseCases;
             
-            domainObject.model_id = new mongo.ObjectId(modelInfo._id);
+//            domainObject.model_id = new mongo.ObjectId(modelInfo._id);
+            domainObject.model_id = modelInfo._id;
+//            domainObject._id = "domainModel["+modelInfo
             
             
             
             //console.log(modelInfo._id);
-            modelInfo._id = new mongo.ObjectId(modelInfo._id);
+//            modelInfo._id = new mongo.ObjectId(modelInfo._id);
             
             //adding rep_id as an element in modelInfo
-            modelInfo.rep_id = repoId;
+            modelInfo.rep_id = new mongo.ObjectId(repoId);
             
             
-            db.collection("modelInfo").update({"_id": mongo.ObjectId(modelInfo._id)}, modelInfo, function(err, res) {
+//            db.collection("modelInfo").update({"_id": mongo.ObjectId(modelInfo._id)}, modelInfo, function(err, res) {
+
+            db.collection("modelInfo").update({"_id": modelInfo._id}, modelInfo, function(err, res) {
                 if (err) throw err;
                 console.log("updating modelInfo");
                          
             });
             
             //updating domainModelInfo to add model_id element
-            db.collection("domainModelInfo").update({"model_id": mongo.ObjectId(modelInfo._id)}, domainObject, function(err, res) {
-                if (err) throw err;
+//            db.collection("domainModelInfo").update({"model_id": mongo.ObjectId(modelInfo._id)}, domainObject, function(err, res) {
+            db.collection("domainModelInfo").update({"model_id": modelInfo._id}, domainObject, function(err, res) {
+                 
+            if (err) throw err;
                 console.log("updating domainModelInfo");
                          
             });
@@ -326,16 +332,33 @@ function deleteRepo(repoId, callbackfunc) {
                     console.log("updating useCaseInfo");
                     
               });*/
-            for(var i in useCaseArray){
-                console.log(useCaseArray[i]._id);
+             for(var i in useCaseArray){
+                
                 useCaseArray[i].model_id = new mongo.ObjectID(modelInfo._id);
                 useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
                 
-                db.collection("useCaseInfo").update({"_id": useCaseArray[i]._id}, useCaseArray[i] , function(err, res) {
+                console.log("USe Case: "+i+" ID: "+ useCaseArray[i]._id);
+                //deleteUseCase(repoId, modelInfo._id, useCaseArray[i]._id);
+                db.collection("useCaseInfo").remove({_id: useCaseArray[i]._id}, function(err, res) 
+                {
+                    //if (err) throw err;
+                        console.log("Use Case deleted");
+                    });
+                
+                //console.log("Use Case Info: "+ useCaseArray[i].Name);
+                
+                db.collection("useCaseInfo").insertOne(useCaseArray[i], function(err, res) 
+                {
+                    if (err) throw err;
+                    //console.log("Use Case deleted");
+                        console.log("use case Inserted");
+                });
+                        
+                //console.log("Ending loop: "+ i);
+                /*db.collection("useCaseInfo").update({"_id": useCaseArray[i]._id}, useCaseArray[i] , function(err, res) {
                 if (err) throw err;
                     console.log("updating useCaseInfo");
-                    
-              });
+              });*/
             }
             
              db.close();
@@ -517,13 +540,19 @@ function deleteRepo(repoId, callbackfunc) {
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
             db.collection("modelInfo").aggregate([
+            	{
+    				"$match":
+    				{
+    				   "_id":modelId
+    				}
+    			},
             
                {
                    "$lookup": {
                        "from": "domainModelInfo",
                        "localField": "_id",
                        "foreignField": "model_id",
-                       "as": "domainModel"
+                       "as": "DomainModel"
                    }
                },
                {
@@ -531,13 +560,28 @@ function deleteRepo(repoId, callbackfunc) {
                        "from": "useCaseInfo",
                        "localField": "_id",
                        "foreignField": "model_id",
-                       "as": "useCases"
+                       "as": "UseCases"
                    }
                }
             ], function(err, result) {
                if (err) throw err;
                console.log("*******Shown result for ModelInfo*******");
                db.close();
+               //restore the ids
+               var modelInfo = result[0];
+               for(var i in modelInfo.UseCases){
+            	   var useCase = modelInfo.UseCases[i];
+            	   if(useCase){
+                	   useCase._id = useCase._id.replace(/\[.*\]/g, "");
+                   }
+               }
+               
+               var domainModel = modelInfo.DomainModel;
+               if(domainModel){
+            	   delete domainModel._id;
+               }
+               
+               
                callbackfunc(result[0]);
             });
         });
@@ -587,8 +631,13 @@ function deleteRepo(repoId, callbackfunc) {
 
 			
            
-            db.collection("repos").aggregate([
-               { 
+            db.collection("repos").aggregate([{
+				"$match":
+				{
+				   "_id":new mongo.ObjectID(repoid)
+				}
+			},
+               { 	
                     "$lookup":
                     {
                         "from": "modelInfo",
@@ -668,10 +717,10 @@ function deleteRepo(repoId, callbackfunc) {
 					
 			db.collection("modelInfo").find(
 			{
-				rep_id:repoid
+				repo_id:repoid
 			},
 			{
-				TransactionAnalytics:1,_id:0
+				TransactionAnalytics:1,ElementAnalytics:1,_id:0
 			}).toArray(
 			function(err, result) 
 			{
@@ -703,9 +752,13 @@ function deleteRepo(repoId, callbackfunc) {
 						   {
 							   
 							   var sum_nt=0;
+							   var sum_useCase=0;
+							   var sum_entityNum=0;
 							   for(i=0;i<result.length;i++)
 							   {
 									sum_nt+=result[i]['TransactionAnalytics']['NT'];
+									sum_useCase+=result[i]['ElementAnalytics']['EntityNum'];
+									sum_entityNum+=result[i]['ElementAnalytics']['UseCaseNum'];
 							   }
 								//console.log("sum_nt"+sum_nt);
 						  
@@ -715,7 +768,7 @@ function deleteRepo(repoId, callbackfunc) {
 							  
 							  //record={repo_id:repoid,NT:sum_nt,timestamp:today.getDate()}
 							  
-							  record={repo_id:repoid,NT:sum_nt,timestamp:today}
+							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum,timestamp:today}
 							  db.collection("noOfTransactions").insertOne(record, function(err, res) 
 							  {
 									if (err) throw err;
@@ -755,48 +808,74 @@ function deleteRepo(repoId, callbackfunc) {
              });        
                     
         }
-
-
+    
     function queryUseCaseInfo(repoId, modelId, useCaseId, callbackfunc){
-        console.log("use case id: "+useCaseId);
-        console.log("model id:"+modelId);
-        MongoClient.connect(url, function(err, db) {
-            if (err) throw err;
-            db.collection("repos").aggregate([
-                {
-                    '$match':{
-                        '_id':new mongo.ObjectID(repoId),
-                        'Models._id':modelId,
-                        'Models.UseCases._id': useCaseId
-                    }
-                },
-                {
-                    '$unwind':'$Models'
-                },
-                {
-                    '$unwind':'$Models.UseCases'
-                },
-                {
-                    '$match':{
-                        '_id':new mongo.ObjectID(repoId),
-                        'Models._id':modelId,
-                        'Models.UseCases._id': useCaseId
-                    }
-                },
-                {
-                    '$project': {
-                        "UseCases":"$Models.UseCases"
-                    }
-                }
-            ], function(err, result){
+    	console.log(useCaseId);
+            MongoClient.connect(url, function(err, db) {
                 if (err) throw err;
-                db.close();
-                console.log("test the use case query");
-                console.log(result);
-                callbackfunc(result[0]['UseCases']);
+                useCaseId = useCaseId+"["+modelId+"]";
+    			console.log(useCaseId);
+//    			useCaseId = "EAID_B5CA8145_00A3_4541_8183_087F17CB8A75";
+//    			useCaseId = "EAID_1AF6160E_2CA8_4c81_AC39_80214CC3DFFF[7c18071493716169cab08bcb5d96e1401524045385596]";
+//    				  var o_id = new mongo.ObjectID(useCaseId);
+    				  db.collection("useCaseInfo").findOne({_id:useCaseId}, function(err, useCase) {
+    					  console.log("use case Info");
+    					 console.log(useCase);
+    					if (err) throw err;
+    				    db.close();
+    				    	if(callbackfunc){
+    				    		if(useCase){
+    				    		useCase._id = useCase._id.replace(/\[.*\]/g, "");
+    				    		}
+    				    		callbackfunc(useCase);
+    				  }
+    			  });
+
             });
-        });
+
     }
+
+
+//    function queryUseCaseInfo(repoId, modelId, useCaseId, callbackfunc){
+//        console.log("use case id: "+useCaseId);
+//        console.log("model id:"+modelId);
+//        MongoClient.connect(url, function(err, db) {
+//            if (err) throw err;
+//            db.collection("repos").aggregate([
+//                {
+//                    '$match':{
+//                        '_id':new mongo.ObjectID(repoId),
+//                        'Models._id':modelId,
+//                        'Models.UseCases._id': useCaseId
+//                    }
+//                },
+//                {
+//                    '$unwind':'$Models'
+//                },
+//                {
+//                    '$unwind':'$Models.UseCases'
+//                },
+//                {
+//                    '$match':{
+//                        '_id':new mongo.ObjectID(repoId),
+//                        'Models._id':modelId,
+//                        'Models.UseCases._id': useCaseId
+//                    }
+//                },
+//                {
+//                    '$project': {
+//                        "UseCases":"$Models.UseCases"
+//                    }
+//                }
+//            ], function(err, result){
+//                if (err) throw err;
+//                db.close();
+//                console.log("test the use case query");
+//                console.log(result);
+//                callbackfunc(result[0]['UseCases']);
+//            });
+//        });
+//    }
 
 
     function queryRepoInfoForAdmin(repoIds, callbackfunc){
@@ -857,14 +936,14 @@ function deleteRepo(repoId, callbackfunc) {
         at _combinedTickCallback (internal/process/next_tick.js:67:7)
         at process._tickCallback (internal/process/next_tick.js:98:9)
     */
-    var modelInfo = {
-        _id: new mongo.ObjectID("5a8fab8f91d51f915e5c29af"),
-        domainModel: {_id:new mongo.ObjectID("5a8fac0691d51f915e5c2a39")},
-        useCases:[
-            {_id:new mongo.ObjectID("5a939b35f919171c7cb07097"),Name:"usecase3"},
-            {_id:new mongo.ObjectID("5a939b35f919171c7cb07098"),Name:"usecase4"}
-            ] 
-    }
+//    var modelInfo = {
+//        _id: new mongo.ObjectID("5a8fab8f91d51f915e5c29af"),
+//        domainModel: {_id:new mongo.ObjectID("5a8fac0691d51f915e5c2a39")},
+//        useCases:[
+//            {_id:new mongo.ObjectID("5a939b35f919171c7cb07097"),Name:"usecase3"},
+//            {_id:new mongo.ObjectID("5a939b35f919171c7cb07098"),Name:"usecase4"}
+//            ] 
+//    }
 
     /*saveModelInfo(modelInfo, "5a8e109c13a5974144158d99", function(result)
     {
@@ -877,8 +956,8 @@ function deleteRepo(repoId, callbackfunc) {
             {
                 if (err) throw err;
     //			console.log(modelInfo);
-                var fs = require("fs");
-                fs.writeFile('./temp/modelInfo1.json', JSON.stringify(modelInfo, null, 2) , 'utf-8');
+//                var fs = require("fs");
+//                fs.writeFile('./temp/modelInfo1.json', JSON.stringify(modelInfo, null, 2) , 'utf-8');
                 //console.log("repoId: "+repoId);
                 var o_id = new mongo.ObjectID(repoId);
               
@@ -890,10 +969,11 @@ function deleteRepo(repoId, callbackfunc) {
                 var useCases = modelInfo.UseCases;
                 var domainModelInfo = modelInfo.DomainModel;
                 
-                for(var i in modelInfo.UseCases)
+                for(var i in useCases)
                 {
-                    var useCase = modelInfo.UseCases[i];
+                    var useCase = useCases[i];
                     useCase.model_id=modelId;
+                    useCase._id = useCase._id+"["+modelId+"]";
                 }
 
                 delete modelInfo.UseCases;
@@ -904,8 +984,10 @@ function deleteRepo(repoId, callbackfunc) {
                 modelInfo.repo_id=o_id
 
                 
-				if(domainModelInfo!=null)
+				if(domainModelInfo!=null){
 					domainModelInfo.model_id=modelId;
+                	domainModelInfo._id="domainModel_["+modelId+"]";
+				}
 
 
                 db.collection("modelInfo").insertOne(modelInfo, function(err, res) 
@@ -1620,7 +1702,7 @@ function deleteRepo(repoId, callbackfunc) {
 		queryDomainModelDetail:function(modelId, repoId, callbackfunc){
 			 queryModelInfo(modelId, repoId, function(modelInfo){
 				 	if(callbackfunc){
-				    callbackfunc(modelInfo.DomainModel);
+				    callbackfunc(modelInfo['DomainModel'][0]);
 				 	}
 			 });
 		},
