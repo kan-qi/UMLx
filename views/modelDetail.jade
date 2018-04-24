@@ -4,7 +4,6 @@
 -var filePath = modelInfo.umlFilePath
 -var index = filePath.lastIndexOf("/");
 -var fileFolder = filePath.substring(15, index);
-
 input(type='hidden', value=repoID)#myrepoId
 input(type='hidden', value=model_id)#mymodelId
 div.block.panel.panel-default
@@ -115,191 +114,338 @@ div.block.panel.panel-default
                     td Distributed System
                     td
                         select(disabled='true').form-control#editNumber1
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                           - var temp = modelInfo.formInfo["distributed-system"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Response time or throughput performance objectives
                     td
                         select(disabled='true').form-control#editNumber2
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["response-time"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td End user efficiency
                     td
                         select(disabled='true').form-control#editNumber3
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["end-user-efficiency"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Complex internal processing
                     td
                         select(disabled='true').form-control#editNumber4
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["alert alert-infoternal-processing"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Code must be reusable
                     td
                         select(disabled='true').form-control#editNumber5
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["code-must-be-resuable"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Easy to install
                     td
                         select(disabled='true').form-control#editNumber6
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["easy-to-install"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Easy to use
                     td
                         select(disabled='true').form-control#editNumber7
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["easy-to-use"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Portable
                     td
                         select(disabled='true').form-control#editNumber8
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["portable"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Easy to change
                     td
                         select(disabled='true').form-control#editNumber9
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["easy-to-change"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Concurrent
                     td
                         select(disabled='true').form-control#editNumber10
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["concurrent"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Includes special security objectives
                     td
                         select(disabled='true').form-control#editNumber11
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["includes-special-security-objectives"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Provides direct access for third parties
                     td
                         select(disabled='true').form-control#editNumber12
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["provides-direct-access-for-third-parties"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Special user training facilities are required
                     td
                         select(disabled='true').form-control#editNumber13
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["special-user-training-facilities-are-required"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Familiar with the project model that is used
                     td
                         select(disabled='true').form-control#editNumber14
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["familiar-with-the-project-model-that-is-used"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Application experience
                     td
                         select(disabled='true').form-control#editNumber15
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["application-experience"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Object-oriented experience
                     td
                         select(disabled='true').form-control#editNumber16
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["object-oriented-experience"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Lead analyst capability
                     td
                         select(disabled='true').form-control#editNumber17
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["lead-analyst-capability"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Motivation
                     td
                         select(disabled='true').form-control#editNumber18
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["motivation"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Stable requirements
                     td
                         select(disabled='true').form-control#editNumber19
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["stable-requirements"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Part-time staff
                     td
                         select(disabled='true').form-control#editNumber20
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["part-time-staff"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
                 tr
                     td Difficult programming language
                     td
                         select(disabled='true').form-control#editNumber21
-                            option 1
-                            option 2
-                            option 3
-                            option 4
-                            option 5
+                          - var temp = modelInfo.formInfo["difficult-programming-language"];                            
+                            option(value =temp, selected='') #{temp}                                                  
+                            if temp!=1 
+                              option 1
+                            if temp!=2
+                              option 2
+                            if temp!=3 
+                              option 3
+                            if temp!=4
+                              option 4
+                            if temp!=5
+                              option 5
 
          button.btn.btn-default.buttonForModel#submitButton.hidden(type='button', onclick='submitEdit();') Submit
          button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel
