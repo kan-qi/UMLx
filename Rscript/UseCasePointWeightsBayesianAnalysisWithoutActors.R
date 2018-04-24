@@ -58,8 +58,8 @@ print(grid.arrange(projectHist1, projectHist2, projectHist3, projectBar, ncol=2)
 
 png(filename=paste(outputPath,"project_counting_statistics_for_bayesian_analysis.png", sep="/"),
 		units="in",
-		width=4*2, 
-		height=3*3, 
+		width=3*2, 
+		height=2*3, 
 		pointsize=12,
 		res=96)
 
@@ -73,8 +73,8 @@ print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, ncol=2))
 print("hello");
 png(filename=paste(outputPath,"project_UC_counting_statistics_for_bayesian_analysis.png", sep="/"),
 		units="in",
-		width=4*2, 
-		height=3*2, 
+		width=3*2, 
+		height=2*2, 
 		pointsize=12,
 		res=96)
 
@@ -86,8 +86,8 @@ print(grid.arrange(UCHist1, UCHist2, UCHist3, ncol=2))
 
 png(filename=paste(outputPath,"project_comprehensive_statistics_for_bayesian_analysis.png", sep="/"),
 		units="in",
-		width=4*2, 
-		height=3*3, 
+		width=3*2, 
+		height=2*3, 
 		pointsize=12,
 		res=96)
 
