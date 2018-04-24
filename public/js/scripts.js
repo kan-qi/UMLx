@@ -1502,27 +1502,27 @@ function editFunction(button) {
 
 function submitEdit(){
 		var form_data = new FormData();                  
-	    form_data.append('distributed_system',$("#editNumber1").text());
-	    form_data.append('response_time', $("#editNumber2").text());
-	    form_data.append('end_user_efficiency', $("#editNumber3").text());
-	    form_data.append('complex_internal_processing', $("#editNumber4").text());
-	    form_data.append('code_must_be_reusable', $("#editNumber5").text());
-	    form_data.append('easy_to_install', $("#editNumber6").text());
-	    form_data.append('easy_to_use', $("#editNumber7").text());
-	    form_data.append('portable', $("#editNumber8").text());
-	    form_data.append('easy_to_change', $("#editNumber9").text());
-	    form_data.append('concurrent', $("#editNumber10").text());
-	    form_data.append('includes_special_security_objectives', $("#editNumber11").text());
-	    form_data.append('provides_direct_access_for_third_parties', $("#editNumber12").text());
-	    form_data.append('special_user_training_facilities_are_required', $("#editNumber13").text());
-	    form_data.append('familiar_with_the_project_model_that_is_used', $("#editNumber14").text());
-	    form_data.append('application_experience', $("#editNumber15").text());
-	    form_data.append('object_oriented_experience', $("#editNumber16").text());
-	    form_data.append('lead_analyst_capability', $("#editNumber17").text());
-	    form_data.append('motivation', $("#editNumber18").text());
-	    form_data.append('stable_requirements', $("#editNumber19").text());
-	    form_data.append('part_time_staff', $("#editNumber20").text());
-	    form_data.append('difficult_programming_language', $("#editNumber21").text());
+	    form_data.append('distributed_system',$("#editNumber1").val());
+	    form_data.append('response_time', $("#editNumber2").val());
+	    form_data.append('end_user_efficiency', $("#editNumber3").val());
+	    form_data.append('complex_internal_processing', $("#editNumber4").val());
+	    form_data.append('code_must_be_reusable', $("#editNumber5").val());
+	    form_data.append('easy_to_install', $("#editNumber6").val());
+	    form_data.append('easy_to_use', $("#editNumber7").val());
+	    form_data.append('portable', $("#editNumber8").val());
+	    form_data.append('easy_to_change', $("#editNumber9").val());
+	    form_data.append('concurrent', $("#editNumber10").val());
+	    form_data.append('includes_special_security_objectives', $("#editNumber11").val());
+	    form_data.append('provides_direct_access_for_third_parties', $("#editNumber12").val());
+	    form_data.append('special_user_training_facilities_are_required', $("#editNumber13").val());
+	    form_data.append('familiar_with_the_project_model_that_is_used', $("#editNumber14").val());
+	    form_data.append('application_experience', $("#editNumber15").val());
+	    form_data.append('object_oriented_experience', $("#editNumber16").val());
+	    form_data.append('lead_analyst_capability', $("#editNumber17").val());
+	    form_data.append('motivation', $("#editNumber18").val());
+	    form_data.append('stable_requirements', $("#editNumber19").val());
+	    form_data.append('part_time_staff', $("#editNumber20").val());
+	    form_data.append('difficult_programming_language', $("#editNumber21").val());
 	    form_data.append('modelID', $("#mymodelId").val());
 	    
 		$.ajax({
