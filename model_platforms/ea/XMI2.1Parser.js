@@ -369,7 +369,7 @@
 	
 	// draw the class diagram of the model
 	function createClassDiagramFunc(classElements, graphFilePath, callbackfunc){
-		return;
+	
 		      console.log("run the create class dia");
               console.log("class diagram model is"+classElements);
               console.log("class diagram model is"+JSON.stringify(classElements));
@@ -469,7 +469,7 @@
 			 }
 
 
-
+            
 
             graph += 'imagepath = \"./public\"}';
             
