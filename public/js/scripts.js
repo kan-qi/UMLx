@@ -1913,8 +1913,10 @@ function highlightElement(id) {
 document.getElementById(id).style.stroke =  "red";
 
 }
-   function clearHighlight() {
-       var allNodes = document.getElementsByTagName("text");
+function clearHighlight() {
+	   var svg = document.getElementsByClassName("use-case")[0];
+	   var svgDoc= svg.contentDocument;
+       var allNodes = svgDoc.getElementsByTagName("text");
 
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "";
