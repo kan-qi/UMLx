@@ -38,16 +38,10 @@
 				var XMILifelineID1 = XMIOccurrence1.$.covered;
 				
 				var group = "System";
-				console.log("eeeHELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
-					console.log(XMIMessagesOne);
-					console.log("eaaaHELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 					console.log(XMIMessagesOne.indexOf(XMIOccurrence1['$']["message"]));
 
 				if(XMIMessagesOne.indexOf(XMIOccurrence1['$']["message"])>=0){
 					var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">undefined"];
-					console.log("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
-					console.log(XMIMessage);
-					console.log("HELLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL");
 					if(XMIMessage){
 						var nextActivity = {
 							Type: "message",
