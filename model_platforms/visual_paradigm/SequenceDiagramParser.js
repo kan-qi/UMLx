@@ -15,9 +15,10 @@
 	function constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators){
 		
 		var activities = [];
-		var precedenceRelations = [];
-		var startActivity = null;
-		var endActivity = null;
+		var activitiesbyID = [];
+		//var precedenceRelations = [];
+		//var startActivity = null;
+		//var endActivity = null;
 
 		console.log("occurence at interaction level");
 //		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\')]');
@@ -25,7 +26,7 @@
 		console.log(XMIOccurrences);
 
 		// for each fragment,identify the covered lifeline
-		var preActivity = null;
+		//var preActivity = null;
 		
 		for(var i= 0; i<XMIOccurrences.length;){
 			var XMIOccurrence = XMIOccurrences[i++];
@@ -41,15 +42,15 @@
 				var XMIOccurrence2 = XMIOccurrences[i++];
 				var XMILifelineID2 = XMIOccurrence2.$.covered;
 				
-				if(XMILifelinesByID[XMILifelineID2].isUser){
+				/*if(XMILifelinesByID[XMILifelineID2].isUser){
 					group = XMILifeline['$']['name'];
-				}
+				}*/
 				
 				var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
 				
-				if(XMIMessage['$']['messageSort'] !== "synchCall"){
+				/*if(XMIMessage['$']['messageSort'] !== "synchCall"){
 					continue;
-				}
+				}*/
 				
 				var outScope = false;
 
@@ -76,28 +77,13 @@
 				nextActivity.receiver = XMILifelineID2;
 
 				activities.push(nextActivity);
-				
-				if(preActivity){
-					if(XMILifelinesByID[nextActivity.sender].isUser && preActivity.receiver != nextActivity.sender){
-					}
-					else{
-	//					UseCase.PrecedenceRelations.push({start: preActivity, end: nextActivity});
-						precedenceRelations.push({start: preActivity, end: nextActivity});
-					}
-				}
-				
-				preActivity = nextActivity;
-				
-				if(!startActivity){
-					startActivity = preActivity;
-				}
-				
+				activitiesbyID[nextActivity['_id']] = nextActivity;
 			}
 		}
 		
-		endActivity = preActivity;
+		//endActivity = preActivity;
 		
-		return {Activities: activities, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
+		return {Activities: activities, ActivitiesbyID: activitiesbyID};//, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
 	}
 
 	function constructCollaboration(Collaboration, XMICollaboration, XMIClassesByStandardizedName){
@@ -116,7 +102,7 @@
 			for(var j in XMILifelines){
 				var XMILifeline = XMILifelines[j];
 				// use name to determine isUser. Just temporary.
-				if(XMILifeline['$']['name'] === "User"){
+				if(XMILifeline['$']['name'] === "Actor"){
 					console.log("is a Stimulus source");
 					XMILifeline.isUser = true;
 				}
@@ -135,15 +121,29 @@
 			var XMIMessages = jp.query(XMIInteraction, '$..message[?(@[\'$\'][\'xmi:type\']==\'uml:Message\')]');
 //			// for each message, identify the send fragment and receive fragment.
 			var XMIMessagesByOccurrences = [];
+			var XMIMessagesIdBySeq = [];
 			for(var j in XMIMessages){
 				var XMIMessage = XMIMessages[j];
+				XMIMessagesIdBySeq.push(XMIMessage['$']['xmi:id']);
 				XMIMessagesByOccurrences[XMIMessage.$.sendEvent+">"+XMIMessage.$.receiveEvent] = XMIMessage;
 			}
 			console.log(XMIMessagesByOccurrences);
 			
 			SDCFG = constructSDCFG(XMIInteraction, XMILifelinesByID, XMIMessagesByOccurrences, []);
 			Collaboration.Activities = Collaboration.Activities.concat(SDCFG.Activities);
-			Collaboration.PrecedenceRelations = Collaboration.PrecedenceRelations.concat(SDCFG.PrecedenceRelations);
+			
+			var ActivitiesbyID = SDCFG.ActivitiesbyID;
+			var precedenceRelations = [];
+
+			if(XMIMessagesIdBySeq.length == Object.keys(ActivitiesbyID).length){
+				for(var j=0; j< XMIMessagesIdBySeq.length;){
+					var startID = XMIMessagesIdBySeq[j++];
+					if(j == XMIMessages.length){ break; }
+					var endID = XMIMessagesIdBySeq[j];
+					precedenceRelations.push({start:ActivitiesbyID[startID], end:ActivitiesbyID[endID]})
+				}
+			}
+			Collaboration.PrecedenceRelations = Collaboration.PrecedenceRelations.concat(precedenceRelations);
 		}
 
 		var ActivitiesToEliminate = [];
@@ -151,9 +151,9 @@
 		for(var i in Collaboration.Activities){
 			var activity = Collaboration.Activities[i];
 
-			console.log("determine fragement node");
-			console.log(Collaboration.Activities);
-			console.log(activity.Name);
+			///console.log("determine fragement node");
+			///console.log(Collaboration.Activities);
+			///console.log(activity.Name);
 			if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 //					var activityToEliminate = activity;
 				ActivitiesToEliminate.push(activity);
@@ -190,13 +190,13 @@
 		}
 		
 
-		console.log("test use case");
-		console.log(Collaboration.PrecedenceRelations);
+		///console.log("test use case");
+		///console.log(Collaboration.PrecedenceRelations);
 		
 		//logic to decide Stimulus
 		for(var i in Collaboration.Activities){
 			var activity = Collaboration.Activities[i];
-			console.log(activity);
+			//////console.log(activity);
 			//if activity's sendevent's lifeline is an actor, acreate an stimulus node
 			if(activity.Name == "onSearch"){
 				var stimulus = {
@@ -214,7 +214,7 @@
 			}
 		}
 		
-		console.log("finished sequence diagram processing");
+		//////console.log("finished sequence diagram processing");
 		
 	}
 
@@ -263,6 +263,10 @@
 			constructCollaboration(Collaboration, XMICollaboration, XMIClassesByStandardizedName);
 
 			Model.Collaboration.push(Collaboration);
+		}
+
+		if(callbackfunc){
+			callbackfunc(Model);
 		}
 
 		});

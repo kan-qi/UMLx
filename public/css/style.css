@@ -1,3 +1,15 @@
+.repo-metrics
+{
+	width:100%;
+}
+#chart-1
+{
+	width:100%;
+}
+#trending-line
+{
+	width: 100%;
+}
 .column {
 	float: left;
 	position: relative;
@@ -215,7 +227,7 @@
 
 .use-case {
 	width: 100%;
-	height: 500px;
+	height: 65%;
 }
 
 .tab-pane {
@@ -257,10 +269,17 @@
 	line-height: 2;
 }
 
-.repo-info-content .tab-pane, .model-info-content .tab-pane {
-	min-height: 400px;
+.repo-info-content .tab-pane, .model-info-content {
+	min-height: 80%;
 	margin: 0 auto;
 	width: 80%;
+	border: 0;
+}
+
+.tab-pane {
+	min-height: 80%;
+	margin: 0 auto;
+	width: 100%;
 	border: 0;
 }
 
@@ -342,6 +361,11 @@
 select.form-control {
 	width: 80px;
 	float: right;
+}
+
+select.estimation-form-control {
+    width: 160px;
+    float: right;
 }
 
 select.sEstimator.form-control {
@@ -655,26 +679,35 @@ label. control-label. col-md-4 {
 	text-align: left;
 }
 
-[data-toggle="collapse"].collapsed .if-collapsed {
-	display: none;
-}
-[data-toggle="collapse"]:not(.collapsed) .if-not-collapsed {
-	display: none;
-}
+/*[data-toggle="collapse"]:not(.collapsed) .if-not-collapsed {*/
+	/*display: none;*/
+/*}*/
 
-#archive_table {
+/*[data-toggle="collapse"].collapsed .if-collapsed {*/
+	/*display: none;*/
+/*}*/
+
+#displayArchive table, #displayRepoArchive table{
 	margin: auto;
-	width: 100%;
+	width: 95%;
 }
 
-#archive_table tr {
+#displayArchive table tr , #displayRepoArchive table tr{
 	width: 100%;
 	height: 40px;
 	text-align: center;
 }
 
+#wrapRow {
+	margin: 10px;
+}
+
+#dirAddress {
+	font-size: 16px;
+	margin: 5px 0 10px;
+}
 .modal-content {
-	height: 600px;
+	height: auto;
 }
 
 #use-case-nodes {
@@ -684,3 +717,32 @@ label. control-label. col-md-4 {
 #use-case-paths {
     height: 100%;
     overflow-y: auto; }
+
+.sidenav {
+    position: fixed;
+    z-index: 1;
+    left: 32%;
+    background-color: #FFFFFF;
+    overflow-x: hidden;
+    transition: 0.5s;
+    bottom: 0;
+    width: 56%;
+    height: 0;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #000000;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 28px;
+    margin-left: 50px;
+}

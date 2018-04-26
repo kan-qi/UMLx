@@ -1,12 +1,12 @@
 if useCaseInfo
  -var useCase_id = useCaseInfo._id
    input(type='hidden', value=useCase_id)#UseCaseId
-   div.use-case-detail-content(data-use-case-title=useCaseInfo.Name)
+   div.use-case-detail-content(data-use-case-title="#{useCaseInfo.Name}")
   ul.nav.nav-tabs
    li.active
     a(data-toggle='tab', href='#use-case-info-pane') UseCase Info
    li
-    a(data-toggle='tab', onclick='populate_usecase_data();') Analytics
+    a(data-toggle='tab', href='#use-case-analytics',onclick='populate_usecase_data();') Analytics
    //li
     //a(data-toggle='tab', href='#use-case-distributions') Distributions
    //li
@@ -15,135 +15,5 @@ if useCaseInfo
   div.tab-pane.fade.in.active(id="use-case-info-pane")
    include diagramDisplay
   div.tab-pane.fade(id="use-case-analytics")
-     div.use-case-analytics
-        h3 Calculated:
-        ul
-         li
-          span.statistical-item(data-url="#{useCaseInfo.AccessDir}/control_operation_analysis_result.svg") Number of Interface Management Transactions: #{useCaseInfo.INT}
-         li
-          span.statistical-item Number of Data Management Transactions: #{useCaseInfo.DM}
-         li
-          span.statistical-item Number of Control Transactions: #{useCaseInfo.CTRL}
-         li
-          span.statistical-item Number of External Inovations: #{useCaseInfo.EXTIVK}
-         li
-          span.statistical-item Number of External Calls: #{useCaseInfo.EXTCLL}
-         li
-          span.statistical-item Number of Not Matched Transactions: #{useCaseInfo.TRAN_NA}
-         li
-          span.statistical-item Number of EI: #{useCaseInfo.EI}
-         li
-          span.statistical-item Number of EO: #{useCaseInfo.EO}
-         li
-          span.statistical-item Number of EQ: #{useCaseInfo.EQ}
-         li
-          span.statistical-item Number of Not Matched Functions: #{useCaseInfo.FUNC_NA}
-         li
-          span.statistical-item Average Path length: #{useCaseInfo.AvgPathLength}
-         li
-          span.statistical-Item Average Element Degree: #{useCaseInfo.AvgDegree}
-         li
-          span.statistical-item Number of Paths: #{useCaseInfo.PathNum}
-         li
-          span.statistical-Item Number of Elements: #{useCaseInfo.ElementNum}
-         li
-          span.statistical-item Number of Actors: #{useCaseInfo.ActorNum}
-         li
-          span.statistical-item Number of Boundary Elements: #{useCaseInfo.BoundaryNum}
-         li
-          span.statistical-item Number of Control Elements: #{useCaseInfo.ControlNum}
-         li
-          span.statistical-item Number of Entity Elements: #{useCaseInfo.EntityNum}
-     div.use-case-analysis-detail
-       div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/control_operation_analysis_result.svg")
-  div.tab-pane.fade(id="use-case-distributions")
-    div.use-case-distributions
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/control_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/external_input_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/external_query_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/external_invocation_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/external_call_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/interface_operation_analysis_result.svg")
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/partial_match_analysis_result.svg")
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/functional_pattern_counts.svg")
-        div.stats-chart
-         img(src="#{useCaseInfo.AccessDir}/trasactional_pattern_counts.svg")
-  if false
-  //skipe the below sections
-  div.tab-pane.fade(id="use-case-evaluation")
-     div.use-case-evaluation
-        h3 Evaluation:
-        form.form-horizontal(id="use-case-evaluation-form", onsubmit="return false;")
-         div.form-group
-          label(for="path_num" class="col-sm-6 control-label") Number of transactions (#{useCaseInfo.PathNum}):
-          div.col-sm-6
-           input(type='text', name='path_num', id='path_num', class="form-control")
-         div.form-group
-          label(for="dm" class="col-sm-6 control-label") Number of Data Management Transactions (#{useCaseInfo.DM}):
-          div.col-sm-6
-           input(type='text', name='dm', id='dm', class="form-control")
-         div.form-group
-          label(for="im" class="col-sm-6 control-label") Number of Interface Management Transactions (#{useCaseInfo.IM}):
-          div.col-sm-6
-           input(type='text', name='im', id='im', class="form-control")
-         div.form-group
-          label(for="ct" class="col-sm-6 control-label") Number of Control Transactions (#{useCaseInfo.CT}):
-          div.col-sm-6
-           input(type='text', name='ct', id='ct', class="form-control")
-         div.form-group
-          label(for="eivk" class="col-sm-6 control-label") Number of external invocations (#{useCaseInfo.EIVK}):
-          div.col-sm-6
-           input(type='text', name='eivk', id='eivk', class="form-control")
-         div.form-group
-          label(for="ecll" class="col-sm-6 control-label") Number of external calls (#{useCaseInfo.ECLL}):
-          div.col-sm-6
-           input(type='text', name='ecll', id='ecll', class="form-control")
-         div.form-group
-          label(for="ccss" class="col-sm-6 control-label") Cyclomatic coplexity of structured scenarios (#{useCaseInfo.CCSS}):
-          div.col-sm-6
-           input(type='text', name='ccss', id='ccss', class="form-control")
-         div.form-group
-          label(for="it" class="col-sm-6 control-label") Number of transactions (#{useCaseInfo.IT}):
-          div.col-sm-6
-           input(type='text', name='it', id='it', class="form-control")
-         div.form-group
-          label(for="ilf" class="col-sm-6 control-label") Internal logical files (#{useCaseInfo.ILF}):
-          div.col-sm-6
-           input(type='text', name='ilf', id='ilf', class="form-control")
-         div.form-group
-          label(for="elf" class="col-sm-6 control-label") External logical files (#{useCaseInfo.ELF}):
-          div.col-sm-6
-           input(type='text', name='elf', id='elf', class="form-control")
-         div.form-group
-          label(for="ei" class="col-sm-6 control-label") External inputs (#{useCaseInfo.EI}):
-          div.col-sm-6
-           input(type='text', name='ei', id='ei', class="form-control")
-         div.form-group
-          label(for="eo" class="col-sm-6 control-label") External outputs(#{useCaseInfo.EO}):
-          div.col-sm-6
-           input(type='text', name='eo', id='eo', class="form-control")
-         div.form-group
-          label(for="eq" class="col-sm-6 control-label") External inquiries (#{useCaseInfo.EQ}):
-          div.col-sm-6
-           input(type='text', name='eq', id='eq', class="form-control")
-         div.form-group
-          label(for="ph" class="col-sm-6 control-label") Effort (person-hours) (#{useCaseInfo.PH}):
-          div.col-sm-6
-           input(type='text', name='ph', id='ph', class="form-control")
-           input(type='hidden', name='use-case-id', value='#{useCaseInfo._id}')
-           input(type='hidden', name='model-id', value='#{modelId}')
-         div.form-group
-          div.col-sm-6.col-sm-offset-6
-           button.btn.btn-primary(id='use-case-evaluation-form-submit-button') Submit
-        div
-          a(id='delete-use-case-btn' href='deleteUseCase?useCase_id=#{useCaseInfo._id}&model_id=#{modelId}') Delete Model
+     div.use-case-analytics(id="analysis-data")
   div.clear

@@ -7,8 +7,7 @@ if repoInfo
                    .panel-heading
                        h4.panel-title Technical Complexity Factor
                            a(data-toggle='collapse', href='#collapse1')
-                               span.if-not-collapsed.glyphicon.glyphicon-triangle-left.collapseButtom
-                               span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                               span.glyphicon.glyphicon-triangle-left.collapseButtom1
                    #collapse1.panel-collapse.collapse
                        .panel-body
                           .form-group
@@ -123,8 +122,8 @@ if repoInfo
                    .panel-heading
                        h4.panel-title Environmental Factors
                            a(data-toggle='collapse', href='#collapse2')
-                               span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
-                               span.if-not-collapsed.glyphicon.glyphicon-triangle-left.collapseButtom
+                               //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                               span.glyphicon.glyphicon-triangle-left.collapseButtom2
                    #collapse2.panel-collapse.collapse
                        .panel-body
                           .form-group
@@ -223,20 +222,21 @@ if repoInfo
                        .panel-body
                         div(id="model-query-box")
                          div.row-item(id='estimator-selector-box')
-                             select#part_time_staff.sEstimator.form-control(name='estimator')
+                             select#estimator.estimation-form-control(name='estimator')
                               option Select Estimator
                               option Linear Regression
                               option Ridge Regression
                               option Linear Spline
+                              option Bayesian
                          div.row-item(id='model-selector-box')
-                             select#part_time_staff.sEstimator.form-control(name='model')
+                             select#model.estimation-form-control(name='model')
                               option Select Model
                               option EUCP
                               option EXUCP
                               option DUCP
-                         div.checkbox.row-item
-                          label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                           input(type='checkbox' value='simulation-data')
+                         //div.checkbox.row-item
+                          //label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                           //input(type='checkbox' value='simulation-data')
                          //button.btn.btn-primary.row-item(id='estimate-project-effort-button', type="submit") Query
                          button.btn.btn-success.pull-right(type='submit') Submit
                          img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
@@ -250,5 +250,4 @@ if repoInfo
                        h4.panel-title
                            | Estimation Results
                    #collapse1.panel-collapse
-                       div(id="estimation-result-panel-body")
-                             
+                       div(id="estimation-result-panel-body") 

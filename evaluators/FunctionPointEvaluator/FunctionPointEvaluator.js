@@ -93,7 +93,7 @@
 	
 	
 	function toModelEvaluationHeader() {
-		return "DET,RET,ILF,EIF,EO,EQ,FN,FUNC_NA";
+		return "DET,RET,ILF,EIF,EI,EO,EQ,FN,FUNC_NA";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {

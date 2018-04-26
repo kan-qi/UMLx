@@ -24,9 +24,6 @@
 
     } 
 
-
-
-
     function updateModelInfo(modelInfo, repoId, callbackfunc){
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;

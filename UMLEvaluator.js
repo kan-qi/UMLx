@@ -21,6 +21,8 @@
 //	var umlFileManager = require('./UMLFileManager');
 
 	var RScriptExec = require('./utils/RScriptUtil.js');
+
+	var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
 	
 	// current available evaluators
 	var umlModelElementEvaluator = require('./evaluators/UMLModelElementsEvaluator/UMLModelElementEvaluator.js');
@@ -285,7 +287,12 @@
 		
 		if(callbackfunc){
 		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
-		
+
+			if(!useCase){
+				callbackfunc(false);
+				return;
+			}
+			
 		for(var i in evaluators){
 			var evaluator = evaluators[i];
 			if(evaluator.evaluateUseCase){
@@ -307,6 +314,11 @@
 		if(callbackfunc){
 			// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
 			
+			if(!domainModel){
+				callbackfunc(false);
+				return;
+			}
+			
 			for(var i in evaluators){
 				var evaluator = evaluators[i];
 				if(evaluator.evaluateDomainModel){
@@ -325,6 +337,7 @@
 	}
 	
 	function evaluateModel(model, callbackfunc){
+		
 
 		var useCaseNum = 1;
 //		var useCaseEmpiricss = [];
@@ -337,6 +350,12 @@
 		var modelEvaluationStr = "";
 		
 		if(callbackfunc){
+			
+
+			if(!model){
+				callbackfunc(false);
+				return;
+			}
 		
 		for(var i in model.UseCases){
 			var useCase = model.UseCases[i];
@@ -345,18 +364,23 @@
 				});
 //			
 			useCaseEvaluationStr += toUseCaseEvaluationStr(useCase, useCaseNum);
-//			useCaseEmpiricss.push(useCaseEmpirics);
 			useCaseNum ++;
 		}
 		
 		var domainModel = model.DomainModel;
+//		console.log("output model");
+//		console.log(model);
+		
+		if(domainModel){
 		evaluateDomainModel(domainModel, function(){
-					console.log('doamin model analysis is complete');
+		console.log('doamin model analysis is complete');
 		});
 		
+
 		domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
-//		useCaseEmpiricss.push(useCaseEmpirics);
-//		domainModelNum ++;
+		domainModelNum ++;
+		
+		}
 		
 		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
 		for(var i in evaluators){
@@ -451,6 +475,11 @@
 		
 	}
 	
+	
+//	function evaluateModelArray(){
+//		
+//	}
+//	
 /*
  * callbackfunc is the function called when the analysis is finished.
  */
@@ -460,9 +489,27 @@
 		var modelEvaluationStr = "";
 //		var repoEvaluationsForUseCase = [];
 		var modelNum = 1;
+		
+
+		var useCaseNum = 1;
+//		var useCaseEmpiricss = [];
+		var useCaseEvaluationStr = "";
+		
+		var domainModelNum = 1;
+		var domainModelEvaluationStr = "";
+		
 //		if(index !== undefined){
 //			useCaseNum = index;
 //		}
+		
+//		console.log("hello3");
+//		console.log(repoInfo);
+	console.log("model analysis complete1");
+	
+
+//	var debug = require("./utils/DebuggerOutput.js");
+//	debug.writeJson("new_new_repo_info_"+repoInfo._id, repoInfo);
+
 		
 		if(callbackfunc){
 			// iterate the hierarchy of the repo
@@ -479,6 +526,35 @@
 				modelEvaluationStr += toModelEvaluationStr(model, modelNum);
 //				console.log(useCaseEvaluationStr);
 				modelNum ++;
+				
+				
+				for(var i in model.UseCases){
+					var useCase = model.UseCases[i];
+//					evaluateUseCase(useCase, model, function(){
+//							console.log('use case analysis is complete');
+//						});
+//					
+					useCaseEvaluationStr += toUseCaseEvaluationStr(useCase, useCaseNum);
+//					useCaseEmpiricss.push(useCaseEmpirics);
+					useCaseNum ++;
+				}
+				
+				var domainModel = model.DomainModel;
+//				console.log("output model");
+//				console.log(model);
+				
+				if(domainModel){
+//				evaluateDomainModel(domainModel, function(){
+//				console.log('doamin model analysis is complete');
+////				useCaseEmpiricss.push(useCaseEmpirics);
+//
+//				});
+//				
+
+				domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
+
+				domainModelNum ++;
+				}
 			}
 			
 			// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
@@ -493,9 +569,13 @@
 			
 
 		repoInfo.ModelEvaluationFileName = "modelEvaluation.csv";
+		repoInfo.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
+		repoInfo.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
 		repoInfo.ModelStatisticsOutputDir = repoInfo.OutputDir+"/model_evaluation_statistics";
 			
-		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr}];
+		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr},
+			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
+			{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
 		
 		umlFileManager.writeFiles(repoInfo.OutputDir, files, function(err){
 			if(err) {
@@ -560,6 +640,80 @@
 	 */
 	
 	
+/*
+ * This function exists becasue of the limit on the documents stored is 16mb
+ * This methods is done with collaboration with db operations.
+ */
+//	
+//	function evaluateRepoByID(repoId, callbackfunc){
+////		console.log(refresh);
+//		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//		
+////			var newRepo  = initRepoEntity(repo._id);
+//
+////			var debug = require("./utils/DebuggerOutput.js");
+////			debug.writeJson("new_repo_info_"+newRepo._id, newRepo);
+//
+//			function reanalyseModel(model, repoInfo){
+//				//update model analytics.
+//				console.log("reanalyse model");
+////				console.log(modelInfo);
+//				return new Promise((resolve, reject) => {
+//					console.log("promise");
+////					var newModel = duplicateModelInfo(model);
+////			    	repoInfo.Models.push(newModel);
+//					umlModelInfoManager.queryModelInfo(model._id, function(modelInfo){
+////						console.log("extract model");
+////						var debug = require("./utils/DebuggerOutput.js");
+////						debug.writeJson("new_model_info_"+modelInfo._id, modelInfo);
+//						if(!modelInfo){
+//							reject("error");
+//						}
+////					umlEvaluator.evaluateModel(newModel, function(newModel){
+//						console.log("model analysis complete");
+////						console.log(newModel);
+////						umlModelInfoManager.updateModelInfo(newModel, repoId, function(newModel){
+//								if(!newModel){
+//								reject("error");
+//								}
+//								else{
+//								resolve();
+//								}
+////						});
+////					});
+//					});
+//				  });
+//			}
+//			
+//
+//
+//		return Promise.all(repoInfo.Models.map(model=>{
+//	    	return reanalyseModel(model,repoInfo);
+//		})).then(
+//				function(){
+//				return new Promise((resolve, reject) => {
+//					setTimeout(function(){	
+//					umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+//						
+//					if(callbackfunc){
+//						callbackfunc(repoInfo);
+//					}
+//					
+//					resolve();
+//				});}, 0);
+//				});
+//			}
+//		
+//		).catch(function(err){
+//				console.log(err);
+//				if(callbackfunc){
+//					callbackfunc(false);
+//				}
+//			});
+//		
+//	});
+//	}
+	
 	
 	module.exports = {
 			loadUseCaseEmpirics: loadUseCaseEmpirics,
@@ -567,6 +721,7 @@
 			evaluateUseCase: evaluateUseCase,
 			evaluateDomainModel: evaluateDomainModel,
 			evaluateModel: evaluateModel,
-			evaluateRepo: evaluateRepo
+			evaluateRepo: evaluateRepo,
+//			evaluateRepoByID: evaluateRepoByID
 	}
 }());

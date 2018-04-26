@@ -1,8 +1,5 @@
-if pResult[0]
-  - var repoID = pResult[0].repo_id
-div 
-- console.log("RepoDetail:"+repoID)
-div  
+-var repoID = repoInfo._id
+-var path = repoInfo.AccessDir;
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -14,13 +11,21 @@ div.block.panel.panel-default
           span.caret
         ul.dropdown-menu
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoInfo._id}&simulation=false&refresh=true') Evaluation For Models
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForModels?repo_id=#{repoInfo._id}&simulation=true&refresh=true') Evaluation For Models (simulation)
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models (simulation)
           li
-            a.dumpEvaluationData.dropdown-item(href='evaluateRepoForUseCases?repo_id=#{repoInfo._id}&simulation=false') Evaluation For Use Cases
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
           li
-            a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
+          //li
+            //a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
       div.dropdown
         button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
           span.caret
@@ -36,7 +41,7 @@ div.block.panel.panel-default
             span.caret
           ul.dropdown-menu
             li
-              a.request-repo-analytics.dropdown-item(href='queryRepoInfo?repo_id=#{repoInfo._id}&refresh=true') Reanalyse Repo
+              a.request-repo-analytics.dropdown-item(href='reanalyseRepo?repo_id=#{repoInfo._id}') Reanalyse Repo
             li
               a.dropdown-item(href='reloadRepo?repo_id=#{repoInfo._id}') Reload Repo
    div.clearFix
@@ -52,6 +57,8 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#project_list') Projects 
         span(class="badge") #{repoInfo.Models.length}
+     li
+      a(data-toggle='tab', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
       if repoInfo
@@ -61,28 +68,28 @@ div.block.panel.panel-default
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{repoInfo.Models.length}
+                h2 #{totalRec}
                 span Projects
           div.col-sm-3
             div.red-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{repoInfo.Models.length}
+                h2 #{repoInfoBrief.UseCaseNum}
                 span Use Cases
           div.col-sm-3
             div.green-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{repoInfo.Models.length}
+                h2 #{repoInfoBrief.NT}
                 span Transactions
           div.col-sm-3 
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{repoInfo.Models.length}
+                h2 #{repoInfoBrief.EntityNum}
                 span Classes
        div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
         //div.col-sm-12.chart-row  
@@ -172,17 +179,22 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="repo_estimation")
       include estimationPanel
      div.tab-pane.fade(id="project_list")
+         div
+           p #{repoInfo.OutputDir}
          .container
              h3.row
                 .col-sm-2 Index
                 .col-sm-8 Project Name
                 .col-sm-2 Date
              .list-group
-             - var pageIndex = (currentPage - 1)*(pageSize) + 1
-             div(id='page-panel')
-                each item in pResult
-                    a.list-group-item.row#model-title(href="queryModelInfo?model_id="+item._id)
-                        .col-sm-2 #{pageIndex++}
-                        .col-sm-8 #{item.Name}
-                        .col-sm-2 #{item.creationTime}
-                  include pagination.jade
+                 - var pageIndex = (currentPage - 1)*(pageSize) + 1
+                 div(id='page-panel')
+                     each item in repoPageInfo
+                         a.list-group-item.row.model-title(href="queryModelInfo?model_id=" + item._id)
+                             .col-sm-2 #{pageIndex++}
+                             .col-sm-8 #{item.Name}
+                             .col-sm-2 #{item.creationTime}
+                     include pagination.jade
+     div.tab-pane.fade(id="repo_archive")
+         div#displayRepoArchive
+

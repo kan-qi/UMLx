@@ -12,7 +12,7 @@
 	
 	function processLabel(label){
 		if(!label){
-			return "";
+			return "undefined";
 		}
 		var terms = label.split(" ");
 		var reformattedLabel = "";

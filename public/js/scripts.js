@@ -11,9 +11,9 @@ function setCookie(cname, cvalue, exdays) {
 }
 
 function pagination_call(repoId, currentPage) {
-	
+
     console.log("Inside Script" + repoId);
-    
+
     var data = {
         repId: repoId,
         //pageSize: pageSize,
@@ -21,7 +21,7 @@ function pagination_call(repoId, currentPage) {
         currentPage:currentPage
         //index:index,
     };
-    
+
     //console.log("StepSize "+stepSize);
     	$.ajax({
 		type : 'GET',
@@ -33,13 +33,13 @@ function pagination_call(repoId, currentPage) {
           //  $('#pResult').append(response);
             $("#page-panel").html("");
 			$("#page-panel").append($(response));
-            
+
 		},
 		error : function() {
 			console.log("fail");
 		}
 	});
-    
+
 }
 
 
@@ -69,11 +69,15 @@ function model_file_upload_fnc() {
 }
 
 function highlight_diagram_element(idString, elementType, diagramType) {
-  //var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
-  var svg = document.getElementsByClassName("use-case")[0];
-  var svgDoc = svg.contentDocument;
-  var elementToHighlight = svgDoc.getElementById(idString);
 
+	console.log("higlight function");
+//  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+
+  var svg = document.getElementsByClassName("use-case")[0];
+  var svgDoc= svg.contentDocument;
+  console.log(idString);
+  var elementToHighlight = svgDoc.getElementById(idString);
+   console.log(elementToHighlight);
   if(diagramType === "analysis_diagram"){
            //have put robustness diagram script under robustness diagram - Aishwarya
   }
@@ -99,10 +103,17 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   else if(diagramType === "activity_diagram"){
     //call Traci's method.
     if(elementToHighlight) {
-      highlight_activity_diagram(elementToHighlight);
+      highlight_activity_diagram(svgDoc, elementToHighlight);
     }
   }
   else if(diagramType === "class_diagram"){
+	  console.log("class highlight func");
+	  //call Lingquan's method.
+	  if (elementToHighlight) {
+
+		  highlightElement_classDia(elementToHighlight);
+	  }
+
       //call Lingquan's method.
   }
   else if(diagramType === "usim"){
@@ -110,10 +121,18 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   }
 }
 
-function highlight_activity_diagram(element) {
-  if(element.getElementsByTagName("path")) {
-    element.getElementsByTagName("path")[0].setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
-  }
+function clear_highlight_activity_diagram(svgDoc) {
+    var allNodes = svgDoc.getElementsByTagName("path");
+    for(var i = 0; i < allNodes.length; i++) {
+        allNodes[i].setAttribute("style", "stroke:#000000");
+    }
+}
+
+function highlight_activity_diagram(svgDoc, element) {
+    clear_highlight_activity_diagram(svgDoc);
+    if(element.getElementsByTagName("path")) {
+        element.getElementsByTagName("path")[0].setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
+    }
 }
 
 function send_analytics_data(uuid, clientIpAddress, pageNumber) {
@@ -201,9 +220,11 @@ function predict_project_effort_func(){
         contentType : false, // Set content type to false as jQuery will tell the server its a query string request
         data : formData,
         enctype : 'multipart/form-data',
+        async :false,
         success : function(response) {
             console.log(response);
             $("#estimation-result-panel-body").html(response);
+            showEstimationChart();
         },
         error : function() {
             console.log("fail");
@@ -234,7 +255,7 @@ function query_exist_models_fnc(projectId) {
 
 function estimate_project_effort_func(){
 	//var formData = new FormData($('#project-effort-estimation-form')[0]);
-	var form_data = new FormData();                  
+	var form_data = new FormData();
     form_data.append('distributed_system',1);
     form_data.append('response_time', 2);
     form_data.append('end_user_efficiency', 3);
@@ -276,7 +297,7 @@ function estimate_project_effort_func(){
 		},
 		error : function(err) {
 			console.log("fail");
-			console.log(err);			
+			console.log(err);
 		}
 	});
 
@@ -441,11 +462,11 @@ function query_sub_model_detail_func(){
         url : url,
         success : function(response) {
 //          console.log(response);
-            $("#use-case-detail-panel").html("");
+            $("#use-case-fdetail-panel").html("");
             $("#use-case-detail-panel").append(response);
             var breadCrumb = $('ol.breadcrumb')[0];
             if (breadCrumb.children.length == 3) {
-                breadCrumb.children[2].innerText = $(response).data('use-case-title');
+                breadCrumb.children[2].innerText = $(response).find(".use-case-detail-content").data('use-case-title');
             } else {
                 breadCrumb.innerHTML += "<li class='breadcrumb-item active'>"+ $(response).data('use-case-title') +"</li>"
             }
@@ -963,8 +984,8 @@ $('#repo-stats-chart').append('<div id="model-selection-panel"> \
 $(document).ready(function() {
     $(document).on('click','a.sub-model-title', query_sub_model_detail_func);
 //  $(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
-    $(document).on('click','#model-title', query_model_detail_func);
-    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
+    $(document).on('click','.model-title', query_model_detail_func);
+//    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
     $(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
     $(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);
     $(document).on('click','#query-model-btn', query_estimation_models_func);
@@ -1069,40 +1090,100 @@ function toggleQueryList() {
 		$('#use-case-list').modal('toggle');
 }
 
+var panZoomInstance;
 function toggleZoom() {
-    panZoomInstance = svgPanZoom('object', {
-        zoomEnabled: true,
-        controlIconsEnabled: true,
-        fit: true,
-        center: true,
-        minZoom: 0.1
+    var panZoom = svgPanZoom('object', {
+      zoomEnabled: true,
+      mouseWheelZoomEnabled: false,
+      controlIconsEnabled: false
     });
 
-    // zoom out
-    panZoomInstance.zoom(1)
+    document.getElementById('zoom-in').style.display="inline";
+    document.getElementById('zoom-out').style.display="inline";
+    document.getElementById('reset').style.display="inline";
+
+    document.getElementById('zoom-in').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.zoomIn()
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.zoomOut()
+    });
+
+    document.getElementById('reset').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.resetZoom()
+    });
 }
 
-
-
-
-function toggleDomainList() {
-    $('#domain-model-list').modal('toggle');
-}
+// function toggleDomainList() {
+//     $('#domain-model-list').modal('toggle');
+// }
 
 // added for zoom control on svg
 
 
-function toggleDiagram() {
+function toggleDiagram(diagramType) {
 	var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
 	var pos = obj_data.search("/useCase.svg");
+	if (diagramType==="class_diagram") {
+		pos = obj_data.search("/domainModel.svg");
+	}
 	var new_obj_data = "";
+	var umlDiagram = "";
+	 if(diagramType === "activity_diagram"){
+        umlDiagram = "/activity_diagram.svg";
+        }
+        else if(diagramType === "robustness_diagram"){
+        umlDiagram = "/robustness_diagram.svg";
+        }
+        //else if(diagramType === "class_diagram"){
+        //umlDiagram = "/class_diagram.svg";
+        //}
+        else if(diagramType === "sequence_diagram"){
+        umlDiagram = "/sequence_diagram.svg";
+        }
+        else{
+        umlDiagram = "/uml_diagram.svg";
+        }
+
+
 	if (pos != -1) {
-		new_obj_data = obj_data.slice(0, pos)+"/uml_diagram.svg";
+
+
+        new_obj_data = obj_data.slice(0, pos)+umlDiagram;
 	} else {
-		pos = obj_data.search("uml_diagram.svg");
+		pos = obj_data.search(umlDiagram);
 		new_obj_data = obj_data.slice(0, pos)+"/useCase.svg";
+		if (diagramType === "class_diagram"){
+			new_obj_data = obj_data.slice(0, pos)+"/domainModel.svg";
+		}
 	}
 	document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
+}
+
+
+function toggleDomainModelDiagram(diagramType) {
+    var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
+    var pos = obj_data.search("/domainModel.svg");
+    var new_obj_data = "";
+    var umlDiagram = "";
+     if(diagramType === "class_diagram"){
+        umlDiagram = "/class_diagram.svg";
+        }
+        else{
+        umlDiagram = "/uml_diagram.svg";
+        }
+
+    if (pos != -1) {
+        new_obj_data = obj_data.slice(0, pos)+umlDiagram;
+    } else {
+        pos = obj_data.search(umlDiagram);
+        new_obj_data = obj_data.slice(0, pos)+"/domainModel.svg";
+    }
+    document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
 }
 
 function get_diagram_name() {
@@ -1110,7 +1191,12 @@ function get_diagram_name() {
 }
 
 
-
+function openList() {
+    document.getElementById("mySidenav").style.height = "30%";
+}
+function closeList() {
+    document.getElementById("mySidenav").style.height = "0";
+}
 
 
 
@@ -1164,79 +1250,226 @@ function createCharts() {
 }
 
 function createTrendingLines() {
-    var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
-    d3.csv(url, function(error, data) {
-        if (error) {
-            console.error(error);
-            return;
-        }
-        var tempData = [];
-        data.forEach(function(d) {
-            d.update_time = new Date(d.update_time).getTime();
-            d.number_of_paths = +d.number_of_paths;
-            tempData.push([d.update_time, d.number_of_paths])
-        });
-        data= tempData;
-        console.dir(data)
-        Highcharts.chart('trending-line', {
-            chart: {
-                zoomType: 'x'
-            },
-            title: {
-                text: 'Number of Transactions'
-            },
-            subtitle: {
-                text: document.ontouchstart === undefined ?
-                        'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-            },
-            xAxis: {
-                type: 'datetime',
-                title: {
-                    text: 'Update Time'
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Paths'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            plotOptions: {
-                area: {
-                    fillColor: {
-                        linearGradient: {
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 1
-                        },
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                        ]
-                    },
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    threshold: null
-                }
-            },
 
-            series: [{
-                type: 'line',
-                name: 'Number of Transactions',
-                data: data
-            }]
-        });
+    $.ajax({
+      url: "http://127.0.0.1:8081/requestRepoBrief",
+      type:"GET",
+      dataType: "json",
+
+      success: function(response)
+      {
+                //console.log(response);
+                var date = [];
+                var transaction_num = [];
+                var project_num =[];
+                var case_num =[];
+                var class_num =[];
+                console.log(response);
+                for(var i=0;i<response.length;i++)
+                {
+                  date.push(response[i].timestamp);
+                  transaction_num.push(response[i].NT);
+                  project_num.push(response[i].project);
+                  case_num.push(response[i].UseCaseNum);
+                  class_num.push(response[i].EntityNum);
+
+                }
+                console.log(response.timestamp);
+
+                // Default chart at the repo level - Number of transactions
+                  var chart =   Highcharts.chart('trending-line', {
+                  xAxis: {
+                    title: {
+                                text: 'Time stamp'
+                            },
+                      categories: date
+                  },
+                  yAxis: {
+                    title: {
+                                text: 'Number of Transactions'
+                            },
+                      min: 0
+                  },
+
+                  series: [{
+                      type: 'line',
+                      name:'transaction_num',
+                      data: transaction_num,
+                      marker: {
+                          enabled: false
+                      },
+                      states: {
+                          hover: {
+                              lineWidth: 0
+                          }
+                      },
+                      enableMouseTracking: true
+                  }
+                  ]
+              });
+              // On click of the projects tab - update the y axis.
+
+            $('.blue-card').click(function ()
+            {
+                  console.log("blue clicked");
+
+                  chart.update({
+                    yAxis: {
+                      title: {
+                                  text: 'Project'
+                              }
+
+                    },
+                    series: [{
+                      name:'project_num',
+                      data: project_num
+                    }]
+                    });
+            });
+
+              // On click of the use cases tab - update the y axis.
+            $('.red-card').click(function ()
+            {
+                  console.log("red clicked");
+                  chart.update({
+                    yAxis: {
+                      title: {
+                                  text: 'Number of use cases'
+                              }
+
+                    },
+                    series: [{
+                      name:'usecase_num',
+                      data: case_num
+                    }]
+                    });
+            });
+
+              // On click of the transaction tab - update the y axis.
+            $('.green-card').click(function ()
+            {
+                    console.log("green clicked");
+                    var transaction_num_new = [];
+                    for(var i=0;i<response.length;i++)
+                    {
+                        transaction_num_new.push(response[i].transaction_num);
+                    }
+                    console.log(transaction_num_new);
+                    chart.update({
+                      yAxis: {
+                        title: {
+                                    text: 'Number of transactions'
+                                }
+
+                    },
+                    series: [{
+                      name:'transaction_num',
+                      data: transaction_num_new
+                    }]
+                    });
+          });
+
+            // On click of the classes tab - update the y axis.
+            $('.purple-card').click(function ()
+            {
+                console.log("purple clicked");
+                chart.update({
+                  yAxis: {
+                    title: {
+                                text: 'Number of classes'
+                            }
+
+                  },
+                  series: [{
+                    name:'class_num',
+                    data: class_num
+                  }]
+                  });
+            });
+
+      },
+      error:function(error){
+        console.log("failed");
+      }
+
+
     });
+    //  console.log(data);
+
+
+    // var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
+    // d3.csv(url, function(error, data) {
+    //     if (error) {
+    //         console.error(error);
+    //         return;
+    //     }
+    //     var tempData = [];
+    //     data.forEach(function(d) {
+    //         d.update_time = new Date(d.update_time).getTime();
+    //         d.number_of_paths = +d.number_of_paths;
+    //         tempData.push([d.update_time, d.number_of_paths])
+    //     });
+    //     data= tempData;
+    //     console.dir(data)
+    //     Highcharts.chart('trending-line', {
+    //         chart: {
+    //             zoomType: 'x'
+    //         },
+    //         title: {
+    //             text: 'Number of Transactions'
+    //         },
+    //         subtitle: {
+    //             text: document.ontouchstart === undefined ?
+    //                     'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+    //         },
+    //         xAxis: {
+    //             type: 'datetime',
+    //             title: {
+    //                 text: 'Update Time'
+    //             }
+    //         },
+    //         yAxis: {
+    //             title: {
+    //                 text: 'Number of Paths'
+    //             }
+    //         },
+    //         legend: {
+    //             enabled: false
+    //         },
+    //         plotOptions: {
+    //             area: {
+    //                 fillColor: {
+    //                     linearGradient: {
+    //                         x1: 0,
+    //                         y1: 0,
+    //                         x2: 0,
+    //                         y2: 1
+    //                     },
+    //                     stops: [
+    //                         [0, Highcharts.getOptions().colors[0]],
+    //                         [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+    //                     ]
+    //                 },
+    //                 marker: {
+    //                     radius: 2
+    //                 },
+    //                 lineWidth: 1,
+    //                 states: {
+    //                     hover: {
+    //                         lineWidth: 1
+    //                     }
+    //                 },
+    //                 threshold: null
+    //             }
+    //         },
+    //
+    //         series: [{
+    //             type: 'line',
+    //             name: 'Number of Transactions',
+    //             data: data
+    //         }]
+    //     });
+    // });
 }
 function createPieChart() {
     var url = $('#transaction-pie')[0].attributes.getNamedItem('data').value;
@@ -1557,7 +1790,7 @@ function submitEdit(){
 	    form_data.append('part_time_staff', $("#editNumber20").val());
 	    form_data.append('difficult_programming_language', $("#editNumber21").val());
 	    form_data.append('modelID', $("#mymodelId").val());
-	    
+
 		$.ajax({
 			type : 'POST',
 			url : "saveModelInfoCharacteristics",
@@ -1572,9 +1805,9 @@ function submitEdit(){
 			},
 			error : function(err) {
 				console.log("fail");
-				console.log(err);			
+				console.log(err);
 			}
-		});	
+		});
 	}
 
 function cancelEdit() {
@@ -1673,54 +1906,153 @@ function cancelEdit() {
 
 
 function highlightElement_classDia(element) {
-      clearHighlight_classDia() ;
-       var allNodes = document.getElementById(element).getElementsByTagName("text");
+      clearHighlight() ;
+      console.log(element);
+       //var allNodes = document.getElementById(element).getElementsByTagName("text");
+       var allNodes = element.getElementsByTagName("text");
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "red";
        }
 
    }
 function highlightElement(id) {
+	console.log("enter highlight");
     clearHighlight() ;
 document.getElementById(id).style.stroke =  "red";
 
 }
-   function clearHighlight() {
-       var allNodes = document.getElementsByTagName("text");
+function clearHighlight() {
+	   var svg = document.getElementsByClassName("use-case")[0];
+	   var svgDoc= svg.contentDocument;
+       var allNodes = svgDoc.getElementsByTagName("text");
 
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "";
        }
    }
 
-// var filesystem = require("fs");
-// var _getAllFilesFromFolder = function(dir) {
-//     // var filesystem = require("fs");
-//     var results = [];
-//
-//     filesystem.readdirSync(dir).forEach(function(file) {
-//
-//         file = dir+'/'+file;
-//         var stat = filesystem.statSync(file);
-//
-//         if (stat && stat.isDirectory()) {
-//             results = results.concat(_getAllFilesFromFolder(file))
-//         } else results.push(file);
-//
-//     });
-//
-//     console.log(results);
-// };
+var dirLink = "public";
+var clickValue;
+var backLink;
+var level = 0;
+function walkDir(get) {
+    fileFolder = $(get).data('url');
+    if (dirLink.indexOf(fileFolder) != -1) {
+        var index = dirLink.indexOf(fileFolder);
+        dirLink = dirLink.substring(0, index-1);
+        level -= 2;
+    }
+    dirLink += "/"+fileFolder;
+    level++;
 
-// _getAllFilesFromFolder(/ealing/ + "Desktop");
+    $.ajax({
+    	type: 'GET',
+        url: 'listFileUnderDir?fileFolder='+dirLink,
+        success: function (data) {
+    	    buildTable(data);
+        }
+    });
+}
 
-// function walkDir() {
-//     const testFolder = './tests/';
-//     const fs = require('fs');
-//
-//     fs.readdir(testFolder, (err, files) => {
-//         files.forEach(file => {
-//         console.log(file);
-//      });
-//  })
-// });
+function buildTable(data) {
+    var out = "<div id='wrapRow' class='row'>";
+    if (level >= 2) {
+        console.log(dirLink);
+        console.log(level);
+        backLink = dirLink.split("/")[level+1];
+        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backLink+" onclick='walkDir(this)'>Back</button>";
+        out += "<p id='dirAddress' class='col-sm-10'>"+dirLink+"</p></div>";
+    } else {
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+dirLink+"</p></div>";
+    }
+
+    out += "<table class='row table-striped'>";
+    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+    for(var i = 0; i < data.length; i++) {
+        if (data[i].isFolder) {
+            clickValue = data[i].url;
+            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+clickValue+" onclick='walkDir(this)'>" +
+                data[i].url+
+                "</a></td><td>folder</td>";
+        } else {
+            out += "<tr><td>" +
+                data[i].url+
+                "</td><td>file</td>";
+        }
+        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+    }
+    out += "</table>";
+    document.getElementById("displayArchive").innerHTML = out;
+}
+
+
+$('#collapse1').on('shown.bs.collapse', function() {
+    $(".collapseButtom1").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse1').on('hidden.bs.collapse', function() {
+    $(".collapseButtom1").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
+$('#collapse2').on('shown.bs.collapse', function() {
+    $(".collapseButtom2").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse2').on('hidden.bs.collapse', function() {
+    $(".collapseButtom2").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
+var repoLink = "public";
+var documentUrl;
+var backUrl;
+var levels = 0;
+function walkRepoDir(get) {
+    fileName = $(get).data('url');
+    if (repoLink.indexOf(fileName) != -1) {
+        var index = repoLink.indexOf(fileName);
+        repoLink = repoLink.substring(0, index-1);
+        levels -= 2;
+    }
+    repoLink += "/"+fileName;
+    levels++;
+
+
+    $.ajax({
+        type: 'GET',
+        url: 'listFileUnderDir?fileFolder='+repoLink,
+        success: function (data) {
+            buildTable2(data);
+        }
+    });
+}
+
+function buildTable2(data) {
+    var out = "<div id='wrapRow' class='row'>";
+    if (levels >= 2) {
+        backUrl = repoLink.split("/")[levels];
+        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backUrl+" onclick='walkRepoDir(this)'>Back</button>";
+        out += "<p id='dirAddress' class='col-sm-10'>"+repoLink+"</p></div>";
+    } else {
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+repoLink+"</p></div>";
+    }
+
+    out += "<table class='row table-striped'>";
+    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+    for(var i = 0; i < data.length; i++) {
+        if (data[i].isFolder) {
+            documentUrl = data[i].url;
+            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+documentUrl+" onclick='walkRepoDir(this)'>" +
+                data[i].url+
+                "</a></td><td>folder</td>";
+        } else {
+            out += "<tr><td>" +
+                data[i].url+
+                "</td><td>file</td>";
+        }
+        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+    }
+    out += "</table>";
+    document.getElementById("displayRepoArchive").innerHTML = out;
+}
