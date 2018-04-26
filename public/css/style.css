@@ -679,24 +679,33 @@ label. control-label. col-md-4 {
 	text-align: left;
 }
 
-[data-toggle="collapse"].collapsed .if-collapsed {
-	display: none;
-}
-[data-toggle="collapse"]:not(.collapsed) .if-not-collapsed {
-	display: none;
-}
+/*[data-toggle="collapse"]:not(.collapsed) .if-not-collapsed {*/
+	/*display: none;*/
+/*}*/
 
-#archive_table {
+/*[data-toggle="collapse"].collapsed .if-collapsed {*/
+	/*display: none;*/
+/*}*/
+
+#displayArchive table, #displayRepoArchive table{
 	margin: auto;
-	width: 100%;
+	width: 80%;
 }
 
-#archive_table tr {
-	width: 100%;
+#displayArchive table tr , #displayRepoArchive table tr{
+	width: 80%;
 	height: 40px;
 	text-align: center;
 }
 
+#wrapRow {
+	margin: 10px;
+}
+
+#dirAddress {
+	font-size: 16px;
+	margin: 5px 0 10px;
+}
 .modal-content {
 	height: auto;
 }

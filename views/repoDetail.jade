@@ -1,9 +1,5 @@
-if reppID
-  - var repoID = reppID
-input(type='hidden', value=repoID)#myrepoId
-div
-- console.log("RepoDetail:   "+ totalRec )
-div
+-var repoID = repoInfo._id
+-var path = repoInfo.AccessDir;
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -59,8 +55,10 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#repo_estimation') Estimation
      li
-      a(data-toggle='tab', href='#project_list') Projects
-        span(class="badge") #{totalRec}
+      a(data-toggle='tab', href='#project_list') Projects 
+        span(class="badge") #{repoInfo.Models.length}
+     li
+      a(data-toggle='tab', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
       if repoInfo
@@ -111,11 +109,14 @@ div.block.panel.panel-default
                 .col-sm-8 Project Name
                 .col-sm-2 Date
              .list-group
-             - var pageIndex = (currentPage - 1)*(pageSize) + 1
-             div(id='page-panel')
-                each item in repoPageInfo
-                    a.list-group-item.row#model-title(href="queryModelInfo?model_id="+item._id)
-                        .col-sm-2 #{pageIndex++}
-                        .col-sm-8 #{item.Name}
-                        .col-sm-2 #{item.creationTime}
-                  include pagination.jade
+                 - var pageIndex = (currentPage - 1)*(pageSize) + 1
+                 div(id='page-panel')
+                     each item in repoPageInfo
+                         a.list-group-item.row#model-title(href="queryModelInfo?model_id=" + item._id)
+                             .col-sm-2 #{pageIndex++}
+                             .col-sm-8 #{item.Name}
+                             .col-sm-2 #{item.creationTime}
+                     include pagination.jade
+     div.tab-pane.fade(id="repo_archive")
+         div#displayRepoArchive
+

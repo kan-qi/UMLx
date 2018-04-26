@@ -1149,9 +1149,9 @@ function toggleDiagram(diagramType) {
         umlDiagram = "/uml_diagram.svg";
         }
 
-        
+
 	if (pos != -1) {
-		
+
 
         new_obj_data = obj_data.slice(0, pos)+umlDiagram;
 	} else {
@@ -1931,34 +1931,128 @@ function clearHighlight() {
        }
    }
 
-// var filesystem = require("fs");
-// var _getAllFilesFromFolder = function(dir) {
-//     // var filesystem = require("fs");
-//     var results = [];
-//
-//     filesystem.readdirSync(dir).forEach(function(file) {
-//
-//         file = dir+'/'+file;
-//         var stat = filesystem.statSync(file);
-//
-//         if (stat && stat.isDirectory()) {
-//             results = results.concat(_getAllFilesFromFolder(file))
-//         } else results.push(file);
-//
-//     });
-//
-//     console.log(results);
-// };
+var dirLink = "public";
+var clickValue;
+var backLink;
+var level = 0;
+function walkDir(get) {
+    fileFolder = $(get).data('url');
+    if (dirLink.indexOf(fileFolder) != -1) {
+        var index = dirLink.indexOf(fileFolder);
+        dirLink = dirLink.substring(0, index-1);
+        level -= 2;
+    }
+    dirLink += "/"+fileFolder;
+    level++;
 
-// _getAllFilesFromFolder(/ealing/ + "Desktop");
+    $.ajax({
+    	type: 'GET',
+        url: 'listFileUnderDir?fileFolder='+dirLink,
+        success: function (data) {
+    	    buildTable(data);
+        }
+    });
+}
 
-// function walkDir() {
-//     const testFolder = './tests/';
-//     const fs = require('fs');
-//
-//     fs.readdir(testFolder, (err, files) => {
-//         files.forEach(file => {
-//         console.log(file);
-//      });
-//  })
-// });
+function buildTable(data) {
+    var out = "<div id='wrapRow' class='row'>";
+    if (level >= 2) {
+        console.log(dirLink);
+        console.log(level);
+        backLink = dirLink.split("/")[level+1];
+        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backLink+" onclick='walkDir(this)'>Back</button>";
+        out += "<p id='dirAddress' class='col-sm-10'>"+dirLink+"</p></div>";
+    } else {
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+dirLink+"</p></div>";
+    }
+
+    out += "<table class='row table-striped'>";
+    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+    for(var i = 0; i < data.length; i++) {
+        if (data[i].isFolder) {
+            clickValue = data[i].url;
+            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+clickValue+" onclick='walkDir(this)'>" +
+                data[i].url+
+                "</a></td><td>folder</td>";
+        } else {
+            out += "<tr><td>" +
+                data[i].url+
+                "</td><td>file</td>";
+        }
+        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+    }
+    out += "</table>";
+    document.getElementById("displayArchive").innerHTML = out;
+}
+
+
+$('#collapse1').on('shown.bs.collapse', function() {
+    $(".collapseButtom1").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse1').on('hidden.bs.collapse', function() {
+    $(".collapseButtom1").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
+$('#collapse2').on('shown.bs.collapse', function() {
+    $(".collapseButtom2").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse2').on('hidden.bs.collapse', function() {
+    $(".collapseButtom2").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
+var repoLink = "public";
+var documentUrl;
+var backUrl;
+var levels = 0;
+function walkRepoDir(get) {
+    fileName = $(get).data('url');
+    if (repoLink.indexOf(fileName) != -1) {
+        var index = repoLink.indexOf(fileName);
+        repoLink = repoLink.substring(0, index-1);
+        levels -= 2;
+    }
+    repoLink += "/"+fileName;
+    levels++;
+
+
+    $.ajax({
+        type: 'GET',
+        url: 'listFileUnderDir?fileFolder='+repoLink,
+        success: function (data) {
+            buildTable2(data);
+        }
+    });
+}
+
+function buildTable2(data) {
+    var out = "<div id='wrapRow' class='row'>";
+    if (levels >= 2) {
+        backUrl = repoLink.split("/")[levels];
+        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backUrl+" onclick='walkRepoDir(this)'>Back</button>";
+        out += "<p id='dirAddress' class='col-sm-10'>"+repoLink+"</p></div>";
+    } else {
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+repoLink+"</p></div>";
+    }
+
+    out += "<table class='row table-striped'>";
+    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+    for(var i = 0; i < data.length; i++) {
+        if (data[i].isFolder) {
+            documentUrl = data[i].url;
+            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+documentUrl+" onclick='walkRepoDir(this)'>" +
+                data[i].url+
+                "</a></td><td>folder</td>";
+        } else {
+            out += "<tr><td>" +
+                data[i].url+
+                "</td><td>file</td>";
+        }
+        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+    }
+    out += "</table>";
+    document.getElementById("displayRepoArchive").innerHTML = out;
+}
