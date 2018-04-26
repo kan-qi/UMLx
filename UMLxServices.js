@@ -1310,14 +1310,7 @@ app.get('/queryUsers', function(req,res){
 });
 
 app.get('/listFileUnderDir', function(req, res) {
-	var filePath;
-	if (req.query.fileFolder.indexOf("/") == 0) {
-		filePath = req.query.fileFolder.substring(1);
-	} else if (req.query.fileFolder.indexOf("public/uploads/") == 0) {
-		filePath = req.query.fileFolder;
-	} else {
-        filePath = "public/uploads/"+req.query.fileFolder;
-	}
+	var filePath = req.query.fileFolder;
 
     function recurDir(filePath, done) {
         var results = [];
@@ -1333,29 +1326,31 @@ app.get('/listFileUnderDir', function(req, res) {
 				list.forEach(function(file) {
 					var fileDir = path.resolve(filePath, file);
 					fs.stat(fileDir, function(err, stat){
-						if (stat && stat.isDirectory()) {
+						// if (stat && stat.isDirectory()) {
+						// 	var entry = {};
+						// 	entry.isFolder = 'true';
+						// 	entry.url = file;
+                         //    entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+						// 	results.push(entry);
+                        //
+						// 	recurDir(fileDir, function(err, ans) {
+						// 		results = results.concat(ans);
+						// 		if (!--pending) {
+						// 			done(null, results);
+						// 		}
+						// 	});
+						// } else {
 							var entry = {};
-							entry.isFolder = 'true';
+							entry.isFolder = stat.isDirectory();
 							entry.url = file;
-                            entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
-							results.push(entry);
-
-							recurDir(fileDir, function(err, ans) {
-								results = results.concat(ans);
-								if (!--pending) {
-									done(null, results);
-								}
-							});
-						} else {
-							var entry = {};
-							entry.isFolder = 'false';
-							entry.url = file;
+							entry.size = stat.size;
+							entry.date = stat.birthtime;
 							entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
 							results.push(entry);
 							if (!--pending) {
 								done(null, results);
 							}
-						}
+						// }
 					});
 				});
             }

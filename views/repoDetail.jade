@@ -1,4 +1,5 @@
 -var repoID = repoInfo._id
+-var path = repoInfo.AccessDir;
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -48,6 +49,8 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#project_list') Projects 
         span(class="badge") #{repoInfo.Models.length}
+     li
+      a(data-toggle='tab', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
     div.tab-content
      div.tab-pane.fade.in.active(id="repo_analytics")
       if repoInfo
@@ -181,3 +184,5 @@ div.block.panel.panel-default
                         .col-sm-8 #{model.Name}
                         .col-sm-2 #{model.creationTime}
                  - }
+     div.tab-pane.fade(id="repo_archive")
+         div#displayRepoArchive

@@ -252,7 +252,7 @@ function delete_use_case_func(){
 }
 
 function query_model_usecase_func(modelId) {
-//  console.log(modelId);
+ console.log(modelId);
 //  var url = $(this).attr("href");
 //  console.log(url);
     if ($('.model-info-content a[href="#usecase-analysis"]').parent()[0].classList.contains('active')) {
@@ -263,7 +263,7 @@ function query_model_usecase_func(modelId) {
         type : 'GET',
         url : 'requestModelUseCases?model_id='+modelId,
         success : function(response) {
-//          console.log(response);
+         console.log(response);
             $("#model-usecase-analysis").html("");
             $("#model-usecase-analysis").append(response);
         },
@@ -1401,27 +1401,6 @@ function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTi
 }
 
 function editFunction(button) {
-//    document.getElementById("editNumber1").contentEditable = "true";
-//    document.getElementById("editNumber2").contentEditable = "true";
-//    document.getElementById("editNumber3").contentEditable = "true";
-//    document.getElementById("editNumber4").contentEditable = "true";
-//    document.getElementById("editNumber5").contentEditable = "true";
-//    document.getElementById("editNumber6").contentEditable = "true";
-//    document.getElementById("editNumber7").contentEditable = "true";
-//    document.getElementById("editNumber8").contentEditable = "true";
-//    document.getElementById("editNumber9").contentEditable = "true";
-//    document.getElementById("editNumber10").contentEditable = "true";
-//    document.getElementById("editNumber11").contentEditable = "true";
-//    document.getElementById("editNumber12").contentEditable = "true";
-//    document.getElementById("editNumber13").contentEditable = "true";
-//    document.getElementById("editNumber14").contentEditable = "true";
-//    document.getElementById("editNumber15").contentEditable = "true";
-//    document.getElementById("editNumber16").contentEditable = "true";
-//    document.getElementById("editNumber17").contentEditable = "true";
-//    document.getElementById("editNumber18").contentEditable = "true";
-//    document.getElementById("editNumber19").contentEditable = "true";
-//    document.getElementById("editNumber20").contentEditable = "true";
-//    document.getElementById("editNumber21").contentEditable = "true";
    document.getElementById("editNumber1").attributes.removeNamedItem("disabled");
    document.getElementById("editNumber2").attributes.removeNamedItem("disabled");
    document.getElementById("editNumber3").attributes.removeNamedItem("disabled");
@@ -1454,27 +1433,6 @@ function submitEdit() {
 }
 
 function cancelEdit() {
-//    document.getElementById("editNumber1").contentEditable = "false";
-//    document.getElementById("editNumber2").contentEditable = "false";
-//    document.getElementById("editNumber3").contentEditable = "false";
-//    document.getElementById("editNumber4").contentEditable = "false";
-//    document.getElementById("editNumber5").contentEditable = "false";
-//    document.getElementById("editNumber6").contentEditable = "false";
-//    document.getElementById("editNumber7").contentEditable = "false";
-//    document.getElementById("editNumber8").contentEditable = "false";
-//    document.getElementById("editNumber9").contentEditable = "false";
-//    document.getElementById("editNumber10").contentEditable = "false";
-//    document.getElementById("editNumber11").contentEditable = "false";
-//    document.getElementById("editNumber12").contentEditable = "false";
-//    document.getElementById("editNumber13").contentEditable = "false";
-//    document.getElementById("editNumber14").contentEditable = "false";
-//    document.getElementById("editNumber15").contentEditable = "false";
-//    document.getElementById("editNumber16").contentEditable = "false";
-//    document.getElementById("editNumber17").contentEditable = "false";
-//    document.getElementById("editNumber18").contentEditable = "false";
-//    document.getElementById("editNumber19").contentEditable = "false";
-//    document.getElementById("editNumber20").contentEditable = "false";
-//    document.getElementById("editNumber21").contentEditable = "false";
 
    var attr1 = document.createAttribute("disabled");
    var attr2 = document.createAttribute("disabled");
@@ -1569,64 +1527,128 @@ document.getElementById(id).style.stroke =  "red";
        }
    }
 
-// var filesystem = require("fs");
-// var _getAllFilesFromFolder = function(dir) {
-//     // var filesystem = require("fs");
-//     var results = [];
-//
-//     filesystem.readdirSync(dir).forEach(function(file) {
-//
-//         file = dir+'/'+file;
-//         var stat = filesystem.statSync(file);
-//
-//         if (stat && stat.isDirectory()) {
-//             results = results.concat(_getAllFilesFromFolder(file))
-//         } else results.push(file);
-//
-//     });
-//
-//     console.log(results);
-// };
+var dirLink = "public";
+var clickValue;
+var backLink;
+var level = 0;
+function walkDir(get) {
+    fileFolder = $(get).data('url');
+    if (dirLink.indexOf(fileFolder) != -1) {
+        var index = dirLink.indexOf(fileFolder);
+        dirLink = dirLink.substring(0, index-1);
+        level -= 2;
+    }
+    dirLink += "/"+fileFolder;
+    level++;
 
-function walkDir(fileFolder) {
     $.ajax({
     	type: 'GET',
-        url: 'listFileUnderDir?fileFolder='+fileFolder,
+        url: 'listFileUnderDir?fileFolder='+dirLink,
         success: function (data) {
-    		console.log(data);
-
-            var out = "<table class='table-striped'>";
-            out += "<tr><th>File Lists</th></tr>";
-
-            for(var i = 0; i < data.length; i++) {
-            	// var fatherUrl = data[i].parent.substring(data[i].parent.lastIndexOf("/")+1);
-            	// if (fatherUrl == fileFolder) {
-            	// 	if (data[i].isFolder == 'true') {
-            	// 		var clickValue = data[i].parent+"/"+data[i].url;
-            	// 		console.log(clickValue);
-                 //        out += "<tr><td><a href='#'>" +
-                 //            data[i].url+
-                 //            "</a></td>";
-					// } else {
-                        out += "<tr><td>" +
-                            data[i].url+
-                            "</td>";
-				// 	}
-				// }
-            }
-            out += "</table>";
-            document.getElementById("displayArchive").innerHTML = out;
+    	    buildTable(data);
         }
     });
 }
 
-// function walkDir() {
-//     const testFolder = './tests/';
-//     const fs = require('fs');
-//
-//     fs.readdir(testFolder, (err, files) => {
-//         files.forEach(file => {
-//         console.log(file);
-//      });
-//  })
-// });
+function buildTable(data) {
+    var out = "<div id='wrapRow' class='row'>";
+    if (level >= 2) {
+        console.log(dirLink);
+        console.log(level);
+        backLink = dirLink.split("/")[level+1];
+        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backLink+" onclick='walkDir(this)'>Back</button>";
+        out += "<p id='dirAddress' class='col-sm-10'>"+dirLink+"</p></div>";
+    } else {
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+dirLink+"</p></div>";
+    }
+
+    out += "<table class='row table-striped'>";
+    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+    for(var i = 0; i < data.length; i++) {
+        if (data[i].isFolder) {
+            clickValue = data[i].url;
+            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+clickValue+" onclick='walkDir(this)'>" +
+                data[i].url+
+                "</a></td><td>folder</td>";
+        } else {
+            out += "<tr><td>" +
+                data[i].url+
+                "</td><td>file</td>";
+        }
+        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+    }
+    out += "</table>";
+    document.getElementById("displayArchive").innerHTML = out;
+}
+
+
+$('#collapse1').on('shown.bs.collapse', function() {
+    $(".collapseButtom1").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse1').on('hidden.bs.collapse', function() {
+    $(".collapseButtom1").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
+$('#collapse2').on('shown.bs.collapse', function() {
+    $(".collapseButtom2").addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-left');
+});
+
+$('#collapse2').on('hidden.bs.collapse', function() {
+    $(".collapseButtom2").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
+});
+
+var repoLink = "public";
+var documentUrl;
+var backUrl;
+var levels = 0;
+function walkRepoDir(get) {
+    fileName = $(get).data('url');
+    if (repoLink.indexOf(fileName) != -1) {
+        var index = repoLink.indexOf(fileName);
+        repoLink = repoLink.substring(0, index-1);
+        levels -= 2;
+    }
+    repoLink += "/"+fileName;
+    levels++;
+
+
+    $.ajax({
+        type: 'GET',
+        url: 'listFileUnderDir?fileFolder='+repoLink,
+        success: function (data) {
+            buildTable2(data);
+        }
+    });
+}
+
+function buildTable2(data) {
+    var out = "<div id='wrapRow' class='row'>";
+    if (levels >= 2) {
+        backUrl = repoLink.split("/")[levels];
+        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backUrl+" onclick='walkRepoDir(this)'>Back</button>";
+        out += "<p id='dirAddress' class='col-sm-10'>"+repoLink+"</p></div>";
+    } else {
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+repoLink+"</p></div>";
+    }
+
+    out += "<table class='row table-striped'>";
+    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+    for(var i = 0; i < data.length; i++) {
+        if (data[i].isFolder) {
+            documentUrl = data[i].url;
+            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+documentUrl+" onclick='walkRepoDir(this)'>" +
+                data[i].url+
+                "</a></td><td>folder</td>";
+        } else {
+            out += "<tr><td>" +
+                data[i].url+
+                "</td><td>file</td>";
+        }
+        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+    }
+    out += "</table>";
+    document.getElementById("displayRepoArchive").innerHTML = out;
+}
