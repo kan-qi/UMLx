@@ -112,7 +112,7 @@ div.block.panel.panel-default
                  - var pageIndex = (currentPage - 1)*(pageSize) + 1
                  div(id='page-panel')
                      each item in repoPageInfo
-                         a.list-group-item.row#model-title(href="queryModelInfo?model_id=" + item._id)
+                         a.list-group-item.row.model-title(href="queryModelInfo?model_id=" + item._id)
                              .col-sm-2 #{pageIndex++}
                              .col-sm-8 #{item.Name}
                              .col-sm-2 #{item.creationTime}

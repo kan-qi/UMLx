@@ -462,11 +462,11 @@ function query_sub_model_detail_func(){
         url : url,
         success : function(response) {
 //          console.log(response);
-            $("#use-case-detail-panel").html("");
+            $("#use-case-fdetail-panel").html("");
             $("#use-case-detail-panel").append(response);
             var breadCrumb = $('ol.breadcrumb')[0];
             if (breadCrumb.children.length == 3) {
-                breadCrumb.children[2].innerText = $(response).data('use-case-title');
+                breadCrumb.children[2].innerText = $(response).find(".use-case-detail-content").data('use-case-title');
             } else {
                 breadCrumb.innerHTML += "<li class='breadcrumb-item active'>"+ $(response).data('use-case-title') +"</li>"
             }
@@ -984,7 +984,7 @@ $('#repo-stats-chart').append('<div id="model-selection-panel"> \
 $(document).ready(function() {
     $(document).on('click','a.sub-model-title', query_sub_model_detail_func);
 //  $(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
-    $(document).on('click','#model-title', query_model_detail_func);
+    $(document).on('click','.model-title', query_model_detail_func);
 //    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
     $(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
     $(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);

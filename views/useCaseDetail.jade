@@ -1,7 +1,7 @@
 if useCaseInfo
  -var useCase_id = useCaseInfo._id
    input(type='hidden', value=useCase_id)#UseCaseId
-   div.use-case-detail-content(data-use-case-title=useCaseInfo.Name)
+   div.use-case-detail-content(data-use-case-title="#{useCaseInfo.Name}")
   ul.nav.nav-tabs
    li.active
     a(data-toggle='tab', href='#use-case-info-pane') UseCase Info
