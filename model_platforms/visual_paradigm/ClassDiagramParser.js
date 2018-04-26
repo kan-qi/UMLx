@@ -31,9 +31,56 @@
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');	
 		for(var i in XMIClasses){
 			var XMIClass = XMIClasses[i];
+			
+			var XMIAttributes = jp.query(XMIClass, '$.ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
+			var attributes = new Array();
+			
+			for(var i in XMIAttributes){
+				var XMIAttribute = XMIAttributes[i];
+				var types = jp.query(XMIAttribute, '$.type[?(@[\'$\'][\'xmi:idref\'])]');
+				var type = "EAJava_void";
+				if(types && types.length > 0){
+					type = types[0]['$']['xmi:idref'];
+				}
+				
+				console.log(XMIAttribute);
+				var attribute = {
+						Name: XMIAttribute['$']['name'],
+						Type: type,
+						isStatic: XMIAttribute['$']['isStatic']
+				}
+				attributes.push(attribute);
+			}
+			
+			var XMIOperations = jp.query(XMIClass, '$.ownedOperation[?(@[\'$\'][\'xmi:id\'])]');
+			var operations = new Array();
+
+			for(var i in XMIOperations){
+				var XMIOperation = XMIOperations[i];
+				var XMIParameters = jp.query(XMIOperation, '$.ownedParameter[?(@[\'$\'][\'xmi:id\'])]');
+				var parameters = [];
+				for(var j in XMIParameters){
+					var XMIParameter = XMIParameters[j];
+					var parameter = {
+							Name: XMIParameter['$']['name'],
+							Type: XMIParameter['$']['type']
+					}
+					parameters.push(parameter);
+				}
+				
+				var operation = {
+						Name: XMIOperation['$']['name'],
+						Visibility: XMIOperation['$']['visibility'],
+						Parameters: parameters
+				}
+				operations.push(operation);
+			}
+			
             var XMIClassesByStandard = {
 				_id: XMIClass['$']['xmi:id'],
 				Name: XMIClass['$']['name'],
+				Operations: operations,
+				Attributes: attributes
 			};
 				Model.Elements.push(XMIClassesByStandard);
 		}

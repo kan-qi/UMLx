@@ -1,53 +1,54 @@
 if useCaseInfo        
-  button(onclick="toggleQueryList()", class="big-button") Toggle List 
+  button(onclick="openList()", class="big-button") Open List 
+  button(onclick="toggleDiagram('#{useCaseInfo.DiagramType}')", class="big-button") Toggle Diagram
   button(onclick="toggleZoom()", class="big-button") Enable Zoom
-  button(onclick="toggleDiagram()", class="big-button") Toggle Diagram
+  button(id="zoom-in", class="big-button" style="display: none;") +
+  button(id="zoom-out", class="big-button" style="display: none;") -
+  button(id="reset", class="big-button" style="display: none;") Reset
   div.use-case-info(id="use-case-diagram")
     //Toggle Diagram should be able to toggle betwee useCase.svg and uml_diagram.svg
-    object.use-case(data=useCaseInfo.AccessDir+"/robust_diagram.svg")
-      div(id="lightgallery")
-        div(data-src=useCaseInfo.AccessDir+"/robust_diagram.svg")
-          img.use-case(src=useCaseInfo.AccessDir+"/robust_diagram.svg", id="use-case-diagram-img" onclick="window.open('"+useCaseInfo.AccessDir+"/robust_diagram.svg', '_blank')")
-          img.use-case(src=useCaseInfo.AccessDir+"/robust_diagram.svg", id="use-case-diagram-img")
-    
-  div.use-case-info-content(style="display: none;", id="use-case-list")
-   ul.nav.nav-tabs
-    li.active
-     a(data-toggle='tab', href='#use-case-nodes') Activities
-    li
-     a(data-toggle='tab', href='#use-case-paths') Paths
-   div.tab-content
-    div.tab-pane.fade.in.active(id="use-case-nodes")
-     table.table.table-striped.use-case-info-tab
-      thead
-       tr
-        th ID
-        th ELEMENT
-        th TYPE
-      tbody
-       -var elementId = 1;
-       each element in useCaseInfo.Activities
-        tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
-         td #{elementId}
-         td
-          span.use-case-element #{element.Name}
-         td
-          span.use-case-element-type #{element.Type}
-        - elementId++;
-    div.tab-pane.fade(id="use-case-paths")
-     table.table.table-striped.use-case-info-tab
-      thead
-       tr
-        th ID
-        th PATH
-        th TYPE
-      tbody
-       -var pathId = 1;
-       each path in useCaseInfo.DisplayablePaths
-        tr(onclick="highlight_diagram_element('#{path.PathStrByIDs}', 'path', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
-         td #{pathId}
-         td
-          span.use-case-path #{path.PathStr}
-         td
-          span.use-case-path-type #{path.Tag}
-        - pathId++;
+    object.use-case(data=useCaseInfo.AccessDir+"/useCase.svg")
+
+  div(id="mySidenav",class="sidenav")
+    a(href="javascript:void(0)",class="closebtn",onclick="closeList()") &times
+    div.use-case-info-content
+     ul.nav.nav-tabs
+      li.active
+       a(data-toggle='tab', href='#use-case-nodes') Activities
+      li
+       a(data-toggle='tab', href='#use-case-paths') Paths
+     div.tab-content
+      div.tab-pane.fade.in.active(id="use-case-nodes")
+       table.table.table-striped.use-case-info-tab
+        thead
+         tr
+          th ID
+          th ELEMENT
+          th TYPE
+        tbody
+         -var elementId = 1;
+         each element in useCaseInfo.Activities
+          tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
+           td #{elementId}
+           td
+            span.use-case-element #{element.Name}
+           td
+            span.use-case-element-type #{element.Type}
+          - elementId++;
+      div.tab-pane.fade(id="use-case-paths")
+       table.table.table-striped.use-case-info-tab
+        thead
+         tr
+          th ID
+          th PATH
+          th TYPE
+        tbody
+         -var pathId = 1;
+         each path in useCaseInfo.DisplayablePaths
+          tr(onclick="highlight_diagram_element('#{path.PathStrByIDs}', 'path', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
+           td #{pathId}
+           td
+            span.use-case-path #{path.PathStr}
+           td
+            span.use-case-path-type #{path.Tag}
+          - pathId++;

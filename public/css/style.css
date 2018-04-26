@@ -1,3 +1,15 @@
+.repo-metrics
+{
+	width:100%;
+}
+#chart-1
+{
+	width:100%;
+}
+#trending-line
+{
+	width: 100%;
+}
 .column {
 	float: left;
 	position: relative;
@@ -117,7 +129,7 @@
 }
 
 #use-case-info-pane .tab-pane {
-	height: 190px;
+	height: 90%;
 }
 
 .dropdown-toggle .caret {
@@ -215,7 +227,7 @@
 
 .use-case {
 	width: 100%;
-	height: 500px;
+	height: 65%;
 }
 
 .tab-pane {
@@ -257,10 +269,17 @@
 	line-height: 2;
 }
 
-.repo-info-content .tab-pane, .model-info-content .tab-pane {
-	min-height: 400px;
+.repo-info-content .tab-pane, .model-info-content {
+	min-height: 80%;
 	margin: 0 auto;
 	width: 80%;
+	border: 0;
+}
+
+.tab-pane {
+	min-height: 80%;
+	margin: 0 auto;
+	width: 100%;
 	border: 0;
 }
 
@@ -342,6 +361,11 @@
 select.form-control {
 	width: 80px;
 	float: right;
+}
+
+select.estimation-form-control {
+    width: 160px;
+    float: right;
 }
 
 select.sEstimator.form-control {
@@ -638,7 +662,7 @@ input[type=file] {
 .bolder{
     font-weight:Bold;
 }
-.collapseButtom1, .collapseButtom2 {
+.collapseButtom {
 	float: right;
 }
 
@@ -681,4 +705,44 @@ label. control-label. col-md-4 {
 #dirAddress {
 	font-size: 16px;
 	margin: 5px 0 10px;
+}
+.modal-content {
+	height: auto;
+}
+
+#use-case-nodes {
+    height: 100%;
+    overflow-y: auto; }
+
+#use-case-paths {
+    height: 100%;
+    overflow-y: auto; }
+
+.sidenav {
+    position: fixed;
+    z-index: 1;
+    left: 32%;
+    background-color: #FFFFFF;
+    overflow-x: hidden;
+    transition: 0.5s;
+    bottom: 0;
+    width: 56%;
+    height: 0;
+}
+
+.sidenav a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 15px;
+    color: #000000;
+    display: block;
+    transition: 0.3s;
+}
+
+.sidenav .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 28px;
+    margin-left: 50px;
 }

@@ -1,3 +1,4 @@
+
 function setCookie(cname, cvalue, exdays) {
     var expires="";
     if(exdays > 0){
@@ -9,6 +10,37 @@ function setCookie(cname, cvalue, exdays) {
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
+function pagination_call(repoId, currentPage) {
+
+    console.log("Inside Script" + repoId);
+
+    var data = {
+        repId: repoId,
+        //pageSize: pageSize,
+        //start: start,
+        currentPage:currentPage
+        //index:index,
+    };
+
+    //console.log("StepSize "+stepSize);
+    	$.ajax({
+		type : 'GET',
+		url : "/pager",
+		data : data,
+		contentType: "application/json",
+		success : function(response) {
+			//console.log(response);
+          //  $('#pResult').append(response);
+            $("#page-panel").html("");
+			$("#page-panel").append($(response));
+
+		},
+		error : function() {
+			console.log("fail");
+		}
+	});
+
+}
 
 
 function model_file_upload_fnc() {
@@ -37,15 +69,19 @@ function model_file_upload_fnc() {
 }
 
 function highlight_diagram_element(idString, elementType, diagramType) {
-  //var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
-  var svg = document.getElementsByClassName("use-case")[0];
-  var svgDoc = svg.contentDocument;
-  var elementToHighlight = svgDoc.getElementById(idString);
 
+	console.log("higlight function");
+//  var diagramType = $(".use-case").attr("data-diagram-type"); //read this by "data-diagram-type" at the line 3 of diagramDispla.jade. Need to be implemented.
+
+  var svg = document.getElementsByClassName("use-case")[0];
+  var svgDoc= svg.contentDocument;
+  console.log(idString);
+  var elementToHighlight = svgDoc.getElementById(idString);
+   console.log(elementToHighlight);
   if(diagramType === "analysis_diagram"){
            //have put robustness diagram script under robustness diagram - Aishwarya
   }
-    
+
   else if(diagramType === "robustness_diagram") {
       const edges = Array.prototype.slice.apply(svgDoc.getElementsByClassName('edge'));
       idString = idString.replace('___', '->');
@@ -60,17 +96,24 @@ function highlight_diagram_element(idString, elementType, diagramType) {
         }
       }
   }
-    
+
   else if(diagramType === "sequence_diagram"){
       //call kate's, not ready.
   }
   else if(diagramType === "activity_diagram"){
     //call Traci's method.
     if(elementToHighlight) {
-      highlight_activity_diagram(elementToHighlight);
+      highlight_activity_diagram(svgDoc, elementToHighlight);
     }
   }
   else if(diagramType === "class_diagram"){
+	  console.log("class highlight func");
+	  //call Lingquan's method.
+	  if (elementToHighlight) {
+
+		  highlightElement_classDia(elementToHighlight);
+	  }
+
       //call Lingquan's method.
   }
   else if(diagramType === "usim"){
@@ -78,10 +121,18 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   }
 }
 
-function highlight_activity_diagram(element) {
-  if(element.getElementsByTagName("path")) {
-    element.getElementsByTagName("path")[0].setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
-  }
+function clear_highlight_activity_diagram(svgDoc) {
+    var allNodes = svgDoc.getElementsByTagName("path");
+    for(var i = 0; i < allNodes.length; i++) {
+        allNodes[i].setAttribute("style", "stroke:#000000");
+    }
+}
+
+function highlight_activity_diagram(svgDoc, element) {
+    clear_highlight_activity_diagram(svgDoc);
+    if(element.getElementsByTagName("path")) {
+        element.getElementsByTagName("path")[0].setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
+    }
 }
 
 function send_analytics_data(uuid, clientIpAddress, pageNumber) {
@@ -169,9 +220,11 @@ function predict_project_effort_func(){
         contentType : false, // Set content type to false as jQuery will tell the server its a query string request
         data : formData,
         enctype : 'multipart/form-data',
+        async :false,
         success : function(response) {
             console.log(response);
             $("#estimation-result-panel-body").html(response);
+            showEstimationChart();
         },
         error : function() {
             console.log("fail");
@@ -197,6 +250,57 @@ function query_exist_models_fnc(projectId) {
     });
 
     return false;
+}
+
+
+function estimate_project_effort_func(){
+	//var formData = new FormData($('#project-effort-estimation-form')[0]);
+	var form_data = new FormData();
+    form_data.append('distributed_system',1);
+    form_data.append('response_time', 2);
+    form_data.append('end_user_efficiency', 3);
+    form_data.append('complex_internal_processing', 4);
+    form_data.append('code_must_be_reusable', 5);
+    form_data.append('easy_to_install', 1);
+    form_data.append('easy_to_use', 2);
+    form_data.append('portable', 3);
+    form_data.append('easy_to_change', 4);
+    form_data.append('concurrent', 5);
+    form_data.append('includes_special_security_objectives', 1);
+    form_data.append('provides_direct_access_for_third_parties', 2);
+    form_data.append('special_user_training_facilities_are_required', 3);
+    form_data.append('familiar_with_the_project_model_that_is_used', 4);
+    form_data.append('application_experience', 5);
+    form_data.append('object_oriented_experience', 1);
+    form_data.append('lead_analyst_capability', 2);
+    form_data.append('motivation', 3);
+    form_data.append('stable_requirements', 4);
+    form_data.append('part_time_staff', 5);
+    form_data.append('difficult_programming_language', 1);
+    form_data.append('uml_file', "temp.uml");
+    form_data.append('estimator', "Linear Regression");
+    form_data.append('model', "EUCP");
+    form_data.append('simulation', 0);
+	//console.log(formData);
+//	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+	$.ajax({
+		type : 'POST',
+		url : "saveEstimation",
+		cache : false,
+		processData : false, // Don't process the files
+		contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+		data : form_data,
+		enctype : 'multipart/form-data',
+		success : function(response) {
+			console.log(response);
+			$("#estimation-results-tables").html(response);
+		},
+		error : function(err) {
+			console.log("fail");
+			console.log(err);
+		}
+	});
+
 }
 
 function query_model_detail_func(){
@@ -252,7 +356,7 @@ function delete_use_case_func(){
 }
 
 function query_model_usecase_func(modelId) {
- console.log(modelId);
+//  console.log(modelId);
 //  var url = $(this).attr("href");
 //  console.log(url);
     if ($('.model-info-content a[href="#usecase-analysis"]').parent()[0].classList.contains('active')) {
@@ -263,7 +367,7 @@ function query_model_usecase_func(modelId) {
         type : 'GET',
         url : 'requestModelUseCases?model_id='+modelId,
         success : function(response) {
-         console.log(response);
+//          console.log(response);
             $("#model-usecase-analysis").html("");
             $("#model-usecase-analysis").append(response);
         },
@@ -881,7 +985,7 @@ $(document).ready(function() {
     $(document).on('click','a.sub-model-title', query_sub_model_detail_func);
 //  $(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
     $(document).on('click','#model-title', query_model_detail_func);
-    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
+//    $(document).on('click','.request-repo-analytics', query_repo_analytics_func);
     $(document).on('click','#use-case-evaluation-form-submit-button', use_case_evaluation_upload_fnc);
     $(document).on('click','#model-evaluation-form-submit-button', model_evaluation_upload_fnc);
     $(document).on('click','#query-model-btn', query_estimation_models_func);
@@ -982,43 +1086,104 @@ function load_file_upload_fnc(type) {
 }
 
 function toggleQueryList() {
-    $("#use-case-list").slideToggle();
+    // $("#use-case-list").slideToggle();
+		$('#use-case-list').modal('toggle');
 }
 
+var panZoomInstance;
 function toggleZoom() {
-    panZoomInstance = svgPanZoom('object', {
-        zoomEnabled: true,
-        controlIconsEnabled: true,
-        fit: true,
-        center: true,
-        minZoom: 0.1
+    var panZoom = svgPanZoom('object', {
+      zoomEnabled: true,
+      mouseWheelZoomEnabled: false,
+      controlIconsEnabled: false
     });
 
-    // zoom out
-    panZoomInstance.zoom(1)
+    document.getElementById('zoom-in').style.display="inline";
+    document.getElementById('zoom-out').style.display="inline";
+    document.getElementById('reset').style.display="inline";
+
+    document.getElementById('zoom-in').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.zoomIn()
+    });
+
+    document.getElementById('zoom-out').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.zoomOut()
+    });
+
+    document.getElementById('reset').addEventListener('click', function(ev){
+      ev.preventDefault()
+      panZoom.resetZoom()
+    });
 }
 
-
-
-
-function toggleDomainList() {
-    $("#domain-model-list").slideToggle();
-}
+// function toggleDomainList() {
+//     $('#domain-model-list').modal('toggle');
+// }
 
 // added for zoom control on svg
 
 
-function toggleDiagram() {
+function toggleDiagram(diagramType) {
 	var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
 	var pos = obj_data.search("/useCase.svg");
+	if (diagramType==="class_diagram") {
+		pos = obj_data.search("/domainModel.svg");
+	}
 	var new_obj_data = "";
+	var umlDiagram = "";
+	 if(diagramType === "activity_diagram"){
+        umlDiagram = "/activity_diagram.svg";
+        }
+        else if(diagramType === "robustness_diagram"){
+        umlDiagram = "/robustness_diagram.svg";
+        }
+        //else if(diagramType === "class_diagram"){
+        //umlDiagram = "/class_diagram.svg";
+        //}
+        else if(diagramType === "sequence_diagram"){
+        umlDiagram = "/sequence_diagram.svg";
+        }
+        else{
+        umlDiagram = "/uml_diagram.svg";
+        }
+
+
 	if (pos != -1) {
-		new_obj_data = obj_data.slice(0, pos)+"/uml_diagram.svg";
+
+
+        new_obj_data = obj_data.slice(0, pos)+umlDiagram;
 	} else {
-		pos = obj_data.search("uml_diagram.svg");
+		pos = obj_data.search(umlDiagram);
 		new_obj_data = obj_data.slice(0, pos)+"/useCase.svg";
+		if (diagramType === "class_diagram"){
+			new_obj_data = obj_data.slice(0, pos)+"/domainModel.svg";
+		}
 	}
 	document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
+}
+
+
+function toggleDomainModelDiagram(diagramType) {
+    var obj_data = document.getElementsByTagName("object")[0].getAttribute("data");
+    var pos = obj_data.search("/domainModel.svg");
+    var new_obj_data = "";
+    var umlDiagram = "";
+     if(diagramType === "class_diagram"){
+        umlDiagram = "/class_diagram.svg";
+        }
+        else{
+        umlDiagram = "/uml_diagram.svg";
+        }
+
+    if (pos != -1) {
+        new_obj_data = obj_data.slice(0, pos)+umlDiagram;
+    } else {
+        pos = obj_data.search(umlDiagram);
+        new_obj_data = obj_data.slice(0, pos)+"/domainModel.svg";
+    }
+    document.getElementsByTagName("object")[0].setAttribute("data", new_obj_data);
 }
 
 function get_diagram_name() {
@@ -1026,7 +1191,12 @@ function get_diagram_name() {
 }
 
 
-
+function openList() {
+    document.getElementById("mySidenav").style.height = "30%";
+}
+function closeList() {
+    document.getElementById("mySidenav").style.height = "0";
+}
 
 
 
@@ -1080,79 +1250,226 @@ function createCharts() {
 }
 
 function createTrendingLines() {
-    var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
-    d3.csv(url, function(error, data) {
-        if (error) {
-            console.error(error);
-            return;
-        }
-        var tempData = [];
-        data.forEach(function(d) {
-            d.update_time = new Date(d.update_time).getTime();
-            d.number_of_paths = +d.number_of_paths;
-            tempData.push([d.update_time, d.number_of_paths])
-        });
-        data= tempData;
-        console.dir(data)
-        Highcharts.chart('trending-line', {
-            chart: {
-                zoomType: 'x'
-            },
-            title: {
-                text: 'Number of Transactions'
-            },
-            subtitle: {
-                text: document.ontouchstart === undefined ?
-                        'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
-            },
-            xAxis: {
-                type: 'datetime',
-                title: {
-                    text: 'Update Time'
-                }
-            },
-            yAxis: {
-                title: {
-                    text: 'Number of Paths'
-                }
-            },
-            legend: {
-                enabled: false
-            },
-            plotOptions: {
-                area: {
-                    fillColor: {
-                        linearGradient: {
-                            x1: 0,
-                            y1: 0,
-                            x2: 0,
-                            y2: 1
-                        },
-                        stops: [
-                            [0, Highcharts.getOptions().colors[0]],
-                            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
-                        ]
-                    },
-                    marker: {
-                        radius: 2
-                    },
-                    lineWidth: 1,
-                    states: {
-                        hover: {
-                            lineWidth: 1
-                        }
-                    },
-                    threshold: null
-                }
-            },
 
-            series: [{
-                type: 'line',
-                name: 'Number of Transactions',
-                data: data
-            }]
-        });
+    $.ajax({
+      url: "http://127.0.0.1:8081/requestRepoBrief",
+      type:"GET",
+      dataType: "json",
+
+      success: function(response)
+      {
+                //console.log(response);
+                var date = [];
+                var transaction_num = [];
+                var project_num =[];
+                var case_num =[];
+                var class_num =[];
+                console.log(response);
+                for(var i=0;i<response.length;i++)
+                {
+                  date.push(response[i].timestamp);
+                  transaction_num.push(response[i].NT);
+                  project_num.push(response[i].project);
+                  case_num.push(response[i].UseCaseNum);
+                  class_num.push(response[i].EntityNum);
+
+                }
+                console.log(response.timestamp);
+
+                // Default chart at the repo level - Number of transactions
+                  var chart =   Highcharts.chart('trending-line', {
+                  xAxis: {
+                    title: {
+                                text: 'Time stamp'
+                            },
+                      categories: date
+                  },
+                  yAxis: {
+                    title: {
+                                text: 'Number of Transactions'
+                            },
+                      min: 0
+                  },
+
+                  series: [{
+                      type: 'line',
+                      name:'transaction_num',
+                      data: transaction_num,
+                      marker: {
+                          enabled: false
+                      },
+                      states: {
+                          hover: {
+                              lineWidth: 0
+                          }
+                      },
+                      enableMouseTracking: true
+                  }
+                  ]
+              });
+              // On click of the projects tab - update the y axis.
+
+            $('.blue-card').click(function ()
+            {
+                  console.log("blue clicked");
+
+                  chart.update({
+                    yAxis: {
+                      title: {
+                                  text: 'Project'
+                              }
+
+                    },
+                    series: [{
+                      name:'project_num',
+                      data: project_num
+                    }]
+                    });
+            });
+
+              // On click of the use cases tab - update the y axis.
+            $('.red-card').click(function ()
+            {
+                  console.log("red clicked");
+                  chart.update({
+                    yAxis: {
+                      title: {
+                                  text: 'Number of use cases'
+                              }
+
+                    },
+                    series: [{
+                      name:'usecase_num',
+                      data: case_num
+                    }]
+                    });
+            });
+
+              // On click of the transaction tab - update the y axis.
+            $('.green-card').click(function ()
+            {
+                    console.log("green clicked");
+                    var transaction_num_new = [];
+                    for(var i=0;i<response.length;i++)
+                    {
+                        transaction_num_new.push(response[i].transaction_num);
+                    }
+                    console.log(transaction_num_new);
+                    chart.update({
+                      yAxis: {
+                        title: {
+                                    text: 'Number of transactions'
+                                }
+
+                    },
+                    series: [{
+                      name:'transaction_num',
+                      data: transaction_num_new
+                    }]
+                    });
+          });
+
+            // On click of the classes tab - update the y axis.
+            $('.purple-card').click(function ()
+            {
+                console.log("purple clicked");
+                chart.update({
+                  yAxis: {
+                    title: {
+                                text: 'Number of classes'
+                            }
+
+                  },
+                  series: [{
+                    name:'class_num',
+                    data: class_num
+                  }]
+                  });
+            });
+
+      },
+      error:function(error){
+        console.log("failed");
+      }
+
+
     });
+    //  console.log(data);
+
+
+    // var url = $('#trending-line')[0].attributes.getNamedItem('data').value;
+    // d3.csv(url, function(error, data) {
+    //     if (error) {
+    //         console.error(error);
+    //         return;
+    //     }
+    //     var tempData = [];
+    //     data.forEach(function(d) {
+    //         d.update_time = new Date(d.update_time).getTime();
+    //         d.number_of_paths = +d.number_of_paths;
+    //         tempData.push([d.update_time, d.number_of_paths])
+    //     });
+    //     data= tempData;
+    //     console.dir(data)
+    //     Highcharts.chart('trending-line', {
+    //         chart: {
+    //             zoomType: 'x'
+    //         },
+    //         title: {
+    //             text: 'Number of Transactions'
+    //         },
+    //         subtitle: {
+    //             text: document.ontouchstart === undefined ?
+    //                     'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+    //         },
+    //         xAxis: {
+    //             type: 'datetime',
+    //             title: {
+    //                 text: 'Update Time'
+    //             }
+    //         },
+    //         yAxis: {
+    //             title: {
+    //                 text: 'Number of Paths'
+    //             }
+    //         },
+    //         legend: {
+    //             enabled: false
+    //         },
+    //         plotOptions: {
+    //             area: {
+    //                 fillColor: {
+    //                     linearGradient: {
+    //                         x1: 0,
+    //                         y1: 0,
+    //                         x2: 0,
+    //                         y2: 1
+    //                     },
+    //                     stops: [
+    //                         [0, Highcharts.getOptions().colors[0]],
+    //                         [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+    //                     ]
+    //                 },
+    //                 marker: {
+    //                     radius: 2
+    //                 },
+    //                 lineWidth: 1,
+    //                 states: {
+    //                     hover: {
+    //                         lineWidth: 1
+    //                     }
+    //                 },
+    //                 threshold: null
+    //             }
+    //         },
+    //
+    //         series: [{
+    //             type: 'line',
+    //             name: 'Number of Transactions',
+    //             data: data
+    //         }]
+    //     });
+    // });
 }
 function createPieChart() {
     var url = $('#transaction-pie')[0].attributes.getNamedItem('data').value;
@@ -1401,6 +1718,27 @@ function createHistogramIndividually(id, data, xAxisName, yAxisName, histogramTi
 }
 
 function editFunction(button) {
+//    document.getElementById("editNumber1").contentEditable = "true";
+//    document.getElementById("editNumber2").contentEditable = "true";
+//    document.getElementById("editNumber3").contentEditable = "true";
+//    document.getElementById("editNumber4").contentEditable = "true";
+//    document.getElementById("editNumber5").contentEditable = "true";
+//    document.getElementById("editNumber6").contentEditable = "true";
+//    document.getElementById("editNumber7").contentEditable = "true";
+//    document.getElementById("editNumber8").contentEditable = "true";
+//    document.getElementById("editNumber9").contentEditable = "true";
+//    document.getElementById("editNumber10").contentEditable = "true";
+//    document.getElementById("editNumber11").contentEditable = "true";
+//    document.getElementById("editNumber12").contentEditable = "true";
+//    document.getElementById("editNumber13").contentEditable = "true";
+//    document.getElementById("editNumber14").contentEditable = "true";
+//    document.getElementById("editNumber15").contentEditable = "true";
+//    document.getElementById("editNumber16").contentEditable = "true";
+//    document.getElementById("editNumber17").contentEditable = "true";
+//    document.getElementById("editNumber18").contentEditable = "true";
+//    document.getElementById("editNumber19").contentEditable = "true";
+//    document.getElementById("editNumber20").contentEditable = "true";
+//    document.getElementById("editNumber21").contentEditable = "true";
    document.getElementById("editNumber1").attributes.removeNamedItem("disabled");
    document.getElementById("editNumber2").attributes.removeNamedItem("disabled");
    document.getElementById("editNumber3").attributes.removeNamedItem("disabled");
@@ -1428,11 +1766,72 @@ function editFunction(button) {
     document.getElementById("modifyButton").classList.add("hidden");
 }
 
-function submitEdit() {
+function submitEdit(){
+		var form_data = new FormData();
+	    form_data.append('distributed_system',$("#editNumber1").text());
+	    form_data.append('response_time', $("#editNumber2").text());
+	    form_data.append('end_user_efficiency', $("#editNumber3").text());
+	    form_data.append('complex_internal_processing', $("#editNumber4").text());
+	    form_data.append('code_must_be_reusable', $("#editNumber5").text());
+	    form_data.append('easy_to_install', $("#editNumber6").text());
+	    form_data.append('easy_to_use', $("#editNumber7").text());
+	    form_data.append('portable', $("#editNumber8").text());
+	    form_data.append('easy_to_change', $("#editNumber9").text());
+	    form_data.append('concurrent', $("#editNumber10").text());
+	    form_data.append('includes_special_security_objectives', $("#editNumber11").text());
+	    form_data.append('provides_direct_access_for_third_parties', $("#editNumber12").text());
+	    form_data.append('special_user_training_facilities_are_required', $("#editNumber13").text());
+	    form_data.append('familiar_with_the_project_model_that_is_used', $("#editNumber14").text());
+	    form_data.append('application_experience', $("#editNumber15").text());
+	    form_data.append('object_oriented_experience', $("#editNumber16").text());
+	    form_data.append('lead_analyst_capability', $("#editNumber17").text());
+	    form_data.append('motivation', $("#editNumber18").text());
+	    form_data.append('stable_requirements', $("#editNumber19").text());
+	    form_data.append('part_time_staff', $("#editNumber20").text());
+	    form_data.append('difficult_programming_language', $("#editNumber21").text());
+	    form_data.append('modelID', $("#mymodelId").val());
 
-}
+		$.ajax({
+			type : 'POST',
+			url : "saveModelInfoCharacteristics",
+			cache : false,
+			processData : false, // Don't process the files
+			contentType : false, // Set content type to false as jQuery will tell the server its a query string request
+			data : form_data,
+			enctype : 'multipart/form-data',
+			success : function(response) {
+				console.log(response);
+				$("#estimation-results-tables").html(response);
+			},
+			error : function(err) {
+				console.log("fail");
+				console.log(err);
+			}
+		});
+	}
 
 function cancelEdit() {
+//    document.getElementById("editNumber1").contentEditable = "false";
+//    document.getElementById("editNumber2").contentEditable = "false";
+//    document.getElementById("editNumber3").contentEditable = "false";
+//    document.getElementById("editNumber4").contentEditable = "false";
+//    document.getElementById("editNumber5").contentEditable = "false";
+//    document.getElementById("editNumber6").contentEditable = "false";
+//    document.getElementById("editNumber7").contentEditable = "false";
+//    document.getElementById("editNumber8").contentEditable = "false";
+//    document.getElementById("editNumber9").contentEditable = "false";
+//    document.getElementById("editNumber10").contentEditable = "false";
+//    document.getElementById("editNumber11").contentEditable = "false";
+//    document.getElementById("editNumber12").contentEditable = "false";
+//    document.getElementById("editNumber13").contentEditable = "false";
+//    document.getElementById("editNumber14").contentEditable = "false";
+//    document.getElementById("editNumber15").contentEditable = "false";
+//    document.getElementById("editNumber16").contentEditable = "false";
+//    document.getElementById("editNumber17").contentEditable = "false";
+//    document.getElementById("editNumber18").contentEditable = "false";
+//    document.getElementById("editNumber19").contentEditable = "false";
+//    document.getElementById("editNumber20").contentEditable = "false";
+//    document.getElementById("editNumber21").contentEditable = "false";
 
    var attr1 = document.createAttribute("disabled");
    var attr2 = document.createAttribute("disabled");
@@ -1507,20 +1906,25 @@ function cancelEdit() {
 
 
 function highlightElement_classDia(element) {
-      clearHighlight_classDia() ;
-       var allNodes = document.getElementById(element).getElementsByTagName("text");
+      clearHighlight() ;
+      console.log(element);
+       //var allNodes = document.getElementById(element).getElementsByTagName("text");
+       var allNodes = element.getElementsByTagName("text");
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "red";
        }
 
    }
 function highlightElement(id) {
+	console.log("enter highlight");
     clearHighlight() ;
 document.getElementById(id).style.stroke =  "red";
 
 }
-   function clearHighlight() {
-       var allNodes = document.getElementsByTagName("text");
+function clearHighlight() {
+	   var svg = document.getElementsByClassName("use-case")[0];
+	   var svgDoc= svg.contentDocument;
+       var allNodes = svgDoc.getElementsByTagName("text");
 
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "";
