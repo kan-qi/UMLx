@@ -103,7 +103,7 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   else if(diagramType === "activity_diagram"){
     //call Traci's method.
     if(elementToHighlight) {
-      highlight_activity_diagram(elementToHighlight);
+      highlight_activity_diagram(svgDoc, elementToHighlight);
     }
   }
   else if(diagramType === "class_diagram"){
@@ -121,10 +121,18 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   }
 }
 
-function highlight_activity_diagram(element) {
-  if(element.getElementsByTagName("path")) {
-    element.getElementsByTagName("path")[0].setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
-  }
+function clear_highlight_activity_diagram(svgDoc) {
+    var allNodes = svgDoc.getElementsByTagName("path");
+    for(var i = 0; i < allNodes.length; i++) {
+        allNodes[i].setAttribute("style", "stroke:#000000");
+    }
+}
+
+function highlight_activity_diagram(svgDoc, element) {
+    clear_highlight_activity_diagram(svgDoc);
+    if(element.getElementsByTagName("path")) {
+        element.getElementsByTagName("path")[0].setAttribute("style", "stroke:yellow;stroke-width:3px;stroke-opacity:0.5;");
+    }
 }
 
 function send_analytics_data(uuid, clientIpAddress, pageNumber) {
@@ -1913,8 +1921,10 @@ function highlightElement(id) {
 document.getElementById(id).style.stroke =  "red";
 
 }
-   function clearHighlight() {
-       var allNodes = document.getElementsByTagName("text");
+function clearHighlight() {
+	   var svg = document.getElementsByClassName("use-case")[0];
+	   var svgDoc= svg.contentDocument;
+       var allNodes = svgDoc.getElementsByTagName("text");
 
        for(var i = 0; i < allNodes.length; i++) {
                allNodes[i].style.stroke = "";
