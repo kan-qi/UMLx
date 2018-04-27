@@ -7,7 +7,6 @@
  * Identify the stimuli.
  * Identify the boundary.
  * Identify the sytem components.....
- * big and strong....
  */
 (function() {
 	var fs = require('fs');
@@ -16,17 +15,17 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 
-	var xpath = require('xpath');
-	var dom = require('xmldom').DOMParser;
+//	var xpath = require('xpath');
+//	var dom = require('xmldom').DOMParser;
 	
 	var xmiSring = "";
 	
-	function extractUserSystermInteractionModel(filePath, ModelOutputDir, ModelAccessDir, callbackfunc) {
+	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
 		console.log("hello");
-		fs.readFile(filePath, "utf8", function(err, data) {
+//		fs.readFile(filePath, "utf8", function(err, data) {
 //			console.log("file content");
 //			console.log(data);
-			parser.parseString(data, function(err, result) {
+//			parser.parseString(data, function(err, result) {
 				
 				var Model = {
 						Actors:[],
@@ -44,7 +43,7 @@
 						}
 				};
 				
-				xmiString = result;
+//				xmiString = result;
 				graph = constructCallGraph(xmiString);
 				
 				function findNextActivities(currentActivity, activities){
@@ -107,7 +106,6 @@
 								Stimulus: false,
 								OutScope: false,
 								Group: "System"
-								
 						}
 
 						UseCase.Activities.push(nextActivity);
@@ -141,13 +139,15 @@
 				
 				Model.UseCases.push(UseCase);
 				
+//				return Model;
 				
+//				
 				if(callbackfunc){
 					callbackfunc(Model);
 				}
 				
-			});
-		});
+//			});
+//		});
 	}
 	
 	function constructCallGraph(xmiString){
@@ -179,7 +179,7 @@
 					for(var k in XMIClasses){
 						console.log("inspect Classes....");
 						var XMIClass = XMIClasses[k];
-						var identifiedClassUnit = identifyClassUnit(XMIClass);
+						var identifiedClassUnit = identifyClassUnit(XMIClass, xmiString);
 						identifiedClassUnit.isWithinBoundary = isWithinBoundary;
 						classUnits.push(identifiedClassUnit);
 //						classUnits = classUnits.concat(identifiedClassUnit.ClassUnits);
@@ -228,7 +228,7 @@
 				if(!targetXMIMethodUnit){
 					continue;
 				}
-				var targetMethodUnit = identifyMethodUnit(targetXMIMethodUnit);
+				var targetMethodUnit = identifyMethodUnit(targetXMIMethodUnit, xmiString);
 				console.log(targetMethodUnit);
 				var targetClassUnit = locateClassUnitForMethod(targetMethodUnit, topClassUnits);
 				
@@ -248,7 +248,6 @@
 				}
 //				var end = targetClassUnit.name;
 				edges.push({start: startNode, end: endNode});
-				
 			}
 			
 		}
@@ -317,7 +316,7 @@
 		return false;
 	}
 	
-	function identifyActionElement(XMIActionElement){
+	function identifyActionElement(XMIActionElement, xmiString){
 		var ActionElement = {
 						name:XMIActionElement['$']['name'],
 						kind:XMIActionElement['$']['kind'],
@@ -374,7 +373,7 @@
 		
 		for(var i in XMIActionElements){
 			var XMIActionElement = XMIActionElements[i];
-			var includedActionElement = identifyActionElement(XMIActionElement);
+			var includedActionElement = identifyActionElement(XMIActionElement, xmiString);
 			
 			ActionElement.MethodUnits = ActionElement.MethodUnits.concat(includedActionElement.MethodUnits);
 			ActionElement.StorableUnits = ActionElement.StorableUnits.concat(includedActionElement.StorableUnits);
@@ -396,7 +395,7 @@
 		for(var i in XMIClassUnits){
 			console.log("---------------inner classes--------------");
 			var XMIClassUnit = XMIClassUnits[i];
-			var includedClassUnit = identifyClassUnit(XMIClassUnit);
+			var includedClassUnit = identifyClassUnit(XMIClassUnit, xmiString);
 			
 			if(!includedClassUnit.name){
 				includedClassUnit.name = XMIActionElement.name+"_inner_"+i;
@@ -447,7 +446,7 @@
 	 * The function is recursively designed to take care of the structure.
 	 *           
 	 */
-	function identifyClassUnit(XMIClassUnit){
+	function identifyClassUnit(XMIClassUnit, xmiString){
 		
 		console.log("identify:"+XMIClassUnit['$']['name']);
 		
@@ -507,7 +506,7 @@
 		for(var i in XMIMethodUnits){
 			var XMIMethodUnit = XMIMethodUnits[i];
 			
-			var methodUnit = identifyMethodUnit(XMIMethodUnit);
+			var methodUnit = identifyMethodUnit(XMIMethodUnit, xmiString);
 			ClassUnit.MethodUnits = ClassUnit.MethodUnits.concat(methodUnit.MethodUnits);
 			
 			ClassUnit.StorableUnits = ClassUnit.StorableUnits.concat(methodUnit.StorableUnits);
@@ -551,7 +550,7 @@
 		for(var i in includedXMIClassUnits){
 			var includedXMIClassUnit = includedXMIClassUnits[i];
 			
-			var IncludedClassUnit = identifyClassUnit(includedXMIClassUnit);
+			var IncludedClassUnit = identifyClassUnit(includedXMIClassUnit, xmiString);
 			if(!IncludedClassUnit.name){
 				IncludedClassUnit.name = XMIClassUnit.name+"_inner_"+i;
 			}
@@ -603,7 +602,7 @@
 		return false;
 	}
 	
-	function identifyMethodUnit(XMIMethodUnit){
+	function identifyMethodUnit(XMIMethodUnit, xmiString){
 
 		var MethodUnit = {
 				Key: '',
@@ -667,7 +666,7 @@
 		var XMIActionElements = jp.query(XMIBlockUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'action:ActionElement\')]');
 		for(var j in XMIActionElements){
 			var XMIActionElement = XMIActionElements[j];
-			actionElement = identifyActionElement(XMIActionElement);
+			actionElement = identifyActionElement(XMIActionElement, xmiString);
 			
 			MethodUnit.BlockUnit.actionElements.push(actionElement);
 			

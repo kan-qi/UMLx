@@ -301,6 +301,10 @@ app.get('/surveyProject', function(req, res){
 ////		var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
 ////		umlModelExtractor.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
 ////		//update model analytics.
+//if(!modelInfoVersion){
+//	res.end("error");
+//	return;
+//}
 //////		console.log(modelInfo);
 ////		umlEvaluator.evaluateModel(modelInfoVersion, function(){
 ////			console.log("model analysis complete");
@@ -505,6 +509,10 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 			console.log("model is extracted");
+			if(!modelInfo){
+				res.end("error");
+				return;
+			}
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
 			});
@@ -588,6 +596,10 @@ app.post('/uploadUMLFileVersion', upload.fields([{name:'uml-file',maxCount:1},{n
 			var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
 			umlModelExtractor.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
 			//update model analytics.
+				if(!modelInfoVersion){
+					res.end("error");
+					return;
+				}
 //			console.log(modelInfo);
 			umlEvaluator.evaluateModel(modelInfoVersion, function(){
 				console.log("model analysis complete");
@@ -695,6 +707,10 @@ app.get('/reanalyseModel', function (req, res){
 	umlModelInfoManager.queryModelInfo(modelId, req.userInfo.repoId, function(modelInfo){
 		umlModelExtractor.extractModelInfo(modelInfo, function(extractedModelInfo){
 			//update model analytics.
+			if(!extractedModelInfo){
+				res.end("error");
+				return;
+			}
 			umlEvaluator.evaluateModel(extractedModelInfo, function(){
 				console.log("model analysis complete");
 			});
@@ -1170,6 +1186,10 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 		console.log(modelInfo);
 		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
+			if(!modelInfo){
+				res.end("error");
+				return;
+			}
 			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");

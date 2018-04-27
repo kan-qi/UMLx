@@ -158,13 +158,10 @@
 			}
 	}
 	
-	function extractUserSystermInteractionModel(filePath, ModelOutputDir, ModelAccessDir, callbackfunc) {
+	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
 		
-		fs.readFile(filePath, function(err, data) {
-			parser.parseString(data, function(err, xmiString) {
-		
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("XMIString", xmiString);
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("XMIString", xmiString);
 			
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
@@ -260,9 +257,10 @@
 			Model.DomainModel.Elements.push(domainElement);
 		}
 
-
+		
 		console.log(XMIClasses);
-		debug.writeJson("XMIClasses", XMIClasses);
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("XMIClasses", XMIClasses);
 		
 		Model.DomainModel.DiagramType = "class_diagram";
 	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
@@ -363,8 +361,10 @@
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("parsed_model_from_parser_"+Model._id, Model);
 		
-			});
-		});
+//			});
+//	});
+//		return Mode;
+		
 	}
 	
 	// draw the class diagram of the model
