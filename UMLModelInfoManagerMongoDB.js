@@ -335,18 +335,33 @@ function deleteRepo(repoId, callbackfunc) {
                     console.log("updating useCaseInfo");
                     
               });*/
-            for(var i in useCaseArray){
-                console.log(useCaseArray[i]._id);
-//                useCaseArray[i].model_id = new mongo.ObjectID(modelInfo._id);
-//                useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
-                useCaseArray[i].model_id = modelInfo._id;
-                useCaseArray[i]._id = useCaseArray[i]._id+"["+modelInfo._id+"]";
+             for(var i in useCaseArray){
                 
-                db.collection("useCaseInfo").update({"_id": useCaseArray[i]._id}, useCaseArray[i] , function(err, res) {
+                useCaseArray[i].model_id = new mongo.ObjectID(modelInfo._id);
+                useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
+                
+                console.log("USe Case: "+i+" ID: "+ useCaseArray[i]._id);
+                //deleteUseCase(repoId, modelInfo._id, useCaseArray[i]._id);
+                db.collection("useCaseInfo").remove({_id: useCaseArray[i]._id}, function(err, res) 
+                {
+                    //if (err) throw err;
+                        console.log("Use Case deleted");
+                    });
+                
+                //console.log("Use Case Info: "+ useCaseArray[i].Name);
+                
+                db.collection("useCaseInfo").insertOne(useCaseArray[i], function(err, res) 
+                {
+                    if (err) throw err;
+                    //console.log("Use Case deleted");
+                        console.log("use case Inserted");
+                });
+                        
+                //console.log("Ending loop: "+ i);
+                /*db.collection("useCaseInfo").update({"_id": useCaseArray[i]._id}, useCaseArray[i] , function(err, res) {
                 if (err) throw err;
                     console.log("updating useCaseInfo");
-                    
-              });
+              });*/
             }
             
 //            db.collection('useCaseInfo').remove({model_id: modelInfo._id}, function(err) {

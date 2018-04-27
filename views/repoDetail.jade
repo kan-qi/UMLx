@@ -84,15 +84,15 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{repoInfoBrief.NT}
                 span Transactions
-          div.col-sm-3
+          div.col-sm-3 
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
                 h2 #{repoInfoBrief.EntityNum}
                 span Classes
-       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
-        //div.col-sm-12.chart-row
+       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
+        //div.col-sm-12.chart-row  
           //.col-sm-6
             //img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
           //.col-sm-6(id="transaction-pie" data="./#{repoInfo.AccessDir}/transactionAnalytics.csv")
