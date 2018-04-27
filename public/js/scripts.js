@@ -462,11 +462,11 @@ function query_sub_model_detail_func(){
         url : url,
         success : function(response) {
 //          console.log(response);
-            $("#use-case-fdetail-panel").html("");
+            $("#use-case-detail-panel").html("");
             $("#use-case-detail-panel").append(response);
             var breadCrumb = $('ol.breadcrumb')[0];
             if (breadCrumb.children.length == 3) {
-                breadCrumb.children[2].innerText = $(response).find(".use-case-detail-content").data('use-case-title');
+                breadCrumb.children[2].innerText = $(response).data('use-case-title');
             } else {
                 breadCrumb.innerHTML += "<li class='breadcrumb-item active'>"+ $(response).data('use-case-title') +"</li>"
             }
