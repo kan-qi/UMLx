@@ -20,7 +20,7 @@
 	
 	var xmiSring = "";
 	
-	function constructCallGraph(xmiString){
+	function constructCallGraph(xmiString, outputDir){
 
 //		var debug = require("../../utils/DebuggerOutput.js");
 //		debug.writeJson("KDM_Example", xmiString);
@@ -128,31 +128,33 @@
 //		var controlElements = identifyCalls(xmiString, actionElements, methodUnits);
 		
 
-		console.log("========================================");
-		
-		console.log("========================================");
-		
-		
-		fs.writeFile("./model_platforms/src/structured_class_units.json", JSON.stringify(classUnits), function(err){
-			if(err) {
-			 	console.log(err);
-			}
-//			 	if(callbackfunc){
-//			    	callbackfunc(false);
-//				} 
-//		    }
-//			else{
-//				if(callbackfunc){
-//			    	callbackfunc(true);
-//				} 
+//		console.log("========================================");
+//		
+//		console.log("========================================");
+//		
+//		
+//		fs.writeFile("./model_platforms/src/structured_class_units.json", JSON.stringify(classUnits), function(err){
+//			if(err) {
+//			 	console.log(err);
 //			}
-			
-		});
+////			 	if(callbackfunc){
+////			    	callbackfunc(false);
+////				} 
+////		    }
+////			else{
+////				if(callbackfunc){
+////			    	callbackfunc(true);
+////				} 
+////			}
+//			
+//		});
 		
-		console.log("nodes");
-		console.log(nodes);
-		console.log("edges");
-		console.log(edges);
+//		console.log("nodes");
+//		console.log(nodes);
+//		console.log("edges");
+//		console.log(edges);
+		
+		drawCallGraph(edges, nodes, outputDir)
 		
 		return {nodes: nodes, edges: edges};
 		
@@ -880,9 +882,9 @@
 //	}
 	
 
-	function drawCallGraph(useCase, edges, nodes){
-		var path = useCase.OutputDir+"/"+"kdm_diagram.dotty"
-		useCase.DiagramType = "kdm_diagram";
+	function drawCallGraph(edges, nodes, outputDir){
+		var path = outputDir+"/"+"kdm_diagram.dotty"
+//		useCase.DiagramType = "kdm_diagram";
 		
 		let graph = 'digraph g {\
 			fontsize=26\

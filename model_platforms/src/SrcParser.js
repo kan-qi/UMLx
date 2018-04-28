@@ -31,6 +31,8 @@
 						Actors:[],
 						Roles:[],
 						UseCases: [],
+						OutputDir: ModelOutputDir,
+						AccessDir: ModelAccessDir,
 						DomainModel: {
 							Elements: [],
 							Usages: [],
@@ -44,7 +46,7 @@
 				};
 				
 //				xmiString = result;
-				graph = constructCallGraph(xmiString);
+				graph = callGraphConstructor.constructCallGraph(xmiString, Model.OutputDir);
 				console.log("graphs");
 				console.log(graph);
 				
@@ -70,6 +72,97 @@
 //						Attachment: XMIUseCase
 				}
 				
+				
+//				var path = useCase.OutputDir+"/"+"kdm_diagram.dotty"
+//				useCase.DiagramType = "kdm_diagram";
+//				drawReferences(edges, nodes, path);
+//				
+			var ActivitiesByName = {};
+			var PrecedenceRelationsByName = {};
+//			var StimulusByName = {};
+			
+			
+			for(var i in callGraph.edges){
+				var edge = callGraph.edges[i];
+				var nextEdges = findNextActivities(edge, callGraph.edges);
+				
+				console.log("nextEdges");
+				console.log(nextEdges);
+				
+				activity = ActivitiesByName[edge.start.name+":"+edge.end.name];
+				if(!activity){
+				var activity = {
+						Name: edge.start.name+":"+edge.end.name,
+						_id: edge.start.name+":"+edge.end.name,
+						Type: "controlflow",
+						isResponse: edge.start.isResponse,
+						Stimulus: false,
+						OutScope: false,
+						Group: "System"
+				}
+
+				UseCase.Activities.push(activity);
+				ActivitiesByName[edge.start.name+":"+edge.end.name] = activity;
+				}
+				
+				for(var j in nextEdges){
+					var nextEdge = nextEdges[j];
+					
+					var nextActivity = ActivitiesByName[nextEdge.start.name+":"+nextEdge.end.name];
+					
+					if(!nextActivity){
+					nextActivity = {
+							Name: nextEdge.start.name+":"+nextEdge.end.name,
+							_id: nextEdge.start.name+":"+nextEdge.end.name,
+							Type: "controlflow",
+							isResponse: nextEdge.start.isResponse,
+							Stimulus: false,
+							OutScope: false,
+							Group: "System"
+					}
+
+					UseCase.Activities.push(nextActivity);
+					ActivitiesByName[nextEdge.start.name+":"+nextEdge.end.name] = nextActivity;
+					}
+					
+					var precedenceRelation = PrecedenceRelationsByName[activity.Name+":"+nextActivity.Name];
+					if(!precedenceRelation){
+						precedenceRelation = {
+								start: activity,
+								end: nextActivity
+							};
+						UseCase.PrecedenceRelations.push(precedenceRelation);
+						PrecedenceRelationsByName[activity.Name+":"+nextActivity.Name] = precedenceRelation;
+					}
+				}
+			}
+			
+			for(var i in UseCase.Activities){
+				var activity = UseCase.Activities[i];
+				if(activity.isResponse && !ActivitiesByName["stl#"+activity.Name]){
+					//create a stimulus nodes for the activity.
+					var stimulus = {
+							Type: "Stimulus",
+							Name: "stl#"+activity.Name,
+							_id: activity._id+"_STL",
+//							Attachment: XMIActivity,
+							Stimulus: true,
+							OutScope: false,
+							Group:  "User"
+					}
+					
+					UseCase.Activities.push(stimulus);
+					ActivitiesByName["stl#"+activity.Name] = stimulus;
+					UseCase.PrecedenceRelations.push({start: stimulus, end: activity});
+				}
+			}
+			
+			var debug = require("../../utils/DebuggerOutput.js");
+			debug.writeJson("constructed_kdm_grph", callGraph);
+			debug.writeJson("constructed_use_case_kdm", UseCase);
+			
+//			drawUISIMDiagram(UseCase, callGraph.edges, callGraph.nodes);
+				
 			
 				Model.UseCases.push(UseCase);
 				
@@ -84,16 +177,13 @@
 //		});
 	}
 	
-//	function drawKDMDiagram(useCase, edges, nodes){
+//	function drawRobustnessDiagram(useCase, edges, nodes){
 //		var path = useCase.OutputDir+"/"+"kdm_diagram.dotty"
 //		useCase.DiagramType = "kdm_diagram";
 //		drawReferences(edges, nodes, path);
 //		
 //	}
 	
-//	function drawCallGraph(controlElements){
-//		
-//	}
 	
 	module.exports = {
 			extractUserSystermInteractionModel : extractUserSystermInteractionModel,
