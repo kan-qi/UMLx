@@ -14,42 +14,19 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var uuidV1 = require('uuid/v1');
-	
+
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
 	
 	var xmiSring = "";
 	
-	function assignUUID(object){
-		if(object instanceof Array){
-				for(var i in object){
-					assignUUID(object[i]);
-				}
-		} else if (object instanceof Object){
-			if(object['$']){
-				object['$']['UUID'] = uuidV1();
-			}else{
-				object['UUID'] = uuidV1();
-			}
-			
-			for(var i in object){
-				if(i === '$'){
-					continue;
-				}
-				assignUUID(object[i]);
-			}
-		}
-	}
-	
 	function constructCallGraph(xmiString, outputDir){
-		
-		assignUUID(xmiString);
 
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("KDM_Example", xmiString);
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("KDM_Example", xmiString);
 //		console.log("determine the class units within the model");
 
+		
 		console.log("========================================");
 		
 		console.log("identify the structured class units");
@@ -86,9 +63,6 @@
 			}
 		}
 		
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("constructed_class_units", topClassUnits);
-		
 		console.log("=====================================");
 		
 		console.log("determine the entry points");
@@ -96,8 +70,6 @@
 		identifyStimulus(xmiString);
 		
 		console.log("control flow construction");
-		
-		//the edges are now defined between methods...
 
 		var edges = [];
 		var nodes = [];
@@ -106,85 +78,46 @@
 		for(var i in classUnits){
 			var classUnit = classUnits[i];
 			var calls = classUnit.Calls; 
-//			var index = 0;
-//			
-//			var startNode = nodesByName[classUnit.name];
-//			if(!startNode){
-//				startNode = {
-//						name: classUnit.name,
-//						isResponse: isResponseClass(classUnit),
-////						isWithinBoundary: classUnit.isWithinBoundary
-//					};
-//				nodes.push(startNode);
-//				nodesByName[classUnit.name] = startNode;
-//			}
+			var index = 0;
+			
+			var startNode = nodesByName[classUnit.name];
+			if(!startNode){
+				startNode = {
+						name: classUnit.name,
+						isResponse: isReponseClass(classUnit),
+						isWithinBoundary: classUnit.isWithinBoundary
+					};
+				nodes.push(startNode);
+				nodesByName[classUnit.name] = startNode;
+			}
 			
 			for(var j in calls){
 				var call = calls[j];
-				var callXMIActionElement = jp.query(xmiString, convertToJsonPath(call.from))[0];
 				var targetXMIMethodUnit = jp.query(xmiString, convertToJsonPath(call.to))[0];
 				console.log("target xmi method");
-				console.log(callXMIActionElement);
-				console.log(targetXMIMethodUnit);
 				
-				if(!targetXMIMethodUnit || !callXMIActionElement){
+				console.log(targetXMIMethodUnit);
+				if(!targetXMIMethodUnit){
 					continue;
 				}
-				
-				var callActionElement = identifyActionElement(callXMIActionElement, xmiString);
-				console.log("call action element");
-				console.log(callActionElement);
-				var callMethodUnit = locateMethodUnitForActionElement(callActionElement, topClassUnits);
-				console.log("call method unit");
-				console.log(callMethodUnit);
-				debug.appendFile("call_method_units", JSON.stringify(callMethodUnit));
-				var callClassUnit = locateClassUnitForMethod(callMethodUnit, topClassUnits);
-
 				var targetMethodUnit = identifyMethodUnit(targetXMIMethodUnit, xmiString);
-				console.log("target method unit");
 				console.log(targetMethodUnit);
 				var targetClassUnit = locateClassUnitForMethod(targetMethodUnit, topClassUnits);
 				
-//				console.log("located class");
-//				console.log(targetClassUnit);
+				console.log("located class");
+				console.log(targetClassUnit);
 
 //				var start = startNode;
 				
-//				console.log("call method");
-//				console.log(callMethodUnit);
-				
-				if(!callMethodUnit.Signature || !targetMethodUnit.Signature){
-					continue;
-				}
-				
-				var startNode = nodesByName[callMethodUnit.UUID];
-				if(!startNode){
-					startNode = {
-							name: callClassUnit.name+":"+callMethodUnit.Signature.name,
-							isResponse: callMethodUnit.isResponse,
-							component: {
-								name: callClassUnit.name
-							},
-							UUID: callMethodUnit.UUID
-//							isWithinBoundary: targetClassUnit.isWithinBoundary
-						};
-					nodes.push(startNode);
-					nodesByName[callMethodUnit.UUID] = startNode;
-				}
-				
-				var endNode = nodesByName[targetMethodUnit.UUID];
+				var endNode = nodesByName[targetClassUnit.name];
 				if(!endNode){
 					endNode = {
-							name: targetClassUnit.name+":"+targetMethodUnit.Signature.name,
-							isResponse: targetMethodUnit.isResponse,
-							component: {
-								name: targetClassUnit.name
-							},
-							UUID: targetMethodUnit.UUID
-//							isWithinBoundary: targetClassUnit.isWithinBoundary
+							name: targetClassUnit.name,
+							isResponse: isReponseClass(targetClassUnit),
+							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 					nodes.push(endNode);
-					nodesByName[targetMethodUnit.UUID] = endNode;
+					nodesByName[targetClassUnit.name] = endNode;
 				}
 //				var end = targetClassUnit.name;
 				edges.push({start: startNode, end: endNode});
@@ -228,61 +161,27 @@
 	}
 	
 	function locateClassUnitForMethod(toCompareMethodUnit, ClassUnits){
-		console.log("UUID");
-		console.log(toCompareMethodUnit.UUID);
+		console.log("key");
+		console.log(toCompareMethodUnit.Key);
 //		var classUnitToSelect = null;
 		for(var i in ClassUnits){
 			var classUnit = ClassUnits[i];
 			var MethodUnits = classUnit.MethodUnits;
 			for(var j in MethodUnits){
 				var methodUnit = MethodUnits[j];
-				if(methodUnit.UUID === toCompareMethodUnit.UUID){
-					console.log("UUID equal");
+				if(methodUnit.Key === toCompareMethodUnit.Key){
+					console.log("key equal");
 					var selectedSubClass = locateClassUnitForMethod(toCompareMethodUnit, classUnit.ClassUnits);
 					if(selectedSubClass){
 						console.log("select class");
-//						console.log(selectedSubClass);
+						console.log(selectedSubClass);
 						return selectedSubClass;
 					}
 					else{
 						console.log("select class");
-//						console.log(classUnit);
+						console.log(classUnit);
 						return classUnit;
 					}
-				}
-			}
-		}
-		
-		return false;
-	}
-	
-	function locateMethodUnitForActionElement(toCompareActionElement, ClassUnits){
-		console.log("UUID");
-		console.log(toCompareActionElement.UUID);
-//		var classUnitToSelect = null;
-		for(var i in ClassUnits){
-			var classUnit = ClassUnits[i];
-			var MethodUnits = classUnit.MethodUnits;
-			for(var j in MethodUnits){
-				var methodUnit = MethodUnits[j];
-				for(var k in methodUnit.ActionElements){
-					var actionElement = methodUnit.ActionElements[k];
-					console.log("to compare action element");
-					console.log(actionElement.UUID);
-					if(actionElement.UUID === toCompareActionElement.UUID){
-					console.log("UUID equal");
-					var selectedSubMethod = locateMethodUnitForActionElement(toCompareActionElement, methodUnit.ClassUnits);
-					if(selectedSubMethod){
-						console.log("select method");
-//						console.log(selectedSubMethod);
-						return selectedSubMethod;
-					}
-					else{
-						console.log("select method");
-//						console.log(methodUnit);
-						return methodUnit;
-					}
-				}
 				}
 			}
 		}
@@ -293,12 +192,10 @@
 	function identifyActionElement(XMIActionElement, xmiString){
 		var ActionElement = {
 						name:XMIActionElement['$']['name'],
-						UUID:XMIActionElement['$']['UUID'],
 						kind:XMIActionElement['$']['kind'],
-						type:XMIActionElement['$']['xsi:type'],
-//						key: XMIActionElement['$']['name']+"_"+XMIActionElement['$']['kind']+XMIActionElement['$']['xsi:type'],
 						MethodUnits : [],
 						StorableUnits: [],
+						Calls : [],
 						ClassUnits: [],
 						InterfaceUnits : [],
 						Imports : [],
@@ -362,13 +259,12 @@
 			ActionElement.Reads=ActionElement.Reads.concat(includedActionElement.Reads);
 			ActionElement.Calls=ActionElement.Calls.concat(includedActionElement.Calls);
 			ActionElement.Creates=ActionElement.Creates.concat(includedActionElement.Creates);
-			ActionElement.ActionElements.push(includedActionElement);
 			ActionElement.ActionElements=ActionElement.ActionElements.concat(includedActionElement.ActionElements);
 		}
 		
 		var XMIClassUnits = jp.query(XMIActionElement, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:ClassUnit\')]');
 		console.log("---inner classes------");
-//		console.log(XMIClassUnits);	
+		console.log(XMIClassUnits);	
 		for(var i in XMIClassUnits){
 			console.log("---------------inner classes--------------");
 			var XMIClassUnit = XMIClassUnits[i];
@@ -392,9 +288,6 @@
 			ActionElement.Creates=ActionElement.Creates.concat(includedClassUnit.Creates);
 			ActionElement.ActionElements=ActionElement.ActionElements.concat(includedClassUnit.ActionElements);
 		}
-		
-		console.log("identified action element");
-		console.log(ActionElement);
 		
 		return ActionElement;
 	}
@@ -573,7 +466,7 @@
 		
 	}
 	
-	function isResponseClass(ClassUnit){
+	function isReponseClass(ClassUnit){
 		for(var i in ClassUnit.MethodUnits){
 			if(ClassUnit.MethodUnits[i].isResponse){
 				return true;
@@ -585,10 +478,10 @@
 	function identifyMethodUnit(XMIMethodUnit, xmiString){
 
 		var MethodUnit = {
-//				key: '',
-				UUID: XMIMethodUnit['$']['UUID'],
+				Key: '',
 				Signature: null,
 				Parameters: [],
+				BlockUnit: null,
 				MethodUnits : [],
 				StorableUnits: [],
 				Calls : [],
@@ -609,7 +502,7 @@
 		if(XMISignature){
 		var XMIParameters = jp.query(XMISignature, '$.parameterUnit[?(@[\'$\'][\'type\'])]');
 		
-//		MethodUnit.UUID = XMISignature['$']['name'];
+		MethodUnit.Key = XMISignature['$']['name'];
 		MethodUnit.Signature = {
 				name: XMISignature['$']['name'],
 				parameterUnits: []
@@ -623,7 +516,7 @@
 				name: XMIParameters[j]["$"]["name"],
 				kind: XMIParameters[j]['$']['kind']
 			});
-//			MethodUnit.key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
+			MethodUnit.Key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
 			
 			var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameters[j]["$"]['type']));
 			console.log("parameter type");
@@ -670,13 +563,11 @@
 			MethodUnit.ClassUnits=MethodUnit.ClassUnits.concat(actionElement.ClassUnits);
 			MethodUnit.InterfaceUnits=MethodUnit.InterfaceUnits.concat(actionElement.InterfaceUnits);
 			MethodUnit.Imports=MethodUnit.Imports.concat(actionElement.Imports);
-			MethodUnit.BlockUnits.push(MethodUnit.BlockUnit);
 			MethodUnit.BlockUnits=MethodUnit.BlockUnits.concat(actionElement.BlockUnits);
 			MethodUnit.Addresses=MethodUnit.Addresses.concat(actionElement.Addresses);
 			MethodUnit.Reads=MethodUnit.Reads.concat(actionElement.Reads);
 			MethodUnit.Calls=MethodUnit.Calls.concat(actionElement.Calls);
 			MethodUnit.Creates=MethodUnit.Creates.concat(actionElement.Creates);
-			MethodUnit.ActionElements.push(actionElement);
 			MethodUnit.ActionElements=MethodUnit.ActionElements.concat(actionElement.ActionElements);
 			
 //			for(var k in actionElement.MethodUnits){
@@ -700,7 +591,7 @@
 			var XMIActionElement = XMIActionElements[i];
 			console.log(XMIActionElement);
 			var actionElement = createActionElement(XMIActionElement);
-			actionElementsByName[actionElement.UUID] = actionElement;
+			actionElementsByName[actionElement.key] = actionElement;
 		}
 		
 		return actionElementsByName;
@@ -713,7 +604,7 @@
 			var XMIMethodUnit = XMIMethodUnits[i];
 			console.log(XMIMethodUnit);
 			var actionElement = createMethodUnit(XMIMethodUnit);
-			methodUnitsByName[actionElement.UUID] = actionElement;
+			methodUnitsByName[actionElement.key] = actionElement;
 		}
 		
 		return methodUnitsByName;
@@ -723,8 +614,7 @@
 		return {
 				name: XMIMethodUnit['$']['name'],
 				kind: XMIMethodUnit['$']['kind'],
-//				key: XMIMethodUnit['$']['name']+"_"+ XMIMethodUnit['$']['kind'],
-				UUID: XMIMethodUnit['$']['UUID']
+				key: XMIMethodUnit['$']['name']+"_"+ XMIMethodUnit['$']['kind']
 		};
 	}
 	
@@ -732,8 +622,7 @@
 		return {
 				name: XMIActionElement['$']['name'],
 				kind: XMIActionElement['$']['kind'],
-//				key: XMIActionElement['$']['name']+"_"+ XMIActionElement['$']['kind']
-				UUID: XMIActionElement['$']['UUID'],
+				key: XMIActionElement['$']['name']+"_"+ XMIActionElement['$']['kind']
 		}
 		
 	}
@@ -937,11 +826,10 @@
 		var codeElement = {
 				name: XMICodeElement['$']['name'],
 				stereoType: XMICodeElement['$']['xsi:type'],
-		        type: XMICodeElement['$']['type'],
-		        uuid: XMICodeElement['$']['UUID'],
+		        type: XMICodeElement['$']['type']
 		}
 //		
-//		codeElement.key = codeElement.name+"_"+codeElement.stereoType+"_"+codeElement.type;
+		codeElement.key = codeElement.name+"_"+codeElement.stereoType+"_"+codeElement.type;
 //		
 		return codeElement;
 	}
