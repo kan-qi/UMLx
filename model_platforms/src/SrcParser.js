@@ -46,9 +46,9 @@
 				};
 				
 //				xmiString = result;
-				graph = callGraphConstructor.constructCallGraph(xmiString, Model.OutputDir);
-				console.log("graphs");
-				console.log(graph);
+				callGraph = callGraphConstructor.constructCallGraph(xmiString, Model.OutputDir);
+				console.log("callGraphs");
+				console.log(callGraph);
 				
 				function findNextActivities(currentActivity, activities){
 					var nextActivities = [];

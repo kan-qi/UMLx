@@ -855,27 +855,27 @@
 ////		console.log("Node: " + nodes[0].toString())
 //	}
 	
-//	function convertToJsonPath(path){
-////		var toNode = queryByXPath(data, toString);
-//		var toNodes = path.split('/');
-////		controlElement.toNodes = toNodes;
-//		console.log(toNodes);
-//		var jsonPath = "$['xmi:XMI']['kdm:Segment'][0]";
-//		for(var i in toNodes){
-//			var toNode = toNodes[i];
-//			if(!toNode.startsWith("@")){
-//				continue;
-//			}
-//			var parts = toNode.replace("@", "").split(".");
-//			jsonPath += "['"+parts[0]+"']["+parts[1]+"]";
-//		}
-//		
-////		jsonPath = "$['xmi:XMI']['kdm:Segment'][0]['model'][1]";
-//		console.log("json path");
-//		console.log(jsonPath);
-//		
-//		return jsonPath;
-//	}
+	function convertToJsonPath(path){
+//		var toNode = queryByXPath(data, toString);
+		var toNodes = path.split('/');
+//		controlElement.toNodes = toNodes;
+		console.log(toNodes);
+		var jsonPath = "$['xmi:XMI']['kdm:Segment'][0]";
+		for(var i in toNodes){
+			var toNode = toNodes[i];
+			if(!toNode.startsWith("@")){
+				continue;
+			}
+			var parts = toNode.replace("@", "").split(".");
+			jsonPath += "['"+parts[0]+"']["+parts[1]+"]";
+		}
+		
+//		jsonPath = "$['xmi:XMI']['kdm:Segment'][0]['model'][1]";
+		console.log("json path");
+		console.log(jsonPath);
+		
+		return jsonPath;
+	}
 	
 //	function drawCallGraph(controlElements){
 //		
@@ -883,7 +883,7 @@
 	
 
 	function drawCallGraph(edges, nodes, outputDir){
-		var path = outputDir+"/"+"kdm_diagram.dotty"
+		var path = outputDir+"/"+"kdm_callgraph_diagram.dotty"
 //		useCase.DiagramType = "kdm_diagram";
 		
 		let graph = 'digraph g {\
@@ -931,7 +931,7 @@
 
 		graph += 'imagepath = \"./\"}';
 		dottyUtil = require("../../utils/DottyUtil.js");
-		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+		dottyUtil.drawDottyGraph(graph, path, function(){
 			console.log("drawing is down");
 		});
 
