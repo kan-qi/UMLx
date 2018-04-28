@@ -111,11 +111,16 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="model-evaluation")
        div.model-evaluation
         div
+          p #{modelInfo.umlFilePath}
           p #{modelInfo.OutputDir}
         h3 Evaluation
          button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);') Modify
          table#dataTable.table.table-striped
             tbody
+                tr
+                    td
+                     h3 Technical Complexity Factors
+                    td
                 tr
                     td Distributed System
                     td
@@ -324,6 +329,10 @@ div.block.panel.panel-default
                               option 4
                             if temp!=5
                               option 5
+                tr
+                    td
+                     h3 Environmental Complexity Factors
+                    td
                 tr
                     td Familiar with the project model that is used
                     td

@@ -1599,6 +1599,15 @@ app.get('/deleteUser', function(req,res){
 	});
 });
 
+
+app.get('/readFile', function(req,res){
+	var filePath = req.query['url'];
+	umlModelInfoManager.deleteUser(userId, function(status){
+		var result ={'status' : status};
+		res.json(result);
+	});
+});
+
 /*
  * only for debugging process
  */

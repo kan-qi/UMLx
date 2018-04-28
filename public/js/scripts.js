@@ -62,7 +62,7 @@ function model_file_upload_fnc() {
         error : function() {
             console.log("fail");
             console.log(err);
-            alert("There was an error submitting commentA");
+            alert("There was an error");
         }
     });
 
@@ -198,7 +198,7 @@ function model_file_update_fnc(){
             // $("#commentList").append($("#name").val() + "<br/>" +
             // $("#body").val());
             console.log("fail");
-            alert("There was an error submitting commentC");
+            alert("There was an error");
         }
     });
 
@@ -229,7 +229,7 @@ function predict_project_effort_func(){
         error : function() {
             console.log("fail");
             console.log(err);
-            alert("There was an error submitting commentA");
+            alert("There was an error");
         }
     });
     return false;
@@ -245,7 +245,7 @@ function query_exist_models_fnc(projectId) {
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentD");
+            alert("There was an error");
         }
     });
 
@@ -327,7 +327,7 @@ function query_model_detail_func(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentE");
+            alert("There was an error");
         }
     });
 
@@ -348,7 +348,7 @@ function delete_use_case_func(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentF");
+            alert("There was an error");
         }
     });
 
@@ -373,7 +373,7 @@ function query_model_usecase_func(modelId) {
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentG");
+            alert("There was an error");
         }
     });
 
@@ -397,7 +397,7 @@ function reanalyse_model_func(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentH");
+            alert("There was an error");
         }
     });
 
@@ -422,7 +422,7 @@ function use_case_evaluation_upload_fnc(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentI");
+            alert("There was an error");
         }
     });
 
@@ -447,7 +447,7 @@ function model_evaluation_upload_fnc(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentJ");
+            alert("There was an error");
         }
     });
 
@@ -473,7 +473,7 @@ function query_sub_model_detail_func(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentK");
+            alert("There was an error");
         }
     });
 
@@ -493,13 +493,14 @@ function query_repo_analytics_func(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentL");
+            alert("There was an error");
         }
     });
 
     return false;
 }
 
+/*
 function dump_model_evaluation_for_use_cases_func(){
     var url = $(this).attr("href");
     console.log(url);
@@ -526,15 +527,57 @@ function dump_model_evaluation_for_use_cases_func(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentM");
+            alert("There was an error");
         }
     });
 
     return false;
 }
+*/
 
-function request_display_data(){
-    var url = $(this).attr("href");
+function openFile(){
+   var url = $(this).attr("href");
+   //var url = $(this).data("url");
+   
+    $('#overlay-frame').modal();
+     $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
+    $("#overlay-frame .modal-body").html("");
+    
+   if(url.endsWith(".csv")){
+ //display_csv_data(url);
+ 
+    $.ajax({
+        type : 'GET',
+        url : url,
+        success : function(response) {
+//          console.log(response);
+                    $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+                    $("#overlay-frame .modal-body").html("<pre>"+response+"</pre>");
+
+        },
+        error : function() {
+            console.log("fail");
+            //alert("There was an error");
+             $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+                    $("#overlay-frame .modal-body").html("Error");
+        }
+    });
+    
+   return false;
+   }
+   
+    $("#overlay-frame .modal-body").html('<iframe class="file-display" src="'+url+'"></iframe>');
+   // $("#overlay-frame .modal-body").html("<img class='progress-bar-icon' src='img/progress-bar.gif'\> Requesting data ...");
+    console.log(url);
+   
+
+    return false;
+}
+
+
+function display_csv_data(url){
+ console.log("requesting data url");
+    console.log(url);
     $('#overlay-frame').modal();
     $("#overlay-frame .modal-body").html("");
     $("#overlay-frame .modal-body").html("<img class='progress-bar-icon' src='img/progress-bar.gif'\> Requesting data ...");
@@ -543,7 +586,7 @@ function request_display_data(){
         type : 'GET',
         url : url,
         success : function(response) {
-//          console.log(response);
+         console.log(response);
 
                     var parsedCSV = d3.csvParseRows(response);
                     $('.modal-title')[0].innerHTML = "Report";
@@ -563,9 +606,15 @@ function request_display_data(){
         },
         error : function() {
             console.log("fail");
-            alert("There was an error submitting commentN");
+            alert("There was an error");
         }
     });
+}
+
+function request_display_data(){
+    var url = $(this).attr("href");
+   
+    display_csv_data(url);
 
     return false;
 }
@@ -992,9 +1041,10 @@ $(document).ready(function() {
 //  $(document).on('click','#estimate-project-effort-button', estimate_project_effor_func);
     $(document).on('click','#delete-use-case-btn', delete_use_case_func);
     $(document).on('click','#reanalyse-model', reanalyse_model_func);
-    $(document).on('click','#dump-model-evaluation-for-use-cases-btn', dump_model_evaluation_for_use_cases_func);
+    //$(document).on('click','#dump-model-evaluation-for-use-cases-btn', dump_model_evaluation_for_use_cases_func);
     $(document).on('click','.dumpEvaluationData', request_display_data);
     $(document).on('click','.dumpAnalyticsData', request_display_data);
+    $(document).on('click','.fileLink', openFile);
 
     $(document).on('click', '#estimator-selector-box .dropdown-menu li a', function(){
 //       alert($(this).closest('.dropdown').find('.btn').text());
@@ -1080,7 +1130,7 @@ function load_file_upload_fnc(type) {
             // $("#commentList").append($("#name").val() + "<br/>" +
             // $("#body").val());
             console.log("fail");
-            alert("There was an error submitting commentO");
+            alert("There was an error");
         }
     });
 }
@@ -1144,6 +1194,9 @@ function toggleDiagram(diagramType) {
         //}
         else if(diagramType === "sequence_diagram"){
         umlDiagram = "/sequence_diagram.svg";
+        }
+        else if(diagramType === "kdm_diagram"){
+        umlDiagram = "/kdm_diagram.svg";
         }
         else{
         umlDiagram = "/uml_diagram.svg";
@@ -1937,6 +1990,7 @@ var dirLink = "public";
 var clickValue;
 var backLink;
 var level = 0;
+
 function walkDir(get) {
     fileFolder = $(get).data('url');
     if (dirLink.indexOf(fileFolder) != -1) {
@@ -1978,9 +2032,10 @@ function buildTable(data) {
                 data[i].url+
                 "</a></td><td>folder</td>";
         } else {
-            out += "<tr><td>" +
+        var path = dirLink+"/"+data[i].url;
+            out += "<tr><td><a class='fileLink' href='"+path.replace("public/", "")+"'>" +
                 data[i].url+
-                "</td><td>file</td>";
+                "</a></td><td>file</td>";
         }
         out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
     }
