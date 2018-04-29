@@ -14,7 +14,7 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var callGraphConstructor = require("./CallGraphConstructor.js");
+	var codeAnalysis = require("./codeAnalysis.js");
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
@@ -46,7 +46,7 @@
 				};
 				
 //				xmiString = result;
-				callGraph = callGraphConstructor.constructCallGraph(xmiString, Model.OutputDir);
+				callGraph = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
 				console.log("callGraphs");
 				console.log(callGraph);
 				
