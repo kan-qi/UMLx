@@ -88,7 +88,7 @@
 		}
 		
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("constructed_class_units", topClassUnits);
+		debug.writeJson("constructed_class_units", classUnits);
 		
 		console.log("=====================================");
 		
@@ -98,10 +98,16 @@
 		
 		console.log("control flow construction");
 		
-		constructCFG(classUnits, topClassUnits, xmiString, outputDir);
+		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir);
+		
+		var controlFlowGraph = constructCFG(classUnits, topClassUnits, xmiString, outputDir);
 		
 		
-		return constructCallGraph(classUnits, topClassUnits, xmiString, outputDir);
+		return {
+			callGraph: callGraph,
+			controlFlowGraph: controlFlowGraph,
+			classUnits: classUnits
+		};
 	}
 	
 	function constructCFG(classUnits, topClassUnits, xmiString, outputDir){
@@ -156,7 +162,19 @@
 
 				for(var i in calls){
 				var call = calls[i];
+				
+				var callXMIActionElement = jp.query(xmiString, convertToJsonPath(call.from))[0];
 				var targetXMIMethodUnit = jp.query(xmiString, convertToJsonPath(call.to))[0];
+
+				if(!targetXMIMethodUnit || !callXMIActionElement){
+					continue;
+				}
+				
+				var callActionElement = identifyActionElement(callXMIActionElement, xmiString);
+				console.log("call action element");
+				console.log(callActionElement);
+				
+				
 				var targetMethodUnit = identifyMethodUnit(targetXMIMethodUnit, xmiString);
 				
 				console.log("find methods to expand");
@@ -166,7 +184,11 @@
 					continue;
 				}
 				
-				methodSequence.push(targetMethodUnit);
+				methodSequence.push(
+						{	
+							action: callActionElement.UUID,
+							methodUnit: targetMethodUnit
+						});
 				
 				var result = expandMethod(targetMethodUnit, xmiString);
 				console.log("expanded methods");
@@ -191,7 +213,10 @@
 //			count++;
 			var responseMethod = responseMethods[i];
 			var methodSequence = [];
-			methodSequence.push(responseMethod);
+			methodSequence.push({
+				action:"response",
+				methodUnit: responseMethod
+			});
 			var expandedMethods = expandMethod(responseMethod, xmiString);
 			console.log("expanded methods");
 			console.log(expandedMethods);
@@ -216,7 +241,8 @@
 			var methodSequence = methodSequences[i];
 			var preNode = null;
 			for(var j in methodSequence){
-				var targetMethodUnit = methodSequence[j];
+				var action = methodSequence[j].action;
+				var targetMethodUnit = methodSequence[j].methodUnit;
 				console.log("target method unit");
 				console.log(targetMethodUnit);
 				var targetClassUnit = locateClassUnitForMethod(targetMethodUnit, topClassUnits);
@@ -225,12 +251,13 @@
 				var node = nodesByName[targetMethodUnit.UUID];
 				if(!node){
 					node = {
-							name: targetClassUnit.name+":"+targetMethodUnit.Signature.name,
+							name: targetClassUnit.name+"_"+targetMethodUnit.Signature.name,
 							isResponse: targetMethodUnit.isResponse,
 							component: {
 								name: targetClassUnit.name
 							},
-							UUID: targetMethodUnit.UUID
+							UUID: action,
+							classUnit: targetClassUnit
 //							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 					nodes.push(node);
@@ -748,6 +775,7 @@
 //				Creates:[],
 //				ActionElements:[],
 //				isResponse: false,
+				UUID: XMIClassUnit['$']['UUID'],
 				attachment: XMIClassUnit
 		}
 		
@@ -777,7 +805,8 @@
 			var XMIStorableUnit = XMIStorableUnits[i];
 			ClassUnit.StorableUnits.push({
 				name: XMIStorableUnit['$']['name'],
-				kind: XMIStorableUnit['$']['kind']
+				kind: XMIStorableUnit['$']['kind'],
+				UUID: XMIStorableUnit['$']['UUID']
 			})
 		}
 		

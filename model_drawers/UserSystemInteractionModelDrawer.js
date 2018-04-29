@@ -104,7 +104,9 @@
 		for (var i in component.Attributes){
 			var attribute = component.Attributes[i];
 //			componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
-			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name+"</B></TD></TR>";
+//			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name+"</B></TD></TR>";
+			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type+" "+attribute.Name+"</B></TD></TR>";
+			
 			componentInternalIndex++;
 		}
 		
@@ -117,7 +119,8 @@
 			for(var j in operation.Parameters){
 				var parameter = operation.Parameters[j];
 				if(parameter.Name === 'return'){
-					functionSignature = parameter.Type.substring(7).replace("__", "[]") + " "+functionSignature;
+					functionSignature = parameter.Type + " "+functionSignature;
+//					functionSignature = parameter.Type.substring(7).replace("__", "[]") + " "+functionSignature;
 				}
 				else {
 //					functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
