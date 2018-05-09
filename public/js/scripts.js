@@ -79,7 +79,16 @@ function highlight_diagram_element(idString, elementType, diagramType) {
   var elementToHighlight = svgDoc.getElementById(idString);
    console.log(elementToHighlight);
   if(diagramType === "analysis_diagram"){
-           //have put robustness diagram script under robustness diagram - Aishwarya
+	const nodes = Array.prototype.slice.apply(svgDoc.getElementsByClassName('node'));
+	for(var i=0; i<nodes.length;i++) {
+		if(nodes[i].firstElementChild.textContent === idString) {
+			nodes[i].setAttribute('stroke','blue');
+		}
+		else {
+			nodes[i].setAttribute('stroke','black');
+		}
+	}
+		
   }
 
   else if(diagramType === "robustness_diagram") {
