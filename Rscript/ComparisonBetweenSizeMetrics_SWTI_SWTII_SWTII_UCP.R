@@ -125,6 +125,7 @@ cor1 = cor.test(data$Effort_Norm, data$SWTI)
 print(cor1)
 print(round(cor1$p.value,3))
 print("linear regression of effort on SWTI")
+
 m1 = lm(Effort_Norm~SWTI, data=data)
 print("confidence interval for the parameters")
 print(confint(m1))
