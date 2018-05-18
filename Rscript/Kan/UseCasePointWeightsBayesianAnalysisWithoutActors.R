@@ -126,7 +126,7 @@ print("norm factor")
 print(normFactor)
 
 print("normalized UUCW")
-normUUCW <- useCaseData[,'Real_Effort_Person_Hours']/(useCaseData[,'TCF']*useCaseData[,'EF']*normFactor)
+normUUCW <- useCaseData[,'Real_Effort_Person_Hours']/(useCaseData[,'TCF']*useCaseData[,'EF']*normFactor) - useCaseData[, 'UAW']
 print(normUUCW)
 useCaseData$norm_UUCW = normUUCW
 
@@ -330,7 +330,7 @@ for(i in 1:nfold){
 	print(foldTrainNormFactor)
 	
 	print("normalized UUCW")
-	foldTrainNormUUCW <- trainData[,'Real_Effort_Person_Hours']/(trainData[,'TCF']*trainData[,'EF']*foldTrainNormFactor)
+	foldTrainNormUUCW <- trainData[,'Real_Effort_Person_Hours']/(trainData[,'TCF']*trainData[,'EF']*foldTrainNormFactor) - trainData[, 'UAW']
 	print(foldTrainNormUUCW)
 	trainData$fold_train_norm_UUCW = foldTrainNormUUCW
 	
@@ -389,7 +389,7 @@ for(i in 1:nfold){
 	print(foldTestingNormFactor)
 	
 	print("normalized UUCW")
-	foldTestNormUUCW <- testData[,'Real_Effort_Person_Hours']/(testData[,'TCF']*testData[,'EF']*foldTestingNormFactor)
+	foldTestNormUUCW <- testData[,'Real_Effort_Person_Hours']/(testData[,'TCF']*testData[,'EF']*foldTestingNormFactor) - testData[, 'UAW']
 	print(foldTestNormUUCW)
 	testData$fold_test_norm_UUCW = foldTestNormUUCW
 	

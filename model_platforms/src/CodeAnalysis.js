@@ -495,7 +495,7 @@
 			for(var k in ActionElement.ClassUnits){
 				classUnits.push(ActionElement.ClassUnits[k]);
 				var subClasses = findSubClasses(ActionElement.ClassUnits[k]);
-				classUnit = classUnit.concat(subClasses);
+				classUnits = classUnits.concat(subClasses);
 			}
 			return classUnits;
 		}
@@ -538,6 +538,10 @@
 //		var classUnitToSelect = null;
 		for(var i in ClassUnits){
 			var classUnit = ClassUnits[i];
+			if(!classUnit){
+				continue;
+			}
+			console.log(classUnit);
 			var MethodUnits = classUnit.MethodUnits;
 			for(var j in MethodUnits){
 				var methodUnit = MethodUnits[j];
@@ -890,7 +894,7 @@
 //			ClassUnit.Creates=ClassUnit.Creates.concat(includedClassUnit.Creates);
 //			ClassUnit.ActionElements=ClassUnit.ActionElements.concat(includedClassUnit.ActionElements);
 			
-			ClassUnit.ClassUnits.push(includedClassUnit);
+			ClassUnit.ClassUnits.push(IncludedClassUnit);
 			
 //				if(includedClassUnit.isResponse){
 //					ClassUnit.isResponse = true;

@@ -66,7 +66,7 @@ png(filename=paste(outputPath,'accuracy_evaluation_plot_PRED_15.png', sep='/'),
 		height=2.5*2,
 		res=96)
 
-yrange = c(0.15, 0.45)
+yrange = c(0.15, 0.65)
 
 # set up the plot 
 plot(xrange, yrange, type="n", xlab="Data Points",
@@ -109,7 +109,7 @@ png(filename=paste(outputPath,'accuracy_evaluation_plot_25.png', sep='/'),
 		height=2.5*2,
 		res=96)
 
-yrange = c(0.25, 0.6)
+yrange = c(0.25, 0.7)
 
 # set up the plot 
 plot(xrange, yrange, type="n", xlab="Data Points",
@@ -152,7 +152,7 @@ png(filename=paste(outputPath,'accuracy_evaluation_plot_50.png', sep='/'),
 		height=2.5*2,
 		res=96)
 
-yrange = c(0.5, 1)
+yrange = c(0.45, 1.1)
 
 # set up the plot 
 plot(xrange, yrange, type="n", xlab="Data Points",
@@ -195,7 +195,7 @@ png(filename=paste(outputPath,'accuracy_evaluation_plot_mmre.png', sep='/'),
 		height=2.5*2,
 		res=96)
 
-yrange = c(0.2, 0.9)
+yrange = c(0.1, 1.9)
 
 # set up the plot 
 plot(xrange, yrange, type="n", xlab="Data Points",
