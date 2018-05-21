@@ -1,9 +1,7 @@
-var modelID;
-
 function display()
 {
   var repoID = $("#myrepoId").val();
-  modelID = $("#mymodelId").val();
+  var modelID = $("#mymodelId").val();
 // console.log(repoID);
 // console.log(modelID);
 var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/useCaseEvaluation.csv";
@@ -131,7 +129,7 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
 }
 // The below code is to populate the json data at the repo level
 
-  var repoID = $("#myrepoId").val();
+ var repoID = $("#myrepoId").val();
   //  console.log("found");
    //console.log($('.repo-metrics').html());
   var repo_url = "output/repo"+ repoID  +  "/model_evaluation_statistics/statistics.json";
@@ -170,6 +168,11 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
       //var modelID = $("#mymodelId").val();
       //console.log(use_case_id);
       //console.log(modelID);
+
+      var repoID = $("#myrepoId").val();
+
+      var modelID = $("#mymodelId").val();
+      
       var usecase_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/element_statistics.json" ;
       var usecase_url2 = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/path_statistics.json" ;
       //console.log(usecase_url);
@@ -230,6 +233,10 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
   }
   function populate_domainAnalysis_data()
   {
+
+	  var repoID = $("#myrepoId").val();
+
+	  var modelID = $("#mymodelId").val();
     console.log("analysis!");
     var usecase_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" +  "/domainModel/domain_model_statistics.json" ;
     $.ajax({

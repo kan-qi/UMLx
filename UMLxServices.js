@@ -1443,7 +1443,7 @@ app.get('/', function(req, res){
 console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
     
       //console.log("INSIDE UMLXSERVICES: "+ repoId);
-      console.log("INSIDE UMLXSERVICES"+ repoInfo.Models[0].creationTime);
+//      console.log("INSIDE UMLXSERVICES"+ repoInfo.Models[0].creationTime);
                        
 //			console.log(req.userInfo);
 		//console.log(repoInfo);
