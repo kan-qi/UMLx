@@ -10,7 +10,7 @@
     var config = require('./config'); // get our config file
     const uuidv4 = require('uuid/v4');
 
-    var GitHubApi = require('github')       
+    var GitHubApi = require('@octokit/rest')       
             
         var github = new GitHubApi({        
         }); 
@@ -1009,7 +1009,20 @@ function deleteRepo(repoId, callbackfunc) {
 			}).toArray(
 			function(err, result) 
 			{
-			   if (err) throw err;
+			   if (err)
+				   {
+				   throw err;
+				   return;
+				   }
+			   
+			   if(result.length === 0){
+				   callbackfunc({
+					   NT: 0,
+					   UseCaseNum: 0,
+					   EntityNum: 0,
+					   timestamp: "0000/00/00"
+				   });
+			   }
 			   else
 			   {
 				    var dt = new Date();
@@ -1027,7 +1040,7 @@ function deleteRepo(repoId, callbackfunc) {
 							db.close();							
 						}
 							
-							//throw new Error('No record found.');
+					    //throw new Error('No record found.');
 						//console.log(doc);//else case
 						
 						else
