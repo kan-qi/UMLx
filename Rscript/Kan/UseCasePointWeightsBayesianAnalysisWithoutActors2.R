@@ -382,22 +382,21 @@ for(i in 1:nfold){
 	
 	print('calculate fold testing norm factor')
 	
-	foldTestingUCPFit <- lm(Real_Effort_Person_Hours ~ UCP - 1, data = testData)
-	foldTestingNormFactor <- coef(foldTestingUCPFit)[c('UCP')]
+	testData[,'bayesSize'] = as.matrix(testDataX) %*% t(foldAverageCoefs)*testData[,'TCF']*testData[,'EF']+ testData[, 'UAW']
+	foldTestingUCPFit <- lm(Real_Effort_Person_Hours ~ bayesSize-1, data = testData)
+	foldTestingNormFactor <- coef(foldTestingUCPFit)[c('bayesSize')]
 	print("fold testing norm factor")
 #normFactor <- 12
 	print(foldTestingNormFactor)
 	
-	foldTestingNormFactor <- foldTrainNormFactor
-	
-	#print("normalized UUCW")
-	#foldTestNormUUCW <- /()
-	#print(foldTestNormUUCW)
-	#testData$fold_test_norm_UUCW = foldTestNormUUCW
+	print("normalized UUCW")
+	foldTestNormUUCW <- testData[,'Real_Effort_Person_Hours']/(testData[,'TCF']*testData[,'EF']*foldTestingNormFactor) - testData[, 'UAW']
+	print(foldTestNormUUCW)
+	testData$fold_test_norm_UUCW = foldTestNormUUCW
 	
 	print('bayesian testing set predication')
 	#bayesian.mre = apply(testData, 1, function(x))
-	bayesian.predict = cbind((as.matrix(testDataX) %*% t(foldAverageCoefs) + testData[, 'UAW'])*testData[,'TCF']*testData[,'EF']*foldTestingNormFactor, testData[,'Real_Effort_Person_Hours'])
+	bayesian.predict = cbind(testData$bayesSize*foldTestingNormFactor,  testData[,'Real_Effort_Person_Hours'])
 	colnames(bayesian.predict) = c('predicted', "actual")
 	print(bayesian.predict)
 	bayesian.mre = apply(bayesian.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -415,9 +414,16 @@ for(i in 1:nfold){
 	}
 	
 	print('apriori testing set predication')
+	testData[,'aprioriSize'] = as.matrix(testDataX) %*% t(aprioriMeans)*testData[,'TCF']*testData[,'EF']+ testData[, 'UAW']
+	foldTestingUCPFit2 <- lm(Real_Effort_Person_Hours ~ aprioriSize-1, data = testData)
+	foldTestingNormFactor2 <- coef(foldTestingUCPFit2)[c('aprioriSize')]
+	print("fold testing norm factor")
+#normFactor <- 12
+	print(foldTestingNormFactor)
+	
 	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
 	#aprioriMeans = cbind(Simple_UC=5, Average_UC=15, Complex_UC=20)
-	apriori.predict = cbind((as.matrix(testDataX) %*% t(aprioriMeans)+ testData[, 'UAW'])*testData[,'TCF']*testData[,'EF']*foldTestingNormFactor, testData[,'Real_Effort_Person_Hours'])
+	apriori.predict = cbind(testData$aprioriSize*foldTestingNormFactor2,  testData[,'Real_Effort_Person_Hours'])
 	colnames(apriori.predict) = c('predicted', "actual")
 	print(apriori.predict)
 	apriori.mre = apply(apriori.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -435,9 +441,14 @@ for(i in 1:nfold){
 	}
 	
 	print('original use case weights testing set predication')
+	originalWeights = cbind(Simple_UC=5, Average_UC=10, Complex_UC=15)
+	testData[,'originalSize'] = as.matrix(testDataX) %*% t(originalWeights)*testData[,'TCF']*testData[,'EF']+ testData[, 'UAW']
+	foldTestingUCPFit3 <- lm(Real_Effort_Person_Hours ~ originalSize-1, data = testData)
+	foldTestingNormFactor3 <- coef(foldTestingUCPFit3)[c('originalSize')]
+	
 	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
 	originalWeights = cbind(Simple_UC=5, Average_UC=10, Complex_UC=15)
-	original.predict = cbind((as.matrix(testDataX) %*% t(originalWeights)+ testData[, 'UAW'])*testData[,'TCF']*testData[,'EF']*foldTestingNormFactor, testData[,'Real_Effort_Person_Hours'])
+	original.predict = cbind(testData$originalSize*foldTestingNormFactor3,  testData[,'Real_Effort_Person_Hours'])
 	colnames(original.predict) = c('predicted', "actual")
 	print(original.predict)
 	original.mre = apply(original.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -457,7 +468,12 @@ for(i in 1:nfold){
 	print('regression testing set predication')
 	#regression.m = lm(norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
 	#regression.m <- lm(Norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainDataX)
-	regression.predict = cbind(predicted=(as.matrix(testDataX) %*% t(foldRegressionCoefs)+ testData[, 'UAW'])*testData[,'TCF']*testData[,'EF']*foldTestingNormFactor, actual=testData[,'Real_Effort_Person_Hours'])
+
+testData[,'regressionSize'] = as.matrix(testDataX) %*% t(foldRegressionCoefs)*testData[,'TCF']*testData[,'EF']+ testData[, 'UAW']
+foldTestingUCPFit4 <- lm(Real_Effort_Person_Hours ~ regressionSize-1, data = testData)
+foldTestingNormFactor4 <- coef(foldTestingUCPFit4)[c('regressionSize')]
+
+	regression.predict = cbind(testData$regressionSiz*foldTestingNormFactor4,  testData[,'Real_Effort_Person_Hours'])
 	print(regression.predict)
 	regression.mre = apply(regression.predict, 1, function(x) abs(x[1] - x[2])/x[2])
 	regression.mmre = mean(regression.mre)
@@ -505,7 +521,7 @@ print(cvResults)
 
 
 #for(i in 1:nfold){
-	#print(foldResults1[,,i])
+#print(foldResults1[,,i])
 #}
 
 avgPreds <- matrix(,nrow=100,ncol=5)
@@ -546,7 +562,7 @@ print(meltAvgPreds)
 svg(paste(outputPath,"use_case_weight_calibration_err_plot.svg", sep="/"), width=6, height=4)
 ggplot(meltAvgPreds) + theme_bw() + 
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
-				ylab("Percentage")+ theme(legend.position="bottom")
+		ylab("Percentage")+ theme(legend.position="bottom")
 
 print("melt avg preds info as lines and smooth function")
 svg(paste(outputPath,"use_case_weight_calibration_err_plot_lines_smooth.svg", sep="/"), width=6, height=4)
