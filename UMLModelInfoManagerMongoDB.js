@@ -558,18 +558,20 @@ function deleteRepo(repoId, callbackfunc) {
     
     
     function queryModelInfo(modelId, repoId, callbackfunc){
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(url, function (err, db) {
+            console.log("ReportPlace1");
             if (err) throw err;
+            console.log("ReportPlace5");
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
+
             db.collection("modelInfo").aggregate([
             	{
     				"$match":
     				{
     				   "_id":modelId
     				}
-    			},
-            
+            	},            
                {
                    "$lookup": {
                        "from": "domainModelInfo",
@@ -585,20 +587,47 @@ function deleteRepo(repoId, callbackfunc) {
                        "foreignField": "model_id",
                        "as": "UseCases"
                    }
-               }
-            ], function(err, result) {
+               },
+                {
+                    "$project":
+                        {
+                            "_id": 1,
+                            "fileUrl": 1,
+                            "Name": 1,
+                            "OutputDir": 1,
+                            "AccessDir": 1,
+                            "TransactionAnalytics": 1,
+                            "UseCaseStatisticsOutputDir": 1,
+                            "DomainModelStatisticsOutputDir": 1,
+                            "repo_id": 1,
+                            "ElementAnalytics": 1,
+                            "formInfo": 1,
+
+                            "DomainModels": 1,
+                            "UseCases": 1
+                        }
+                },
+                {
+                    "$unwind": "$UseCases"
+                }
+            ],
+            function (err, result) {
+               console.log("ReportPlace3");
                if (err) throw err;
+               console.log("ReportPlace4");
+               //console.log(result);
                console.log("*******Shown result for ModelInfo*******");
                db.close();
-               //restore the ids
-               var modelInfo = result[0];
-               for(var i in modelInfo.UseCases){
-            	   var useCase = modelInfo.UseCases[i];
+                //restore the ids
+               var modelInfo = result;
+               for(var i in modelInfo){
+            	   var useCase = modelInfo[i].UseCases;
             	   if(useCase){
                 	   useCase._id = useCase._id.replace(/\[.*\]/g, "");
                    }
                }
                
+               console.log("ReportPlace5");
                if(modelInfo.DomainModels&&modelInfo.DomainModels[0]){
 
                    var domainModel = modelInfo.DomainModels[0];
