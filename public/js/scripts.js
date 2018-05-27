@@ -2020,7 +2020,26 @@ function walkDir(get) {
 }
 
 function buildTable(data) {
-    var out = "<div id='wrapRow' class='row'>";
+    var keys = [];
+    var newKeys = [];
+    var type = [];
+    var sizeData = [];
+    var dateData = [];
+    for(var i = 0; i < data.length; i++){
+        keys[i] = data[i].url;
+    }
+    newKeys = keys.sort();
+    for(var i = 0; i < newKeys.length; i++){
+        if(data[i].isFolder){
+            type[data[i].url] = "Folder";
+        } 
+        else{
+            type[data[i].url] = "File";
+        }
+        sizeData[data[i].url] = data[i].size;
+        dateData[data[i].url] = data[i].date;
+    }
+    var out = "<div id='wrapRow' class='row table-response'>";
     if (level >= 2) {
         console.log(dirLink);
         console.log(level);
@@ -2034,19 +2053,27 @@ function buildTable(data) {
     out += "<table class='row table-striped'>";
     out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
 
-    for(var i = 0; i < data.length; i++) {
-        if (data[i].isFolder) {
-            clickValue = data[i].url;
-            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+clickValue+" onclick='walkDir(this)'>" +
-                data[i].url+
+    for(var i = 0; i < newKeys.length; i++) {
+        if (type[newKeys[i]] === "Folder") {
+            clickValue = newKeys[i];
+            out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div"+ i +"' data-url="+clickValue+" onclick='walkDir(this)'>" +
+                newKeys[i]+
                 "</a></td><td>folder</td>";
-        } else {
-        var path = dirLink+"/"+data[i].url;
-            out += "<tr><td><a class='fileLink' href='"+path.replace("public/", "")+"'>" +
-                data[i].url+
-                "</a></td><td>file</td>";
+            out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
+        }else{
+            continue;
+        }        
+    } 
+    for(var i = 0; i < newKeys.length; i++) {
+        if (type[newKeys[i]] === "File") {
+            var path = dirLink+"/"+newKeys[i];
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'><a class='fileLink' href='"+path.replace("public/", "")+"'>" +
+                    newKeys[i]+
+                    "</a></td><td>file</td>";
+                out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
+        }else{
+            continue;
         }
-        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
     }
     out += "</table>";
     document.getElementById("displayArchive").innerHTML = out;
@@ -2094,7 +2121,27 @@ function walkRepoDir(get) {
 }
 
 function buildTable2(data) {
-    var out = "<div id='wrapRow' class='row'>";
+    var keys = [];
+    var newKeys = [];
+    var type = [];
+    var sizeData = [];
+    var dateData = [];
+    for(var i = 0; i < data.length; i++){
+        keys[i] = data[i].url;
+    }
+    newKeys = keys.sort();
+    for(var i = 0; i < newKeys.length; i++){
+        if(data[i].isFolder){
+            type[data[i].url] = "Folder";
+        } 
+        else{
+            type[data[i].url] = "File";
+        }
+        sizeData[data[i].url] = data[i].size;
+        dateData[data[i].url] = data[i].date;
+    }
+  
+    var out = "<div id='wrapRow' class='row table-responsive'>";
     if (levels >= 2) {
         backUrl = repoLink.split("/")[levels];
         out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backUrl+" onclick='walkRepoDir(this)'>Back</button>";
@@ -2106,18 +2153,28 @@ function buildTable2(data) {
     out += "<table class='row table-striped'>";
     out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
 
-    for(var i = 0; i < data.length; i++) {
-        if (data[i].isFolder) {
-            documentUrl = data[i].url;
-            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+documentUrl+" onclick='walkRepoDir(this)'>" +
-                data[i].url+
+    for(var i = 0; i < newKeys.length; i++) {
+        if (type[newKeys[i]] === "Folder") {
+            documentUrl = newKeys[i];
+            out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div"+ i +"' data-url="+documentUrl+" onclick='walkRepoDir(this)'>" +
+                newKeys[i]+
                 "</a></td><td>folder</td>";
-        } else {
-            out += "<tr><td>" +
-                data[i].url+
-                "</td><td>file</td>";
+            out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
         }
-        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+        else{
+            continue;
+        }
+    }
+    for(var i = 0; i < newKeys.length; i++) {
+        if (type[newKeys[i]] === "File") {
+            out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'>" +
+                newKeys[i]+
+                "</td><td>file</td>";
+            out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
+        }
+        else{
+            continue;
+        }
     }
     out += "</table>";
     document.getElementById("displayRepoArchive").innerHTML = out;
