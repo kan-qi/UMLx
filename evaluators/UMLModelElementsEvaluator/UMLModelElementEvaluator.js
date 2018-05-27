@@ -66,8 +66,14 @@
 	var umlFileManager = require('../../UMLFileManager');
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
+	
 	function toModelEvaluationHeader() {
-		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,ControlNum,Entity_Num,attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
+		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,ControlNum,Entity_Num," +
+				"attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class," +
+				"Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects," +
+				"para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size,"+
+				"Lines_of_code, External_Method_Num, Services_Requested_Num,Recode_Num,Data_Element_Num,Points_Num,Inher_Rela_Num,Use_Rela_Num,Real_Rela_Num,Method_Num,Parameter_Num,Parameter_Method_Avg"
+				"External_Files, Internal_Files,Data_element,File_Type_Referenced";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -120,7 +126,8 @@
 
 	// to output the header for data for the use cases.
 	function toUseCaseEvaluationHeader() {
-		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Avg_Degree,Avg_Path_Length,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,Control_Num,Entity_Num";
+		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Avg_Degree,Avg_Path_Length,Actor_Num," +
+				"Role_Num,Avg_Actor,Avg_Role,Boundary_Num,Control_Num,Entity_Num;
 	}
 
 	// to output each row of the data for the use cases.
@@ -146,7 +153,11 @@
 	}
 
 	function toDomainModelEvaluationHeader() {
-		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
+		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree," +
+				"Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes," +
+				"Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree" +
+				",Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation," +
+				" avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
