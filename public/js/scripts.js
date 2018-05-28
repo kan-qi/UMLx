@@ -1336,7 +1336,11 @@ function createTrendingLines() {
                   class_num.push(response[i].EntityNum);
 
                 }
-                console.log(response.timestamp);
+                date.push(response.timestamp);
+                transaction_num.push(response.NT);
+                project_num.push(response.projectNum);
+                case_num.push(response.UseCaseNum);
+                class_num.push(response.EntityNum);
 
                 // Default chart at the repo level - Number of transactions
                   var chart =   Highcharts.chart('trending-line', {
@@ -1414,8 +1418,9 @@ function createTrendingLines() {
                     var transaction_num_new = [];
                     for(var i=0;i<response.length;i++)
                     {
-                        transaction_num_new.push(response[i].transaction_num);
+                        transaction_num_new.push(response.transaction_num);
                     }
+                    transaction_num_new.push(response.NT);
                     console.log(transaction_num_new);
                     chart.update({
                       yAxis: {
@@ -2039,7 +2044,7 @@ function buildTable(data) {
         sizeData[data[i].url] = data[i].size;
         dateData[data[i].url] = data[i].date;
     }
-    var out = "<div id='wrapRow' class='row table-response'>";
+    var out = "<div id='wrapRow' class='row table-responsive'>";
     if (level >= 2) {
         console.log(dirLink);
         console.log(level);
