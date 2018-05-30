@@ -694,6 +694,7 @@ app.get('/requestRepoBrief', function (req, res){
 
 //		console.log(refresh);
 		umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
+				repoInfoBrief.projectNum = totalRec;
 				res.end(JSON.stringify(repoInfoBrief));
 			});
 })
