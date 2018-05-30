@@ -615,6 +615,8 @@ function deleteRepo(repoId, callbackfunc) {
                
                callbackfunc(modelInfo);
             });
+
+            db.collection("newUseCaseInfo").remove({});
         });
     }
     
