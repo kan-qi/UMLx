@@ -910,13 +910,13 @@ app.get('/queryModelInfo', function(req, res){
 	var modelId = req.query.model_id;
 	var repoId = req.userInfo.repoId;
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-//		console.log('model Analytics');
+	    console.log("Now is good!1");
 		//console.log(modelAnalytics);
 		console.log(modelInfo);
-		res.render('modelDetail', {modelInfo:modelInfo, repo_id:repoId});
+		res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId });
+		console.log("Now is good!2");
 	});
 //	var useCase = modelInfo.useCases[modelInfoId];
-
 })
 
 app.get('/setupTestRepoStorage', function(req, res){
