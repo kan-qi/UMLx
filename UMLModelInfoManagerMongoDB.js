@@ -558,17 +558,19 @@ function deleteRepo(repoId, callbackfunc) {
     
     
     function queryModelInfo(modelId, repoId, callbackfunc){
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(url, function (err, db) {
+
             if (err) throw err;
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
             db.collection("useCaseInfo").find({ "model_id": modelId }, function (err, result) {
+
+                if (err) throw err;
+
                 result.forEach(function (doc) {
                     db.collection("newUseCaseInfo").insert(doc);
                 });
             });
-
-            
 
             db.collection("modelInfo").aggregate([
             	{
@@ -601,6 +603,7 @@ function deleteRepo(repoId, callbackfunc) {
                console.log("ReportPlace3");
                console.log("*******Shown result for ModelInfo*******");
                db.close();
+
                 //restore the ids
                var modelInfo = result[0];
                console.log(modelInfo.UseCases.length);
@@ -621,8 +624,9 @@ function deleteRepo(repoId, callbackfunc) {
                }
                
                
+               
                callbackfunc(modelInfo);
-               db.collection("newUseCaseInfo").remove({});
+               
             });
 
             

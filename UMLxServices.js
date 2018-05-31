@@ -18,6 +18,9 @@ var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
 var bodyParser = require('body-parser');
 var randomstring = require("randomstring");
+var mongo = require('mongodb');
+var MongoClient = mongo.MongoClient;
+var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 //var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 
 var storage = multer.diskStorage({
@@ -909,6 +912,15 @@ app.get('/queryExistingModelsTest', function(req, res){
 app.get('/queryModelInfo', function(req, res){
 	var modelId = req.query.model_id;
 	var repoId = req.userInfo.repoId;
+	MongoClient.connect(url, function (err, db) {
+	    if (err) throw err;
+	    db.collection("newUseCaseInfo").remove({}, function (err, db) {
+	        if (err) throw err;
+	    });
+	    db.close();
+	});
+
+
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 	    console.log("Now is good!1");
 		//console.log(modelAnalytics);
