@@ -1,4 +1,3 @@
-
 function setCookie(cname, cvalue, exdays) {
     var expires="";
     if(exdays > 0){
@@ -527,19 +526,16 @@ function dump_model_evaluation_for_use_cases_func(){
                         .selectAll("tr")
                             .data(parsedCSV).enter()
                             .append("tr")
-
                         .selectAll("td")
                             .data(function(d) { return d; }).enter()
                             .append("td")
                             .text(function(d) { return d == "undefined" ? "-" : d; });
-
         },
         error : function() {
             console.log("fail");
             alert("There was an error");
         }
     });
-
     return false;
 }
 */
@@ -2009,11 +2005,15 @@ function walkDir(get) {
     fileFolder = $(get).data('url');
     if (dirLink.indexOf(fileFolder) != -1) {
         var index = dirLink.indexOf(fileFolder);
-        dirLink = dirLink.substring(0, index-1);
+        dirLink = dirLink.substring(0, index - 1);
         level -= 2;
     }
-    dirLink += "/"+fileFolder;
+    dirLink += "/" + fileFolder;
+    console.log("fileFolder");
+    console.log(fileFolder);
     level++;
+    console.log("dirLink");
+    console.log(dirLink);
 
     $.ajax({
     	type: 'GET',
@@ -2058,6 +2058,9 @@ function buildTable(data) {
     out += "<table class='row table-striped'>";
     out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
 
+    console.log("out");
+    console.log(out);
+
     for(var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "Folder") {
             clickValue = newKeys[i];
@@ -2068,7 +2071,11 @@ function buildTable(data) {
         }else{
             continue;
         }        
-    } 
+    }
+
+    console.log("out");
+    console.log(out);
+
     for(var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "File") {
             var path = dirLink+"/"+newKeys[i];
@@ -2081,7 +2088,12 @@ function buildTable(data) {
         }
     }
     out += "</table>";
+
+    console.log("out");
+    console.log(out);
+
     document.getElementById("displayArchive").innerHTML = out;
+    document.getElementById("displayUploads").innerHTML = out;
 }
 
 

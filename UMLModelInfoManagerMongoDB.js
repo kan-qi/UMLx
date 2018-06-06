@@ -558,13 +558,20 @@ function deleteRepo(repoId, callbackfunc) {
     
     
     function queryModelInfo(modelId, repoId, callbackfunc){
-        MongoClient.connect(url, function(err, db) {
+        MongoClient.connect(url, function (err, db) {
+
             if (err) throw err;
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
-            db.collection("useCaseInfo").find({ "model_id": modelId }).forEach(function (doc) {
-                db.collection("newUseCaseInfo").insert(doc);
+            db.collection("useCaseInfo").find({ "model_id": modelId }, function (err, result) {
+
+                if (err) throw err;
+
+                result.forEach(function (doc) {
+                    db.collection("newUseCaseInfo").insert(doc);
+                });
             });
+
             db.collection("modelInfo").aggregate([
             	{
     				"$match":
@@ -596,8 +603,11 @@ function deleteRepo(repoId, callbackfunc) {
                console.log("ReportPlace3");
                console.log("*******Shown result for ModelInfo*******");
                db.close();
+
                 //restore the ids
                var modelInfo = result[0];
+               console.log(modelInfo.UseCases.length);
+               console.log(modelInfo.useCases);
                for(var i in modelInfo.UseCases){
             	   var useCase = modelInfo.UseCases[i];
             	   if(useCase){
@@ -605,6 +615,7 @@ function deleteRepo(repoId, callbackfunc) {
                    }
                }
                console.log("ReportPlace5");
+               console.log(modelInfo.UseCases.length);
                if(modelInfo.DomainModels&&modelInfo.DomainModels){
                    var domainModel = modelInfo.DomainModels;
                    delete modelInfo.DomainModels;
@@ -613,10 +624,12 @@ function deleteRepo(repoId, callbackfunc) {
                }
                
                
+               
                callbackfunc(modelInfo);
+               
             });
 
-            db.collection("newUseCaseInfo").remove({});
+            
         });
     }
     
@@ -806,7 +819,7 @@ function deleteRepo(repoId, callbackfunc) {
 			
 			//use promise to construct the repo objects
 			function loadModel(model_id, repoInfo){
-				return new Promise((resolve, reject) => {
+			    return new Promise((resolve, reject) => {
             db.collection("modelInfo").aggregate([
             	{
     				"$match":
@@ -1121,7 +1134,8 @@ function deleteRepo(repoId, callbackfunc) {
             MongoClient.connect(url, function(err, db) {
                 if (err) throw err;
                 useCaseId = useCaseId+"["+modelId+"]";
-    			console.log(useCaseId);
+                console.log(useCaseId);
+
 //    			useCaseId = "EAID_B5CA8145_00A3_4541_8183_087F17CB8A75";
 //    			useCaseId = "EAID_1AF6160E_2CA8_4c81_AC39_80214CC3DFFF[7c18071493716169cab08bcb5d96e1401524045385596]";
 //    				  var o_id = new mongo.ObjectID(useCaseId);
