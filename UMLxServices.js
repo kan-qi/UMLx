@@ -921,7 +921,6 @@ app.get('/queryModelInfo', function(req, res){
 	    db.close();
 	});
 
-
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 	    console.log("Now is good!1");
 		//console.log(modelAnalytics);
