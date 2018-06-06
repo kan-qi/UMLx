@@ -2007,7 +2007,6 @@ var level = 0;
 
 function walkDir(get) {
     dirLink = "public";
-    level = 0;
     fileFolder = $(get).data('url');
     if (dirLink.indexOf(fileFolder) != -1) {
         var index = dirLink.indexOf(fileFolder);
@@ -2015,11 +2014,11 @@ function walkDir(get) {
         level -= 2;
     }
     dirLink += "/" + fileFolder;
-    console.log("fileFolder");
-    console.log(fileFolder);
+    //console.log("fileFolder");
+    //console.log(fileFolder);
     level++;
-    console.log("dirLink");
-    console.log(dirLink);
+    //console.log("dirLink");
+    //console.log(dirLink);
 
     $.ajax({
     	type: 'GET',
@@ -2064,8 +2063,8 @@ function buildTable(data) {
     out += "<table class='row table-striped'>";
     out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
 
-    console.log("out");
-    console.log(out);
+    //console.log("out");
+    //console.log(out);
 
     for(var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "Folder") {
@@ -2079,8 +2078,8 @@ function buildTable(data) {
         }        
     }
 
-    console.log("out");
-    console.log(out);
+    //console.log("out");
+    //console.log(out);
 
     for(var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "File") {
@@ -2095,8 +2094,8 @@ function buildTable(data) {
     }
     out += "</table>";
 
-    console.log("out");
-    console.log(out);
+    //console.log("out");
+    //console.log(out);
 
     document.getElementById("displayArchive").innerHTML = out;
     document.getElementById("displayUploads").innerHTML = out;
