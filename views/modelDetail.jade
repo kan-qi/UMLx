@@ -2,8 +2,10 @@
 -var modelName = modelInfo.Name
 -var repoID = repo_id
 -var filePath = modelInfo.AccessDir
+-var loadsPath = upLoadsPath
 input(type='hidden', value=model_id)#mymodelId
 input(type='hidden', value=repoID)#myrepoId
+input(type='hidden', value=loadsPath)#myupLoadsPath
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -54,6 +56,8 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#model-evaluation') Model Info
      li
       a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', onclick="walkDir(this);") Archive
+     li
+      a(data-toggle='tab', id='modelUploads' href='#loadsPath', data-url='#{loadsPath}', onclick="walkDir(this);") Uploads
 
      //li
       //a(data-toggle='tab', href='#model-representation') Representation
@@ -466,6 +470,8 @@ div.block.panel.panel-default
          button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel
      div.tab-pane.fade(id="repo_archive")
         div#displayArchive
+     div.tab-pane.fade(id="loadsPath")
+        div#displayUploads
 
      //div.tab-pane.fade(id="model-evaluation")
       div.model-evaluation-ops
