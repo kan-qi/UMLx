@@ -2006,6 +2006,8 @@ var backLink;
 var level = 0;
 
 function walkDir(get) {
+    dirLink = "public";
+    level = 0;
     fileFolder = $(get).data('url');
     if (dirLink.indexOf(fileFolder) != -1) {
         var index = dirLink.indexOf(fileFolder);
