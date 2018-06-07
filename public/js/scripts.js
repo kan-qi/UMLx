@@ -2072,9 +2072,9 @@ function buildTable(data) {
         //backLink = dirLink.split("/")[level+1];
 
         out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
-        out += "<p id='dirAddress' class='col-sm-10'>"+dirLink+"</p></div>";
+        out += "<p id='dirAddress' class='col-sm-10'>" + parentUrl + "</p></div>";
     } else {
-        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+dirLink+"</p></div>";
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + parentUrl + "</p></div>";
     }
 
     out += "<table class='row table-striped'>";
