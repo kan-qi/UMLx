@@ -1,4 +1,3 @@
-
 function setCookie(cname, cvalue, exdays) {
     var expires="";
     if(exdays > 0){
@@ -527,19 +526,16 @@ function dump_model_evaluation_for_use_cases_func(){
                         .selectAll("tr")
                             .data(parsedCSV).enter()
                             .append("tr")
-
                         .selectAll("td")
                             .data(function(d) { return d; }).enter()
                             .append("td")
                             .text(function(d) { return d == "undefined" ? "-" : d; });
-
         },
         error : function() {
             console.log("fail");
             alert("There was an error");
         }
     });
-
     return false;
 }
 */
