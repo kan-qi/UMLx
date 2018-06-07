@@ -2064,68 +2064,77 @@ function buildTable(data) {
         dateData[data[i].url] = data[i].date;
     }
     var out = "<div id='wrapRow' class='row table-responsive'>";
-    var parentUrl = data[0].parent;
-    console.log("parent: " + parentUrl);
-
-    console.log("level: " + level);
-    if (level >= 2) {
-        //backLink = dirLink.split("/")[level+1];
-
-        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
-        out += "<p id='dirAddress' class='col-sm-10'>" + parentUrl + "</p></div>";
-    } else {
-        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + parentUrl + "</p></div>";
+    var parentUrl;
+    if (data.length === 0) {
+        alert("It is an empty folder!");
+        level--;
     }
+    else {
+        parentUrl = data[0].parent;
+        console.log("parent: " + parentUrl);
 
-    out += "<table class='row table-striped'>";
-    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+        console.log("level: " + level);
 
-    //console.log("Data");
-   // console.log(data);
-    //console.log("out");
-    //console.log(out);
+        if (level >= 2) {
+            //backLink = dirLink.split("/")[level+1];
 
-    for(var i = 0; i < newKeys.length; i++) {
-        if (type[newKeys[i]] === "Folder") {
-            //clickValue = newKeys[i];
-            var path = parentUrl + "/" + newKeys[i];
-            path = path.substring(7);
-            //console.log("path: " + path);
-            out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
-                newKeys[i]+
-                "</a></td><td>folder</td>";
-            out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
-        }else{
-            continue;
-        }        
-    }
-
-    //console.log("Data");
-    //console.log(data);
-    //console.log("out");
-    //console.log(out);
-
-    for(var i = 0; i < newKeys.length; i++) {
-        if (type[newKeys[i]] === "File") {
-            var path = parentUrl + "/" + newKeys[i];
-            //console.log("path: " + path);
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'><a class='fileLink' href='"+ path +"'>" +
-                    newKeys[i]+
-                    "</a></td><td>file</td>";
-                out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
-        }else{
-            continue;
+            out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
+            out += "<p id='dirAddress' class='col-sm-10'>" + parentUrl + "</p></div>";
+        } else {
+            out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + parentUrl + "</p></div>";
         }
+
+        out += "<table class='row table-striped'>";
+        out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+        //console.log("Data");
+        // console.log(data);
+        //console.log("out");
+        //console.log(out);
+
+        for (var i = 0; i < newKeys.length; i++) {
+            if (type[newKeys[i]] === "Folder") {
+                //clickValue = newKeys[i];
+                var path = parentUrl + "/" + newKeys[i];
+                path = path.substring(7);
+                //console.log("path: " + path);
+                out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
+                    newKeys[i] +
+                    "</a></td><td>folder</td>";
+                out += "<td>" + sizeData[newKeys[i]] + " Bytes</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+            } else {
+                continue;
+            }
+        }
+
+        //console.log("Data");
+        //console.log(data);
+        //console.log("out");
+        //console.log(out);
+
+        for (var i = 0; i < newKeys.length; i++) {
+            if (type[newKeys[i]] === "File") {
+                var path = parentUrl + "/" + newKeys[i];
+                //console.log("path: " + path);
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'><a class='fileLink' href='" + path + "'>" +
+                    newKeys[i] +
+                    "</a></td><td>file</td>";
+                out += "<td>" + sizeData[newKeys[i]] + " Bytes</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+            } else {
+                continue;
+            }
+        }
+        out += "</table>";
+
+        //console.log("Data");
+        //console.log(data);
+        console.log("out");
+        console.log(out);
+
+        document.getElementById("displayArchive").innerHTML = out;
+        document.getElementById("displayUploads").innerHTML = out;
     }
-    out += "</table>";
-
-    //console.log("Data");
-    //console.log(data);
-    console.log("out");
-    console.log(out);
-
-    document.getElementById("displayArchive").innerHTML = out;
-    document.getElementById("displayUploads").innerHTML = out;
+    
 }
 
 
