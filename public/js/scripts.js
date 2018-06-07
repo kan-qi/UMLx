@@ -2001,27 +2001,34 @@ var clickValue;
 var backLink;
 var level = 0;
 var typeChange = "";
+var originalUrl = "";
+
 
 function walkDir(get) {
     fileFolder = $(get).data('url');
-    data_type = $(get).data('type');
-    console.log("data_type: " + data_type);
-    
-    if (typeChange !== data_type) {
-        level = 0;
-        typeChange = data_type;
+
+    if (originalUrl !== fileFolder) {
+        originalUrl = fileFolder;
+        data_type = $(get).data('type');
         console.log("data_type: " + data_type);
-    }
 
-    level++;
-
-    $.ajax({
-    	type: 'GET',
-    	url: 'listFileUnderDir?fileFolder=public/' + fileFolder,
-        success: function (data) {
-    	    buildTable(data);
+        if (typeChange !== data_type) {
+            level = 0;
+            typeChange = data_type;
+            console.log("data_type: " + data_type);
         }
-    });
+
+        level++;
+
+        $.ajax({
+            type: 'GET',
+            url: 'listFileUnderDir?fileFolder=public/' + fileFolder,
+            success: function (data) {
+                buildTable(data);
+            }
+        });
+    }   
+    
 }
 
 function backDir(get) {
