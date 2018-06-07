@@ -497,7 +497,13 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount:
 
 app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
 	console.log(req.body);
-	var umlFilePath = req.files['uml-file'][0].path;
+	var umlFilePath = req.files['uml-file'][0].path; // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+	//
+	// e.g.
+	//  req.files['avatar'][0] -> File
+	//  req.files['gallery'] -> Array
+	//
+	// req.body will contain the text fields, if there were any
 	var umlModelName = req.body['uml-model-name'];
 	var umlModelType = req.body['uml-model-type'];
 	var repoId = req.userInfo.repoId;

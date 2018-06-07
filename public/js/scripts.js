@@ -187,7 +187,7 @@ function model_survey_file_upload_fnc() {
 
 
 function model_file_update_fnc(){
-    var formData = new FormData($('#model-file-update-submit-form')[0]);
+    var formData = new FormData($('#model-file-update-submit-form')[0]);//only dom element, use [index] to make jquery object become dom
 //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type : 'POST',
@@ -2002,8 +2002,6 @@ var backLink;
 var level = 0;
 var typeChange = "";
 var originalUrl = "";
-
-
 function walkDir(get) {
     fileFolder = $(get).data('url');
 
@@ -2011,7 +2009,7 @@ function walkDir(get) {
         originalUrl = fileFolder;
         data_type = $(get).data('type');
         console.log("data_type: " + data_type);
-
+        console.log("fileFolder:" + fileFolder);
         if (typeChange !== data_type) {
             level = 0;
             typeChange = data_type;
@@ -2052,10 +2050,11 @@ function buildTable(data) {
     var sizeData = [];
     var dateData = [];
     var nextUrl = [];
-
-    console.log("Data");
-    console.log(data);
-
+    var tempUrl = [];
+    var storeUrl = [];
+    //console.log("Data");
+   // console.log(data);
+    var displayUrl = "";
     for(var i = 0; i < data.length; i++){
         keys[i] = data[i].url;
     }
@@ -2081,14 +2080,35 @@ function buildTable(data) {
         console.log("parent: " + parentUrl);
 
         console.log("level: " + level);
-
+        tempUrl = parentUrl.split("/");
+        if(tempUrl.length>=3){
+            for(var i=2;i<tempUrl.length-1;i++){
+                storeUrl.push(tempUrl[i].substring(0,8)+"..."+tempUrl[i].slice(-8));
+            }
+            console.log(storeUrl);
+            displayUrl = tempUrl[0]+"/"+tempUrl[1]+"/";
+            if(storeUrl.length==0){
+                displayUrl += tempUrl[2];
+            }
+            else{
+                for(var i=0;i<storeUrl.length;i++){
+                    displayUrl += storeUrl[i]+"/";
+                }
+                if(tempUrl[tempUrl.length-1].length>16){
+                    displayUrl+=tempUrl[tempUrl.length-1].substring(0,8)+"..."+tempUrl[tempUrl.length-1].slice(-8);
+                }
+                else{
+                    displayUrl+=tempUrl[tempUrl.length-1];  
+                }              
+            }
+        }
         if (level >= 2) {
             //backLink = dirLink.split("/")[level+1];
 
             out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
-            out += "<p id='dirAddress' class='col-sm-10'>" + parentUrl + "</p></div>";
+            out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
         } else {
-            out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + parentUrl + "</p></div>";
+            out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
         }
 
         out += "<table class='row table-striped'>";
@@ -2102,7 +2122,9 @@ function buildTable(data) {
         for (var i = 0; i < newKeys.length; i++) {
             if (type[newKeys[i]] === "Folder") {
                 //clickValue = newKeys[i];
+                //console.log(newKeys[i]);
                 var path = parentUrl + "/" + newKeys[i];
+                //console.log("pathbefore: " + path);
                 path = path.substring(7);
                 //console.log("path: " + path);
                 out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
@@ -2121,8 +2143,9 @@ function buildTable(data) {
 
         for (var i = 0; i < newKeys.length; i++) {
             if (type[newKeys[i]] === "File") {
+               // console.log(newKeys[i]);
                 var path = parentUrl + "/" + newKeys[i];
-                //console.log("path: " + path);
+               // console.log("path: " + path);
                 out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'><a class='fileLink' href='" + path + "'>" +
                     newKeys[i] +
                     "</a></td><td>file</td>";
@@ -2135,8 +2158,8 @@ function buildTable(data) {
 
         //console.log("Data");
         //console.log(data);
-        console.log("out");
-        console.log(out);
+       // console.log("out");
+        //console.log(out);
 
         document.getElementById("displayArchive").innerHTML = out;
         document.getElementById("displayUploads").innerHTML = out;
@@ -2191,6 +2214,9 @@ function buildTable2(data) {
     var type = [];
     var sizeData = [];
     var dateData = [];
+    var tempUrl = [];
+    var storeUrl = [];
+    var displayUrl = "";
     for(var i = 0; i < data.length; i++){
         keys[i] = data[i].url;
     }
@@ -2207,12 +2233,36 @@ function buildTable2(data) {
     }
   
     var out = "<div id='wrapRow' class='row table-responsive'>";
+
+    tempUrl = repoLink.split("/");
+    if(tempUrl.length>=3){
+        for(var i=2;i<tempUrl.length-1;i++){
+            storeUrl.push(tempUrl[i].substring(0,8)+"..."+tempUrl[i].slice(-8));
+        }
+        console.log(storeUrl);
+        displayUrl = tempUrl[0]+"/"+tempUrl[1]+"/";
+        if(storeUrl.length==0){
+            displayUrl += tempUrl[2];
+        }
+        else{
+            for(var i=0;i<storeUrl.length;i++){
+                displayUrl += storeUrl[i]+"/";
+            }
+            if(tempUrl[tempUrl.length-1].length>16){
+                displayUrl+=tempUrl[tempUrl.length-1].substring(0,8)+"..."+tempUrl[tempUrl.length-1].slice(-8);
+            }
+            else{
+                displayUrl+=tempUrl[tempUrl.length-1];  
+            }              
+        }
+    }
+
     if (levels >= 2) {
         backUrl = repoLink.split("/")[levels];
         out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backUrl+" onclick='walkRepoDir(this)'>Back</button>";
-        out += "<p id='dirAddress' class='col-sm-10'>"+repoLink+"</p></div>";
+        out += "<p id='dirAddress' class='col-sm-10'>"+displayUrl+"</p></div>";
     } else {
-        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+repoLink+"</p></div>";
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+displayUrl+"</p></div>";
     }
 
     out += "<table class='row table-striped'>";
