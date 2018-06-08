@@ -2052,6 +2052,7 @@ function buildTable(data) {
     var nextUrl = [];
     var tempUrl = [];
     var storeUrl = [];
+    var kb = [];
     //console.log("Data");
    // console.log(data);
     var displayUrl = "";
@@ -2067,7 +2068,9 @@ function buildTable(data) {
             type[data[i].url] = "File";
         }
         sizeData[data[i].url] = data[i].size;
-        dateData[data[i].url] = data[i].date;
+        var trans = parseInt(sizeData[data[i].url]);
+        kb[data[i].url]=(trans/1024).toFixed(2);
+        dateData[data[i].url] = data[i].date.substring(0,10)+" "+data[i].date.substring(11,19);
     }
     var out = "<div id='wrapRow' class='row table-responsive'>";
     var parentUrl;
@@ -2085,7 +2088,7 @@ function buildTable(data) {
             for(var i=2;i<tempUrl.length-1;i++){
                 storeUrl.push(tempUrl[i].substring(0,8)+"..."+tempUrl[i].slice(-8));
             }
-            console.log(storeUrl);
+           // console.log(storeUrl);
             displayUrl = tempUrl[0]+"/"+tempUrl[1]+"/";
             if(storeUrl.length==0){
                 displayUrl += tempUrl[2];
@@ -2130,7 +2133,7 @@ function buildTable(data) {
                 out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
                     newKeys[i] +
                     "</a></td><td>folder</td>";
-                out += "<td>" + sizeData[newKeys[i]] + " Bytes</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+                out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
             } else {
                 continue;
             }
@@ -2149,7 +2152,7 @@ function buildTable(data) {
                 out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'><a class='fileLink' href='" + path + "'>" +
                     newKeys[i] +
                     "</a></td><td>file</td>";
-                out += "<td>" + sizeData[newKeys[i]] + " Bytes</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+                out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
             } else {
                 continue;
             }
@@ -2213,6 +2216,7 @@ function buildTable2(data) {
     var newKeys = [];
     var type = [];
     var sizeData = [];
+    var kb = [];
     var dateData = [];
     var tempUrl = [];
     var storeUrl = [];
@@ -2229,7 +2233,9 @@ function buildTable2(data) {
             type[data[i].url] = "File";
         }
         sizeData[data[i].url] = data[i].size;
-        dateData[data[i].url] = data[i].date;
+        var trans = parseInt(sizeData[data[i].url]);
+        kb[data[i].url]=(trans/1024).toFixed(2);
+        dateData[data[i].url] = data[i].date.substring(0,10)+" "+data[i].date.substring(11,19);
     }
   
     var out = "<div id='wrapRow' class='row table-responsive'>";
@@ -2239,7 +2245,7 @@ function buildTable2(data) {
         for(var i=2;i<tempUrl.length-1;i++){
             storeUrl.push(tempUrl[i].substring(0,8)+"..."+tempUrl[i].slice(-8));
         }
-        console.log(storeUrl);
+        //console.log(storeUrl);
         displayUrl = tempUrl[0]+"/"+tempUrl[1]+"/";
         if(storeUrl.length==0){
             displayUrl += tempUrl[2];
@@ -2274,7 +2280,7 @@ function buildTable2(data) {
             out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div"+ i +"' data-url="+documentUrl+" onclick='walkRepoDir(this)'>" +
                 newKeys[i]+
                 "</a></td><td>folder</td>";
-            out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
+            out += "<td>"+kb[newKeys[i]]+" KB</td><td>"+dateData[newKeys[i]]+"</td></tr>"
         }
         else{
             continue;
@@ -2285,7 +2291,7 @@ function buildTable2(data) {
             out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'>" +
                 newKeys[i]+
                 "</td><td>file</td>";
-            out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
+            out += "<td>"+kb[newKeys[i]]+" KB</td><td>"+dateData[newKeys[i]]+"</td></tr>"
         }
         else{
             continue;
