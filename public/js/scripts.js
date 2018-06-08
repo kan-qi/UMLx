@@ -1,4 +1,3 @@
-
 function setCookie(cname, cvalue, exdays) {
     var expires="";
     if(exdays > 0){
@@ -527,19 +526,16 @@ function dump_model_evaluation_for_use_cases_func(){
                         .selectAll("tr")
                             .data(parsedCSV).enter()
                             .append("tr")
-
                         .selectAll("td")
                             .data(function(d) { return d; }).enter()
                             .append("td")
                             .text(function(d) { return d == "undefined" ? "-" : d; });
-
         },
         error : function() {
             console.log("fail");
             alert("There was an error");
         }
     });
-
     return false;
 }
 */
@@ -1336,7 +1332,11 @@ function createTrendingLines() {
                   class_num.push(response[i].EntityNum);
 
                 }
-                console.log(response.timestamp);
+                date.push(response.timestamp);
+                transaction_num.push(response.NT);
+                project_num.push(response.projectNum);
+                case_num.push(response.UseCaseNum);
+                class_num.push(response.EntityNum);
 
                 // Default chart at the repo level - Number of transactions
                   var chart =   Highcharts.chart('trending-line', {
@@ -1414,8 +1414,9 @@ function createTrendingLines() {
                     var transaction_num_new = [];
                     for(var i=0;i<response.length;i++)
                     {
-                        transaction_num_new.push(response[i].transaction_num);
+                        transaction_num_new.push(response.transaction_num);
                     }
+                    transaction_num_new.push(response.NT);
                     console.log(transaction_num_new);
                     chart.update({
                       yAxis: {
@@ -1999,57 +2000,148 @@ var dirLink = "public";
 var clickValue;
 var backLink;
 var level = 0;
+var typeChange = "";
+var originalUrl = "";
+
 
 function walkDir(get) {
     fileFolder = $(get).data('url');
-    if (dirLink.indexOf(fileFolder) != -1) {
-        var index = dirLink.indexOf(fileFolder);
-        dirLink = dirLink.substring(0, index-1);
-        level -= 2;
-    }
-    dirLink += "/"+fileFolder;
-    level++;
+
+    if (originalUrl !== fileFolder) {
+        originalUrl = fileFolder;
+        data_type = $(get).data('type');
+        console.log("data_type: " + data_type);
+
+        if (typeChange !== data_type) {
+            level = 0;
+            typeChange = data_type;
+            console.log("data_type: " + data_type);
+        }
+
+        level++;
+
+        $.ajax({
+            type: 'GET',
+            url: 'listFileUnderDir?fileFolder=public/' + fileFolder,
+            success: function (data) {
+                buildTable(data);
+            }
+        });
+    }   
+    
+}
+
+function backDir(get) {
+    fileFolder = $(get).data('url');
+
+    level--;
 
     $.ajax({
-    	type: 'GET',
-        url: 'listFileUnderDir?fileFolder='+dirLink,
+        type: 'GET',
+        url: 'listFileUnderDir?fileFolder=' + fileFolder,
         success: function (data) {
-    	    buildTable(data);
+            buildTable(data);
         }
     });
 }
 
 function buildTable(data) {
-    var out = "<div id='wrapRow' class='row'>";
-    if (level >= 2) {
-        console.log(dirLink);
-        console.log(level);
-        backLink = dirLink.split("/")[level+1];
-        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backLink+" onclick='walkDir(this)'>Back</button>";
-        out += "<p id='dirAddress' class='col-sm-10'>"+dirLink+"</p></div>";
-    } else {
-        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>"+dirLink+"</p></div>";
+    var keys = [];
+    var newKeys = [];
+    var type = [];
+    var sizeData = [];
+    var dateData = [];
+    var nextUrl = [];
+
+    console.log("Data");
+    console.log(data);
+
+    for(var i = 0; i < data.length; i++){
+        keys[i] = data[i].url;
     }
-
-    out += "<table class='row table-striped'>";
-    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
-
-    for(var i = 0; i < data.length; i++) {
-        if (data[i].isFolder) {
-            clickValue = data[i].url;
-            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+clickValue+" onclick='walkDir(this)'>" +
-                data[i].url+
-                "</a></td><td>folder</td>";
-        } else {
-        var path = dirLink+"/"+data[i].url;
-            out += "<tr><td><a class='fileLink' href='"+path.replace("public/", "")+"'>" +
-                data[i].url+
-                "</a></td><td>file</td>";
+    newKeys = keys.sort();
+    for(var i = 0; i < newKeys.length; i++){
+        if(data[i].isFolder){
+            type[data[i].url] = "Folder";
+        } 
+        else{
+            type[data[i].url] = "File";
         }
-        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+        sizeData[data[i].url] = data[i].size;
+        dateData[data[i].url] = data[i].date;
     }
-    out += "</table>";
-    document.getElementById("displayArchive").innerHTML = out;
+    var out = "<div id='wrapRow' class='row table-responsive'>";
+    var parentUrl;
+    if (data.length === 0) {
+        alert("It is an empty folder!");
+        level--;
+    }
+    else {
+        parentUrl = data[0].parent;
+        console.log("parent: " + parentUrl);
+
+        console.log("level: " + level);
+
+        if (level >= 2) {
+            //backLink = dirLink.split("/")[level+1];
+
+            out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
+            out += "<p id='dirAddress' class='col-sm-10'>" + parentUrl + "</p></div>";
+        } else {
+            out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + parentUrl + "</p></div>";
+        }
+
+        out += "<table class='row table-striped'>";
+        out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+        //console.log("Data");
+        // console.log(data);
+        //console.log("out");
+        //console.log(out);
+
+        for (var i = 0; i < newKeys.length; i++) {
+            if (type[newKeys[i]] === "Folder") {
+                //clickValue = newKeys[i];
+                var path = parentUrl + "/" + newKeys[i];
+                path = path.substring(7);
+                //console.log("path: " + path);
+                out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
+                    newKeys[i] +
+                    "</a></td><td>folder</td>";
+                out += "<td>" + sizeData[newKeys[i]] + " Bytes</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+            } else {
+                continue;
+            }
+        }
+
+        //console.log("Data");
+        //console.log(data);
+        //console.log("out");
+        //console.log(out);
+
+        for (var i = 0; i < newKeys.length; i++) {
+            if (type[newKeys[i]] === "File") {
+                var path = parentUrl + "/" + newKeys[i];
+                //console.log("path: " + path);
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'><a class='fileLink' href='" + path + "'>" +
+                    newKeys[i] +
+                    "</a></td><td>file</td>";
+                out += "<td>" + sizeData[newKeys[i]] + " Bytes</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+            } else {
+                continue;
+            }
+        }
+        out += "</table>";
+
+        //console.log("Data");
+        //console.log(data);
+        console.log("out");
+        console.log(out);
+
+        document.getElementById("displayArchive").innerHTML = out;
+        document.getElementById("displayUploads").innerHTML = out;
+    }
+    
 }
 
 
@@ -2094,7 +2186,27 @@ function walkRepoDir(get) {
 }
 
 function buildTable2(data) {
-    var out = "<div id='wrapRow' class='row'>";
+    var keys = [];
+    var newKeys = [];
+    var type = [];
+    var sizeData = [];
+    var dateData = [];
+    for(var i = 0; i < data.length; i++){
+        keys[i] = data[i].url;
+    }
+    newKeys = keys.sort();
+    for(var i = 0; i < newKeys.length; i++){
+        if(data[i].isFolder){
+            type[data[i].url] = "Folder";
+        } 
+        else{
+            type[data[i].url] = "File";
+        }
+        sizeData[data[i].url] = data[i].size;
+        dateData[data[i].url] = data[i].date;
+    }
+  
+    var out = "<div id='wrapRow' class='row table-responsive'>";
     if (levels >= 2) {
         backUrl = repoLink.split("/")[levels];
         out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url="+backUrl+" onclick='walkRepoDir(this)'>Back</button>";
@@ -2106,18 +2218,28 @@ function buildTable2(data) {
     out += "<table class='row table-striped'>";
     out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
 
-    for(var i = 0; i < data.length; i++) {
-        if (data[i].isFolder) {
-            documentUrl = data[i].url;
-            out += "<tr><td><a href='#' id='div"+ i +"' data-url="+documentUrl+" onclick='walkRepoDir(this)'>" +
-                data[i].url+
+    for(var i = 0; i < newKeys.length; i++) {
+        if (type[newKeys[i]] === "Folder") {
+            documentUrl = newKeys[i];
+            out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div"+ i +"' data-url="+documentUrl+" onclick='walkRepoDir(this)'>" +
+                newKeys[i]+
                 "</a></td><td>folder</td>";
-        } else {
-            out += "<tr><td>" +
-                data[i].url+
-                "</td><td>file</td>";
+            out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
         }
-        out += "<td>"+data[i].size+" Bytes</td><td>"+data[i].date+"</td></tr>"
+        else{
+            continue;
+        }
+    }
+    for(var i = 0; i < newKeys.length; i++) {
+        if (type[newKeys[i]] === "File") {
+            out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'>" +
+                newKeys[i]+
+                "</td><td>file</td>";
+            out += "<td>"+sizeData[newKeys[i]]+" Bytes</td><td>"+dateData[newKeys[i]]+"</td></tr>"
+        }
+        else{
+            continue;
+        }
     }
     out += "</table>";
     document.getElementById("displayRepoArchive").innerHTML = out;
