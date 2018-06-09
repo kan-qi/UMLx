@@ -303,6 +303,7 @@ function query_sub_model_detail_func(){
 
 
 function query_repo_analytics_func(){
+<<<<<<< HEAD
 	var url = $(this).attr("href");
 	$.ajax({
 		type : 'GET',
@@ -317,6 +318,122 @@ function query_repo_analytics_func(){
 			alert("There was an error submitting commentL");
 		}
 	});
+=======
+    var url = $(this).attr("href");
+    $.ajax({
+        type : 'GET',
+        url : url,
+        success : function(response) {
+//          console.log(response);
+            $("#display-panel").html("");
+            $("#display-panel").append(response);
+        },
+        error : function() {
+            console.log("fail");
+            alert("There was an error");
+        }
+    });
+
+    return false;
+}
+
+/*
+function dump_model_evaluation_for_use_cases_func(){
+    var url = $(this).attr("href");
+    console.log(url);
+    $.ajax({
+        type : 'GET',
+        url : url,
+        success : function(response) {
+//          console.log(response);
+                    var parsedCSV = d3.csvParseRows(response);
+                    $('.modal-title')[0].innerHTML = "Report";
+                    $("#model-evaluation-dump-display").html("");
+                    var container = d3.select("#model-evaluation-dump-display")
+                        .append("table").attr('class', 'table table-striped table-bordered table-hover')
+                        .append("tbody")
+                        .selectAll("tr")
+                            .data(parsedCSV).enter()
+                            .append("tr")
+                        .selectAll("td")
+                            .data(function(d) { return d; }).enter()
+                            .append("td")
+                            .text(function(d) { return d == "undefined" ? "-" : d; });
+        },
+        error : function() {
+            console.log("fail");
+            alert("There was an error");
+        }
+    });
+    return false;
+}
+*/
+
+function openFile(){
+   var url = $(this).attr("href");
+   //var url = $(this).data("url");
+   
+     $('#overlay-frame').modal();
+     $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
+     $("#overlay-frame .modal-body").html("");
+
+     console.log(url);
+     console.log($('#overlay-frame'));
+
+    
+   if(url.endsWith(".csv")){
+ //display_csv_data(url);
+ 
+    $.ajax({
+        type : 'GET',
+        url: 'fetchDocument?DocFolder=' + url,
+
+        success : function(response) {
+              console.log(response);
+            $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+            $("#overlay-frame .modal-body").html("<pre>"+response+"</pre>");
+
+        },
+        error : function() {
+            console.log("fail");
+            //alert("There was an error");
+            $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+            $("#overlay-frame .modal-body").html("Error");
+        }
+    });
+    
+   return false;
+   }
+
+   if (url.endsWith(".txt")) {
+       //display_csv_data(url);
+
+       $.ajax({
+           type: 'GET',
+           url: 'fetchDocument?DocFolder=' + url,
+
+           success: function (response) {
+               console.log(response);
+               $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
+               $("#overlay-frame .modal-body").html("<pre>" + response + "</pre>");
+
+           },
+           error: function () {
+               console.log("fail");
+               //alert("There was an error");
+               $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
+               $("#overlay-frame .modal-body").html("Error");
+           }
+       });
+
+       return false;
+   }
+   
+   //$("#overlay-frame .modal-body").html('<iframe class="file-display" src="'+url+'"></iframe>');
+   // $("#overlay-frame .modal-body").html("<img class='progress-bar-icon' src='img/progress-bar.gif'\> Requesting data ...");
+    //console.log(url);
+   
+>>>>>>> cc9df5c945157c61c61af0e0a6e7cb3dc78c0957
 
 	return false;
 }
@@ -351,7 +468,46 @@ function dump_model_evaluation_for_use_cases_func(){
 		}
 	});
 
+<<<<<<< HEAD
 	return false;
+=======
+
+
+function display_csv_data(url){
+ console.log("requesting data url");
+    console.log(url);
+    $('#overlay-frame').modal();
+    $("#overlay-frame .modal-body").html("");
+    $("#overlay-frame .modal-body").html("<img class='progress-bar-icon' src='img/progress-bar.gif'\> Requesting data ...");
+    console.log(url);
+    $.ajax({
+        type : 'GET',
+        url : url,
+        success : function(response) {
+         console.log(response);
+
+                    var parsedCSV = d3.csvParseRows(response);
+                    $('.modal-title')[0].innerHTML = "Report";
+                    $("#overlay-frame .modal-body").html("");
+                    var container = d3.select("#overlay-frame .modal-body")
+                        .append("table").attr('class', 'table table-striped table-bordered table-hover')
+                        .append("tbody")
+                        .selectAll("tr")
+                            .data(parsedCSV).enter()
+                            .append("tr")
+
+                        .selectAll("td")
+                            .data(function(d) { return d; }).enter()
+                            .append("td")
+                            .text(function(d) { return d == "undefined" ? "-" : d; });
+
+        },
+        error : function() {
+            console.log("fail");
+            alert("There was an error");
+        }
+    });
+>>>>>>> cc9df5c945157c61c61af0e0a6e7cb3dc78c0957
 }
 
 function request_display_data(){
