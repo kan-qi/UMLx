@@ -303,22 +303,6 @@ function query_sub_model_detail_func(){
 
 
 function query_repo_analytics_func(){
-<<<<<<< HEAD
-	var url = $(this).attr("href");
-	$.ajax({
-		type : 'GET',
-		url : url,
-		success : function(response) {
-//			console.log(response);
-			$("#display-panel").html("");
-			$("#display-panel").append(response);
-		},
-		error : function() {
-			console.log("fail");
-			alert("There was an error submitting commentL");
-		}
-	});
-=======
     var url = $(this).attr("href");
     $.ajax({
         type : 'GET',
@@ -433,7 +417,6 @@ function openFile(){
    // $("#overlay-frame .modal-body").html("<img class='progress-bar-icon' src='img/progress-bar.gif'\> Requesting data ...");
     //console.log(url);
    
->>>>>>> cc9df5c945157c61c61af0e0a6e7cb3dc78c0957
 
 	return false;
 }
@@ -468,9 +451,6 @@ function dump_model_evaluation_for_use_cases_func(){
 		}
 	});
 
-<<<<<<< HEAD
-	return false;
-=======
 
 
 function display_csv_data(url){
@@ -507,7 +487,6 @@ function display_csv_data(url){
             alert("There was an error");
         }
     });
->>>>>>> cc9df5c945157c61c61af0e0a6e7cb3dc78c0957
 }
 
 function request_display_data(){
