@@ -1704,6 +1704,24 @@ app.get('/listFileUnderDir', function(req, res) {
 	// });
 });
 
+//Fetch txt/csv file in public/repo/ouput
+app.get('/fetchDocument', function (req, res) {
+
+    var docPath = req.query.DocFolder;
+
+    fs.readFile(docPath, function (err, data) {
+        if (err) {
+            return console.error(err);
+        }
+        res.writeHead(200, { 'content-Type': 'text/html' });
+
+        res.write(data);
+        res.end();
+
+    });
+});
+
+
 
 app.get('/deactivateUser', function(req,res){
 	var userId = req.query['uid'];

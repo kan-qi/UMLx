@@ -544,40 +544,71 @@ function openFile(){
    var url = $(this).attr("href");
    //var url = $(this).data("url");
    
-    $('#overlay-frame').modal();
+     $('#overlay-frame').modal();
      $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
-    $("#overlay-frame .modal-body").html("");
+     $("#overlay-frame .modal-body").html("");
+
+     console.log(url);
+     console.log($('#overlay-frame'));
+
     
    if(url.endsWith(".csv")){
  //display_csv_data(url);
  
     $.ajax({
         type : 'GET',
-        url : url,
+        url: 'fetchDocument?DocFolder=' + url,
+
         success : function(response) {
-//          console.log(response);
-                    $('#overlay-frame .modal-title')[0].innerHTML = "Report";
-                    $("#overlay-frame .modal-body").html("<pre>"+response+"</pre>");
+              console.log(response);
+            $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+            $("#overlay-frame .modal-body").html("<pre>"+response+"</pre>");
 
         },
         error : function() {
             console.log("fail");
             //alert("There was an error");
-             $('#overlay-frame .modal-title')[0].innerHTML = "Report";
-                    $("#overlay-frame .modal-body").html("Error");
+            $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+            $("#overlay-frame .modal-body").html("Error");
         }
     });
     
    return false;
    }
+
+   if (url.endsWith(".txt")) {
+       //display_csv_data(url);
+
+       $.ajax({
+           type: 'GET',
+           url: 'fetchDocument?DocFolder=' + url,
+
+           success: function (response) {
+               console.log(response);
+               $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
+               $("#overlay-frame .modal-body").html("<pre>" + response + "</pre>");
+
+           },
+           error: function () {
+               console.log("fail");
+               //alert("There was an error");
+               $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
+               $("#overlay-frame .modal-body").html("Error");
+           }
+       });
+
+       return false;
+   }
    
-    $("#overlay-frame .modal-body").html('<iframe class="file-display" src="'+url+'"></iframe>');
+   //$("#overlay-frame .modal-body").html('<iframe class="file-display" src="'+url+'"></iframe>');
    // $("#overlay-frame .modal-body").html("<img class='progress-bar-icon' src='img/progress-bar.gif'\> Requesting data ...");
-    console.log(url);
+    //console.log(url);
    
 
     return false;
 }
+
+
 
 
 function display_csv_data(url){
