@@ -44,8 +44,12 @@ function pagination_call(repoId, currentPage) {
 
 function model_file_upload_fnc() {
     var formData = new FormData($('#model-file-submit-form')[0]);
-    console.log("starting the ajax call to some where");
-    //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+    
+    console.log("Good!!!");
+    console.log("formData: " + formData);
+    //formData.append('uml-other', document.getElementById('uml-other'));
+    //console.log("formData: " + formData);
+    
     $.ajax({
         type: 'POST',
         url: "uploadUMLFile",
@@ -63,6 +67,7 @@ function model_file_upload_fnc() {
             alert("There was an error");
         }
     });
+    
 
 }
 
@@ -551,7 +556,6 @@ function openFile() {
     $("#overlay-frame .modal-body").html("");
 
     console.log(url);
-    console.log($('#overlay-frame'));
 
 
     if (url.endsWith(".csv")) {
