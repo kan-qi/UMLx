@@ -21,6 +21,9 @@ var randomstring = require("randomstring");
 var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
+var unzip = require('unzip');
+var rimraf = require('rimraf');
+//var removeDir = require('some-custom-fs');
 //var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 
 var storage = multer.diskStorage({
@@ -495,10 +498,22 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount:
 });
 
 
-app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
-	console.log(req.body);
+
+app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
+    { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
+
+        console.log(req.files);
 	var umlFilePath = req.files['uml-file'][0].path; // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
-	//
+	var umlOtherPath = req.files['uml-other'][0].path;
+	fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
+
+    //remove directory of zip file and the contents in the directory 
+	rimraf(umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")),function(err) {
+	    if (err) {
+	        console.log(err);
+	    }
+	});
+	
 	// e.g.
 	//  req.files['avatar'][0] -> File
 	//  req.files['gallery'] -> Array
@@ -509,6 +524,8 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 	var repoId = req.userInfo.repoId;
 	var uuidVal = req.body['uuid'];
 	var formInfo = req.body;
+    
+
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
 		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
@@ -537,6 +554,7 @@ app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'um
 			});
 		});
 	});
+
 });
 
 
@@ -695,18 +713,20 @@ app.get('/reanalyseRepo', function (req, res){
 	});
 })
 
+
 app.get('/requestRepoBrief', function (req, res){
 //	console.log("/reanalyseRepo");
 //	app.get('/queryRepoInfo', function(req, res){
 		//temporary analysis
 		var repoId = req.userInfo.repoId;
 
-//		console.log(refresh);
+		console.log("refresh");
 		umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
 				repoInfoBrief.projectNum = totalRec;
 				res.end(JSON.stringify(repoInfoBrief));
 			});
 })
+
 
 
 
@@ -1420,6 +1440,7 @@ app.get('/pager',function(req,res){
     }); 
 })
 
+
 app.get('/', function(req, res){
 
     var message = req.query.e;
@@ -1438,8 +1459,10 @@ app.get('/', function(req, res){
 //        repID = repoInfo._id;
 //        //stepSize = repoInfo.Models.length;
 //        //pageSize = 3;
-//    }
-    
+    //    }
+
+
+
     if(req.param('curremtPage') != undefined){
         currentPage = parseInt(req.param('currentPage'));
     }
@@ -1502,7 +1525,13 @@ console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Cu
 
          });
 	});
+
+
+
 });
+
+
+
 
 app.get('/thankYou', function(req, res){
 	res.render('thankYou');
