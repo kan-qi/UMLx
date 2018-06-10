@@ -45,7 +45,6 @@ function pagination_call(repoId, currentPage) {
 function model_file_upload_fnc() {
     var formData = new FormData($('#model-file-submit-form')[0]);
     console.log("starting the ajax call to some where");
-    console.log(formData);
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
@@ -187,7 +186,10 @@ function model_survey_file_upload_fnc() {
 
 
 function model_file_update_fnc() {
-    var formData = new FormData($('#model-file-update-submit-form')[0]);//only dom element, use [index] to make jquery object become dom
+    var formData = new FormData($('#model-file-submit-form')[0]);
+    //formData.append('uml-file', document.getElementById('uml-file'));
+    //formData.append('uml-other', document.getElementById('uml-other'));
+    //only dom element, use [index] to make jquery object become dom
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',

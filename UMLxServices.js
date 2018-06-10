@@ -495,9 +495,15 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount:
 });
 
 
-app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
-	console.log(req.body);
-	var umlFilePath = req.files['uml-file'][0].path; // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
+app.post('/uploadUMLFile', upload.fields([{name:'uml-file',maxCount:1},{name:'uml-other',maxCount:1},{name:'uml-model-name', maxCount:1},{name:'uml-model-type', maxCount:1}, {name:'repo-id', maxCount:1}]), function (req, res){
+	console.log("FUCK!!!!!!!!!!!!!!!!!!!!!!!!");
+	var umlFilePath = req.files['uml-file'][0].path; 
+	var umlUnzipFilePath = req.files['uml-other'][0].path;
+	console.log("unzip:NNNNNNNNNNNNNNNNNNNNN");
+	console.log(umlFilePath);
+	console.log(umlUnzipFilePath);
+	//fs.createReadStream(umlUnzipFilePath).pipe(console.log("hello world"));
+	// req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
 	//
 	// e.g.
 	//  req.files['avatar'][0] -> File
