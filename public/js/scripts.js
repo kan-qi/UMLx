@@ -5,7 +5,8 @@ function setCookie(cname, cvalue, exdays) {
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
         expires = "expires=" + d.toUTCString();
     }
-
+    // no expires setting means when close the brower, 
+    //cookie will be deleted and you need login again
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
