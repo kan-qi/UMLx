@@ -3,9 +3,9 @@
  */
 
 (function() {
-	var fs = require('fs');
-	var xml2js = require('xml2js');
-	var parser = new xml2js.Parser();
+    var fs = require('fs');
+    var xml2js = require('xml2js');
+    var parser = new xml2js.Parser();
 	var eaParser = require('./model_platforms/ea/XMI2.1Parser.js');
 	var srcParser = require('./model_platforms/src/SrcParser.js');
 	var vpParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');

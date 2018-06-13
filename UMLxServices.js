@@ -501,19 +501,33 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount:
 
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
     { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
-
-        console.log(req.files);
-	var umlFilePath = req.files['uml-file'][0].path; // req.files is an object (String -> Array) where fieldname is the key, and the value is array of files
-	var umlOtherPath = req.files['uml-other'][0].path;
-	fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
-
-    //remove directory of zip file and the contents in the directory 
-	rimraf(umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")),function(err) {
-	    if (err) {
-	        console.log(err);
-	    }
-	});
 	
+	var umlFilePath = null;
+	var umlOtherPath = null;
+	//need to implement unzipped xml file data-analysis, for now only process single xml file!!
+	if(req.files['uml-file'] != null && req.files['uml-other'] != null){
+		umlFilePath = req.files['uml-file'][0].path;
+		umlOtherPath = req.files['uml-other'][0].path;
+
+		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
+		//remove directory of zip file and the contents in the directory 
+		rimraf(umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")),function(err) {
+			if (err) {
+				console.log(err);
+			}
+		});
+	}
+	else if (req.files['uml-file'] != null) {
+		umlFilePath = req.files['uml-file'][0].path;
+	}
+	//same problem as above comment
+	else if (req.files['uml-other'] != null) {
+		umlOtherPath = req.files['uml-other'][0].path;
+
+		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({path: umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")) }));
+	} else {
+		return false;
+	}
 	// e.g.
 	//  req.files['avatar'][0] -> File
 	//  req.files['gallery'] -> Array
@@ -524,36 +538,37 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 	var repoId = req.userInfo.repoId;
 	var uuidVal = req.body['uuid'];
 	var formInfo = req.body;
-    
 
-	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
-		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
-		console.log('updated model info');
-		console.log(modelInfo);
-		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
-			//update model analytics.
-			console.log("model is extracted");
-			if(!modelInfo){
-				res.end("error");
-				return;
-			}
-			umlEvaluator.evaluateModel(modelInfo, function(){
-				console.log("model analysis complete");
-			});
-//			console.log(modelInfo);
+	if(umlFilePath != null){
+		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+			var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
+			console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+			var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
+			console.log('updated model info');
+			console.log(modelInfo);
+			umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+				//update model analytics.
+				console.log("model is extracted");
+				if(!modelInfo){
+					res.end("error");
+					return;
+				}
+				umlEvaluator.evaluateModel(modelInfo, function(){
+					console.log("model analysis complete");
+				});
+	//			console.log(modelInfo);
 
-			umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
-//				console.log(modelInfo);
-				umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-					console.log("=============repoInfo==========");
-					console.log(repoInfo);
-					res.render('mainPanel', {repoInfo:repoInfo});
-				}, true);
+				umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
+	//				console.log(modelInfo);
+					umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+						console.log("=============repoInfo==========");
+						console.log(repoInfo);
+						res.render('mainPanel', {repoInfo:repoInfo});
+					}, true);
+				});
 			});
 		});
-	});
+	}
 
 });
 
@@ -941,12 +956,26 @@ app.get('/queryModelInfo', function(req, res){
 
 	MongoClient.connect(url, function (err, db) {
 	    if (err) throw err;
-	    db.collection("newUseCaseInfo").remove({}, function (err, db) {
-	        if (err) throw err;
+	    db.collection("newUseCaseInfo").remove({}, function (err, result) {
+			if (err) throw err;
+			db.close();
+
+			umlModelInfoManager.queryModelInfo(modelId, repoId, function (modelInfo) {
+			    console.log("Now is good!1");
+			    //console.log(modelAnalytics);
+			    //console.log(modelInfo);
+			    var uploadsFile = modelInfo.fileUrl;
+			    uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
+			    console.log(uploadsFile);
+			    res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
+			    console.log("Now is good!2");
+			});
 	    });
-	    db.close();
+	    
+		
 	});
 
+    /*
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 	    console.log("Now is good!1");
 		//console.log(modelAnalytics);
@@ -957,6 +986,7 @@ app.get('/queryModelInfo', function(req, res){
 	    res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
 		console.log("Now is good!2");
 	});
+    */
 //	var useCase = modelInfo.useCases[modelInfoId];
 })
 
@@ -981,7 +1011,8 @@ app.get('/addModelTest', function(req, res){
 app.get('/requestModelUseCases', function(req, res){
 	var modelId = req.query.model_id;
 	umlModelInfoManager.queryModelInfo(modelId, req.userInfo.repoId, function(modelInfo){
-//		console.log(modelInfo);
+		// console.log("AAAAAAAAAAAAAAAAAAAAA");
+		// console.log(modelInfo);
 		res.render('useCaseList', {modelInfo:modelInfo});
 	    });
 })
