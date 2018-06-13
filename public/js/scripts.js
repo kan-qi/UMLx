@@ -5,7 +5,8 @@ function setCookie(cname, cvalue, exdays) {
         d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
         expires = "expires=" + d.toUTCString();
     }
-
+    // no expires setting means when close the brower, 
+    //cookie will be deleted and you need login again
     document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
 }
 
@@ -191,7 +192,10 @@ function model_survey_file_upload_fnc() {
 
 
 function model_file_update_fnc() {
-    var formData = new FormData($('#model-file-update-submit-form')[0]);//only dom element, use [index] to make jquery object become dom
+    var formData = new FormData($('#model-file-submit-form')[0]);
+    //formData.append('uml-file', document.getElementById('uml-file'));
+    //formData.append('uml-other', document.getElementById('uml-other'));
+    //only dom element, use [index] to make jquery object become dom
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',

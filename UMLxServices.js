@@ -985,6 +985,21 @@ app.get('/queryModelInfo', function(req, res){
 	    console.log(uploadsFile);
 	    res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
 		console.log("Now is good!2");
+
+			console.log("TEST*************************");
+			db.close();
+			umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+				console.log("Now is good!1");
+				//console.log(modelAnalytics);
+				console.log(modelInfo);
+				var uploadsFile = modelInfo.fileUrl;
+				uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
+				console.log(uploadsFile);
+				res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
+				console.log("Now is good!2");
+			});
+		});
+		
 	});
     */
 //	var useCase = modelInfo.useCases[modelInfoId];

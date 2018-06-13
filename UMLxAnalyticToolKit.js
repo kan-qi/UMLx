@@ -16,7 +16,8 @@ function analyzeUML() {
 	var date = new Date();
     var analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
     var outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now()+"/";
-	//create output directory for analysis result
+
+    //create output directory for analysis result
 	mkdirp(outputDir, (err) => {
 		if(err) {
 			console.log("Error: Fail to create output directory!");
@@ -60,9 +61,7 @@ function analyzeUML() {
 						console.log("Error: Fail to extract model Info!");
 						console.log(err);
 					}
-
-					//var resultDir = analyzeUML();
-					console.log("This is the output: Look at this shit man!");
+					console.log("Out Put dir:");
 					console.log(outputDir);
 					// console.log("Successfully extract model Info and saved them to output Directory: " + outputDir);
 				})
@@ -70,13 +69,7 @@ function analyzeUML() {
 		});
 	});
 
-
 	return outputDir;
 }
 
-
-var resultDir = analyzeUML();
-/*
-console.log("This is the output: Look at this shit man!");
-console.log(resultDir);
-*/
+analyzeUML();

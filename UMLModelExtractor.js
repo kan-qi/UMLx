@@ -3,8 +3,8 @@
  */
 
 (function() {
-    var fs = require('fs');
-    var xml2js = require('xml2js');
+	var fs = require('fs');
+	var xml2js = require('xml2js');
     var parser = new xml2js.Parser();
 	var eaParser = require('./model_platforms/ea/XMI2.1Parser.js');
 	var srcParser = require('./model_platforms/src/SrcParser.js');
