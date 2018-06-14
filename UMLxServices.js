@@ -954,24 +954,19 @@ app.get('/queryModelInfo', function(req, res){
 	var modelId = req.query.model_id;
 	var repoId = req.userInfo.repoId;
 
-	MongoClient.connect(url, function (err, db) {
-	    if (err) throw err;
-	    db.collection("newUseCaseInfo").remove({}, function (err, result) {
-			if (err) throw err;
-			console.log("TEST*************************");
-			db.close();
-			umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-				console.log("Now is good!1");
-				//console.log(modelAnalytics);
-				console.log(modelInfo);
-				var uploadsFile = modelInfo.fileUrl;
-				uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
-				console.log(uploadsFile);
-				res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
-				console.log("Now is good!2");
-			});
-		});
-		
+	// MongoClient.connect(url, function (err, db) {
+	//     if (err) throw err;
+
+	// });
+	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+		console.log("Now is good!1");
+		//console.log(modelAnalytics);
+		console.log(modelInfo);
+		var uploadsFile = modelInfo.fileUrl;
+		uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
+		console.log(uploadsFile);
+		res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
+		console.log("Now is good!2");
 	});
 //	var useCase = modelInfo.useCases[modelInfoId];
 })
