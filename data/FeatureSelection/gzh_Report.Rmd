@@ -294,6 +294,7 @@ plot(cvfit)
 ```{r}
 library(BayesFactor)
 features = c(
+  "Effort",
   "KSLOC",
   "Path_Num",
   "UseCase_Num",
@@ -341,15 +342,17 @@ features = c(
   "SWTII",
   "SWTIII"
   )
+model_data = subset(raw_data, select = features)
 stats <- data.frame(matrix(nrow = 0, ncol = 5))
 colnames(stats) <- c("var", "r2", "AIC", "BIC", "BF")
-for (var in features) {
-  model <- lm(Y_data ~ ., data = X_data[var])
+for (var in features[2:47]) {
+  regression_formula <- as.formula(paste("Effort ~ ", var))
+  model <- lm(regression_formula, data = model_data)
   r2 = summary(model)$r.squared
   aic = AIC(model)
   bic = BIC(model)
-  #bf = lmBF(Y_data ~ ., data = X_data[var]) // library call error
-  stats[nrow(stats) + 1,] <- list(var, r2, aic, bic, NA)
+  bf = lmBF(regression_formula, data = model_data)
+  stats[nrow(stats) + 1,] <- list(var, r2, aic, bic, bf)
 }
 ```
 r²
@@ -369,4 +372,10 @@ BIC
 bic_data <- stats[, c("var", "BIC")]
 bic_data.sort <- bic_data[order(bic_data$BIC), ]
 bic_data.sort
+```
+Bayes Factor
+```{r}
+bf_data <- stats[, c("var", "BF")]
+bf_data.sort <- bf_data[order(-bf_data$BF), ]
+bf_data.sort
 ```
