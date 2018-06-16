@@ -563,6 +563,7 @@ function deleteRepo(repoId, callbackfunc) {
             if (err) throw err;
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
+<<<<<<< HEAD
             db.collection("newUseCaseInfo").remove({}, function (err, res) {
                 if (err) throw err;
                 console.log("TEST*************************");
@@ -578,10 +579,24 @@ function deleteRepo(repoId, callbackfunc) {
                             console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNN");
                     });
                     setTimeout(function(){
+=======
+            db.collection("newUseCaseInfo").remove({}, function(err, res){
+                if (err) throw err;
+                db.collection("useCaseInfo").find({ "model_id": modelId }, function (err, result) {
+
+                    if (err) throw err;
+
+                    result.forEach(function (doc) {
+                        db.collection("newUseCaseInfo").insert(doc);
+                        // console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNN");
+                    });
+                    setTimeout(function () {
+>>>>>>> a636f09238d8575f9ef2bfb79ee3e5e84b47ec1f
                         db.collection("modelInfo").aggregate([
                             {
                                 "$match":
                                 {
+<<<<<<< HEAD
                                     "_id":modelId
                                 }
                             },
@@ -621,16 +636,72 @@ function deleteRepo(repoId, callbackfunc) {
                             for(var i in modelInfo.UseCases){
                                 var useCase = modelInfo.UseCases[i];
                                 if(useCase){
+=======
+                                    "_id": modelId
+                                }
+                            },
+
+                           {
+                               "$lookup": {
+                                   "from": "domainModelInfo",
+                                   "localField": "_id",
+                                   "foreignField": "model_id",
+                                   "as": "DomainModels"
+                               }
+                           },
+                           {
+                               "$lookup": {
+                                   "from": "newUseCaseInfo",
+                                   "localField": "_id",
+                                   "foreignField": "model_id",
+                                   "as": "UseCases"
+                               }
+                           },
+                            {
+                                "$unwind": "$UseCases"
+                            }
+                            //{ "$out": "newInfor" }
+                        ], function (err, result) {
+                            if (err) throw err;
+                            console.log("ReportPlace3");
+                            console.log("*******Shown result for ModelInfo*******");
+                            db.close();
+
+                            //restore the ids
+                            var modelInfo = result[0];
+                            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                            console.log(modelInfo);
+                            console.log("number of result: " + result.length);
+                            var arr = [];
+                            //console.log(modelInfo.UseCases.length);
+                            result.forEach(function (element) {
+                                arr.push(element.UseCases);
+                            });
+                            console.log("number of arr: " + arr.length);
+
+                            modelInfo.UseCases = arr;
+
+                            for (var i in modelInfo.UseCases) {
+                                var useCase = modelInfo.UseCases[i];
+                                if (useCase) {
+>>>>>>> a636f09238d8575f9ef2bfb79ee3e5e84b47ec1f
                                     useCase._id = useCase._id.replace(/\[.*\]/g, "");
                                 }
                             }
                             console.log("ReportPlace5");
+<<<<<<< HEAD
                             console.log(modelInfo.UseCases.length);
                             if(modelInfo.DomainModels&&modelInfo.DomainModels){
+=======
+                            //console.log(modelInfo);
+                            //console.log(modelInfo.UseCases.length);
+                            if (modelInfo.DomainModels && modelInfo.DomainModels) {
+>>>>>>> a636f09238d8575f9ef2bfb79ee3e5e84b47ec1f
                                 var domainModel = modelInfo.DomainModels;
                                 delete modelInfo.DomainModels;
                                 delete domainModel._id;
                                 modelInfo.DomainModel = domainModel;
+<<<<<<< HEAD
                             }           
                             console.log("KKKKKKKKKKKKKKKKKKKKKKKK"); 
                                  
@@ -643,6 +714,16 @@ function deleteRepo(repoId, callbackfunc) {
                 });  
             });	
          
+=======
+                            }
+                            //console.log("KKKKKKKKKKKKKKKKKKKKKKKK");       
+                            callbackfunc(modelInfo);
+
+                        });
+                    }, 100);
+                });
+            });                
+>>>>>>> a636f09238d8575f9ef2bfb79ee3e5e84b47ec1f
         });
     }
     
