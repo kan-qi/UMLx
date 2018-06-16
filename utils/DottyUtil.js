@@ -25,7 +25,8 @@
 				if (error !== null) {
 					console.log('exec error: ' + error);
 				}
-				 console.log('The file was saved!');
+				console.log('The file was saved!');
+				//console.log("AAAAAAAAAAAAAAAAAAA");
 				 /*var content;
 				 fs.readFile(dir+'/'+fileName+'.svg', "utf8", function read(err, data) {
 					if (err) {

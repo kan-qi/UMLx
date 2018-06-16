@@ -968,6 +968,7 @@ app.get('/queryModelInfo', function(req, res){
 		res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
 		console.log("Now is good!2");
 	});
+    
 //	var useCase = modelInfo.useCases[modelInfoId];
 })
 

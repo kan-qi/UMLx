@@ -851,7 +851,7 @@ function deleteRepo(repoId, callbackfunc) {
                },
                {
                    "$lookup": {
-                       "from": "useCaseInfo",
+                       "from": "newUseCaseInfo",
                        "localField": "_id",
                        "foreignField": "model_id",
                        "as": "UseCases"
