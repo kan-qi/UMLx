@@ -60,6 +60,10 @@
 //		});
 	}
 	
+	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
+		
+	}
+	
 //	// those elements store all the same type of elements in the sub classes.
 //	var ClassUnit = {
 //			name: XMIClassUnit['$']['name'],

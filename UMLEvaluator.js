@@ -33,9 +33,10 @@
 	var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
 	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
 	var useCasePointWeightEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointWeightEvaluator.js');
+	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
 	
 //	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
-	var evaluators = [umlModelElementEvaluator,functionPointEvaluator, transactionEvaluator,modelVersionEvaluator, projectTypeEvaluator, cocomoCalculator,useCasePointWeightEvaluator,useCasePointCalculator];
+	var evaluators = [umlModelElementEvaluator,functionPointEvaluator, transactionEvaluator,modelVersionEvaluator, projectTypeEvaluator, cocomoCalculator,useCasePointWeightEvaluator,useCasePointCalculator,UMLSizeMetricEvaluator];
 //	function setUp(){
 //		evaluators = [cocomoCalculator, useCaseCalculator, umlModelElementEvaluator];
 //		for(var i in evaluators){

@@ -337,8 +337,9 @@ function deleteRepo(repoId, callbackfunc) {
               });*/
              for(var i in useCaseArray){
                 
-                useCaseArray[i].model_id = new mongo.ObjectID(modelInfo._id);
-                useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
+//            	console.log(modelInfo._id.substring(1,12));
+                useCaseArray[i].model_id = modelInfo._id;
+//                useCaseArray[i]._id = useCaseArray[i]._id;
                 
                 console.log("USe Case: "+i+" ID: "+ useCaseArray[i]._id);
                 //deleteUseCase(repoId, modelInfo._id, useCaseArray[i]._id);
@@ -563,73 +564,87 @@ function deleteRepo(repoId, callbackfunc) {
             if (err) throw err;
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
-            db.collection("useCaseInfo").find({ "model_id": modelId }, function (err, result) {
-
+            db.collection("newUseCaseInfo").remove({}, function(err, res){
                 if (err) throw err;
+                db.collection("useCaseInfo").find({ "model_id": modelId }, function (err, result) {
 
-                result.forEach(function (doc) {
-                    db.collection("newUseCaseInfo").insert(doc);
+                    if (err) throw err;
+
+                    result.forEach(function (doc) {
+                        db.collection("newUseCaseInfo").insert(doc);
+                        // console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNN");
+                    });
+                    setTimeout(function () {
+                        db.collection("modelInfo").aggregate([
+                            {
+                                "$match":
+                                {
+                                    "_id": modelId
+                                }
+                            },
+
+                           {
+                               "$lookup": {
+                                   "from": "domainModelInfo",
+                                   "localField": "_id",
+                                   "foreignField": "model_id",
+                                   "as": "DomainModels"
+                               }
+                           },
+                           {
+                               "$lookup": {
+                                   "from": "newUseCaseInfo",
+                                   "localField": "_id",
+                                   "foreignField": "model_id",
+                                   "as": "UseCases"
+                               }
+                           },
+                            {
+                                "$unwind": "$UseCases"
+                            }
+                            //{ "$out": "newInfor" }
+                        ], function (err, result) {
+                            if (err) throw err;
+                            console.log("ReportPlace3");
+                            console.log("*******Shown result for ModelInfo*******");
+                            db.close();
+
+                            //restore the ids
+                            var modelInfo = result[0];
+                            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                            console.log(modelInfo);
+                            console.log("number of result: " + result.length);
+                            var arr = [];
+                            //console.log(modelInfo.UseCases.length);
+                            result.forEach(function (element) {
+                                arr.push(element.UseCases);
+                            });
+                            console.log("number of arr: " + arr.length);
+
+                            modelInfo.UseCases = arr;
+
+                            for (var i in modelInfo.UseCases) {
+                                var useCase = modelInfo.UseCases[i];
+                                if (useCase) {
+                                    useCase._id = useCase._id.replace(/\[.*\]/g, "");
+                                }
+                            }
+                            console.log("ReportPlace5");
+                            //console.log(modelInfo);
+                            //console.log(modelInfo.UseCases.length);
+                            if (modelInfo.DomainModels && modelInfo.DomainModels) {
+                                var domainModel = modelInfo.DomainModels;
+                                delete modelInfo.DomainModels;
+                                delete domainModel._id;
+                                modelInfo.DomainModel = domainModel;
+                            }
+                            //console.log("KKKKKKKKKKKKKKKKKKKKKKKK");       
+                            callbackfunc(modelInfo);
+
+                        });
+                    }, 100);
                 });
-            });
-
-            db.collection("modelInfo").aggregate([
-            	{
-    				"$match":
-    				{
-    				   "_id":modelId
-    				}
-    			},
-            
-               {
-                   "$lookup": {
-                       "from": "domainModelInfo",
-                       "localField": "_id",
-                       "foreignField": "model_id",
-                       "as": "DomainModels"
-                   }
-               },
-               {
-                   "$lookup": {
-                       "from": "newUseCaseInfo",
-                       "localField": "_id",
-                       "foreignField": "model_id",
-                       "as": "UseCases"
-                   }
-               },
-                //{ "$unwind": "$UseCases"},
-                //{ "$out": "newInfor" }
-            ], function(err, result) {
-               if (err) throw err;
-               console.log("ReportPlace3");
-               console.log("*******Shown result for ModelInfo*******");
-               db.close();
-
-                //restore the ids
-               var modelInfo = result[0];
-               console.log(modelInfo.UseCases.length);
-               console.log(modelInfo.useCases);
-               for(var i in modelInfo.UseCases){
-            	   var useCase = modelInfo.UseCases[i];
-            	   if(useCase){
-                	   useCase._id = useCase._id.replace(/\[.*\]/g, "");
-                   }
-               }
-               console.log("ReportPlace5");
-               console.log(modelInfo.UseCases.length);
-               if(modelInfo.DomainModels&&modelInfo.DomainModels){
-                   var domainModel = modelInfo.DomainModels;
-                   delete modelInfo.DomainModels;
-            	   delete domainModel._id;
-            	   modelInfo.DomainModel = domainModel;
-               }
-               
-               
-               
-               callbackfunc(modelInfo);
-               
-            });
-
-            
+            });                
         });
     }
     
@@ -838,7 +853,7 @@ function deleteRepo(repoId, callbackfunc) {
                },
                {
                    "$lookup": {
-                       "from": "useCaseInfo",
+                       "from": "newUseCaseInfo",
                        "localField": "_id",
                        "foreignField": "model_id",
                        "as": "UseCases"
