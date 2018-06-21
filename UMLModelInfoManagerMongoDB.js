@@ -570,8 +570,10 @@ function deleteRepo(repoId, callbackfunc) {
                     if (err) throw err;
 
                     result.forEach(function (doc) {
-                        db.collection("newUseCaseInfo").insert(doc);
-                        // console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNN");
+                        db.collection("newUseCaseInfo").insert(doc,function (err, result) {
+                            if (err) throw err;
+                        });
+                         console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNN");
                     });
                     setTimeout(function () {
                         db.collection("modelInfo").aggregate([
@@ -600,9 +602,9 @@ function deleteRepo(repoId, callbackfunc) {
                            },
                             {
                                 "$unwind": "$UseCases"
-                            }
+                            },
                             //{ "$out": "newInfor" }
-                        ], function (err, result) {
+                        ], {allowDiskUse : true}, function (err, result) {
                             if (err) throw err;
                             console.log("ReportPlace3");
                             console.log("*******Shown result for ModelInfo*******");
@@ -641,7 +643,7 @@ function deleteRepo(repoId, callbackfunc) {
                             callbackfunc(modelInfo);
 
                         });
-                    }, 100);
+                    }, 900);
                 });
             });                
         });
