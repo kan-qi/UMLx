@@ -22,7 +22,47 @@
 	var xmiSring = "";
 	
 	function identifyStimuli(components, classes, relations, callbackfunc) {
-		
+
+//		var XMISignature = jp.query(XMIMethodUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:Signature\')]')[0];
+//		if(XMISignature){
+//		var XMIParameters = jp.query(XMISignature, '$.parameterUnit[?(@[\'$\'][\'type\'])]');
+//		
+////		MethodUnit.UUID = XMISignature['$']['name'];
+//		MethodUnit.Signature = {
+//				name: XMISignature['$']['name'],
+//				parameterUnits: []
+//		};
+//		
+//		console.log("iterate signature");
+//		
+//		for(var j in XMIParameters){
+//			console.log("iterate parameters");
+//			MethodUnit.Signature.parameterUnits.push({
+//				name: XMIParameters[j]["$"]["name"],
+//				kind: XMIParameters[j]['$']['kind']
+//			});
+////			MethodUnit.key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
+//			
+//			var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameters[j]["$"]['type']));
+//			console.log("parameter type");
+//			console.log(XMIParameterType);
+//			if(XMIParameterType){
+//				if(XMIParameterType[0]['$']['name'].indexOf("event") !=-1 || XMIParameterType[0]['$']['name'].indexOf("Event") !=-1) {
+//					MethodUnit.isResponse = true;
+//					console.log("found response method");
+//				}
+//			}
+//			
+//			
+//		}
+//		
+//
+//		if(XMISignature["$"]["name"] === "main"){
+//			MethodUnit.isResponse = true;
+//		}
+//		
+//		}
+//		
 	}
 	
 	
