@@ -67,6 +67,39 @@
 //			
 //		}
 		
+		function findSubMethods(classUnit){
+			var subMethods = [];
+			
+			function findSubMethodsFromActionElement(actionElement){
+				var subMethods = [];
+				
+				for(var i in actionElement.ClassUnits){
+					var classUnit = actionElement.ClassUnits[i];
+					var result = findSubMethods(classUnit);
+					subMethods = subMethods.concat(result);
+				}
+				for(var i in actionElement.ActionElements){
+					var result = findSubMethodsFromActionElement(actionElement.ActionElements[i]);
+					subMethods = subMethods.concat(result);
+				}
+				
+				return subMethods;
+			}
+			
+			for(var i in classUnit.MethodUnits){
+					var methodUnit = classUnit.MethodUnits[i];
+					subMethods.push(methodUnit);
+					
+					for(var j in methodUnit.BlockUnit.ActionElements){
+						var actionElement = methodUnit.BlockUnit.ActionElements[j];
+						var result = findSubMethodsFromActionElement(actionElement);
+						subMethods = subMethods.concat(result);
+					}
+			}
+			
+			return subMethods;
+		}
+		
 		function expandMethod(methodUnit, xmiString){
 			
 			var methodSequence = [];

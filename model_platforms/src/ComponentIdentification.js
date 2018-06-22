@@ -1,6 +1,8 @@
 /**
  * This module is to identify the components by the clustering algorithms.
  * 
+ * The clustering algorithm should be based on the three kinds of graphs: call graph, access graph, and type dependency graph that are constructed in Code Analysis.js
+ * 
  * This script relies on KDM and Java model 
  * 
  * The goal is the establish the control flow between the modules...

@@ -66,6 +66,54 @@
 	}
 	
 	
+function identifyStimulus(xmiString){
+		
+		var XMIMethods = jp.query(xmiString, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
+		var stimuli = [];
+		for(var i in XMIMethods){
+			var XMIMethod = XMIMethods[i];
+			var XMIParameters = jp.query(XMIMethod, '$..parameterUnit[?(@[\'$\'][\'type\'])]');
+			
+			for(var j in XMIParameters){
+				var XMIParameter = XMIParameters[j];
+				var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameter["$"]['type']));
+				console.log("parameter type");
+				console.log(XMIParameterType);
+				if(XMIParameterType){
+					if(XMIParameterType[0]['$']['name'].indexOf("event") !=-1 || XMIParameterType[0]['$']['name'].indexOf("Event") !=-1) {
+						var stimulus = {
+								name: XMIMethod['$']['name']
+						}
+						
+						stimuli.push(stimulus);
+						continue;
+					}
+				}
+			}
+			
+			
+		}
+		
+		
+		
+		console.log("stimuli");
+		console.log(stimuli);
+		
+		return stimuli;
+	}
+
+
+function isResponseClass(ClassUnit){
+	for(var i in ClassUnit.MethodUnits){
+		if(ClassUnit.MethodUnits[i].isResponse){
+			return true;
+		}
+	}
+	return false;
+}
+
+	
+	
 	module.exports = {
 			identifyStimuli : identifyStimuli,
 	}

@@ -4,9 +4,10 @@
  * This script relies on KDM and Java model 
  * 
  * The goal is the establish the control flow between the modules...
+ * Identify the system boundary
+ * Identify the sytem components.....
  * Identify the stimuli.
  * Identify the boundary.
- * Identify the sytem components.....
  */
 (function() {
 	var fs = require('fs');
@@ -94,17 +95,17 @@
 		
 		console.log("determine the entry points");
 
-		identifyStimulus(xmiString);
+//		identifyStimulus(xmiString);
 		
 		console.log("control flow construction");
 		
-		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir);
+//		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir);
 		
 //		var controlFlowGraph = constructCFG(classUnits, topClassUnits, xmiString, outputDir);
 		
 		
 		return {
-			callGraph: callGraph,
+//			callGraph: callGraph,
 //			controlFlowGraph: controlFlowGraph,
 			classUnits: classUnits
 		};
@@ -287,40 +288,6 @@
 		}
 		
 		return calls;
-	}
-	
-	
-	function findSubMethods(classUnit){
-		var subMethods = [];
-		
-		function findSubMethodsFromActionElement(actionElement){
-			var subMethods = [];
-			
-			for(var i in actionElement.ClassUnits){
-				var classUnit = actionElement.ClassUnits[i];
-				var result = findSubMethods(classUnit);
-				subMethods = subMethods.concat(result);
-			}
-			for(var i in actionElement.ActionElements){
-				var result = findSubMethodsFromActionElement(actionElement.ActionElements[i]);
-				subMethods = subMethods.concat(result);
-			}
-			
-			return subMethods;
-		}
-		
-		for(var i in classUnit.MethodUnits){
-				var methodUnit = classUnit.MethodUnits[i];
-				subMethods.push(methodUnit);
-				
-				for(var j in methodUnit.BlockUnit.ActionElements){
-					var actionElement = methodUnit.BlockUnit.ActionElements[j];
-					var result = findSubMethodsFromActionElement(actionElement);
-					subMethods = subMethods.concat(result);
-				}
-		}
-		
-		return subMethods;
 	}
 	
 	function findSubClasses(classUnit){
@@ -740,14 +707,14 @@
 		
 	}
 	
-	function isResponseClass(ClassUnit){
-		for(var i in ClassUnit.MethodUnits){
-			if(ClassUnit.MethodUnits[i].isResponse){
-				return true;
-			}
-		}
-		return false;
-	}
+//	function isResponseClass(ClassUnit){
+//		for(var i in ClassUnit.MethodUnits){
+//			if(ClassUnit.MethodUnits[i].isResponse){
+//				return true;
+//			}
+//		}
+//		return false;
+//	}
 	
 	function identifyMethodUnit(XMIMethodUnit, xmiString){
 
@@ -1051,41 +1018,7 @@
 	}
 	
 	
-	function identifyStimulus(xmiString){
-		
-		var XMIMethods = jp.query(xmiString, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
-		var stimuli = [];
-		for(var i in XMIMethods){
-			var XMIMethod = XMIMethods[i];
-			var XMIParameters = jp.query(XMIMethod, '$..parameterUnit[?(@[\'$\'][\'type\'])]');
-			
-			for(var j in XMIParameters){
-				var XMIParameter = XMIParameters[j];
-				var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameter["$"]['type']));
-				console.log("parameter type");
-				console.log(XMIParameterType);
-				if(XMIParameterType){
-					if(XMIParameterType[0]['$']['name'].indexOf("event") !=-1 || XMIParameterType[0]['$']['name'].indexOf("Event") !=-1) {
-						var stimulus = {
-								name: XMIMethod['$']['name']
-						}
-						
-						stimuli.push(stimulus);
-						continue;
-					}
-				}
-			}
-			
-			
-		}
-		
-		
-		
-		console.log("stimuli");
-		console.log(stimuli);
-		
-		return stimuli;
-	}
+	
 	
 	function identifyExternalClass(xmiString){
 //		
@@ -1172,7 +1105,9 @@
 //		
 //	}
 	
-
+/*
+ * This method is used to draw different dependency graphs between different nodes.
+ */
 	function drawGraph(edges, nodes, outputDir, fileName){
 		if(!fileName){
 			fileName = "kdm_callgraph_diagram.dotty";

@@ -424,6 +424,7 @@
 //            var numberOfChildren = 0'
             var depthInheritanceTree = 0;
 //            var couplingBetweenObjects = 0;
+            var totalNumberOfChildrenOfTopLevelClasses = 0;
 
             var parameterNum = 0;
 			var instanceVarNum = 0;
@@ -473,7 +474,7 @@
                if(element.numberOfInheritanceRelationships == 0){
             	   element.isTopLevelClass = true;
             	   topLevelClasses++;
-            	   totalNumberOfChildrenOfTopLevelClass +=  element.numberOfChildren;
+//            	   totalNumberOfChildrenOfTopLevelClasses +=  element.numberOfChildren;
                }
 //               numberOfDerivedClasses += element.numberOfDerivedClasses;
                
@@ -564,7 +565,7 @@
             domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree = averageDepthInheritanceTree;
             domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
 //            domainModelInfo["ElementAnalytics"].averageNumberOfChildrenPerBaseClass = numberOfBaseClasses == 0? 0 : totalNumberOfChildren/numberOfBaseClasses;
-            domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass = topLevelClasses == 0? 0 : totalNumberOfChildrenofTopLevelClass/topLevelClasses;
+            domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass = topLevelClasses == 0? 0 : totalNumberOfChildrenOfTopLevelClasses/topLevelClasses;
             domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships = numberOfInheritanceRelationships;
 //            domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses = numberOfDerivedClasses;
 //            domainModelInfo["ElementAnalytics"].NumberOfClassesInherited = numberOfClassesInherited;
