@@ -1,0 +1,279 @@
+html
+  head
+    title UMLx
+    link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet') 
+    link(href='css/style.css', rel='stylesheet')
+    //link(href="lightgallery.css" rel="stylesheet")
+    script.
+    function showPage(pageNumer) {
+        for (var i = 1; i <= 5; i++) {
+            var classList = document.getElementById("page" + i).classList;
+            if (i !== pageNumer) {
+                classList.add("hidden");
+            } else {
+                classList.remove("hidden");
+            }
+        }
+    }
+    
+  body#upload-body
+    .container
+        form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+            #page1
+                .alert.alert-info
+                    | Technical Complexity Factor
+                .form-group
+                    label.control-label(for='distributed-system') Distributed System
+                    select#distributed-system.form-control(name='distributed-system')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='response-time') Response time or throughput performance objectives
+                    select#response-time.form-control(name='response-time')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='end-user-efficiency') End user efficiency
+                    select#end-user-efficiency.form-control(name='end-user-efficiency')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='alert alert-infoternal-processing') Complex internal processing
+                    select.form-control(id='alert alert-infoternal-processing', name='alert alert-infoternal-processing')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='code-must-be-resuable') Code must be reusable
+                    select#code-must-be-resuable.form-control(name='code-must-be-resuable')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='easy-to-install') Easy to install
+                    select#easy-to-install.form-control(name='easy-to-install')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='easy-to-use') Easy to use
+                    select#easy-to-use.form-control(name='easy-to-use')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='portable') Portable
+                    select#portable.form-control(name='portable')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='easy-to-change') Easy to change
+                    select#easy-to-change.form-control(name='easy-to-change')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='concurrent') Concurrent
+                    select#concurrent.form-control(name='concurrent')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='includes-special-security-objectives') Includes special security objectives
+                    select#includes-special-security-objectives.form-control(name='includes-special-security-objectives')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='provides-direct-access-for-third-parties') Provides direct access for third parties
+                    select#provides-direct-access-for-third-parties.form-control(name='provides-direct-access-for-third-parties')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='special-user-training-facilities-are-required') Special user training facilities are required
+                    select#special-user-training-facilities-are-required.form-control(name='special-user-training-facilities-are-required')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+
+                input#uuid-page1(type='hidden', name='uuid-page1', value='')
+                
+                .form-group
+                    .col-sm-offset-2.col-xs-8
+                        button.btn.btn-default.disabled.pull-left(type='button') < Previous
+                        button.btn.btn-success.pull-right(type='button', onclick='showPage(2)') Next >
+                
+            // Page 2
+            #page2.hidden
+                .alert.alert-info
+                    | Environmental Factors
+                .form-group
+                    label.control-label(for='familiar-with-the-project-model-that-is-used') Familiar with the project model that is used
+                    select#familiar-with-the-project-model-that-is-used.form-control(name='familiar-with-the-project-model-that-is-used')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='application-experience') Application experience
+                    select#application-experience.form-control(name='application-experience')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='object-oriented-experience') Object-oriented experience
+                    select#object-oriented-experience.form-control(name='object-oriented-experience')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='lead-analyst-capability') Lead analyst capability
+                    select#lead-analyst-capability.form-control(name='lead-analyst-capability')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='motivation') Motivation
+                    select#motivation.form-control(name='motivation')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='stable-requirements') Stable requirements
+                    select#stable-requirements.form-control(name='stable-requirements')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='part-time-staff') Part-time staff
+                    select#part-time-staff.form-control(name='part-time-staff')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+                .form-group
+                    label.control-label(for='difficult-programming-language') Difficult programming language
+                    select#difficult-programming-language.form-control(name='difficult-programming-language')
+                        option 1
+                        option 2
+                        option 3
+                        option 4
+                        option 5
+
+                input#uuid-page2(type='hidden', name='uuid-page2', value='')
+                .form-group
+                    .col-sm-offset-2.col-xs-8
+                        button.btn.btn-default.pull-left(type='button', onclick='showPage(1)') < Previous
+                        button.btn.btn-success.pull-right(type='button', onclick='showPage(3)') Next > 
+            // Page3
+            #page3.hidden
+                .alert.alert-info
+                    | Project model file and documents
+                .form-group
+                    label.control-label(style='text-align:left').col-xs-4(for='uml-file') Model File (file types: xml are supported)
+                    .col-xs-8
+                        input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
+                .form-group
+                    label.control-label(style='text-align:left').col-xs-4(for='uml-other') Other Documents (file types: zip, rar, tar are supported)
+                    .col-xs-8
+                        input#uml-other.form-control(type='file', name='uml-other', accept='application/x-zip-compressed')
+
+                input#uuid-page3(type='hidden', name='uuid-page3', value='')
+
+                .form-group
+                    .col-sm-offset-2.col-xs-8
+                        button.btn.btn-default.pull-left(type='button', onclick='showPage(2)') < Previous
+                        button.btn.btn-success.pull-right(type='button', onclick='showPage(4)') Next > 
+
+            //Page 4
+            #page4.hidden
+                .alert.alert-info
+                    | Select Estimator
+                
+                .form-group
+                    label.control-label(for='estimator') Select Estimator
+                    select#estimator.estimation-form-control(name='estimator')
+                        option Select Estimator
+                        option Linear Regression
+                        option Ridge Regression
+                        option Linear Spline
+                        option Bayesian
+
+                .form-group
+                    label.control-label(for='model') Select Model
+                    select#model.estimation-form-control(name='model')
+                        option Select Model
+                        option EUCP
+                        option EXUCP
+                        option DUCP
+
+                input#uuid-page4(type='hidden', name='uuid-page4', value='')
+
+                .form-group
+                    .col-sm-offset-2.col-xs-8
+                        button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
+                        button.btn.btn-success.pull-right(type='submit', onclick='showPage(5)') Submit
+            
+            //page 5
+            #page5.hidden
+                .panel-group
+                    .panel.panel-default
+                        .panel-heading
+                            h4.panel-title
+                                | Estimation Results
+                        #collapse1.panel-collapse
+                        div(id="estimation-result-panel-body")
+                
+                input#uuid-page5(type='hidden', name='uuid-page5', value='')
+
+script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
+script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
+script(type='text/javascript', src='js/scripts.js')
+script(type='text/javascript', src="js/charts.js")
+script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv1@latest')
+

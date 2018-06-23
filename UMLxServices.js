@@ -16,7 +16,6 @@ var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
-var EclipseUtil = require('./utils/EclipseUtil.js');
 var bodyParser = require('body-parser');
 var randomstring = require("randomstring");
 var mongo = require('mongodb');
@@ -206,7 +205,9 @@ app.get('/testgitapifollowing', function(req,response){
 });
 
 // END OF TEST GIT API
-
+app.get('/estimationPage',function(req,res){
+	res.render('estimationPage');
+});
 app.get('/signup',function(req,res){
 
 	if(req.query.tk!=null && req.query.tk!=undefined){
@@ -517,18 +518,6 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 				console.log(err);
 			}
 		});
-		
-		/*
-		 * for each upload, the zip files which contains the source code should be analysed by the eclipse to generate the kdm model.
-		 * 
-		 * for instance:
-		 * 
-		 * eclipseUtil.generateKDMModel(umlOtherPath, function(kdmPath){
-		 * 	console.log(kdmPath);
-		 * });
-		 * 
-		 */
-		
 	}
 	else if (req.files['uml-file'] != null) {
 		umlFilePath = req.files['uml-file'][0].path;
@@ -603,8 +592,6 @@ app.post('/uploadUseCaseFile', upload.fields([{name:'usecase-file',maxCount:1}, 
 		}, usecaseFilePath);
 	});
 })
-
-
 
 app.post('/uploadModelFile', upload.fields([{name:'model-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
 	console.log('/uploadModelFile');
