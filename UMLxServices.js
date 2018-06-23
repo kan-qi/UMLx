@@ -959,8 +959,7 @@ app.get('/queryModelInfo', function(req, res){
 
 	// });
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-		console.log("Now is good!1");
-		//console.log(modelAnalytics);
+		console.log("---------------modelInfo------------------");
 		console.log(modelInfo);
 		var uploadsFile = modelInfo.fileUrl;
 		uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
@@ -1391,6 +1390,10 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
 app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');
+});
+
+app.get('/estimatePage', function(req, res){
+	res.render('estimationPage');
 });
 
 // TODO use this API to populate data on UI
