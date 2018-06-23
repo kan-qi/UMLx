@@ -23,7 +23,7 @@
 	
 	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
 //		fs.readFile(filePath, "utf8", function(err, data) {
-//			console.log("file content");
+			console.log("file content");
 //			console.log(data);
 //			parser.parseString(data, function(err, result) {
 				
@@ -39,18 +39,18 @@
 //				console.log("callGraphs");
 //				console.log(callGraph);
 				
-				var domainModelResult = createDomainModel(result.classUnits, ModelOutputDir, ModelAccessDir);
-				Model.DomainModel = domainModelResult.DomainModel;
-				var domainElementsByID = domainModelResult.domainElementsByID;
+//				var domainModelResult = createDomainModel(result.classUnits, ModelOutputDir, ModelAccessDir);
+//				Model.DomainModel = domainModelResult.DomainModel;
+//				var domainElementsByID = domainModelResult.domainElementsByID;
 				
-				var UseCases = createUseCasesbyCFG(result.controlFlowGraph, ModelOutputDir, ModelAccessDir, domainElementsByID);
+//				var UseCases = createUseCasesbyCFG(result.controlFlowGraph, ModelOutputDir, ModelAccessDir, domainElementsByID);
 				
-				Model.UseCases = UseCases;
+//				Model.UseCases = UseCases;
 				
 //				return Model;
 //				
 				var debug = require("../../utils/DebuggerOutput.js");
-				debug.writeJson("constructed_model_by_kdm", Model);
+				debug.writeJson("constructed_model_by_kdm_6_22", result);
 				
 				if(callbackfunc){
 					callbackfunc(Model);

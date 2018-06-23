@@ -337,10 +337,7 @@ function deleteRepo(repoId, callbackfunc) {
               });*/
             console.log(modelInfo._id);
              for(var i in useCaseArray){
-                
                 useCaseArray[i].model_id = modelInfo._id;
-                //useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
-                
                 console.log("USe Case: "+i+" ID: "+ useCaseArray[i]._id);
                 //deleteUseCase(repoId, modelInfo._id, useCaseArray[i]._id);
                 db.collection("useCaseInfo").remove({_id: useCaseArray[i]._id}, function(err, res) 

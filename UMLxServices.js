@@ -205,7 +205,9 @@ app.get('/testgitapifollowing', function(req,response){
 });
 
 // END OF TEST GIT API
-
+app.get('/estimationPage',function(req,res){
+	res.render('estimationPage');
+});
 app.get('/signup',function(req,res){
 
 	if(req.query.tk!=null && req.query.tk!=undefined){
