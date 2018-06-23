@@ -581,16 +581,7 @@
 		return ClassUnit;
 		
 	}
-	
-	function isResponseClass(ClassUnit){
-		for(var i in ClassUnit.MethodUnits){
-			if(ClassUnit.MethodUnits[i].isResponse){
-				return true;
-			}
-		}
-		return false;
-	}
-	
+
 	function identifyMethodUnit(XMIMethodUnit, xmiString){
 
 		var MethodUnit = {

@@ -430,7 +430,7 @@
 			var instanceVarNum = 0;
 			var externalOperNum = 0;
 			var objectdataNum = 0;
-			var WeightedOperNum = 0;
+			var weightedOperNum = 0;
 			
 			var totalNumberOfChildrenClass = 0;
 
@@ -438,28 +438,36 @@
                             var element = domainModelInfo.Elements[i];
                             entityNum++;
                             classNum++;
+                            
+                            var attributeNum_cls = 0;
+                            var instanceVarNum_cls = 0;
+                            var operationNum_cls = 0;
+                            var externalOperNum_cls = 0;
+                            var parameterNum_cls = 0;
+                            var weightedOperNum_cls = 0;
+                            
                             for ( var j in element.Attributes) {
                                 var attribute = element.Attributes[j];
-                                attributeNum++;
+                                attributeNum_cls++;
                                 if ( attribute['isStatic'] == "false"){
-									instanceVarNum++;
+									instanceVarNum_cls++;
 								}
                             }
 
                             for ( var j in element.Operations) {
                                 var operation = element.Operations[j];
-                                operationNum++;
+                                operationNum_cls++;
                                 if (operation['Visibility'] == "public"){
-									externalOperNum++;
+									externalOperNum_cls++;
 								}
 								for ( var k in operation.Parameters){
 									var parameter = operation.Parameters[k];
-									parameterNum++;
+									parameterNum_cls++;
 								}
 							
 					               var w = 0.3;
 //									domainModelInfo["SizeMetricAnalytics"].WMC += w*1; //Weighted methods per class
-					               WeightedOperNum = w*1;
+					               weightedOperNum_cls = w*1;
                             }
                             
                             
@@ -468,30 +476,70 @@
 							}
                             
                             
-               var children = umlModelProcessor.identifyChildren(element, domainModelInfo.generaliations);
-               element.numberOfDerivedClasses = children.length;
+                element.attributeNum = attributeNum_cls;
+                element.instanceVarNum = instanceVarNum_cls;
+                element.operationNum = operationNum_cls;
+                element.externalOperNum = externalOperNum_cls;
+                element.parameterNum = parameterNum_cls;
+                element.weightedOperNum = weightedOperNum_cls;
+                            
+               // determine the inheritance relationships
+                            
+               var derivedClasses = umlModelProcessor.identifyChildren(element, domainModelInfo.Generalizations);
+               element.numberOfDerivedClasses = derivedClasses.length;
                element.numberOfChildren = element.numberOfDerivedClasses;
-               if(element.numberOfInheritanceRelationships == 0){
+               
+               var inheritedClasses = umlModelProcessor.identifyOffSprings(element, domainModelInfo.Generalizations);
+               element.numberOfClassesInherited = inheritedClasses.elements.length;
+               element.depthInheritanceTree = inheritedClasses.elements.depth;
+               
+               if(depthInheritanceTree < element.depthInheritanceTree){
+            	   depthInheritanceTree = element.depthInheritanceTree;
+               }
+               
+               var derivingClasses = umlModelProcessor.identifyParents(element, domainModelInfo.Generalizations);
+               element.numberOfDerivingClasses = derivingClasses.length;
+               if(element.numberOfDerivingClasses == 0){
             	   element.isTopLevelClass = true;
             	   topLevelClasses++;
 //            	   totalNumberOfChildrenOfTopLevelClasses +=  element.numberOfChildren;
                }
 //               numberOfDerivedClasses += element.numberOfDerivedClasses;
                
-               var offSprings = umlModelProcessor.identifyOffSprings(element, domainModelInfo.generaliations);
-               element.numberOfClassesInherited = offSprings.elements.length;
-               element.depthInheritanceTree = offSprings.elements.depth;
-               
-               if(depthInheritanceTree < element.depthInheritanceTree){
-            	   depthInheritanceTree = element.depthInheritanceTree;
-               }
-               
-               var ancestors = umlModelProcessor.identifyAncestors(element, domainModelInfo.generaliations);
-               element.numberOfClassesInheritedFrom = ancestors.length;
-               
+               var ancestors = umlModelProcessor.identifyAncestors(element, domainModelInfo.Generalizations);
+               element.numberOfClassesInheritedFrom = ancestors.elements.length;
                
                element.numberOfInheritanceRelationships = element.numberOfDerivedClasses+element.numberOfClassesInherited;
-               element.couplingBetweenObjects = element.numberOfInheritanceRelationships;
+               
+            // determine the associations relationships
+               
+               var associatedClasses = umlModelProcessor.identifyChildren(element, domainModelInfo.Associations);
+               element.numberOfAssociatedClasses = associatedClasses.length;
+               
+               var associatingClasses = umlModelProcessor.identifyParents(element, domainModelInfo.Associations);
+               element.numberOfAssociatingClasses = associatingClasses.length;
+            
+               element.numberOfAssociationRelationships = element.umberOfAssociatedClasses+element.numberOfAssociatingClasses;
+               
+               
+            // determine the usages relationships
+               
+               var usedClasses = umlModelProcessor.identifyChildren(element, domainModelInfo.Usages);
+               element.numberOfUsedClasses = usedClasses.length;
+               
+               var usingClasses = umlModelProcessor.identifyParents(element, domainModelInfo.Generalizations);
+               element.numberOfUsingClasses = usingClasses.length;
+               
+               element.numberOfUsageRelationships = element.numberOfUsedClasses+element.numberOfUsingClasses;
+               
+               attributeNum += attributeNum_cls;
+               instanceVarNum += instanceVarNum_cls;
+               operationNum += operationNum_cls;
+               externalOperNum += externalOperNum_cls;
+               parameterNum += parameterNum_cls;
+               weightedOperNum += weightedOperNum_cls;
+               
+               element.couplingBetweenObjects = element.numberOfInheritanceRelationships+element.numberOfAssociationRelationships+element.numberOfUsageRelationships;
 		 }
 			
 			
@@ -572,7 +620,7 @@
 //            domainModelInfo["ElementAnalytics"].NumberOfChildren = numberOfChildren;
 //            domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom = numberOfClassesInheritedFrom;
 //            domainModelInfo["ElementAnalytics"].CouplingBetweenObjects = couplingBetweenObjects;
-            domainModelInfo["ElementAnalytics"].WeightedOperNum =  WeightedOperNum;
+            domainModelInfo["ElementAnalytics"].WeightedOperNum =  weightedOperNum;
 
             domainModelInfo["ElementAnalytics"].ObjectDataNum = objectdataNum;
 			domainModelInfo["ElementAnalytics"].ParameterNum = parameterNum;
@@ -1048,7 +1096,7 @@
 //		console.log("domain model");
 //		console.log(domainModelInfo);
 
-		var entityAnalyticsStr = entityNum == 0 ? "id,element,attributeNum,operationNum\n" : "";
+		var entityAnalyticsStr = entityNum == 0 ? "id,element,attributeNum,operationNum,instanceVarNum,externalOperNum,parameterNum,weightedOperNum,numberOfDerivedClasses,numberOfChildren,numberOfClassesInherited,depthInheritanceTree,numberOfDerivingClasses,isTopLevelClass,numberOfClassesInheritedFrom,numberOfInheritanceRelationships,numberOfAssociatedClasses,numberOfAssociatingClasses,numberOfAssociationRelationships,numberOfUsedClasses,numberOfUsingClasses,numberOfUsageRelationships\n" : "";
 		var attributeAnalyticsStr = attributeNum == 0 ? "id,attribute,type,element\n" : "";
 		var operationAnalyticsStr = operationNum == 0 ? "id,operation,element\n" : "";
 
@@ -1063,9 +1111,27 @@
 					entityNum++;
 					entityAnalyticsStr += entityNum + ","
 						+ element.Name + ","
-						+ element.Attributes.length + ","
-						+ element.Operations.length + "\n";
-
+						+ element.attributeNum + ","
+						+ element.operationNum + ","
+						+ element.instanceVarNum + ","
+						+ element.externalOperNum + ","
+						+ element.parameterNum + ","
+						+ element.weightedOperNum + ","
+						+ element.numberOfDerivedClasses + ","
+						+ element.numberOfChildren + ","
+						+ element.numberOfClassesInherited + ","
+						+ element.depthInheritanceTree + ","
+						+ element.numberOfDerivingClasses + ","
+						+ element.isTopLevelClass + ","
+						+ element.numberOfClassesInheritedFrom + ","
+						+ element.numberOfInheritanceRelationships + ","
+						+ element.numberOfAssociatedClasses + ","
+						+ element.numberOfAssociatingClasses + ","
+						+ element.numberOfAssociationRelationships + ","
+						+ element.numberOfUsedClasses + ","
+						+ element.numberOfUsingClasses + ","
+						+ element.numberOfUsageRelationships+"\n";
+					
 				for ( var j in element.Attributes) {
 					attributeNum++;
 					var attribute = element.Attributes[j];
