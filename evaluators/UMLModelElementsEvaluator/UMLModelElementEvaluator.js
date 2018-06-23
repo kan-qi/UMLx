@@ -67,7 +67,7 @@
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
 	function toModelEvaluationHeader() {
-		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,ControlNum,Entity_Num,attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
+		return "Path_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,ControlNum,Entity_Num,attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Depth_Inheritance_Tree,para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -95,12 +95,12 @@
 		        + modelInfo["ElementAnalytics"].AverageDepthInheritanceTree + ","
 		        + modelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass + ","
 		        + modelInfo["ElementAnalytics"].NumberOfInheritanceRelationships + ","
-		        + modelInfo["ElementAnalytics"].NumberOfDerivedClasses + ","
-		        + modelInfo["ElementAnalytics"].NumberOfClassesInherited + ","
-		        + modelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom + ","
-		        + modelInfo["ElementAnalytics"].NumberOfChildren + ","
+//		        + modelInfo["ElementAnalytics"].NumberOfDerivedClasses + ","
+//		        + modelInfo["ElementAnalytics"].NumberOfClassesInherited + ","
+//		        + modelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom + ","
+//		        + modelInfo["ElementAnalytics"].NumberOfChildren + ","
 		        + modelInfo["ElementAnalytics"].DepthInheritanceTree + ","
-		        + modelInfo["ElementAnalytics"].CouplingBetweenObjects + ","
+//		        + modelInfo["ElementAnalytics"].CouplingBetweenObjects + ","
 		        + modelInfo["ElementAnalytics"].ParameterNum + ","
 				+ modelInfo["ElementAnalytics"].UsageNum + ","
 				+ modelInfo["ElementAnalytics"].RealNum + ","
@@ -116,6 +116,20 @@
 				+ modelInfo["ElementAnalytics"].AvgInstVar + ","
 				+ modelInfo["ElementAnalytics"].WeightedOperNum + ","
 				+ modelInfo["ElementAnalytics"].MethodSize;
+				//added metrics for the domain model
+//				+ modelInfo["ElementAnalytics"].EexternalMetdNum + ","
+//				+ modelInfo["ElementAnalytics"].ServicesReqNum + ","
+//				+ modelInfo["ElementAnalytics"].RecordNum + ","
+//				+ modelInfo["ElementAnalytics"].DataElementNum  + ","
+//				+ modelInfo["ElementAnalytics"].InheritRltNum + ","
+//				+ modelInfo["ElementAnalytics"].UseRltNum + ","
+//				+ modelInfo["ElementAnalytics"].RealRltNum + ","
+//				+ modelInfo["ElementAnalytics"].MtdNum + ","
+//				+ modelInfo["ElementAnalytics"].ParaNum + ","
+//				+ modelInfo["ElementAnalytics"].AvgParaNum + ","
+//				+ modelInfo["ElementAnalytics"].ExternalFiles +","
+//				+ modelInfo["ElementAnalytics"].InternalFiles + ","
+//				+ modelInfo["ElementAnalytics"].FileTypeReferenced + ";"
 	}
 
 	// to output the header for data for the use cases.
@@ -146,7 +160,8 @@
 	}
 
 	function toDomainModelEvaluationHeader() {
-		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
+//		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
+		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Depth_Inheritance_Tree,para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
@@ -156,16 +171,16 @@
 		return domainModelInfo["ElementAnalytics"].AttributeNum + ","
 		+ domainModelInfo["ElementAnalytics"].OperationNum + ","
 		+ domainModelInfo["ElementAnalytics"].ClassNum  + ","
-                + domainModelInfo["ElementAnalytics"].TopLevelClasses + ","
-                + domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree + ","
-                + domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass + ","
-                + domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships + ","
-                + domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses + ","
-                + domainModelInfo["ElementAnalytics"].NumberOfClassesInherited + ","
-                + domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom + ","
-                + domainModelInfo["ElementAnalytics"].NumberOfChildren + ","
-                + domainModelInfo["ElementAnalytics"].DepthInheritanceTree + ","
-                + domainModelInfo["ElementAnalytics"].CouplingBetweenObjects + ","
+        + domainModelInfo["ElementAnalytics"].TopLevelClasses + ","
+        + domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree + ","
+        + domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass + ","
+        + domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships + ","
+//        + domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses + ","
+//        + domainModelInfo["ElementAnalytics"].NumberOfClassesInherited + ","
+//        + domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom + ","
+//        + domainModelInfo["ElementAnalytics"].NumberOfChildren + ","
+        + domainModelInfo["ElementAnalytics"].DepthInheritanceTree + ","
+//        + domainModelInfo["ElementAnalytics"].CouplingBetweenObjects + ","
         + domainModelInfo["ElementAnalytics"].ParameterNum + ","
 		+ domainModelInfo["ElementAnalytics"].UsageNum + ","
 		+ domainModelInfo["ElementAnalytics"].RealNum + ","
@@ -351,21 +366,21 @@
 				OperationNum :0,
 				EntityNum :0,
 				ClassNum: 0,
-                                TopLevelClasses :0,
-                                AverageDepthInheritanceTree :0,
-                                AverageNumberOfChildrenPerBaseClass :0,
-                                NumberOfInheritanceRelationships :0,
-                                NumberOfDerivedClasses :0,
-                                NumberOfClassesInherited :0,
-                                NumberOfClassesInheritedFrom :0,
-                                NumberOfChildren :0,
-                                DepthInheritanceTree :0,
-                                CouplingBetweenObjects :0,
-
+                TopLevelClasses :0,
+                AverageDepthInheritanceTree :0,
+                AverageNumberOfChildrenPerBaseClass :0,
+                NumberOfInheritanceRelationships :0,
+//                NumberOfDerivedClasses :0,
+//                NumberOfClassesInherited :0,
+//                NumberOfClassesInheritedFrom :0,
+//                NumberOfChildren :0,
+                DepthInheritanceTree :0,
+//                CouplingBetweenObjects :0,
                 ParameterNum :0,
 				UsageNum: 0,
 				RealNum: 0,
 				AssocNum: 0,
+				GeneralNum: 0,
 				ExternalOperNum: 0,
 				ObjectDataNum: 0,
 				AvgOperation :0,
@@ -377,6 +392,7 @@
 				AvgInstVar: 0,
 				WeightedOperNum: 0,
 				MethodSize: 0,
+				InstanceVarNum: 0,
 				EntityAnalyticsFileName : 'entityAnalytics.csv',
 				AttributeAnalyticsFileName :  'attributeAnalytics.csv',
 				OperationAnalyticsFileName : 'operationAnalytics.csv'
@@ -398,21 +414,25 @@
 			var operationNum = 0;
 			var entityNum = 0;
 			var classNum = 0;
-                        var topLevelClasses = 0;
-                        var averageDepthInheritanceTree = 0;
-                        var averageNumberOfChildrenPerBaseClass = 0;
-                        var numberOfInheritanceRelationships = 0;
-                        var numberOfDerivedClasses = 0;
-                        var numberOfClassesInherited = 0;
-                        var numberOfClassesInheritedFrom = 0;
-                        var numberOfChildren = 0;
-                        var depthInheritanceTree = 0;
-                        var couplingBetweenObjects = 0;
+            var topLevelClasses = 0;
+            var averageDepthInheritanceTree = 0;
+            var averageNumberOfChildrenPerBaseClass = 0;
+            var numberOfInheritanceRelationships = 0;
+//            var numberOfDerivedClasses = 0;
+//            var numberOfClassesInherited = 0;
+//            var numberOfClassesInheritedFrom = 0;
+//            var numberOfChildren = 0'
+            var depthInheritanceTree = 0;
+//            var couplingBetweenObjects = 0;
+            var totalNumberOfChildrenOfTopLevelClasses = 0;
 
             var parameterNum = 0;
 			var instanceVarNum = 0;
 			var externalOperNum = 0;
 			var objectdataNum = 0;
+			var WeightedOperNum = 0;
+			
+			var totalNumberOfChildrenClass = 0;
 
 			for ( var i in domainModelInfo.Elements) {
                             var element = domainModelInfo.Elements[i];
@@ -424,7 +444,6 @@
                                 if ( attribute['isStatic'] == "false"){
 									instanceVarNum++;
 								}
-
                             }
 
                             for ( var j in element.Operations) {
@@ -437,67 +456,123 @@
 									var parameter = operation.Parameters[k];
 									parameterNum++;
 								}
+							
+					               var w = 0.3;
+//									domainModelInfo["SizeMetricAnalytics"].WMC += w*1; //Weighted methods per class
+					               WeightedOperNum = w*1;
                             }
+                            
+                            
                             if(element.Attributes.length>0 && element.Operations.length==0){
 								objectdataNum++;
 							}
-			}
-                        if (domainModelInfo.InheritanceStats) {
-                            inheritanceStats = domainModelInfo.InheritanceStats;
-                            topLevelClasses = inheritanceStats['topLevelClasses'];
-                            couplingBetweenObjects = inheritanceStats['coupling'];
-                            numberOfInheritanceRelationships = Object.keys(inheritanceStats['children']).length;
-                            numberOfClassesInherited = Object.keys(inheritanceStats['children']).length;
-                            numberOfClassesInheritedFrom = inheritanceStats['numInheritedFrom'];
-                            for (var key in inheritanceStats['numOfChildren']) {
-                                numberOfChildren += inheritanceStats['numOfChildren'][key];
-                            }
-                            numberOfDerivedClasses = numberOfChildren;
-                            averageNumberOfChildrenPerBaseClass = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : numberOfChildren / Object.keys(inheritanceStats['numOfChildren']).length;
-                            for (var key in inheritanceStats['tree']) {
-                                depth = 0;
-                                val = inheritanceStats['tree'][key];
-                                while (val !== '#') {
-                                    depth++;
-                                    val = inheritanceStats['tree'][val];
-                                }
-                                depthInheritanceTree += depth;
-                            }
-                            averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
-//                        averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
-			}
+                            
+                            
+               var children = umlModelProcessor.identifyChildren(element, domainModelInfo.generaliations);
+               element.numberOfDerivedClasses = children.length;
+               element.numberOfChildren = element.numberOfDerivedClasses;
+               if(element.numberOfInheritanceRelationships == 0){
+            	   element.isTopLevelClass = true;
+            	   topLevelClasses++;
+//            	   totalNumberOfChildrenOfTopLevelClasses +=  element.numberOfChildren;
+               }
+//               numberOfDerivedClasses += element.numberOfDerivedClasses;
+               
+               var offSprings = umlModelProcessor.identifyOffSprings(element, domainModelInfo.generaliations);
+               element.numberOfClassesInherited = offSprings.elements.length;
+               element.depthInheritanceTree = offSprings.elements.depth;
+               
+               if(depthInheritanceTree < element.depthInheritanceTree){
+            	   depthInheritanceTree = element.depthInheritanceTree;
+               }
+               
+               var ancestors = umlModelProcessor.identifyAncestors(element, domainModelInfo.generaliations);
+               element.numberOfClassesInheritedFrom = ancestors.length;
+               
+               
+               element.numberOfInheritanceRelationships = element.numberOfDerivedClasses+element.numberOfClassesInherited;
+               element.couplingBetweenObjects = element.numberOfInheritanceRelationships;
+		 }
+			
+			
+//			domainModelInfo["ElementAnalytics"].averageNumberOfChildrenPerBaseClass = 0;
+//			var totalNumberOfChildren = 0;
+//			var numberOfBaseClasses = 0;
+//			for ( var i in domainModelInfo.Elements) {
+//                var element = domainModelInfo.Elements[i];
+//                totalNumberOfChildren += element[numberOfDerivedClasses];
+//                if(element.isTopLevelClass){
+//                	numberOfBaseClasses ++;
+//                }
+//			}
+//			domainModelInfo["ElementAnalytics"].topLevelClasses = topLevelClasses;
+//			domainModelInfo["ElementAnalytics"].averageNumberOfChildrenPerBaseClass = numberOfBaseClasses == 0? 0 : totalNumberOfChildren/numberOfBaseClasses;
+//		
+//                        if (domainModelInfo.InheritanceStats) {
+//                            inheritanceStats = domainModelInfo.InheritanceStats;
+//                            topLevelClasses = inheritanceStats['topLevelClasses'];
+//                            couplingBetweenObjects = inheritanceStats['coupling'];
+//                            numberOfInheritanceRelationships = Object.keys(inheritanceStats['children']).length;
+//                            numberOfClassesInherited = Object.keys(inheritanceStats['children']).length;
+//                            numberOfClassesInheritedFrom = inheritanceStats['numInheritedFrom'];
+//                            for (var key in inheritanceStats['numOfChildren']) {
+//                                numberOfChildren += inheritanceStats['numOfChildren'][key];
+//                            }
+//                            numberOfDerivedClasses = numberOfChildren;
+//                            averageNumberOfChildrenPerBaseClass = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : numberOfChildren / Object.keys(inheritanceStats['numOfChildren']).length;
+//                            for (var key in inheritanceStats['tree']) {
+//                                depth = 0;
+//                                val = inheritanceStats['tree'][key];
+//                                while (val !== '#') {
+//                                    depth++;
+//                                    val = inheritanceStats['tree'][val];
+//                                }
+//                                depthInheritanceTree += depth;
+//                            }
+//                            averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
+////                        averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
+//			}
 			var usageNum = 0;
 			var realNum = 0;
 			var assocNum = 0;
+			var generalNum = 0;
 
 			for ( var i in domainModelInfo.Usages) {
 				var usage = domainModelInfo.Usages[i];
 					usageNum++;
 			}
-			for ( var i in domainModelInfo.Realization) {
-				var realization = domainModelInfo.Realization[i];
+			for ( var i in domainModelInfo.Realizations) {
+				var realization = domainModelInfo.Realizations[i];
 					realNum++;
 			}
-			for ( var i in domainModelInfo.Assoc) {
-				var association = domainModelInfo.Assoc[i];
+			for ( var i in domainModelInfo.Associations) {
+				var association = domainModelInfo.Associations[i];
 					assocNum++;
+			}
+			
+			for(var i in domainModelInfo.Generalizations){
+				var generalization = domainModelInfo.Generalizations[i];
+					generalNum++;
 			}
 
 //			diagram["ElementAnalytics"] = {};
 			domainModelInfo["ElementAnalytics"].AttributeNum = attributeNum;
+			domainModelInfo["ElementAnalytics"].InstanceVarNum = instanceVarNum;
 			domainModelInfo["ElementAnalytics"].OperationNum = operationNum;
 			domainModelInfo["ElementAnalytics"].EntityNum = entityNum;
 			domainModelInfo["ElementAnalytics"].ClassNum = classNum;
-                        domainModelInfo["ElementAnalytics"].TopLevelClasses = topLevelClasses;
-                        domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree = averageDepthInheritanceTree;
-                        domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
-                        domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass = averageNumberOfChildrenPerBaseClass;
-                        domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships = numberOfInheritanceRelationships;
-                        domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses = numberOfDerivedClasses;
-                        domainModelInfo["ElementAnalytics"].NumberOfClassesInherited = numberOfClassesInherited;
-                        domainModelInfo["ElementAnalytics"].NumberOfChildren = numberOfChildren;
-                        domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom = numberOfClassesInheritedFrom;
-                        domainModelInfo["ElementAnalytics"].CouplingBetweenObjects = couplingBetweenObjects;
+            domainModelInfo["ElementAnalytics"].TopLevelClasses = topLevelClasses;
+            domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree = averageDepthInheritanceTree;
+            domainModelInfo["ElementAnalytics"].DepthInheritanceTree = depthInheritanceTree;
+//            domainModelInfo["ElementAnalytics"].averageNumberOfChildrenPerBaseClass = numberOfBaseClasses == 0? 0 : totalNumberOfChildren/numberOfBaseClasses;
+            domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass = topLevelClasses == 0? 0 : totalNumberOfChildrenOfTopLevelClasses/topLevelClasses;
+            domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships = numberOfInheritanceRelationships;
+//            domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses = numberOfDerivedClasses;
+//            domainModelInfo["ElementAnalytics"].NumberOfClassesInherited = numberOfClassesInherited;
+//            domainModelInfo["ElementAnalytics"].NumberOfChildren = numberOfChildren;
+//            domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom = numberOfClassesInheritedFrom;
+//            domainModelInfo["ElementAnalytics"].CouplingBetweenObjects = couplingBetweenObjects;
+            domainModelInfo["ElementAnalytics"].WeightedOperNum =  WeightedOperNum;
 
             domainModelInfo["ElementAnalytics"].ObjectDataNum = objectdataNum;
 			domainModelInfo["ElementAnalytics"].ParameterNum = parameterNum;
@@ -506,6 +581,7 @@
 			domainModelInfo["ElementAnalytics"].UsageNum = usageNum;
 			domainModelInfo["ElementAnalytics"].RealNum = realNum;
 			domainModelInfo["ElementAnalytics"].AssocNum = assocNum;
+			domainModelInfo["ElementAnalytics"].GeneralNum = generalNum;
 			domainModelInfo["ElementAnalytics"].AvgOperation = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].OperationNum / domainModelInfo["ElementAnalytics"].EntityNum;
 			domainModelInfo["ElementAnalytics"].AvgAttribute = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].AttributeNum / domainModelInfo["ElementAnalytics"].EntityNum;
 			domainModelInfo["ElementAnalytics"].AvgParameter = domainModelInfo["ElementAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ElementAnalytics"].ParameterNum / domainModelInfo["ElementAnalytics"].EntityNum;
@@ -601,12 +677,12 @@
 		        AverageDepthInheritanceTree : 0,
 		        AverageNumberOfChildrenPerBaseClass : 0,
 		        NumberOfInheritanceRelationships : 0,
-		        NumberOfDerivedClasses : 0,
-		        NumberOfClassesInherited : 0,
-		        NumberOfClassesInheritedFrom : 0,
-		        NumberOfChildren : 0,
+//		        NumberOfDerivedClasses : 0,
+//		        NumberOfClassesInherited : 0,
+//		        NumberOfClassesInheritedFrom : 0,
+//		        NumberOfChildren : 0,
 		        DepthInheritanceTree : 0,
-		        CouplingBetweenObjects : 0,
+//		        CouplingBetweenObjects : 0,
 		        ParameterNum : 0,
 				UsageNum : 0,
 				RealNum : 0,
@@ -669,16 +745,16 @@
 		modelInfo["ElementAnalytics"].AttributeNum = domainModelInfo["ElementAnalytics"].AttributeNum;
 		modelInfo["ElementAnalytics"].OperationNum = domainModelInfo["ElementAnalytics"].OperationNum
 		modelInfo["ElementAnalytics"].ClassNum  = domainModelInfo["ElementAnalytics"].ClassNum;
-                modelInfo["ElementAnalytics"].TopLevelClasses = domainModelInfo["ElementAnalytics"].TopLevelClasses;
-                modelInfo["ElementAnalytics"].AverageDepthInheritanceTree = domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree;
-                modelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass = domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass;
-                modelInfo["ElementAnalytics"].NumberOfInheritanceRelationships = domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships;
-                modelInfo["ElementAnalytics"].NumberOfDerivedClasses = domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses;
-                modelInfo["ElementAnalytics"].NumberOfClassesInherited = domainModelInfo["ElementAnalytics"].NumberOfClassesInherited;
-                modelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom = domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom;
-                modelInfo["ElementAnalytics"].NumberOfChildren = domainModelInfo["ElementAnalytics"].NumberOfChildren;
-                modelInfo["ElementAnalytics"].DepthInheritanceTree = domainModelInfo["ElementAnalytics"].DepthInheritanceTree;
-                modelInfo["ElementAnalytics"].CouplingBetweenObjects = domainModelInfo["ElementAnalytics"].CouplingBetweenObjects;
+        modelInfo["ElementAnalytics"].TopLevelClasses = domainModelInfo["ElementAnalytics"].TopLevelClasses;
+        modelInfo["ElementAnalytics"].AverageDepthInheritanceTree = domainModelInfo["ElementAnalytics"].AverageDepthInheritanceTree;
+        modelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass = domainModelInfo["ElementAnalytics"].AverageNumberOfChildrenPerBaseClass;
+        modelInfo["ElementAnalytics"].NumberOfInheritanceRelationships = domainModelInfo["ElementAnalytics"].NumberOfInheritanceRelationships;
+//        modelInfo["ElementAnalytics"].NumberOfDerivedClasses = domainModelInfo["ElementAnalytics"].NumberOfDerivedClasses;
+//        modelInfo["ElementAnalytics"].NumberOfClassesInherited = domainModelInfo["ElementAnalytics"].NumberOfClassesInherited;
+//        modelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom = domainModelInfo["ElementAnalytics"].NumberOfClassesInheritedFrom;
+//        modelInfo["ElementAnalytics"].NumberOfChildren = domainModelInfo["ElementAnalytics"].NumberOfChildren;
+        modelInfo["ElementAnalytics"].DepthInheritanceTree = domainModelInfo["ElementAnalytics"].DepthInheritanceTree;
+//        modelInfo["ElementAnalytics"].CouplingBetweenObjects = domainModelInfo["ElementAnalytics"].CouplingBetweenObjects;
         modelInfo["ElementAnalytics"].ParameterNum = domainModelInfo["ElementAnalytics"].ParameterNum;
 		modelInfo["ElementAnalytics"].UsageNum = domainModelInfo["ElementAnalytics"].UsageNum;
 		modelInfo["ElementAnalytics"].RealNum = domainModelInfo["ElementAnalytics"].RealNum;

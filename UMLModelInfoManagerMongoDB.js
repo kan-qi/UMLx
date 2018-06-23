@@ -337,8 +337,9 @@ function deleteRepo(repoId, callbackfunc) {
               });*/
              for(var i in useCaseArray){
                 
-                useCaseArray[i].model_id = new mongo.ObjectID(modelInfo._id);
-                useCaseArray[i]._id = new mongo.ObjectID(useCaseArray[i]._id);
+//            	console.log(modelInfo._id.substring(1,12));
+                useCaseArray[i].model_id = modelInfo._id;
+//                useCaseArray[i]._id = useCaseArray[i]._id;
                 
                 console.log("USe Case: "+i+" ID: "+ useCaseArray[i]._id);
                 //deleteUseCase(repoId, modelInfo._id, useCaseArray[i]._id);
@@ -570,10 +571,8 @@ function deleteRepo(repoId, callbackfunc) {
                     if (err) throw err;
 
                     result.forEach(function (doc) {
-                        db.collection("newUseCaseInfo").insert(doc,function (err, result) {
-                            if (err) throw err;
-                        });
-                         console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNN");
+                        db.collection("newUseCaseInfo").insert(doc);
+                        // console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNN");
                     });
                     setTimeout(function () {
                         db.collection("modelInfo").aggregate([
@@ -602,9 +601,9 @@ function deleteRepo(repoId, callbackfunc) {
                            },
                             {
                                 "$unwind": "$UseCases"
-                            },
+                            }
                             //{ "$out": "newInfor" }
-                        ], {allowDiskUse : true}, function (err, result) {
+                        ], function (err, result) {
                             if (err) throw err;
                             console.log("ReportPlace3");
                             console.log("*******Shown result for ModelInfo*******");
@@ -643,7 +642,7 @@ function deleteRepo(repoId, callbackfunc) {
                             callbackfunc(modelInfo);
 
                         });
-                    }, 900);
+                    }, 100);
                 });
             });                
         });

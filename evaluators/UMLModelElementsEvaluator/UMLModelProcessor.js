@@ -98,6 +98,87 @@
 			},
 			processLink: function(link){
 				return true;
+			},
+			identifyParents: function(element, relations){
+				var parents = [];
+				for(var i in relations){
+					var relation = relations[i];
+					if(relation['client'] && relation['client'] === eleemnt._id){
+						parents.push(relation['supplier']);
+					}
+				}
+				return parents;
+			},
+			identifyAncestors: function(element, relations){
+//				var Ancestors = [];
+				var visited = {};
+				var maxDepth = 0;
+				var searchAncestors = function(id, relations, depth){
+				if(maxDepth < depth){
+					maxDepth = depth;
+				}
+			    var ancestors = [];
+				for(var i in relations){
+					var relation = relations[i];
+					if(relation['suuplier'] && relation['supplier'] === id && !visited[relation['client']]){
+						ancestors.push(relation['client']);
+						visited[relation['client']] = 1;
+						var searchedAncestors = searchOffSpring(relation['client'], relations, depth++);
+						for(var i in searchedAncestors){
+							ancestors.push(searchedAncestors[i]);
+						}
+					}
+				}
+				return ancestors;
+				}
+				
+				return {
+					depth: maxDepth,
+					elements: searchAncestors(element._id, relations)
+				}
+				
+			},
+			identifyChildren: function(element, relations){
+				var children = [];
+				for(var i in relations){
+					var relation = relations[i];
+					if(relation['suuplier'] && relation['supplier'] === eleemnt._id){
+						parents.push(relation['client']);
+					}
+				}
+				return children;
+			},
+			identifyOffSprings: function(element, relations){
+				var visited = {};
+				var maxDepth = 0;
+				
+				var searchOffSprings = function(id, relations, depth){
+			    if(maxDepth < depth){
+			    	maxDepth = depth;
+			    }
+			    var offSprings = [];
+			    
+				for(var i in relations){
+					var relation = relations[i];
+					if(relation['suuplier'] && relation['supplier'] === id && !visited[relation['client']]){
+						offSprings.push(relation['client']);
+						visited[relation['client']] = 1;
+						var searchedOffSprings = searchOffSpring(relation['client'], relations, depth++);
+						for(var i in searchedOffSprings){
+							offSprings.push(searchedOffSprings[i]);
+						}
+					}
+				}
+				return offSprings;
+				}
+				
+				
+				var offSprings = searchOffSprings(element._id, relations, 0);
+				
+				return {
+					depth: maxDepth,
+					elements: offSprings
+				}
 			}
 	}
 })();
