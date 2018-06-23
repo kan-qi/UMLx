@@ -721,8 +721,8 @@ app.get('/reanalyseRepo', function (req, res){
 
 //					});
 				
-					res.redirect('/');
-//					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
+					// res.redirect('/');
+					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
 
 				});
 			});

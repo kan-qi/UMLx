@@ -17,7 +17,6 @@
 	var jp = require('jsonpath');
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
-		console.log("extract model info");
 		console.log(umlModelInfo);
 		mkdirp(umlModelInfo.OutputDir, function(err) {
 			console.log("create dir");
@@ -32,25 +31,15 @@
 				parser.parseString(data, function(err, xmiString) {
 			// determine what type xmi file it is.
 			var xmiParser = null;
-			var token = jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0];
-			if(token){
+			if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
 				xmiParser = eaParser;
 			}
-			else{
-				token = jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0];
-				if(token){
-					xmiParser = vpParser;
-				}
-				else{
-					token = jp.query(xmiString, '$..["kdm:Segment"]')[0];
-					if(token){
-						xmiParser = srcParser;
-					}
-					
-				}
+			else if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0]) {
+				xmiParser = vpParser;
 			}
-			console.log("segment");
-			console.log(token);
+			else if(jp.query(xmiString, '$..["kdm:Segment"]')[0]){
+				xmiParser = srcParser;
+			}
 			
 			if(xmiParser == null){
 				if(callbackfunc){
