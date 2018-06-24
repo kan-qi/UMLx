@@ -520,7 +520,7 @@
 //				}
 				var model = repoInfo.Models[i];
 				evaluateModel(model, function(){
-					console.log('model analysis is complete');
+					console.log('model analysis is complete!!!!!!!!!!');
 				})
 				
 //				var useCaseEmpirics = evaluateUseCase(useCase, model.umlModelName);
@@ -557,7 +557,7 @@
 				domainModelNum ++;
 				}
 			}
-			
+			console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 			// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
 			for(var i in evaluators){
 				var evaluator = evaluators[i];
@@ -577,6 +577,8 @@
 		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr},
 			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
 			{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
+
+		console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
 		
 		umlFileManager.writeFiles(repoInfo.OutputDir, files, function(err){
 			if(err) {
@@ -593,7 +595,9 @@
 						evaluator.analyseRepoEvaluation(repoInfo);
 					}
 				}
-				
+
+                console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+
 				umlFileManager.makeDir(repoInfo.ModelStatisticsOutputDir, function(result){
 					if(result){
 						//Needs to be upgraded soon

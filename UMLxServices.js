@@ -715,6 +715,7 @@ app.get('/reanalyseRepo', function (req, res){
 
 			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
 //				this repofo information only has repo structure but no actual data.
+				console.log("evaluated!!!!!!!");
 				
 				umlModelInfoManager.updateRepoInfo(repoInfo, function(){
 //					umlFileManager.deleteDir(function(result){
@@ -723,6 +724,9 @@ app.get('/reanalyseRepo', function (req, res){
 				
 					res.redirect('/');
 //					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
+
+					console.log("---------------------------------------------");
+					console.log("finished!!!!");
 
 				});
 			});
