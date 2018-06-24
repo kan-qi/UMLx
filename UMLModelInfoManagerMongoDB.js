@@ -819,19 +819,53 @@ function deleteRepo(repoId, callbackfunc) {
                 //function loadModel(model, repoInfo) {};
                 //use promise to construct the repo objects
 
+
                 repoInfo.Models.forEach(function (model) {
-                    queryModelInfo(model._id, repoId, function(modelInfo){
+                    queryModelInfo(model._id, repoId, function (modelInfo) {
                         repoInfo.UnusedModels.push(modelInfo);
                     });
                 });
 
-                setTimeout(function () {
+                setTimeout(function() {
                     repoInfo.Models = repoInfo.UnusedModels;
                     delete repoInfo.UnusedModels;
                     if (callbackfunc) {
                         callbackfunc(repoInfo);
                     }
                 }, 1000);
+
+
+                /*
+                var good = new Promise((resolve, reject) => {
+                    if(repoInfo) {
+
+                        resolve(function () {
+                            repoInfo.Models.forEach(function (model) {
+                                queryModelInfo(model._id, repoId, function (modelInfo) {
+                                    repoInfo.UnusedModels.push(modelInfo);
+                                });
+                            });
+                        });
+
+                    }else {
+                        reject("good error");
+                    }
+                } );
+
+                good
+                    .then(() => {
+                        setTimeout(function() {
+                            repoInfo.Models = repoInfo.UnusedModels;
+                            delete repoInfo.UnusedModels;
+                            if (callbackfunc) {
+                                callbackfunc(repoInfo);
+                            }
+                        }, 0);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                    */
 
                 /*
                 var modelArr = new Promise((resolve, reject) => {
