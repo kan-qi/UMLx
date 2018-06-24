@@ -103,8 +103,8 @@
 				var parents = [];
 				for(var i in relations){
 					var relation = relations[i];
-					if(relation['client'] && relation['client'] === eleemnt._id){
-						parents.push(relation['supplier']);
+					if(relation['Client'] && relation['Client'] === element._id){
+						parents.push(relation['Supplier']);
 					}
 				}
 				return parents;
@@ -120,10 +120,10 @@
 			    var ancestors = [];
 				for(var i in relations){
 					var relation = relations[i];
-					if(relation['suuplier'] && relation['supplier'] === id && !visited[relation['client']]){
-						ancestors.push(relation['client']);
-						visited[relation['client']] = 1;
-						var searchedAncestors = searchOffSpring(relation['client'], relations, depth++);
+					if(relation['Client'] && relation['Client'] === id && !visited[relation['Supplier']]){
+						ancestors.push(relation['Supplier']);
+						visited[relation['Supplier']] = 1;
+						var searchedAncestors = searchAncestors(relation['Supplier'], relations, depth++);
 						for(var i in searchedAncestors){
 							ancestors.push(searchedAncestors[i]);
 						}
@@ -142,8 +142,8 @@
 				var children = [];
 				for(var i in relations){
 					var relation = relations[i];
-					if(relation['suuplier'] && relation['supplier'] === eleemnt._id){
-						parents.push(relation['client']);
+					if(relation['Supplier'] && relation['Supplier'] === element._id){
+						children.push(relation['Client']);
 					}
 				}
 				return children;
@@ -160,10 +160,10 @@
 			    
 				for(var i in relations){
 					var relation = relations[i];
-					if(relation['suuplier'] && relation['supplier'] === id && !visited[relation['client']]){
-						offSprings.push(relation['client']);
-						visited[relation['client']] = 1;
-						var searchedOffSprings = searchOffSpring(relation['client'], relations, depth++);
+					if(relation['Supplier'] && relation['Supplier'] === id && !visited[relation['Client']]){
+						offSprings.push(relation['Client']);
+						visited[relation['Client']] = 1;
+						var searchedOffSprings = searchOffSprings(relation['Client'], relations, depth++);
 						for(var i in searchedOffSprings){
 							offSprings.push(searchedOffSprings[i]);
 						}

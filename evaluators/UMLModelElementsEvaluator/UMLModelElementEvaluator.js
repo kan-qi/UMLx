@@ -393,6 +393,7 @@
 				WeightedOperNum: 0,
 				MethodSize: 0,
 				InstanceVarNum: 0,
+				
 				EntityAnalyticsFileName : 'entityAnalytics.csv',
 				AttributeAnalyticsFileName :  'attributeAnalytics.csv',
 				OperationAnalyticsFileName : 'operationAnalytics.csv'
@@ -489,9 +490,15 @@
                element.numberOfDerivedClasses = derivedClasses.length;
                element.numberOfChildren = element.numberOfDerivedClasses;
                
+               console.log("derivedClasses");
+               console.log(derivedClasses);
+               
                var inheritedClasses = umlModelProcessor.identifyOffSprings(element, domainModelInfo.Generalizations);
                element.numberOfClassesInherited = inheritedClasses.elements.length;
-               element.depthInheritanceTree = inheritedClasses.elements.depth;
+               element.depthInheritanceTree = inheritedClasses.depth;
+               
+               console.log("inheritedClasses");
+               console.log(inheritedClasses);
                
                if(depthInheritanceTree < element.depthInheritanceTree){
             	   depthInheritanceTree = element.depthInheritanceTree;
@@ -503,6 +510,9 @@
             	   element.isTopLevelClass = true;
             	   topLevelClasses++;
 //            	   totalNumberOfChildrenOfTopLevelClasses +=  element.numberOfChildren;
+               }
+               else{
+            	   element.isTopLevelClass = false;
                }
 //               numberOfDerivedClasses += element.numberOfDerivedClasses;
                
@@ -519,7 +529,7 @@
                var associatingClasses = umlModelProcessor.identifyParents(element, domainModelInfo.Associations);
                element.numberOfAssociatingClasses = associatingClasses.length;
             
-               element.numberOfAssociationRelationships = element.umberOfAssociatedClasses+element.numberOfAssociatingClasses;
+               element.numberOfAssociationRelationships = element.numberOfAssociatedClasses+element.numberOfAssociatingClasses;
                
                
             // determine the usages relationships
@@ -1096,7 +1106,7 @@
 //		console.log("domain model");
 //		console.log(domainModelInfo);
 
-		var entityAnalyticsStr = entityNum == 0 ? "id,element,attributeNum,operationNum,instanceVarNum,externalOperNum,parameterNum,weightedOperNum,numberOfDerivedClasses,numberOfChildren,numberOfClassesInherited,depthInheritanceTree,numberOfDerivingClasses,isTopLevelClass,numberOfClassesInheritedFrom,numberOfInheritanceRelationships,numberOfAssociatedClasses,numberOfAssociatingClasses,numberOfAssociationRelationships,numberOfUsedClasses,numberOfUsingClasses,numberOfUsageRelationships\n" : "";
+		var entityAnalyticsStr = entityNum == 0 ? "id,element,attributeNum,operationNum,instanceVarNum,externalOperNum,parameterNum,weightedOperNum,numberOfDerivedClasses,numberOfChildren,numberOfClassesInherited,depthInheritanceTree,numberOfDerivingClasses,isTopLevelClass,numberOfClassesInheritedFrom,numberOfInheritanceRelationships,numberOfAssociatedClasses,numberOfAssociatingClasses,numberOfAssociationRelationships,numberOfUsedClasses,numberOfUsingClasses,numberOfUsageRelationships,couplingBetweenObjects\n" : "";
 		var attributeAnalyticsStr = attributeNum == 0 ? "id,attribute,type,element\n" : "";
 		var operationAnalyticsStr = operationNum == 0 ? "id,operation,element\n" : "";
 
@@ -1130,7 +1140,8 @@
 						+ element.numberOfAssociationRelationships + ","
 						+ element.numberOfUsedClasses + ","
 						+ element.numberOfUsingClasses + ","
-						+ element.numberOfUsageRelationships+"\n";
+						+ element.numberOfUsageRelationships+","
+						+ element.couplingBetweenObjects+"\n";
 					
 				for ( var j in element.Attributes) {
 					attributeNum++;

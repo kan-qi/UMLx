@@ -262,6 +262,14 @@
 					}
 				}
 				
+				
+
+				path['TransactionAnalytics'].TranLength = TL;
+				path['TransactionAnalytics'].total_degree = TD;
+				path['TransactionAnalytics'].TL = TL;
+				path['TransactionAnalytics'].DETs = DETs;
+				path['TransactionAnalytics'].TD = TD;
+				path['TransactionAnalytics'].arch_diff = archDiff;
 
 				path['TransactionAnalytics'].swti = swti;
 				path['TransactionAnalytics'].swtii = swtii;
@@ -338,7 +346,7 @@
 			if(callbackfunc){
 				var useCaseTransactionDump = dumpUseCaseTransactionsInfo(useCaseInfo);
 
-				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,arch_diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
 				 
 						useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName = "transactionAnalytics.csv";
 						var files = [{fileName : useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -420,7 +428,7 @@
 		if(callbackfunc){
 			 var modelTransactionInfoDump = dumpModelTransactionsInfo(modelInfo);
 
-				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,arch_diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "d,path,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
 	
 				modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 				var files = [{fileName : modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -505,7 +513,7 @@
 			if(callbackfunc){
 				var repoTransactionInfoDump = dumpRepoTransactionsInfo(repoInfo);
 
-				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,arch_diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
 	
 					repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 					var files = [{fileName : repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -561,8 +569,12 @@
 				useCaseInfo.Name+","+
 				transactionalOperation+","+ 
 				path['TransactionAnalytics'].TranLength+","+
-				path['TransactionAnalytics'].TotalDegree+"\n";
-				
+				path['TransactionAnalytics'].total_degree+","+
+				path['TransactionAnalytics'].TL+","+
+				path['TransactionAnalytics'].DETs+","+
+				path['TransactionAnalytics'].TD+","+
+				path['TransactionAnalytics'].arch_diff+"\n";
+	
 				}
 				
 			}

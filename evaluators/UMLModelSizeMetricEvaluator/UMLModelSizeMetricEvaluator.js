@@ -296,8 +296,8 @@
 			domainModelInfo["SizeMetricAnalytics"].ANPC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["ElementAnalytics"].ParameterNum/domainModelInfo["ElementAnalytics"].ClassNum;  //Average Number of parameters per class
 			domainModelInfo["SizeMetricAnalytics"].ANCAC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["ElementAnalytics"].AttributeNum/domainModelInfo["ElementAnalytics"].ClassNum; //Average number of class attributes per class
 			
-			for(var i in domainModelInfo.elements){
-				var element = domainModelInfo.eleemnts[i];
+			for(var i in domainModelInfo.Elements){
+				var element = domainModelInfo.Elements[i];
 				
 				element.NOCH = element.numberOfChildren; //Number of children
 				element.DIT = element.depthInheritanceTree; //Depth in inheritance tree
