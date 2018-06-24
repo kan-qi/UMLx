@@ -16,7 +16,6 @@ var config = require('./config'); // get our config file
 var cookieParser = require('cookie-parser');
 var nodemailer = require('nodemailer');
 var RScriptUtil = require('./utils/RScriptUtil.js');
-var EclipseUtil = require('./utils/EclipseUtil.js');
 var bodyParser = require('body-parser');
 var randomstring = require("randomstring");
 var mongo = require('mongodb');
@@ -206,7 +205,9 @@ app.get('/testgitapifollowing', function(req,response){
 });
 
 // END OF TEST GIT API
-
+app.get('/estimationPage',function(req,res){
+	res.render('estimationPage');
+});
 app.get('/signup',function(req,res){
 
 	if(req.query.tk!=null && req.query.tk!=undefined){
@@ -517,18 +518,6 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 				console.log(err);
 			}
 		});
-		
-		/*
-		 * for each upload, the zip files which contains the source code should be analysed by the eclipse to generate the kdm model.
-		 * 
-		 * for instance:
-		 * 
-		 * eclipseUtil.generateKDMModel(umlOtherPath, function(kdmPath){
-		 * 	console.log(kdmPath);
-		 * });
-		 * 
-		 */
-		
 	}
 	else if (req.files['uml-file'] != null) {
 		umlFilePath = req.files['uml-file'][0].path;
@@ -603,8 +592,6 @@ app.post('/uploadUseCaseFile', upload.fields([{name:'usecase-file',maxCount:1}, 
 		}, usecaseFilePath);
 	});
 })
-
-
 
 app.post('/uploadModelFile', upload.fields([{name:'model-file',maxCount:1}, {name:'repo-id', maxCount:1}]), function(req, res) {
 	console.log('/uploadModelFile');
@@ -719,27 +706,37 @@ app.get('/reanalyseRepo', function (req, res){
 
 //		console.log(refresh);
 		umlModelInfoManager.queryFullRepoInfo(repoId, function(repoInfo){
-//			console.log("start");
-//			console.log(repoInfo);
-//			console.log("done");		
+			// console.log("start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			// console.log(repoInfo);
+			// console.log("done!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			
 //   			var debug = require("./utils/DebuggerOutput.js");
 //   			debug.writeJson("new_full_repo_info_"+repoId, repoInfo);
 
+
 			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
 //				this repofo information only has repo structure but no actual data.
-				
+				console.log("evaluated!!!!!!!");
+				console.log(repoInfo);
+
+
 				umlModelInfoManager.updateRepoInfo(repoInfo, function(){
 //					umlFileManager.deleteDir(function(result){
 
 //					});
-				
+					console.log("---------------------------------------------");
+					console.log("finished!!!!");
+
 					res.redirect('/');
-//					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
+					//res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
+
+
 
 				});
+
 			});
 //		});
+
 	});
 })
 
@@ -974,8 +971,7 @@ app.get('/queryModelInfo', function(req, res){
 
 	// });
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-		console.log("Now is good!1");
-		//console.log(modelAnalytics);
+		console.log("---------------modelInfo------------------");
 		console.log(modelInfo);
 		var uploadsFile = modelInfo.fileUrl;
 		uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
@@ -1406,6 +1402,10 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
 app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');
+});
+
+app.get('/estimatePage', function(req, res){
+	res.render('estimationPage');
 });
 
 // TODO use this API to populate data on UI

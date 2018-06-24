@@ -335,12 +335,9 @@ function deleteRepo(repoId, callbackfunc) {
                     console.log("updating useCaseInfo");
                     
               });*/
+            console.log(modelInfo._id);
              for(var i in useCaseArray){
-                
-//            	console.log(modelInfo._id.substring(1,12));
                 useCaseArray[i].model_id = modelInfo._id;
-//                useCaseArray[i]._id = useCaseArray[i]._id;
-                
                 console.log("USe Case: "+i+" ID: "+ useCaseArray[i]._id);
                 //deleteUseCase(repoId, modelInfo._id, useCaseArray[i]._id);
                 db.collection("useCaseInfo").remove({_id: useCaseArray[i]._id}, function(err, res) 
@@ -392,6 +389,8 @@ function deleteRepo(repoId, callbackfunc) {
     }
 
     function updateRepoInfo(repo, callbackfunc){
+        console.log(repo);
+        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
         MongoClient.connect(url, function(err, db) {
             if (err) throw err;
             
@@ -564,87 +563,64 @@ function deleteRepo(repoId, callbackfunc) {
             if (err) throw err;
             //var modelQuery = getModelQuery(modelId,repoId);
             //var projections = getModelQueryProjections(modelId, repoId);
-            db.collection("newUseCaseInfo").remove({}, function(err, res){
-                if (err) throw err;
-                db.collection("useCaseInfo").find({ "model_id": modelId }, function (err, result) {
+            db.collection("modelInfo").aggregate([
+                  {
+                      "$match":
+                      {
+                          "_id": modelId
+                      }
+                  },
 
-                    if (err) throw err;
+                 {
+                     "$lookup": {
+                         "from": "domainModelInfo",
+                         "localField": "_id",
+                         "foreignField": "model_id",
+                         "as": "DomainModels"
+                     }
+                 },
+                 {
+                     "$lookup": {
+                         "from": "useCaseInfo",
+                         "localField": "_id",
+                         "foreignField": "model_id",
+                         "as": "UseCases"
+                     }
+                 },
+                  {
+                      "$unwind": "$UseCases"
+                  },
+                  //{ "$out": "newInfor" }
+              ]).toArray(function (err, result) {
+                  if (err) throw err;
+                  db.close();
 
-                    result.forEach(function (doc) {
-                        db.collection("newUseCaseInfo").insert(doc);
-                        // console.log("NNNNNNNNNNNNNNNNNNNNNNNNNNN");
-                    });
-                    setTimeout(function () {
-                        db.collection("modelInfo").aggregate([
-                            {
-                                "$match":
-                                {
-                                    "_id": modelId
-                                }
-                            },
+                  //restore the ids
+                  var modelInfo = result[0];
+                  var arr = [];
+                  result.forEach(function (element) {
+                      arr.push(element.UseCases);
+                  });
 
-                           {
-                               "$lookup": {
-                                   "from": "domainModelInfo",
-                                   "localField": "_id",
-                                   "foreignField": "model_id",
-                                   "as": "DomainModels"
-                               }
-                           },
-                           {
-                               "$lookup": {
-                                   "from": "newUseCaseInfo",
-                                   "localField": "_id",
-                                   "foreignField": "model_id",
-                                   "as": "UseCases"
-                               }
-                           },
-                            {
-                                "$unwind": "$UseCases"
-                            }
-                            //{ "$out": "newInfor" }
-                        ], function (err, result) {
-                            if (err) throw err;
-                            console.log("ReportPlace3");
-                            console.log("*******Shown result for ModelInfo*******");
-                            db.close();
+                  modelInfo.UseCases = arr;
+                  for (var i in modelInfo.UseCases) {
+                      var useCase = modelInfo.UseCases[i];
+                      if (useCase) {
+                          useCase._id = useCase._id.replace(/\[.*\]/g, "");
+                      }
+                  }
 
-                            //restore the ids
-                            var modelInfo = result[0];
-                            console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
-                            console.log(modelInfo);
-                            console.log("number of result: " + result.length);
-                            var arr = [];
-                            //console.log(modelInfo.UseCases.length);
-                            result.forEach(function (element) {
-                                arr.push(element.UseCases);
-                            });
-                            console.log("number of arr: " + arr.length);
+                  if (modelInfo.DomainModels) {
+                      var domainModel = modelInfo.DomainModels[0];
+                      delete modelInfo.DomainModels;
+                      delete domainModel._id;
+                      modelInfo.DomainModel = domainModel;
+                  }
+                    //console.log("---------------modelInfo----------------");
+                    //console.log(modelInfo);
+                  callbackfunc(modelInfo);
 
-                            modelInfo.UseCases = arr;
-
-                            for (var i in modelInfo.UseCases) {
-                                var useCase = modelInfo.UseCases[i];
-                                if (useCase) {
-                                    useCase._id = useCase._id.replace(/\[.*\]/g, "");
-                                }
-                            }
-                            console.log("ReportPlace5");
-                            //console.log(modelInfo);
-                            //console.log(modelInfo.UseCases.length);
-                            if (modelInfo.DomainModels && modelInfo.DomainModels) {
-                                var domainModel = modelInfo.DomainModels;
-                                delete modelInfo.DomainModels;
-                                delete domainModel._id;
-                                modelInfo.DomainModel = domainModel;
-                            }
-                            //console.log("KKKKKKKKKKKKKKKKKKKKKKKK");       
-                            callbackfunc(modelInfo);
-
-                        });
-                    }, 100);
-                });
-            });                
+              });              
         });
     }
     
@@ -727,20 +703,20 @@ function deleteRepo(repoId, callbackfunc) {
 //    {
 //        MongoClient.connect(url, function(err, db)
 //        {
-//			
+//
 //            if (err) throw err;
 //            var repo_id = new mongo.ObjectID(repoId);
-//            
+//
 //       	 db.collection("repos").findOne({_id: repo_id}, function(err, repoInfo) {
-//			 console.log(repoInfo);
-//			if (err) throw err;
-//			
-//			if(!repoInfo){
-//				callbackfunc(false);
-//				return;
-//			}
-//			
-//           
+// 			 console.log(repoInfo);
+// 			if (err) throw err;
+//
+// 			if(!repoInfo){
+// 				callbackfunc(false);
+// 				return;
+// 			}
+//
+//
 //            db.collection("modelInfo").aggregate([
 //            	{
 //    				"$match":
@@ -748,7 +724,7 @@ function deleteRepo(repoId, callbackfunc) {
 //    				   "repo_id":repo_id
 //    				}
 //    			},
-//            
+//
 //               {
 //                   "$lookup": {
 //                       "from": "domainModelInfo",
@@ -756,9 +732,6 @@ function deleteRepo(repoId, callbackfunc) {
 //                       "foreignField": "model_id",
 //                       "as": "DomainModels"
 //                   }
-//               },
-//               {
-//            	   "$unwind": '$DomainModels'
 //               },
 //               {
 //                   "$lookup": {
@@ -769,189 +742,228 @@ function deleteRepo(repoId, callbackfunc) {
 //                   }
 //               },
 //               {
-//            	   "$unwind": '$UseCases'
+//                   "$unwind": '$UseCases'
 //               }
-//               
-//            ], {
-//                allowDiskUse: true
-//            }, function(err, result) {
-//               if (err) throw err;
-//               console.log("*******Shown result for ModelInfo*******");
-//               db.close();
-////               
-////   			var debug = require("./utils/DebuggerOutput.js");
-////   			debug.writeJson("full_repo_info_"+repoId, result);
 //
-//             repoInfo.Models = [];  
-////               restore the ids
-//   			for(var i in result){
-//               var modelInfo = result[i];
-//               for(var i in modelInfo.UseCases){
-//            	   var useCase = modelInfo.UseCases[i];
-//            	   if(useCase){
-//                	   useCase._id = useCase._id.replace(/\[.*\]/g, "");
-//                   }
-//               }
-//               
-//               	console.log("queried model info");
-//               	console.log(modelInfo);
-//               
-////               var domainModel = modelInfo.DomainModels[0];
-//               if(modelInfo.DomainModels && modelInfo.DomainModels[0]){
-//            	   domainModel = modelInfo.DomainModels[0];
-//            	   delete domainModel._id;
-//            	   delete modelInfo.DomainModels;
-//            	   modelInfo.DomainModel = domainModel;
-//               }
-//               
-//               repoInfo.Models.push(modelInfo);
-//   			} 
-//               
-//               callbackfunc(repoInfo);
+//            ]).toArray(function(err, result) {
+//                 if (err) throw err;
+//                 console.log("*******Shown result for ModelInfo*******");
+//                 db.close();
+// //
+//                 repoInfo.Models = [];
+// //               restore the ids
+//
+//                 var modelInfo = result[0];
+//                 var arr = [];
+//                 result.forEach(function (element) {
+//                     arr.push(element.UseCases);
+//                 });
+//
+//                 modelInfo.UseCases = arr;
+//                 for (var i in modelInfo.UseCases) {
+//                     var useCase = modelInfo.UseCases[i];
+//                     if (useCase) {
+//                         useCase._id = useCase._id.replace(/\[.*\]/g, "");
+//                     }
+//                 }
+//
+//                for(var i in result){
+//                    var modelInfo = result[i];
+//                    for(var i in modelInfo.UseCases){
+//                        var useCase = modelInfo.UseCases[i];
+//                        if(useCase){
+//                            useCase._id = useCase._id.replace(/\[.*\]/g, "");
+//                        }
+//                    }
+//
+//                    console.log("queried model info");
+//                    console.log(modelInfo);
+//
+// //               var domainModel = modelInfo.DomainModels[0];
+//                    if(modelInfo.DomainModels && modelInfo.DomainModels[0]){
+//                        domainModel = modelInfo.DomainModels[0];
+//                        delete domainModel._id;
+//                        delete modelInfo.DomainModels;
+//                        modelInfo.DomainModel = domainModel;
+//                    }
+//
+//                    repoInfo.Models.push(modelInfo);
+//                }
+//
+//                callbackfunc(repoInfo);
 //            });
 //       	 });
-//		});
-//	}
+// 		});
+// 	}
     
     
-    function queryFullRepoInfo(repoId, callbackfunc)
-    {
+    function queryFullRepoInfo(repoId, callbackfunc) {
 //    	console.log("hello");
-        MongoClient.connect(url, function(err, db)
-        {
-			
+        MongoClient.connect(url, function (err, db) {
+
             if (err) throw err;
             var repo_id = new mongo.ObjectID(repoId);
-            
-       	queryRepoInfo(repoId, function(repoInfo) {
-			 console.log(repoInfo);
-			if (err) throw err;
-			
-			if(!repoInfo){
-				callbackfunc(false);
-				return;
-			}
-			
-			//use promise to construct the repo objects
-			function loadModel(model_id, repoInfo){
-			    return new Promise((resolve, reject) => {
-            db.collection("modelInfo").aggregate([
-            	{
-    				"$match":
-    				{
-    				   "_id":model_id
-    				}
-    			},
-            
-               {
-                   "$lookup": {
-                       "from": "domainModelInfo",
-                       "localField": "_id",
-                       "foreignField": "model_id",
-                       "as": "DomainModels"
-                   }
-               },
-               {
-                   "$lookup": {
-                       "from": "newUseCaseInfo",
-                       "localField": "_id",
-                       "foreignField": "model_id",
-                       "as": "UseCases"
-                   }
-               }
-               
-            ], function(err, result) {
-               if (err) reject(err);
 
-               console.log("hello");
-               console.log("*******Shown result for ModelInfo*******");
-               db.close();
-               
-//               
-//   			var debug = require("./utils/DebuggerOutput.js");
-//   			debug.writeJson("full_repo_info_"+repoId, result);
+            queryRepoInfo(repoId, function (repoInfo) {
+                console.log(repoInfo);
+                if (err) throw err;
 
-//             repoInfo.Models = [];  
-//               restore the ids
-   			if(result && result[0]){
-               var modelInfo = result[0];
-               for(var i in modelInfo.UseCases){
-            	   var useCase = modelInfo.UseCases[i];
-            	   if(useCase){
-                	   useCase._id = useCase._id.replace(/\[.*\]/g, "");
-                   }
-               }
-               
-               
-//               var domainModel = modelInfo.DomainModels[0];
-               if(modelInfo.DomainModels){
-            	   domainModel = modelInfo.DomainModels[0];
-            	   delete modelInfo.DomainModels;
-            	   if(domainModel){
-            	   delete domainModel._id;
-            	   modelInfo.DomainModel = domainModel;
-            	   }
-               } 
-//               else {
-//            		   modelInfo.DomainModel = {
-//            				   _id: "domainModel_["+modelInfo._id+"]",
-//            				   Elements: [],
-//            				   model_id: modelInfo._id
-//            		   }
-//               }
-               
+                if (!repoInfo) {
+                    callbackfunc(false);
+                    return;
+                }
 
-              	console.log("queried model info");
-              	console.log(modelInfo);	
-               
-               repoInfo.UnfoldedModels.push(modelInfo);
-   			} 
-               
-//               callbackfunc(repoInfo);
-               resolve();
+                repoInfo.UnusedModels = [];
+                console.log("1111111111111111111111111111111111111111111");
+                console.log(repoInfo.UnusedModels);
+                //function loadModel(model, repoInfo) {};
+                //use promise to construct the repo objects
+
+
+                repoInfo.Models.forEach(function (model) {
+                    queryModelInfo(model._id, repoId, function (modelInfo) {
+                        repoInfo.UnusedModels.push(modelInfo);
+                    });
+                });
+
+                setTimeout(function() {
+                    repoInfo.Models = repoInfo.UnusedModels;
+                    delete repoInfo.UnusedModels;
+                    if (callbackfunc) {
+                        callbackfunc(repoInfo);
+                    }
+                }, 1000);
+
+
+                /*
+                var good = new Promise((resolve, reject) => {
+                    if(repoInfo) {
+
+                        resolve(function () {
+                            repoInfo.Models.forEach(function (model) {
+                                queryModelInfo(model._id, repoId, function (modelInfo) {
+                                    repoInfo.UnusedModels.push(modelInfo);
+                                });
+                            });
+                        });
+
+                    }else {
+                        reject("good error");
+                    }
+                } );
+
+                good
+                    .then(() => {
+                        setTimeout(function() {
+                            repoInfo.Models = repoInfo.UnusedModels;
+                            delete repoInfo.UnusedModels;
+                            if (callbackfunc) {
+                                callbackfunc(repoInfo);
+                            }
+                        }, 0);
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                    */
+
+                /*
+                var modelArr = new Promise((resolve, reject) => {
+                    repoInfo.Models.map(model => {
+
+                        db.collection("modelInfo").aggregate([{
+                            "$match":
+                                {
+                                    "_id": model._id
+                                }
+                        },
+                            {
+                                "$lookup": {
+                                    "from": "domainModelInfo",
+                                    "localField": "_id",
+                                    "foreignField": "model_id",
+                                    "as": "DomainModels"
+                                }
+                            },
+                            {
+                                "$lookup": {
+                                    "from": "useCaseInfo",
+                                    "localField": "_id",
+                                    "foreignField": "model_id",
+                                    "as": "UseCases"
+                                }
+                            },
+                            {
+                                "$unwind": "$UseCases"
+                            }]).toArray((err, result) => {
+                            if (err) {
+                                throw(err);
+                            }
+
+                            console.log("hello");
+                            console.log("*******Shown result for ModelInfo*******");
+                            db.close();
+
+                            var modelInfo = null;
+                            if (result && result[0]) {
+                                modelInfo = result[0];
+                                var arr = [];
+                                result.forEach(function (element) {
+                                    arr.push(element.UseCases);
+                                });
+
+                                modelInfo.UseCases = arr;
+
+                                for (var i in modelInfo.UseCases) {
+                                    var useCase = modelInfo.UseCases[i];
+                                    if (useCase) {
+                                        useCase._id = useCase._id.replace(/\[.*\]/g, "");
+                                    }
+                                }
+
+                                if (modelInfo.DomainModels) {
+                                    domainModel = modelInfo.DomainModels[0];
+                                    delete modelInfo.DomainModels;
+                                    if (domainModel) {
+                                        delete domainModel._id;
+                                        modelInfo.DomainModel = domainModel;
+                                    }
+                                }
+
+                                console.log("queried model info");
+                                console.log(modelInfo);
+                                repoInfo.UnusedModels.push(modelInfo);
+                            }
+                        });
+
+                    });
+                    if (repoInfo.UnusedModels) {
+                        console.log(repoInfo.UnusedModels);
+                        resolve();
+                    } else {
+                        reject("Map failed!");
+                    }
+                });
+
+
+                modelArr
+                    .then(() => {
+                        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+                        console.log(repoInfo.UnusedModels);
+                        repoInfo.Models = repoInfo.UnusedModels;
+                        delete repoInfo.UnusedModels;
+                        if (callbackfunc) {
+                            callbackfunc(repoInfo);
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    })
+
+                */
             });
-				});
-				}
-			
-			
-			repoInfo.UnfoldedModels = [];
-			
-		return Promise.all(repoInfo.Models.map(model=>{
-	    	return loadModel(model._id,repoInfo);
-		})).then(
-				function(){
-				return new Promise((resolve, reject) => {
-					setTimeout(function(){	
-					
-//					umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
-					repoInfo.Models = repoInfo.UnfoldedModels;
-					delete repoInfo.UnfoldedModels;
-						
-					if(callbackfunc){
-					
-						callbackfunc(repoInfo);
-					}
-					
-					 
-					resolve();
-					
-//				});
-					
-				}, 0);
-				});
-			}
-		
-		).catch(function(err){
-				console.log(err);
-				if(callbackfunc){
-					callbackfunc(false);
-				}
-			});
-		
-			
-       	 });
-		});
-	}
+        });
+    }
 
 
 	//testing queryRepoInfoByPage 

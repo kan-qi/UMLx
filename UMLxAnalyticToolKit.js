@@ -67,7 +67,7 @@ function analyzeUML() {
 					// console.log("Successfully extract model Info and saved them to output Directory: " + outputDir);
 				})
 			});
-		});
+	    });
 	});
 
 	return outputDir;
