@@ -706,31 +706,37 @@ app.get('/reanalyseRepo', function (req, res){
 
 //		console.log(refresh);
 		umlModelInfoManager.queryFullRepoInfo(repoId, function(repoInfo){
-//			console.log("start");
-//			console.log(repoInfo);
-//			console.log("done");		
+			// console.log("start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+			// console.log(repoInfo);
+			// console.log("done!!!!!!!!!!!!!!!!!!!!!!!!!!!");
 			
 //   			var debug = require("./utils/DebuggerOutput.js");
 //   			debug.writeJson("new_full_repo_info_"+repoId, repoInfo);
 
+
 			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
 //				this repofo information only has repo structure but no actual data.
 				console.log("evaluated!!!!!!!");
-				
+				console.log(repoInfo);
+
+
 				umlModelInfoManager.updateRepoInfo(repoInfo, function(){
 //					umlFileManager.deleteDir(function(result){
 
 //					});
-				
-					// res.redirect('/');
-					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
-
 					console.log("---------------------------------------------");
 					console.log("finished!!!!");
 
+					res.redirect('/');
+					//res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
+
+
+
 				});
+
 			});
 //		});
+
 	});
 })
 

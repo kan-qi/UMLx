@@ -584,7 +584,7 @@
 			if(err) {
 			 	console.log(err);
 			 	if(callbackfunc){
-			    	callbackfunc(false);
+			    	callbackfunc("false umlFileManager.writeFiles");
 				} 
 		    }
 			else {
@@ -604,22 +604,23 @@
 						console.log("apply statistical analysis on the repo output evaluation");
 						var command = './Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo.ModelStatisticsOutputDir+'" "."';
 							console.log(command);
-							RScriptExec.runRScript(command,function(result){
-								if (!result) {
-									if(callbackfunc){
-										callbackfunc(false);
-									}
-									return;
-								}
+
+							// RScriptExec.runRScript(command,function(result){
+							// 	if (!result) {
+							// 		if(callbackfunc){
+							// 			callbackfunc("false umlFileManager.makeDir");
+							// 		}
+							// 		return;
+							// 	}
 								if(callbackfunc){
 									callbackfunc(repoInfo);
 								}
-							});
+							// });
 						
 					}
 					else {
 						if(callbackfunc){
-							callbackfunc(false);
+							callbackfunc("false umlFileManager.makeDir else");
 						}
 					}
 					
