@@ -12,16 +12,18 @@
 	var activityDiagramParser= require("./ActivityDiagramParser.js");
 	var analysisDiagramParser= require("./AnalysisDiagramParser.js");
 	var useCaseDiagramParser = require("./UseCaseDiagramParser.js");
-        var inheritanceStats = {
-                'depth': 0,
-                'numInheritedFrom': 0,
-                'numDerivedClass': 0,
-                'coupling': 0,
-                'children': {},
-                'topLevelClasses': 0,
-                'numOfChildren': {},
-                'tree':{},
-        };
+	var visualSprintDiagramParser = require("./VisualSprintDiagramParser.js");
+	
+//        var inheritanceStats = {
+//                'depth': 0,
+//                'numInheritedFrom': 0,
+//                'numDerivedClass': 0,
+//                'coupling': 0,
+//                'children': {},
+//                'topLevelClasses': 0,
+//                'numOfChildren': {},
+//                'tree':{},
+//        };
 
 	/*
 	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
@@ -223,27 +225,29 @@
 			DomainElementsBySN[standardizeName(XMIClass['$']['name'])] = domainElement;
 //			model.DomainModel.push(domainElement);
 			
-
-            var XMIGeneralizations = jp.query(XMIClass, '$.generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Generalization\')]');
-            
-            for (i in XMIGeneralizations) {
-                inheritanceStats['coupling']++;
-                inheritanceStats['numInheritedFrom']++;
-                inheritanceStats['tree'][XMIClass['$']['xmi:id']] = XMIGeneralizations[i]['$']['general'];
-                if (XMIGeneralizations[i]['$']['general'] in inheritanceStats['numOfChildren']) {
-                    inheritanceStats['numOfChildren'][XMIGeneralizations[i]['$']['general']]++;
-                } else {
-                    inheritanceStats['numOfChildren'][XMIGeneralizations[i]['$']['general']] = 1;
-                }
-                
-                var generalization = {
-						id: XMIGeneralizations[i]['$']['general'],
-						type: "generalization",
-						Supplier: XMIClass['$']['xmi:id'],
-						Client: XMIGeneralizations[i]['$']['general']
-				}
-				Model.DomainModel.Generalizations.push(generalization);
-            }
+			/*
+			 * the logic has been implemented in another place.
+			 */
+//            var XMIGeneralizations = jp.query(XMIClass, '$.generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Generalization\')]');
+//            
+//            for (i in XMIGeneralizations) {
+//                inheritanceStats['coupling']++;
+//                inheritanceStats['numInheritedFrom']++;
+//                inheritanceStats['tree'][XMIClass['$']['xmi:id']] = XMIGeneralizations[i]['$']['general'];
+//                if (XMIGeneralizations[i]['$']['general'] in inheritanceStats['numOfChildren']) {
+//                    inheritanceStats['numOfChildren'][XMIGeneralizations[i]['$']['general']]++;
+//                } else {
+//                    inheritanceStats['numOfChildren'][XMIGeneralizations[i]['$']['general']] = 1;
+//                }
+//                
+//                var generalization = {
+//						id: XMIGeneralizations[i]['$']['general'],
+//						type: "generalization",
+//						Supplier: XMIClass['$']['xmi:id'],
+//						Client: XMIGeneralizations[i]['$']['general']
+//				}
+//				Model.DomainModel.Generalizations.push(generalization);
+//            }
             
 //          if (XMIGeneralizations.length == 0) {
 //              inheritanceStats['topLevelClasses']++;
@@ -331,7 +335,7 @@
 //		for(var i in DomainElementsBySN){
 //			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
 //		}
-        Model.DomainModel.InheritanceStats = inheritanceStats;
+//        Model.DomainModel.InheritanceStats = inheritanceStats;
 		
 		var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
 //		var DomainUsagesByID = [];
@@ -405,6 +409,8 @@
 //		}
 		
 		useCaseDiagramParser.parseUseCaseDiagram(XMIUseCases, XMIUMLModel, Model);
+		
+		visualSprintDiagramParser.parseUserStoryDiagram(XMIUseCases, XMIUMLModel, Model);
 		
 //		return Model;
 		

@@ -21,9 +21,9 @@
 	function parseUserStoryDiagram(XMIUseCases, XMIUMLModel, Model){
 
 		//create a catelog for the actors.
-		var XMIScrumEpics = jp.query(XMIUMLModel, '$..\'Scrum:epic\'[?(@[\'$\'][\'base_UseCase\'])]');
-		var XMIScrumUserStories = jp.query(XMIUMLModel, '$..\'Scrum:userstory\'[?(@[\'$\'][\'base_Class\'])]');
-		var XMIScrumTasks = jp.query(XMIUMLModel, '$..\'Scrum:task\'[?(@[\'$\'][\'base_Class\'])]');
+		var XMIScrumEpics = jp.query(XMIUMLModel, '$..[\'Scrum:epic\'][?(@[\'$\'][\'base_UseCase\'])]');
+		var XMIScrumUserStories = jp.query(XMIUMLModel, '$..[\'Scrum:userstory\'][?(@[\'$\'][\'base_Class\'])]');
+		var XMIScrumTasks = jp.query(XMIUMLModel, '$..[\'Scrum:task\'][?(@[\'$\'][\'base_Class\'])]');
 		var XMIDependencies = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\'] == \'uml:Dependency\')]');
 		
 		var epicsByID = {};
@@ -41,8 +41,17 @@
 		
 		for(var i in XMIScrumTasks){
 			var XMIScrumTask = XMIScrumTasks[i];
+			
+			//identify the name by id
+			var XMIScrumTaskClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\'] == \''+XMIScrumTask['$']['base_Class']+'\')]');
+			
+			if(!XMIScrumTaskClasses[0]){
+				continue;
+			}
+			
 			var task = {
 					_id:  XMIScrumTask['$']['base_Class'],
+					Name: XMIScrumTaskClasses[0]['$']['name'],
 					ProjectManagerEstimate: XMIScrumTask['$']['Project_Manager_Estimate__Person-Hours_'],
 					EstimatedDuration: XMIScrumTask['$']['Estimated_Duration__work_days_'],
 					ActualEffort: XMIScrumTask['$']['Actual__Person-hours_'],
@@ -55,14 +64,24 @@
 		
 		var userStoryByID = {};
 		for(var i in XMIScrumUserStories){
-			var XMIScrumUserStory = XMIScrumUserStroies[i];
+			var XMIScrumUserStory = XMIScrumUserStories[i];
+			
+			//identify the name by id
+			var XMIScrumUserStoryClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\'] == \''+XMIScrumUserStory['$']['base_Class']+'\')]');
+			
+			if(!XMIScrumUserStoryClasses[0]){
+				continue;
+			}
+			
+			
 			var userStory = {
-					_id:  XMIScrumTask['$']['base_Class'],
-					ProjectManagerEstimate: XMIScrumTask['$']['Project_Manager_Estimate__Person-Hours_'],
-					EstimatedDuration: XMIScrumTask['$']['Estimated_Duration__work_days_'],
-					ActualEffort: XMIScrumTask['$']['Actual__Person-hours_'],
-					DeveloperEstimate: XMIScrumTask['$']['Developer_Estimate__Person-hours_'],
-					Priority:  XMIScrumTask['$']['Priority'],
+					_id:  XMIScrumUserStory['$']['base_Class'],
+					Name: XMIScrumUserStoryClasses[0]['$']['name'],
+					ProjectManagerEstimate: XMIScrumUserStory['$']['Project_Manager_Estimate__Person-Hours_'],
+					EstimatedDuration: XMIScrumUserStory['$']['Estimated_Duration__work_days_'],
+					ActualEffort: XMIScrumUserStory['$']['Actual__Person-hours_'],
+					DeveloperEstimate: XMIScrumUserStory['$']['Developer_Estimate__Person-hours_'],
+					Priority:  XMIScrumUserStory['$']['Priority'],
 					Tasks: []
 			}
 		
@@ -71,20 +90,26 @@
 			
 		}
 		
+
+//		console.log("identifying story classes");
+//		console.log(userStoryByID);
+//		
+		
 		for(var i in XMIDependencies){
 			var XMIDependency = XMIDependencies[i];
-			var supplierID = XMIDependency['$']['supplier'];
-			var clientID = XMIDependency['$']['client'];
+			var supplierID = XMIDependency['$']['client'];
+			var clientID = XMIDependency['$']['supplier'];
 			
 			var userStory = userStoryByID[supplierID];
-			if(userStory){
 			var task = tasksByID[clientID];
+			if(userStory && task){
 			userStory.Tasks.push(task);
 			}
 			
 			var epic = epicsByID[supplierID];
+			var userStory = userStoryByID[clientID];
 			if(epic){
-				var userStory.Epic = epic;
+				userStory.Epic = epic;
 			}
 			
 		}
@@ -95,8 +120,8 @@
 			Model.UserStories.push(userStoryByID[i]);
 		}
 		
-		console.log("user story output");
-		console.log(Model);
+//		console.log("user story output");
+//		console.log(Model.UserStories[0].Tasks);
 		
 	}
 
