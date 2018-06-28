@@ -26,7 +26,19 @@
 		var XMIScrumTasks = jp.query(XMIUMLModel, '$..\'Scrum:task\'[?(@[\'$\'][\'base_Class\'])]');
 		var XMIDependencies = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\'] == \'uml:Dependency\')]');
 		
+		var epicsByID = {};
+		for(var i in XMIScrumEpics){
+			var XMIScrumEpic = XMIScrumEpics[i];
+			var epic = {
+					_id: XMIScrumEpic['$']['xmi:id'],
+					name: XMIScrumEpic['$']['name']
+			}
+			
+			epicsByID[epic._id] = epic;
+		}
+		
 		var tasksByID = {};
+		
 		for(var i in XMIScrumTasks){
 			var XMIScrumTask = XMIScrumTasks[i];
 			var task = {
@@ -65,9 +77,26 @@
 			var clientID = XMIDependency['$']['client'];
 			
 			var userStory = userStoryByID[supplierID];
+			if(userStory){
 			var task = tasksByID[clientID];
-			userStoryTasks.push(task);
+			userStory.Tasks.push(task);
+			}
+			
+			var epic = epicsByID[supplierID];
+			if(epic){
+				var userStory.Epic = epic;
+			}
+			
 		}
+		
+		Model.UserStories = [];
+		
+		for(var i in userStoryByID){
+			Model.UserStories.push(userStoryByID[i]);
+		}
+		
+		console.log("user story output");
+		console.log(Model);
 		
 	}
 
