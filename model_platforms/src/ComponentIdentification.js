@@ -6,10 +6,10 @@
  * This script relies on KDM and Java model 
  * 
  * The goal is the establish the control flow between the modules...
+ * Identify the boundary....
  * Identify the sytem components.....
  * Establish the control flow between the components
  * Identify the stimuli.
- * Identify the boundary.
  */
 (function() {
 	var fs = require('fs');

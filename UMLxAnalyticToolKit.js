@@ -136,10 +136,7 @@ function analyzeUML() {
 	    });
 	});
 	console.log(repoId);
-
-
-    
-
+	
 	return outputDir;
 }
 

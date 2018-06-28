@@ -7,7 +7,6 @@
  * Identify the system boundary
  * Identify the sytem components.....
  * Identify the stimuli.
- * Identify the boundary.
  */
 (function() {
 	var fs = require('fs');
