@@ -52,10 +52,10 @@
 			var task = {
 					_id:  XMIScrumTask['$']['base_Class'],
 					Name: XMIScrumTaskClasses[0]['$']['name'],
-					ProjectManagerEstimate: XMIScrumTask['$']['Project_Manager_Estimate__Person-Hours_'],
-					EstimatedDuration: XMIScrumTask['$']['Estimated_Duration__work_days_'],
-					ActualEffort: XMIScrumTask['$']['Actual__Person-hours_'],
-					DeveloperEstimate: XMIScrumTask['$']['Developer_Estimate__Person-hours_'],
+					ProjectManagerEstimate: Number(XMIScrumTask['$']['Project_Manager_Estimate__Person-Hours_']),
+					EstimatedDuration: Number(XMIScrumTask['$']['Estimated_Duration__work_days_']),
+					ActualEffort: Number(XMIScrumTask['$']['Actual__Person-hours_']),
+					DeveloperEstimate: Number(XMIScrumTask['$']['Developer_Estimate__Person-hours_']),
 					
 			}
 			
@@ -77,11 +77,11 @@
 			var userStory = {
 					_id:  XMIScrumUserStory['$']['base_Class'],
 					Name: XMIScrumUserStoryClasses[0]['$']['name'],
-					ProjectManagerEstimate: XMIScrumUserStory['$']['Project_Manager_Estimate__Person-Hours_'],
-					EstimatedDuration: XMIScrumUserStory['$']['Estimated_Duration__work_days_'],
-					ActualEffort: XMIScrumUserStory['$']['Actual__Person-hours_'],
-					DeveloperEstimate: XMIScrumUserStory['$']['Developer_Estimate__Person-hours_'],
-					Priority:  XMIScrumUserStory['$']['Priority'],
+					ProjectManagerEstimate: Number(XMIScrumUserStory['$']['Project_Manager_Estimate__Person-Hours_']),
+					EstimatedDuration: Number(XMIScrumUserStory['$']['Estimated_Duration__work_days_']),
+					ActualEffort: Number(XMIScrumUserStory['$']['Actual__Person-hours_']),
+					DeveloperEstimate: Number(XMIScrumUserStory['$']['Developer_Estimate__Person-hours_']),
+					Priority:  Number(XMIScrumUserStory['$']['Priority']),
 					Tasks: []
 			}
 		
@@ -115,9 +115,11 @@
 		}
 		
 		Model.UserStories = [];
+		var UserStoriesByName = {};
 		
 		for(var i in userStoryByID){
 			Model.UserStories.push(userStoryByID[i]);
+			UserStoriesByName[userStoryByID[i].Name] = userStoryByID[i];
 		}
 		
 //		console.log("user story output");
