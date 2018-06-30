@@ -805,14 +805,14 @@ app.get('/reanalyseModel', function (req, res){
 //					console.log("=============repoInfo==========");
 //					console.log(repoInfo);
                     //res.render('modelDetail', {modelInfo:modelInfo, repo_id: repoId});
-                    console.log("Now is good!1");
+                    console.log("Re ana Now is good!1");
                     //console.log(modelAnalytics);
                     console.log(modelInfo);
                     var uploadsFile = modelInfo.fileUrl;
                     uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
                     console.log(uploadsFile);
                     res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
-                    console.log("Now is good!2");
+                    console.log("Re ana Now is good!2");
 
 //				});
                 });
