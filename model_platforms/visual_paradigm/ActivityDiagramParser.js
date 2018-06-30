@@ -9,7 +9,21 @@
         return name.replace(/\s/g, '').toUpperCase();
     }
 
-    function parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN) {
+    function parseActivityDiagram(XMIUMLModel, Model, callbackfunc) {
+    	
+    	var XMIActivityDiagrams = [];
+    	
+    	for(var i in XMIActivityDiagrams){
+    	
+    	var UseCase = {
+				_id: XMIInteraction['$']['xmi:id'],
+				Name: XMIInteraction['$']['name'],
+				PrecedenceRelations : [],
+				Activities : [],
+				OutputDir : Model.OutputDir+"/"+XMIInteraction['$']['xmi:id'],
+				AccessDir : Model.AccessDir+"/"+XMIInteraction['$']['xmi:id'],
+		}
+    	
         console.log("Parsing activity diagram");
         var Activities = [];
         var PrecedenceRelations = [];
@@ -129,10 +143,18 @@
                 PrecedenceRelations.push(XMIEdgeByStandard);
             }
         }
+        
         console.log("Finished parsing activity diagram");
         UseCase.Activities = Activities;
         UseCase.PrecedenceRelations = PrecedenceRelations;
         UseCase.Partitions = Partitions;
+        
+        Model.UseCases.push(UseCase);
+    	}
+    	
+    	if(callbackfunc){
+    		callbackfunc(Model);
+    	}
     }
 
     module.exports = {

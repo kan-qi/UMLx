@@ -107,47 +107,128 @@
 			}
 	}*/
 	
-	function extractUserSystermInteractionModel(filePath, callbackfunc) {
+	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
 		
-		fs.readFile(filePath, function(err, data) {
-			parser.parseString(data, function(err, xmiString) {
-		
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("XMIString", xmiString);
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("XMIString", xmiString);
 			
-		//var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
+//		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		
-//		$.store.book[?(@.title =~ /^.*Sword.*$/)]
-//		console.log("hello");
+		var Model = {
+				Actors:[],
+				Roles:[],
+				UseCases: [],
+				DomainModel: {
+					Elements: [],
+					Usages: [],
+					Realizations:[],
+					Associations: [],
+//					Inheritances: [],
+					Generalizations: [],
+					OutputDir : ModelOutputDir+"/domainModel",
+					AccessDir : ModelAccessDir+"/domainModel",
+					DiagramType : "class_diagram",
+                    InheritanceStats: null
+				},
+				OutputDir: ModelOutputDir,
+				AccessDir: ModelAccessDir
+				
+		};
 		
-		//create a catalog for the different types of the elements.
-/*		var XMICustomProfiles = jp.query(XMIUMLModel, '$..["thecustomprofile:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
-		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:control"][?(@["$"])]').map((obj) => {obj.type="control"; return obj;}));
-		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:boundary"][?(@["$"])]').map((obj) => {obj.type="boundary"; return obj;}));
 		
-		var CustomProfiles = {};
-//		console.log("custom profiles");
-//		console.log(XMICustomProfiles);
-//		debug.writeJson("XMICustomProfiles", XMICustomProfiles);
+		// constructing the domain model.
+		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		
-		for(var i in XMICustomProfiles){
-//			var CustomProfile = {};
-			var XMICustomProfile = XMICustomProfiles[i];
-			console.log(XMICustomProfile);
-//			var id = "";
-			if(XMICustomProfile["$"]['base_Lifeline']){
-				CustomProfiles[XMICustomProfile["$"]['base_Lifeline']] = XMICustomProfile.type;
+//      var Model = {
+//				Elements: [],
+//				Edges:[]
+//		};
+		
+		
+		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+		var XMIClassesByStandardizedName = [];
+		for(var i in XMIClasses){
+			var XMIClass = XMIClasses[i];
+			
+			var XMIAttributes = jp.query(XMIClass, '$.ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
+			var attributes = new Array();
+			
+			for(var i in XMIAttributes){
+				var XMIAttribute = XMIAttributes[i];
+				var types = jp.query(XMIAttribute, '$.type[?(@[\'$\'][\'xmi:idref\'])]');
+				var type = "EAJava_void";
+				if(types && types.length > 0){
+					type = types[0]['$']['xmi:idref'];
+				}
+				
+				console.log(XMIAttribute);
+				var attribute = {
+						Name: XMIAttribute['$']['name'],
+						Type: type,
+						isStatic: XMIAttribute['$']['isStatic']
+				}
+				attributes.push(attribute);
 			}
-			else if(XMICustomProfile["$"]['base_InstanceSpecification']){
-				CustomProfiles[XMICustomProfile["$"]['base_InstanceSpecification']] = XMICustomProfile.type;
+			
+			var XMIOperations = jp.query(XMIClass, '$.ownedOperation[?(@[\'$\'][\'xmi:id\'])]');
+			var operations = new Array();
+
+			for(var i in XMIOperations){
+				var XMIOperation = XMIOperations[i];
+				var XMIParameters = jp.query(XMIOperation, '$.ownedParameter[?(@[\'$\'][\'xmi:id\'])]');
+				var parameters = [];
+				for(var j in XMIParameters){
+					var XMIParameter = XMIParameters[j];
+					var parameter = {
+							Name: XMIParameter['$']['name'],
+							Type: XMIParameter['$']['type']
+					}
+					parameters.push(parameter);
+				}
+				
+				var operation = {
+						Name: XMIOperation['$']['name'],
+						Visibility: XMIOperation['$']['visibility'],
+						Parameters: parameters
+				}
+				operations.push(operation);
 			}
-//			CustomProfile.type = "entity";
-//			CustomProfiles[id] = "entity";
+			
+			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
+			
+          var XMIClassesByStandard = {
+				_id: XMIClass['$']['xmi:id'],
+				Name: XMIClass['$']['name'],
+				Operations: operations,
+				Attributes: attributes
+			};
+				Model.DomainModel.Elements.push(XMIClassesByStandard);
 		}
-		
-		console.log(CustomProfiles);
-*/		
-		//create a catelog for the actors.
+	
+    
+     var XMIActivities = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\')]');
+	   console.log(XMIActivities);
+	   var XMIEdges = [];
+	   for(var i in XMIActivities){
+			 var XMIActivity = XMIActivities[i];		
+			 XMIEdges = XMIEdges.concat(jp.query(XMIActivity, '$..["edge"][?(@["$"])]').map((obj) => {obj.type="uml:ControlFlow"; return obj;}));	
+			 XMIEdges = XMIEdges.concat(jp.query(XMIActivity, '$..["edge"][?(@["$"])]').map((obj) => {obj.type="uml:ObjectFlow"; return obj;}));		
+		}
+		     console.log(XMIEdges.length);
+	
+	   for(var i in XMIEdges){
+			var XMIEdge = XMIEdges[i];   
+			var Edge = {
+				_id: XMIEdge['$']['xmi:id'],
+				Type:XMIEdge['$']['xmi:type'],
+				Source:XMIEdge['$']['source'],
+				Target:XMIEdge['$']['target']
+			}
+			Model.DomainModel.Associations.push(Edge);
+		}
+	   
+	   
+	 //create a catelog for the actors.
 		var XMIActors = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
 		var ActorsByID = {};
 		for(var i in XMIActors){
@@ -157,10 +238,11 @@
 					_id: XMIActor['$']['xmi:id']
 			}
 		}
+		
 				
-		var Model = {
-				Interactions: []
-		};
+//		var Model = {
+//				Interactions: []
+//		};
 		
 		//console.log(XMIUMLModel);
 
@@ -176,29 +258,17 @@
 			//DomainElementsByID[domainElement._id] = domainElement;
 		}
 		console.log(XMIClasses);
-
-		var XMIInteractions = jp.query(xmiString, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Interaction\')]');
 		
-		for(var i in XMIInteractions){
-			var XMIInteraction = XMIInteractions[i];
-			
-			var Interaction = {
-					_id: XMIInteraction['$']['xmi:id'],
-					Name: XMIInteraction['$']['name'],
-					PrecedenceRelations : [],
-					Activities : []
-			}
-			sequenceDiagramParser.parseSequenceDiagram(Interaction, XMIInteraction, XMIClassesByStandardizedName);
-			Model.Interactions.push(Interaction);
-		}
+
+		sequenceDiagramParser.parseSequenceDiagram(Interaction, XMIInteraction, XMIClassesByStandardizedName);
+
+		
 		
 		
 		if(callbackfunc){
 			callbackfunc(Model);
 		}
 		
-			});
-		});
 	}
 	
 	module.exports = {
