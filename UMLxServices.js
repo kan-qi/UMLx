@@ -559,19 +559,6 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 				}
 				umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
 					console.log("model analysis complete");
-<<<<<<< HEAD
-					umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
-		//				console.log(modelInfo);
-						umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-							console.log("=============repoInfo==========");
-							console.log(repoInfo);
-							res.render('mainPanel', {repoInfo:repoInfo});
-							// res.redirect('/');
-						}, true);
-					});
-				});
-	//			console.log(modelInfo);
-=======
 
                     umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
                         //				console.log(modelInfo);
@@ -604,7 +591,6 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 					}, true);
 				});
 */
->>>>>>> 889768d7e6f4e8800593423d75c7758843e46356
 			});
 		});
 	}

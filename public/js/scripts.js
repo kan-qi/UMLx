@@ -602,28 +602,6 @@ function openFile() {
 
 
     if (url.endsWith(".csv")) {
-<<<<<<< HEAD
-        //display_csv_data(url);
-
-        $.ajax({
-            type: 'GET',
-            url: 'fetchCSVDocument?DocFolder=' + url,
-
-            success: function (response) {
-                console.log("BBBBBBBBBB");
-                console.log(response);
-                // $('#overlay-frame .modal-title')[0].innerHTML = "Report";
-                // $("#overlay-frame .modal-body").html("<pre>" + response+ "</pre>");
-
-            },
-            error: function () {
-                console.log("fail");
-                //alert("There was an error");
-                $('#overlay-frame .modal-title')[0].innerHTML = "Report";
-                $("#overlay-frame .modal-body").html("Error");
-            }
-        });
-=======
         display_csv_data(url);
 
         // $.ajax({
@@ -664,7 +642,6 @@ function openFile() {
         //         $("#overlay-frame .modal-body").html("Error");
         //     }
         // });
->>>>>>> 889768d7e6f4e8800593423d75c7758843e46356
 
         return false;
     }
