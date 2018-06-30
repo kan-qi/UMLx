@@ -1848,7 +1848,7 @@ function deleteRepo(repoId, callbackfunc) {
 	        //fall back in case uuid is not generated on client end
             console.log("uuid was blank, adding uuid on server side");
 
-            // TODO:  what should we do?? generate a new uuid on server or discard data or insert blank?
+            //TODO:  what should we do?? generate a new uuid on server or discard data or insert blank?
 	        uuid = uuidv4();
         }
         data = {

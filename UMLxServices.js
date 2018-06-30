@@ -484,6 +484,7 @@ app.post('/inviteUser', upload.fields([{name:'email',maxCount:1}]),  function (r
 })
 app.get('/surveyAnalytics', function (req, res){
     // console.log(req);
+	console.log("=================arrive here====================");
     umlModelInfoManager.saveSurveyAnalyticsData(req.query.uuid, req.query.ip, req.query.page);
     // console.log(data)
     // res.sendStatus(200);
@@ -491,17 +492,17 @@ app.get('/surveyAnalytics', function (req, res){
 
 
 app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
-	console.log(req.body);
+	//console.log(req.body);
 	var formInfo = req.body;
-	console.log("==========umlSurveyFiles=============");
-    console.log(umlSurveyFiles);
+	//console.log("==========umlSurveyFiles=============");
+    //console.log(umlSurveyFiles);
 
     // save the file names in DB
     formInfo.uml_file = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
     formInfo.uml_other = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
 
-    console.log('=================formInfo==================');
-    console.log(formInfo);
+    //console.log('=================formInfo==================');
+    //console.log(formInfo);
 
 	umlModelInfoManager.saveSurveyData(formInfo);
 	res.redirect("thankYou");
@@ -578,7 +579,7 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
                             //res.render('mainPanel', {repoInfo:repoInfo2, totalRec: totalRec});
                             // setTimeout(function(){
                             // 	console.log("=============refresh=============");
-							 //res.redirect('/');
+							 res.redirect('/');
                             // }, 1000);
                             //window.location.reload(true);
                         });
@@ -795,18 +796,29 @@ app.get('/reanalyseModel', function (req, res){
 				res.end("error");
 				return;
 			}
-			umlEvaluator.evaluateModel(extractedModelInfo, function(){
+			umlEvaluator.evaluateModel(extractedModelInfo, function(modelInfo2){
 				console.log("model analysis complete");
-			});
-//			console.log(modelInfo);
-			umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
+
+                umlModelInfoManager.updateModelInfo(modelInfo2, repoId, function(modelInfo){
 //				console.log(modelInfo);
 //				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 //					console.log("=============repoInfo==========");
 //					console.log(repoInfo);
-					res.render('modelDetail', {modelInfo:modelInfo, repo_id: repoId});
+                    //res.render('modelDetail', {modelInfo:modelInfo, repo_id: repoId});
+                    console.log("Now is good!1");
+                    //console.log(modelAnalytics);
+                    console.log(modelInfo);
+                    var uploadsFile = modelInfo.fileUrl;
+                    uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
+                    console.log(uploadsFile);
+                    res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
+                    console.log("Now is good!2");
+
 //				});
+                });
 			});
+//			console.log(modelInfo);
+
 		});
 	});
 })

@@ -43,75 +43,75 @@ function pagination_call(repoId, currentPage) {
 }
 
 
-function model_file_upload_fnc() {
-    var formData = new FormData($('#model-file-submit-form')[0]);
-    
-    console.log("Good!!!");
-    // console.log("formData: " + formData);
-    //formData.append('uml-other', document.getElementById('uml-other'));
-    //console.log("formData: " + formData);
-
-    console.log('====start====');
-    ajax_test = $.ajax({
-        type: 'POST',
-        url: "uploadUMLFile",
-        //async: false,
-        cache: false,
-        processData: false, // Don't process the files
-        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-        data: formData,
-        enctype: 'multipart/form-data',
-        success: function (response) {
-            onsole.log('====end11111====');
-            console.log(response);
-        },
-        error: function () {
-            console.log("fail");
-            //console.log(err);
-            setTimeout(function () {
-                location.reload(true);
-            }, 3000);
-
-
-            // $.ajax({
-            //     type: 'GET',
-            //     //async: false,
-            //     url: "uploadUMLFileCompany",
-            //     success: function (response) {
-            //         console.log(response);
-            //
-            //     },
-            //     error: function () {
-            //         console.log("fail");
-            //         location.reload();
-            //         //console.log(err);
-            //         //alert("There was an error");
-            //     }
-            // });
-
-            //alert("There was an error 123456");
-        }
-    });
-
-    // console.log('====yunxing1====');
-    // $.when(ajax_test).done(function(){
-    //     $.ajax({
-    //         type: 'GET',
-    //         //async: false,
-    //         url: "uploadUMLFileCompany",
-    //         success: function (response) {
-    //             console.log(response);
-    //
-    //         },
-    //         error: function () {
-    //             console.log("fail");
-    //             console.log(err);
-    //             alert("There was an error");
-    //         }
-    //     });
-    // });
-    // console.log('====end====');
-}
+// function model_file_upload_fnc() {
+//     var formData = new FormData($(/'#model-file-submit-form/')[0]);
+//
+//     console.log("Good!!!");
+//     // console.log("formData: " + formData);
+//     //formData.append('uml-other', document.getElementById('uml-other'));
+//     //console.log("formData: " + formData);
+//
+//     console.log('====start====');
+//     ajax_test = $.ajax({
+//         type: 'POST',
+//         url: "uploadUMLFile",
+//         //async: false,
+//         cache: false,
+//         processData: false, // Don't process the files
+//         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+//         data: formData,
+//         enctype: 'multipart/form-data',
+//         success: function (response) {
+//             onsole.log('====end11111====');
+//             console.log(response);
+//         },
+//         error: function () {
+//             console.log("fail");
+//             //console.log(err);
+//             setTimeout(function () {
+//                 location.reload(true);
+//             }, 3000);
+//
+//
+//             // $.ajax({
+//             //     type: 'GET',
+//             //     //async: false,
+//             //     url: "uploadUMLFileCompany",
+//             //     success: function (response) {
+//             //         console.log(response);
+//             //
+//             //     },
+//             //     error: function () {
+//             //         console.log("fail");
+//             //         location.reload();
+//             //         //console.log(err);
+//             //         //alert("There was an error");
+//             //     }
+//             // });
+//
+//             //alert("There was an error 123456");
+//         }
+//     });
+//
+//     // console.log('====yunxing1====');
+//     // $.when(ajax_test).done(function(){
+//     //     $.ajax({
+//     //         type: 'GET',
+//     //         //async: false,
+//     //         url: "uploadUMLFileCompany",
+//     //         success: function (response) {
+//     //             console.log(response);
+//     //
+//     //         },
+//     //         error: function () {
+//     //             console.log("fail");
+//     //             console.log(err);
+//     //             alert("There was an error");
+//     //         }
+//     //     });
+//     // });
+//     // console.log('====end====');
+// }
 
 function highlight_diagram_element(idString, elementType, diagramType) {
 
@@ -209,6 +209,35 @@ function send_analytics_data(uuid, clientIpAddress, pageNumber) {
         }
     });
 }
+
+
+// function send_all_survey_data() {
+//
+//     var formData = new FormData($('')[0]);
+//
+//     console.log(formData);
+//     console.log('====start====');
+//     ajax_test = $.ajax({
+//         type: 'POST',
+//         url: "uploadSurveyData",
+//         //async: false,
+//         cache: false,
+//         processData: false, // Don't process the files
+//         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+//         data: formData,
+//         enctype: 'multipart/form-data',
+//         success: function (response) {
+//             onsole.log('====end11111====');
+//             console.log(response);
+//         },
+//         error: function () {
+//             console.log("fail");
+//         }
+//     });
+// }
+
+
+
 
 
 function model_survey_file_upload_fnc() {
@@ -390,6 +419,41 @@ function query_model_detail_func() {
 
     return false;
 }
+
+
+function re_analyze_model_func() {
+    var url = $(this).attr("href");
+    console.log(url);
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        success: function (response) {
+            console.log(response);
+            $("#display-panel").html("");
+            $("#display-panel").append(response);
+            $('.model-info-content a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var breadCrumb = $('ol.breadcrumb')[0];
+                if (breadCrumb.children.length == 3) {
+                    breadCrumb.removeChild(breadCrumb.children[2]);
+                }
+                console.dir(e);
+            });
+
+            display();
+            //createCharts();
+            alert("Reanalyse Model Finished!");
+        },
+        error: function () {
+            console.log("fail");
+            alert("There was an error");
+        }
+    });
+
+    return false;
+}
+
 
 function delete_use_case_func() {
     //  alert('delete use case func');
@@ -1189,6 +1253,9 @@ $(document).ready(function () {
 
     });
 
+    $(document).on('click', '#reanalyse-model', re_analyze_model_func);
+
+
     $('.nav.nav-tabs').tab();
 
     $('form#sign-up').submit(signUpFormSubmit);
@@ -1776,6 +1843,11 @@ function createHistogram(dataList, max) {
             for (i = 0; i < maxLength; i++) {
                 categoriesList.push(i.toString());
             }
+
+            console.log("====================categoriesList=====================");
+            console.log(categoriesList);
+
+
             Highcharts.chart('chart-1', {
                 chart: {
                     type: 'column'

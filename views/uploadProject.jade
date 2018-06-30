@@ -22,7 +22,7 @@ html
     include banner
     .container
       h2  Project Details 
-      form#model-file-submit-form.form-horizontal(novalidate='', onsubmit='model_file_upload_fnc()', method='post', action='/')
+      form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadUMLFile', enctype='multipart/form-data')
         // Page1
         #page1
           .alert.alert-info
