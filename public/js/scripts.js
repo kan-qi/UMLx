@@ -47,29 +47,70 @@ function model_file_upload_fnc() {
     var formData = new FormData($('#model-file-submit-form')[0]);
     
     console.log("Good!!!");
-    console.log("formData: " + formData);
+    // console.log("formData: " + formData);
     //formData.append('uml-other', document.getElementById('uml-other'));
     //console.log("formData: " + formData);
-    
-    $.ajax({
+
+    console.log('====start====');
+    ajax_test = $.ajax({
         type: 'POST',
         url: "uploadUMLFile",
+        //async: false,
         cache: false,
         processData: false, // Don't process the files
         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
         data: formData,
         enctype: 'multipart/form-data',
         success: function (response) {
+            onsole.log('====end11111====');
             console.log(response);
         },
         error: function () {
             console.log("fail");
-            console.log(err);
-            alert("There was an error");
+            //console.log(err);
+            setTimeout(function () {
+                location.reload(true);
+            }, 3000);
+
+
+            // $.ajax({
+            //     type: 'GET',
+            //     //async: false,
+            //     url: "uploadUMLFileCompany",
+            //     success: function (response) {
+            //         console.log(response);
+            //
+            //     },
+            //     error: function () {
+            //         console.log("fail");
+            //         location.reload();
+            //         //console.log(err);
+            //         //alert("There was an error");
+            //     }
+            // });
+
+            //alert("There was an error 123456");
         }
     });
-    
 
+    // console.log('====yunxing1====');
+    // $.when(ajax_test).done(function(){
+    //     $.ajax({
+    //         type: 'GET',
+    //         //async: false,
+    //         url: "uploadUMLFileCompany",
+    //         success: function (response) {
+    //             console.log(response);
+    //
+    //         },
+    //         error: function () {
+    //             console.log("fail");
+    //             console.log(err);
+    //             alert("There was an error");
+    //         }
+    //     });
+    // });
+    // console.log('====end====');
 }
 
 function highlight_diagram_element(idString, elementType, diagramType) {
@@ -561,6 +602,7 @@ function openFile() {
 
 
     if (url.endsWith(".csv")) {
+<<<<<<< HEAD
         //display_csv_data(url);
 
         $.ajax({
@@ -581,6 +623,48 @@ function openFile() {
                 $("#overlay-frame .modal-body").html("Error");
             }
         });
+=======
+        display_csv_data(url);
+
+        // $.ajax({
+        //     type: 'GET',
+        //     url: 'fetchCSV?DocFolder=' + url,
+        //
+        //
+        //     //display_csv_data(url);
+        //
+        //     success: function (response) {
+        //         console.log(response);
+        //
+        //         console.log("=========started=============");
+        //         var parsedCSV = d3.csv.parseRows(response);
+        //         var container = d3.select("body")
+        //             .append("table")
+        //
+        //             .selectAll("tr")
+        //             .data(parsedCSV).enter()
+        //             .append("tr")
+        //
+        //             .selectAll("td")
+        //             .data(function(d) { return d; }).enter()
+        //             .append("td")
+        //             .text(function(d) { return d; });
+        //
+        //         console.log("=========finished=============");
+        //
+        //         $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+        //         $("#overlay-frame .modal-body").html("<pre>" + response + "</pre>");
+        //
+        //
+        //     },
+        //     error: function () {
+        //         console.log("fail");
+        //         //alert("There was an error");
+        //         $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+        //         $("#overlay-frame .modal-body").html("Error");
+        //     }
+        // });
+>>>>>>> 889768d7e6f4e8800593423d75c7758843e46356
 
         return false;
     }
@@ -629,11 +713,11 @@ function display_csv_data(url) {
     console.log(url);
     $.ajax({
         type: 'GET',
-        url: url,
+        url: 'fetchDocument?DocFolder=' + url,
         success: function (response) {
             console.log(response);
 
-            var parsedCSV = d3.csvParseRows(response);
+            var parsedCSV = d3.csv.parseRows(response);
             $('.modal-title')[0].innerHTML = "Report";
             $("#overlay-frame .modal-body").html("");
             var container = d3.select("#overlay-frame .modal-body")
@@ -2086,8 +2170,10 @@ function buildTable(data) {
     var tempUrl = [];
     var storeUrl = [];
     var kb = [];
-    //console.log("Data");
-    // console.log(data);
+
+    console.log("Data");
+    console.log(data);
+
     var displayUrl = "";
     for (var i = 0; i < data.length; i++) {
         keys[i] = data[i].url;
@@ -2179,12 +2265,35 @@ function buildTable(data) {
 
         for (var i = 0; i < newKeys.length; i++) {
             if (type[newKeys[i]] === "File") {
+
                 // console.log(newKeys[i]);
                 var path = parentUrl + "/" + newKeys[i];
                 // console.log("path: " + path);
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'><a class='fileLink' href='" + path + "'>" +
-                    newKeys[i] +
-                    "</a></td><td>file</td>";
+                if (newKeys[i].endsWith(".csv")) {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/csv.jpg'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
+                else if (newKeys[i].endsWith(".txt")) {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
+                else if (newKeys[i].endsWith(".svg")) {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
+                else if (newKeys[i].endsWith(".json")) {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
+                else {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
                 out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
             } else {
                 continue;

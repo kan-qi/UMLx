@@ -23,6 +23,8 @@ var MongoClient = mongo.MongoClient;
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
+
+//var csv=require('csvtojson')
 //var removeDir = require('some-custom-fs');
 //var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 
@@ -555,8 +557,9 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 					res.end("error");
 					return;
 				}
-				umlEvaluator.evaluateModel(modelInfo, function(){
+				umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
 					console.log("model analysis complete");
+<<<<<<< HEAD
 					umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
 		//				console.log(modelInfo);
 						umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
@@ -568,11 +571,50 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 					});
 				});
 	//			console.log(modelInfo);
+=======
+
+                    umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
+                        //				console.log(modelInfo);
+                        umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo2){
+                            console.log("=============repoInfo==========");
+                            console.log(repoInfo2);
+                            console.log("=============repoInfoNumber==========");
+                            var totalRec = repoInfo2.Models.length;
+                            console.log(totalRec);
+                            console.log("=============render==========");
+                            //res.render('mainPanel', {repoInfo:repoInfo2, totalRec: totalRec});
+                            // setTimeout(function(){
+                            // 	console.log("=============refresh=============");
+							 //res.redirect('/');
+                            // }, 1000);
+                            //window.location.reload(true);
+                        });
+                    });
+				});
+	//			console.log(modelInfo);
+
+/*
+				umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
+	//				console.log(modelInfo);
+					umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+						console.log("=============repoInfo==========");
+						console.log(repoInfo);
+						res.render('mainPanel', {repoInfo:repoInfo});
+						//res.redirect('/');
+					}, true);
+				});
+*/
+>>>>>>> 889768d7e6f4e8800593423d75c7758843e46356
 			});
 		});
 	}
 
 });
+
+app.get('/uploadUMLFileCompany', function(req, res){
+	console.log('============gettoweb============');
+	res.redirect('/');
+})
 
 
 //This funtion is same as loadEmpiricalUsecaseDataForRepo, except we just take file from user input and pass it down.
@@ -1408,7 +1450,11 @@ app.get('/surveyData', function(req, res){
 
 // to handle post redirect to home page
 app.post('/', function(req, res){
-	res.redirect('/')
+	console.log('==============shenmeshihou==============');
+	setTimeout(function () {
+        res.redirect('/');
+    }, 10000);
+
 });
 
 //Vibhanshu
@@ -1527,13 +1573,17 @@ console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Cu
 						}
 				        
 						repoInfo.requestUUID = requestUUID;
-						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
+							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise,
+							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
                 	});
 				});
 
 			} else {
                 repoInfo.requestUUID = requestUUID;
-				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
+					repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
+					pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
 			}
 
 		});
