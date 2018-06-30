@@ -231,7 +231,7 @@
 	}
 
 //	function parseSequenceDiagram(Interaction, XMIInteraction, XMIClassesByStandardizedName, callback){
-	function parseSequenceDiagram(XMIUMLModel, XMIClassesByStandardizedName, Model, callback){
+	function parseSequenceDiagram(XMIUMLModel, XMIClassesByStandardizedName, Model){
 		//var XMIInteractions = jp.query(XMICollaboration, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Interaction\')]');
 	
 		//console.log(XMIInteractions);
@@ -390,10 +390,6 @@
 
 		Model.UseCases.push(Interaction);
 
-		}
-		
-		if(callbackfunc){
-			callbackfunc(Model);
 		}
 		
 	}

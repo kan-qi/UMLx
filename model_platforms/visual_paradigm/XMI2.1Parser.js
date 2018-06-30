@@ -9,7 +9,7 @@
 	var jp = require('jsonpath');
 	
 	var sequenceDiagramParser= require("./SequenceDiagramParser.js");
-	//var activityDiagramParser= require("./ActivityDiagramParser.js");
+	var activityDiagramParser= require("./ActivityDiagramParser.js");
 	//var analysisDiagramParser= require("./AnalysisDiagramParser.js");
 	//var useCaseDiagramParser = require("./UseCaseDiagramParser.js");	
 	
@@ -109,8 +109,6 @@
 	
 	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
 		
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("XMIString", xmiString);
 			
 //		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		
@@ -135,15 +133,13 @@
 				
 		};
 		
-		
 		// constructing the domain model.
-		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
+		var	XMIUMLModel = xmiString['uml:Model'];
 		
 //      var Model = {
 //				Elements: [],
 //				Edges:[]
 //		};
-		
 		
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
 		var XMIClassesByStandardizedName = [];
@@ -233,10 +229,14 @@
 		var ActorsByID = {};
 		for(var i in XMIActors){
 			var XMIActor = XMIActors[i];
-			ActorsByID[XMIActor['$']['xmi:id']] = {
+			var actor = {
 					Name: XMIActor['$']['name'],
 					_id: XMIActor['$']['xmi:id']
 			}
+			
+			ActorsByID[XMIActor['$']['xmi:id']] = actor;
+			
+			Model.Actors.push(actor);
 		}
 		
 				
@@ -246,29 +246,29 @@
 		
 		//console.log(XMIUMLModel);
 
-		var XMIClasses = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
-		var XMIClassesByStandardizedName = [];
-		//var DomainElementsByID = [];
+//		var XMIClasses = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+//		var XMIClassesByStandardizedName = [];
+//		//var DomainElementsByID = [];
+//		
+//		for(var i in XMIClasses){
+//			var XMIClass = XMIClasses[i];
+//
+//			//var domainElement = createDomainElement(XMIClass);
+//			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
+//			//DomainElementsByID[domainElement._id] = domainElement;
+//		}
+//		console.log(XMIClasses);
 		
-		for(var i in XMIClasses){
-			var XMIClass = XMIClasses[i];
+		activityDiagramParser.parseActivityDiagram(XMIUMLModel, Model);
+		
+		sequenceDiagramParser.parseSequenceDiagram(XMIUMLModel, XMIClassesByStandardizedName, Model);
 
-			//var domainElement = createDomainElement(XMIClass);
-			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
-			//DomainElementsByID[domainElement._id] = domainElement;
-		}
-		console.log(XMIClasses);
-		
-
-		sequenceDiagramParser.parseSequenceDiagram(Interaction, XMIInteraction, XMIClassesByStandardizedName);
-
-		
-		
-		
 		if(callbackfunc){
 			callbackfunc(Model);
 		}
 		
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("XMI_model_output_visual_paradigm", Model);
 	}
 	
 	module.exports = {

@@ -9,31 +9,45 @@
         return name.replace(/\s/g, '').toUpperCase();
     }
 
-    function parseActivityDiagram(XMIUMLModel, Model, callbackfunc) {
+    function parseActivityDiagram(XMIUMLModel, Model) {
     	
-    	var XMIActivityDiagrams = [];
+    	var XMIActivityDiagrams = jp.query(XMIUMLModel, '$..[\'uml:Diagram\'][?(@[\'$\'][\'diagramType\']==\'ActivityDiagram\')]');
     	
     	for(var i in XMIActivityDiagrams){
+    		
+    	XMIActivityDiagram = XMIActivityDiagrams[i];
     	
     	var UseCase = {
-				_id: XMIInteraction['$']['xmi:id'],
-				Name: XMIInteraction['$']['name'],
+				_id: XMIActivityDiagram['$']['xmi:id'],
+				Name: XMIActivityDiagram['$']['name'],
 				PrecedenceRelations : [],
 				Activities : [],
-				OutputDir : Model.OutputDir+"/"+XMIInteraction['$']['xmi:id'],
-				AccessDir : Model.AccessDir+"/"+XMIInteraction['$']['xmi:id'],
+				OutputDir : Model.OutputDir+"/"+XMIActivityDiagram['$']['xmi:id'],
+				AccessDir : Model.AccessDir+"/"+XMIActivityDiagram['$']['xmi:id'],
 		}
     	
+    	var XMIActivitiesReferenced = jp.query(XMIActivityDiagram, '$..[\'uml:DiagramElement\'][?(@[\'$\'][\'subject\'])]');
+
         console.log("Parsing activity diagram");
         var Activities = [];
         var PrecedenceRelations = [];
         var Partitions = [];
 
-        var XMIActivities = jp.query(XMIUseCase, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\')]');
+    	
+    	for(var j in XMIActivitiesReferenced){
+    		
+    	var XMIActivityReferenced = XMIActivitiesReferenced[j];
+    	
+//        var XMIActivities = jp.query(XMIUseCase, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\')]');
+        
+        var XMIActivities = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+XMIActivityReferenced['$']['subject']+'\')]');
 
-        for (var i in XMIActivities) {
+        if(!XMIActivities[0]){
+        	continue;
+        }
+        
             console.log("Found an activity");
-            var XMIActivity = XMIActivities[i];
+            var XMIActivity = XMIActivities[0];
             var XMINodes = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\']==\'uml:CallBehaviorAction\')]');
             for (var i in XMINodes) {
                 var XMINode = XMINodes[i];
@@ -150,10 +164,6 @@
         UseCase.Partitions = Partitions;
         
         Model.UseCases.push(UseCase);
-    	}
-    	
-    	if(callbackfunc){
-    		callbackfunc(Model);
     	}
     }
 
