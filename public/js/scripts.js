@@ -550,6 +550,7 @@ function dump_model_evaluation_for_use_cases_func(){
 
 function openFile() {
     var url = $(this).attr("href");
+    console.log("AAAAAAAAAAA"+url);
     //var url = $(this).data("url");
 
     $('#overlay-frame').modal();
@@ -564,12 +565,13 @@ function openFile() {
 
         $.ajax({
             type: 'GET',
-            url: 'fetchDocument?DocFolder=' + url,
+            url: 'fetchCSVDocument?DocFolder=' + url,
 
             success: function (response) {
+                console.log("BBBBBBBBBB");
                 console.log(response);
-                $('#overlay-frame .modal-title')[0].innerHTML = "Report";
-                $("#overlay-frame .modal-body").html("<pre>" + response + "</pre>");
+                // $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+                // $("#overlay-frame .modal-body").html("<pre>" + response+ "</pre>");
 
             },
             error: function () {
@@ -588,7 +590,7 @@ function openFile() {
 
         $.ajax({
             type: 'GET',
-            url: 'fetchDocument?DocFolder=' + url,
+            url: 'fetchTextDocument?DocFolder=' + url,
 
             success: function (response) {
                 console.log(response);

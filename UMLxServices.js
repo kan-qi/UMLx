@@ -557,17 +557,17 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 				}
 				umlEvaluator.evaluateModel(modelInfo, function(){
 					console.log("model analysis complete");
+					umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
+		//				console.log(modelInfo);
+						umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+							console.log("=============repoInfo==========");
+							console.log(repoInfo);
+							res.render('mainPanel', {repoInfo:repoInfo});
+							// res.redirect('/');
+						}, true);
+					});
 				});
 	//			console.log(modelInfo);
-
-				umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
-	//				console.log(modelInfo);
-					umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-						console.log("=============repoInfo==========");
-						console.log(repoInfo);
-						res.render('mainPanel', {repoInfo:repoInfo});
-					}, true);
-				});
 			});
 		});
 	}
@@ -706,37 +706,27 @@ app.get('/reanalyseRepo', function (req, res){
 
 //		console.log(refresh);
 		umlModelInfoManager.queryFullRepoInfo(repoId, function(repoInfo){
-			// console.log("start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			// console.log(repoInfo);
-			// console.log("done!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//			console.log("start");
+//			console.log(repoInfo);
+//			console.log("done");		
 			
 //   			var debug = require("./utils/DebuggerOutput.js");
 //   			debug.writeJson("new_full_repo_info_"+repoId, repoInfo);
 
-
 			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
 //				this repofo information only has repo structure but no actual data.
-				console.log("evaluated!!!!!!!");
-				console.log(repoInfo);
-
-
+				
 				umlModelInfoManager.updateRepoInfo(repoInfo, function(){
 //					umlFileManager.deleteDir(function(result){
 
 //					});
-					console.log("---------------------------------------------");
-					console.log("finished!!!!");
-
+				
 					res.redirect('/');
-					//res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
-
-
+//					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
 
 				});
-
 			});
 //		});
-
 	});
 })
 
@@ -971,7 +961,8 @@ app.get('/queryModelInfo', function(req, res){
 
 	// });
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-		console.log("---------------modelInfo------------------");
+		console.log("Now is good!1");
+		//console.log(modelAnalytics);
 		console.log(modelInfo);
 		var uploadsFile = modelInfo.fileUrl;
 		uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
@@ -1404,10 +1395,6 @@ app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');
 });
 
-app.get('/estimatePage', function(req, res){
-	res.render('estimationPage');
-});
-
 // TODO use this API to populate data on UI
 app.get('/getSubmittedSurveyList', function(req, res){
     umlModelInfoManager.getSurveyData(function(data){
@@ -1491,7 +1478,7 @@ app.get('/', function(req, res){
 
 
 
-    if(req.param('curremtPage') != undefined){
+    if(req.param('currentPage') != undefined){
         currentPage = parseInt(req.param('currentPage'));
     }
     
@@ -1779,7 +1766,21 @@ app.get('/fetchDocument', function (req, res) {
 });
 
 
+app.get('/fetchDocument', function (req, res) {
 
+    var docPath = req.query.DocFolder;
+
+    fs.readFile(docPath, function (err, data) {
+        if (err) {
+            return console.error(err);
+        }
+        res.writeHead(200, { 'content-Type': 'text/html' });
+
+        res.write(data);
+        res.end();
+
+    });
+});
 app.get('/deactivateUser', function(req,res){
 	var userId = req.query['uid'];
 
