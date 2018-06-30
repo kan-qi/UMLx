@@ -1054,8 +1054,11 @@ function deleteRepo(repoId, callbackfunc) {
 			{
 				TransactionAnalytics:1,ElementAnalytics:1,_id:0
 			}).toArray(
-			function(err, result) 
+			function(err, result)
 			{
+			    console.log('=================result=========');
+			    console.log(result);
+                console.log('=================result=========');
 			   if (err)
 				   {
 				   throw err;
@@ -1067,7 +1070,8 @@ function deleteRepo(repoId, callbackfunc) {
 					   NT: 0,
 					   UseCaseNum: 0,
 					   EntityNum: 0,
-					   timestamp: "0000/00/00"
+					   timestamp: "0000/00/00",
+                       projectNum: 0
 				   });
 			   }
 			   else
@@ -1082,9 +1086,36 @@ function deleteRepo(repoId, callbackfunc) {
 					{
 						if(doc)
 						{
-							console.log("Record exists");
-							callbackfunc(doc);
-							db.close();							
+						    db.collection('noOfTransactions').find(
+                                {
+                                    repo_id:repoid
+                                },
+                                {
+                                    NT:1,UseCaseNum:1,EntityNum:1,timestamp:1,projectNum:1,_id:0
+                                }
+                            ).toArray(function (err, result) {
+                                if (err) throw err;
+                                var response = {NT:[], UseCaseNum:[], EntityNum:[], timestamp:[],projectNum:[]};
+
+                                result.forEach(function (element) {
+                                    response.NT.push(element.NT);
+                                    response.UseCaseNum.push(element.UseCaseNum);
+                                    response.EntityNum.push(element.EntityNum);
+                                    response.timestamp.push(element.timestamp);
+                                    if (!element.projectNum) {
+                                        response.projectNum.push(0);
+                                    }
+                                    else {
+                                        response.projectNum.push(element.projectNum);
+                                    }
+                                });
+
+                                console.log("Record exists");
+                                console.log(response);
+                                console.log('=============');
+                                callbackfunc(response);
+                                db.close();
+                            })
 						}
 							
 					    //throw new Error('No record found.');
@@ -1113,7 +1144,8 @@ function deleteRepo(repoId, callbackfunc) {
 							  
 							  //record={repo_id:repoid,NT:sum_nt,timestamp:today.getDate()}
 							  
-							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum,timestamp:today}
+							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum,
+                                  timestamp:today,projectNum:result.length};
 							  db.collection("noOfTransactions").insertOne(record, function(err, res) 
 							  {
 									if (err) throw err;

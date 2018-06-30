@@ -23,6 +23,7 @@ var MongoClient = mongo.MongoClient;
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
+var download = require('download');
 
 //var csv=require('csvtojson')
 //var removeDir = require('some-custom-fs');
@@ -492,11 +493,16 @@ app.get('/surveyAnalytics', function (req, res){
 app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
 	console.log(req.body);
 	var formInfo = req.body;
-    // console.log(umlSurveyFiles);
+	console.log("==========umlSurveyFiles=============");
+    console.log(umlSurveyFiles);
 
     // save the file names in DB
     formInfo.uml_file = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
     formInfo.uml_other = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
+
+    console.log('=================formInfo==================');
+    console.log(formInfo);
+
 	umlModelInfoManager.saveSurveyData(formInfo);
 	res.redirect("thankYou");
 });
@@ -566,8 +572,8 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
                             console.log("=============repoInfo==========");
                             console.log(repoInfo2);
                             console.log("=============repoInfoNumber==========");
-                            var totalRec = repoInfo2.Models.length;
-                            console.log(totalRec);
+                            //var totalRec = repoInfo2.Models.length;
+                            //console.log(totalRec);
                             console.log("=============render==========");
                             //res.render('mainPanel', {repoInfo:repoInfo2, totalRec: totalRec});
                             // setTimeout(function(){
@@ -777,7 +783,10 @@ app.get('/requestRepoBrief', function (req, res){
 
 		console.log("refresh");
 		umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
-				repoInfoBrief.projectNum = totalRec;
+			console.log('==========totalRec===========');
+			// console.log(totalRec);
+				repoInfoBrief.projectNum[repoInfoBrief.projectNum.length - 1] = totalRec;
+
 				res.end(JSON.stringify(repoInfoBrief));
 			});
 })
@@ -1812,6 +1821,39 @@ app.get('/fetchDocument', function (req, res) {
         res.end();
 
     });
+});
+
+
+app.get('/downloadDocument', function(req, res) {
+	var dirFilePath = req.query.downloadUrl;
+	var filePath = '127.0.0.1:8081/' + req.query.downloadUrl;
+    var downPath = 'C:/UMLx_project/UMLx/public/downloads';
+	var fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
+
+	console.log('=======filePath++++++++');
+	console.log(dirFilePath);
+	console.log(filePath);
+    console.log('=======fileName++++++++');
+    console.log(fileName);
+    console.log(downPath + '/' + fileName);
+
+    // download(dirFilePath, downPath).then(() => {
+    //     console.log('done!');
+    // });
+
+    download(dirFilePath).then(data => {
+        fs.writeFileSync(downPath + '/' + fileName, data);
+        console.log('done2!')
+    });
+    //
+    // download(filePath).pipe(fs.createWriteStream(downPath + '/' + fileName));
+
+    // Promise.all([
+    //     filePath
+    // ].map(x => download(x, downPath))).then(() => {
+    //     console.log('files downloaded!');
+    // });
+
 });
 
 

@@ -588,9 +588,31 @@ function dump_model_evaluation_for_use_cases_func(){
     return false;
 }
 */
+var gloablUrlForDownload;
+
+function fileDownload() {
+    $.ajax({
+        type: 'GET',
+        url: 'downloadDocument?downloadUrl=' + gloablUrlForDownload,
+
+        success: function (response) {
+            console.log(response);
+        },
+        error: function () {
+            console.log("fail");
+            //alert("There was an error");
+        }
+    });
+}
+
 
 function openFile() {
     var url = $(this).attr("href");
+
+    console.log('========url===============');
+    console.log(url);
+
+    gloablUrlForDownload = url;
     //var url = $(this).data("url");
 
     $('#overlay-frame').modal();
@@ -657,12 +679,14 @@ function openFile() {
                 $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
                 $("#overlay-frame .modal-body").html("<pre>" + response + "</pre>");
 
+
             },
             error: function () {
                 console.log("fail");
                 //alert("There was an error");
                 $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
                 $("#overlay-frame .modal-body").html("Error");
+
             }
         });
 
@@ -1415,26 +1439,30 @@ function createTrendingLines() {
         dataType: "json",
 
         success: function (response) {
-            //console.log(response);
+            console.log('----------');
+            console.log(response);
             var date = [];
             var transaction_num = [];
             var project_num = [];
             var case_num = [];
             var class_num = [];
             console.log(response);
-            for (var i = 0; i < response.length; i++) {
-                date.push(response[i].timestamp);
-                transaction_num.push(response[i].NT);
-                project_num.push(response[i].project);
-                case_num.push(response[i].UseCaseNum);
-                class_num.push(response[i].EntityNum);
+            for (var i = 0; i < response.NT.length; i++) {
+                date.push(response.timestamp[i]);
+                transaction_num.push(response.NT[i]);
+                project_num.push(response.projectNum[i]);
+                case_num.push(response.UseCaseNum[i]);
+                class_num.push(response.EntityNum[i]);
 
             }
-            date.push(response.timestamp);
-            transaction_num.push(response.NT);
-            project_num.push(response.projectNum);
-            case_num.push(response.UseCaseNum);
-            class_num.push(response.EntityNum);
+
+
+
+            // date.push(response.timestamp);
+            // transaction_num.push(response.NT);
+            // project_num.push(response.projectNum);
+            // case_num.push(response.UseCaseNum);
+            // class_num.push(response.EntityNum);
 
             // Default chart at the repo level - Number of transactions
             var chart = Highcharts.chart('trending-line', {
@@ -1507,10 +1535,11 @@ function createTrendingLines() {
             $('.green-card').click(function () {
                 console.log("green clicked");
                 var transaction_num_new = [];
-                for (var i = 0; i < response.length; i++) {
-                    transaction_num_new.push(response.transaction_num);
+                for (var i = 0; i < response.NT.length; i++) {
+                    transaction_num_new.push(response.NT[i]);
                 }
-                transaction_num_new.push(response.NT);
+                //console.log(transaction_num_new);
+                console.log('===========');
                 console.log(transaction_num_new);
                 chart.update({
                     yAxis: {

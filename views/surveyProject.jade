@@ -22,7 +22,6 @@ html
                     classList.remove("hidden");
                 }
             }
-            send_analytics_data(uuid, ipAdress, pageNumer);
         }
 
         var ipAdress = "localhost--";
@@ -36,7 +35,7 @@ html
 
 
   body#upload-body
-    include banner
+    include bannerForSurvey
     .container
       h2  Project Survey
       form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadSurveyData', enctype='multipart/form-data' )
@@ -62,9 +61,9 @@ html
             .col-xs-8
               input#project_duration.form-control(type='text', placeholder='Duration', name='project_duration')
           .form-group
-            label.control-label.col-xs-4(for='project_personnel') Duration
+            label.control-label.col-xs-4(for='project_personnel') Personnel
             .col-xs-8
-              input#project_duration.form-control(type='text', placeholder='Personnel', name='project_personnel')
+              input#project_personnel.form-control(type='text', placeholder='Personnel', name='project_personnel')
           .form-group
             label.control-label.col-xs-4(for='organization_name') Organization/Personal Name
             .col-xs-8
