@@ -609,10 +609,11 @@ function fileDownload() {
 function openFile() {
     var url = $(this).attr("href");
 
-    console.log('========url===============');
-    console.log(url);
+    // console.log('========url===============');
+    // console.log(url);
 
     gloablUrlForDownload = url;
+
     //var url = $(this).data("url");
 
     $('#overlay-frame').modal();
@@ -672,7 +673,7 @@ function openFile() {
 
         $.ajax({
             type: 'GET',
-            url: 'fetchDocument?DocFolder=' + url,
+            url: 'fetchTextDocument?DocFolder=' + url,
 
             success: function (response) {
                 console.log(response);
@@ -2435,9 +2436,31 @@ function buildTable2(data) {
     }
     for (var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "File") {
-            out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'>" +
+            if (newKeys[i].endsWith(".csv")) {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
+            }
+            else if (newKeys[i].endsWith(".txt")) {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'>" +
+                newKeys[i] +
+                "</td><td>file</td>";
+            }
+            else if (newKeys[i].endsWith(".svg")) {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'>" +
+                newKeys[i] +
+                "</td><td>file</td>";
+            }
+            else if (newKeys[i].endsWith(".json")) {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'>" +
+                newKeys[i] +
+                "</td><td>file</td>";
+            }
+            else {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'>" +
+                newKeys[i] +
+                "</td><td>file</td>";
+            }
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
         }
         else {
