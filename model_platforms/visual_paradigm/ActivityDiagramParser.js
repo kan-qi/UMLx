@@ -28,7 +28,8 @@
     	
     	var XMIActivitiesReferenced = jp.query(XMIActivityDiagram, '$..[\'uml:DiagramElement\'][?(@[\'$\'][\'subject\'])]');
 
-        console.log("Parsing activity diagram");
+        console.log("Parsing activity diagram: visual paradigm");
+        console.log(XMIActivitiesReferenced);
         var Activities = [];
         var PrecedenceRelations = [];
         var Partitions = [];
@@ -42,6 +43,9 @@
         
         var XMIActivities = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+XMIActivityReferenced['$']['subject']+'\')]');
 
+        console.log("Parsing activity diagram: visual paradigm");
+        console.log(XMIActivitiesReferenced);
+        
         if(!XMIActivities[0]){
         	continue;
         }
