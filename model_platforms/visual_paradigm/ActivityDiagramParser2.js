@@ -54,23 +54,12 @@
         	continue;
         }
         
-        var activity = null;
-        
             console.log("Found an activity");
             var XMIActivity = XMIActivities[0];
-            if(XMIActivity['$']['xmi:type']=='uml:Activity'){
-                 var activity = {
-                     Type: "action",
-                     _id: XMIActivity['$']['xmi:id'],
-                     Name: XMIActivity['$']['name'],
-                     Partition: (XMIActivity['$']['inPartition'] === undefined) ? "" : XMIActivity['$']['inPartition'],
-                     Stimulus: false,
-                     Scope: false,
-                 };
-                 Activities.push(activity);
-            }
-            else if(XMIActivity['$']['xmi:type']=='uml:CallBehaviorAction'){
-                var XMINode = XMIActivity;
+            
+            var XMINodes = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\']==\'uml:CallBehaviorAction\')]');
+            for (var i in XMINodes) {
+                var XMINode = XMINodes[i];
                 var activity = {
                     Type: "action",
                     _id: XMINode['$']['xmi:id'],
@@ -80,17 +69,22 @@
                     Scope: false,
                 };
                 Activities.push(activity);
-			}
-else if(XMIActivity['$']['xmi:type']=='uml:ActivityPartition'){
-                var XMIPartition = XMIActivity;
+            }
+
+            var XMIPartitions = jp.query(XMIActivity, '$..group[?(@[\'$\'][\'xmi:type\']==\'uml:ActivityPartition\')]');
+            for (var i in XMIPartitions) {
+                var XMIPartition = XMIPartitions[i];
                 var partition = {
                     Type: "partition",
                     _id: XMIPartition['$']['xmi:id'],
                     Name: XMIPartition['$']['name']
                 }
                 Partitions.push(partition);
-} else if(XMIActivity['$']['xmi:type']=='uml:InitialNode'){
-                var XMIInitialNode = XMIActivity;
+            }
+
+            var XMIInitialNodes = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\']==\'uml:InitialNode\')]');
+            for (var i in XMIInitialNodes) {
+                var XMIInitialNode = XMIInitialNodes[i];
                 var activity = {
                     Type: "initialNode",
                     _id: XMIInitialNode['$']['xmi:id'],
@@ -98,8 +92,11 @@ else if(XMIActivity['$']['xmi:type']=='uml:ActivityPartition'){
                     Partition: (XMIInitialNode['$']['inPartition'] === undefined) ? "" : XMIInitialNode['$']['inPartition'],
                 };
                 Activities.push(activity);
-} else if(XMIActivity['$']['xmi:type']=='uml:ActivityFinalNode'){
-                var XMIEndNode = XMIActivity;
+            }
+
+            var XMIEndNodes = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\']==\'uml:ActivityFinalNode\')]');
+            for (var i in XMIEndNodes) {
+                var XMIEndNode = XMIEndNodes[i];
                 var activity = {
                     Type: "finalNode",
                     _id: XMIEndNode['$']['xmi:id'],
@@ -107,8 +104,11 @@ else if(XMIActivity['$']['xmi:type']=='uml:ActivityPartition'){
                     Partition: (XMIEndNode['$']['inPartition'] === undefined) ? "" : XMIEndNode['$']['inPartition'],
                 };
                 Activities.push(activity);
-} else if(XMIActivity['$']['xmi:type']=='uml:ForkNode'){
-                var XMIForkNode = XMIActivity;
+            }
+
+            var XMIForkNodes = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\']==\'uml:ForkNode\')]');
+            for (var i in XMIForkNodes) {
+                var XMIForkNode = XMIForkNodes[i];
                 var activity = {
                     Type: "forkNode",
                     _id: XMIForkNode['$']['xmi:id'],
@@ -116,8 +116,11 @@ else if(XMIActivity['$']['xmi:type']=='uml:ActivityPartition'){
                     Partition: (XMIForkNode['$']['inPartition'] === undefined) ? "" : XMIForkNode['$']['inPartition'],
                 };
                 Activities.push(activity);
-} else if(XMIActivity['$']['xmi:type']=='uml:JoinNode'){
-                var XMIJoinNode = XMIActivity;
+            }
+
+            var XMIJoinNodes = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\']==\'uml:JoinNode\')]')
+            for (var i in XMIJoinNodes) {
+                var XMIJoinNode = XMIJoinNodes[i];
                 var activity = {
                     Type: "joinNode",
                     _id: XMIJoinNode['$']['xmi:id'],
@@ -125,8 +128,11 @@ else if(XMIActivity['$']['xmi:type']=='uml:ActivityPartition'){
                     Partition: (XMIJoinNode['$']['inPartition'] === undefined) ? "" : XMIJoinNode['$']['inPartition'],
                 }
                 Activities.push(activity);
-} else if(XMIActivity['$']['xmi:type']=='uml:DecisionNode'){
-                var XMIDecisionNode = XMIActivity;
+            }
+
+            var XMIDecisionNodes = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\']==\'uml:DecisionNode\')]')
+            for (var i in XMIDecisionNodes) {
+                var XMIDecisionNode = XMIDecisionNodes[i];
                 var activity = {
                     Type: "decisionNode",
                     _id: XMIDecisionNode['$']['xmi:id'],
@@ -134,8 +140,11 @@ else if(XMIActivity['$']['xmi:type']=='uml:ActivityPartition'){
                     Partition: (XMIDecisionNode['$']['inPartition'] === undefined) ? "" : XMIDecisionNode['$']['inPartition'],
                 }
                 Activities.push(activity);
-} else if(XMIActivity['$']['xmi:type']=='uml:MergeNode'){
-                var XMIMergeNode = XMIActivity;
+            }
+
+            var XMIMergeNodes = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\']==\'uml:MergeNode\')]')
+            for (var i in XMIMergeNodes) {
+                var XMIMergeNode = XMIMergeNodes[i];
                 var activity = {
                     Type: "mergeNode",
                     _id: XMIMergeNode['$']['xmi:id'],
@@ -143,8 +152,11 @@ else if(XMIActivity['$']['xmi:type']=='uml:ActivityPartition'){
                     Partition: (XMIMergeNode['$']['inPartition'] === undefined) ? "" : XMIMergeNode['$']['inPartition'],
                 }
                 Activities.push(activity);
-} else if(XMIActivity['$']['xmi:type']=='uml:ControlFlow'){
-                var XMIEdge = XMIActivity;
+            }
+
+            var XMIEdges = jp.query(XMIActivity, '$..edge[?(@[\'$\'][\'xmi:type\']==\'uml:ControlFlow\')]');
+            for (var i in XMIEdges) {
+                var XMIEdge = XMIEdges[i];
                 var XMIEdgeByStandard = {
                     _id: XMIEdge['$']['xmi:id'],
                     Name: (XMIEdge['$']['name'] === undefined) ? "" : XMIEdge['$']['name'],
@@ -152,15 +164,16 @@ else if(XMIActivity['$']['xmi:type']=='uml:ActivityPartition'){
                     End: XMIEdge['$']['target']
                 };
                 PrecedenceRelations.push(XMIEdgeByStandard);
+            }
         }
-    	}
+        
         console.log("Finished parsing activity diagram");
         UseCase.Activities = Activities;
         UseCase.PrecedenceRelations = PrecedenceRelations;
         UseCase.Partitions = Partitions;
         
         Model.UseCases.push(UseCase);
-    }
+    	}
     }
 
     module.exports = {
