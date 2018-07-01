@@ -945,29 +945,48 @@ function deleteRepo(repoId, callbackfunc) {
 					callbackfunc(false);
 					return;
 				}
-				db.collection("modelInfo").aggregate([
-					{
-						"$match":
-						{
-						   "repo_id":new mongo.ObjectID(repoid)
-						}
-					},
-					{
-					   $skip: pageParameter
-					}, // pagination skip
-					{
-						$limit: stepParameter
-					}
-					],function(err, result) 
-		            {
-		               if (err) throw err;
-		               //console.log("*******Shown result for queryRepoInfoByPage*******");
-		               db.close();
-		               repoInfo.Models = result;
-					   console.log(repoInfo);
-		               callbackfunc(repoInfo);
-		            });
-					
+                 var dt = new Date();
+                 var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') +
+                     (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
+
+                     db.collection('noOfTransactions').find(
+                         {
+                             timestamp: '2018/06/30'
+                         },
+                         {
+                             NT:1,UseCaseNum:1,EntityNum:1
+                         }).toArray(
+                                function (err, res) {
+
+                                 console.log(res[0]);
+
+                                 repoInfo.NT = res[0].NT;
+                                 repoInfo.UseCaseNum = res[0].UseCaseNum;
+                                 repoInfo.EntityNum = res[0].EntityNum;
+
+                                 db.collection("modelInfo").aggregate([
+                                     {
+                                         "$match":
+                                             {
+                                                 "repo_id":new mongo.ObjectID(repoid)
+                                             }
+                                     },
+                                     {
+                                         $skip: pageParameter
+                                     }, // pagination skip
+                                     {
+                                         $limit: stepParameter
+                                     }
+                                 ],function(err, result)
+                                 {
+                                     if (err) throw err;
+                                     //console.log("*******Shown result for queryRepoInfoByPage*******");
+                                     db.close();
+                                     repoInfo.Models = result;
+                                     console.log(repoInfo);
+                                     callbackfunc(repoInfo);
+                                 });
+                     });
 				});
 			    	
 		  });

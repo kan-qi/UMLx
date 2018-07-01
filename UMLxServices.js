@@ -1558,6 +1558,9 @@ app.get('/', function(req, res){
       
 //    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
   umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
+
+  	console.log("==========================sfsdfsdfs==============");
+  	console.log(repoInfo);
 	  
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
       
