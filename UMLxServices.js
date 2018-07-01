@@ -517,8 +517,13 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 	var umlOtherPath = null;
 	//need to implement unzipped xml file data-analysis, for now only process single xml file!!
 	if(req.files['uml-file'] != null && req.files['uml-other'] != null){
+		// console.log("================================path===================");
+
 		umlFilePath = req.files['uml-file'][0].path;
 		umlOtherPath = req.files['uml-other'][0].path;
+
+        // console.log(umlFilePath);
+        // console.log(umlOtherPath);
 
 		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
 		//remove directory of zip file and the contents in the directory 
@@ -535,7 +540,13 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 	else if (req.files['uml-other'] != null) {
 		umlOtherPath = req.files['uml-other'][0].path;
 
+        console.log("================================path===================");
+        console.log(umlOtherPath);
+
 		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({path: umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")) }));
+
+        res.redirect('/');
+
 	} else {
 		return false;
 	}
@@ -747,8 +758,9 @@ app.get('/reanalyseRepo', function (req, res){
 			
 //   			var debug = require("./utils/DebuggerOutput.js");
 //   			debug.writeJson("new_full_repo_info_"+repoId, repoInfo);
-
+            console.log("==================SURPRISE================");
 			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+
 //				this repofo information only has repo structure but no actual data.
 				
 				umlModelInfoManager.updateRepoInfo(repoInfo, function(){
@@ -1458,9 +1470,10 @@ app.get('/surveyData', function(req, res){
 // to handle post redirect to home page
 app.post('/', function(req, res){
 	console.log('==============shenmeshihou==============');
-	setTimeout(function () {
-        res.redirect('/');
-    }, 10000);
+    res.redirect('/');
+    // setTimeout(function () {
+    //     res.redirect('/');
+    // }, 10000);
 
 });
 
@@ -1824,35 +1837,48 @@ app.get('/fetchDocument', function (req, res) {
 
 
 app.get('/downloadDocument', function(req, res) {
-	var dirFilePath = req.query.downloadUrl;
-	var filePath = '127.0.0.1:8081/' + req.query.downloadUrl;
-    var downPath = 'C:/UMLx_project/UMLx/public/downloads';
-	var fileName = filePath.substring(filePath.lastIndexOf('/') + 1);
 
-	console.log('=======filePath++++++++');
-	console.log(dirFilePath);
-	console.log(filePath);
-    console.log('=======fileName++++++++');
+	var all_path = req.query.downloadUrl;
+	console.log("===========all_path===============");
+	console.log(all_path);
+
+    let downloadPath = 'http://localhost:8081/' + all_path;
+    console.log("++++++++++++++++downloadPath++++++++++++++");
+    console.log(downloadPath);
+
+    let savePath = 'public/downloads';
+    console.log("++++++++++++++++savePath++++++++++++++");
+    console.log(savePath);
+
+    let fileName = all_path.substring(all_path.lastIndexOf('/') + 1);
+    console.log("++++++++++++++++fileName++++++++++++++");
     console.log(fileName);
-    console.log(downPath + '/' + fileName);
 
-    // download(dirFilePath, downPath).then(() => {
-    //     console.log('done!');
-    // });
+    let test_path = 'localhost:8081/' + all_path;
+    console.log("===========test_path===============");
+    console.log(test_path);
 
-    download(dirFilePath).then(data => {
-        fs.writeFileSync(downPath + '/' + fileName, data);
-        console.log('done2!')
+    download(downloadPath, savePath).then(() => {
+        console.log('done!');
     });
-    //
-    // download(filePath).pipe(fs.createWriteStream(downPath + '/' + fileName));
 
-    // Promise.all([
-    //     filePath
-    // ].map(x => download(x, downPath))).then(() => {
-    //     console.log('files downloaded!');
+    // download(downloadPath).then(data => {
+    //     fs.writeFileSync(savePath + '/' + fileName, data);
     // });
 
+    // download(test_path).pipe(fs.createWriteStream(savePath + '/' + fileName));
+
+    // fs.readFile(downloadPath, (err, data) => {
+    //     if (err) throw err;
+    //     console.log(data);
+    //
+    //     fs.writeFile(savePath, data, (err) => {
+    //         if (err) throw err;
+    //         console.log(fs.readFileSync(path));
+    //     });
+    // });
+
+    res.end();
 });
 
 

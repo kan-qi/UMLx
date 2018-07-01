@@ -420,16 +420,23 @@ function query_model_detail_func() {
     return false;
 }
 
+var loaded = false;
 
 function re_analyze_model_func() {
     var url = $(this).attr("href");
     console.log(url);
+
+    if (loaded) return;
+
+    loaded = true;
 
     $.ajax({
         type: 'GET',
         url: url,
         async: false,
         success: function (response) {
+            loaded = false;
+
             console.log(response);
             $("#display-panel").html("");
             $("#display-panel").append(response);
@@ -446,10 +453,13 @@ function re_analyze_model_func() {
             alert("Reanalyse Model Finished!");
         },
         error: function () {
+            loaded = false;
+
             console.log("fail");
             alert("There was an error");
         }
     });
+
 
     return false;
 }
@@ -655,6 +665,9 @@ function dump_model_evaluation_for_use_cases_func(){
 var gloablUrlForDownload;
 
 function fileDownload() {
+
+    gloablUrlForDownload = gloablUrlForDownload.substring(7);
+
     $.ajax({
         type: 'GET',
         url: 'downloadDocument?downloadUrl=' + gloablUrlForDownload,
@@ -731,13 +744,12 @@ function openFile() {
 
         return false;
     }
-
-    if (url.endsWith(".txt")) {
+    else {
         //display_csv_data(url);
 
         $.ajax({
             type: 'GET',
-            url: 'fetchTextDocument?DocFolder=' + url,
+            url: 'fetchDocument?DocFolder=' + url,
 
             success: function (response) {
                 console.log(response);
