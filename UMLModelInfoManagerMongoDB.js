@@ -595,6 +595,7 @@ function deleteRepo(repoId, callbackfunc) {
                   if (err) throw err;
                   db.close();
 
+                console.log("---------------modelInfoStart----------------");
                   //restore the ids
                   var modelInfo = result[0];
                   var arr = [];
@@ -616,7 +617,7 @@ function deleteRepo(repoId, callbackfunc) {
                       delete domainModel._id;
                       modelInfo.DomainModel = domainModel;
                   }
-                    //console.log("---------------modelInfo----------------");
+                  console.log("---------------modelInfo----------------");
                     //console.log(modelInfo);
                   callbackfunc(modelInfo);
 
@@ -690,6 +691,9 @@ function deleteRepo(repoId, callbackfunc) {
 			   console.log(result[0]);
                console.log("*******Shown result for ModelInfo*******");               
                db.close();
+
+               // result[0].UnusedModels = [];
+
                callbackfunc(result[0]);
             });
 		});
@@ -795,88 +799,37 @@ function deleteRepo(repoId, callbackfunc) {
 //       	 });
 // 		});
 // 	}
-    
-    
-    function queryFullRepoInfo(repoId, callbackfunc) {
-//    	console.log("hello");
-        MongoClient.connect(url, function (err, db) {
+
+
+    function queryFullRepoInfo(repoId, callbackfunc)
+    {
+        MongoClient.connect(url, function(err, db)
+        {
 
             if (err) throw err;
             var repo_id = new mongo.ObjectID(repoId);
 
-            queryRepoInfo(repoId, function (repoInfo) {
+            queryRepoInfo(repoId, function(repoInfo) {
                 console.log(repoInfo);
                 if (err) throw err;
 
-                if (!repoInfo) {
+                if(!repoInfo){
                     callbackfunc(false);
                     return;
                 }
 
-                repoInfo.UnusedModels = [];
-                console.log("1111111111111111111111111111111111111111111");
-                console.log(repoInfo.UnusedModels);
-                //function loadModel(model, repoInfo) {};
                 //use promise to construct the repo objects
+                function loadModel(model_id, repoInfo){
+                    return new Promise((resolve, reject) => {
 
+                        db.collection("modelInfo").aggregate([
+                            {
+                                "$match":
+                                    {
+                                        "_id": model_id
+                                    }
+                            },
 
-                repoInfo.Models.forEach(function (model) {
-                    queryModelInfo(model._id, repoId, function (modelInfo) {
-                        repoInfo.UnusedModels.push(modelInfo);
-                    });
-                });
-
-                setTimeout(function() {
-                    repoInfo.Models = repoInfo.UnusedModels;
-                    delete repoInfo.UnusedModels;
-                    if (callbackfunc) {
-                        callbackfunc(repoInfo);
-                    }
-                }, 1000);
-
-
-                /*
-                var good = new Promise((resolve, reject) => {
-                    if(repoInfo) {
-
-                        resolve(function () {
-                            repoInfo.Models.forEach(function (model) {
-                                queryModelInfo(model._id, repoId, function (modelInfo) {
-                                    repoInfo.UnusedModels.push(modelInfo);
-                                });
-                            });
-                        });
-
-                    }else {
-                        reject("good error");
-                    }
-                } );
-
-                good
-                    .then(() => {
-                        setTimeout(function() {
-                            repoInfo.Models = repoInfo.UnusedModels;
-                            delete repoInfo.UnusedModels;
-                            if (callbackfunc) {
-                                callbackfunc(repoInfo);
-                            }
-                        }, 0);
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    });
-                    */
-
-                /*
-                var modelArr = new Promise((resolve, reject) => {
-                    repoInfo.Models.map(model => {
-
-                        db.collection("modelInfo").aggregate([{
-                            "$match":
-                                {
-                                    "_id": model._id
-                                }
-                        },
                             {
                                 "$lookup": {
                                     "from": "domainModelInfo",
@@ -895,72 +848,74 @@ function deleteRepo(repoId, callbackfunc) {
                             },
                             {
                                 "$unwind": "$UseCases"
-                            }]).toArray((err, result) => {
-                            if (err) {
-                                throw(err);
-                            }
-
-                            console.log("hello");
-                            console.log("*******Shown result for ModelInfo*******");
+                            },
+                            //{ "$out": "newInfor" }
+                        ]).toArray(function (err, result) {
+                            if (err) throw err;
                             db.close();
 
-                            var modelInfo = null;
-                            if (result && result[0]) {
-                                modelInfo = result[0];
-                                var arr = [];
-                                result.forEach(function (element) {
-                                    arr.push(element.UseCases);
-                                });
+                            //restore the ids
+                            var modelInfo = result[0];
+                            var arr = [];
+                            result.forEach(function (element) {
+                                arr.push(element.UseCases);
+                            });
 
-                                modelInfo.UseCases = arr;
-
-                                for (var i in modelInfo.UseCases) {
-                                    var useCase = modelInfo.UseCases[i];
-                                    if (useCase) {
-                                        useCase._id = useCase._id.replace(/\[.*\]/g, "");
-                                    }
+                            modelInfo.UseCases = arr;
+                            for (var i in modelInfo.UseCases) {
+                                var useCase = modelInfo.UseCases[i];
+                                if (useCase) {
+                                    useCase._id = useCase._id.replace(/\[.*\]/g, "");
                                 }
-
-                                if (modelInfo.DomainModels) {
-                                    domainModel = modelInfo.DomainModels[0];
-                                    delete modelInfo.DomainModels;
-                                    if (domainModel) {
-                                        delete domainModel._id;
-                                        modelInfo.DomainModel = domainModel;
-                                    }
-                                }
-
-                                console.log("queried model info");
-                                console.log(modelInfo);
-                                repoInfo.UnusedModels.push(modelInfo);
                             }
+
+                            if (modelInfo.DomainModels) {
+                                var domainModel = modelInfo.DomainModels[0];
+                                delete modelInfo.DomainModels;
+                                delete domainModel._id;
+                                modelInfo.DomainModel = domainModel;
+                            }
+
+                            repoInfo.UnfoldedModels.push(modelInfo);
+
+                            resolve();
+                            //console.log(modelInfo);
+
                         });
 
                     });
-                    if (repoInfo.UnusedModels) {
-                        console.log(repoInfo.UnusedModels);
-                        resolve();
-                    } else {
-                        reject("Map failed!");
+                }
+
+                repoInfo.UnfoldedModels = [];
+
+                return Promise.all(repoInfo.Models.map(model=>{
+                    return loadModel(model._id,repoInfo);
+                })).then(
+                    function(){
+                        return new Promise((resolve, reject) => {
+                            setTimeout(function(){
+
+                                repoInfo.Models = repoInfo.UnfoldedModels;
+                                delete repoInfo.UnfoldedModels;
+
+                                if(callbackfunc){
+
+                                    callbackfunc(repoInfo);
+                                }
+
+                                resolve();
+
+                            }, 0);
+                        });
+                    }
+
+                ).catch(function(err){
+                    console.log(err);
+                    if(callbackfunc){
+                        callbackfunc(false);
                     }
                 });
 
-
-                modelArr
-                    .then(() => {
-                        console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-                        console.log(repoInfo.UnusedModels);
-                        repoInfo.Models = repoInfo.UnusedModels;
-                        delete repoInfo.UnusedModels;
-                        if (callbackfunc) {
-                            callbackfunc(repoInfo);
-                        }
-                    })
-                    .catch(err => {
-                        console.log(err);
-                    })
-
-                */
             });
         });
     }
@@ -990,29 +945,48 @@ function deleteRepo(repoId, callbackfunc) {
 					callbackfunc(false);
 					return;
 				}
-				db.collection("modelInfo").aggregate([
-					{
-						"$match":
-						{
-						   "repo_id":new mongo.ObjectID(repoid)
-						}
-					},
-					{
-					   $skip: pageParameter
-					}, // pagination skip
-					{
-						$limit: stepParameter
-					}
-					],function(err, result) 
-		            {
-		               if (err) throw err;
-		               //console.log("*******Shown result for queryRepoInfoByPage*******");
-		               db.close();
-		               repoInfo.Models = result;
-					   console.log(repoInfo);
-		               callbackfunc(repoInfo);
-		            });
-					
+                 var dt = new Date();
+                 var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') +
+                     (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
+
+                     db.collection('noOfTransactions').find(
+                         {
+                             timestamp: '2018/06/30'
+                         },
+                         {
+                             NT:1,UseCaseNum:1,EntityNum:1
+                         }).toArray(
+                                function (err, res) {
+
+                                 console.log(res[0]);
+
+                                 repoInfo.NT = res[0].NT;
+                                 repoInfo.UseCaseNum = res[0].UseCaseNum;
+                                 repoInfo.EntityNum = res[0].EntityNum;
+
+                                 db.collection("modelInfo").aggregate([
+                                     {
+                                         "$match":
+                                             {
+                                                 "repo_id":new mongo.ObjectID(repoid)
+                                             }
+                                     },
+                                     {
+                                         $skip: pageParameter
+                                     }, // pagination skip
+                                     {
+                                         $limit: stepParameter
+                                     }
+                                 ],function(err, result)
+                                 {
+                                     if (err) throw err;
+                                     //console.log("*******Shown result for queryRepoInfoByPage*******");
+                                     db.close();
+                                     repoInfo.Models = result;
+                                     console.log(repoInfo);
+                                     callbackfunc(repoInfo);
+                                 });
+                     });
 				});
 			    	
 		  });
@@ -1054,8 +1028,11 @@ function deleteRepo(repoId, callbackfunc) {
 			{
 				TransactionAnalytics:1,ElementAnalytics:1,_id:0
 			}).toArray(
-			function(err, result) 
+			function(err, result)
 			{
+			    console.log('=================result=========');
+			    console.log(result);
+                console.log('=================result=========');
 			   if (err)
 				   {
 				   throw err;
@@ -1067,7 +1044,8 @@ function deleteRepo(repoId, callbackfunc) {
 					   NT: 0,
 					   UseCaseNum: 0,
 					   EntityNum: 0,
-					   timestamp: "0000/00/00"
+					   timestamp: "0000/00/00",
+                       projectNum: 0
 				   });
 			   }
 			   else
@@ -1082,9 +1060,36 @@ function deleteRepo(repoId, callbackfunc) {
 					{
 						if(doc)
 						{
-							console.log("Record exists");
-							callbackfunc(doc);
-							db.close();							
+						    db.collection('noOfTransactions').find(
+                                {
+                                    repo_id:repoid
+                                },
+                                {
+                                    NT:1,UseCaseNum:1,EntityNum:1,timestamp:1,projectNum:1,_id:0
+                                }
+                            ).toArray(function (err, result) {
+                                if (err) throw err;
+                                var response = {NT:[], UseCaseNum:[], EntityNum:[], timestamp:[],projectNum:[]};
+
+                                result.forEach(function (element) {
+                                    response.NT.push(element.NT);
+                                    response.UseCaseNum.push(element.UseCaseNum);
+                                    response.EntityNum.push(element.EntityNum);
+                                    response.timestamp.push(element.timestamp);
+                                    if (!element.projectNum) {
+                                        response.projectNum.push(0);
+                                    }
+                                    else {
+                                        response.projectNum.push(element.projectNum);
+                                    }
+                                });
+
+                                console.log("Record exists");
+                                console.log(response);
+                                console.log('=============');
+                                callbackfunc(response);
+                                db.close();
+                            })
 						}
 							
 					    //throw new Error('No record found.');
@@ -1113,7 +1118,8 @@ function deleteRepo(repoId, callbackfunc) {
 							  
 							  //record={repo_id:repoid,NT:sum_nt,timestamp:today.getDate()}
 							  
-							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum,timestamp:today}
+							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum,
+                                  timestamp:today,projectNum:result.length};
 							  db.collection("noOfTransactions").insertOne(record, function(err, res) 
 							  {
 									if (err) throw err;
@@ -1237,6 +1243,8 @@ function deleteRepo(repoId, callbackfunc) {
                 var modelArray = repos.map(function(repo){
                     return repo.Models;
                 });
+
+
 
                 callbackfunc(modelArray);
 
@@ -1816,7 +1824,7 @@ function deleteRepo(repoId, callbackfunc) {
 	        //fall back in case uuid is not generated on client end
             console.log("uuid was blank, adding uuid on server side");
 
-            // TODO:  what should we do?? generate a new uuid on server or discard data or insert blank?
+            //TODO:  what should we do?? generate a new uuid on server or discard data or insert blank?
 	        uuid = uuidv4();
         }
         data = {

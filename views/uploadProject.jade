@@ -2,27 +2,13 @@ html
   head
     title UMLx
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
-    script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
-    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-    script(type='text/javascript', src='js/scripts.js')
-    script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv1@latest')
     link(href='css/style.css', rel='stylesheet')
-    script.
-        function showPage(pageNumer) {
-            for (var i = 1; i <= 4; i++) {
-                var classList = document.getElementById("page" + i).classList;
-                if (i != pageNumer) {
-                    classList.add("hidden");
-                } else {
-                    classList.remove("hidden");
-                }
-            }
-        }
+
   body#upload-body
     include banner
     .container
       h2  Project Details 
-      form#model-file-submit-form.form-horizontal(novalidate='', onsubmit='model_file_upload_fnc()', method='post', action='/')
+      form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadUMLFile', enctype='multipart/form-data')
         // Page1
         #page1
           .alert.alert-info
@@ -258,3 +244,18 @@ html
         document.getElementById("uuid-page2").value = uuidv1();
         document.getElementById("uuid-page3").value = uuidv1();
         document.getElementById("uuid-page4").value = uuidv1();
+    script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    script(type='text/javascript', src='js/scripts.js')
+    script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv1@latest')
+    script.
+        function showPage(pageNumer) {
+            for (var i = 1; i <= 4; i++) {
+                var classList = document.getElementById("page" + i).classList;
+                if (i != pageNumer) {
+                    classList.add("hidden");
+                } else {
+                    classList.remove("hidden");
+                }
+            }
+        }
