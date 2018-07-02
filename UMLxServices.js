@@ -1905,34 +1905,24 @@ app.get('/deactivateUser', function(req,res){
 	}
 });
 
-//var server = app.listen(8081,'0.0.0.0', function () {
-//  var host = server.address().address
-//  var port = server.address().port
-//  console.log("Example app listening at http://%s:%s", host, port)
 
-//});
+//==================== local machine code for development ==========================
 
-//var server = app.listen(8081,'127.0.0.1', function () {
-//  var host = server.address().address
-//  var port = server.address().port
-//  console.log("Example app listening at http://%s:%s", host, port)
-//});
+var server = app.listen(8081,'127.0.0.1', function () {
+  var host = server.address().address
+  var port = server.address().port
+  console.log("Example app listening at http://%s:%s", host, port)
+});
 
+
+//==================== remote server code for production ==========================
+//var vhost = require('vhost');
+//var webServer = module.exports = express();
+//
 //webServer.use(vhost('umlx.kanqi.org', app)); // Serves top level domain via Main server app
-
-/* istanbul ignore next */
+//
+///* istanbul ignore next */
 //if (!module.parent) {
 //  webServer.listen(8081);
 //  console.log('Express started on port 8081');
 //}
-
-var vhost = require('vhost');
-var webServer = module.exports = express();
-
-webServer.use(vhost('umlx.kanqi.org', app)); // Serves top level domain via Main server app
-
-/* istanbul ignore next */
-if (!module.parent) {
-  webServer.listen(8081);
-  console.log('Express started on port 8081');
-}
