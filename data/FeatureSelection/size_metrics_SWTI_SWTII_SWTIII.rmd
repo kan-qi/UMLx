@@ -13,8 +13,14 @@ calculateSWTI <- function(x, weights) {
   # Returns: 
   #   SWTI
   quantiles <- seq(1/length(weights),1 - (1/length(weights)), 1/length(weights))
+  print("quntiles")
+  print(quantiles)
   cutPoints <- qnorm(quantiles, mean = mean(x), sd = sd(x))
+  #print("cutPoints")
+  #print(cutPoints)
   category <- cut(x, c(-Inf, cutPoints, Inf), labels = FALSE)
+  print("category")
+  print(category)
   SWTI <- 0
   for (num in category) {
     SWTI <- SWTI + weights[num]
@@ -43,8 +49,11 @@ calculateSWTII <- function(x, weights) {
     TD <- x[i, "TD"]
     percentiles[i] <- 
       pmvnorm(lower = -Inf, upper = c(TL, TD), mean = dataMeans, sigma = dataCovariance)
+    #print("swt II parameters")
+    #print(percentiles[i])
   }
   category <- cut(percentiles, cutPoints, labels = FALSE)
+  print(category)
   SWTII <- 0
   for (num in category) {
     SWTII <- SWTII + weights[num]
@@ -116,7 +125,7 @@ calcPRED <- function(testData, pred, percent) {
 ## Cross validation
 Get the data
 ```{r}
-transactionAnalyticsFolder <- "C:/Users/Gary/Documents/cs590/Transaction Data"
+transactionAnalyticsFolder <- "C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/FeatureSelection/Transaction Data"
 data <- matrix(nrow = length(dir(transactionAnalyticsFolder)), ncol = 4)
 colnames(data) <- c("SWTI", "SWTII", "SWTIII", "Effort")
 rownames(data) <- dir(transactionAnalyticsFolder)
