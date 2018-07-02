@@ -43,34 +43,75 @@ function pagination_call(repoId, currentPage) {
 }
 
 
-function model_file_upload_fnc() {
-    var formData = new FormData($('#model-file-submit-form')[0]);
-    
-    console.log("Good!!!");
-    console.log("formData: " + formData);
-    //formData.append('uml-other', document.getElementById('uml-other'));
-    //console.log("formData: " + formData);
-    
-    $.ajax({
-        type: 'POST',
-        url: "uploadUMLFile",
-        cache: false,
-        processData: false, // Don't process the files
-        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
-        data: formData,
-        enctype: 'multipart/form-data',
-        success: function (response) {
-            console.log(response);
-        },
-        error: function () {
-            console.log("fail");
-            console.log(err);
-            alert("There was an error");
-        }
-    });
-    
-
-}
+// function model_file_upload_fnc() {
+//     var formData = new FormData($(/'#model-file-submit-form/')[0]);
+//
+//     console.log("Good!!!");
+//     // console.log("formData: " + formData);
+//     //formData.append('uml-other', document.getElementById('uml-other'));
+//     //console.log("formData: " + formData);
+//
+//     console.log('====start====');
+//     ajax_test = $.ajax({
+//         type: 'POST',
+//         url: "uploadUMLFile",
+//         //async: false,
+//         cache: false,
+//         processData: false, // Don't process the files
+//         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+//         data: formData,
+//         enctype: 'multipart/form-data',
+//         success: function (response) {
+//             onsole.log('====end11111====');
+//             console.log(response);
+//         },
+//         error: function () {
+//             console.log("fail");
+//             //console.log(err);
+//             setTimeout(function () {
+//                 location.reload(true);
+//             }, 3000);
+//
+//
+//             // $.ajax({
+//             //     type: 'GET',
+//             //     //async: false,
+//             //     url: "uploadUMLFileCompany",
+//             //     success: function (response) {
+//             //         console.log(response);
+//             //
+//             //     },
+//             //     error: function () {
+//             //         console.log("fail");
+//             //         location.reload();
+//             //         //console.log(err);
+//             //         //alert("There was an error");
+//             //     }
+//             // });
+//
+//             //alert("There was an error 123456");
+//         }
+//     });
+//
+//     // console.log('====yunxing1====');
+//     // $.when(ajax_test).done(function(){
+//     //     $.ajax({
+//     //         type: 'GET',
+//     //         //async: false,
+//     //         url: "uploadUMLFileCompany",
+//     //         success: function (response) {
+//     //             console.log(response);
+//     //
+//     //         },
+//     //         error: function () {
+//     //             console.log("fail");
+//     //             console.log(err);
+//     //             alert("There was an error");
+//     //         }
+//     //     });
+//     // });
+//     // console.log('====end====');
+// }
 
 function highlight_diagram_element(idString, elementType, diagramType) {
 
@@ -168,6 +209,35 @@ function send_analytics_data(uuid, clientIpAddress, pageNumber) {
         }
     });
 }
+
+
+// function send_all_survey_data() {
+//
+//     var formData = new FormData($('')[0]);
+//
+//     console.log(formData);
+//     console.log('====start====');
+//     ajax_test = $.ajax({
+//         type: 'POST',
+//         url: "uploadSurveyData",
+//         //async: false,
+//         cache: false,
+//         processData: false, // Don't process the files
+//         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+//         data: formData,
+//         enctype: 'multipart/form-data',
+//         success: function (response) {
+//             onsole.log('====end11111====');
+//             console.log(response);
+//         },
+//         error: function () {
+//             console.log("fail");
+//         }
+//     });
+// }
+
+
+
 
 
 function model_survey_file_upload_fnc() {
@@ -349,6 +419,51 @@ function query_model_detail_func() {
 
     return false;
 }
+
+var loaded = false;
+
+function re_analyze_model_func() {
+    var url = $(this).attr("href");
+    console.log(url);
+
+    if (loaded) return;
+
+    loaded = true;
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        async: false,
+        success: function (response) {
+            loaded = false;
+
+            console.log(response);
+            $("#display-panel").html("");
+            $("#display-panel").append(response);
+            $('.model-info-content a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+                var breadCrumb = $('ol.breadcrumb')[0];
+                if (breadCrumb.children.length == 3) {
+                    breadCrumb.removeChild(breadCrumb.children[2]);
+                }
+                console.dir(e);
+            });
+
+            display();
+            //createCharts();
+            alert("Reanalyse Model Finished!");
+        },
+        error: function () {
+            loaded = false;
+
+            console.log("fail");
+            alert("There was an error");
+        }
+    });
+
+
+    return false;
+}
+
 
 function delete_use_case_func() {
     //  alert('delete use case func');
@@ -547,9 +662,35 @@ function dump_model_evaluation_for_use_cases_func(){
     return false;
 }
 */
+var gloablUrlForDownload;
+
+function fileDownload() {
+
+    gloablUrlForDownload = gloablUrlForDownload.substring(7);
+
+    $.ajax({
+        type: 'GET',
+        url: 'downloadDocument?downloadUrl=' + gloablUrlForDownload,
+
+        success: function (response) {
+            console.log(response);
+        },
+        error: function () {
+            console.log("fail");
+            //alert("There was an error");
+        }
+    });
+}
+
 
 function openFile() {
     var url = $(this).attr("href");
+
+    // console.log('========url===============');
+    // console.log(url);
+
+    gloablUrlForDownload = url;
+
     //var url = $(this).data("url");
 
     $('#overlay-frame').modal();
@@ -560,30 +701,50 @@ function openFile() {
 
 
     if (url.endsWith(".csv")) {
-        //display_csv_data(url);
+        display_csv_data(url);
 
-        $.ajax({
-            type: 'GET',
-            url: 'fetchDocument?DocFolder=' + url,
-
-            success: function (response) {
-                console.log(response);
-                $('#overlay-frame .modal-title')[0].innerHTML = "Report";
-                $("#overlay-frame .modal-body").html("<pre>" + response + "</pre>");
-
-            },
-            error: function () {
-                console.log("fail");
-                //alert("There was an error");
-                $('#overlay-frame .modal-title')[0].innerHTML = "Report";
-                $("#overlay-frame .modal-body").html("Error");
-            }
-        });
+        // $.ajax({
+        //     type: 'GET',
+        //     url: 'fetchCSV?DocFolder=' + url,
+        //
+        //
+        //     //display_csv_data(url);
+        //
+        //     success: function (response) {
+        //         console.log(response);
+        //
+        //         console.log("=========started=============");
+        //         var parsedCSV = d3.csv.parseRows(response);
+        //         var container = d3.select("body")
+        //             .append("table")
+        //
+        //             .selectAll("tr")
+        //             .data(parsedCSV).enter()
+        //             .append("tr")
+        //
+        //             .selectAll("td")
+        //             .data(function(d) { return d; }).enter()
+        //             .append("td")
+        //             .text(function(d) { return d; });
+        //
+        //         console.log("=========finished=============");
+        //
+        //         $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+        //         $("#overlay-frame .modal-body").html("<pre>" + response + "</pre>");
+        //
+        //
+        //     },
+        //     error: function () {
+        //         console.log("fail");
+        //         //alert("There was an error");
+        //         $('#overlay-frame .modal-title')[0].innerHTML = "Report";
+        //         $("#overlay-frame .modal-body").html("Error");
+        //     }
+        // });
 
         return false;
     }
-
-    if (url.endsWith(".txt")) {
+    else {
         //display_csv_data(url);
 
         $.ajax({
@@ -595,12 +756,14 @@ function openFile() {
                 $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
                 $("#overlay-frame .modal-body").html("<pre>" + response + "</pre>");
 
+
             },
             error: function () {
                 console.log("fail");
                 //alert("There was an error");
                 $('#overlay-frame .modal-title')[0].innerHTML = "File Content";
                 $("#overlay-frame .modal-body").html("Error");
+
             }
         });
 
@@ -627,11 +790,11 @@ function display_csv_data(url) {
     console.log(url);
     $.ajax({
         type: 'GET',
-        url: url,
+        url: 'fetchDocument?DocFolder=' + url,
         success: function (response) {
             console.log(response);
 
-            var parsedCSV = d3.csvParseRows(response);
+            var parsedCSV = d3.csv.parseRows(response);
             $('.modal-title')[0].innerHTML = "Report";
             $("#overlay-frame .modal-body").html("");
             var container = d3.select("#overlay-frame .modal-body")
@@ -1102,6 +1265,9 @@ $(document).ready(function () {
 
     });
 
+    $(document).on('click', '#reanalyse-model', re_analyze_model_func);
+
+
     $('.nav.nav-tabs').tab();
 
     $('form#sign-up').submit(signUpFormSubmit);
@@ -1353,26 +1519,30 @@ function createTrendingLines() {
         dataType: "json",
 
         success: function (response) {
-            //console.log(response);
+            console.log('----------');
+            console.log(response);
             var date = [];
             var transaction_num = [];
             var project_num = [];
             var case_num = [];
             var class_num = [];
             console.log(response);
-            for (var i = 0; i < response.length; i++) {
-                date.push(response[i].timestamp);
-                transaction_num.push(response[i].NT);
-                project_num.push(response[i].project);
-                case_num.push(response[i].UseCaseNum);
-                class_num.push(response[i].EntityNum);
+            for (var i = 0; i < response.NT.length; i++) {
+                date.push(response.timestamp[i]);
+                transaction_num.push(response.NT[i]);
+                project_num.push(response.projectNum[i]);
+                case_num.push(response.UseCaseNum[i]);
+                class_num.push(response.EntityNum[i]);
 
             }
-            date.push(response.timestamp);
-            transaction_num.push(response.NT);
-            project_num.push(response.projectNum);
-            case_num.push(response.UseCaseNum);
-            class_num.push(response.EntityNum);
+
+
+
+            // date.push(response.timestamp);
+            // transaction_num.push(response.NT);
+            // project_num.push(response.projectNum);
+            // case_num.push(response.UseCaseNum);
+            // class_num.push(response.EntityNum);
 
             // Default chart at the repo level - Number of transactions
             var chart = Highcharts.chart('trending-line', {
@@ -1445,10 +1615,11 @@ function createTrendingLines() {
             $('.green-card').click(function () {
                 console.log("green clicked");
                 var transaction_num_new = [];
-                for (var i = 0; i < response.length; i++) {
-                    transaction_num_new.push(response.transaction_num);
+                for (var i = 0; i < response.NT.length; i++) {
+                    transaction_num_new.push(response.NT[i]);
                 }
-                transaction_num_new.push(response.NT);
+                //console.log(transaction_num_new);
+                console.log('===========');
                 console.log(transaction_num_new);
                 chart.update({
                     yAxis: {
@@ -1684,6 +1855,11 @@ function createHistogram(dataList, max) {
             for (i = 0; i < maxLength; i++) {
                 categoriesList.push(i.toString());
             }
+
+            console.log("====================categoriesList=====================");
+            console.log(categoriesList);
+
+
             Highcharts.chart('chart-1', {
                 chart: {
                     type: 'column'
@@ -2084,8 +2260,10 @@ function buildTable(data) {
     var tempUrl = [];
     var storeUrl = [];
     var kb = [];
-    //console.log("Data");
-    // console.log(data);
+
+    console.log("Data");
+    console.log(data);
+
     var displayUrl = "";
     for (var i = 0; i < data.length; i++) {
         keys[i] = data[i].url;
@@ -2177,12 +2355,35 @@ function buildTable(data) {
 
         for (var i = 0; i < newKeys.length; i++) {
             if (type[newKeys[i]] === "File") {
+
                 // console.log(newKeys[i]);
                 var path = parentUrl + "/" + newKeys[i];
                 // console.log("path: " + path);
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'><a class='fileLink' href='" + path + "'>" +
-                    newKeys[i] +
-                    "</a></td><td>file</td>";
+                if (newKeys[i].endsWith(".csv")) {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/csv.jpg'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
+                else if (newKeys[i].endsWith(".txt")) {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
+                else if (newKeys[i].endsWith(".svg")) {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
+                else if (newKeys[i].endsWith(".json")) {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
+                else {
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path + "'>" +
+                        newKeys[i] +
+                        "</a></td><td>file</td>";
+                }
                 out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
             } else {
                 continue;
@@ -2319,9 +2520,31 @@ function buildTable2(data) {
     }
     for (var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "File") {
-            out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/file.png'>" +
+            if (newKeys[i].endsWith(".csv")) {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
+            }
+            else if (newKeys[i].endsWith(".txt")) {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'>" +
+                newKeys[i] +
+                "</td><td>file</td>";
+            }
+            else if (newKeys[i].endsWith(".svg")) {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'>" +
+                newKeys[i] +
+                "</td><td>file</td>";
+            }
+            else if (newKeys[i].endsWith(".json")) {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'>" +
+                newKeys[i] +
+                "</td><td>file</td>";
+            }
+            else {
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'>" +
+                newKeys[i] +
+                "</td><td>file</td>";
+            }
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
         }
         else {

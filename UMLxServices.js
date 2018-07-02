@@ -23,6 +23,9 @@ var MongoClient = mongo.MongoClient;
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
+var download = require('download');
+
+//var csv=require('csvtojson')
 //var removeDir = require('some-custom-fs');
 //var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 
@@ -218,10 +221,14 @@ app.get('/signup',function(req,res){
 });
 
 app.get('/login',function(req,res){
-	res.render('login');
+	//res.render('login');
+	res.redirect('/surveyproject');
 });
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+
+	res.end("error");
+	return;
 
 	var username = req.body['username'];
 	var pwd = req.body['password'];
@@ -481,6 +488,7 @@ app.post('/inviteUser', upload.fields([{name:'email',maxCount:1}]),  function (r
 })
 app.get('/surveyAnalytics', function (req, res){
     // console.log(req);
+	console.log("=================arrive here====================");
     umlModelInfoManager.saveSurveyAnalyticsData(req.query.uuid, req.query.ip, req.query.page);
     // console.log(data)
     // res.sendStatus(200);
@@ -488,13 +496,18 @@ app.get('/surveyAnalytics', function (req, res){
 
 
 app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
-	console.log(req.body);
+	//console.log(req.body);
 	var formInfo = req.body;
-    // console.log(umlSurveyFiles);
+	//console.log("==========umlSurveyFiles=============");
+    //console.log(umlSurveyFiles);
 
     // save the file names in DB
     formInfo.uml_file = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
     formInfo.uml_other = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
+
+    //console.log('=================formInfo==================');
+    //console.log(formInfo);
+
 	umlModelInfoManager.saveSurveyData(formInfo);
 	res.redirect("thankYou");
 });
@@ -508,8 +521,13 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 	var umlOtherPath = null;
 	//need to implement unzipped xml file data-analysis, for now only process single xml file!!
 	if(req.files['uml-file'] != null && req.files['uml-other'] != null){
+		// console.log("================================path===================");
+
 		umlFilePath = req.files['uml-file'][0].path;
 		umlOtherPath = req.files['uml-other'][0].path;
+
+        // console.log(umlFilePath);
+        // console.log(umlOtherPath);
 
 		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
 		//remove directory of zip file and the contents in the directory 
@@ -526,7 +544,13 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 	else if (req.files['uml-other'] != null) {
 		umlOtherPath = req.files['uml-other'][0].path;
 
+        console.log("================================path===================");
+        console.log(umlOtherPath);
+
 		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({path: umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")) }));
+
+        res.redirect('/');
+
 	} else {
 		return false;
 	}
@@ -555,24 +579,50 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 					res.end("error");
 					return;
 				}
-				umlEvaluator.evaluateModel(modelInfo, function(){
+				umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
 					console.log("model analysis complete");
+
+                    umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
+                        //				console.log(modelInfo);
+                        umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo2){
+                            console.log("=============repoInfo==========");
+                            console.log(repoInfo2);
+                            console.log("=============repoInfoNumber==========");
+                            //var totalRec = repoInfo2.Models.length;
+                            //console.log(totalRec);
+                            console.log("=============render==========");
+                            //res.render('mainPanel', {repoInfo:repoInfo2, totalRec: totalRec});
+                            // setTimeout(function(){
+                            // 	console.log("=============refresh=============");
+							 res.redirect('/');
+                            // }, 1000);
+                            //window.location.reload(true);
+                        });
+                    });
 				});
 	//			console.log(modelInfo);
 
+/*
 				umlModelInfoManager.saveModelInfo(modelInfo, repoId, function(modelInfo){
 	//				console.log(modelInfo);
 					umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 						console.log("=============repoInfo==========");
 						console.log(repoInfo);
 						res.render('mainPanel', {repoInfo:repoInfo});
+						//res.redirect('/');
 					}, true);
 				});
+*/
 			});
 		});
 	}
 
 });
+
+app.get('/uploadUMLFileCompany', function(req, res){
+	console.log('============gettoweb============');
+	res.redirect('/');
+})
 
 
 //This funtion is same as loadEmpiricalUsecaseDataForRepo, except we just take file from user input and pass it down.
@@ -706,37 +756,28 @@ app.get('/reanalyseRepo', function (req, res){
 
 //		console.log(refresh);
 		umlModelInfoManager.queryFullRepoInfo(repoId, function(repoInfo){
-			// console.log("start!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-			// console.log(repoInfo);
-			// console.log("done!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+//			console.log("start");
+//			console.log(repoInfo);
+//			console.log("done");		
 			
 //   			var debug = require("./utils/DebuggerOutput.js");
 //   			debug.writeJson("new_full_repo_info_"+repoId, repoInfo);
-
-
+            console.log("==================SURPRISE================");
 			umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+
 //				this repofo information only has repo structure but no actual data.
-				console.log("evaluated!!!!!!!");
-				console.log(repoInfo);
-
-
+				
 				umlModelInfoManager.updateRepoInfo(repoInfo, function(){
 //					umlFileManager.deleteDir(function(result){
 
 //					});
-					console.log("---------------------------------------------");
-					console.log("finished!!!!");
-
+				
 					res.redirect('/');
-					//res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
-
-
+//					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
 
 				});
-
 			});
 //		});
-
 	});
 })
 
@@ -749,7 +790,10 @@ app.get('/requestRepoBrief', function (req, res){
 
 		console.log("refresh");
 		umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
-				repoInfoBrief.projectNum = totalRec;
+			console.log('==========totalRec===========');
+			// console.log(totalRec);
+				repoInfoBrief.projectNum[repoInfoBrief.projectNum.length - 1] = totalRec;
+
 				res.end(JSON.stringify(repoInfoBrief));
 			});
 })
@@ -768,18 +812,29 @@ app.get('/reanalyseModel', function (req, res){
 				res.end("error");
 				return;
 			}
-			umlEvaluator.evaluateModel(extractedModelInfo, function(){
+			umlEvaluator.evaluateModel(extractedModelInfo, function(modelInfo2){
 				console.log("model analysis complete");
-			});
-//			console.log(modelInfo);
-			umlModelInfoManager.updateModelInfo(modelInfo, repoId, function(modelInfo){
+
+                umlModelInfoManager.updateModelInfo(modelInfo2, repoId, function(modelInfo){
 //				console.log(modelInfo);
 //				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 //					console.log("=============repoInfo==========");
 //					console.log(repoInfo);
-					res.render('modelDetail', {modelInfo:modelInfo, repo_id: repoId});
+                    //res.render('modelDetail', {modelInfo:modelInfo, repo_id: repoId});
+                    console.log("Re ana Now is good!1");
+                    //console.log(modelAnalytics);
+                    console.log(modelInfo);
+                    var uploadsFile = modelInfo.fileUrl;
+                    uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
+                    console.log(uploadsFile);
+                    res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
+                    console.log("Re ana Now is good!2");
+
 //				});
+                });
 			});
+//			console.log(modelInfo);
+
 		});
 	});
 })
@@ -971,7 +1026,8 @@ app.get('/queryModelInfo', function(req, res){
 
 	// });
 	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-		console.log("---------------modelInfo------------------");
+		console.log("Now is good!1");
+		//console.log(modelAnalytics);
 		console.log(modelInfo);
 		var uploadsFile = modelInfo.fileUrl;
 		uploadsFile = uploadsFile.substring(0, uploadsFile.length - 33);
@@ -1404,10 +1460,6 @@ app.get('/uploadProject', function(req, res){
 	res.render('uploadProject');
 });
 
-app.get('/estimatePage', function(req, res){
-	res.render('estimationPage');
-});
-
 // TODO use this API to populate data on UI
 app.get('/getSubmittedSurveyList', function(req, res){
     umlModelInfoManager.getSurveyData(function(data){
@@ -1421,7 +1473,12 @@ app.get('/surveyData', function(req, res){
 
 // to handle post redirect to home page
 app.post('/', function(req, res){
-	res.redirect('/')
+	console.log('==============shenmeshihou==============');
+    res.redirect('/');
+    // setTimeout(function () {
+    //     res.redirect('/');
+    // }, 10000);
+
 });
 
 //Vibhanshu
@@ -1491,7 +1548,7 @@ app.get('/', function(req, res){
 
 
 
-    if(req.param('curremtPage') != undefined){
+    if(req.param('currentPage') != undefined){
         currentPage = parseInt(req.param('currentPage'));
     }
     
@@ -1505,6 +1562,9 @@ app.get('/', function(req, res){
       
 //    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
   umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
+
+  	console.log("==========================sfsdfsdfs==============");
+  	console.log(repoInfo);
 	  
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
       
@@ -1540,13 +1600,17 @@ console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Cu
 						}
 				        
 						repoInfo.requestUUID = requestUUID;
-						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
+							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise,
+							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
                 	});
 				});
 
 			} else {
                 repoInfo.requestUUID = requestUUID;
-				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
+				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
+					repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
+					pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
 			}
 
 		});
@@ -1779,6 +1843,51 @@ app.get('/fetchDocument', function (req, res) {
 });
 
 
+app.get('/downloadDocument', function(req, res) {
+
+	var all_path = req.query.downloadUrl;
+	console.log("===========all_path===============");
+	console.log(all_path);
+
+    let downloadPath = 'http://localhost:8081/' + all_path;
+    console.log("++++++++++++++++downloadPath++++++++++++++");
+    console.log(downloadPath);
+
+    let savePath = 'public/downloads';
+    console.log("++++++++++++++++savePath++++++++++++++");
+    console.log(savePath);
+
+    let fileName = all_path.substring(all_path.lastIndexOf('/') + 1);
+    console.log("++++++++++++++++fileName++++++++++++++");
+    console.log(fileName);
+
+    let test_path = 'localhost:8081/' + all_path;
+    console.log("===========test_path===============");
+    console.log(test_path);
+
+    download(downloadPath, savePath).then(() => {
+        console.log('done!');
+    });
+
+    // download(downloadPath).then(data => {
+    //     fs.writeFileSync(savePath + '/' + fileName, data);
+    // });
+
+    // download(test_path).pipe(fs.createWriteStream(savePath + '/' + fileName));
+
+    // fs.readFile(downloadPath, (err, data) => {
+    //     if (err) throw err;
+    //     console.log(data);
+    //
+    //     fs.writeFile(savePath, data, (err) => {
+    //         if (err) throw err;
+    //         console.log(fs.readFileSync(path));
+    //     });
+    // });
+
+    res.end();
+});
+
 
 app.get('/deactivateUser', function(req,res){
 	var userId = req.query['uid'];
@@ -1796,9 +1905,34 @@ app.get('/deactivateUser', function(req,res){
 	}
 });
 
-var server = app.listen(8081,'127.0.0.1', function () {
-  var host = server.address().address
-  var port = server.address().port
-  console.log("Example app listening at http://%s:%s", host, port)
+//var server = app.listen(8081,'0.0.0.0', function () {
+//  var host = server.address().address
+//  var port = server.address().port
+//  console.log("Example app listening at http://%s:%s", host, port)
 
-});
+//});
+
+//var server = app.listen(8081,'127.0.0.1', function () {
+//  var host = server.address().address
+//  var port = server.address().port
+//  console.log("Example app listening at http://%s:%s", host, port)
+//});
+
+//webServer.use(vhost('umlx.kanqi.org', app)); // Serves top level domain via Main server app
+
+/* istanbul ignore next */
+//if (!module.parent) {
+//  webServer.listen(8081);
+//  console.log('Express started on port 8081');
+//}
+
+var vhost = require('vhost');
+var webServer = module.exports = express();
+
+webServer.use(vhost('umlx.kanqi.org', app)); // Serves top level domain via Main server app
+
+/* istanbul ignore next */
+if (!module.parent) {
+  webServer.listen(8081);
+  console.log('Express started on port 8081');
+}
