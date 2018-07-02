@@ -433,22 +433,22 @@
 						console.log(command);
 						RScriptExec.runRScript(command,function(result){
 							
-							if (!result) {
-								if(callbackfunc){
-									callbackfunc(false);
-								}
-								return;
-							}
+							// if (!result) {
+							// 	if(callbackfunc){
+							// 		callbackfunc(false);
+							// 	}
+							// 	return;
+							// }
 							
 							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
 							
 							RScriptExec.runRScript(command,function(result){
-								if (!result) {
-									if(callbackfunc){
-										callbackfunc(false);
-									}
-									return;
-								}
+								// if (!result) {
+								// 	if(callbackfunc){
+								// 		callbackfunc(false);
+								// 	}
+								// 	return;
+								// }
 								if(callbackfunc){
 									callbackfunc(model);
 								}

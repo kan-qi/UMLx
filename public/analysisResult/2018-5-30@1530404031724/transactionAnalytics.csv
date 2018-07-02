@@ -1,0 +1,64 @@
+id,path,useCase,transactional,tran_length,arch_diff
+1,stl#Actor2:b2->Actor2:b2->b2:b1->b1:c1->c1:e1->e1:c2->c2:e2->e2:b2->b2:b1,Experiment Use Case,CTRL,9,9
+2,stl#Actor2:b2->Actor2:b2->b2:b1->b1:c1->c1:e1->e1:c2->c2:e2->e2:b1->b1:c1,Experiment Use Case,CTRL,9,9
+3,stl#Actor2:b2->Actor2:b2->b2:b1->b1:c1->c1:b2->b2:b1,Experiment Use Case,CTRL,6,6
+4,stl#Actor1:b1->Actor1:b1->b1:c1->c1:e1->e1:c2->c2:e2->e2:b2->b2:b1->b1:c1,Experiment Use Case,CTRL,9,9
+5,stl#Actor1:b1->Actor1:b1->b1:c1->c1:e1->e1:c2->c2:e2->e2:b1->b1:c1,Experiment Use Case,CTRL,8,8
+6,stl#Actor1:b1->Actor1:b1->b1:c1->c1:b2->b2:b1->b1:c1,Experiment Use Case,CTRL,6,6
+7,stl#Actor1:b2->Actor1:b2->b2:b1->b1:c1->c1:e1->e1:c2->c2:e2->e2:b2->b2:b1,Experiment Use Case,CTRL,9,9
+8,stl#Actor1:b2->Actor1:b2->b2:b1->b1:c1->c1:e1->e1:c2->c2:e2->e2:b1->b1:c1,Experiment Use Case,CTRL,9,9
+9,stl#Actor1:b2->Actor1:b2->b2:b1->b1:c1->c1:b2->b2:b1,Experiment Use Case,CTRL,6,6
+1,stl#undefined->undefined,Use Case1,CTRL,2,2
+1,stl#Actor2:Object1->Actor2:Object1->Object1:b1->b1:c1->c1:e1,TestAlgorithm1,TRAN_NA,5,5
+2,stl#Actor2:Object1->Actor2:Object1->Object1:Object2->Object2:c1->c1:e1,TestAlgorithm1,TRAN_NA,5,5
+3,stl#Actor1:b1->Actor1:b1->b1:c1->c1:e1,TestAlgorithm1,CTRL,4,4
+1,stl#undefined->undefined,Use Case1,CTRL,2,2
+1,stl#Actor2:Object1->Actor2:Object1->Object1:b1->b1:c1->c1:e1,Test use case,TRAN_NA,5,5
+2,stl#Actor2:Object1->Actor2:Object1->Object1:Object2->Object2:c1->c1:e1,Test use case,TRAN_NA,5,5
+3,stl#Actor1:b1->Actor1:b1->b1:c1->c1:e1,Test use case,CTRL,4,4
+1,stl#undefined->undefined,Use Case1,CTRL,2,2
+1,stl#Business Parter:Buy Subscription Page(1)->Business Parter:Buy Subscription Page(1)->Buy Subscription Page(1):Display Subscription Page(2)->Display Subscription Page(2):Buy Subscription Page(1)->Buy Subscription Page(1):Display Subscription Comfirmation Page->Display Subscription Comfirmation Page:Buy Subscription Comfirmation Page->Buy Subscription Comfirmation Page:Marked as Subscirpted->Marked as Subscirpted:Subscription->Subscription:Display Buy My Subscription Success Page->Display Buy My Subscription Success Page:Buy Success Page->Buy Success Page:Display Home Page(Designed by other part),Buy Partner Subscription,TRAN_NA,11,11
+2,stl#Business Parter:Buy Subscription Page(1)->Business Parter:Buy Subscription Page(1)->Buy Subscription Page(1):Display Subscription Comfirmation Page->Display Subscription Comfirmation Page:Buy Subscription Comfirmation Page->Buy Subscription Comfirmation Page:Marked as Subscirpted->Marked as Subscirpted:Subscription->Subscription:Display Buy My Subscription Success Page->Display Buy My Subscription Success Page:Buy Success Page->Buy Success Page:Display Home Page(Designed by other part),Buy Partner Subscription,TRAN_NA,9,9
+3,stl#Business Parter:Buy Success Page->Business Parter:Buy Success Page->Buy Success Page:Display Home Page(Designed by other part),Buy Partner Subscription,TRAN_NA,3,3
+4,stl#Business Parter:Buy Subscription Comfirmation Page->Business Parter:Buy Subscription Comfirmation Page->Buy Subscription Comfirmation Page:Marked as Subscirpted->Marked as Subscirpted:Subscription->Subscription:Display Buy My Subscription Success Page->Display Buy My Subscription Success Page:Buy Success Page->Buy Success Page:Display Home Page(Designed by other part),Buy Partner Subscription,TRAN_NA,7,7
+1,stl#Business Partner:Cancel Subscription Comfirmation Page->Business Partner:Cancel Subscription Comfirmation Page->Cancel Subscription Comfirmation Page:Marked as Canceled->Marked as Canceled:Subscription,Cancel Partner Subscription,CTRL,4,4
+2,stl#Business Partner:Cancel Subscription Comfirmation Page->Business Partner:Cancel Subscription Comfirmation Page->Cancel Subscription Comfirmation Page:Marked as Canceled->Marked as Canceled:Display Success Page->Display Success Page:Cancel Subscription Success Page->Cancel Subscription Success Page:Display Home Page,Cancel Partner Subscription,CTRL,6,6
+3,stl#Business Partner:Cancel Subscription Comfirmation Page->Business Partner:Cancel Subscription Comfirmation Page->Cancel Subscription Comfirmation Page:Display Cancel Sub page,Cancel Partner Subscription,CTRL,3,3
+4,stl#Business Partner:Cancel Subscription Success Page->Business Partner:Cancel Subscription Success Page->Cancel Subscription Success Page:Display Home Page,Cancel Partner Subscription,CTRL,3,3
+5,stl#Business Partner:Cancel Subscription Page->Business Partner:Cancel Subscription Page->Cancel Subscription Page:Display Comfirmation Page->Display Comfirmation Page:Cancel Subscription Comfirmation Page->Cancel Subscription Comfirmation Page:Marked as Canceled->Marked as Canceled:Subscription,Cancel Partner Subscription,CTRL,6,6
+6,stl#Business Partner:Cancel Subscription Page->Business Partner:Cancel Subscription Page->Cancel Subscription Page:Display Comfirmation Page->Display Comfirmation Page:Cancel Subscription Comfirmation Page->Cancel Subscription Comfirmation Page:Marked as Canceled->Marked as Canceled:Display Success Page->Display Success Page:Cancel Subscription Success Page->Cancel Subscription Success Page:Display Home Page,Cancel Partner Subscription,CTRL,8,8
+7,stl#Business Partner:Cancel Subscription Page->Business Partner:Cancel Subscription Page->Cancel Subscription Page:Display Comfirmation Page->Display Comfirmation Page:Cancel Subscription Comfirmation Page->Cancel Subscription Comfirmation Page:Display Cancel Sub page,Cancel Partner Subscription,CTRL,5,5
+1,stl#Third Party Client:access->Third Party Client:access->access:Coupon,Design Coupon,TRAN_NA,3,3
+2,stl#Business Partner:Coupon Designer->Business Partner:Coupon Designer->Coupon Designer:Upload Image->Upload Image:External Image Service,Design Coupon,TRAN_NA,4,4
+3,stl#Business Partner:Coupon Designer->Business Partner:Coupon Designer->Coupon Designer:Test,Design Coupon,TRAN_NA,3,3
+4,stl#Business Partner:Coupon Designer->Business Partner:Coupon Designer->Coupon Designer:Retrieves->Retrieves:Error Message,Design Coupon,TRAN_NA,4,4
+5,stl#Business Partner:Coupon Designer->Business Partner:Coupon Designer->Coupon Designer:Save->Save:Coupon,Design Coupon,TRAN_NA,4,4
+6,stl#Business Partner:Coupon Designer->Business Partner:Coupon Designer->Coupon Designer:Edit->Edit:Coupon Templates,Design Coupon,TRAN_NA,4,4
+1,stl#FTSR:Offers Page->FTSR:Offers Page->Offers Page:Edit Offer->Edit Offer:Modify offer page->Modify offer page:Modify Offer->Modify Offer:Offer,Modify Offer,CTRL,6,6
+2,stl#FTSR:Offers Page->FTSR:Offers Page->Offers Page:Edit Offer->Edit Offer:Modify offer page->Modify offer page:Invoke design coupon use case,Modify Offer,CTRL,5,5
+3,stl#FTSR:Offers Page->FTSR:Offers Page->Offers Page:Edit Offer->Edit Offer:Modify offer page->Modify offer page:Enter offer's new values,Modify Offer,CTRL,5,5
+1,stl#User:Partner Login->User:Partner Login->Partner Login:Enter username and password->Enter username and password:Query database with username and password->Query database with username and password:System Database->System Database:Is a match found?->Is a match found?:Partner Portal,Partner Login,TRAN_NA,7,7
+2,stl#User:Partner Login->User:Partner Login->Partner Login:Enter username and password->Enter username and password:Query database with username and password->Query database with username and password:System Database->System Database:Is a match found?->Is a match found?:Display error message,Partner Login,TRAN_NA,7,7
+3,stl#User:Partner Portal->User:Partner Portal,Partner Login,CTRL,2,2
+1,stl#FTSR:offer details->FTSR:offer details->offer details:Check validate->Check validate:Display modify error,Publish Offer,TRAN_NA,4,4
+2,stl#FTSR:offer details->FTSR:offer details->offer details:Check validate->Check validate:Publish offer,Publish Offer,TRAN_NA,4,4
+3,stl#FTSR:offers pages->FTSR:offers pages->offers pages:Display offer->Display offer:offer details->offer details:Check validate->Check validate:Display modify error,Publish Offer,TRAN_NA,6,6
+4,stl#FTSR:offers pages->FTSR:offers pages->offers pages:Display offer->Display offer:offer details->offer details:Check validate->Check validate:Publish offer,Publish Offer,TRAN_NA,6,6
+5,stl#FTSR:offers pages->FTSR:offers pages->offers pages:Display offer->Display offer:Retrieve offers->Retrieve offers:Dispaly Error Msg,Publish Offer,CTRL,5,5
+6,stl#Add Server:Publish offer->Add Server:Publish offer,Publish Offer,CTRL,2,2
+1,stl#FT:Coupon Page->FT:Coupon Page->Coupon Page:Redeem Coupon->Redeem Coupon:Coupon Database,Test Coupon,TRAN_NA,4,4
+2,stl#FT:Coupon Page->FT:Coupon Page->Coupon Page:Save coupon for later->Save coupon for later:Partner's Mobile->Partner's Mobile:Open Coupon Page,Test Coupon,TRAN_NA,5,5
+3,stl#FT:Coupon Redeemed->FT:Coupon Redeemed->Coupon Redeemed:Coupon Validator->Coupon Validator:Coupon Database,Test Coupon,TRAN_NA,4,4
+4,stl#FT:Coupon Invalid->FT:Coupon Invalid->Coupon Invalid:Coupon Validator->Coupon Validator:Coupon Database,Test Coupon,TRAN_NA,4,4
+1,stl#User:Cancel Button->User:Cancel Button,Upload Image,CTRL,2,2
+2,stl#User:Cancel Button->User:Cancel Button,Upload Image,EXTCLL,2,2
+3,stl#User:Cancel Button->User:Cancel Button,Upload Image,INT,2,2
+4,stl#User:Upload Image button->User:Upload Image button->Upload Image button:File Chooser Windows->File Chooser Windows:Select the Image file,Upload Image,CTRL,4,4
+5,stl#User:Upload Image button->User:Upload Image button->Upload Image button:File Chooser Windows->File Chooser Windows:Cancel Button,Upload Image,CTRL,4,4
+6,stl#User:Upload Image button->User:Upload Image button->Upload Image button:File Chooser Windows->File Chooser Windows:Cancel Button,Upload Image,EXTCLL,4,4
+7,stl#User:Upload Image button->User:Upload Image button->Upload Image button:File Chooser Windows->File Chooser Windows:Cancel Button,Upload Image,INT,4,4
+8,stl#User:Design Coupon screen->User:Design Coupon screen,Upload Image,CTRL,2,2
+9,stl#User:Design Coupon screen->User:Design Coupon screen,Upload Image,EXTCLL,2,2
+10,stl#User:Design Coupon screen->User:Design Coupon screen,Upload Image,INT,2,2
+11,stl#User:Open Button->User:Open Button->Open Button:Display Image in Coupon Image->Display Image in Coupon Image:Design Coupon screen,Upload Image,TRAN_NA,4,4
+12,stl#User:Select the Image file->User:Select the Image file,Upload Image,CTRL,2,2
