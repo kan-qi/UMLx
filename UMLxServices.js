@@ -1796,9 +1796,21 @@ app.get('/deactivateUser', function(req,res){
 	}
 });
 
-var server = app.listen(8081,'127.0.0.1', function () {
-  var host = server.address().address
-  var port = server.address().port
-  console.log("Example app listening at http://%s:%s", host, port)
+//var server = app.listen(8081,'127.0.0.1', function () {
+//  var host = server.address().address
+//  var port = server.address().port
+//  console.log("Example app listening at http://%s:%s", host, port)
+//
+//});
 
-});
+
+var vhost = require('vhost');
+var webServer = module.exports = express();
+
+webServer.use(vhost('umlx.kqi.org', app)); // Serves top level domain via Main server app
+
+/* istanbul ignore next */
+if (!module.parent) {
+  webServer.listen(8081);
+  console.log('Express started on port 8081');
+}
