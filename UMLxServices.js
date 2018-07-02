@@ -218,10 +218,14 @@ app.get('/signup',function(req,res){
 });
 
 app.get('/login',function(req,res){
-	res.render('login');
+	//res.render('login');
+	res.redirect('/surveyproject');
 });
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+
+	res.end("error");
+	return;
 
 	var username = req.body['username'];
 	var pwd = req.body['password'];
@@ -1796,18 +1800,18 @@ app.get('/deactivateUser', function(req,res){
 	}
 });
 
-//var server = app.listen(8081,'127.0.0.1', function () {
+//var server = app.listen(8081,'0.0.0.0', function () {
 //  var host = server.address().address
 //  var port = server.address().port
 //  console.log("Example app listening at http://%s:%s", host, port)
-//
+
 //});
 
 
 var vhost = require('vhost');
 var webServer = module.exports = express();
 
-webServer.use(vhost('umlx.kqi.org', app)); // Serves top level domain via Main server app
+webServer.use(vhost('umlx.kanqi.org', app)); // Serves top level domain via Main server app
 
 /* istanbul ignore next */
 if (!module.parent) {
