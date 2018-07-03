@@ -18,7 +18,7 @@ var fs = require('fs');
 //	var ModelOutputDir = "./model_platforms/src";
 //	var ModelOutputDir = "./model_platforms/src/carbonData";
 //	var ModelOutputDir = "./model_platforms/src/repoAnalyzer";
-	var ModelOutputDir = "./model_platforms/ea";
+	var ModelOutputDir = "./model_platforms/visual_paradigm";
 	
 var xmiParser = require("../XMI2.1Parser.js");
 				console.log("hello");
