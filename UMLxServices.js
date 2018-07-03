@@ -221,8 +221,8 @@ app.get('/signup',function(req,res){
 });
 
 app.get('/login',function(req,res){
-	//res.render('login');
-	res.redirect('/surveyproject');
+	res.render('login');
+//	res.redirect('/surveyproject');
 });
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){

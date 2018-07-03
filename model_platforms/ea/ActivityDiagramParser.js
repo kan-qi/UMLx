@@ -167,9 +167,9 @@
 		for(var i in Activities){
 			var activity = Activities[i];
 
-			console.log("determine fragement node");
-			console.log(Activities);
-			console.log(activity.Name);
+//			console.log("determine fragement node");
+//			console.log(Activities);
+//			console.log(activity.Name);
 			if(activity.Type === "uml:DecisionNode" || activity.Type === "uml:ActivityFinalNode" || activity.Type === "uml:InitialNode" || activity.Type === "uml:FlowFinalNode"){
 //					var activityToEliminate = activity;
 				ActivitiesToEliminate.push(activity);

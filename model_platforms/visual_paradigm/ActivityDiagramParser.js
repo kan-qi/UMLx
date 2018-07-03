@@ -4,6 +4,7 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
+	const uuidv4 = require('uuid/v4');
 
 	function standardizeName(name) {
 		return name.replace(/\s/g, '').toUpperCase();
@@ -17,8 +18,7 @@
 	for ( var i in XMIActivityDiagrams) {
 
 		XMIActivityDiagram = XMIActivityDiagrams[i];
-		
-		
+	
 		var Diagram = {
 				_id : XMIActivityDiagram['$']['xmi:id'],
 				Name : XMIActivityDiagram['$']['name'],
@@ -33,6 +33,21 @@
 		
 		DiagramsByID[Diagram._id] = Diagram;
 	}
+	
+	
+	function findDiagramByActivity(action, DiagramsByID){
+		for(var i in DiagramsByID){
+			var diagram = DiagramsByID[i];
+			for(var j in diagram.Elements){
+				var element = Diagram.Elements[j];
+				if(element === action._id){
+					return diagram;
+				}
+			}
+		}
+		
+		return null;
+	}
 
 		// identify the use cases by diagrams.
 		
@@ -41,24 +56,28 @@
 		for ( var i in XMIActivities) {
 
 			XMIActivity = XMIActivities[i];
-
-//			var UseCase = {
-//				_id : XMIActivityDiagram['$']['xmi:id'],
-//				Name : XMIActivityDiagram['$']['name'],
-//				PrecedenceRelations : [],
-//				Activities : [],
-//				OutputDir : Model.OutputDir + "/"
-//						+ XMIActivityDiagram['$']['xmi:id'],
-//				AccessDir : Model.AccessDir + "/"
-//						+ XMIActivityDiagram['$']['xmi:id'],
-//			}
 			
 			var Activities = [];
+			var ActivitiesByID = {};
 			var PrecedenceRelations = [];
-			var Partitions = [];
+			
+			var PartitionsByID = {};
+			
+			 var XMIPartitions = jp.query(XMIActivity, '$..group[?(@[\'$\'][\'xmi:type\']==\'uml:ActivityPartition\')]');
+	            for (var i in XMIPartitions) {
+	                var XMIPartition = XMIPartitions[i];
+	                var partition = {
+	                    Type: "partition",
+	                    _id: XMIPartition['$']['xmi:id'],
+	                    Name: XMIPartition['$']['name']
+	                }
+	                PartitionsByID[partition._id] = partition.Name;
+	            }
 
+			
 
-
+			var referencedDiagram = null;
+			
 			var XMIActions = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\'])]');
 			var activity = null;
 			
@@ -69,77 +88,93 @@
 			if (XMIAction['$']['xmi:type'] == 'uml:CallBehaviorAction') {
 					var XMINode = XMIAction;
 					activity = {
-						Type : "action",
+						Type : "uml:CallBehaviorAction",
 						_id : XMINode['$']['xmi:id'],
 						Name : XMINode['$']['name'],
-						Partition : (XMINode['$']['inPartition'] === undefined) ? ""
-								: XMINode['$']['inPartition'],
+						Partition : (PartitionsByID[XMINode['$']['inPartition']] === undefined) ? ""
+								: PartitionsByID[XMINode['$']['inPartition']],
 						Stimulus : false,
-						Scope : false,
+						Scope : true,
 					};
 				}  else if (XMIAction['$']['xmi:type'] == 'uml:InitialNode') {
 					var XMIInitialNode = XMIAction;
 					activity = {
-						Type : "initialNode",
+						Type : "uml:InitialNode",
 						_id : XMIInitialNode['$']['xmi:id'],
 						Name : (XMIInitialNode['$']['name'] === undefined) ? ""
 								: XMIInitialNode['$']['name'],
-						Partition : (XMIInitialNode['$']['inPartition'] === undefined) ? ""
-								: XMIInitialNode['$']['inPartition'],
+						Partition : (PartitionsByID[XMINode['$']['inPartition']] === undefined) ? ""
+										: PartitionsByID[XMINode['$']['inPartition']],
+						Stimulus : false,
+						Scope : true,
 					};
 				} else if (XMIAction['$']['xmi:type'] == 'uml:ActivityFinalNode') {
 					var XMIEndNode = XMIAction;
 					activity = {
-						Type : "finalNode",
+						Type : "uml:ActivityFinalNode",
 						_id : XMIEndNode['$']['xmi:id'],
 						Name : (XMIEndNode['$']['name'] === undefined) ? ""
 								: XMIEndNode['$']['name'],
-						Partition : (XMIEndNode['$']['inPartition'] === undefined) ? ""
-								: XMIEndNode['$']['inPartition'],
+						Partition : (PartitionsByID[XMINode['$']['inPartition']] === undefined) ? ""
+										: PartitionsByID[XMINode['$']['inPartition']],
+						Stimulus : false,
+						Scope : true,
 					};
 				} else if (XMIAction['$']['xmi:type'] == 'uml:ForkNode') {
 					var XMIForkNode = XMIAction;
 					activity = {
-						Type : "forkNode",
+						Type : "uml:ForkNode",
 						_id : XMIForkNode['$']['xmi:id'],
 						Name : (XMIForkNode['$']['name'] === undefined) ? ""
 								: XMIForkNode['$']['name'],
-						Partition : (XMIForkNode['$']['inPartition'] === undefined) ? ""
-								: XMIForkNode['$']['inPartition'],
+						Partition : (PartitionsByID[XMINode['$']['inPartition']] === undefined) ? ""
+										: PartitionsByID[XMINode['$']['inPartition']],
+					    Stimulus : false,
+					    Scope : true,
 					};
 				} else if (XMIAction['$']['xmi:type'] == 'uml:JoinNode') {
 					var XMIJoinNode = XMIAction;
 					activity = {
-						Type : "joinNode",
+						Type : "uml:JoinNode",
 						_id : XMIJoinNode['$']['xmi:id'],
 						Name : (XMIJoinNode['$']['name'] === undefined) ? ""
 								: XMIJoinNode['$']['name'],
-						Partition : (XMIJoinNode['$']['inPartition'] === undefined) ? ""
-								: XMIJoinNode['$']['inPartition'],
+						Partition : (PartitionsByID[XMINode['$']['inPartition']] === undefined) ? ""
+										: PartitionsByID[XMINode['$']['inPartition']],
+					    Stimulus : false,
+						Scope : true,
 					}
 				} else if (XMIAction['$']['xmi:type'] == 'uml:DecisionNode') {
 					var XMIDecisionNode = XMIAction;
 					activity = {
-						Type : "decisionNode",
+						Type : "uml:DecisionNode",
 						_id : XMIDecisionNode['$']['xmi:id'],
 						Name : (XMIDecisionNode['$']['name'] === undefined) ? ""
 								: XMIDecisionNode['$']['name'],
-						Partition : (XMIDecisionNode['$']['inPartition'] === undefined) ? ""
-								: XMIDecisionNode['$']['inPartition'],
+						Partition : (PartitionsByID[XMINode['$']['inPartition']] === undefined) ? ""
+										: PartitionsByID[XMINode['$']['inPartition']],
+						Stimulus : false,
+						Scope : true,
 					}
 				} else if (XMIAction['$']['xmi:type'] == 'uml:MergeNode') {
 					var XMIMergeNode = XMIAction;
 					activity = {
-						Type : "mergeNode",
+						Type : "uml:MergeNode",
 						_id : XMIMergeNode['$']['xmi:id'],
 						Name : (XMIMergeNode['$']['name'] === undefined) ? ""
 								: XMIMergeNode['$']['name'],
-						Partition : (XMIMergeNode['$']['inPartition'] === undefined) ? ""
-								: XMIMergeNode['$']['inPartition'],
+						Partition : (PartitionsByID[XMINode['$']['inPartition']] === undefined) ? ""
+										: PartitionsByID[XMINode['$']['inPartition']],
+						Stimulus : false,
+						Scope : true,
 					}
 				}
 				
+				if(!referencedDiagram){
+					referencedDiagram = findDiagramByActivity(activity, DiagramsByID);
+				}
 				
+				ActivitiesByID[activity._id] = activity;
 				Activities.push(activity);
 				}
 					
@@ -151,36 +186,89 @@
 			                var XMIEdgeByStandard = {
 			                    _id: XMIEdge['$']['xmi:id'],
 			                    Name: (XMIEdge['$']['name'] === undefined) ? "" : XMIEdge['$']['name'],
-			                    Start: XMIEdge['$']['source'],
-			                    End: XMIEdge['$']['target']
+			                    start: ActivitiesByID[XMIEdge['$']['source']],
+			                    end: ActivitiesByID[XMIEdge['$']['target']]
 			                };
 			                PrecedenceRelations.push(XMIEdgeByStandard);
 			          }
 					
-					 var XMIPartitions = jp.query(XMIActivity, '$..group[?(@[\'$\'][\'xmi:type\']==\'uml:ActivityPartition\')]');
-			            for (var i in XMIPartitions) {
-			                var XMIPartition = XMIPartitions[i];
-			                var partition = {
-			                    Type: "partition",
-			                    _id: XMIPartition['$']['xmi:id'],
-			                    Name: XMIPartition['$']['name']
-			                }
-			                Partitions.push(partition);
-			            }
-
 					
 				
 			
 			console.log("Finished parsing activity diagram");
 			
-			var UseCase = {
-					_id: "hello",
-					Name: "hello",
-					Activities : Activities,
-					PrecedenceRelations : PrecedenceRelations,
-					Partitions : Partitions
+			if(!referencedDiagram){
+				var uuid = uuidv4();
+				referencedDiagram = {
+						_id: uuid,
+						Name: "UC-"+uuid
+				}
 			}
+			
+			var ActivitiesToEliminate = [];
+			//to  eliminate unnecessary activities
+			for(var i in Activities){
+				var activity = Activities[i];
 
+//				console.log("determine fragement node");
+//				console.log(Activities);
+//				console.log(activity.Name);
+				if(activity.Type === "uml:DecisionNode" || activity.Type === "uml:ActivityFinalNode" || activity.Type === "uml:InitialNode" || activity.Type === "uml:FlowFinalNode"){
+//						var activityToEliminate = activity;
+					ActivitiesToEliminate.push(activity);
+				}
+			}
+			
+			for(var j in ActivitiesToEliminate){
+				var activityToEliminate = ActivitiesToEliminate[j];
+				var outEdges = [];
+				var inEdges = [];
+				var leftEdges = [];
+				for(var k in PrecedenceRelations){
+					var precedenceRelation = PrecedenceRelations[k];
+					if(precedenceRelation.end == activityToEliminate){
+						inEdges.push(precedenceRelation);
+					} else if(precedenceRelation.start == activityToEliminate){
+						outEdges.push(precedenceRelation);
+					} else {
+						leftEdges.push(precedenceRelation);
+					}
+				}
+				
+				for(var k in inEdges){
+					var  inEdge = inEdges[k];
+					for(var l in outEdges){
+						var outEdge = outEdges[l];
+						 //create a new edge by triangle rules.
+						leftEdges.push({start: inEdge.start, end: outEdge.end});
+					}
+				}
+				
+				Activities.splice(Activities.indexOf(activityToEliminate), 1);
+				PrecedenceRelations = leftEdges;
+			}
+			
+			//logic to decide Stimulus
+			for(var j in PrecedenceRelations){
+				var edge = PrecedenceRelations[j];
+				 //create a new edge by triangle rules.
+				if(edge.start.Partition !== "System" && edge.end.Partition === "System"){
+					console.log("Stimulus...");
+					console.log(edge.start);
+					edge.start.Stimulus = true;
+				}
+			}
+			
+			var UseCase = {
+			_id : referencedDiagram._id,
+			Name : referencedDiagram.Name,
+			Activities : Activities,
+			PrecedenceRelations : PrecedenceRelations,
+			OutputDir : Model.OutputDir + "/"
+					+ referencedDiagram._id,
+			AccessDir : Model.AccessDir + "/"
+					+ referencedDiagram._id,
+		}
 			Model.UseCases.push(UseCase);
 		}
 	}
