@@ -66,9 +66,14 @@ var surveyFiles = multer.diskStorage({
         cb(null, fileDestination);
     },
     filename: function (req, file, cb) {
+        //console.log("--------------1-------------");
+        //console.log(file.originalname);
         var fileName = Date.now()+ "-" + file.originalname;
-        cb(null, fileName)
-        umlSurveyFiles.push(fileName);
+        //console.log("--------------0-------------");
+        //console.log(fileName);
+        cb(null, fileName);
+        //umlSurveyFiles.push(fileName);
+        //console.log(umlSurveyFiles);
 		console.log("saved the file " + fileName + " in " + fileDestination);
     }
 })
@@ -491,18 +496,29 @@ app.get('/surveyAnalytics', function (req, res){
 });
 
 
-app.post('/uploadSurveyData', surveyUploads.fields([{name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
-	//console.log(req.body);
+app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxCount: 1}, {name: 'requirements', maxCount:1},
+	{name: 'use_cases', maxCount: 1}, {name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
+	console.log(req.body);
 	var formInfo = req.body;
-	//console.log("==========umlSurveyFiles=============");
-    //console.log(umlSurveyFiles);
+
+	console.log("==========req.files=============");
+    console.log(req.files);
 
     // save the file names in DB
-    formInfo.uml_file = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
-    formInfo.uml_other = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
+    // formInfo.project_plans = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
+    // formInfo.requirements = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
+    // formInfo.use_cases = (umlSurveyFiles[2]==undefined) ? "" : umlSurveyFiles[2];
+    // formInfo.uml_file = (umlSurveyFiles[3]==undefined) ? "" : umlSurveyFiles[3];
+    // formInfo.uml_other = (umlSurveyFiles[4]==undefined) ? "" : umlSurveyFiles[4];
 
-    //console.log('=================formInfo==================');
-    //console.log(formInfo);
+    formInfo.project_plans = (req.files.project_plans==undefined) ? "" : Date.now()+ "-" + req.files.project_plans[0].originalname;
+    formInfo.requirements = (req.files.requirements==undefined) ? "" : Date.now()+ "-" + req.files.requirements[0].originalname;
+    formInfo.use_cases = (req.files.use_cases==undefined) ? "" : Date.now()+ "-" + req.files.use_cases[0].originalname;
+    formInfo.uml_file = (req.files.uml_file==undefined) ? "" : Date.now()+ "-" + req.files.uml_file[0].originalname;
+    formInfo.uml_other = (req.files.uml_other==undefined) ? "" : Date.now()+ "-" + req.files.uml_other[0].originalname;
+
+    console.log('=================formInfo==================');
+    console.log(formInfo);
 
 	umlModelInfoManager.saveSurveyData(formInfo);
 	res.redirect("thankYou");
