@@ -136,6 +136,8 @@
 		// constructing the domain model.
 		var	XMIUMLModel = xmiString['uml:Model'];
 		
+//		console.log(XMIUMLModel);
+		
 //      var Model = {
 //				Elements: [],
 //				Edges:[]
@@ -258,6 +260,7 @@
 //			//DomainElementsByID[domainElement._id] = domainElement;
 //		}
 //		console.log(XMIClasses);
+//		console.log(XMIUMLModel);
 		
 		activityDiagramParser.parseActivityDiagram(XMIUMLModel, Model);
 		
