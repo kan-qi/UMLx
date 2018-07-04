@@ -30,6 +30,8 @@
 				var Model = {
 						Actors:[],
 						Roles:[],
+						UseCases: [],
+						DomainModel: [],
 						OutputDir: ModelOutputDir,
 						AccessDir: ModelAccessDir
 				};
