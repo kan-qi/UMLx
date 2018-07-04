@@ -11,55 +11,31 @@
 	}
 
 	function parseActivityDiagram(XMIUMLModel, Model) {
-		
-		var XMIActivityDiagrams = jp.query(XMIUMLModel, '$..[\'uml:Diagram\'][?(@[\'$\'][\'diagramType\']==\'ActivityDiagram\')]');
-		var DiagramsByID = {};
-		
-	for ( var i in XMIActivityDiagrams) {
-
-		XMIActivityDiagram = XMIActivityDiagrams[i];
 	
-		var Diagram = {
-				_id : XMIActivityDiagram['$']['xmi:id'],
-				Name : XMIActivityDiagram['$']['name'],
-				Elements: []
-			}
-
-		var XMIActivitiesReferenced = jp.query(XMIActivityDiagram, '$..[\'uml:DiagramElement\'][?(@[\'$\'][\'subject\'])]');
-		for ( var j in XMIActivitiesReferenced) {
-			var XMIActivityReferenced = XMIActivitiesReferenced[j];
-			Diagram.Elements.push(XMIActivityReferenced['$']['subject']);
-		}
-		
-		DiagramsByID[Diagram._id] = Diagram;
-	}
-	
-	
-	function findDiagramByActivity(action, DiagramsByID){
-		for(var i in DiagramsByID){
-			var diagram = DiagramsByID[i];
-			for(var j in diagram.Elements){
-				var element = Diagram.Elements[j];
-				if(element === action._id){
-					return diagram;
-				}
-			}
-		}
-		
-		return null;
-	}
+//	function findDiagramByActivity(action, DiagramsByID){
+//		for(var i in DiagramsByID){
+//			var diagram = DiagramsByID[i];
+//			for(var j in diagram.Elements){
+//				var element = Diagram.Elements[j];
+//				if(element === action._id){
+//					return diagram;
+//				}
+//			}
+//		}
+//		
+//		return null;
+//	}
 
 		// identify the use cases by diagrams.
-		
+//		var Activities = [];
+		var ActivitiesByID = {};
+		var PrecedenceRelationsBySource = {};
+				
 		var XMIActivities = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\')]');
 
 		for ( var i in XMIActivities) {
 
 			XMIActivity = XMIActivities[i];
-			
-			var Activities = [];
-			var ActivitiesByID = {};
-			var PrecedenceRelations = [];
 			
 			var PartitionsByID = {};
 			
@@ -76,7 +52,7 @@
 
 			
 
-			var referencedDiagram = null;
+//			var referencedDiagram = null;
 			
 			var XMIActions = jp.query(XMIActivity, '$..node[?(@[\'$\'][\'xmi:type\'])]');
 			var activity = null;
@@ -170,12 +146,12 @@
 					}
 				}
 				
-				if(!referencedDiagram){
-					referencedDiagram = findDiagramByActivity(activity, DiagramsByID);
-				}
+//				if(!referencedDiagram){
+//					referencedDiagram = findDiagramByActivity(activity, DiagramsByID);
+//				}
 				
 				ActivitiesByID[activity._id] = activity;
-				Activities.push(activity);
+//				Activities.push(activity);
 				}
 					
 					var XMIEdges = jp.query(XMIActivity, '$..edge[?(@[\'$\'][\'xmi:type\'])]');
@@ -183,13 +159,19 @@
 					 var XMIEdges = jp.query(XMIActivity, '$..edge[?(@[\'$\'][\'xmi:type\']==\'uml:ControlFlow\')]');
 			            for (var i in XMIEdges) {
 			                var XMIEdge = XMIEdges[i];
-			                var XMIEdgeByStandard = {
+			                var PrecedenceRelation = {
 			                    _id: XMIEdge['$']['xmi:id'],
 			                    Name: (XMIEdge['$']['name'] === undefined) ? "" : XMIEdge['$']['name'],
 			                    start: ActivitiesByID[XMIEdge['$']['source']],
 			                    end: ActivitiesByID[XMIEdge['$']['target']]
 			                };
-			                PrecedenceRelations.push(XMIEdgeByStandard);
+			                
+			                var PrecedenceRelationsReferenced = PrecedenceRelationsBySource[XMIEdge['$']['source']];
+			                if(!PrecedenceRelationsReferenced){
+			                	PrecedenceRelationsReferenced = [];
+			                	PrecedenceRelationsBySource[XMIEdge['$']['source']] = PrecedenceRelationsReferenced;
+			                }
+			                PrecedenceRelationsReferenced.push(PrecedenceRelation);
 			          }
 					
 					
@@ -197,13 +179,48 @@
 			
 			console.log("Finished parsing activity diagram");
 			
-			if(!referencedDiagram){
-				var uuid = uuidv4();
-				referencedDiagram = {
-						_id: uuid,
-						Name: "UC-"+uuid
+			
+		}
+			var XMIActivityDiagrams = jp.query(XMIUMLModel, '$..[\'uml:Diagram\'][?(@[\'$\'][\'diagramType\']==\'ActivityDiagram\')]');
+			var DiagramsByID = {};
+			
+		for ( var i in XMIActivityDiagrams) {
+			var Activities = [];
+			var PrecedenceRelations = [];
+
+			XMIActivityDiagram = XMIActivityDiagrams[i];
+		
+//			var Diagram = {
+//					_id : XMIActivityDiagram['$']['xmi:id'],
+//					Name : XMIActivityDiagram['$']['name'],
+//					Elements: []
+//				}
+
+			var XMIActivitiesReferenced = jp.query(XMIActivityDiagram, '$..[\'uml:DiagramElement\'][?(@[\'$\'][\'subject\'])]');
+			for ( var j in XMIActivitiesReferenced) {
+				var XMIActivityReferenced = XMIActivitiesReferenced[j];
+				if(ActivitiesByID[XMIActivityReferenced['$']['subject']]){
+				Activities.push(ActivitiesByID[XMIActivityReferenced['$']['subject']]);
+				}
+				
+				if(PrecedenceRelationsBySource[XMIActivityReferenced['$']['subject']]){
+					PrecedenceRelations = PrecedenceRelations.concat(PrecedenceRelationsBySource[XMIActivityReferenced['$']['subject']]);
 				}
 			}
+			
+//			DiagramsByID[Diagram._id] = Diagram;
+	
+
+//			if(!referencedDiagram){
+//				var uuid = uuidv4();
+//				referencedDiagram = {
+//						_id: uuid,
+//						Name: "UC-"+uuid
+//				}
+//			}
+			
+			console.log(Activities);
+			console.log(PrecedenceRelationsBySource);
 			
 			var ActivitiesToEliminate = [];
 			//to  eliminate unnecessary activities
@@ -260,15 +277,15 @@
 			}
 			
 			var UseCase = {
-			_id : referencedDiagram._id,
-			Name : referencedDiagram.Name,
+			_id : XMIActivityDiagram['$']['xmi:id'],
+			Name : XMIActivityDiagram['$']['name'],
 			Activities : Activities,
 			PrecedenceRelations : PrecedenceRelations,
 			OutputDir : Model.OutputDir + "/"
-					+ referencedDiagram._id,
+					+ XMIActivityDiagram['$']['xmi:id'],
 			AccessDir : Model.AccessDir + "/"
-					+ referencedDiagram._id,
-		}
+					+ XMIActivityDiagram['$']['xmi:id'],
+			}
 			Model.UseCases.push(UseCase);
 		}
 	}
