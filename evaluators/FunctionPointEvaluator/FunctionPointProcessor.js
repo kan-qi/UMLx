@@ -1,6 +1,6 @@
 (function(){
 	
-	var pathPatternMatchUtil = require("../../utils/PathPatternMatchUtil.js");
+	var pathPatternMatchUtil = require("../../utils/TransactionPatternMatchUtil.js");
 
 	var functionalPatterns = [
 		[ 'boundary', 'control[+]', 'entity', 'pattern#1', 'EI', 'functional', 'External input' ],
@@ -18,7 +18,7 @@
 //			processDiagram: function(diagram, usecase){
 //				return true;
 //			},
-			processPath: function(path, usecase){
+			processTransaction: function(path, usecase){
 				path["FPAnalytics"] = {};
 				path["FPAnalytics"].Operations = {};
 				var functionalOperations = pathPatternMatchUtil.recognizePattern(path, functionalPatternTreeRoot);

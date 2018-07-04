@@ -1,11 +1,11 @@
 (function(){
 
 /*
- * Adding extra processing on use cases, for example, paths traversing, and pattern matching.
+ * Adding extra processing on use cases, for example, transactions traversing, and pattern matching.
  */
 	
 //	var UMLDiagramTraverser = require("./UMLDiagramTraverser.js");
-	var pathPatternMatchUtil = require("../../utils/PathPatternMatchUtil.js");
+	var transactionPatternMatchUtil = require("../../utils/TransactionPatternMatchUtil.js");
 
 //	var diagramDrawer = require('./DiagramProfilers/DiagramDrawer.js');
 
@@ -57,7 +57,7 @@
 			return categoriesToReturn;
 		}
 
-	var transactionalPatternTreeRoot = pathPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
+	var transactionalPatternTreeRoot = transactionPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
 	
 	module.exports = {
 			/*
@@ -77,21 +77,21 @@
 //					var node = {
 //						//id: startElement, //ElementGUID
 //						Node: activity,
-//						PathToNode: [activity],
+//						TransactionToNode: [activity],
 //						OutScope: activity.outScope
 //					};
 //					toExpandCollection.push(node);
 //					}
 //				}
 //				
-//				var Paths = new Array();
+//				var Transactions = new Array();
 //				var toExpand;
 //				while((toExpand = toExpandCollection.pop()) != null){
 //					var node = toExpand.Node;
-//					var pathToNode = toExpand.PathToNode;
+//					var transactionToNode = toExpand.TransactionToNode;
 ////					var toExpandID = toExpand.id;
 ////					var expanded = false;
-//					// test completeness of the expanded path first to decide if continue to expand
+//					// test completeness of the expanded transaction first to decide if continue to expand
 ////					var childNodes = diagram.expand(node);
 //					// if null is returned, then node is an end node.
 //					
@@ -118,7 +118,7 @@
 ////				}
 //					
 //					if(childNodes.length == 0){
-//						Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+//						Transactions.push({Nodes: transactionToNode, OutScope: toExpand.OutScope});
 //					}
 //					else{
 //						for(var j in childNodes){
@@ -136,7 +136,7 @@
 //							
 //							var toExpandNode = {
 //								Node: childNode,
-//								PathToNode: pathToNode.concat(childNode),
+//								TransactionToNode: transactionToNode.concat(childNode),
 //								OutScope: OutScope
 //							}
 //							
@@ -149,33 +149,33 @@
 //							console.log(childNode.name);
 //							console.log(childNode.group);
 //
-//							if(!isCycled(toExpandNode.PathToNode) && childNode.group === "System"){
+//							if(!isCycled(toExpandNode.TransactionToNode) && childNode.group === "System"){
 //							toExpandCollection.push(toExpandNode);
 //							}
 //							else{
-//							Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+//							Transactions.push({Nodes: toExpandNode.TransactionToNode, OutScope: toExpandNode.OutScope});
 //							}
 //						}		
 //					}
 //			}
-//				return Paths;
+//				return Transactions;
 //			},
 //			processDiagram: function(diagram, usecase, model, callbackfunc){
 //				console.log("transaction process: process diagram");
-//				diagram.Paths = UMLDiagramTraverser.traverseDiagram(diagram);
+//				diagram.Transactions = UMLDiagramTraverser.traverseDiagram(diagram);
 //				diagramDrawer.drawBehavioralDiagram(diagram, callbackfunc);
-//				console.log(diagram.Paths);
+//				console.log(diagram.Transactions);
 //			},
-			processPath: function(path,  usecase, model){
+			processTransaction: function(transaction,  usecase, model){
 //				var components = [];
-//				var pathStr = "";
+//				var transactionStr = "";
 				
 				//the total degree should be determined differently. If an element has a component, then the degree is the number of components associated with the current component, and if not, it is the number of messages, associated with the current messages.
 				var totalDegree = 0;
 				
-				for(var i in path.Nodes)
+				for(var i in transaction.Nodes)
 				{	
-					var node = path.Nodes[i];
+					var node = transaction.Nodes[i];
 //					
 //					if(i == 0){
 //						if(node.source){
@@ -187,8 +187,8 @@
 //						components.push(node.target);
 //					}
 //					
-////					var node = path[i];
-////					var elementID = path['Elements'][i];
+////					var node = transaction[i];
+////					var elementID = transaction['Elements'][i];
 ////					var components = diagram.allocate(node);
 ////					if(!element){
 ////						break;
@@ -198,9 +198,9 @@
 ////						tranLength++;	
 ////					}
 //					
-//					pathStr += node.Name;
-//					if( i != path.Nodes.length - 1){
-//						pathStr += "->";
+//					transactionStr += node.Name;
+//					if( i != transaction.Nodes.length - 1){
+//						transactionStr += "->";
 //					}
 					
 //					var associatedComponents = model.findAssociatedComponents(node);
@@ -233,12 +233,12 @@
 //					totalDegree += associatedComponents.length + 1;
 				}
 				
-//				console.log(pathStr);
-//				path.PathStr = pathStr;
+//				console.log(transactionStr);
+//				transaction.TransactionStr = transactionStr;
 
-				path['TransactionAnalytics'] = {};
+				transaction['TransactionAnalytics'] = {};
 				
-				var transactionalOperations = pathPatternMatchUtil.recognizePattern(path, transactionalPatternTreeRoot);
+				var transactionalOperations = transactionPatternMatchUtil.recognizePattern(transaction, transactionalPatternTreeRoot);
 				var transactionalOperationStr = "";
 				for(var i=0; i < transactionalOperations.length; i++){
 					if(i !== 0){
@@ -275,29 +275,29 @@
 								}
 							}
 						}
-						path['TransactionAnalytics'].Transactional = matchedCategories;
-//						console.log(path.Operations.transactional);
+						transaction['TransactionAnalytics'].Transactional = matchedCategories;
+//						console.log(transaction.Operations.transactional);
 					}
 					else{
-						path['TransactionAnalytics'].Transactional = ['TRAN_NA'];
+						transaction['TransactionAnalytics'].Transactional = ['TRAN_NA'];
 					}
 					
-				path['TransactionAnalytics'].TransactionalTag = "";
-				if(path['TransactionAnalytics'].Transactional.length > 0){
-					path['TransactionAnalytics'].TransactionalTag = path['TransactionAnalytics'].Transactional.join(',');
+				transaction['TransactionAnalytics'].TransactionalTag = "";
+				if(transaction['TransactionAnalytics'].Transactional.length > 0){
+					transaction['TransactionAnalytics'].TransactionalTag = transaction['TransactionAnalytics'].Transactional.join(',');
 				}
 				
 				
-//				path['TransactionAnalytics'].Components = components;
-				path['TransactionAnalytics'].TranLength = path.Nodes.length;
+//				transaction['TransactionAnalytics'].Components = components;
+				transaction['TransactionAnalytics'].TranLength = transaction.Nodes.length;
 				//The transaction length is defined as the number of operations of a transaction, which can be the number of activities, messages, interactions.
 				
 				
 				
-				path['TransactionAnalytics'].TotalDegree = totalDegree;
+				transaction['TransactionAnalytics'].TotalDegree = totalDegree;
 				
-				console.log("transaction process: path process");
-				console.log(path);
+				console.log("transaction process: transaction process");
+				console.log(transaction);
 				
 				
 				return true;

@@ -50,7 +50,7 @@
 		var complexUC = 0;
 		for(var i in modelInfo.UseCases){
 			var useCase = modelInfo.UseCases[i];
-			var nt = useCase["ElementAnalytics"].NT;
+			var nt = useCase["ComponentAnalytics"].NT;
 			if(nt <= 3){
 				simpleUC++;
 			}

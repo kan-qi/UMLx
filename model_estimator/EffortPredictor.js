@@ -62,6 +62,10 @@
 			});
 		},
 		
+		/*
+		 *  This function calculate the project management decisions based on estimated effort, including the duration and personnel.
+		 */
+		
 		makeProjectManagementDecisions: function(modelInfo, umlEstimationInfo, projectEffort){
 			//predict presonnel, schedule based on predicted effort
 			//need to update
@@ -73,20 +77,51 @@
 					SizeMeasurement: modelInfo['UseCasePointData'][sizeMetric]
 			};
 			
-			var personnel = projectEffort/12;
 //			calculateResourceAllocation(modelInfo, personnel);
 //			modelInfo.predictedPersonnel = personnel;
+			
+			//need to update
+//			var projectDuration = projectEffort/10;
+			
+			//the better way of estimating the duration by COCOMO
+			/*
+			 * PM_NS = A*Size^E*\prod_(i=1)^nEM_i
+			 * 
+			 * TDEV_NS = C*(PM_NS)^F
+			 * 
+			 * F = D + 0.2*0.01*\sum_(j=1)^5(SF_j)
+			 * = D + 0.2*(E-B)
+			 * 
+			 * A = 2.94
+			 * B = 0.91
+			 * C = 3.67
+			 * D = 0.28
+			 * 
+			 * P = PM_NS/TDEV_NS
+			 * 
+			 * 152 is for PH/PM ratio
+			 */
+			
+//			modelInfo.predictedDuration = projectDuration;
+//			calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
+			
+			var projectEffortInPM = projectEffort/152;
+			
+			var projectDuration = 3.67*(projectEffortInPM)^(0.28+0.2*(1.15-0.91))
+			
+			estimationResults.Duration = projectDuration;
+			
+
+//			var personnel = projectEffort/12;
+			
+			var personnel = projectEffortInPM/projectDuration;
+			
+
 			estimationResults.Personnel = personnel;
 			estimationResults.Personnel_UI = personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
 			estimationResults.Personnel_DB = personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
 			estimationResults.Personnel_FS = personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
 			
-			//need to update
-			var projectDuration = projectEffort/10;
-			
-//			modelInfo.predictedDuration = projectDuration;
-//			calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
-			estimationResults.Duration = projectDuration;
 			
 			//calculate distributions
 
