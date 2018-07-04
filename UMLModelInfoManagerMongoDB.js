@@ -957,6 +957,14 @@ function deleteRepo(repoId, callbackfunc) {
                              NT:1,UseCaseNum:1,EntityNum:1
                          }).toArray(
                                 function (err, res) {
+                                	
+                                if(!res[0]){
+                                	res[0]={
+                                			NT: 1,
+                                			UseCaseNum: 1,
+                                			EntityNum: 1
+                                	}
+                                }
 
                                  console.log(res[0]);
 
