@@ -1571,14 +1571,15 @@ app.get('/', function(req, res){
 //    umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
     umlModelInfoManager.queryModelNumByRepoID(repoId, function(modelNum){
 
-      
-//    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
-  umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
-
-  	console.log("==========================sfsdfsdfs==============");
-  	console.log(repoInfo);
 	  
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
+
+
+          //    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
+          umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
+
+              console.log("==========================sfsdfsdfs==============");
+              console.log(repoInfo);
       
         totalRec = modelNum;
         pageCount =  Math.ceil(totalRec/pageSize);
@@ -1591,7 +1592,8 @@ console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Cu
 //      console.log("INSIDE UMLXSERVICES"+ repoInfo.Models[0].creationTime);
                        
 //			console.log(req.userInfo);
-		//console.log(repoInfo);
+		console.log("==========repoInfo========");
+		console.log(repoInfo);
 		if(!repoInfo){
 			res.send("error");
 			return;

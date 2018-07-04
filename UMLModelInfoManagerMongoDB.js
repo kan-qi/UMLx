@@ -892,21 +892,32 @@ function deleteRepo(repoId, callbackfunc) {
                     return loadModel(model._id,repoInfo);
                 })).then(
                     function(){
-                        return new Promise((resolve, reject) => {
-                            setTimeout(function(){
+                        //return new Promise((resolve, reject) => {
+                            repoInfo.Models = repoInfo.UnfoldedModels;
+                            delete repoInfo.UnfoldedModels;
 
-                                repoInfo.Models = repoInfo.UnfoldedModels;
-                                delete repoInfo.UnfoldedModels;
+                            if(callbackfunc){
 
-                                if(callbackfunc){
+                                callbackfunc(repoInfo);
+                            }
 
-                                    callbackfunc(repoInfo);
-                                }
+                            //resolve();
 
-                                resolve();
-
-                            }, 0);
-                        });
+                            // setTimeout(function(){
+                            //
+                            //     repoInfo.Models = repoInfo.UnfoldedModels;
+                            //     delete repoInfo.UnfoldedModels;
+                            //
+                            //     if(callbackfunc){
+                            //
+                            //         callbackfunc(repoInfo);
+                            //     }
+                            //
+                            //     resolve();
+                            //
+                            // }, 0);
+                        //}
+                        //);
                     }
 
                 ).catch(function(err){
@@ -945,48 +956,79 @@ function deleteRepo(repoId, callbackfunc) {
 					callbackfunc(false);
 					return;
 				}
-                 var dt = new Date();
-                 var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') +
-                     (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
+				if (!repoInfo.ElementAnalytics) {
 
-                     db.collection('noOfTransactions').find(
-                         {
-                             timestamp: '2018/06/30'
-                         },
-                         {
-                             NT:1,UseCaseNum:1,EntityNum:1
-                         }).toArray(
-                                function (err, res) {
+                    repoInfo.NT = 0;
+                    repoInfo.UseCaseNum = 0;
+                    repoInfo.EntityNum = 0;
+                    db.collection("modelInfo").aggregate([
+                        {
+                            "$match":
+                                {
+                                    "repo_id":new mongo.ObjectID(repoid)
+                                }
+                        },
+                        {
+                            $skip: pageParameter
+                        }, // pagination skip
+                        {
+                            $limit: stepParameter
+                        }
+                    ],function(err, result)
+                    {
+                        if (err) throw err;
+                        //console.log("*******Shown result for queryRepoInfoByPage*******");
+                        db.close();
+                        repoInfo.Models = result;
+                        console.log(repoInfo);
+                        callbackfunc(repoInfo);
+                    });
 
-                                 console.log(res[0]);
+                }
+                else {
+                    var dt = new Date();
+                    var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') +
+                        (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
 
-                                 repoInfo.NT = res[0].NT;
-                                 repoInfo.UseCaseNum = res[0].UseCaseNum;
-                                 repoInfo.EntityNum = res[0].EntityNum;
+                    db.collection('noOfTransactions').find(
+                        {
+                            timestamp: today
+                        },
+                        {
+                            NT:1,UseCaseNum:1,EntityNum:1
+                        }).toArray(
+                        function (err, res) {
 
-                                 db.collection("modelInfo").aggregate([
-                                     {
-                                         "$match":
-                                             {
-                                                 "repo_id":new mongo.ObjectID(repoid)
-                                             }
-                                     },
-                                     {
-                                         $skip: pageParameter
-                                     }, // pagination skip
-                                     {
-                                         $limit: stepParameter
-                                     }
-                                 ],function(err, result)
-                                 {
-                                     if (err) throw err;
-                                     //console.log("*******Shown result for queryRepoInfoByPage*******");
-                                     db.close();
-                                     repoInfo.Models = result;
-                                     console.log(repoInfo);
-                                     callbackfunc(repoInfo);
-                                 });
-                     });
+                            console.log(res[0]);
+
+                            repoInfo.NT = res[0].NT;
+                            repoInfo.UseCaseNum = res[0].UseCaseNum;
+                            repoInfo.EntityNum = res[0].EntityNum;
+
+                            db.collection("modelInfo").aggregate([
+                                {
+                                    "$match":
+                                        {
+                                            "repo_id":new mongo.ObjectID(repoid)
+                                        }
+                                },
+                                {
+                                    $skip: pageParameter
+                                }, // pagination skip
+                                {
+                                    $limit: stepParameter
+                                }
+                            ],function(err, result)
+                            {
+                                if (err) throw err;
+                                //console.log("*******Shown result for queryRepoInfoByPage*******");
+                                db.close();
+                                repoInfo.Models = result;
+                                console.log(repoInfo);
+                                callbackfunc(repoInfo);
+                            });
+                        });
+                }
 				});
 			    	
 		  });
@@ -1020,6 +1062,8 @@ function deleteRepo(repoId, callbackfunc) {
 			if (err) throw err;
 			
 			var repoid=new mongo.ObjectID(repoId);
+			console.log("========repoid==========");
+			console.log(repoid);
 					
 			db.collection("modelInfo").find(
 			{

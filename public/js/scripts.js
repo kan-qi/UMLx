@@ -1526,7 +1526,7 @@ function createTrendingLines() {
             var project_num = [];
             var case_num = [];
             var class_num = [];
-            console.log(response);
+            //console.log(response);
             for (var i = 0; i < response.NT.length; i++) {
                 date.push(response.timestamp[i]);
                 transaction_num.push(response.NT[i]);
