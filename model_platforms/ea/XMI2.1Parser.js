@@ -363,8 +363,8 @@
 			var domainRealization = {
 				_id: XMIReal['$']['xmi:id'],
 				type: "realization",
-				Supplier: XMIUsage['$']['supplier'],
-				Client: XMIUsage['$']['client']
+				Supplier: XMIReal['$']['supplier'],
+				Client: XMIReal['$']['client']
 			}
 			Model.DomainModel.Realizations.push(domainRealization);
 		}

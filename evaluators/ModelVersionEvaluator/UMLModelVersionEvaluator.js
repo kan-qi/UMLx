@@ -94,16 +94,16 @@
 	function dumpModelVersionInfo(modelInfo, callbackfunc, modelVersionNum) {
 		modelVersionNum = !modelVersionNum ? 0 : modelVersionNum;
 		
-		var modelVersionInfoStr = modelVersionNum == 0 ? "id,model_name,update_time,number_of_paths\n" : "";
+		var modelVersionInfoStr = modelVersionNum == 0 ? "id,model_name,update_time,number_of_transactions\n" : "";
 
-		modelVersionInfoStr += modelInfo._id + "," + modelInfo.Name + "," + modelInfo.creationTime + "," + modelInfo["ElementAnalytics"].PathNum + "\n";
+		modelVersionInfoStr += modelInfo._id + "," + modelInfo.Name + "," + modelInfo.creationTime + "," + modelInfo["ComponentAnalytics"].TranNum + "\n";
 		
 		for ( var i in modelInfo.Versions) {
 			var version = modelInfo.Versions[i];
 			modelVersionInfoStr += version._id + ","
 					+ version.Name + "," 
 					+ version.creationTime + ","
-					+ version["ElementAnalytics"].PathNum + "\n";
+					+ version["ComponentAnalytics"].TransactionNum + "\n";
 		}
 		
 		// console.log(domainModelAnalytics);

@@ -3,8 +3,8 @@
  * 
  * Has three major functions:
  * 
- * 1. identify paths for use cases.
- * 2. identify pattern for the paths and determine as transactions.
+ * 1. identify transactions for use cases.
+ * 2. identify pattern for the transactions and determine as transactions.
  * 3. associate with components.
  */
 
@@ -136,20 +136,20 @@
 			var NT = 0;
 			var TranLength = 0;
 			
-			for ( var j in useCaseInfo.Paths) {
+			for ( var j in useCaseInfo.Transactions) {
 				
-				var path = useCaseInfo.Paths[j];
-				 console.log('--------Process Path-------');
-				 console.log(path);
+				var transaction = useCaseInfo.Transactions[j];
+				 console.log('--------Process Transaction-------');
+				 console.log(transaction);
 				 
 				 console.log(modelInfo);
 				
-				transactionProcessor.processPath(path, useCaseInfo, modelInfo);
+				transactionProcessor.processTransaction(transaction, useCaseInfo, modelInfo);
 				
-//				console.log(path);
-//				console.log(diagram.Paths);
+//				console.log(transaction);
+//				console.log(diagram.Transactions);
 
-				var transactionalOperations = path['TransactionAnalytics'].Transactional;
+				var transactionalOperations = transaction['TransactionAnalytics'].Transactional;
 				
 				if(transactionalOperations.indexOf("EI") > -1){
 					EI++;
@@ -178,20 +178,20 @@
 				}
 				else {
 					NT ++;
-					TranLength += path['TransactionAnalytics'].TranLength;
+					TranLength += transaction['TransactionAnalytics'].TranLength;
 				}
 				
-//				var path = useCaseInfo.Paths[i];
+//				var transaction = useCaseInfo.Transactions[i];
 				
-				var TL = path.pathLength;
+				var TL = transaction.transactionLength;
 				var DETs = 0;
 				var TD = 0;
 				
 				var componentNum = 0;
 				var totalOps = 0;
 				
-				for(var j in path.Nodes){
-					var node = path.Nodes[j];
+				for(var j in transaction.Nodes){
+					var node = transaction.Nodes[j];
 					var component = node.Component;
 					if(component){
 						componentNum++;
@@ -264,16 +264,16 @@
 				
 				
 
-				path['TransactionAnalytics'].TranLength = TL;
-				path['TransactionAnalytics'].total_degree = TD;
-				path['TransactionAnalytics'].TL = TL;
-				path['TransactionAnalytics'].DETs = DETs;
-				path['TransactionAnalytics'].TD = TD;
-				path['TransactionAnalytics'].arch_diff = archDiff;
+				transaction['TransactionAnalytics'].TranLength = TL;
+				transaction['TransactionAnalytics'].total_degree = TD;
+				transaction['TransactionAnalytics'].TL = TL;
+				transaction['TransactionAnalytics'].DETs = DETs;
+				transaction['TransactionAnalytics'].TD = TD;
+				transaction['TransactionAnalytics'].arch_diff = archDiff;
 
-				path['TransactionAnalytics'].swti = swti;
-				path['TransactionAnalytics'].swtii = swtii;
-				path['TransactionAnalytics'].swtiii = swtiii;
+				transaction['TransactionAnalytics'].swti = swti;
+				transaction['TransactionAnalytics'].swtii = swtii;
+				transaction['TransactionAnalytics'].swtiii = swtiii;
 				
 				useCaseInfo['TransactionAnalytics'].ArchDiff += archDiff;
 			}
@@ -289,7 +289,7 @@
 			useCaseInfo['TransactionAnalytics'].TRAN_NA = TRAN_NA;
 			useCaseInfo['TransactionAnalytics'].NT = NT;
 			useCaseInfo['TransactionAnalytics'].TranLength = TranLength;
-			useCaseInfo['TransactionAnalytics'].ArchDiff = useCaseInfo.Paths.length == 0? 0: useCaseInfo['TransactionAnalytics'].ArchDiff/useCaseInfo.Paths.length
+			useCaseInfo['TransactionAnalytics'].ArchDiff = useCaseInfo.Transactions.length == 0? 0: useCaseInfo['TransactionAnalytics'].ArchDiff/useCaseInfo.Transactions.length
 			
 //			useCaseInfo['TransactionAnalytics'].EI += diagram['TransactionAnalytics'].EI;
 //			useCaseInfo['TransactionAnalytics'].EQ += diagram['TransactionAnalytics'].EQ;
@@ -305,48 +305,48 @@
 //			console.log(useCaseInfo['TransactionAnalytics']);
 //		}
 		
-//		useCaseInfo.getPaths = function(){
-//			var paths = [];
+//		useCaseInfo.getTransactions = function(){
+//			var transactions = [];
 //			for(var i in this.Diagrams){
 //				var diagram = this.Diagrams[i];
-//				for(var j in diagram.Paths){
-//					paths.push(diagram.Paths[j]);
+//				for(var j in diagram.Transactions){
+//					transactions.push(diagram.Transactions[j]);
 //				}
 //			}
-//			return paths;
+//			return transactions;
 //		}
 		
-		var useCasePaths = [];
+		var useCaseTransactions = [];
 //		for(var i in useCaseInfo.Diagrams){
 //			var diagram = useCaseInfo.Diagrams[i];
-			for(var j in useCaseInfo.Paths){
-				console.log("iterating paths");
-				console.log(useCaseInfo.Paths[j]);
-				useCasePaths.push(useCaseInfo.Paths[j]);
+			for(var j in useCaseInfo.Transactions){
+				console.log("iterating transactions");
+				console.log(useCaseInfo.Transactions[j]);
+				useCaseTransactions.push(useCaseInfo.Transactions[j]);
 			}
 //		}
 		
-		useCaseInfo.Paths = useCasePaths;
+		useCaseInfo.Transactions = useCaseTransactions;
 		
-//		var useCasePaths = useCaseInfo.getPaths();
-		console.log("evaluate use cases: paths");
-		console.log(useCasePaths);
+//		var useCaseTransactions = useCaseInfo.getTransactions();
+		console.log("evaluate use cases: transactions");
+		console.log(useCaseTransactions);
 		
-		console.log("stringified paths");
-		console.log( JSON.stringify(useCasePaths));
+		console.log("stringified transactions");
+		console.log( JSON.stringify(useCaseTransactions));
 //		console.log('test1');
-//		console.log(useCasePaths);
+//		console.log(useCaseTransactions);
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("paths"+useCaseInfo.Name,useCasePaths);
+		debug.writeJson("transactions"+useCaseInfo.Name,useCaseTransactions);
 //		debug.writeJson("model1",modelInfo);
 		
 		useCaseInfo['TransactionAnalytics'].AvgTranLength = useCaseInfo['TransactionAnalytics'].NT == 0 ? 0 : useCaseInfo['TransactionAnalytics'].TranLength/useCaseInfo['TransactionAnalytics'].NT;
-		useCaseInfo['TransactionAnalytics'].ArchDiff =  useCaseInfo['TransactionAnalytics'].AvgPathLength * useCaseInfo["ElementAnalytics"].AvgDegree;
+		useCaseInfo['TransactionAnalytics'].ArchDiff =  useCaseInfo['TransactionAnalytics'].AvgTransactionLength * useCaseInfo["ComponentAnalytics"].AvgDegree;
 			
 			if(callbackfunc){
 				var useCaseTransactionDump = dumpUseCaseTransactionsInfo(useCaseInfo);
 
-				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,transaction,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
 				 
 						useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName = "transactionAnalytics.csv";
 						var files = [{fileName : useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -392,7 +392,7 @@
 				ArchDiff:0
 		};
 
-		var useCasePaths = [];
+		var useCaseTransactions = [];
 		//analyse use cases
 		for(var i in modelInfo.UseCases){
 			var useCaseInfo = modelInfo.UseCases[i]
@@ -410,25 +410,25 @@
 			modelInfo['TransactionAnalytics'].TranLength += useCaseInfo['TransactionAnalytics'].Tran_Length;
 			}
 			
-			console.log("paths 2");
-			console.log(useCaseInfo.Paths);
-			useCasePaths = useCasePaths.concat(useCaseInfo.Paths);
+			console.log("transactions 2");
+			console.log(useCaseInfo.Transactions);
+			useCaseTransactions = useCaseTransactions.concat(useCaseInfo.Transactions);
 		}
 		
 		
 		console.log('test1');
-		console.log(useCasePaths);
+		console.log(useCaseTransactions);
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("paths",useCasePaths);
+		debug.writeJson("transactions",useCaseTransactions);
 		debug.writeJson("model1",modelInfo);
 
 		modelInfo['TransactionAnalytics'].AvgTranLength = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : modelInfo['TransactionAnalytics'].TranLength/modelInfo['TransactionAnalytics'].NT;
-		modelInfo['TransactionAnalytics'].ArchDiff = modelInfo['TransactionAnalytics'].AvgTranLength*modelInfo["ElementAnalytics"].AvgDegree;
+		modelInfo['TransactionAnalytics'].ArchDiff = modelInfo['TransactionAnalytics'].AvgTranLength*modelInfo["ComponentAnalytics"].AvgDegree;
 		
 		if(callbackfunc){
 			 var modelTransactionInfoDump = dumpModelTransactionsInfo(modelInfo);
 
-				var transactionAnalyticsStr = "d,path,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "d,transaction,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
 	
 				modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 				var files = [{fileName : modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -491,16 +491,16 @@
 		}
 		
 		repoInfo['TransactionAnalytics'].AvgTranLength = repoInfo['TransactionAnalytics'].NT == 0 ? 0 : repoInfo['TransactionAnalytics'].TranLength/repoInfo['TransactionAnalytics'].NT;
-		repoInfo['TransactionAnalytics'].ArchDiff = repoInfo['TransactionAnalytics'].AvgTranLength*repoInfo["ElementAnalytics"].AvgDegree;
+		repoInfo['TransactionAnalytics'].ArchDiff = repoInfo['TransactionAnalytics'].AvgTranLength*repoInfo["ComponentAnalytics"].AvgDegree;
 		
-		 repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath = repoInfo.OutputDir+"/Model_Evaluation_Results";
+		 repoInfo['TransactionAnalytics'].repoModelEvaluationResultsTransaction = repoInfo.OutputDir+"/Model_Evaluation_Results";
 		 
-//			mkdirp(repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath, function(err) { 
+//			mkdirp(repoInfo['TransactionAnalytics'].repoModelEvaluationResultsTransaction, function(err) { 
 //				if(err) {
 //					console.log(err);
 //			        return;
 //			    }
-//						 var command = './Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo['TransactionAnalytics'].RepoEvaluationForModelsFileName+'" "'+repoInfo['TransactionAnalytics'].repoModelEvaluationResultsPath+'"';	
+//						 var command = './Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo['TransactionAnalytics'].RepoEvaluationForModelsFileName+'" "'+repoInfo['TransactionAnalytics'].repoModelEvaluationResultsTransaction+'"';	
 //							
 //							RScriptExec.runRScript(command,function(result){
 //								if (!result) {
@@ -513,7 +513,7 @@
 			if(callbackfunc){
 				var repoTransactionInfoDump = dumpRepoTransactionsInfo(repoInfo);
 
-				var transactionAnalyticsStr = "id,path,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,transaction,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
 	
 					repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 					var files = [{fileName : repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -554,26 +554,26 @@
 //		for ( var i in useCaseInfo.Diagrams) {
 //			var diagram = useCaseInfo.Diagrams[i];
 			
-			for(var i in useCaseInfo.Paths){
-				var path = useCaseInfo.Paths[i];
+			for(var i in useCaseInfo.Transactions){
+				var transaction = useCaseInfo.Transactions[i];
 				
-				for(var j in path['TransactionAnalytics'].Transactional){
+				for(var j in transaction['TransactionAnalytics'].Transactional){
 					
-				var transactionalOperation = path['TransactionAnalytics'].Transactional[j];
+				var transactionalOperation = transaction['TransactionAnalytics'].Transactional[j];
 				
 				transactionNum++;
 				
 				transactionAnalyticsStr += transactionNum+","+
-				path.PathStr.replace(/,/gi, "")+","+ 
+				transaction.TransactionStr.replace(/,/gi, "")+","+ 
 //				diagram.Name+","+ 
 				useCaseInfo.Name+","+
 				transactionalOperation+","+ 
-				path['TransactionAnalytics'].TranLength+","+
-				path['TransactionAnalytics'].total_degree+","+
-				path['TransactionAnalytics'].TL+","+
-				path['TransactionAnalytics'].DETs+","+
-				path['TransactionAnalytics'].TD+","+
-				path['TransactionAnalytics'].arch_diff+"\n";
+				transaction['TransactionAnalytics'].TranLength+","+
+				transaction['TransactionAnalytics'].total_degree+","+
+				transaction['TransactionAnalytics'].TL+","+
+				transaction['TransactionAnalytics'].DETs+","+
+				transaction['TransactionAnalytics'].TD+","+
+				transaction['TransactionAnalytics'].arch_diff+"\n";
 	
 				}
 				
@@ -593,7 +593,7 @@
 		
 		transactionNum = !transactionNum ? 0 : transactionNum;
 		
-//		var transactionAnalyticsStr = header ? "id,path,diagram,useCase,transactional,tran_length,arch_diff\n" : "";
+//		var transactionAnalyticsStr = header ? "id,transaction,diagram,useCase,transactional,tran_length,arch_diff\n" : "";
 		
 		var transactionAnalyticsStr = "";
 		
@@ -632,96 +632,6 @@
 		}
 		
 	}
-	
-	
-	
-//	function isCycled(path){
-//		var lastNode = path[path.length-1];
-//			for(var i=0; i < path.length-1; i++){
-//				if(path[i] == lastNode){
-//					return true;
-//				}
-//			}
-//		return false;
-//	}
-//
-//	function traverseBehavioralDiagram(diagram){
-//		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
-//		var entries=diagram.Entries;// tag: elements
-//		
-//		var toExpandCollection = new Array();
-//		
-//		for (var i=0; i < entries.length; i++){
-//			var entry = entries[i];
-//			//define the node structure to keep the infor while traversing the graph
-//			var node = {
-//				//id: startElement, //ElementGUID
-//				Node: entry,
-//				PathToNode: [entry]
-//			};
-//			toExpandCollection.push(node);
-//		}
-//		
-//		var Paths = new Array();
-//		var toExpand;
-//		while((toExpand = toExpandCollection.pop()) != null){
-//			var node = toExpand.Node;
-//			var pathToNode = toExpand.PathToNode;
-////			var toExpandID = toExpand.id;
-////			var expanded = false;
-//			// test completeness of the expanded path first to decide if continue to expand
-////			var childNodes = diagram.expand(node);
-//			// if null is returned, then node is an end node.
-//			
-////			diagram.expand = function(node){
-//			// add condition on actor to prevent stop searching for message [actor, view].
-////			if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
-////				return;
-////			}
-////			if(node.outboundNum == 0){
-////				return;
-////			}
-////			else {
-//
-//				var childNodes = [];
-//				for(var i in diagram.Edges){
-//					var edge = diagram.Edges[i];
-//					if(edge.start == node){
-//						childNodes.push(edge.end);
-//					}
-//				}
-//
-////				return children;
-////			}
-//			
-////		}
-//			
-//			if(!childNodes){
-//				Paths.push({Nodes: pathToNode});
-//			}
-//			else{
-//
-//				for(var i in childNodes){
-//					var childNode = childNodes[i];
-//					var toExpandNode = {
-//							Node: childNode,
-//							PathToNode: pathToNode.concat(childNode)
-//						}
-//
-//					if(!isCycled(toExpandNode.PathToNode)){
-//					toExpandCollection.push(toExpandNode);
-//					}
-//					else{
-//					 Paths.push({Nodes: toExpandNode.PathToNode});
-//					}
-//				}		
-//			}
-//			
-//			
-//		}
-//		
-//		return Paths;
-//	}
 	
 
 	module.exports = {

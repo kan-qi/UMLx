@@ -281,20 +281,20 @@
 				SizeMetricsAnalyticsFileName : 'SizeMetricsAnalytics.csv'
 	        };
 		
-			domainModelInfo["SizeMetricAnalytics"].NEM = domainModelInfo["ElementAnalytics"].ExternalOperNum; //Number of External Methods
-        	domainModelInfo["SizeMetricAnalytics"].NSR = domainModelInfo["ElementAnalytics"].ExternalOperNum; //Number of Services Requested 
-			domainModelInfo["SizeMetricAnalytics"].NOAAE = domainModelInfo["ElementAnalytics"].AttributeNum; //Number of attributes of all the entities
-            domainModelInfo["SizeMetricAnalytics"].NOA = domainModelInfo["ElementAnalytics"].AttributeNum; //Number of Attributes
-			domainModelInfo["SizeMetricAnalytics"].NTLC = domainModelInfo["ElementAnalytics"].TopLevelClasses; //Number of top level classes
-			domainModelInfo["SizeMetricAnalytics"].MPC = domainModelInfo["ElementAnalytics"].AvgOperation; //Methods per class
-			domainModelInfo["SizeMetricAnalytics"].WMC =  domainModelInfo["ElementAnalytics"].WeightedOperNum; //Weighted methods per class
-			domainModelInfo["SizeMetricAnalytics"].ANWMC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["ElementAnalytics"].WeightedOperNum/domainModelInfo["ElementAnalytics"].ClassNum; //Average number of weighted methods per classes
-			domainModelInfo["SizeMetricAnalytics"].NIVPC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["ElementAnalytics"].InstanceVarNum/domainModelInfo["ElementAnalytics"].ClassNum; //Number of instance variables per class
+			domainModelInfo["SizeMetricAnalytics"].NEM = domainModelInfo["ComponentAnalytics"].ExternalOperNum; //Number of External Methods
+        	domainModelInfo["SizeMetricAnalytics"].NSR = domainModelInfo["ComponentAnalytics"].ExternalOperNum; //Number of Services Requested 
+			domainModelInfo["SizeMetricAnalytics"].NOAAE = domainModelInfo["ComponentAnalytics"].AttributeNum; //Number of attributes of all the entities
+            domainModelInfo["SizeMetricAnalytics"].NOA = domainModelInfo["ComponentAnalytics"].AttributeNum; //Number of Attributes
+			domainModelInfo["SizeMetricAnalytics"].NTLC = domainModelInfo["ComponentAnalytics"].TopLevelClasses; //Number of top level classes
+			domainModelInfo["SizeMetricAnalytics"].MPC = domainModelInfo["ComponentAnalytics"].AvgOperation; //Methods per class
+			domainModelInfo["SizeMetricAnalytics"].WMC =  domainModelInfo["ComponentAnalytics"].WeightedOperNum; //Weighted methods per class
+			domainModelInfo["SizeMetricAnalytics"].ANWMC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].WeightedOperNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of weighted methods per classes
+			domainModelInfo["SizeMetricAnalytics"].NIVPC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].InstanceVarNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Number of instance variables per class
 			
 
-			domainModelInfo["SizeMetricAnalytics"].ANMC = domainModelInfo["ElementAnalytics"].AvgOperation;  //Average number of methods per class
-			domainModelInfo["SizeMetricAnalytics"].ANPC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["ElementAnalytics"].ParameterNum/domainModelInfo["ElementAnalytics"].ClassNum;  //Average Number of parameters per class
-			domainModelInfo["SizeMetricAnalytics"].ANCAC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["ElementAnalytics"].AttributeNum/domainModelInfo["ElementAnalytics"].ClassNum; //Average number of class attributes per class
+			domainModelInfo["SizeMetricAnalytics"].ANMC = domainModelInfo["ComponentAnalytics"].AvgOperation;  //Average number of methods per class
+			domainModelInfo["SizeMetricAnalytics"].ANPC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].ParameterNum/domainModelInfo["ComponentAnalytics"].ClassNum;  //Average Number of parameters per class
+			domainModelInfo["SizeMetricAnalytics"].ANCAC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].AttributeNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of class attributes per class
 			
 			for(var i in domainModelInfo.Elements){
 				var element = domainModelInfo.Elements[i];
@@ -314,29 +314,29 @@
 	        domainModelInfo["SizeMetricAnalytics"].DET = 0; //Data element types 
 	        domainModelInfo["SizeMetricAnalytics"].FTR = 0; //File type referenced
 	        
-	        domainModelInfo["SizeMetricAnalytics"].NOC = domainModelInfo["ElementAnalytics"].ClassNum; //Number of classes
+	        domainModelInfo["SizeMetricAnalytics"].NOC = domainModelInfo["ComponentAnalytics"].ClassNum; //Number of classes
 	        
-	        domainModelInfo["SizeMetricAnalytics"].NOM = domainModelInfo["ElementAnalytics"].OperationNum;  //Number of methods
-	        domainModelInfo["SizeMetricAnalytics"].NOP = domainModelInfo["ElementAnalytics"].ParameterNum;  //Number of parameters
-	        domainModelInfo["SizeMetricAnalytics"].NOCA = domainModelInfo["ElementAnalytics"].AttributeNum; //Number of class attributes
+	        domainModelInfo["SizeMetricAnalytics"].NOM = domainModelInfo["ComponentAnalytics"].OperationNum;  //Number of methods
+	        domainModelInfo["SizeMetricAnalytics"].NOP = domainModelInfo["ComponentAnalytics"].ParameterNum;  //Number of parameters
+	        domainModelInfo["SizeMetricAnalytics"].NOCA = domainModelInfo["ComponentAnalytics"].AttributeNum; //Number of class attributes
 	        
-	        domainModelInfo["SizeMetricAnalytics"].NOC = domainModelInfo["ElementAnalytics"].ClassNum; //Number of classes
-			domainModelInfo["SizeMetricAnalytics"].NOAPC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["ElementAnalytics"].AttributeNum/domainModelInfo["ElementAnalytics"].ClassNum; //Number of attributes per class 
+	        domainModelInfo["SizeMetricAnalytics"].NOC = domainModelInfo["ComponentAnalytics"].ClassNum; //Number of classes
+			domainModelInfo["SizeMetricAnalytics"].NOAPC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].AttributeNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Number of attributes per class 
 			domainModelInfo["SizeMetricAnalytics"].NODET = 0; //Number of data element types
 			domainModelInfo["SizeMetricAnalytics"].NORET = 0; //Number of records
-			domainModelInfo["SizeMetricAnalytics"].NOMPC = domainModelInfo["ElementAnalytics"].AvgOperation; //Number of methods per class
-			domainModelInfo["SizeMetricAnalytics"].NPPM = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["ElementAnalytics"].ParameterNum/domainModelInfo["ElementAnalytics"].ClassNum; //Number of parameters per method
-			domainModelInfo["SizeMetricAnalytics"].NMT = domainModelInfo["ElementAnalytics"].OperationNum; //Number of method types
+			domainModelInfo["SizeMetricAnalytics"].NOMPC = domainModelInfo["ComponentAnalytics"].AvgOperation; //Number of methods per class
+			domainModelInfo["SizeMetricAnalytics"].NPPM = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].ParameterNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Number of parameters per method
+			domainModelInfo["SizeMetricAnalytics"].NMT = domainModelInfo["ComponentAnalytics"].OperationNum; //Number of method types
 		    
-		    domainModelInfo["SizeMetricAnalytics"].RR = domainModelInfo["ElementAnalytics"].UsageNum; //Reuse ration
-    		domainModelInfo["SizeMetricAnalytics"].NOUR = domainModelInfo["ElementAnalytics"].UsageNum; //Number of use relationships
-    		domainModelInfo["SizeMetricAnalytics"].NOIR = domainModelInfo["ElementAnalytics"].GeneralNum; //Number of Inheritance Relationships
-    		domainModelInfo["SizeMetricAnalytics"].NORR = domainModelInfo["ElementAnalytics"].RealNum;  //Number of realize relationships
-	    	domainModelInfo["SizeMetricAnalytics"].NOASSOC = domainModelInfo["ElementAnalytics"].AssocNum; //Number of associations
-			domainModelInfo["SizeMetricAnalytics"].NOA = domainModelInfo["ElementAnalytics"].AssocNum; //Number of associations
-    		domainModelInfo["SizeMetricAnalytics"].NORT = domainModelInfo["ElementAnalytics"].UsageNum+domainModelInfo["ElementAnalytics"].GeneralNum+domainModelInfo["ElementAnalytics"].RealNum+domainModelInfo["ElementAnalytics"].AssocNum; //Number of relationship types
-		    domainModelInfo["SizeMetricAnalytics"].ANASSOCC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["SizeMetricAnalytics"].NOASSOC*2/domainModelInfo["ElementAnalytics"].ClassNum; //Average number of associations per class
-		    domainModelInfo["SizeMetricAnalytics"].ANRELC = domainModelInfo["ElementAnalytics"].ClassNum == 0? 0: domainModelInfo["SizeMetricAnalytics"].NOASSOC*2/domainModelInfo["ElementAnalytics"].ClassNum; //Average number of relationships per class
+		    domainModelInfo["SizeMetricAnalytics"].RR = domainModelInfo["ComponentAnalytics"].UsageNum; //Reuse ration
+    		domainModelInfo["SizeMetricAnalytics"].NOUR = domainModelInfo["ComponentAnalytics"].UsageNum; //Number of use relationships
+    		domainModelInfo["SizeMetricAnalytics"].NOIR = domainModelInfo["ComponentAnalytics"].GeneralNum; //Number of Inheritance Relationships
+    		domainModelInfo["SizeMetricAnalytics"].NORR = domainModelInfo["ComponentAnalytics"].RealNum;  //Number of realize relationships
+	    	domainModelInfo["SizeMetricAnalytics"].NOASSOC = domainModelInfo["ComponentAnalytics"].AssocNum; //Number of associations
+			domainModelInfo["SizeMetricAnalytics"].NOA = domainModelInfo["ComponentAnalytics"].AssocNum; //Number of associations
+    		domainModelInfo["SizeMetricAnalytics"].NORT = domainModelInfo["ComponentAnalytics"].UsageNum+domainModelInfo["ComponentAnalytics"].GeneralNum+domainModelInfo["ComponentAnalytics"].RealNum+domainModelInfo["ComponentAnalytics"].AssocNum; //Number of relationship types
+		    domainModelInfo["SizeMetricAnalytics"].ANASSOCC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["SizeMetricAnalytics"].NOASSOC*2/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of associations per class
+		    domainModelInfo["SizeMetricAnalytics"].ANRELC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["SizeMetricAnalytics"].NOASSOC*2/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of relationships per class
 			
 		if (callbackfunc) {
 
@@ -441,11 +441,11 @@
 			var useCaseInfo = modelInfo.UseCases[i];
 
 			modelInfo["SizeMetricAnalytics"].NOS ++; //Number of use cases/scenario scripts
-			modelInfo["SizeMetricAnalytics"].NT  = useCaseInfo["ElementAnalytics"].PathNum;
-			modelInfo["SizeMetricAnalytics"].NOA = useCaseInfo["ElementAnalytics"].ActorNum;
+			modelInfo["SizeMetricAnalytics"].NT  = useCaseInfo["ComponentAnalytics"].PathNum;
+			modelInfo["SizeMetricAnalytics"].NOA = useCaseInfo["ComponentAnalytics"].ActorNum;
 			
 			modelInfo["SizeMetricAnalytics"].NOUC ++;
-			modelInfo["SizeMetricAnalytics"].NOR = useCaseInfo["ElementAnalytics"].ActorNum; //Number of roles
+			modelInfo["SizeMetricAnalytics"].NOR = useCaseInfo["ComponentAnalytics"].ActorNum; //Number of roles
 		}
 		
 		modelInfo["SizeMetricAnalytics"].ANAPUC = modelInfo["SizeMetricAnalytics"].NOUC == 0 ? 0 : modelInfo["SizeMetricAnalytics"].NOA/modelInfo["SizeMetricAnalytics"].NOUC;
