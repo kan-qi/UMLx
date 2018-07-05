@@ -1017,11 +1017,11 @@ function deleteRepo(repoId, callbackfunc) {
 		
 	}
 	
-	/*repoDetail("5a8e109c13a5974144158d99",function(result)
+	/*requestRepoBrief("5a8e109c13a5974144158d99",function(result)
     {
         console.log(result);
     })*/
-	function repoDetail(repoId,callbackfunc)
+	function requestRepoBrief(repoId,callbackfunc)
 	{
 		MongoClient.connect(url, function(err, db) 
 		{
@@ -1034,7 +1034,7 @@ function deleteRepo(repoId, callbackfunc) {
 				repo_id:repoid
 			},
 			{
-				TransactionAnalytics:1,ElementAnalytics:1,_id:0
+				TransactionAnalytics:1,ComponentAnalytics:1,_id:0
 			}).toArray(
 			function(err, result)
 			{
@@ -1115,8 +1115,8 @@ function deleteRepo(repoId, callbackfunc) {
 							   for(i=0;i<result.length;i++)
 							   {
 									sum_nt+=result[i]['TransactionAnalytics']['NT'];
-									sum_useCase+=result[i]['ElementAnalytics']['EntityNum'];
-									sum_entityNum+=result[i]['ElementAnalytics']['UseCaseNum'];
+									sum_useCase+=result[i]['ComponentAnalytics']['EntityNum'];
+									sum_entityNum+=result[i]['ComponentAnalytics']['UseCaseNum'];
 							   }
 								//console.log("sum_nt"+sum_nt);
 						  
@@ -1974,7 +1974,6 @@ function deleteRepo(repoId, callbackfunc) {
 		queryRepoInfo : queryRepoInfo,
 		queryRepoInfoByPage:queryRepoInfoByPage,
 		queryUseCaseInfo: queryUseCaseInfo,
-		repoDetail:repoDetail,
 		saveEstimation: saveEstimation,
 		saveModelInfoCharacteristics : saveModelInfoCharacteristics,
 		//queryUseCaseAnalytics: function(repoId, modelId, useCaseId, callbackfunc){
@@ -2113,7 +2112,7 @@ function deleteRepo(repoId, callbackfunc) {
 //        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
         queryModelNumByRepoID: queryModelNumByRepoID,
         queryFullRepoInfo: queryFullRepoInfo,
-        requestRepoBrief: repoDetail
+        requestRepoBrief: requestRepoBrief
     }
 	
 }());

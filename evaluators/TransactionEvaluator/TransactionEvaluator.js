@@ -64,7 +64,7 @@
 	}
 	
 	function toModelEvaluationHeader(){
-		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Tran_Length,Arch_Diff";
+		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Avg_TL,Avg_TD,Arch_Diff";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -78,12 +78,13 @@
 				+ modelInfo['TransactionAnalytics'].EXTCLL + ","
 				+ modelInfo['TransactionAnalytics'].TRAN_NA + ","
 				+ modelInfo['TransactionAnalytics'].NT+ ","
-				+ modelInfo['TransactionAnalytics'].Tran_Length+ ","
+				+ modelInfo['TransactionAnalytics'].Avg_TL+ ","
+				+ modelInfo['TransactionAnalytics'].Avg_TD+ ","
 				+ modelInfo['TransactionAnalytics'].Arch_Diff;
 	}
 	
 	function toUseCaseEvaluationHeader() {
-		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Avg_Tran_Length,Arch_Diff";
+		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Avg_TL,Avg_TD,Arch_Diff";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
@@ -97,8 +98,9 @@
 		+ useCaseInfo['TransactionAnalytics'].EXTCLL + ","
 		+ useCaseInfo['TransactionAnalytics'].TRAN_NA + ","
 		+ useCaseInfo['TransactionAnalytics'].NT+ ","
-		+ useCaseInfo['TransactionAnalytics'].AvgTranLength+ ","
-		+ useCaseInfo['TransactionAnalytics'].ArchDiff;
+		+ useCaseInfo['TransactionAnalytics'].Avg_TL+ ","
+		+ useCaseInfo['TransactionAnalytics'].Avg_TD+ ","
+		+ useCaseInfo['TransactionAnalytics'].Arch_Diff;
 	}
 
 	
@@ -116,8 +118,9 @@
 				TRAN_NA: 0,
 				NT: 0,
 //				TranLength: 0,
-				AvgTranLength: 0,
-				ArchDiff: 0
+				Avg_TL: 0,
+				Avg_TD: 0,
+				Arch_Diff: 0
 		}
 		
 //		for ( var i in useCaseInfo.Diagrams) {
@@ -222,7 +225,7 @@
 				var swtii = 10;
 				if(archDiff <= 4){
 					swtii = 4;
-				} else if (archDiff < 7){
+				} else if (archDiff < 7){ 	 	
 					swtii = 10;
 				} else {
 					swtii = 15;
@@ -263,7 +266,7 @@
 				transaction['TransactionAnalytics'].TL = TL;
 				transaction['TransactionAnalytics'].DETs = DETs;
 				transaction['TransactionAnalytics'].TD = TD;
-				transaction['TransactionAnalytics'].ArchDiff = archDiff;
+				transaction['TransactionAnalytics'].Arch_Diff = archDiff;
 
 				transaction['TransactionAnalytics'].swti = swti;
 				transaction['TransactionAnalytics'].swtii = swtii;
@@ -272,7 +275,7 @@
 				total_TD += TD;
 				total_TL += TL;
 				
-//				useCaseInfo['TransactionAnalytics'].ArchDiff += archDiff;
+//				useCaseInfo['TransactionAnalytics'].Arch_Diff += archDiff;
 			}
 			
 //			useCaseInfo['TransactionAnalytics'] = {};
@@ -289,7 +292,7 @@
 //			useCaseInfo['TransactionAnalytics'].TranLength = TranLength;
 			useCaseInfo['TransactionAnalytics'].Avg_TD = useCaseInfo['TransactionAnalytics'].NT == 0? 0: total_TD/useCaseInfo['TransactionAnalytics'].NT;
 			useCaseInfo['TransactionAnalytics'].Avg_TL = useCaseInfo['TransactionAnalytics'].NT == 0 ? 0 : total_TL/useCaseInfo['TransactionAnalytics'].NT;
-			useCaseInfo['TransactionAnalytics'].ArchDiff =  useCaseInfo['TransactionAnalytics'].Avg_TD * useCaseInfo["ComponentAnalytics"].Avg_TL;
+			useCaseInfo['TransactionAnalytics'].Arch_Diff =  useCaseInfo['TransactionAnalytics'].Avg_TD * useCaseInfo["ComponentAnalytics"].Avg_TL;
 			
 //			useCaseInfo['TransactionAnalytics'].EI += diagram['TransactionAnalytics'].EI;
 //			useCaseInfo['TransactionAnalytics'].EQ += diagram['TransactionAnalytics'].EQ;
@@ -344,7 +347,7 @@
 			if(callbackfunc){
 				var useCaseTransactionDump = dumpUseCaseTransactionsInfo(useCaseInfo);
 
-				var transactionAnalyticsStr = "id,transaction,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,transaction,useCase,transactional,TL, DETs, TD, Arch_Diff\n" + useCaseTransactionDump.transactionAnalyticsStr;
 				 
 						useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName = "transactionAnalytics.csv";
 						var files = [{fileName : useCaseInfo['TransactionAnalytics'].TransactionalAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -388,7 +391,7 @@
 //				TranLength: 0,
 				Avg_TD: 0,
 				Avg_TL:0,
-				ArchDiff:0
+				Arch_Diff:0
 		};
 
 		var useCaseTransactions = [];
@@ -422,12 +425,12 @@
 		debug.writeJson("model1",modelInfo);
 
 		modelInfo['TransactionAnalytics'].AvgTranLength = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : modelInfo['TransactionAnalytics'].TranLength/modelInfo['TransactionAnalytics'].NT;
-		modelInfo['TransactionAnalytics'].ArchDiff = modelInfo['TransactionAnalytics'].AvgTranLength*modelInfo["ComponentAnalytics"].AvgDegree;
+		modelInfo['TransactionAnalytics'].Arch_Diff = modelInfo['TransactionAnalytics'].AvgTranLength*modelInfo["ComponentAnalytics"].AvgDegree;
 		
 		if(callbackfunc){
 			 var modelTransactionInfoDump = dumpModelTransactionsInfo(modelInfo);
 
-				var transactionAnalyticsStr = "d,transaction,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,transaction,useCase,transactional, TL, DETs, TD, Arch_Diff\n" + modelTransactionInfoDump.transactionAnalyticsStr;
 	
 				modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 				var files = [{fileName : modelInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -468,7 +471,9 @@
 				EXTCLL:0,
 				TRAN_NA:0,
 				NT:0,
-				Tran_Length:0,
+//				Tran_Length:0,
+				Avg_TL: 0,
+				Avg_TD: 0,
 				Arch_Diff:0
 		};
 		
@@ -483,14 +488,14 @@
 			repoInfo['TransactionAnalytics'].CTRL += modelInfo['TransactionAnalytics'].CTRL;
 			repoInfo['TransactionAnalytics'].TRAN_NA += modelInfo['TransactionAnalytics'].TRAN_NA;
 			repoInfo['TransactionAnalytics'].NT += modelInfo['TransactionAnalytics'].NT;
-			repoInfo['TransactionAnalytics'].TranLength += modelInfo['TransactionAnalytics'].TranLength;
+//			repoInfo['TransactionAnalytics'].TranLength += modelInfo['TransactionAnalytics'].TranLength;
 			repoInfo['TransactionAnalytics'].EXTIVK += modelInfo['TransactionAnalytics'].EXTIVK;
 			repoInfo['TransactionAnalytics'].EXTCLL += modelInfo['TransactionAnalytics'].EXTCLL;
 			}
 		}
 		
 		repoInfo['TransactionAnalytics'].AvgTranLength = repoInfo['TransactionAnalytics'].NT == 0 ? 0 : repoInfo['TransactionAnalytics'].TranLength/repoInfo['TransactionAnalytics'].NT;
-		repoInfo['TransactionAnalytics'].ArchDiff = repoInfo['TransactionAnalytics'].AvgTranLength*repoInfo["ComponentAnalytics"].AvgDegree;
+		repoInfo['TransactionAnalytics'].Arch_Diff = repoInfo['TransactionAnalytics'].AvgTranLength*repoInfo["ComponentAnalytics"].AvgDegree;
 		
 		 repoInfo['TransactionAnalytics'].repoModelEvaluationResultsTransaction = repoInfo.OutputDir+"/Model_Evaluation_Results";
 		 
@@ -512,7 +517,7 @@
 			if(callbackfunc){
 				var repoTransactionInfoDump = dumpRepoTransactionsInfo(repoInfo);
 
-				var transactionAnalyticsStr = "id,transaction,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
+				var transactionAnalyticsStr = "id,transaction,useCase,transactional, TL, DETs, TD, Arch_Diff\n" + repoTransactionInfoDump.transactionAnalyticsStr;
 	
 					repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 					var files = [{fileName : repoInfo['TransactionAnalytics'].TransactionAnalyticsFileName , content : transactionAnalyticsStr}];
@@ -567,12 +572,12 @@
 //				diagram.Name+","+ 
 				useCaseInfo.Name+","+
 				transactionalOperation+","+ 
-				transaction['TransactionAnalytics'].TranLength+","+
-				transaction['TransactionAnalytics'].total_degree+","+
+//				transaction['TransactionAnalytics'].TranLength+","+
+//				transaction['TransactionAnalytics'].total_degree+","+
 				transaction['TransactionAnalytics'].TL+","+
 				transaction['TransactionAnalytics'].DETs+","+
 				transaction['TransactionAnalytics'].TD+","+
-				transaction['TransactionAnalytics'].arch_diff+"\n";
+				transaction['TransactionAnalytics'].Arch_Diff+"\n";
 	
 				}
 				
