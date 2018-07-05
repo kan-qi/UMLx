@@ -8,7 +8,9 @@ var fs = require('fs');
 	var parser = new xml2js.Parser();
 	
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\workspace\\experimentExample\\experimentExample_kdm.xmi";
-	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\workspace\\experimentExample\\experimentExample_kdm_simplified.xmi";
+//	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\workspace\\experimentExample\\experimentExample_kdm_simplified.xmi";
+//	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\workspace\\experimentExample\\experimentExample_kdm_simplified.xmi";
+	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\model_platforms\\src\\tests\\repoAnalyzer_kdm.xmi";
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\CarbonData_java.xmi";
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\Repo Analyser\\repoAnalyzer_kdm.xmi";
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\fabric-sdk-java\\fabric-sdk-java_kdm.xmi";
@@ -19,7 +21,7 @@ var fs = require('fs');
 //	var ModelOutputDir = "./model_platforms/src/repoAnalyzer";
 //	var ModelOutputDir = "./model_platforms/src/alltheapps";
 	
-var srcParser = require("./SrcParser.js");
+var srcParser = require("../SrcParser.js");
 				console.log("hello");
 
 				fs.readFile(filePath, "utf8", function(err, data) {

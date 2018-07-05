@@ -15,6 +15,10 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	var codeAnalysis = require("./CodeAnalysis.js");
+	var componentIdentifier = require("./ComponentIdentification.js");
+	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
+	var stimulusIdentifier = require("./StimulusIdentification.js");
+	
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
@@ -34,30 +38,60 @@
 						AccessDir: ModelAccessDir
 				};
 				
+
+				var debug = require("../../utils/DebuggerOutput.js");
+				
 //				xmiString = result;
 				var result = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
-//				console.log("callGraphs");
-//				console.log(callGraph);
+				debug.writeJson("constructed_model_by_kdm_result_7_5", result);
 				
-//				var domainModelResult = createDomainModel(result.classUnits, ModelOutputDir, ModelAccessDir);
-//				Model.DomainModel = domainModelResult.DomainModel;
-//				var domainElementsByID = domainModelResult.domainElementsByID;
+//				return {
+//					callGraph: callGraph,
+//					typeDependenceGraph: typeDependenceTraph,
+//					accessGraph: accessGraph,
+////					controlFlowGraph: controlFlowGraph,
+//					topClassUnits: classUnits
+//				};
 				
-//				var UseCases = createUseCasesbyCFG(result.controlFlowGraph, ModelOutputDir, ModelAccessDir, domainElementsByID);
+				var components = componentIdentifier.identifyComponents(result.classUnits, result.accessGraph, result.typeDependenceGraph, result.callGraph);
+				debug.writeJson("constructed_model_by_kdm_components_7_5", components);
 				
-//				Model.UseCases = UseCases;
+//				Model.DomainModel = createDomainModel(components, ModelOutput, ModelAccessDir).DomainModel;
 				
-//				return Model;
+//				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(components, ModelOutputDir);
+				
+//				stimulusIdentifier.identifyStimuli(controlFlowGraph);
+				
+//				var UseCase = {
+//						_id : XMIActivityDiagram['$']['xmi:id'],
+//						Name : XMIActivityDiagram['$']['name'],
+//						Activities : Activities,
+//						PrecedenceRelations : PrecedenceRelations,
+//						OutputDir : Model.OutputDir + "/"
+//								+ XMIActivityDiagram['$']['xmi:id'],
+//						AccessDir : Model.AccessDir + "/"
+//								+ XMIActivityDiagram['$']['xmi:id'],
+//						}
 //				
-				var debug = require("../../utils/DebuggerOutput.js");
-				debug.writeJson("constructed_model_by_kdm_6_22", result);
+//				
+//				for(var i in controlFlowGraph.Edges){
+//					var edge = controlFlowGraph.Edges[i];
+//					var activity = {
+//							Type : "action",
+//							_id : edge._id,
+//							Name : edge.Name,
+//							Stimulus : false,
+//							Scope : false,
+//						};
+//					
+//					UseCase.Activities.push(activity);
+//				}
+//				
 				
 				if(callbackfunc){
 					callbackfunc(Model);
 				}
 				
-//			});
-//		});
 	}
 	
 //	// those elements store all the same type of elements in the sub classes.
