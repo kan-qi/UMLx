@@ -172,6 +172,8 @@
 				
 				//the total degree should be determined differently. If an element has a component, then the degree is the number of components associated with the current component, and if not, it is the number of messages, associated with the current messages.
 				var totalDegree = 0;
+				var totalComponent = 0;
+				var dataElementTypes = 0;
 				
 				for(var i in transaction.Nodes)
 				{	
@@ -208,8 +210,9 @@
 					//crate a few high level functions for further analysis
 //					model.findAssociatedComponents = function(node){
 //						var components = new Set();
-					totalDegree += 1;
+//					totalDegree += 1;
 						if(node.Component){
+							totalComponent ++;
 							var outgoingEdges = [];
 //							for(var i in this.Diagrams){
 								var edges = usecase.precedenceRelations;
@@ -221,6 +224,17 @@
 									}
 								}
 //							}
+								
+								var matchedMethod = node.MatchedMethod;
+								for(var k in component.Operations){
+									var operation = component.Operations[k];
+//									totalOps++;
+									if(operation.Name === matchedMethod){
+										for(var l in operation.Parameters){
+											dataElementTypes++;
+										}
+									}
+								}
 							
 //							for(var edge in outgoingEdges){
 //								components.add(edge.target);
@@ -292,9 +306,9 @@
 				transaction['TransactionAnalytics'].TranLength = transaction.Nodes.length;
 				//The transaction length is defined as the number of operations of a transaction, which can be the number of activities, messages, interactions.
 				
+				transaction['TransactionAnalytics'].TranDegree = totalComponents? 0 : totalDegree/totalComponents;
 				
-				
-				transaction['TransactionAnalytics'].TotalDegree = totalDegree;
+				transaction['TransactionAnalytics'].DataElementTypes = dataElementTypes;
 				
 				console.log("transaction process: transaction process");
 				console.log(transaction);
