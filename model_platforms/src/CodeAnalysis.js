@@ -167,7 +167,7 @@
 				}
 				console.log("targetClassUnit");
 				console.log(targetClassUnit);
-				if (!targetClassUnit) { // the type of the parameter is not within classUnits, like string, int...
+				if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within classUnits, like string, int...
 					continue;
 				}
 
@@ -214,7 +214,7 @@
 				var methodParameters = methodUnit.Signature.parameterUnits; // the parameters of the method, including input and return
 				var methodClassUnit = locateClassUnitForMethod(methodUnit, topClassUnits); // the class which owns the method
 
-				if (!methodParameters || !methodClassUnit) {
+				if (!methodParameters || !methodClassUnit || !methodClassUnit.isWithinBoundary) {
 					continue;
 				}
 
@@ -233,7 +233,7 @@
 								targetClassUnit = classUnitCandidate;
 							}
 						}
-						if (!targetClassUnit) { // the type of the parameter is not within classUnits, like string, int...
+						if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within classUnits, like string, int...
 							continue;
 						}
 						var startNode = nodesByNameLocal[methodUnit.UUID];
@@ -292,7 +292,7 @@
 						}
 					}
 
-					if (!targetClassUnit) { // the type of the parameter is not within classUnits, like string, int...
+					if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within classUnits, like string, int...
 						continue;
 					}
 
@@ -370,7 +370,7 @@
 				var methodUnit = identifyMethodUnit(XMIMethodUnit, xmiString);
 				// var methodClassUnit = locateClassUnitForMethod(methodUnit, topClassUnits); // the class which owns the method
 
-				if (!methodUnit) {
+				if (!methodUnit || !classUnit.isWithinBoundary) {
 					continue;
 				}
 
@@ -417,6 +417,10 @@
 											}
 										}
 
+									}
+
+									if (!targetClassUnit || !targetClassUnit.isWithinBoundary) {
+										continue;
 									}
 									// console.log("className");
 									// console.log(methodClassUnit.name);
@@ -548,7 +552,7 @@
 //				console.log("call method");
 //				console.log(callMethodUnit);
 
-				if(!callMethodUnit.Signature || !targetMethodUnit.Signature){
+				if(!callMethodUnit.Signature || !targetMethodUnit.Signature || !targetClassUnit.isWithinBoundary){
 					continue;
 				}
 
