@@ -183,7 +183,9 @@
 		useCaseInfo['UseCasePointData'] = {}
 		
 		// those measurements should be take by specific evaluators.
-		
+		for(var i in useCaseInfo.Transactions){
+		var transaction = useCaseInfo.Transactions[i];
+			
 		var TL = transaction['TransactionAnalytics'].TL;
 		var DETs = transaction['TransactionAnalytics'].DETs;
 		var TD = transaction['TransactionAnalytics'].TD;
@@ -229,11 +231,12 @@
 		
 		var swti =  determineTransactionWeight({TL:TL}, "swti");
 		var swtii =  determineTransactionWeight({TD: TD, TL:TL}, "swtii")
-		var swtiii =  determineTransactionWeight({DETs: DETS, TD: TD, TL:TL}, "swtiii");
+		var swtiii =  determineTransactionWeight({DETs: DETs, TD: TD, TL:TL}, "swtiii");
 				
 		useCaseInfo['UseCasePointData'].SWTI = swti;
 		useCaseInfo['UseCasePointData'].SWTII = swtii;
 		useCaseInfo['UseCasePointData'].SWTIII = swtiii;
+		}
 				
 	}
 	
@@ -276,9 +279,9 @@
 		var EF = Number(modelInfo['UseCasePointData'].EF);
 		var UAW = Number(modelInfo['UseCasePointData'].UAW);
 		
-		var EUCP = (modelInfo['UseCasePointData'].SWTI+UAW)*TCF*EF;
-		var EXUCP = (modelInfo['UseCasePointData'].SWTII+UAW)*TCF*EF;
-		var DUCP = (modelInfo['UseCasePointData'].SWTIII+UAW)*TCF*EF;
+		modelInfo['UseCasePointData'].EUCP = (modelInfo['UseCasePointData'].SWTI+UAW)*TCF*EF;
+		modelInfo['UseCasePointData'].EXUCP = (modelInfo['UseCasePointData'].SWTII+UAW)*TCF*EF;
+		modelInfo['UseCasePointData'].DUCP = (modelInfo['UseCasePointData'].SWTIII+UAW)*TCF*EF;
 
 	}
 	

@@ -107,7 +107,7 @@
 
 	// to output the header for data for the use cases.
 	function toUseCaseEvaluationHeader() {
-		return "Tran_Num,Activity_Num,Actor_Num,Component_num,Boundary_Num,Control_Num,Entity_Num";
+		return "Tran_Num,Activity_Num,Actor_Num,Component_num,Boundary_Num,Control_Num,Entity_Num|";
 	}
 
 	// to output each row of the data for the use cases.

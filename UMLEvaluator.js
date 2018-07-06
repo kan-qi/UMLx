@@ -26,7 +26,7 @@
 	
 	// current available evaluators
 	var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
-	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
+//	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 	var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
 	var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
 	var useCasePointCalculator = require('./evaluators/UseCasePointEvaluator/UseCasePointCalculator.js');
@@ -38,7 +38,7 @@
 	var userStoryEvaluator = require('./evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
 	
 //	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
-	var evaluators = [useCaseComponentsEvaluator,functionPointEvaluator, transactionEvaluator,modelVersionEvaluator, projectTypeEvaluator, cocomoCalculator,useCasePointWeightEvaluator,useCasePointCalculator,UMLSizeMetricEvaluator,userStoryEvaluator];
+	var evaluators = [useCaseComponentsEvaluator,transactionEvaluator,modelVersionEvaluator, projectTypeEvaluator, cocomoCalculator,useCasePointWeightEvaluator,useCasePointCalculator,UMLSizeMetricEvaluator,userStoryEvaluator];
 //	function setUp(){
 //		evaluators = [cocomoCalculator, useCaseCalculator, useCaseComponentsEvaluator];
 //		for(var i in evaluators){
