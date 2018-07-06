@@ -27,7 +27,7 @@
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
 //
-  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classes) {
+  function calculateMetric(callGraph, accessGraph, typeDependencyGraph, classes) {
 		var classDic = {};
 		var classArray = [];
 		var methods = []; // store the number of methods in each class
@@ -75,10 +75,10 @@
 		console.log(metric);
 		console.log(relations);
 
-		var components = findClusters(classArray, relations);
+		var components = identifyComponents(classArray, relations);
 		console.log(util.inspect(components, false, null))
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("components", components);
+		debug.writeJson("components", classClusters);
 		return components;
 
 	}
@@ -332,7 +332,7 @@
 	}
 
 
-	function findClusters(classArray, metrics) {
+	function identifyComponents(classArray, metrics) {
 
 		var clusterfck = require("clusterfck");
 
@@ -443,6 +443,6 @@
 			// calculateCallMetric: calculateCallMetric,
 			// calculateAccessMetric: calculateAccessMetric,
 			// calculateTypeDependencyMetric: calculateTypeDependencyMetric,
-			findClusters: findClusters
+			calculateMetric: calculateMetric
 	}
 }());
