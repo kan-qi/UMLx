@@ -60,196 +60,56 @@
 	var transactionalPatternTreeRoot = transactionPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
 	
 	module.exports = {
-			/*
-			 * At the diagram level, the components need to associate with domain model.
-			 */
-//			processUseCase: function(useCase, model, callbackfunc){
-////				var useCase = model.UseCases[i];
-//				
-////				var entries=diagram.Entries;// tag: elements
-//				
-//				var toExpandCollection = new Array();
-//				
-//				for (var j in useCase.activities){
-//					var activity = useCase.activities[j];
-//					//define the node structure to keep the infor while traversing the graph
-//					if(activity.stimulus){
-//					var node = {
-//						//id: startElement, //ElementGUID
-//						Node: activity,
-//						TransactionToNode: [activity],
-//						OutScope: activity.outScope
-//					};
-//					toExpandCollection.push(node);
-//					}
-//				}
-//				
-//				var Transactions = new Array();
-//				var toExpand;
-//				while((toExpand = toExpandCollection.pop()) != null){
-//					var node = toExpand.Node;
-//					var transactionToNode = toExpand.TransactionToNode;
-////					var toExpandID = toExpand.id;
-////					var expanded = false;
-//					// test completeness of the expanded transaction first to decide if continue to expand
-////					var childNodes = diagram.expand(node);
-//					// if null is returned, then node is an end node.
-//					
-////					diagram.expand = function(node){
-//					// add condition on actor to prevent stop searching for message [actor, view].
-////					if(modelComponents[node.TargetID] && modelComponents[node.TargetID].Type === "boundary"){
-////						return;
-////					}
-////					if(node.outboundNum == 0){
-////						return;
-////					}
-////					else {
-//
-//						var childNodes = [];
-//						for(var j in useCase.precedenceRelations){
-//							var edge = useCase.precedenceRelations[j];
-//							if(edge.start == node){
-//								childNodes.push(edge.end);
-//							}
-//						}
-////						return children;
-////					}
-//					
-////				}
-//					
-//					if(childNodes.length == 0){
-//						Transactions.push({Nodes: transactionToNode, OutScope: toExpand.OutScope});
-//					}
-//					else{
-//						for(var j in childNodes){
-//							var childNode = childNodes[j];
-//							if(!childNode){
-//								continue;
-//							}
-//							
-//							//if childNode is an outside activity
-//							
-//							var OutScope = false;
-//							if(toExpand.OutScope||childNode.outScope){
-//								OutScope = true;
-//							}
-//							
-//							var toExpandNode = {
-//								Node: childNode,
-//								TransactionToNode: transactionToNode.concat(childNode),
-//								OutScope: OutScope
-//							}
-//							
-//							console.log("toExpandNode");
-//							console.log(toExpandNode);
-//							
-//							console.log("child node");
-//							console.log(childNodes);
-//							console.log(childNode);
-//							console.log(childNode.name);
-//							console.log(childNode.group);
-//
-//							if(!isCycled(toExpandNode.TransactionToNode) && childNode.group === "System"){
-//							toExpandCollection.push(toExpandNode);
-//							}
-//							else{
-//							Transactions.push({Nodes: toExpandNode.TransactionToNode, OutScope: toExpandNode.OutScope});
-//							}
-//						}		
-//					}
-//			}
-//				return Transactions;
-//			},
-//			processDiagram: function(diagram, usecase, model, callbackfunc){
-//				console.log("transaction process: process diagram");
-//				diagram.Transactions = UMLDiagramTraverser.traverseDiagram(diagram);
-//				diagramDrawer.drawBehavioralDiagram(diagram, callbackfunc);
-//				console.log(diagram.Transactions);
-//			},
 			processTransaction: function(transaction,  usecase, model){
 //				var components = [];
 //				var transactionStr = "";
 				
 				//the total degree should be determined differently. If an element has a component, then the degree is the number of components associated with the current component, and if not, it is the number of messages, associated with the current messages.
 				var totalDegree = 0;
-				var totalComponent = 0;
+				var totalComponents = 0;
 				var dataElementTypes = 0;
 				
 				for(var i in transaction.Nodes)
 				{	
 					var node = transaction.Nodes[i];
-//					
-//					if(i == 0){
-//						if(node.source){
-//						components.push(node.source);
-//						}
-//					}
-//	
-//					if(node.target){
-//						components.push(node.target);
-//					}
-//					
-////					var node = transaction[i];
-////					var elementID = transaction['Elements'][i];
-////					var components = diagram.allocate(node);
-////					if(!element){
-////						break;
-////					}
-////					for(var j in components){
-////						totalDegree += components[j].InboundNumber;
-////						tranLength++;	
-////					}
-//					
-//					transactionStr += node.Name;
-//					if( i != transaction.Nodes.length - 1){
-//						transactionStr += "->";
-//					}
-					
-//					var associatedComponents = model.findAssociatedComponents(node);
-					
-					//crate a few high level functions for further analysis
-//					model.findAssociatedComponents = function(node){
-//						var components = new Set();
-//					totalDegree += 1;
+
 						if(node.Component){
-							totalComponent ++;
-							var outgoingEdges = [];
+							
+							console.log("associating component");
+							console.log(node.Component);
+						
+							totalComponents ++;
+//							var outgoingEdges = [];
 //							for(var i in this.Diagrams){
-								var edges = usecase.precedenceRelations;
+								var edges = usecase.PrecedenceRelations;
 								for(var j in edges){
 									var edge = edges[j];
-									if(edge.end.Component == node.Component){
+									
+									if(edge.end.Component && edge.end.Component._id === node.Component._id){
 //										outgoingEdges.push(edge);
+										console.log("checking degree");
 										totalDegree++;
 									}
 								}
 //							}
 								
 								var matchedMethod = node.MatchedMethod;
-								for(var k in component.Operations){
-									var operation = component.Operations[k];
+//								for(var k in node.Component.Operations){
+//									var operation = node.Component.Operations[k];
 //									totalOps++;
-									if(operation.Name === matchedMethod){
-										for(var l in operation.Parameters){
+//									if(operation.Name === matchedMethod){
+									if(matchedMethod){
+										for(var j in matchedMethod.Parameters){
 											dataElementTypes++;
 										}
 									}
-								}
+//									}
+//								}
 							
-//							for(var edge in outgoingEdges){
-//								components.add(edge.target);
-//							}		
 						}
 						
-//						return Array.from(components);
-//					}
-					
-//					totalDegree += associatedComponents.length + 1;
 				}
 				
-//				console.log(transactionStr);
-//				transaction.TransactionStr = transactionStr;
-
 				transaction['TransactionAnalytics'] = {};
 				
 				var transactionalOperations = transactionPatternMatchUtil.recognizePattern(transaction, transactionalPatternTreeRoot);
@@ -303,12 +163,16 @@
 				
 				
 //				transaction['TransactionAnalytics'].Components = components;
-				transaction['TransactionAnalytics'].TranLength = transaction.Nodes.length;
+				transaction['TransactionAnalytics'].TL = transaction.Nodes.length;
 				//The transaction length is defined as the number of operations of a transaction, which can be the number of activities, messages, interactions.
 				
-				transaction['TransactionAnalytics'].TranDegree = totalComponents? 0 : totalDegree/totalComponents;
+				transaction['TransactionAnalytics'].TC = totalComponents;
 				
-				transaction['TransactionAnalytics'].DataElementTypes = dataElementTypes;
+				transaction['TransactionAnalytics'].TD = totalComponents == 0? 0 : totalDegree/totalComponents;
+				
+				transaction['TransactionAnalytics'].DETs = dataElementTypes;
+				
+				transaction['TransactionAnalytics'].Arch_Diff = transaction['TransactionAnalytics'].TL*transaction['TransactionAnalytics'].TD;
 				
 				console.log("transaction process: transaction process");
 				console.log(transaction);

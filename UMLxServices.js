@@ -1102,7 +1102,7 @@ app.get('/requestUseCaseDetail', function(req, res){
 //				console.log('use case detail');
 //				console.log(useCaseInfo);
 //		for(var i in useCaseInfo.Diagrams){
-//		console.log(useCaseInfo.Diagrams[i]['Paths']);
+//		console.log(useCaseInfo.Diagrams[i]['Transactions']);
 //		}
 		
 		if(!useCaseInfo){
@@ -1111,21 +1111,21 @@ app.get('/requestUseCaseDetail', function(req, res){
 		}
 		
 		//create the displayable paths
-		var displayablePaths = [];
-		for(var i in useCaseInfo.Paths){
-			var path = useCaseInfo.Paths[i];
-			var pathStr = "";
-			for(var j in path.Nodes){
-				var node = path.Nodes[j];
-				pathStr += node.Name;
-				if( i != path.Nodes.length - 1){
-					pathStr += "->";
+		var displayableTransactions = [];
+		for(var i in useCaseInfo.Transactions){
+			var transaction = useCaseInfo.Transactions[i];
+			var transactionStr = "";
+			for(var j in transaction.Nodes){
+				var node = transaction.Nodes[j];
+				transactionStr += node.Name;
+				if( i != transaction.Nodes.length - 1){
+					transactionStr += "->";
 				}
 			}
-			displayablePaths.push({id: i, PathStr: pathStr, Tag: "undefined"});
+			displayableTransactions.push({id: i, TransactionStr: transactionStr, Tag: "undefined"});
 		}
 		console.log(useCaseInfo);
-		useCaseInfo.DisplayablePaths = displayablePaths;
+		useCaseInfo.DisplayableTransactions = displayableTransactions;
 				res.render('useCaseDetail', {useCaseInfo:useCaseInfo, modelId:modelId,repoId:repoId});
 
 		//create img directory so icons can be displayed

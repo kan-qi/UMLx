@@ -107,14 +107,15 @@
 
 	// to output the header for data for the use cases.
 	function toUseCaseEvaluationHeader() {
-		return "Tran_Num,Activity_Num,Actor_Num,Component_num,Boundary_Num,Control_Num,Entity_Num,Avg_Degree,Avg_Transaction_Length,";
+		return "Tran_Num,Activity_Num,Actor_Num,Component_num,Boundary_Num,Control_Num,Entity_Num";
 	}
 
 	// to output each row of the data for the use cases.
 	function toUseCaseEvaluationRow(useCase, index) {
 //		var useCaseEmpirics = useCase.UseCaseEmpirics;
 
-		return useCase["ComponentAnalytics"].TranNum + ","
+		return 
+		useCase["ComponentAnalytics"].TranNum + ","
 //		+ useCase["ComponentAnalytics"].DiagramNum + ","
 		+ useCase["ComponentAnalytics"].ActivityNum + ","
 		+ useCase["ComponentAnalytics"].ActorNum + ","
@@ -122,8 +123,8 @@
 		+ useCase["ComponentAnalytics"].BoundaryNum + ","
 		+ useCase["ComponentAnalytics"].ControlNum + ","
 		+ useCase["ComponentAnalytics"].EntityNum + ","
-		+ useCase["ComponentAnalytics"].AvgDegree + ","
-		+ useCase["ComponentAnalytics"].AvgTransactionLength;
+//		+ useCase["ComponentAnalytics"].AvgDegree + ","
+//		+ useCase["ComponentAnalytics"].AvgTransactionLength;
 
 	}
 	
@@ -138,8 +139,8 @@
 		BoundaryNum : 0,
 		ControlNum : 0,
 		EntityNum : 0,
-		AvgDegree : 0,
-		AvgTransactionLength : 0
+//		AvgDegree : 0,
+//		AvgTransactionLength : 0
 		};
 		
 				// element analytics
@@ -153,15 +154,15 @@
 				var entityNum = 0;
 				var componentNum = 0;
 				
-				var totalTransactionLength = 0;
+//				var totalTransactionLength = 0;
 				var transactionNum = 0;
 
 				for ( var j in useCase.Activities) {
-					var Activity = useCase.Activities[j]; // tag: elements
+					var activity = useCase.Activities[j]; // tag: elements
 //					var components = diagram.allocate(Activity);
 					// if it is mvc decomposed. we are able to understand the boundry, control, and entity.
-					if(Activity.target){
-						var component = Activity.target;
+					if(activity.Component){
+						var component = activity.Component;
 						totalDegree += component.InboundNumber;
 						
 						var type = component.Type;
@@ -193,11 +194,11 @@
 
 //				totalLinks += diagram.Edges.length;
 
-				for ( var j in useCase.Transactions) {
-					var Transaction = useCase.Transactions[j];
-					totalTransactionLength += Transaction.Nodes.length;
-					transactionNum++;
-				}
+//				for ( var j in useCase.Transactions) {
+//					var Transaction = useCase.Transactions[j];
+////					totalTransactionLength += Transaction.Nodes.length;
+//					transactionNum++;
+//				}
 
 				useCase["ComponentAnalytics"].TotalDegree = totalDegree;
 //				useCase["ComponentAnalytics"].TotalLinks = totalLinks;
@@ -208,9 +209,9 @@
 				useCase["ComponentAnalytics"].EntityNum = entityNum;
 				useCase["ComponentAnalytics"].ActivityNum = activityNum;
 				useCase["ComponentAnalytics"].ComponentNum = componentNum;
-				useCase["ComponentAnalytics"].TranNum = transactionNum;
-				useCase["ComponentAnalytics"].AvgDegree = useCase["ComponentAnalytics"].ActivtyNum == 0 ? 0 : useCase["ComponentAnalytics"].TotalDegree / useCase["ComponentAnalytics"].ActivtyNum;
-				useCase["ComponentAnalytics"].AvgTransactionLength = useCase["ComponentAnalytics"].TranNum == 0 ? 0 : useCase["ComponentAnalytics"].TotalTransactionLength / useCase["ComponentAnalytics"].TranNum;
+				useCase["ComponentAnalytics"].TranNum = useCase.Transactions.length;
+//				useCase["ComponentAnalytics"].AvgDegree = useCase["ComponentAnalytics"].ActivtyNum == 0 ? 0 : useCase["ComponentAnalytics"].TotalDegree / useCase["ComponentAnalytics"].ActivtyNum;
+//				useCase["ComponentAnalytics"].AvgTransactionLength = useCase["ComponentAnalytics"].TranNum == 0 ? 0 : useCase["ComponentAnalytics"].TotalTransactionLength / useCase["ComponentAnalytics"].TranNum;
 
 		if (callbackfunc) {
 
@@ -613,14 +614,14 @@
 	
 
 	function toModelEvaluationHeader() {
-		return "Transaction_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,ControlNum,Entity_Num,attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Depth_Inheritance_Tree,para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
+		return "Tran_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,ControlNum,Entity_Num,attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Depth_Inheritance_Tree,para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
 //		var modelInfo["ComponentAnalytics"] = modelInfo.ModelAnalytics;
 //		var modelEmpirics = modelInfo.ModelEmpirics;
 
-		return modelInfo["ComponentAnalytics"].TransactionNum + ","
+		return modelInfo["ComponentAnalytics"].TranNum + ","
 				+ modelInfo["ComponentAnalytics"].UseCaseNum + ","
 //				+ modelInfo["ComponentAnalytics"].DiagramNum + ","
 				+ modelInfo["ComponentAnalytics"].ActivityNum + ","
@@ -670,7 +671,7 @@
 				OperationNum : 0,
 				EntityNum : 0,
 				ActivityNum : 0,
-				TransactionNum : 0,
+				TranNum : 0,
 				UseCaseNum : 0,
 				ActorNum : 0,
 				BoundaryNum : 0,
@@ -713,9 +714,9 @@
 				TransactionAnalyticsFileName : "transactionAnalytics.csv"
 		}
 		
-		var totalTransactionLength = 0;
+//		var totalTransactionLength = 0;
 		var totalActorNum = 0;
-		var totalDegree = 0;
+//		var totalDegree = 0;
 		
 		for ( var i in modelInfo.UseCases) {
 			var useCase = modelInfo.UseCases[i];
@@ -740,9 +741,9 @@
 			//need to recalculate here.
 			modelInfo["ComponentAnalytics"].RoleNum += useCase["ComponentAnalytics"].RoleNum;
 			
-			totalTransactionLength += useCase["ComponentAnalytics"].AvgTransactionLength*useCase["ComponentAnalytics"].TranNum;
+//			totalTransactionLength += useCase["ComponentAnalytics"].AvgTransactionLength*useCase["ComponentAnalytics"].TranNum;
 			totalActorNum += useCase["ComponentAnalytics"].ActorNum;
-			totalDegree += useCase["ComponentAnalytics"].AvgDegree*useCase["ComponentAnalytics"].ComponentNum;
+//			totalDegree += useCase["ComponentAnalytics"].AvgDegree*useCase["ComponentAnalytics"].ComponentNum;
 //			modelInfo["ComponentAnalytics"].AvgActor += useCase["ComponentAnalytics"].AvgActor;
 //			modelInfo["ComponentAnalytics"].AvgRole += useCase["ComponentAnalytics"].AvgRole;
 			}
@@ -750,8 +751,8 @@
 			modelInfo["ComponentAnalytics"].UseCaseNum++;
 		}
 
-		modelInfo["ComponentAnalytics"].AvgTransactionLength = modelInfo["ComponentAnalytics"].TransactionNum == 0 ? 0 : totalTransactionLength / modelInfo["ComponentAnalytics"].TransactionNum;
-		modelInfo["ComponentAnalytics"].AvgDegree = modelInfo["ComponentAnalytics"].ComponentNum == 0 ? 0 : totalDegree / modelInfo["ComponentAnalytics"].ComponentNum;
+//		modelInfo["ComponentAnalytics"].AvgTransactionLength = modelInfo["ComponentAnalytics"].TransactionNum == 0 ? 0 : totalTransactionLength / modelInfo["ComponentAnalytics"].TransactionNum;
+//		modelInfo["ComponentAnalytics"].AvgDegree = modelInfo["ComponentAnalytics"].ComponentNum == 0 ? 0 : totalDegree / modelInfo["ComponentAnalytics"].ComponentNum;
 		modelInfo["ComponentAnalytics"].AvgActorNum = modelInfo["ComponentAnalytics"].ActivtyNum == 0 ? 0 : totalActorNum / modelInfo["ComponentAnalytics"].UseCaseNum;
 
 		// analyse domain model
@@ -860,7 +861,7 @@
 
 	function evaluateRepo(repoInfo, callbackfunc) {
 		repoInfo["ComponentAnalytics"] = {
-		TranNum:0,	
+		TranNum:0,
 		ActorNum:0,
 		UseCaseNum: 0,
 		BoundaryNum:0,
@@ -877,16 +878,16 @@
 //		repoInfo.RepoAnalytics = repoInfo["ComponentAnalytics"];
 
 
-		var totalTransactionLength = 0;
+//		var totalTransactionLength = 0;
 		var totalActorNum = 0;
-		var totalDegree = 0;
+//		var totalDegree = 0;
 		
 		for ( var i in repoInfo.Models) {
 			var modelInfo = repoInfo.Models[i];
 
 			if(modelInfo["ComponentAnalytics"]){
 //			repoInfo["ComponentAnalytics"].TotalTransactionLength += modelInfo["ComponentAnalytics"].TotalTransactionLength;
-			repoInfo["ComponentAnalytics"].TranNum += modelInfo["ComponentAnalytics"].TransactionNum;
+			repoInfo["ComponentAnalytics"].TranNum += modelInfo["ComponentAnalytics"].TranNum;
 			repoInfo["ComponentAnalytics"].UseCaseNum += modelInfo["ComponentAnalytics"].UseCaseNum;
 
 //			repoInfo["ComponentAnalytics"].TotalTransactionLength += modelInfo["ComponentAnalytics"].TotalTransactionLength;
@@ -901,15 +902,15 @@
 //			repoInfo["ComponentAnalytics"].TotalDegree += modelInfo["ComponentAnalytics"].TotalDegree;
 			repoInfo["ComponentAnalytics"].ActivtyNum += modelInfo["ComponentAnalytics"].ActivtyNum;
 			
-			totalTransactionLength += modelInfo["ComponentAnalytics"].AvgTransactionLength*modelInfo["ComponentAnalytics"].TranNum;
+//			totalTransactionLength += modelInfo["ComponentAnalytics"].AvgTransactionLength*modelInfo["ComponentAnalytics"].TranNum;
 			totalActorNum += modelInfo["ComponentAnalytics"].ActorNum;
-			totalDegree += modelInfo["ComponentAnalytics"].AvgDegree*modelInfo["ComponentAnalytics"].ComponentNum;
+//			totalDegree += modelInfo["ComponentAnalytics"].AvgDegree*modelInfo["ComponentAnalytics"].ComponentNum;
 			
 			}
 		}
 
-		repoInfo["ComponentAnalytics"].AvgTransactionLength = repoInfo["ComponentAnalytics"].TransactionNum == 0 ? 0 : totalTransactionLength / repoInfo["ComponentAnalytics"].TransactionNum;
-		repoInfo["ComponentAnalytics"].AvgDegree = repoInfo["ComponentAnalytics"].ComponentNum == 0 ? 0 : totalDegree / repoInfo["ComponentAnalytics"].ComponentNum;
+//		repoInfo["ComponentAnalytics"].AvgTransactionLength = repoInfo["ComponentAnalytics"].TransactionNum == 0 ? 0 : totalTransactionLength / repoInfo["ComponentAnalytics"].TransactionNum;
+//		repoInfo["ComponentAnalytics"].AvgDegree = repoInfo["ComponentAnalytics"].ComponentNum == 0 ? 0 : totalDegree / repoInfo["ComponentAnalytics"].ComponentNum;
 		repoInfo["ComponentAnalytics"].AvgActorNum = repoInfo["ComponentAnalytics"].UseCaseNum == 0 ? 0 : totalDegree / repoInfo["ComponentAnalytics"].UseCaseNum;
 
 		repoInfo["ComponentAnalytics"].repoModelEvaluationResultsTransaction = repoInfo.OutputDir + "/Model_Evaluation_Results";

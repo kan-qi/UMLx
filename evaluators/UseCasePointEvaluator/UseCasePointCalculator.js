@@ -65,14 +65,16 @@
 	
 	function toModelEvaluationHeader(){
 //		return "UEUCW,UEUCW_ALY,UEXUCW,UEXUCW_ALY,UDUCW,UDUCW_ALY,UAW,UAW_ALY,TCF,TCF_ALY,EF,EF_ALY,EUCP,EUCP_ALY,EXUCP,EXUCP_ALY,DUCP_ALY,Effort_Norm_UCP";
-		return "UEUCW,UEXUCW,UDUCW,UAW,TCF,EF,EUCP,EXUCP,DUCP,SWTI,SWTII,SWTIII,Effort_Norm_UCP";
+//		return "UEUCW,UEXUCW,UDUCW,UAW,TCF,EF,EUCP,EXUCP,DUCP,SWTI,SWTII,SWTIII,Effort_Norm_UCP";
+		return "UAW,TCF,EF,EUCP,EXUCP,DUCP,SWTI,SWTII,SWTIII,Effort_Norm_UCP";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
 		
-		return modelInfo['UseCasePointData'].UEUCW+","+
-		modelInfo['UseCasePointData'].UEXUCW+","+
-		modelInfo['UseCasePointData'].UDUCW+","+
+		return 
+//		modelInfo['UseCasePointData'].UEUCW+","+
+//		modelInfo['UseCasePointData'].UEXUCW+","+
+//		modelInfo['UseCasePointData'].UDUCW+","+
 		modelInfo['UseCasePointData'].UAW+","+
 		modelInfo['UseCasePointData'].TCF+","+
 		modelInfo['UseCasePointData'].EF+","+
@@ -87,19 +89,22 @@
 	
 	function toUseCaseEvaluationHeader(){
 //		return "UEUCW_EMP,UEUCW_ALY,UEXUCW_EMP,UEXUCW_ALY, Effort,Effort_ALY";
-		return "UEUCW,UEXUCW,UDUCW,Effort,SWTI,SWTII,SWTIII,";
+		// at use case level, there are no UEUCW, UEXUCW, UDUCW
+//		return "UEUCW,UEXUCW,UDUCW,Effort,SWTI,SWTII,SWTIII";
+		return "SWTI,SWTII,SWTIII";
 	}
 	
 	function toUseCaseEvaluationRow(useCaseInfo, index){
-			return useCaseInfo['UseCasePointData'].UEUCW+","+
-			useCaseInfo['UseCasePointData'].UEXUCW+","+
+			return 
+//			useCaseInfo['UseCasePointData'].UEUCW+","+
+//			useCaseInfo['UseCasePointData'].UEXUCW+","+
 //			useCaseEmpirics.IT+","+
 //			useCaseInfo['UseCasePointData'].IT+","+
 			//UEUCW
 //			useCaseEmpirics.UEXUCW+","+
-			useCaseInfo['UseCasePointData'].UDUCW+","+
+//			useCaseInfo['UseCasePointData'].UDUCW+","+
 //			useCaseEmpirics.Effort+","+
-			useCaseInfo['UseCasePointData'].Effort+","+
+//			useCaseInfo['UseCasePointData'].Effort+","+
 			useCaseInfo['UseCasePointData'].SWTI+","+
 			useCaseInfo['UseCasePointData'].SWTII+","+
 			useCaseInfo['UseCasePointData'].SWTIII;
@@ -108,260 +113,308 @@
 	function evaluateUseCase(useCaseInfo){
 		useCaseInfo['UseCasePointData'] = {}
 		
-		//evaluate UEUCW
-
-		useCaseInfo['UseCasePointData'].UEUCW = 0;
+		// those measurements should be take by specific evaluators.
 		
-		if(useCaseInfo['UseCasePointData'].TN <= 0){
-			useCaseInfo['UseCasePointData'].UEUCW = 0;
+		var TL = transaction['TransactionAnalytics'].TL;
+		var DETs = transaction['TransactionAnalytics'].DETs;
+		var TD = transaction['TransactionAnalytics'].TD;
+		var archDiff = transaction['TransactionAnalytics'].Arch_Diff;
+		
+		var swti = 10;
+		
+		var swtii = 10;
+		if(archDiff <= 4){
+			swtii = 4;
+		} else if (archDiff < 7){ 	 	
+			swtii = 10;
+		} else {
+			swtii = 15;
 		}
-		else if(useCaseInfo['UseCasePointData'].TN <= 3){
-			useCaseInfo['UseCasePointData'].UEUCW = 5;
+		
+		var swtiii = 10;
+		if(archDiff <= 4){
+			if(DETs <= 14){
+				swtiii = 2;
+			} else if (DETs < 20){
+				swtiii = 4;
+			} else {
+				swtiii = 6;
+			}
+		} else if (archDiff < 7){
+			if(DETs <= 14){
+				swtiii = 8;
+			} else if (DETs < 20){
+				swtiii = 10;
+			} else {
+				swtiii = 14;
+			}
+		} else {
+			if(DETs <= 14){
+				swtiii = 12;
+			} else if (DETs < 20){
+				swtiii = 15;
+			} else {
+				swtiii = 18;
+			}
 		}
-		else if(useCaseInfo['UseCasePointData'].TN<= 7){
-			useCaseInfo['UseCasePointData'].UEUCW = 10;
-		}
-		else{
-			useCaseInfo['UseCasePointData'].UEUCW = 15;
-		}
+		
+		
+		//evaluate UEUCW
+//
+//		useCaseInfo['UseCasePointData'].UEUCW = 0;
+//		
+//		if(useCaseInfo['UseCasePointData'].TN <= 0){
+//			useCaseInfo['UseCasePointData'].UEUCW = 0;
+//		}
+//		else if(useCaseInfo['UseCasePointData'].TN <= 3){
+//			useCaseInfo['UseCasePointData'].UEUCW = 5;
+//		}
+//		else if(useCaseInfo['UseCasePointData'].TN<= 7){
+//			useCaseInfo['UseCasePointData'].UEUCW = 10;
+//		}
+//		else{
+//			useCaseInfo['UseCasePointData'].UEUCW = 15;
+//		}
 		
 		//evaluate UEXUCW
-		useCaseInfo['UseCasePointData'].UEXUCW = 0;
+//		useCaseInfo['UseCasePointData'].UEXUCW = 0;
 		// merge the analytics by the levels.
 //		for(var j in useCaseInfo.Diagrams){
 //			var diagramInfo = useCaseInfo.Diagrams[j];
 //			console.log(diagramInfo);
 //			for(var k in diagramInfo.Paths){
 //				var path = diagramInfo.Paths[k];
-			for(var k in useCaseInfo.Paths){
-				var path = useCaseInfo.Paths[k];
-				var utw = 0;
-				var doN = path.pathLength;
-				var uieN = path.boundaryNum
-				
-				
-				if(doN <= 0){
-					utw = 0;
-				} else if (doN < 3){
-					if(uieN < 2){
-						utw = 2
-					} else if(uieN < 6){
-						utw = 2
-					} else{
-						utw = 5
-					}
-				} else if( doN < 8){
-					if(uieN < 2){
-						utw = 2
-					} else if(uieN < 6){
-						utw = 5
-					} else{
-						utw = 13
-					}
-				} else {
-					if(uieN < 2){
-						utw = 5
-					} else if(uieN < 6){
-						utw = 13
-					} else{
-						utw = 13
-					}
-				}
-				
-				path.utw = utw;
-				
-				//to evaluate the unadjusted transactional weight for each transaction for exucp
-				var operationalCharacteristics = path['TransactionAnalytics'].Transactional;
-				//check if it is a transaction
-				if(operationalCharacteristics.indexOf("TRAN_NA") > -1){
-					continue;
-				}
-
-				useCaseInfo['UseCasePointData'].UEXUCW += utw;
-			  }
+//			for(var k in useCaseInfo.Paths){
+//				var path = useCaseInfo.Paths[k];
+//				var utw = 0;
+//				var doN = path.pathLength;
+//				var uieN = path.boundaryNum
+//				
+//				
+//				if(doN <= 0){
+//					utw = 0;
+//				} else if (doN < 3){
+//					if(uieN < 2){
+//						utw = 2
+//					} else if(uieN < 6){
+//						utw = 2
+//					} else{
+//						utw = 5
+//					}
+//				} else if( doN < 8){
+//					if(uieN < 2){
+//						utw = 2
+//					} else if(uieN < 6){
+//						utw = 5
+//					} else{
+//						utw = 13
+//					}
+//				} else {
+//					if(uieN < 2){
+//						utw = 5
+//					} else if(uieN < 6){
+//						utw = 13
+//					} else{
+//						utw = 13
+//					}
+//				}
+//				
+//				path.utw = utw;
+//				
+//				//to evaluate the unadjusted transactional weight for each transaction for exucp
+//				var operationalCharacteristics = path['TransactionAnalytics'].Transactional;
+//				//check if it is a transaction
+//				if(operationalCharacteristics.indexOf("TRAN_NA") > -1){
+//					continue;
+//				}
+//
+//				useCaseInfo['UseCasePointData'].UEXUCW += utw;
+//			  }
 //		}
 			
-		//evaluate DUCW
-			useCaseInfo['UseCasePointData'].UDUCW = 0;
-			// merge the analytics by the levels.
-//			for(var j in useCaseInfo['UseCasePointData'].Diagrams){
-//				var diagramInfo = useCaseInfo['UseCasePointData'].Diagrams[j];
-//				console.log(diagramInfo);
-				for(var k in useCaseInfo.Paths){
-					var path = useCaseInfo.Paths[k];
-					var utw = 0;
-					var doN = path.pathLength;
-					var uieN = path.boundaryNum;
-					
-					if(doN <= 0){
-						utw = 0;
-					} else if (doN < 3){
-						if(uieN < 2){
-							utw = 2
-						} else if(uieN < 6){
-							utw = 2
-						} else{
-							utw = 5
-						}
-					} else if( doN < 8){
-						if(uieN < 2){
-							utw = 2
-						} else if(uieN < 6){
-							utw = 5
-						} else{
-							utw = 13
-						}
-					} else {
-						if(uieN < 2){
-							utw = 5
-						} else if(uieN < 6){
-							utw = 13
-						} else{
-							utw = 13
-						}
-					}
-					
-					var archDiff = path.archDiff;
-					if(archDiff < 5){
-						utw -= 1;
-					}
-					else if(archDiff > 6){
-						utw += 2;
-					}
-					
-					path.utw = utw;
-					
-					//check if it is a transaction
-					//to evaluate the unadjusted transactional weight for each transaction for ducp
-					var operationalCharacteristics = path['TransactionAnalytics'].Transactional;
-					if(operationalCharacteristics.indexOf("TRAN_NA") > -1){
-						continue;
-					}
-
-					useCaseInfo['UseCasePointData'].UDUCW += utw;
-				  }
+//		//evaluate DUCW
+//			useCaseInfo['UseCasePointData'].UDUCW = 0;
+//			// merge the analytics by the levels.
+////			for(var j in useCaseInfo['UseCasePointData'].Diagrams){
+////				var diagramInfo = useCaseInfo['UseCasePointData'].Diagrams[j];
+////				console.log(diagramInfo);
+//				for(var k in useCaseInfo.Paths){
+//					var path = useCaseInfo.Paths[k];
+//					var utw = 0;
+//					var doN = path.pathLength;
+//					var uieN = path.boundaryNum;
+//					
+//					if(doN <= 0){
+//						utw = 0;
+//					} else if (doN < 3){
+//						if(uieN < 2){
+//							utw = 2
+//						} else if(uieN < 6){
+//							utw = 2
+//						} else{
+//							utw = 5
+//						}
+//					} else if( doN < 8){
+//						if(uieN < 2){
+//							utw = 2
+//						} else if(uieN < 6){
+//							utw = 5
+//						} else{
+//							utw = 13
+//						}
+//					} else {
+//						if(uieN < 2){
+//							utw = 5
+//						} else if(uieN < 6){
+//							utw = 13
+//						} else{
+//							utw = 13
+//						}
+//					}
+//					
+//					var archDiff = path.archDiff;
+//					if(archDiff < 5){
+//						utw -= 1;
+//					}
+//					else if(archDiff > 6){
+//						utw += 2;
+//					}
+//					
+//					path.utw = utw;
+//					
+//					//check if it is a transaction
+//					//to evaluate the unadjusted transactional weight for each transaction for ducp
+//					var operationalCharacteristics = path['TransactionAnalytics'].Transactional;
+//					if(operationalCharacteristics.indexOf("TRAN_NA") > -1){
+//						continue;
+//					}
+//
+//					useCaseInfo['UseCasePointData'].UDUCW += utw;
+//				  }
 //			}
 
-				useCaseInfo['UseCasePointData'].SWTI = 0;
-				useCaseInfo['UseCasePointData'].SWTII = 0;
-				useCaseInfo['UseCasePointData'].SWTIII = 0;
+				useCaseInfo['UseCasePointData'].SWTI = swti;
+				useCaseInfo['UseCasePointData'].SWTII = swtii;
+				useCaseInfo['UseCasePointData'].SWTIII = swtiii;
 				
 				
-				evaluateSWT(useCaseInfo);
+//				evaluateSWT(useCaseInfo);
 	}
 	
-	function evaluateSWT(useCaseInfo){
-//		useCaseInfo['UseCasePointData'].SWTI = 10*useCaseInfo['UseCasePointData'].NT;
-		
-			for(var i in useCaseInfo.Paths){
-				var path = useCaseInfo.Paths[i];
-				if(path['TransactionAnalytics']){
-				useCaseInfo['UseCasePointData'].SWTI += path['TransactionAnalytics'].swti;
-				useCaseInfo['UseCasePointData'].SWTII += path['TransactionAnalytics'].swtii;
-				useCaseInfo['UseCasePointData'].SWTIII += path['TransactionAnalytics'].swtiii;
-				}
-			  }
-		
-	}
+//	function evaluateSWT(useCaseInfo){
+////		useCaseInfo['UseCasePointData'].SWTI = 10*useCaseInfo['UseCasePointData'].NT;
+//		
+//			for(var i in useCaseInfo.Paths){
+//				var path = useCaseInfo.Paths[i];
+//				if(path['TransactionAnalytics']){
+//				useCaseInfo['UseCasePointData'].SWTI += path['TransactionAnalytics'].swti;
+//				useCaseInfo['UseCasePointData'].SWTII += path['TransactionAnalytics'].swtii;
+//				useCaseInfo['UseCasePointData'].SWTIII += path['TransactionAnalytics'].swtiii;
+//				}
+//			  }
+//		
+//	}
 	
 
 	function evaluateModel(modelInfo){
-		if(!modelInfo['UseCasePointData']){
+//		if(!modelInfo['UseCasePointData']){
 			modelInfo['UseCasePointData'] = {
 			COCOMONormalizedEffort : 0,
 			UUCW:0,
 			UAW:0,
 			TCF:1,
 			EF:1,
-			Effort_Norm_UCP : 0
+			Effort_Norm_UCP : 0,
+//			UEUCW: 0,
+			EUCP: 0,
+//			UEXUCW: 0,
+			EXUCP: 0,
+//			UDUCW: 0,
+			DUCP: 0,
+			SWTI: 0,
+			SWTII: 0,
+			SWTIII: 0
 			}
-		}
+//		}
 		
-		modelInfo['UseCasePointData'].UEUCW = 0;
-		modelInfo['UseCasePointData'].EUCP = 0;
-		modelInfo['UseCasePointData'].UEXUCW = 0;
-		modelInfo['UseCasePointData'].EXUCP = 0;
-		modelInfo['UseCasePointData'].UDUCW = 0;
-		modelInfo['UseCasePointData'].DUCP = 0;
-		
-
-		modelInfo['UseCasePointData'].SWTI = 0;
-		modelInfo['UseCasePointData'].SWTII = 0;
-		modelInfo['UseCasePointData'].SWTIII = 0;
 		
 		
 		//calculate EUCP
-		var UEUCW = 0;
+//		var UEUCW = 0;
 		for(var i in modelInfo.UseCases){
 		var useCaseInfo = modelInfo.UseCases[i];
-		if(useCaseInfo['UseCasePointData']){
-		UEUCW += useCaseInfo['UseCasePointData'].UEUCW;
-		}
-		}
-		
-		var TCF = Number(modelInfo['UseCasePointData'].TCF);
-		var EF = Number(modelInfo['UseCasePointData'].EF);
-		var UAW = Number(modelInfo['UseCasePointData'].UAW);
-		
-		var EUCP = (UEUCW+UAW)*TCF*EF;
-
-		modelInfo['UseCasePointData'].UEUCW = UEUCW;
-		modelInfo['UseCasePointData'].EUCP = EUCP;
-		
-		//calculate EXUCP
-		var UEXUCW = 0;
-		for(var i in modelInfo.UseCases){
-		var useCaseInfo = modelInfo.UseCases[i];
-//		var useCaseAnalytics = useCase.UseCaseAnalytics;
-
-		if(useCaseInfo['UseCasePointData']){
-		UEXUCW += useCaseInfo['UseCasePointData'].UEXUCW;
-		}
-		}
-		
-		var TCF = Number(modelInfo['UseCasePointData'].TCF);
-		var EF = Number(modelInfo['UseCasePointData'].EF);
-		var UAW = Number(modelInfo['UseCasePointData'].UAW);
-		
-		var EXUCP = (UEXUCW+UAW)*TCF*EF;
-
-		var useCasePointData = modelInfo['UseCasePointData'];
-//		console.log(useCasePointData);
-
-		modelInfo['UseCasePointData'].UEXUCW = UEXUCW;
-		modelInfo['UseCasePointData'].EXUCP = EXUCP;
-		
-		//calculate DUCP
-		var UDUCW = 0;
-		for(var i in modelInfo.UseCases){
-		var useCaseInfo = modelInfo.UseCases[i];
-//		var useCaseAnalytics = useCase.UseCaseAnalytics;
-
-		if(useCaseInfo['UseCasePointData']){
-		UDUCW += useCaseInfo['UseCasePointData'].UDUCW;
-		}
-		}
-		
-		var TCF = Number(modelInfo['UseCasePointData'].TCF);
-		var EF = Number(modelInfo['UseCasePointData'].EF);
-		var UAW = Number(modelInfo['UseCasePointData'].UAW);
-		
-		var DUCP = (UDUCW+UAW)*TCF*EF;
-
-		modelInfo['UseCasePointData'].UDUCW = UDUCW;
-		modelInfo['UseCasePointData'].DUCP = DUCP;
-		
-		//calcualte swti, swtii, swtiii
-		for(var i in modelInfo.UseCases){
-		var useCaseInfo = modelInfo.UseCases[i];
-//		var useCaseAnalytics = useCase.UseCaseAnalytics;
-
 		if(useCaseInfo['UseCasePointData']){
 			modelInfo['UseCasePointData'].SWTI += useCaseInfo['UseCasePointData'].SWTI;
 			modelInfo['UseCasePointData'].SWTII += useCaseInfo['UseCasePointData'].SWTII;
 			modelInfo['UseCasePointData'].SWTIII += useCaseInfo['UseCasePointData'].SWTIII;
 		}
 		}
+		
+		var TCF = Number(modelInfo['UseCasePointData'].TCF);
+		var EF = Number(modelInfo['UseCasePointData'].EF);
+		var UAW = Number(modelInfo['UseCasePointData'].UAW);
+		
+		var EUCP = (modelInfo['UseCasePointData'].SWTI+UAW)*TCF*EF;
+		var EXUCP = (modelInfo['UseCasePointData'].SWTII+UAW)*TCF*EF;
+		var DUCP = (modelInfo['UseCasePointData'].SWTIII+UAW)*TCF*EF;
+
+//		modelInfo['UseCasePointData'].UEUCW = UEUCW;
+//		modelInfo['UseCasePointData'].EUCP = EUCP;
+		
+		//calculate EXUCP
+//		var UEXUCW = 0;
+//		for(var i in modelInfo.UseCases){
+//		var useCaseInfo = modelInfo.UseCases[i];
+////		var useCaseAnalytics = useCase.UseCaseAnalytics;
+//
+//		if(useCaseInfo['UseCasePointData']){
+//		UEXUCW += useCaseInfo['UseCasePointData'].UEXUCW;
+//		}
+//		}
+		
+//		var TCF = Number(modelInfo['UseCasePointData'].TCF);
+//		var EF = Number(modelInfo['UseCasePointData'].EF);
+//		var UAW = Number(modelInfo['UseCasePointData'].UAW);
+//		
+//		var EXUCP = (UEXUCW+UAW)*TCF*EF;
+//
+//		var useCasePointData = modelInfo['UseCasePointData'];
+////		console.log(useCasePointData);
+//
+//		modelInfo['UseCasePointData'].UEXUCW = UEXUCW;
+//		modelInfo['UseCasePointData'].EXUCP = EXUCP;
+//		
+//		//calculate DUCP
+//		var UDUCW = 0;
+//		for(var i in modelInfo.UseCases){
+//		var useCaseInfo = modelInfo.UseCases[i];
+////		var useCaseAnalytics = useCase.UseCaseAnalytics;
+//
+//		if(useCaseInfo['UseCasePointData']){
+//		UDUCW += useCaseInfo['UseCasePointData'].UDUCW;
+//		}
+//		}
+//		
+//		var TCF = Number(modelInfo['UseCasePointData'].TCF);
+//		var EF = Number(modelInfo['UseCasePointData'].EF);
+//		var UAW = Number(modelInfo['UseCasePointData'].UAW);
+//		
+//		var DUCP = (UDUCW+UAW)*TCF*EF;
+//
+//		modelInfo['UseCasePointData'].UDUCW = UDUCW;
+//		modelInfo['UseCasePointData'].DUCP = DUCP;
+		
+		//calcualte swti, swtii, swtiii
+//		for(var i in modelInfo.UseCases){
+//		var useCaseInfo = modelInfo.UseCases[i];
+////		var useCaseAnalytics = useCase.UseCaseAnalytics;
+//
+//		if(useCaseInfo['UseCasePointData']){
+//			modelInfo['UseCasePointData'].SWTI += useCaseInfo['UseCasePointData'].SWTI;
+//			modelInfo['UseCasePointData'].SWTII += useCaseInfo['UseCasePointData'].SWTII;
+//			modelInfo['UseCasePointData'].SWTIII += useCaseInfo['UseCasePointData'].SWTIII;
+//		}
+//		}
 	}
 	
 	function analyseRepoEvaluation(repoInfo){

@@ -140,6 +140,7 @@
 			
 			var total_TL = 0;
 			var total_TD = 0;
+			var total_TC = 0;
 //			var TranLength = 0;
 			
 			for ( var j in useCaseInfo.Transactions) {
@@ -189,10 +190,11 @@
 				
 //				var transaction = useCaseInfo.Transactions[i];
 				
-				var TL = transaction['TransactionAnalytics'].TranLength;
-				var TD = transaction['TransactionAnalytics'].TranDegree;
-				var DETs = transaction['TransactionAnalytics'].DataElementTypes;
-				var archDiff = TL*TD;
+//				var TL = transaction['TransactionAnalytics'].TranLength;
+//				var TD = transaction['TransactionAnalytics'].TranDegree;
+//				var DETs = transaction['TransactionAnalytics'].DataElementTypes;
+				
+//				var archDiff = TL*TD;
 				
 //				var componentNum = 0;
 //				var totalOps = 0;
@@ -218,62 +220,23 @@
 //				if(DETs == 0){
 //					DETs = 10;
 //				}
-				
-				
-				var swti = 10;
-				
-				var swtii = 10;
-				if(archDiff <= 4){
-					swtii = 4;
-				} else if (archDiff < 7){ 	 	
-					swtii = 10;
-				} else {
-					swtii = 15;
-				}
-				
-				var swtiii = 10;
-				
-				if(archDiff <= 4){
-					if(DETs <= 14){
-						swtiii = 2;
-					} else if (DETs < 20){
-						swtiii = 4;
-					} else {
-						swtiii = 6;
-					}
-				} else if (archDiff < 7){
-					if(DETs <= 14){
-						swtiii = 8;
-					} else if (DETs < 20){
-						swtiii = 10;
-					} else {
-						swtiii = 14;
-					}
-				} else {
-					if(DETs <= 14){
-						swtiii = 12;
-					} else if (DETs < 20){
-						swtiii = 15;
-					} else {
-						swtiii = 18;
-					}
-				}
-				
+			
 				
 
 //				transaction['TransactionAnalytics'].TranLength = TL;
 //				transaction['TransactionAnalytics'].total_degree = TD;
-				transaction['TransactionAnalytics'].TL = TL;
-				transaction['TransactionAnalytics'].DETs = DETs;
-				transaction['TransactionAnalytics'].TD = TD;
-				transaction['TransactionAnalytics'].Arch_Diff = archDiff;
+//				transaction['TransactionAnalytics'].TL = TL;
+//				transaction['TransactionAnalytics'].DETs = DETs;
+//				transaction['TransactionAnalytics'].TD = TD;
+//				transaction['TransactionAnalytics'].Arch_Diff = archDiff;
 
-				transaction['TransactionAnalytics'].swti = swti;
-				transaction['TransactionAnalytics'].swtii = swtii;
-				transaction['TransactionAnalytics'].swtiii = swtiii;
+//				transaction['TransactionAnalytics'].swti = swti;
+//				transaction['TransactionAnalytics'].swtii = swtii;
+//				transaction['TransactionAnalytics'].swtiii = swtiii;
 				
-				total_TD += TD;
-				total_TL += TL;
+				total_TD += transaction['TransactionAnalytics'].TD*transaction['TransactionAnalytics'].TC;
+				total_TL += transaction['TransactionAnalytics'].TL;
+				total_TC += transaction['TransactionAnalytics'].TC;
 				
 //				useCaseInfo['TransactionAnalytics'].Arch_Diff += archDiff;
 			}
@@ -290,7 +253,7 @@
 			useCaseInfo['TransactionAnalytics'].NT = NT;
 			
 //			useCaseInfo['TransactionAnalytics'].TranLength = TranLength;
-			useCaseInfo['TransactionAnalytics'].Avg_TD = useCaseInfo['TransactionAnalytics'].NT == 0? 0: total_TD/useCaseInfo['TransactionAnalytics'].NT;
+			useCaseInfo['TransactionAnalytics'].Avg_TD = total_TC == 0? 0: total_TD/total_TC;
 			useCaseInfo['TransactionAnalytics'].Avg_TL = useCaseInfo['TransactionAnalytics'].NT == 0 ? 0 : total_TL/useCaseInfo['TransactionAnalytics'].NT;
 			useCaseInfo['TransactionAnalytics'].Arch_Diff =  useCaseInfo['TransactionAnalytics'].Avg_TD * useCaseInfo["ComponentAnalytics"].Avg_TL;
 			
@@ -340,7 +303,7 @@
 //		console.log('test1');
 //		console.log(useCaseTransactions);
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("transactions"+useCaseInfo.Name,useCase.Transactions);
+		debug.writeJson("transactions"+useCaseInfo.Name,useCaseInfo.Transactions);
 //		debug.writeJson("model1",modelInfo);
 		
 			
