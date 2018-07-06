@@ -14,10 +14,92 @@
 	var mkdirp = require('mkdirp');
 	var cocomoCalculator = require('../COCOMOEvaluator/COCOMOCalculator.js');
 	
-	function initUseCasePointData(){
-		return 
+	var transactionWeightingSchema = {
+			swti:{
+				classification:{
+					TL: [3,5,10]
+				},
+				weights:[
+					10, 15, 20
+				]
+			},
+			swtii: {
+				classification:{
+					TD: [2,7,10],
+					TL: [3,5,10],
+				},
+				weights:[
+					[9, 12, 18],
+					[10, 15, 20],
+					[12, 19, 22]
+				]
+			},
+			swtiii: {
+				classification:{
+					DETs: [3,8,15],
+					TD: [2,7,10],
+					TL: [3,5,10]
+				},
+				weights:[
+					[[7, 9, 14], [9, 12, 19],[11, 15, 19]],
+					[[9, 12, 18], [10, 15, 20], [12, 19, 22]],
+					[[11, 14, 19], [11, 16, 21], [14, 21, 28]]
+				]
+			}
+			};
+
+	
+	var transactionWeightingJsonFile = "./transaction_weighting_schema.json";
+	
+	function initEvaluator(callbackfunc){
 		
+		//readTransactionWeightingSchema
+		fs.readFile(transactionWeightingJsonFile, 'utf-8', (err, str) => {
+			   if (err) throw err;
+//			    console.log(data);
+			  
+		});
 	}
+	
+	
+	function determineTransactionWeight(dimensions, schema){
+		var weightingSchema = transactionWeightingSchema[schema];
+		var classification = weightingSchema.classification;
+		
+		console.log(classification);
+		
+		var levelsOfDimension = {};
+		var dimensionIndex = 0;
+		for(var i in classification){
+			dimensionIndex++;
+			var dimensionLevels = classification[i];
+			for(var j in dimensionLevels){
+				if(dimensions[i] <= dimensionLevels[j]){
+					levelsOfDimension[dimensionIndex] = j;
+					break;
+				}
+			}
+		}
+		
+		console.log(levelsOfDimension);
+		
+		var weights = weightingSchema.weights;
+		for(var i in levelsOfDimension){
+			weights = weights[levelsOfDimension[i]];
+		}
+		
+		console.log(weights);
+		
+		return weights;
+	}
+	
+	/*
+	 * test cases
+	 */
+	
+//	determineTransactionWeight({DETs: 2, TD: 8, TL: 4}, "swtiii");
+//	determineTransactionWeight({TL: 4}, "swti");
+//	determineTransactionWeight({TD: 8, TL: 4}, "swtii");
 	
 	function loadModelEmpirics(modelLoad, modelInfo, modelId){
 		
@@ -88,24 +170,11 @@
 	}
 	
 	function toUseCaseEvaluationHeader(){
-//		return "UEUCW_EMP,UEUCW_ALY,UEXUCW_EMP,UEXUCW_ALY, Effort,Effort_ALY";
-		// at use case level, there are no UEUCW, UEXUCW, UDUCW
-//		return "UEUCW,UEXUCW,UDUCW,Effort,SWTI,SWTII,SWTIII";
 		return "SWTI,SWTII,SWTIII";
 	}
 	
 	function toUseCaseEvaluationRow(useCaseInfo, index){
-			return 
-//			useCaseInfo['UseCasePointData'].UEUCW+","+
-//			useCaseInfo['UseCasePointData'].UEXUCW+","+
-//			useCaseEmpirics.IT+","+
-//			useCaseInfo['UseCasePointData'].IT+","+
-			//UEUCW
-//			useCaseEmpirics.UEXUCW+","+
-//			useCaseInfo['UseCasePointData'].UDUCW+","+
-//			useCaseEmpirics.Effort+","+
-//			useCaseInfo['UseCasePointData'].Effort+","+
-			useCaseInfo['UseCasePointData'].SWTI+","+
+			return useCaseInfo['UseCasePointData'].SWTI+","+
 			useCaseInfo['UseCasePointData'].SWTII+","+
 			useCaseInfo['UseCasePointData'].SWTIII;
 	}
@@ -120,200 +189,53 @@
 		var TD = transaction['TransactionAnalytics'].TD;
 		var archDiff = transaction['TransactionAnalytics'].Arch_Diff;
 		
-		var swti = 10;
-		
-		var swtii = 10;
-		if(archDiff <= 4){
-			swtii = 4;
-		} else if (archDiff < 7){ 	 	
-			swtii = 10;
-		} else {
-			swtii = 15;
-		}
-		
-		var swtiii = 10;
-		if(archDiff <= 4){
-			if(DETs <= 14){
-				swtiii = 2;
-			} else if (DETs < 20){
-				swtiii = 4;
-			} else {
-				swtiii = 6;
-			}
-		} else if (archDiff < 7){
-			if(DETs <= 14){
-				swtiii = 8;
-			} else if (DETs < 20){
-				swtiii = 10;
-			} else {
-				swtiii = 14;
-			}
-		} else {
-			if(DETs <= 14){
-				swtiii = 12;
-			} else if (DETs < 20){
-				swtiii = 15;
-			} else {
-				swtiii = 18;
-			}
-		}
-		
-		
-		//evaluate UEUCW
-//
-//		useCaseInfo['UseCasePointData'].UEUCW = 0;
+//		var swti = 10;
 //		
-//		if(useCaseInfo['UseCasePointData'].TN <= 0){
-//			useCaseInfo['UseCasePointData'].UEUCW = 0;
+//		var swtii = 10;
+//		if(archDiff <= 4){
+//			swtii = 4;
+//		} else if (archDiff < 7){ 	 	
+//			swtii = 10;
+//		} else {
+//			swtii = 15;
 //		}
-//		else if(useCaseInfo['UseCasePointData'].TN <= 3){
-//			useCaseInfo['UseCasePointData'].UEUCW = 5;
-//		}
-//		else if(useCaseInfo['UseCasePointData'].TN<= 7){
-//			useCaseInfo['UseCasePointData'].UEUCW = 10;
-//		}
-//		else{
-//			useCaseInfo['UseCasePointData'].UEUCW = 15;
-//		}
-		
-		//evaluate UEXUCW
-//		useCaseInfo['UseCasePointData'].UEXUCW = 0;
-		// merge the analytics by the levels.
-//		for(var j in useCaseInfo.Diagrams){
-//			var diagramInfo = useCaseInfo.Diagrams[j];
-//			console.log(diagramInfo);
-//			for(var k in diagramInfo.Paths){
-//				var path = diagramInfo.Paths[k];
-//			for(var k in useCaseInfo.Paths){
-//				var path = useCaseInfo.Paths[k];
-//				var utw = 0;
-//				var doN = path.pathLength;
-//				var uieN = path.boundaryNum
-//				
-//				
-//				if(doN <= 0){
-//					utw = 0;
-//				} else if (doN < 3){
-//					if(uieN < 2){
-//						utw = 2
-//					} else if(uieN < 6){
-//						utw = 2
-//					} else{
-//						utw = 5
-//					}
-//				} else if( doN < 8){
-//					if(uieN < 2){
-//						utw = 2
-//					} else if(uieN < 6){
-//						utw = 5
-//					} else{
-//						utw = 13
-//					}
-//				} else {
-//					if(uieN < 2){
-//						utw = 5
-//					} else if(uieN < 6){
-//						utw = 13
-//					} else{
-//						utw = 13
-//					}
-//				}
-//				
-//				path.utw = utw;
-//				
-//				//to evaluate the unadjusted transactional weight for each transaction for exucp
-//				var operationalCharacteristics = path['TransactionAnalytics'].Transactional;
-//				//check if it is a transaction
-//				if(operationalCharacteristics.indexOf("TRAN_NA") > -1){
-//					continue;
-//				}
-//
-//				useCaseInfo['UseCasePointData'].UEXUCW += utw;
-//			  }
-//		}
-			
-//		//evaluate DUCW
-//			useCaseInfo['UseCasePointData'].UDUCW = 0;
-//			// merge the analytics by the levels.
-////			for(var j in useCaseInfo['UseCasePointData'].Diagrams){
-////				var diagramInfo = useCaseInfo['UseCasePointData'].Diagrams[j];
-////				console.log(diagramInfo);
-//				for(var k in useCaseInfo.Paths){
-//					var path = useCaseInfo.Paths[k];
-//					var utw = 0;
-//					var doN = path.pathLength;
-//					var uieN = path.boundaryNum;
-//					
-//					if(doN <= 0){
-//						utw = 0;
-//					} else if (doN < 3){
-//						if(uieN < 2){
-//							utw = 2
-//						} else if(uieN < 6){
-//							utw = 2
-//						} else{
-//							utw = 5
-//						}
-//					} else if( doN < 8){
-//						if(uieN < 2){
-//							utw = 2
-//						} else if(uieN < 6){
-//							utw = 5
-//						} else{
-//							utw = 13
-//						}
-//					} else {
-//						if(uieN < 2){
-//							utw = 5
-//						} else if(uieN < 6){
-//							utw = 13
-//						} else{
-//							utw = 13
-//						}
-//					}
-//					
-//					var archDiff = path.archDiff;
-//					if(archDiff < 5){
-//						utw -= 1;
-//					}
-//					else if(archDiff > 6){
-//						utw += 2;
-//					}
-//					
-//					path.utw = utw;
-//					
-//					//check if it is a transaction
-//					//to evaluate the unadjusted transactional weight for each transaction for ducp
-//					var operationalCharacteristics = path['TransactionAnalytics'].Transactional;
-//					if(operationalCharacteristics.indexOf("TRAN_NA") > -1){
-//						continue;
-//					}
-//
-//					useCaseInfo['UseCasePointData'].UDUCW += utw;
-//				  }
+//		
+//		var swtiii = 10;
+//		if(archDiff <= 4){
+//			if(DETs <= 14){
+//				swtiii = 2;
+//			} else if (DETs < 20){
+//				swtiii = 4;
+//			} else {
+//				swtiii = 6;
 //			}
-
-				useCaseInfo['UseCasePointData'].SWTI = swti;
-				useCaseInfo['UseCasePointData'].SWTII = swtii;
-				useCaseInfo['UseCasePointData'].SWTIII = swtiii;
+//		} else if (archDiff < 7){
+//			if(DETs <= 14){
+//				swtiii = 8;
+//			} else if (DETs < 20){
+//				swtiii = 10;
+//			} else {
+//				swtiii = 14;
+//			}
+//		} else {
+//			if(DETs <= 14){
+//				swtiii = 12;
+//			} else if (DETs < 20){
+//				swtiii = 15;
+//			} else {
+//				swtiii = 18;
+//			}
+//		}
+		
+		var swti =  determineTransactionWeight({TL:TL}, "swti");
+		var swtii =  determineTransactionWeight({TD: TD, TL:TL}, "swtii")
+		var swtiii =  determineTransactionWeight({DETs: DETS, TD: TD, TL:TL}, "swtiii");
 				
+		useCaseInfo['UseCasePointData'].SWTI = swti;
+		useCaseInfo['UseCasePointData'].SWTII = swtii;
+		useCaseInfo['UseCasePointData'].SWTIII = swtiii;
 				
-//				evaluateSWT(useCaseInfo);
 	}
-	
-//	function evaluateSWT(useCaseInfo){
-////		useCaseInfo['UseCasePointData'].SWTI = 10*useCaseInfo['UseCasePointData'].NT;
-//		
-//			for(var i in useCaseInfo.Paths){
-//				var path = useCaseInfo.Paths[i];
-//				if(path['TransactionAnalytics']){
-//				useCaseInfo['UseCasePointData'].SWTI += path['TransactionAnalytics'].swti;
-//				useCaseInfo['UseCasePointData'].SWTII += path['TransactionAnalytics'].swtii;
-//				useCaseInfo['UseCasePointData'].SWTIII += path['TransactionAnalytics'].swtiii;
-//				}
-//			  }
-//		
-//	}
 	
 
 	function evaluateModel(modelInfo){
@@ -358,63 +280,6 @@
 		var EXUCP = (modelInfo['UseCasePointData'].SWTII+UAW)*TCF*EF;
 		var DUCP = (modelInfo['UseCasePointData'].SWTIII+UAW)*TCF*EF;
 
-//		modelInfo['UseCasePointData'].UEUCW = UEUCW;
-//		modelInfo['UseCasePointData'].EUCP = EUCP;
-		
-		//calculate EXUCP
-//		var UEXUCW = 0;
-//		for(var i in modelInfo.UseCases){
-//		var useCaseInfo = modelInfo.UseCases[i];
-////		var useCaseAnalytics = useCase.UseCaseAnalytics;
-//
-//		if(useCaseInfo['UseCasePointData']){
-//		UEXUCW += useCaseInfo['UseCasePointData'].UEXUCW;
-//		}
-//		}
-		
-//		var TCF = Number(modelInfo['UseCasePointData'].TCF);
-//		var EF = Number(modelInfo['UseCasePointData'].EF);
-//		var UAW = Number(modelInfo['UseCasePointData'].UAW);
-//		
-//		var EXUCP = (UEXUCW+UAW)*TCF*EF;
-//
-//		var useCasePointData = modelInfo['UseCasePointData'];
-////		console.log(useCasePointData);
-//
-//		modelInfo['UseCasePointData'].UEXUCW = UEXUCW;
-//		modelInfo['UseCasePointData'].EXUCP = EXUCP;
-//		
-//		//calculate DUCP
-//		var UDUCW = 0;
-//		for(var i in modelInfo.UseCases){
-//		var useCaseInfo = modelInfo.UseCases[i];
-////		var useCaseAnalytics = useCase.UseCaseAnalytics;
-//
-//		if(useCaseInfo['UseCasePointData']){
-//		UDUCW += useCaseInfo['UseCasePointData'].UDUCW;
-//		}
-//		}
-//		
-//		var TCF = Number(modelInfo['UseCasePointData'].TCF);
-//		var EF = Number(modelInfo['UseCasePointData'].EF);
-//		var UAW = Number(modelInfo['UseCasePointData'].UAW);
-//		
-//		var DUCP = (UDUCW+UAW)*TCF*EF;
-//
-//		modelInfo['UseCasePointData'].UDUCW = UDUCW;
-//		modelInfo['UseCasePointData'].DUCP = DUCP;
-		
-		//calcualte swti, swtii, swtiii
-//		for(var i in modelInfo.UseCases){
-//		var useCaseInfo = modelInfo.UseCases[i];
-////		var useCaseAnalytics = useCase.UseCaseAnalytics;
-//
-//		if(useCaseInfo['UseCasePointData']){
-//			modelInfo['UseCasePointData'].SWTI += useCaseInfo['UseCasePointData'].SWTI;
-//			modelInfo['UseCasePointData'].SWTII += useCaseInfo['UseCasePointData'].SWTII;
-//			modelInfo['UseCasePointData'].SWTIII += useCaseInfo['UseCasePointData'].SWTIII;
-//		}
-//		}
 	}
 	
 	function analyseRepoEvaluation(repoInfo){
