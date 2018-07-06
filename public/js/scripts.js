@@ -2261,8 +2261,8 @@ function buildTable(data) {
     var storeUrl = [];
     var kb = [];
 
-    console.log("Data");
-    console.log(data);
+    // console.log("Data");
+    // console.log(data);
 
     var displayUrl = "";
     for (var i = 0; i < data.length; i++) {
@@ -2453,6 +2453,10 @@ function buildTable2(data) {
     var tempUrl = [];
     var storeUrl = [];
     var displayUrl = "";
+
+    console.log("Data")
+    console.log(data)
+
     for (var i = 0; i < data.length; i++) {
         keys[i] = data[i].url;
     }
@@ -2520,28 +2524,31 @@ function buildTable2(data) {
     }
     for (var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "File") {
+
+            var path = data[0].parent + "/" + newKeys[i];
+
             if (newKeys[i].endsWith(".csv")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a class='fileLink' href='" + path + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".txt")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".svg")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".json")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
             else {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
