@@ -107,25 +107,23 @@
 
 	// to output the header for data for the use cases.
 	function toUseCaseEvaluationHeader() {
-		return "Tran_Num,Activity_Num,Actor_Num,Component_num,Boundary_Num,Control_Num,Entity_Num|";
+		return "Tran_Num,Activity_Num,Actor_Num,Component_num,Boundary_Num,Control_Num,Entity_Num";
 	}
 
 	// to output each row of the data for the use cases.
 	function toUseCaseEvaluationRow(useCase, index) {
 //		var useCaseEmpirics = useCase.UseCaseEmpirics;
 
-		return 
-		useCase["ComponentAnalytics"].TranNum + ","
+		return useCase["ComponentAnalytics"].TranNum + ","
 //		+ useCase["ComponentAnalytics"].DiagramNum + ","
 		+ useCase["ComponentAnalytics"].ActivityNum + ","
 		+ useCase["ComponentAnalytics"].ActorNum + ","
 		+ useCase["ComponentAnalytics"].ComponentNum + ","
 		+ useCase["ComponentAnalytics"].BoundaryNum + ","
 		+ useCase["ComponentAnalytics"].ControlNum + ","
-		+ useCase["ComponentAnalytics"].EntityNum + ","
+		+ useCase["ComponentAnalytics"].EntityNum;
 //		+ useCase["ComponentAnalytics"].AvgDegree + ","
 //		+ useCase["ComponentAnalytics"].AvgTransactionLength;
-
 	}
 	
 	// callbackfunc is called when the elements are dumped into the files?
@@ -614,7 +612,42 @@
 	
 
 	function toModelEvaluationHeader() {
-		return "Tran_Num,UseCase_Num,Total_Degree,Element_Num,Total_Links,Actor_Num,Role_Num,Avg_Actor,Avg_Role,Boundary_Num,ControlNum,Entity_Num,attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Depth_Inheritance_Tree,para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
+		return "Tran_Num," +
+				"UseCase_Num," +
+//				"Total_Degree," +
+				"Activity_Num," +
+//				"Total_Links," +
+				"Actor_Num," +
+//				"Role_Num," +
+				"Avg_Actor," +
+//				"Avg_Role," +
+				"Boundary_Num," +
+				"ControlNum," +
+				"Entity_Num," +
+				"Component_num," +
+				"Attribute_num," +
+				"Operation_num," +
+				"class_num," +
+				"Top_Level_Classes," +
+				"Average_Depth_Inheritance_Tree," +
+				"Average_Number_Of_Children_Per_Base_Class," +
+				"Number_Of_Inheritance_Relationships," +
+				"Depth_Inheritance_Tree," +
+				"para_num," +
+				"usage_num," +
+				"real_num," +
+				"assoc_num," +
+				"externaloper_num," +
+				"objectdata_num," +
+				"avg_operation," +
+				"avg_attribute," +
+				"avg_parameter," +
+				"avg_usage," +
+				"avg_real," +
+				"avg_assoc," +
+				"avg_instVar," +
+				"weightedoper_num," +
+				"method_size";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {

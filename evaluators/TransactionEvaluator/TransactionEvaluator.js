@@ -84,7 +84,7 @@
 	}
 	
 	function toUseCaseEvaluationHeader() {
-		return "|EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Avg_TL,Avg_TD,Arch_Diff";
+		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Avg_TL,Avg_TD,Arch_Diff";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
@@ -188,52 +188,6 @@
 //					TranLength += transaction['TransactionAnalytics'].TranLength;
 				}
 				
-//				var transaction = useCaseInfo.Transactions[i];
-				
-//				var TL = transaction['TransactionAnalytics'].TranLength;
-//				var TD = transaction['TransactionAnalytics'].TranDegree;
-//				var DETs = transaction['TransactionAnalytics'].DataElementTypes;
-				
-//				var archDiff = TL*TD;
-				
-//				var componentNum = 0;
-//				var totalOps = 0;
-				
-//				for(var j in transaction.Nodes){
-//					var node = transaction.Nodes[j];
-//					var component = node.Component;
-//					if(component){
-//						componentNum++;
-//						
-//					}
-//				}
-				
-//				if(componentNum == 0){
-//					componentNum = 3;
-//				}
-//				
-//				if(totalOps == 0){
-//						totalOps = 15;
-//					}
-//				
-//				TD = totalOps/componentNum;
-//				if(DETs == 0){
-//					DETs = 10;
-//				}
-			
-				
-
-//				transaction['TransactionAnalytics'].TranLength = TL;
-//				transaction['TransactionAnalytics'].total_degree = TD;
-//				transaction['TransactionAnalytics'].TL = TL;
-//				transaction['TransactionAnalytics'].DETs = DETs;
-//				transaction['TransactionAnalytics'].TD = TD;
-//				transaction['TransactionAnalytics'].Arch_Diff = archDiff;
-
-//				transaction['TransactionAnalytics'].swti = swti;
-//				transaction['TransactionAnalytics'].swtii = swtii;
-//				transaction['TransactionAnalytics'].swtiii = swtiii;
-				
 				total_TD += transaction['TransactionAnalytics'].TD*transaction['TransactionAnalytics'].TC;
 				total_TL += transaction['TransactionAnalytics'].TL;
 				total_TC += transaction['TransactionAnalytics'].TC;
@@ -255,53 +209,8 @@
 //			useCaseInfo['TransactionAnalytics'].TranLength = TranLength;
 			useCaseInfo['TransactionAnalytics'].Avg_TD = total_TC == 0? 0: total_TD/total_TC;
 			useCaseInfo['TransactionAnalytics'].Avg_TL = useCaseInfo['TransactionAnalytics'].NT == 0 ? 0 : total_TL/useCaseInfo['TransactionAnalytics'].NT;
-			useCaseInfo['TransactionAnalytics'].Arch_Diff =  useCaseInfo['TransactionAnalytics'].Avg_TD * useCaseInfo["ComponentAnalytics"].Avg_TL;
+			useCaseInfo['TransactionAnalytics'].Arch_Diff =  useCaseInfo['TransactionAnalytics'].Avg_TD * useCaseInfo["TransactionAnalytics"].Avg_TL;
 			
-//			useCaseInfo['TransactionAnalytics'].EI += diagram['TransactionAnalytics'].EI;
-//			useCaseInfo['TransactionAnalytics'].EQ += diagram['TransactionAnalytics'].EQ;
-//			useCaseInfo['TransactionAnalytics'].INT += diagram['TransactionAnalytics'].INT;
-//			useCaseInfo['TransactionAnalytics'].DM += diagram['TransactionAnalytics'].DM;
-//			useCaseInfo['TransactionAnalytics'].CTRL += diagram['TransactionAnalytics'].CTRL;
-//			useCaseInfo['TransactionAnalytics'].EXTIVK += diagram['TransactionAnalytics'].EXTIVK;
-//			useCaseInfo['TransactionAnalytics'].EXTCLL += diagram['TransactionAnalytics'].EXTCLL;
-//			useCaseInfo['TransactionAnalytics'].TRAN_NA += diagram['TransactionAnalytics'].TRAN_NA;
-//			useCaseInfo['TransactionAnalytics'].NT += diagram['TransactionAnalytics'].NT;
-//			useCaseInfo['TransactionAnalytics'].TranLength += diagram['TransactionAnalytics'].TranLength;
-			
-//			console.log(useCaseInfo['TransactionAnalytics']);
-//		}
-		
-//		useCaseInfo.getTransactions = function(){
-//			var transactions = [];
-//			for(var i in this.Diagrams){
-//				var diagram = this.Diagrams[i];
-//				for(var j in diagram.Transactions){
-//					transactions.push(diagram.Transactions[j]);
-//				}
-//			}
-//			return transactions;
-//		}
-		
-//		var useCaseTransactions = [];
-////		for(var i in useCaseInfo.Diagrams){
-////			var diagram = useCaseInfo.Diagrams[i];
-//			for(var j in useCaseInfo.Transactions){
-//				console.log("iterating transactions");
-//				console.log(useCaseInfo.Transactions[j]);
-//				useCaseTransactions.push(useCaseInfo.Transactions[j]);
-//			}
-////		}
-//		
-//		useCaseInfo.Transactions = useCaseTransactions;
-//		
-//		var useCaseTransactions = useCaseInfo.getTransactions();
-//		console.log("evaluate use cases: transactions");
-//		console.log(useCaseTransactions);
-//		
-//		console.log("stringified transactions");
-//		console.log( JSON.stringify(useCaseTransactions));
-//		console.log('test1');
-//		console.log(useCaseTransactions);
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("transactions"+useCaseInfo.Name,useCaseInfo.Transactions);
 //		debug.writeJson("model1",modelInfo);
@@ -357,8 +266,10 @@
 				Arch_Diff:0
 		};
 
-		var useCaseTransactions = [];
-		//analyse use cases
+		
+		var tranLength = 0;
+		var tranDegree = 0;
+		
 		for(var i in modelInfo.UseCases){
 			var useCaseInfo = modelInfo.UseCases[i]
 
@@ -373,22 +284,16 @@
 			modelInfo['TransactionAnalytics'].TRAN_NA += useCaseInfo['TransactionAnalytics'].TRAN_NA;
 			modelInfo['TransactionAnalytics'].NT += useCaseInfo['TransactionAnalytics'].NT;
 //			modelInfo['TransactionAnalytics'].TranLength += useCaseInfo['TransactionAnalytics'].Tran_Length;
+			
+			tranLength += useCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_TL;
+			tranDegree += useCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_TD;
 			}
 			
-			console.log("transactions 2");
-			console.log(useCaseInfo.Transactions);
-			useCaseTransactions = useCaseTransactions.concat(useCaseInfo.Transactions);
 		}
-		
-		
-		console.log('test1');
-		console.log(useCaseTransactions);
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("transactions",useCaseTransactions);
-		debug.writeJson("model1",modelInfo);
 
-		modelInfo['TransactionAnalytics'].AvgTranLength = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : modelInfo['TransactionAnalytics'].TranLength/modelInfo['TransactionAnalytics'].NT;
-		modelInfo['TransactionAnalytics'].Arch_Diff = modelInfo['TransactionAnalytics'].AvgTranLength*modelInfo["ComponentAnalytics"].AvgDegree;
+		modelInfo['TransactionAnalytics'].Avg_TL = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : tranLength/modelInfo['TransactionAnalytics'].NT;
+		modelInfo['TransactionAnalytics'].Avg_TD = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : tranDegree/modelInfo['TransactionAnalytics'].NT;
+		modelInfo['TransactionAnalytics'].Arch_Diff = modelInfo['TransactionAnalytics'].Avg_TL*modelInfo["TransactionAnalytics"].Avg_TD;
 		
 		if(callbackfunc){
 			 var modelTransactionInfoDump = dumpModelTransactionsInfo(modelInfo);
@@ -440,6 +345,9 @@
 				Arch_Diff:0
 		};
 		
+		var tranLength = 0;
+		var tranDegree = 0;
+	
 		for(var i in repoInfo.models){
 			var modelInfo = repoInfo.models[i];
 
@@ -454,11 +362,16 @@
 //			repoInfo['TransactionAnalytics'].TranLength += modelInfo['TransactionAnalytics'].TranLength;
 			repoInfo['TransactionAnalytics'].EXTIVK += modelInfo['TransactionAnalytics'].EXTIVK;
 			repoInfo['TransactionAnalytics'].EXTCLL += modelInfo['TransactionAnalytics'].EXTCLL;
+			
+			tranLength = useCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_TL;
+			tranDegree = useCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_TD;
 			}
 		}
 		
-		repoInfo['TransactionAnalytics'].AvgTranLength = repoInfo['TransactionAnalytics'].NT == 0 ? 0 : repoInfo['TransactionAnalytics'].TranLength/repoInfo['TransactionAnalytics'].NT;
-		repoInfo['TransactionAnalytics'].Arch_Diff = repoInfo['TransactionAnalytics'].AvgTranLength*repoInfo["ComponentAnalytics"].AvgDegree;
+
+	repoInfo['TransactionAnalytics'].Avg_TL = repoInfo['TransactionAnalytics'].NT == 0 ? 0 : tranLength/repoInfo['TransactionAnalytics'].NT;
+	repoInfo['TransactionAnalytics'].Avg_TD = repoInfo['TransactionAnalytics'].NT == 0 ? 0 : tranDegree/repoInfo['TransactionAnalytics'].NT;
+	repoInfo['TransactionAnalytics'].Arch_Diff = repoInfo['TransactionAnalytics'].Avg_TL*repoInfo["TransactionAnalytics"].Avg_TD;
 		
 		 repoInfo['TransactionAnalytics'].repoModelEvaluationResultsTransaction = repoInfo.OutputDir+"/Model_Evaluation_Results";
 		 

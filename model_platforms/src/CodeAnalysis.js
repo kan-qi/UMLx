@@ -229,7 +229,7 @@
 						var targetClassUnit = null;
 						for (var j in topClassUnits) { //TODO: only consider topClassUnits, is it okay?
 							var classUnitCandidate = topClassUnits[j];
-							if (classUnitCandidate.UUID == XMIClassStorableUnitType[0]['$']['UUID']) {
+							if (classUnitCandidate.UUID == localVariableType[0]['$']['UUID']) {
 								targetClassUnit = classUnitCandidate;
 							}
 						}

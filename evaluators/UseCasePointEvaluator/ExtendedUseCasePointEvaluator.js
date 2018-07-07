@@ -100,73 +100,22 @@
 //	determineTransactionWeight({DETs: 2, TD: 8, TL: 4}, "swtiii");
 //	determineTransactionWeight({TL: 4}, "swti");
 //	determineTransactionWeight({TD: 8, TL: 4}, "swtii");
-	
-	function loadModelEmpirics(modelLoad, modelInfo, modelId){
-		
-		modelInfo['UseCasePointData'] = {
-			COCOMONormalizedEffort : 0,
-			UUCW:0,
-			UAW:0,
-			TCF:1,
-			EF:1,
-			Effort_Norm_UCP : 0
-		};
-		
-		
-		for(var i in modelInfo['UseCasePointData']){
-			if(modelLoad[i]){
-				modelInfo['UseCasePointData'][i] = Number(modelLoad[i]);
-			}
-		}
-		
-		modelInfo['UseCasePointData'].Effort_Norm_UCP = normalizeEffortForUseCasePoint(modelInfo['COCOMOData']);
-}
-	
-	// normalise effort by cocomo.
-	function normalizeEffortForUseCasePoint(cocomoData){
-		//normalize effort with the equation in use case driven paper
-		var effort_actual = cocomoData.Effort;
-		var ksloc = cocomoData.KSLOC;
-		var sf_delta = (cocomoData.SF.PREC - cocomoCalculator.COCOMO.SF.PREC.N) + 
-		(cocomoData.SF.FLEX - cocomoCalculator.COCOMO.SF.FLEX.N) + 
-		(cocomoData.SF.RESL - cocomoCalculator.COCOMO.SF.RESL.N);
-		
-		var em_delta = cocomoData.EM.PROD.RELY *
-		cocomoData.EM.PROD.DATA *
-		cocomoData.EM.PROD.DOCU *
-		cocomoData.EM.PLAT.STOR *
-		cocomoData.EM.PLAT.PVOL *
-		cocomoData.EM.PERS.PLEX *
-		cocomoData.EM.PROJ.TOOL *
-		cocomoData.EM.PROJ.SITE *
-		cocomoData.EM.PROJ.SCED ;
-		
-		cocomoData.Norm_Factor = 1/(em_delta*Math.pow(ksloc, 0.01*sf_delta));
-		return effort_actual*cocomoData.Norm_Factor;
-	}
-	
+
 	function toModelEvaluationHeader(){
 //		return "UEUCW,UEUCW_ALY,UEXUCW,UEXUCW_ALY,UDUCW,UDUCW_ALY,UAW,UAW_ALY,TCF,TCF_ALY,EF,EF_ALY,EUCP,EUCP_ALY,EXUCP,EXUCP_ALY,DUCP_ALY,Effort_Norm_UCP";
 //		return "UEUCW,UEXUCW,UDUCW,UAW,TCF,EF,EUCP,EXUCP,DUCP,SWTI,SWTII,SWTIII,Effort_Norm_UCP";
-		return "UAW,TCF,EF,EUCP,EXUCP,DUCP,SWTI,SWTII,SWTIII,Effort_Norm_UCP";
+		return "EUCP,EXUCP,DUCP,SWTI,SWTII,SWTIII";
 	}
 	
 	function toModelEvaluationRow(modelInfo, index){
 		
-		return 
-//		modelInfo['UseCasePointData'].UEUCW+","+
-//		modelInfo['UseCasePointData'].UEXUCW+","+
-//		modelInfo['UseCasePointData'].UDUCW+","+
-		modelInfo['UseCasePointData'].UAW+","+
-		modelInfo['UseCasePointData'].TCF+","+
-		modelInfo['UseCasePointData'].EF+","+
-		modelInfo['UseCasePointData'].EUCP.toFixed(2)+","+
-		modelInfo['UseCasePointData'].EXUCP.toFixed(2)+","+
-		modelInfo['UseCasePointData'].DUCP.toFixed(2)+","+ //replace DUCP
-		modelInfo['UseCasePointData'].SWTI.toFixed(2)+","+
-		modelInfo['UseCasePointData'].SWTII.toFixed(2)+","+
-		modelInfo['UseCasePointData'].SWTIII.toFixed(2)+","+ //replace DUCP
-		modelInfo['UseCasePointData'].Effort_Norm_UCP.toFixed(2);
+		return modelInfo['ExtendedUseCasePointData'].EUCP.toFixed(2)+","+
+		modelInfo['ExtendedUseCasePointData'].EXUCP.toFixed(2)+","+
+		modelInfo['ExtendedUseCasePointData'].DUCP.toFixed(2)+","+ //replace DUCP
+		modelInfo['ExtendedUseCasePointData'].SWTI.toFixed(2)+","+
+		modelInfo['ExtendedUseCasePointData'].SWTII.toFixed(2)+","+
+		modelInfo['ExtendedUseCasePointData'].SWTIII.toFixed(2); //replace DUCP
+//		modelInfo['ExtendedUseCasePointData'].Effort_Norm_UCP.toFixed(2);
 	}
 	
 	function toUseCaseEvaluationHeader(){
@@ -174,13 +123,13 @@
 	}
 	
 	function toUseCaseEvaluationRow(useCaseInfo, index){
-			return useCaseInfo['UseCasePointData'].SWTI+","+
-			useCaseInfo['UseCasePointData'].SWTII+","+
-			useCaseInfo['UseCasePointData'].SWTIII;
+			return useCaseInfo['ExtendedUseCasePointData'].SWTI+","+
+			useCaseInfo['ExtendedUseCasePointData'].SWTII+","+
+			useCaseInfo['ExtendedUseCasePointData'].SWTIII;
 	}
 	
 	function evaluateUseCase(useCaseInfo){
-		useCaseInfo['UseCasePointData'] = {}
+		useCaseInfo['ExtendedUseCasePointData'] = {}
 		
 		// those measurements should be take by specific evaluators.
 		for(var i in useCaseInfo.Transactions){
@@ -191,65 +140,27 @@
 		var TD = transaction['TransactionAnalytics'].TD;
 		var archDiff = transaction['TransactionAnalytics'].Arch_Diff;
 		
-//		var swti = 10;
-//		
-//		var swtii = 10;
-//		if(archDiff <= 4){
-//			swtii = 4;
-//		} else if (archDiff < 7){ 	 	
-//			swtii = 10;
-//		} else {
-//			swtii = 15;
-//		}
-//		
-//		var swtiii = 10;
-//		if(archDiff <= 4){
-//			if(DETs <= 14){
-//				swtiii = 2;
-//			} else if (DETs < 20){
-//				swtiii = 4;
-//			} else {
-//				swtiii = 6;
-//			}
-//		} else if (archDiff < 7){
-//			if(DETs <= 14){
-//				swtiii = 8;
-//			} else if (DETs < 20){
-//				swtiii = 10;
-//			} else {
-//				swtiii = 14;
-//			}
-//		} else {
-//			if(DETs <= 14){
-//				swtiii = 12;
-//			} else if (DETs < 20){
-//				swtiii = 15;
-//			} else {
-//				swtiii = 18;
-//			}
-//		}
-		
 		var swti =  determineTransactionWeight({TL:TL}, "swti");
 		var swtii =  determineTransactionWeight({TD: TD, TL:TL}, "swtii")
 		var swtiii =  determineTransactionWeight({DETs: DETs, TD: TD, TL:TL}, "swtiii");
 				
-		useCaseInfo['UseCasePointData'].SWTI = swti;
-		useCaseInfo['UseCasePointData'].SWTII = swtii;
-		useCaseInfo['UseCasePointData'].SWTIII = swtiii;
+		useCaseInfo['ExtendedUseCasePointData'].SWTI = swti;
+		useCaseInfo['ExtendedUseCasePointData'].SWTII = swtii;
+		useCaseInfo['ExtendedUseCasePointData'].SWTIII = swtiii;
 		}
 				
 	}
 	
 
 	function evaluateModel(modelInfo){
-//		if(!modelInfo['UseCasePointData']){
-			modelInfo['UseCasePointData'] = {
-			COCOMONormalizedEffort : 0,
-			UUCW:0,
-			UAW:0,
-			TCF:1,
-			EF:1,
-			Effort_Norm_UCP : 0,
+//		if(!modelInfo['ExtendedUseCasePointData']){
+			modelInfo['ExtendedUseCasePointData'] = {
+//			COCOMONormalizedEffort : 0,
+//			UUCW:0,
+//			UAW:0,
+//			TCF:1,
+//			EF:1,
+//			Effort_Norm_UCP : 0,
 //			UEUCW: 0,
 			EUCP: 0,
 //			UEXUCW: 0,
@@ -268,10 +179,10 @@
 //		var UEUCW = 0;
 		for(var i in modelInfo.UseCases){
 		var useCaseInfo = modelInfo.UseCases[i];
-		if(useCaseInfo['UseCasePointData']){
-			modelInfo['UseCasePointData'].SWTI += useCaseInfo['UseCasePointData'].SWTI;
-			modelInfo['UseCasePointData'].SWTII += useCaseInfo['UseCasePointData'].SWTII;
-			modelInfo['UseCasePointData'].SWTIII += useCaseInfo['UseCasePointData'].SWTIII;
+		if(useCaseInfo['ExtendedUseCasePointData']){
+			modelInfo['ExtendedUseCasePointData'].SWTI += useCaseInfo['ExtendedUseCasePointData'].SWTI;
+			modelInfo['ExtendedUseCasePointData'].SWTII += useCaseInfo['ExtendedUseCasePointData'].SWTII;
+			modelInfo['ExtendedUseCasePointData'].SWTIII += useCaseInfo['ExtendedUseCasePointData'].SWTIII;
 		}
 		}
 		
@@ -279,23 +190,23 @@
 		var EF = Number(modelInfo['UseCasePointData'].EF);
 		var UAW = Number(modelInfo['UseCasePointData'].UAW);
 		
-		modelInfo['UseCasePointData'].EUCP = (modelInfo['UseCasePointData'].SWTI+UAW)*TCF*EF;
-		modelInfo['UseCasePointData'].EXUCP = (modelInfo['UseCasePointData'].SWTII+UAW)*TCF*EF;
-		modelInfo['UseCasePointData'].DUCP = (modelInfo['UseCasePointData'].SWTIII+UAW)*TCF*EF;
+		modelInfo['ExtendedUseCasePointData'].EUCP = (modelInfo['ExtendedUseCasePointData'].SWTI+UAW)*TCF*EF;
+		modelInfo['ExtendedUseCasePointData'].EXUCP = (modelInfo['ExtendedUseCasePointData'].SWTII+UAW)*TCF*EF;
+		modelInfo['ExtendedUseCasePointData'].DUCP = (modelInfo['ExtendedUseCasePointData'].SWTIII+UAW)*TCF*EF;
 
 	}
 	
 	function analyseRepoEvaluation(repoInfo){
-		 repoInfo['UseCasePointData'] = {
+		 repoInfo['ExtendedUseCasePointData'] = {
 				 repoUseCasePointEvaluationResultsPath : repoInfo.OutputDir+"/Model_Evaluation_Results"
 		 }
 		 
-			mkdirp(repoInfo['UseCasePointData'].repoUseCasePointEvaluationResultsPath, function(err) { 
+			mkdirp(repoInfo['ExtendedUseCasePointData'].repoUseCasePointEvaluationResultsPath, function(err) { 
 				if(err) {
 					console.log(err);
 			        return;
 			    }
-						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/LinearRegressionForUseCasePoints.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['UseCasePointData'].repoUseCasePointEvaluationResultsPath+'"';
+						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/LinearRegressionForUseCasePoints.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['ExtendedUseCasePointData'].repoUseCasePointEvaluationResultsPath+'"';
 							console.log(command);
 							var child = exec(command, function(error, stdout, stderr) {
 
@@ -314,7 +225,6 @@
 		toModelEvaluationRow: toModelEvaluationRow,
 		toUseCaseEvaluationHeader: toUseCaseEvaluationHeader,
 		toUseCaseEvaluationRow: toUseCaseEvaluationRow,
-		loadModelEmpirics: loadModelEmpirics,
 		evaluateUseCase: evaluateUseCase,
 		evaluateModel: evaluateModel,
 		analyseRepoEvaluation: analyseRepoEvaluation
