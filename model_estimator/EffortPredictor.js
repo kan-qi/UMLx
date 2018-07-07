@@ -23,6 +23,9 @@
 		
 			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'"';
 			
+			console.log("estimation command");
+			console.log(command);
+			
 			RScriptExec.runRScript(command,function(result){
 				if (!result) {
 //					console.log('exec error: ' + error);
@@ -51,6 +54,9 @@
 						   
 //						   calculateProjectDecisions(modelInfo, modelInfo.predicted_effort);
 //						    console.log(data);
+						   
+						   console.log(str);
+						   
 						   if(callbackfunc){
 							   callbackfunc(JSON.parse(str).result);
 						   }
@@ -70,11 +76,12 @@
 			//predict presonnel, schedule based on predicted effort
 			//need to update
 			var sizeMetric = umlEstimationInfo.sizeMetric;
+			var transactionMetric = umlEstimationInfo.transactionMetric;
 			
 			var estimationResults = {
 					Effort: projectEffort,
 					UseCases: [],
-					SizeMeasurement: modelInfo['UseCasePointData'][sizeMetric]
+					SizeMeasurement: modelInfo['ExtendedUseCasePointData'][transactionMetric]
 			};
 			
 //			calculateResourceAllocation(modelInfo, personnel);
@@ -128,24 +135,25 @@
 			//distribute project effort
 			for(var i in modelInfo.UseCases){
 				var useCase = modelInfo.UseCases[i];
+				
 				var useCaseEstimates = {
 						Name: useCase.Name,
 						_id: useCase._id,
-						SizeMeasurement: useCase['UseCasePointData'][sizeMetric]
+						SizeMeasurement: useCase['ExtendedUseCasePointData'][transactionMetric]
 				};
 				
-				useCaseEstimates.Effort = projectEffort/modelInfo['UseCasePointData'][sizeMetric]*useCase['UseCasePointData'][sizeMetric];
+				useCaseEstimates.Effort = projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
 //				useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
 				
 //				var useCase = modelInfo.UseCases[i];
-				useCaseEstimates.Duration = projectDuration/modelInfo['UseCasePointData'][sizeMetric]*useCase['UseCasePointData'][sizeMetric];
+				useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
 //				useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
 				
 				//distribute project effort
 				
-					useCaseEstimates.Personnel = personnel/modelInfo['UseCasePointData'][sizeMetric]*useCase['UseCasePointData'][sizeMetric];
+					useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
 //					useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //					useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
 					

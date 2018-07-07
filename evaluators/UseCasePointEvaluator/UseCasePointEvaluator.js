@@ -36,13 +36,23 @@
 			}
 		}
 		
-		modelInfo['UseCasePointData'].Effort_Norm_COCOMO = normalizeEffortForUseCasePointByCOCOMO(modelInfo['COCOMOData']);
+		modelInfo['UseCasePointData'].Effort_Norm_COCOMO = 0;
+//		normalizeEffortForUseCasePointByCOCOMO(modelInfo);
+
+		
+		console.log("cocomo data");
+		console.log(modelInfo['UseCasePointData'].Effort_Norm_COCOMO);
+		
 		modelInfo['UseCasePointData'].Effort_Norm_UCP = modelInfo['UseCasePointData'].Effort/(modelInfo['UseCasePointData'].EF*modelInfo['UseCasePointData'].TCF*20);
 }
 	
 	// normalise effort by cocomo.
-	function normalizeEffortForUseCasePointByCOCOMO(cocomoData){
+	function normalizeEffortForUseCasePointByCOCOMO(modelInfo){
 		//normalize effort with the equation in use case driven paper
+		var cocomoData = modelInfo['COCOMOData'];
+		if(!cocomoData){
+			return 0;
+		}
 		var effort_actual = cocomoData.Effort;
 		var ksloc = cocomoData.KSLOC;
 		var sf_delta = (cocomoData.SF.PREC - cocomoCalculator.COCOMO.SF.PREC.N) + 
@@ -90,6 +100,7 @@
 		modelInfo['UseCasePointData'] = {
 				EF : 1,
 				TCF : 1,
+				UAW : 0,
 				Effort : 0,
 				Effort_Norm_UCP : 0,
 				Effort_Norm_COCOMO : 0
@@ -116,7 +127,7 @@
 		var complexUC = 0;
 		for(var i in modelInfo.UseCases){
 			var useCase = modelInfo.UseCases[i];
-			var nt = useCase["ComponentAnalytics"].NT;
+			var nt = useCase["ComponentAnalytics"].TranNum;
 			if(nt <= 3){
 				simpleUC++;
 			}
@@ -132,7 +143,7 @@
 		modelInfo['UseCasePointData'].AverageUC = averageUC;
 		modelInfo['UseCasePointData'].ComplexUC = complexUC;
 		
-		modelInfo['UseCasePointData'].UUCP = modelInfo['UseCasePointData'].SimpleUC*5+modelInfo['UseCasePointData'].AverageUC*10+modelInfo['UseCasePointData'].ComplextUC*15+modelInfo['UseCasePointData'].UAW;
+		modelInfo['UseCasePointData'].UUCP = modelInfo['UseCasePointData'].SimpleUC*5+modelInfo['UseCasePointData'].AverageUC*10+modelInfo['UseCasePointData'].ComplexUC*15+modelInfo['UseCasePointData'].UAW;
 		modelInfo['UseCasePointData'].UCP = modelInfo['UseCasePointData'].UUCP*modelInfo['UseCasePointData'].EF*modelInfo['UseCasePointData'].TCF;
 	}
 	

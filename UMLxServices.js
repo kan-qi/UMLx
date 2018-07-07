@@ -1294,12 +1294,15 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //	var sizeMetric = "UEUCW";
 	if(umlEstimationInfo.model === "EUCP"){
 		umlEstimationInfo.sizeMetric = "UEUCW";
+		umlEstimationInfo.transactionMetric = "swti";
 	}
 	if(umlEstimationInfo.model === "EXUCP"){
 		umlEstimationInfo.sizeMetric = "UEXUCW";
+		umlEstimationInfo.transactionMetric = "swtii";
 	}
 	else{
 		umlEstimationInfo.sizeMetric = "UDUCW"
+		umlEstimationInfo.transactionMetric = "swtiii";
 	}
 
 //	console.log("check");
@@ -1335,11 +1338,13 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //			console.log(modelInfo);
 			
 			effortPredictor.predictEffort(modelInfo, umlEstimationInfo, function(estimatedEffort){
-				if(!modelInfo){
+				if(!estimatedEffort){
 					console.log("error");
 					res.render('estimationResultPane', {error: "inter process error"});
 				}
 				
+				console.log("predicted effort");
+				console.log(estimatedEffort);
 				
 				var estimationResults = effortPredictor.makeProjectManagementDecisions(modelInfo, umlEstimationInfo, estimatedEffort);
 				

@@ -236,7 +236,7 @@
 //							Attachment: XMIInstanceSpecification,
 							Group: "System",
 							OutScope: false,
-							Component:  matchedResult.method,
+							Component:  matchedResult.component,
 							MatchedMethod: matchedResult.method
 					}
 					
@@ -248,7 +248,9 @@
 					
 					if(ConnectedXMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
 						activity.Group = XMIInstanceSpecification['$']['name'];
+						if(activity.Component){
 						activity.Component.Type = "actor";
+						}
 					}
 					
 					Activities.push(activity);

@@ -17,33 +17,35 @@
 	var transactionWeightingSchema = {
 			swti:{
 				classification:{
-					TL: [3,5,10]
+					TL: [Number.NEGATIVE_INFINITY,3,5,10,Number.POSITIVE_INFINITY]
 				},
 				weights:[
-					10, 15, 20
+					10, 15, 20, 30
 				]
 			},
 			swtii: {
 				classification:{
-					TD: [2,7,10],
-					TL: [3,5,10],
+					TD: [Number.NEGATIVE_INFINITY,2,7,10,Number.POSITIVE_INFINITY],
+					TL: [Number.NEGATIVE_INFINITY,3,5,10,Number.POSITIVE_INFINITY],
 				},
 				weights:[
-					[9, 12, 18],
-					[10, 15, 20],
-					[12, 19, 22]
+					[9, 12, 18, 25],
+					[10, 15, 20, 30],
+					[12, 19, 22, 45],
+					[15, 21, 28, 50]
 				]
 			},
 			swtiii: {
 				classification:{
-					DETs: [3,8,15],
-					TD: [2,7,10],
-					TL: [3,5,10]
+					DETs: [Number.NEGATIVE_INFINITY,3,8,15,Number.POSITIVE_INFINITY],
+					TD: [Number.NEGATIVE_INFINITY,2,7,10,Number.POSITIVE_INFINITY],
+					TL: [Number.NEGATIVE_INFINITY,3,5,10,Number.POSITIVE_INFINITY]
 				},
 				weights:[
-					[[7, 9, 14], [9, 12, 19],[11, 15, 19]],
-					[[9, 12, 18], [10, 15, 20], [12, 19, 22]],
-					[[11, 14, 19], [11, 16, 21], [14, 21, 28]]
+					[[7, 9, 14, 18], [9, 12, 19, 25],[11, 15, 19, 22],[13, 18, 20, 25]],
+					[[9, 12, 18, 25],[10, 15, 20, 30],[12, 19, 22, 45],[15, 21, 28, 50]],
+					[[11, 14, 19, 21], [11, 16, 21, 28], [14, 21, 28, 38],[18, 19, 23, 51]],
+					[[12, 18, 21, 24], [14, 18, 25, 31], [18, 25, 31, 42],[21, 27, 28, 54]]
 				]
 			}
 			};
@@ -71,24 +73,32 @@
 		var levelsOfDimension = {};
 		var dimensionIndex = 0;
 		for(var i in classification){
-			dimensionIndex++;
 			var dimensionLevels = classification[i];
 			for(var j in dimensionLevels){
 				if(dimensions[i] <= dimensionLevels[j]){
-					levelsOfDimension[dimensionIndex] = j;
+					levelsOfDimension[dimensionIndex] = j-1;
 					break;
 				}
 			}
+			dimensionIndex++;
 		}
 		
 		console.log(levelsOfDimension);
 		
 		var weights = weightingSchema.weights;
 		for(var i in levelsOfDimension){
+			console.log("weights");
+			console.log(weights);
 			weights = weights[levelsOfDimension[i]];
 		}
 		
 		console.log(weights);
+		
+		if(weights.length){
+			console.log(dimensions);
+			console.log(schema);
+			throw "weights";
+		}
 		
 		return weights;
 	}
@@ -98,8 +108,8 @@
 	 */
 	
 //	determineTransactionWeight({DETs: 2, TD: 8, TL: 4}, "swtiii");
-//	determineTransactionWeight({TL: 4}, "swti");
-//	determineTransactionWeight({TD: 8, TL: 4}, "swtii");
+//	determineTransactionWeight({TL: 9}, "swti");
+//	determineTransactionWeight({TD: 13, TL: 5}, "swtii");
 
 	function toModelEvaluationHeader(){
 //		return "UEUCW,UEUCW_ALY,UEXUCW,UEXUCW_ALY,UDUCW,UDUCW_ALY,UAW,UAW_ALY,TCF,TCF_ALY,EF,EF_ALY,EUCP,EUCP_ALY,EXUCP,EXUCP_ALY,DUCP_ALY,Effort_Norm_UCP";
@@ -109,12 +119,12 @@
 	
 	function toModelEvaluationRow(modelInfo, index){
 		
-		return modelInfo['ExtendedUseCasePointData'].EUCP.toFixed(2)+","+
-		modelInfo['ExtendedUseCasePointData'].EXUCP.toFixed(2)+","+
-		modelInfo['ExtendedUseCasePointData'].DUCP.toFixed(2)+","+ //replace DUCP
-		modelInfo['ExtendedUseCasePointData'].SWTI.toFixed(2)+","+
-		modelInfo['ExtendedUseCasePointData'].SWTII.toFixed(2)+","+
-		modelInfo['ExtendedUseCasePointData'].SWTIII.toFixed(2); //replace DUCP
+		return modelInfo['ExtendedUseCasePointData'].EUCP+","+
+		modelInfo['ExtendedUseCasePointData'].EXUCP+","+
+		modelInfo['ExtendedUseCasePointData'].DUCP+","+ //replace DUCP
+		modelInfo['ExtendedUseCasePointData'].SWTI+","+
+		modelInfo['ExtendedUseCasePointData'].SWTII+","+
+		modelInfo['ExtendedUseCasePointData'].SWTIII; //replace DUCP
 //		modelInfo['ExtendedUseCasePointData'].Effort_Norm_UCP.toFixed(2);
 	}
 	
@@ -129,7 +139,11 @@
 	}
 	
 	function evaluateUseCase(useCaseInfo){
-		useCaseInfo['ExtendedUseCasePointData'] = {}
+		useCaseInfo['ExtendedUseCasePointData'] = {
+				SWTI : 0,
+				SWTII : 0,
+				SWTIII : 0,
+		}
 		
 		// those measurements should be take by specific evaluators.
 		for(var i in useCaseInfo.Transactions){

@@ -29,9 +29,9 @@
 //	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 	var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
 	var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
+	var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
 	var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
 	var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
-	var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
 	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
 	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
 
@@ -49,6 +49,7 @@
 			UMLSizeMetricEvaluator,
 			userStoryEvaluator
 			];
+	
 //	function setUp(){
 //		evaluators = [cocomoCalculator, useCaseCalculator, useCaseComponentsEvaluator];
 //		for(var i in evaluators){

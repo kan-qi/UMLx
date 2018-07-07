@@ -441,7 +441,7 @@
 			var useCaseInfo = modelInfo.UseCases[i];
 
 			modelInfo["SizeMetricAnalytics"].NOS ++; //Number of use cases/scenario scripts
-			modelInfo["SizeMetricAnalytics"].NT  = useCaseInfo["ComponentAnalytics"].PathNum;
+			modelInfo["SizeMetricAnalytics"].NT  = useCaseInfo["ComponentAnalytics"].TranNum;
 			modelInfo["SizeMetricAnalytics"].NOA = useCaseInfo["ComponentAnalytics"].ActorNum;
 			
 			modelInfo["SizeMetricAnalytics"].NOUC ++;
