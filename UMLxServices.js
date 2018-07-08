@@ -1341,6 +1341,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 				if(!estimatedEffort){
 					console.log("error");
 					res.render('estimationResultPane', {error: "inter process error"});
+					return;
 				}
 				
 				console.log("predicted effort");
