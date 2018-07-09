@@ -8,6 +8,7 @@
  * Identify the boundary.
  * Identify the sytem components.....
  */
+
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
@@ -18,7 +19,7 @@
 	var componentIdentifier = require("./ComponentIdentification.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var stimulusIdentifier = require("./StimulusIdentification.js");
-
+	const uuidv4 = require('uuid/v4');
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
@@ -35,46 +36,32 @@
 						Actors:[],
 						Roles:[],
 						UseCases: [],
-						DomainModel: [],
+						DomainModel: {},
 						OutputDir: ModelOutputDir,
 						AccessDir: ModelAccessDir
 				};
-
 
 				var debug = require("../../utils/DebuggerOutput.js");
 
 //				xmiString = result;
 				var result = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
 				debug.writeJson("constructed_model_by_kdm_result_7_5", result);
+				
+				console.log("testing result");
+				console.log(result);
 
-//				return {
-//					callGraph: callGraph,
-//					typeDependenceGraph: typeDependenceTraph,
-//					accessGraph: accessGraph,
-////					controlFlowGraph: controlFlowGraph,
-//					topClassUnits: classUnits
-//				};
-
-				var components = componentIdentifier.identifyComponents(result.callGraph, result.accessGraph, result.typeDependenceGraph, result.classUnits);
+				var components = componentIdentifier.identifyComponents(result.callGraph, result.accessGraph, result.typeDependencyGraph, result.classUnits);
 				debug.writeJson("constructed_model_by_kdm_components_7_5", components);
 
-				Model.DomainModel = createDomainModel(components, ModelOutput, ModelAccessDir).DomainModel;
+				Model.DomainModel = createDomainModel(components, ModelOutputDir, ModelAccessDir).DomainModel;
 
-//				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(components, ModelOutputDir);
+				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(components, xmiString, ModelOutputDir);
+				
+				debug.writeJson("constructed_model_by_kdm_control_flow_graph_7_5", controlFlowGraph);
 
-//				stimulusIdentifier.identifyStimuli(controlFlowGraph);
-
-//				var UseCase = {
-//						_id : XMIActivityDiagram['$']['xmi:id'],
-//						Name : XMIActivityDiagram['$']['name'],
-//						Activities : Activities,
-//						PrecedenceRelations : PrecedenceRelations,
-//						OutputDir : Model.OutputDir + "/"
-//								+ XMIActivityDiagram['$']['xmi:id'],
-//						AccessDir : Model.AccessDir + "/"
-//								+ XMIActivityDiagram['$']['xmi:id'],
-//						}
-//
+				stimulusIdentifier.identifyStimuli(controlFlowGraph);
+				
+				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, ModelOutputDir, ModelAccessDir);
 //
 //				for(var i in controlFlowGraph.Edges){
 //					var edge = controlFlowGraph.Edges[i];
@@ -89,6 +76,8 @@
 //					UseCase.Activities.push(activity);
 //				}
 //
+				
+				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
 
 				if(callbackfunc){
 					callbackfunc(Model);
@@ -118,7 +107,7 @@
 //			attachment: XMIClassUnit
 //	}
 
-	function createDomainModel(classUnits, ModelOutputDir, ModelAccessDir){
+	function createDomainModel(Components, ModelOutputDir, ModelAccessDir){
 
 		var DomainModel = {
 			Elements: [],
@@ -130,11 +119,15 @@
 			DiagramType : "class_diagram",
 		}
 
-		function createDomainElement(classUnit){
+		function createDomainElement(component){
 			var attributes = new Array();
+			var operations = new Array();
 
-			for(var i in classUnit.StorableUnits){
-				var storableUnit = classUnit.StorableUnits[i];
+			for(var i in component.classUnits){
+			var classUnit = component.classUnits[i];
+			
+			for(var j in classUnit.StorableUnits){
+				var storableUnit = classUnit.StorableUnits[j];
 
 				var attribute = {
 						Name: storableUnit.name,
@@ -144,10 +137,9 @@
 				attributes.push(attribute);
 			}
 
-			var operations = new Array();
 
-			for(var i in classUnit.MethodUnits){
-				var methodUnit = classUnit.MethodUnits[i];
+			for(var j in classUnit.MethodUnits){
+				var methodUnit = classUnit.MethodUnits[j];
 
 				console.log(methodUnit.Signature);
 
@@ -178,6 +170,7 @@
 				}
 				operations.push(operation);
 			}
+			}
 
 //			var id = classUnit.UUID.replace(/\-/g, "");
 //			console.log("id");
@@ -195,12 +188,14 @@
 		}
 
 		var domainElementsByID = [];
-
-		for(var i in classUnits){
-			var classUnit = classUnits[i];
-			console.log('exam class');
-			console.log(classUnit);
-			var domainElement = createDomainElement(classUnit);
+		
+		// the current methods of creating domain elements are abrupt, which is by consolidating all the sub class units
+		
+		for(var i in Components){
+			var component = Components[i];
+			console.log('exam component');
+			console.log(component);
+			var domainElement = createDomainElement(component);
 			DomainModel.Elements.push(domainElement);
 			domainElementsByID[domainElement._id] = domainElement;
 		}
@@ -337,73 +332,21 @@
              return graph;
 		}
 
-	function createUseCasesbyCFG(cfgGraph, ModelOutputDir, ModelAccessDir, domainElementsByID){
+	function createUseCasesbyCFG(controlFlowGraph, ModelOutputDir, ModelAccessDir){
 
 		var UseCases = [];
 
+		var useCaseID = uuidv4(); 
 		var UseCase = {
-				_id: "src",
-				Name: "src",
-				PrecedenceRelations : [],
-				Activities : [],
-				OutputDir : ModelOutputDir+"/src",
-				AccessDir : ModelAccessDir+"/src",
-				DiagramType : "none"
-//				Attachment: XMIUseCase
-		}
-
-
-		var nodes = cfgGraph.nodes;
-		var edges = cfgGraph.edges;
-
-		var activities = [];
-		var activitiesByID = {}
-
-		for(var i in nodes){
-			var node = nodes[i];
-			var classUnit = node.classUnit;
-
-			var domainElement = null;
-			if(classUnit){
-				domainElement = domainElementsByID[classUnit.UUID.replace(/\-/g, "")];
-			}
-
-			var activity = {
-					Name: node['name'],
-					_id: node['UUID'].replace(/\-/g, ""),
-					Type: "activity",
-					isResponse: node.isResponse,
-					Stimulus: false,
-					OutScope: false,
-					Group: "System",
-					Component: domainElement
-			}
-
-			activities.push(activity);
-			activitiesByID[activity._id] = activity;
-
-		}
-
-
-		var precedenceRelations = [];
-
-		for(var i in edges){
-			var edge = edges[i];
-			console.log("print edge");
-			console.log(edge);
-			var startNode = edge.start;
-			var endNode = edge.end;
-
-			precedenceRelations.push(
-					{
-						start: activitiesByID[startNode.UUID.replace(/\-/g, "")],
-						end: activitiesByID[endNode.UUID.replace(/\-/g, "")]
-					}
-			);
-		}
-
-		UseCase.Activities = UseCase.Activities.concat(activities);
-		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
+				_id : useCaseID,
+				Name : "source_code_transaction_collection",
+				Activities : controlFlowGraph.nodes,
+				PrecedenceRelations : controlFlowGraph.edges,
+				OutputDir : ModelOutputDir + "/"
+						+ useCaseID,
+				AccessDir : ModelAccessDir + "/"
+						+ useCaseID,
+				}
 
 		UseCases.push(UseCase);
 
@@ -411,132 +354,6 @@
 
 	}
 
-
-	function createUseCasesByCallGraph(callGraph){
-
-		var UseCase = {
-				_id: "src",
-				Name: "src",
-				PrecedenceRelations : [],
-				Activities : [],
-				OutputDir : ModelOutputDir+"/src",
-				AccessDir : ModelAccessDir+"/src",
-				DiagramType : "none"
-//				Attachment: XMIUseCase
-		}
-
-
-		function findNextActivities(currentActivity, activities){
-			var nextActivities = [];
-			for(var i in activities){
-				var activity = activities[i];
-				if(currentActivity.end == activity.start){
-					nextActivities.push(activity);
-				}
-			}
-			return nextActivities;
-		}
-
-	var debug = require("../../utils/DebuggerOutput.js");
-	debug.writeJson("constructed_kdm_grph", callGraph);
-	debug.writeJson("constructed_use_case_kdm", UseCase);
-
-//	drawUISIMDiagram(UseCase, callGraph.edges, callGraph.nodes);
-
-//		var path = useCase.OutputDir+"/"+"kdm_diagram.dotty"
-//		useCase.DiagramType = "kdm_diagram";
-//		drawReferences(edges, nodes, path);
-//
-	var ActivitiesByName = {};
-	var PrecedenceRelationsByName = {};
-//	var StimulusByName = {};
-
-
-	for(var i in callGraph.edges){
-		var edge = callGraph.edges[i];
-		var nextEdges = findNextActivities(edge, callGraph.edges);
-
-		console.log("nextEdges");
-		console.log(nextEdges);
-
-		activity = ActivitiesByName[edge.start.name+":"+edge.end.name];
-		if(!activity){
-		var activity = {
-				Name: edge.start.name+":"+edge.end.name,
-				_id: edge.start.name+":"+edge.end.name,
-				Type: "controlflow",
-				isResponse: edge.start.isResponse,
-				Stimulus: false,
-				OutScope: false,
-				Group: "System"
-		}
-
-		UseCase.Activities.push(activity);
-		ActivitiesByName[edge.start.name+":"+edge.end.name] = activity;
-		}
-
-		for(var j in nextEdges){
-			var nextEdge = nextEdges[j];
-
-			var nextActivity = ActivitiesByName[nextEdge.start.name+":"+nextEdge.end.name];
-
-			if(!nextActivity){
-			nextActivity = {
-					Name: nextEdge.start.name+":"+nextEdge.end.name,
-					_id: nextEdge.start.name+":"+nextEdge.end.name,
-					Type: "controlflow",
-					isResponse: nextEdge.start.isResponse,
-					Stimulus: false,
-					OutScope: false,
-					Group: "System"
-			}
-
-			UseCase.Activities.push(nextActivity);
-			ActivitiesByName[nextEdge.start.name+":"+nextEdge.end.name] = nextActivity;
-			}
-
-			var precedenceRelation = PrecedenceRelationsByName[activity.Name+":"+nextActivity.Name];
-			if(!precedenceRelation){
-				precedenceRelation = {
-						start: activity,
-						end: nextActivity
-					};
-				UseCase.PrecedenceRelations.push(precedenceRelation);
-				PrecedenceRelationsByName[activity.Name+":"+nextActivity.Name] = precedenceRelation;
-			}
-		}
-	}
-
-	for(var i in UseCase.Activities){
-		var activity = UseCase.Activities[i];
-		if(activity.isResponse && !ActivitiesByName["stl#"+activity.Name]){
-			//create a stimulus nodes for the activity.
-			var stimulus = {
-					Type: "Stimulus",
-					Name: "stl#"+activity.Name,
-					_id: activity._id+"_STL",
-//					Attachment: XMIActivity,
-					Stimulus: true,
-					OutScope: false,
-					Group:  "User"
-			}
-
-			UseCase.Activities.push(stimulus);
-			ActivitiesByName["stl#"+activity.Name] = stimulus;
-			UseCase.PrecedenceRelations.push({start: stimulus, end: activity});
-		}
-	}
-	}
-
-
-
-
-//	function drawRobustnessDiagram(useCase, edges, nodes){
-//		var path = useCase.OutputDir+"/"+"kdm_diagram.dotty"
-//		useCase.DiagramType = "kdm_diagram";
-//		drawReferences(edges, nodes, path);
-//
-//	}
 
 
 	module.exports = {

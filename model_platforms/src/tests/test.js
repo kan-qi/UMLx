@@ -23,13 +23,23 @@ var fs = require('fs');
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\model_platforms\\src\\tests\\experimentExample_kdm.xmi";
 	// var filePath = ".\\model_platforms\\src\\tests\\experimentExample_kdm_simplified.xmi";
 	var filePath = "./model_platforms/src/tests/experimentExample_kdm_simplified.xmi"
+		
+		var modelDrawer = require("../../../model_drawers/UserSystemInteractionModelDrawer.js");
 
 var srcParser = require("../SrcParser.js");
 				console.log("hello");
 
 				fs.readFile(filePath, "utf8", function(err, data) {
 					parser.parseString(data, function(err, xmiString) {
-				srcParser.extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelOutputDir, function(){
+				srcParser.extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelOutputDir, function(Model){
+					
+					for(var i in Model.UseCases){
+						var useCase = Model.UseCases[i];
+						modelDrawer.drawPrecedenceDiagram(useCase, Model.DomainModel, ModelOutputDir+"/useCase_experiment.dotty", function(){
+						console.log("use case is drawn");
+					});
+					}
+					
 					console.log("finished");
 				});
 

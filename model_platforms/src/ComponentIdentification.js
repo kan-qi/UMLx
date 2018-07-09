@@ -23,14 +23,18 @@
 	var jp = require('jsonpath');
 	var codeAnalysis = require("./codeAnalysis.js");
 	var util = require('util');
+    const uuidv4 = require('uuid/v4');
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
-//
-  function calculateMetric(callGraph, accessGraph, typeDependencyGraph, classes) {
+  
+  
+  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classes) {
+	  
 		var classDic = {};
 		var classArray = [];
 		var methods = []; // store the number of methods in each class
+		var classesByName = {};
 
 		for(var i in classes) {
 			var classUnit = classes[i];
@@ -41,6 +45,7 @@
 			}
 			classArray.push(classU);
 			methods.push(classUnit.MethodUnits.length);
+			classesByName[classUnit.name] = classUnit;
 		}
 
 		var callMetric = calculateCallMetric(callGraph, classes, classDic, methods);
@@ -70,15 +75,100 @@
 			}
 			relations.push(row);
 		}
-    console.log(classArray);
-    console.log("relations");
+		console.log(classArray);
+		console.log("relations");
 		console.log(metric);
 		console.log(relations);
 
-		var components = identifyComponents(classArray, relations);
-		console.log(util.inspect(components, false, null))
+		var clusteredClasses = findClusters(classArray, relations);
+		console.log(util.inspect(clusteredClasses, false, null))
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("components", classClusters);
+		
+		
+		debug.writeJson("clusteredClasses", clusteredClasses);
+		
+		var cutoffDepth = 4; //there might be multiple criterion to determining the cutoff tree
+		
+		var clusters = [];
+		
+		var currentLevel = [];
+		var currentLevelDepth = 0;
+		currentLevel.push(clusteredClasses[0]);
+		while(currentLevelDepth < cutoffDepth){
+			var nextLevel = [];
+			var nodeToExpand = null;
+			console.log("currentLevel");
+			console.log(currentLevel);
+			while ((nodeToExpand = currentLevel.shift())){
+				console.log("nodeToExpand");
+				console.log(nodeToExpand);
+				var leftNode = nodeToExpand.left;
+				var rightNode = nodeToExpand.right;
+				if(!leftNode && !rightNode){
+					clusters.push(nodeToExpand);
+				}
+				else{
+					nextLevel.push(leftNode);
+					nextLevel.push(rightNode);
+				}
+			}
+			currentLevel = nextLevel;
+			currentLevelDepth++;
+		}
+		
+		clusters = clusters.concat(currentLevel);
+		
+		// components are collections of classes and with interface class which are determined based on clusters.
+		// need more thinking about the interface class
+		
+		function searchClassesFromCluster(cluster, level){
+			if(!cluster){
+				return [];
+			}
+			
+			if(!level){
+				level = 0;
+			}
+			
+			var classes = [];
+			if(!cluster.left && !cluster.right){
+				cluster.level = level;
+				classes.push(cluster.value)
+			}
+			else{
+				var leftClasses = searchClassesFromCluster(cluster.left, level++);
+				var rightClasses = searchClassesFromCluster(cluster.right, level++);
+				classes = classes.concat(leftClasses);
+				classes = classes.concat(rightClasses);
+			}
+			
+			return classes;
+		}
+		
+		var components = [];
+		
+		for(var i in clusters){
+			var classes = searchClassesFromCluster(clusters[i]);
+//			var interfaceClass = null;
+			
+			var classUnits = [];
+			for(var j in classes){
+				var identifiedClass = classes[j];
+				var referencedClassUnit = classesByName[identifiedClass.name];
+				classUnits.push(referencedClassUnit);
+			}
+			
+			var component = {
+					name: i,
+					uuid: uuidv4(),
+					classUnits: classUnits
+			}
+			components.push(component);
+		}
+		
+		console.log("components");
+		console.log(components);
+		
 		return components;
 
 	}
@@ -102,6 +192,9 @@
 
 	function calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods) {
 		console.log("type dependency metric");
+
+		  console.log("typeDependencyGraph");
+		  console.log(typeDependencyGraph);
 		// console.log(typeDependencyGraph);
 
 		// var classDic = {};
@@ -332,7 +425,7 @@
 	}
 
 
-	function identifyComponents(classArray, metrics) {
+	function findClusters(classArray, metrics) {
 
 		var clusterfck = require("clusterfck");
 
@@ -439,10 +532,10 @@
 
 
 	module.exports = {
-			identifyComponents : identifyComponents,
+			findClusters : findClusters,
 			// calculateCallMetric: calculateCallMetric,
 			// calculateAccessMetric: calculateAccessMetric,
 			// calculateTypeDependencyMetric: calculateTypeDependencyMetric,
-			calculateMetric: calculateMetric
+			identifyComponents: identifyComponents
 	}
 }());
