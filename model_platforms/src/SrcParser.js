@@ -8,7 +8,6 @@
  * Identify the boundary.
  * Identify the sytem components.....
  */
-
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
@@ -19,11 +18,7 @@
 	var componentIdentifier = require("./ComponentIdentification.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var stimulusIdentifier = require("./StimulusIdentification.js");
-<<<<<<< HEAD
-	const uuidv4 = require('uuid/v4');
-=======
 
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
@@ -40,42 +35,17 @@
 						Actors:[],
 						Roles:[],
 						UseCases: [],
-<<<<<<< HEAD
-						DomainModel: {},
-=======
 						DomainModel: [],
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 						OutputDir: ModelOutputDir,
 						AccessDir: ModelAccessDir
 				};
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 				var debug = require("../../utils/DebuggerOutput.js");
 
 //				xmiString = result;
 				var result = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
 				debug.writeJson("constructed_model_by_kdm_result_7_5", result);
-<<<<<<< HEAD
-				
-				console.log("testing result");
-				console.log(result);
-
-				var components = componentIdentifier.identifyComponents(result.callGraph, result.accessGraph, result.typeDependencyGraph, result.classUnits);
-				debug.writeJson("constructed_model_by_kdm_components_7_5", components);
-
-				Model.DomainModel = createDomainModel(components, ModelOutputDir, ModelAccessDir).DomainModel;
-
-				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(components, xmiString, ModelOutputDir);
-				
-				debug.writeJson("constructed_model_by_kdm_control_flow_graph_7_5", controlFlowGraph);
-
-				stimulusIdentifier.identifyStimuli(controlFlowGraph);
-				
-				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, ModelOutputDir, ModelAccessDir);
-=======
 
 //				return {
 //					callGraph: callGraph,
@@ -105,7 +75,6 @@
 //								+ XMIActivityDiagram['$']['xmi:id'],
 //						}
 //
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 //
 //				for(var i in controlFlowGraph.Edges){
 //					var edge = controlFlowGraph.Edges[i];
@@ -120,11 +89,6 @@
 //					UseCase.Activities.push(activity);
 //				}
 //
-<<<<<<< HEAD
-				
-				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
-=======
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 				if(callbackfunc){
 					callbackfunc(Model);
@@ -154,11 +118,7 @@
 //			attachment: XMIClassUnit
 //	}
 
-<<<<<<< HEAD
-	function createDomainModel(Components, ModelOutputDir, ModelAccessDir){
-=======
 	function createDomainModel(classUnits, ModelOutputDir, ModelAccessDir){
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 		var DomainModel = {
 			Elements: [],
@@ -170,23 +130,11 @@
 			DiagramType : "class_diagram",
 		}
 
-<<<<<<< HEAD
-		function createDomainElement(component){
-			var attributes = new Array();
-			var operations = new Array();
-
-			for(var i in component.classUnits){
-			var classUnit = component.classUnits[i];
-			
-			for(var j in classUnit.StorableUnits){
-				var storableUnit = classUnit.StorableUnits[j];
-=======
 		function createDomainElement(classUnit){
 			var attributes = new Array();
 
 			for(var i in classUnit.StorableUnits){
 				var storableUnit = classUnit.StorableUnits[i];
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 				var attribute = {
 						Name: storableUnit.name,
@@ -196,14 +144,10 @@
 				attributes.push(attribute);
 			}
 
+			var operations = new Array();
 
-<<<<<<< HEAD
-			for(var j in classUnit.MethodUnits){
-				var methodUnit = classUnit.MethodUnits[j];
-=======
 			for(var i in classUnit.MethodUnits){
 				var methodUnit = classUnit.MethodUnits[i];
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 				console.log(methodUnit.Signature);
 
@@ -234,10 +178,6 @@
 				}
 				operations.push(operation);
 			}
-<<<<<<< HEAD
-			}
-=======
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 //			var id = classUnit.UUID.replace(/\-/g, "");
 //			console.log("id");
@@ -255,23 +195,12 @@
 		}
 
 		var domainElementsByID = [];
-<<<<<<< HEAD
-		
-		// the current methods of creating domain elements are abrupt, which is by consolidating all the sub class units
-		
-		for(var i in Components){
-			var component = Components[i];
-			console.log('exam component');
-			console.log(component);
-			var domainElement = createDomainElement(component);
-=======
 
 		for(var i in classUnits){
 			var classUnit = classUnits[i];
 			console.log('exam class');
 			console.log(classUnit);
 			var domainElement = createDomainElement(classUnit);
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 			DomainModel.Elements.push(domainElement);
 			domainElementsByID[domainElement._id] = domainElement;
 		}
@@ -408,24 +337,6 @@
              return graph;
 		}
 
-<<<<<<< HEAD
-	function createUseCasesbyCFG(controlFlowGraph, ModelOutputDir, ModelAccessDir){
-
-		var UseCases = [];
-
-		var useCaseID = uuidv4(); 
-		var UseCase = {
-				_id : useCaseID,
-				Name : "source_code_transaction_collection",
-				Activities : controlFlowGraph.nodes,
-				PrecedenceRelations : controlFlowGraph.edges,
-				OutputDir : ModelOutputDir + "/"
-						+ useCaseID,
-				AccessDir : ModelAccessDir + "/"
-						+ useCaseID,
-				}
-
-=======
 	function createUseCasesbyCFG(cfgGraph, ModelOutputDir, ModelAccessDir, domainElementsByID){
 
 		var UseCases = [];
@@ -494,16 +405,11 @@
 		UseCase.Activities = UseCase.Activities.concat(activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
 
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 		UseCases.push(UseCase);
 
 		return UseCases;
 
 	}
-<<<<<<< HEAD
-
-
-=======
 
 
 	function createUseCasesByCallGraph(callGraph){
@@ -632,7 +538,6 @@
 //
 //	}
 
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 	module.exports = {
 			extractUserSystermInteractionModel : extractUserSystermInteractionModel,

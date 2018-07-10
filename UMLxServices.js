@@ -1296,16 +1296,16 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
 //	var sizeMetric = "UEUCW";
 	if(umlEstimationInfo.model === "EUCP"){
-		umlEstimationInfo.sizeMetric = "UEUCW";
-		umlEstimationInfo.transactionMetric = "swti";
+		umlEstimationInfo.sizeMetric = "EUCP";
+		umlEstimationInfo.transactionMetric = "SWTI";
 	}
 	if(umlEstimationInfo.model === "EXUCP"){
-		umlEstimationInfo.sizeMetric = "UEXUCW";
-		umlEstimationInfo.transactionMetric = "swtii";
+		umlEstimationInfo.sizeMetric = "EXUCP";
+		umlEstimationInfo.transactionMetric = "SWTII";
 	}
 	else{
-		umlEstimationInfo.sizeMetric = "UDUCW"
-		umlEstimationInfo.transactionMetric = "swtiii";
+		umlEstimationInfo.sizeMetric = "DUCP"
+		umlEstimationInfo.transactionMetric = "SWTIII";
 	}
 
 //	console.log("check");
@@ -1319,8 +1319,8 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
 //	var predictionModel = model+"_"+estimator+"_model.rds";
 //	var uuidVal = req.body['uuid'];
-	console.log(repoId);
-	console.log(umlEstimationInfo.umlFilePath);
+//	console.log(repoId);
+//	console.log(umlEstimationInfo.umlFilePath);
 	var formInfo = req.body;
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlEstimationInfo.umlFilePath, umlEstimationInfo.umlModelType, formInfo);
@@ -1350,7 +1350,11 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 				console.log("predicted effort");
 				console.log(estimatedEffort);
 				
+				console.log("estimation request");
+				console.log(umlEstimationInfo);
+				
 				var estimationResults = effortPredictor.makeProjectManagementDecisions(modelInfo, umlEstimationInfo, estimatedEffort);
+				
 				
 				modelInfo.EstimationResults = estimationResults;
 				modelInfo.repo_id = repoId;
@@ -1369,9 +1373,8 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 						res.end("error");
 						return;
 					}
-					console.log("estimation result is saved");
-					console.log(estimationResults);
-					res.render('estimationResultPane', {estimationResults:estimationResults, estimationModel: umlEstimationInfo.model, sizeMetric: umlEstimationInfo.sizeMetric, modelInfo: modelInfo});
+					
+					res.render('estimationResultPane', {estimationResults:estimationResults, estimationModel: umlEstimationInfo.model, sizeMetric: umlEstimationInfo.sizeMetric, transactionMetric: umlEstimationInfo.transactionMetric, modelInfo: modelInfo});
 ////
 					});
 				});

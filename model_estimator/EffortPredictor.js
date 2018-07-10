@@ -31,6 +31,7 @@
 //					console.log('exec error: ' + error);
 					console.log("project effort estimation error");
 					if(callbackfunc){
+						// error because of the R script
 						callbackfunc(false);
 					}
 				} else {
@@ -81,7 +82,7 @@
 			var estimationResults = {
 					Effort: projectEffort,
 					UseCases: [],
-					SizeMeasurement: modelInfo['ExtendedUseCasePointData'][transactionMetric]
+					SizeMeasurement: modelInfo['ExtendedUseCasePointData'][sizeMetric]
 			};
 			
 //			calculateResourceAllocation(modelInfo, personnel);
@@ -107,6 +108,8 @@
 			 * P = PM_NS/TDEV_NS
 			 * 
 			 * 152 is for PH/PM ratio
+			 * 
+			 * y = 3.67*(x)^(0.28+0.2*(1.15-0.91))
 			 */
 			
 //			modelInfo.predictedDuration = projectDuration;
@@ -114,7 +117,12 @@
 			
 			var projectEffortInPM = projectEffort/152;
 			
-			var projectDuration = 3.67*(projectEffortInPM)^(0.28+0.2*(1.15-0.91))
+			console.log("project effort");
+			console.log(projectEffortInPM);
+			
+			var projectDuration = 3.67*Math.pow(projectEffortInPM, 0.28+0.2*(1.15-0.91));
+			
+			console.log(projectDuration);
 			
 			estimationResults.Duration = projectDuration;
 			
@@ -123,7 +131,6 @@
 			
 			var personnel = projectEffortInPM/projectDuration;
 			
-
 			estimationResults.Personnel = personnel;
 			estimationResults.Personnel_UI = personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
 			estimationResults.Personnel_DB = personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
@@ -146,14 +153,24 @@
 //				useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
 				
+				var useCaseEffortInPM = useCaseEstimates.Effort/152;
+				
+				var useCaseDuration = 3.67*Math.pow(useCaseEffortInPM, 0.28+0.2*(1.15-0.91));
+
+//				var personnel = projectEffort/12;
+				
+				var useCasePersonnel = useCaseEffortInPM/useCaseDuration;
+				
 //				var useCase = modelInfo.UseCases[i];
-				useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+//				useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+				useCaseEstimates.Duration = useCaseDuration;
 //				useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
 				
 				//distribute project effort
 				
-					useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+//					useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+					useCaseEstimates.Personnel = useCasePersonnel;
 //					useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //					useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
 					
@@ -163,6 +180,10 @@
 					
 					estimationResults.UseCases.push(useCaseEstimates);
 			}
+			
+
+			console.log("estimation result");
+			console.log(estimationResults);
 			
 			return estimationResults;
 			
