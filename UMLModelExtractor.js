@@ -8,7 +8,7 @@
     var parser = new xml2js.Parser();
 	var eaParser = require('./model_platforms/ea/XMI2.1Parser.js');
 	var srcParser = require('./model_platforms/src/SrcParser.js');
-	var vpParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
+	var vpParser = require('./model_platforms/visual_paradigm/XMI2.1Parser.js');
 	var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
 	var modelDrawer = require("./model_drawers/UserSystemInteractionModelDrawer.js");
 	var domainModelDrawer = require("./model_drawers/DomainModelDrawer.js");
@@ -89,19 +89,19 @@
 //								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
 								
-								useCase.Paths = traverseUseCaseForPaths(useCase);
+								useCase.Transactions = traverseUseCaseForTransactions(useCase);
 								
 								var debug = require("./utils/DebuggerOutput.js");
 								debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
 								
-								for(var j in useCase.Paths){
-									var path = useCase.Paths[j];
-									var PathStrByIDs = "";
-									for(var k in path.Elements){
-										var node = path.Elements[k];
-										PathStrByIDs += node._id+"->";
+								for(var j in useCase.Transactions){
+									var transaction = useCase.Transactions[j];
+									var TransactionStrByIDs = "";
+									for(var k in transaction.Elements){
+										var node = transaction.Elements[k];
+										TransactionStrByIDs += node._id+"->";
 									}
-									path.PathStrByIDs = path.PathStrByIDs;
+									transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
 								}
 								
 								
@@ -144,7 +144,7 @@
 		});
 	}
 	
-	function traverseUseCaseForPaths(useCase){
+	function traverseUseCaseForTransactions(useCase){
 		
 		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
 		

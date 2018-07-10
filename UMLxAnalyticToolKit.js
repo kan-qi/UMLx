@@ -19,22 +19,30 @@ var umlFileManager = require("./UMLFileManager.js");
 var RScriptExec = require('./utils/RScriptUtil.js');
 
 // current available evaluators
-var umlModelElementEvaluator = require('./evaluators/UMLModelElementsEvaluator/UMLModelElementEvaluator.js');
-var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
+var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
 var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
 var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
-var useCasePointCalculator = require('./evaluators/UseCasePointEvaluator/UseCasePointCalculator.js');
 var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
+var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
+var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
 var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
-var useCasePointWeightEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointWeightEvaluator.js');
 var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
-	
-//	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
-var evaluators = [umlModelElementEvaluator,functionPointEvaluator, transactionEvaluator,modelVersionEvaluator, projectTypeEvaluator, cocomoCalculator,useCasePointWeightEvaluator,useCasePointCalculator,UMLSizeMetricEvaluator];
+var userStoryEvaluator = require('./evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
 
+var evaluators = [
+    useCaseComponentsEvaluator,
+    transactionEvaluator,
+    modelVersionEvaluator,
+    projectTypeEvaluator,
+    cocomoCalculator,
+    useCasePointEvaluator,
+    extendedUseCasePointEvaluator,
+    UMLSizeMetricEvaluator,
+    userStoryEvaluator
+];
 
 //Input xml file directory 
-var inputDir = process.argv[2];
+var inputDir = "data\\2014_spring_577b_use_case_model_uml2.1.xml"//process.argv[2];
 //Manully setted output directory
 let date = new Date();
 let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
@@ -105,18 +113,33 @@ function modelExtractor(model) {
 	});
 
 	for(let i in model.UseCases) {
-		var useCase = model.UseCases[i];
-		useCase.Paths = traverseUseCaseForPaths(useCase);
-	
-		for(let j in useCase.Paths){
-			let path = useCase.Paths[j];
-			var PathStrByIDs = "";
-			for(let k in path.Elements){
-				let node = path.Elements[k];
-				PathStrByIDs += node._id+"->";
-			}
-			path.PathStrByIDs = path.PathStrByIDs;
-		}
+		// var useCase = model.UseCases[i];
+		// useCase.Paths = traverseUseCaseForPaths(useCase);
+        //
+		// for(let j in useCase.Paths){
+		// 	let path = useCase.Paths[j];
+		// 	var PathStrByIDs = "";
+		// 	for(let k in path.Elements){
+		// 		let node = path.Elements[k];
+		// 		PathStrByIDs += node._id+"->";
+		// 	}
+		// 	path.PathStrByIDs = path.PathStrByIDs;
+		// }
+        var useCase = model.UseCases[i];
+        useCase.Transactions = traverseUseCaseForTransactions(useCase);
+
+        var debug = require("./utils/DebuggerOutput.js");
+        debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
+
+        for(var j in useCase.Transactions){
+            var transaction = useCase.Transactions[j];
+            var TransactionStrByIDs = "";
+            for(var k in transaction.Elements){
+                var node = transaction.Elements[k];
+                TransactionStrByIDs += node._id+"->";
+            }
+            transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
+        }
 		
 		modelDrawer.drawPrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase.dotty", () => {
 			console.log("Use Case is drawn");
@@ -226,6 +249,106 @@ function traverseUseCaseForPaths(useCase){
 		}
 	}		
 	return Paths;		
+}
+
+function traverseUseCaseForTransactions(useCase){
+
+    console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+
+
+    function isCycled(path){
+        var lastNode = path[path.length-1];
+        for(var i=0; i < path.length-1; i++){
+            if(path[i] == lastNode){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    var toExpandCollection = new Array();
+
+    for (var j in useCase.Activities){
+        var activity = useCase.Activities[j];
+        //define the node structure to keep the infor while traversing the graph
+        if(activity.Stimulus){
+            var node = {
+                //id: startElement, //ElementGUID
+                Node: activity,
+                PathToNode: [activity],
+                OutScope: activity.OutScope
+            };
+            toExpandCollection.push(node);
+        }
+    }
+
+    var Paths = new Array();
+    var toExpand;
+
+    var debug = require("./utils/DebuggerOutput.js");
+    debug.writeJson("use_cas_toExpand_"+useCase._id, toExpandCollection);
+
+    while((toExpand = toExpandCollection.pop()) != null){
+        var node = toExpand.Node;
+        var pathToNode = toExpand.PathToNode;
+
+        var childNodes = [];
+        for(var j in useCase.PrecedenceRelations){
+            var edge = useCase.PrecedenceRelations[j];
+            if(edge.start == node){
+                childNodes.push(edge.end);
+            }
+        }
+
+        if(childNodes.length == 0){
+            Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+        }
+        else{
+            for(var j in childNodes){
+                var childNode = childNodes[j];
+                if(!childNode){
+                    continue;
+                }
+
+                //if childNode is an outside activity
+
+                var OutScope = false;
+                if(toExpand.OutScope||childNode.OutScope){
+                    OutScope = true;
+                }
+
+                var toExpandNode = {
+                    Node: childNode,
+                    PathToNode: pathToNode.concat(childNode),
+                    OutScope: OutScope
+                }
+
+                console.log("toExpandNode");
+                console.log(toExpandNode);
+
+                console.log("child node");
+                console.log(childNodes);
+                console.log(childNode);
+                console.log(childNode.Name);
+                console.log(childNode.Group);
+
+                if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
+                    toExpandCollection.push(toExpandNode);
+                }
+                else{
+                    Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+                }
+            }
+        }
+
+
+    }
+
+//			console.log(Paths);
+//			useCase.Paths = Paths;
+
+    return Paths;
+
 }
 
 function evaluateUseCase(useCase, model, callbackfunc){

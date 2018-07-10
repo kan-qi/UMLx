@@ -16,7 +16,7 @@ if useCaseInfo
       li.active
        a(data-toggle='tab', href='#use-case-nodes') Activities
       li
-       a(data-toggle='tab', href='#use-case-paths') Paths
+       a(data-toggle='tab', href='#use-case-transactions') Transactions
      div.tab-content
       div.tab-pane.fade.in.active(id="use-case-nodes")
        table.table.table-striped.use-case-info-tab
@@ -35,7 +35,7 @@ if useCaseInfo
            td
             span.use-case-element-type #{element.Type}
           - elementId++;
-      div.tab-pane.fade(id="use-case-paths")
+      div.tab-pane.fade(id="use-case-transactions")
        table.table.table-striped.use-case-info-tab
         thead
          tr
@@ -43,12 +43,12 @@ if useCaseInfo
           th PATH
           th TYPE
         tbody
-         -var pathId = 1;
-         each path in useCaseInfo.DisplayablePaths
-          tr(onclick="highlight_diagram_element('#{path.PathStrByIDs}', 'path', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
-           td #{pathId}
+         -var transactionId = 1;
+         each transaction in useCaseInfo.DisplayableTransactions
+          tr(onclick="highlight_diagram_element('#{transaction.TransactionStrByIDs}', 'transaction', '#{useCaseInfo.DiagramType}')", class="usecase-tr")
+           td #{transactionId}
            td
-            span.use-case-path #{path.PathStr}
+            span.use-case-transaction #{transaction.TransactionStr}
            td
-            span.use-case-path-type #{path.Tag}
-          - pathId++;
+            span.use-case-transaction-type #{transaction.Tag}
+          - transactionId++;

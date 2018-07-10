@@ -7,6 +7,7 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
+	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
 	
 function standardizeName(name){
 	return name.replace(/\s/g, '').toUpperCase();
@@ -176,12 +177,15 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					}
 				}
 				
-				var component = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
-				if(!component){
-					component = {};
+//				var component = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
+				
+				var matchedResult = domainElementSearchUtil.matchComponent(standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name']), DomainElementsBySN);
+				
+				if(!matchedResult.component){
+					matchedResult.component = {};
 				}
 				
-				component.Type = CustomProfiles[XMILifelineID2];
+				matchedResult.component.Type = CustomProfiles[XMILifelineID2];
 //				
 //				var DomainElement = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
 //				if(DomainElement){
@@ -195,7 +199,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //						Stimulus: false,
 						Group: "System",
 						OutScope: outScope,
-						Component: component
+						Component: matchedResult.component,
+						MatchedMethod: matchedResult.method
 //						Attachment: XMIMessage
 				}
 				

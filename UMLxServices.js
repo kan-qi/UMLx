@@ -216,7 +216,6 @@ app.get('/testgitapifollowing', function(req,response){
 app.get('/estimationPage',function(req,res){
 	res.render('estimationPage');
 });
-
 app.get('/signup',function(req,res){
 
 	if(req.query.tk!=null && req.query.tk!=undefined){
@@ -228,9 +227,13 @@ app.get('/signup',function(req,res){
 
 app.get('/login',function(req,res){
 	res.render('login');
+//	res.redirect('/surveyproject');
 });
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+
+//	res.end("error");
+//	return;
 
 	var username = req.body['username'];
 	var pwd = req.body['password'];
@@ -805,7 +808,10 @@ app.get('/requestRepoBrief', function (req, res){
 		umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
 			console.log('==========totalRec===========');
 			// console.log(totalRec);
-				repoInfoBrief.projectNum[repoInfoBrief.projectNum.length - 1] = totalRec;
+            repoInfoBrief.projectNum[repoInfoBrief.projectNum.length - 1] = totalRec;
+            repoInfoBrief.NT[repoInfoBrief.NT.length - 1] = totalNT;
+            repoInfoBrief.UseCaseNum[repoInfoBrief.UseCaseNum.length - 1] = totalUseCaseNum;
+            repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length - 1] = totalEntityNum;
 
 				res.end(JSON.stringify(repoInfoBrief));
 			});
@@ -1099,7 +1105,7 @@ app.get('/requestUseCaseDetail', function(req, res){
 //				console.log('use case detail');
 //				console.log(useCaseInfo);
 //		for(var i in useCaseInfo.Diagrams){
-//		console.log(useCaseInfo.Diagrams[i]['Paths']);
+//		console.log(useCaseInfo.Diagrams[i]['Transactions']);
 //		}
 		
 		if(!useCaseInfo){
@@ -1108,21 +1114,21 @@ app.get('/requestUseCaseDetail', function(req, res){
 		}
 		
 		//create the displayable paths
-		var displayablePaths = [];
-		for(var i in useCaseInfo.Paths){
-			var path = useCaseInfo.Paths[i];
-			var pathStr = "";
-			for(var j in path.Nodes){
-				var node = path.Nodes[j];
-				pathStr += node.Name;
-				if( i != path.Nodes.length - 1){
-					pathStr += "->";
+		var displayableTransactions = [];
+		for(var i in useCaseInfo.Transactions){
+			var transaction = useCaseInfo.Transactions[i];
+			var transactionStr = "";
+			for(var j in transaction.Nodes){
+				var node = transaction.Nodes[j];
+				transactionStr += node.Name;
+				if( i != transaction.Nodes.length - 1){
+					transactionStr += "->";
 				}
 			}
-			displayablePaths.push({id: i, PathStr: pathStr, Tag: "undefined"});
+			displayableTransactions.push({id: i, TransactionStr: transactionStr, Tag: "undefined"});
 		}
 		console.log(useCaseInfo);
-		useCaseInfo.DisplayablePaths = displayablePaths;
+		useCaseInfo.DisplayableTransactions = displayableTransactions;
 				res.render('useCaseDetail', {useCaseInfo:useCaseInfo, modelId:modelId,repoId:repoId});
 
 		//create img directory so icons can be displayed
@@ -1291,12 +1297,15 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //	var sizeMetric = "UEUCW";
 	if(umlEstimationInfo.model === "EUCP"){
 		umlEstimationInfo.sizeMetric = "UEUCW";
+		umlEstimationInfo.transactionMetric = "swti";
 	}
 	if(umlEstimationInfo.model === "EXUCP"){
 		umlEstimationInfo.sizeMetric = "UEXUCW";
+		umlEstimationInfo.transactionMetric = "swtii";
 	}
 	else{
 		umlEstimationInfo.sizeMetric = "UDUCW"
+		umlEstimationInfo.transactionMetric = "swtiii";
 	}
 
 //	console.log("check");
@@ -1332,11 +1341,13 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //			console.log(modelInfo);
 			
 			effortPredictor.predictEffort(modelInfo, umlEstimationInfo, function(estimatedEffort){
-				if(!modelInfo){
+				if(!estimatedEffort){
 					console.log("error");
 					res.render('estimationResultPane', {error: "inter process error"});
 				}
 				
+				console.log("predicted effort");
+				console.log(estimatedEffort);
 				
 				var estimationResults = effortPredictor.makeProjectManagementDecisions(modelInfo, umlEstimationInfo, estimatedEffort);
 				
@@ -1486,7 +1497,7 @@ app.get('/surveyData', function(req, res){
 
 // to handle post redirect to home page
 app.post('/', function(req, res){
-	console.log('==============shenmeshihou==============');
+	console.log('==============testpost==============');
     res.redirect('/');
     // setTimeout(function () {
     //     res.redirect('/');
@@ -1496,6 +1507,9 @@ app.post('/', function(req, res){
 
 //Vibhanshu
 var totalRec = 0;
+var totalUseCaseNum = 0;
+var totalNT = 0;
+var totalEntityNum =  0;
 var pageSize = 10;
 var pageCount = 0;
 var start = 0;
@@ -1572,15 +1586,24 @@ app.get('/', function(req, res){
 //    umlModelInfoManager.queryRepoInfoByPage(repID, pageSize, start, function(result,message){
     umlModelInfoManager.queryModelNumByRepoID(repoId, function(modelNum){
 
+      
+//    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
+  umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
+
+  	console.log("==========================sfsdfsdfs==============");
+  	console.log(repoInfo);
+
+  	umlModelInfoManager.queryAllModelBrief(repoId, function(resultForRepoInfo){
+
+  	    repoInfo.UseCaseNum = resultForRepoInfo.UseCaseNum;
+        repoInfo.NT = resultForRepoInfo.NT;
+        repoInfo.EntityNum = resultForRepoInfo.EntityNum;
+
+        totalUseCaseNum = resultForRepoInfo.UseCaseNum;
+        totalNT = resultForRepoInfo.NT;
+        totalEntityNum =  resultForRepoInfo.EntityNum;
 	  
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
-
-
-          //    umlModelInfoManager.queryRepoInfoByPage(req.userInfo.repoId, function(repoInfo){
-          umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
-
-              console.log("==========================sfsdfsdfs==============");
-              console.log(repoInfo);
       
         totalRec = modelNum;
         pageCount =  Math.ceil(totalRec/pageSize);
@@ -1593,8 +1616,7 @@ console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Cu
 //      console.log("INSIDE UMLXSERVICES"+ repoInfo.Models[0].creationTime);
                        
 //			console.log(req.userInfo);
-		console.log("==========repoInfo========");
-		console.log(repoInfo);
+		//console.log(repoInfo);
 		if(!repoInfo){
 			res.send("error");
 			return;
@@ -1629,7 +1651,7 @@ console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Cu
 			}
 
 		});
-
+    });
          });
 	});
 
@@ -1920,9 +1942,24 @@ app.get('/deactivateUser', function(req,res){
 	}
 });
 
+
+//==================== local machine code for development ==========================
+
 var server = app.listen(8081,'127.0.0.1', function () {
   var host = server.address().address
   var port = server.address().port
   console.log("Example app listening at http://%s:%s", host, port)
-
 });
+
+
+//==================== remote server code for production ==========================
+//var vhost = require('vhost');
+//var webServer = module.exports = express();
+//
+//webServer.use(vhost('umlx.kanqi.org', app)); // Serves top level domain via Main server app
+//
+///* istanbul ignore next */
+//if (!module.parent) {
+//  webServer.listen(8081);
+//  console.log('Express started on port 8081');
+//}

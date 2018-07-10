@@ -7,7 +7,7 @@
 //	var parser = new xml2js.Parser();
 //	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var stringSimilarity = require('string-similarity');
+	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
 	
 	function queryExtensionElements(XMIExtension){
 		var extensionAnalysisElements = jp.query(XMIExtension, '$..element[?(@[\'$\'][\'xmi:type\']==\'uml:Object\' || @[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
@@ -76,54 +76,54 @@
 		return useCaseInExtension;
 	}
 	
-	function matchComponent(activityName, DomainElementsBySN){
-		//flatout the domainModel
-		
-		var domainElementStrings = [];
-		var domainElementsByString = {};
-		for(var i in DomainElementsBySN){
-			var domainElement = DomainElementsBySN[i];
-			var stringRepresentation = i;
-			for(var j in domainElement.Operations){
-				var operation = domainElement.Operations[j];
-				stringRepresentation += operation.Name;
-			}
-			domainElementStrings.push(stringRepresentation);
-			domainElementsByString[stringRepresentation] = domainElement;
-		}
-		
-		console.log(activityName);
-		console.log(DomainElementsBySN);
-		console.log(domainElementStrings);
-		
-		var matchedDomainElement = {};
-		if(domainElementStrings.length>0){
-		var matches = stringSimilarity.findBestMatch(activityName, domainElementStrings);
-		matchedDomainElement = domainElementsByString[matches.bestMatch.target];
-		}
-		
-		console.log(matchedDomainElement);
-		
-		var operations = [];
-		for(var i in matchedDomainElement.Operations){
-			var operation = matchedDomainElement.Operations[i];
-			operations.push(operation.Name);
-		}
-		
-		console.log(operations);
-		
-		var matchedOperation = ""
-		if(operations.length > 0){
-		var operationMatches = stringSimilarity.findBestMatch(activityName, operations);
-		matchedOperation = operationMatches.bestMatch.target;
-		}
-		
-		return {
-			component: matchedDomainElement,
-			method: matchedOperation
-		}
-
-	}
+//	function matchComponent(activityName, DomainElementsBySN){
+//		//flatout the domainModel
+//		
+//		var domainElementStrings = [];
+//		var domainElementsByString = {};
+//		for(var i in DomainElementsBySN){
+//			var domainElement = DomainElementsBySN[i];
+//			var stringRepresentation = i;
+//			for(var j in domainElement.Operations){
+//				var operation = domainElement.Operations[j];
+//				stringRepresentation += operation.Name;
+//			}
+//			domainElementStrings.push(stringRepresentation);
+//			domainElementsByString[stringRepresentation] = domainElement;
+//		}
+//		
+//		console.log(activityName);
+//		console.log(DomainElementsBySN);
+//		console.log(domainElementStrings);
+//		
+//		var matchedDomainElement = {};
+//		if(domainElementStrings.length>0){
+//		var matches = stringSimilarity.findBestMatch(activityName, domainElementStrings);
+//		matchedDomainElement = domainElementsByString[matches.bestMatch.target];
+//		}
+//		
+//		console.log(matchedDomainElement);
+//		
+//		var operations = [];
+//		for(var i in matchedDomainElement.Operations){
+//			var operation = matchedDomainElement.Operations[i];
+//			operations.push(operation.Name);
+//		}
+//		
+//		console.log(operations);
+//		
+//		var matchedOperation = ""
+//		if(operations.length > 0){
+//		var operationMatches = stringSimilarity.findBestMatch(activityName, operations);
+//		matchedOperation = operationMatches.bestMatch.target;
+//		}
+//		
+//		return {
+//			component: matchedDomainElement,
+//			method: matchedOperation
+//		}
+//
+//	}
 	
 	function parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel){
 		console.log("parse analysis diagram");
@@ -216,14 +216,18 @@
 					
 					//matching with components
 					
-					var matchedResult = matchComponent(standardizeName(ConnectedXMIInstanceSpecification['$']['name']), DomainElementsBySN);
-					
-					var component = matchedResult.component;
-					if(!component){
-						component = {};
+					var matchedResult = domainElementSearchUtil.matchComponent(standardizeName(ConnectedXMIInstanceSpecification['$']['name']), DomainElementsBySN);
+				
+					if(!matchedResult.component){
+						matchedResult.component = {};
 					}
 					
-					component.Type = CustomProfiles[ConnectedXMIInstanceSpecification['$']['xmi:id']];
+//					var component = matchedResult.component;
+//					if(!component){
+//						component = {};
+//					}
+					
+					matchedResult.component.Type = CustomProfiles[ConnectedXMIInstanceSpecification['$']['xmi:id']];
 					
 					var activity = {
 							Type: "instanceSpecificationCall",
@@ -232,7 +236,7 @@
 //							Attachment: XMIInstanceSpecification,
 							Group: "System",
 							OutScope: false,
-							Component: component,
+							Component:  matchedResult.component,
 							MatchedMethod: matchedResult.method
 					}
 					
@@ -244,9 +248,10 @@
 					
 					if(ConnectedXMIInstanceSpecification['$']['xmi:type'] === "uml:Actor"){
 						activity.Group = XMIInstanceSpecification['$']['name'];
+						if(activity.Component){
 						activity.Component.Type = "actor";
+						}
 					}
-					
 					
 					Activities.push(activity);
 					Dependencies.push({

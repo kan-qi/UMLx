@@ -8,28 +8,30 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
   /* Parse csv file using d3.js and display the required data  */
   d3.csv(chart_url, function(data) {
 
-      var ueucw = [];
-      var uexucw = [];
-      var uducw =[];
+      var swti = [];
+      var swtii = [];
+      var swtiii =[];
       var categories=[];
       for(var i=0;i<data.length;i++)
       {
-        ueucw.push([parseInt(data[i].UEUCW)]);
-        uexucw.push([parseInt(data[i].UEXUCW)]);
-        uducw.push([parseInt(data[i].UDUCW)]);
+        swti.push([parseInt(data[i].SWTI)]);
+        swtii.push([parseInt(data[i].SWTII)]);
+        swtiii.push([parseInt(data[i].SWTIII)]);
         categories.push(["UC"+data[i].NUM]);
       }
 
-      console.log("====================data=====================");
-      console.log(data);
-      console.log("====================ueucw=====================");
-      console.log(ueucw);
-      console.log("====================uexucw=====================");
-      console.log(uexucw);
-      console.log("====================uducw=====================");
-      console.log(uducw);
-      console.log("====================categories=====================");
-      console.log(categories);
+      // console.log("===============chart_url================");
+      // console.log(chart_url);
+      // console.log("====================data=====================");
+      // console.log(data);
+      // console.log("====================swti=====================");
+      // console.log(swti);
+      // console.log("====================swtii=====================");
+      // console.log(swtii);
+      // console.log("====================swtiii=====================");
+      // console.log(swtiii);
+      // console.log("====================categories=====================");
+      // console.log(categories);
 
       $('#chart-1').highcharts({
         chart: {
@@ -66,16 +68,16 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
         }
     },
     series: [ {
-        name: 'UDUCW',
-        data: ueucw
+        name: 'SWTI',
+        data: swti
 
     }, {
-        name: 'UEXUCW',
-        data: uexucw
+        name: 'SWTII',
+        data: swtii
 
     }, {
-        name: 'UDUCW',
-        data: uducw
+        name: 'SWTIII',
+        data: swtiii
 
     }]
 
