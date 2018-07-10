@@ -808,7 +808,10 @@ app.get('/requestRepoBrief', function (req, res){
 		umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
 			console.log('==========totalRec===========');
 			// console.log(totalRec);
-				repoInfoBrief.projectNum[repoInfoBrief.projectNum.length - 1] = totalRec;
+            repoInfoBrief.projectNum[repoInfoBrief.projectNum.length - 1] = totalRec;
+            repoInfoBrief.NT[repoInfoBrief.NT.length - 1] = totalNT;
+            repoInfoBrief.UseCaseNum[repoInfoBrief.UseCaseNum.length - 1] = totalUseCaseNum;
+            repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length - 1] = totalEntityNum;
 
 				res.end(JSON.stringify(repoInfoBrief));
 			});
@@ -1495,7 +1498,7 @@ app.get('/surveyData', function(req, res){
 
 // to handle post redirect to home page
 app.post('/', function(req, res){
-	console.log('==============shenmeshihou==============');
+	console.log('==============testpost==============');
     res.redirect('/');
     // setTimeout(function () {
     //     res.redirect('/');
@@ -1505,6 +1508,9 @@ app.post('/', function(req, res){
 
 //Vibhanshu
 var totalRec = 0;
+var totalUseCaseNum = 0;
+var totalNT = 0;
+var totalEntityNum =  0;
 var pageSize = 10;
 var pageCount = 0;
 var start = 0;
@@ -1587,6 +1593,16 @@ app.get('/', function(req, res){
 
   	console.log("==========================sfsdfsdfs==============");
   	console.log(repoInfo);
+
+  	umlModelInfoManager.queryAllModelBrief(repoId, function(resultForRepoInfo){
+
+  	    repoInfo.UseCaseNum = resultForRepoInfo.UseCaseNum;
+        repoInfo.NT = resultForRepoInfo.NT;
+        repoInfo.EntityNum = resultForRepoInfo.EntityNum;
+
+        totalUseCaseNum = resultForRepoInfo.UseCaseNum;
+        totalNT = resultForRepoInfo.NT;
+        totalEntityNum =  resultForRepoInfo.EntityNum;
 	  
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
       
@@ -1636,7 +1652,7 @@ console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Cu
 			}
 
 		});
-
+    });
          });
 	});
 
@@ -1935,7 +1951,6 @@ var server = app.listen(8081,'127.0.0.1', function () {
   var port = server.address().port
   console.log("Example app listening at http://%s:%s", host, port)
 });
-
 
 //==================== remote server code for production ==========================
 //var vhost = require('vhost');

@@ -68,7 +68,28 @@
 
 	function toDomainModelEvaluationHeader() {
 //		return "attribute_num,operation_num,class_num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Number_Of_Derived_Classes,Number_Of_Classes_Inherited,Number_Of_Classes_Inherited_From,Number_Of_Children,Depth_Inheritance_Tree,Coupling_Between_Objects, para_num, usage_num, real_num, assoc_num, externaloper_num, objectdata_num, avg_operation, avg_attribute, avg_parameter, avg_usage, avg_real, avg_assoc, avg_instVar, weightedoper_num, method_size";
-		return "Attribute_Num,Operation_Num,Class_Num,Top_Level_Classes,Average_Depth_Inheritance_Tree,Average_Number_Of_Children_Per_Base_Class,Number_Of_Inheritance_Relationships,Depth_Inheritance_Tree,para_numusage_numreal_numassoc_numexternaloper_numobjectdata_numavg_operationavg_attributeavg_parameteravg_usageavg_realavg_assocavg_instVarweightedoper_nummethod_size";
+
+		return "Attribute_Num," +
+			"Operation_Num," +
+			"Class_Num," +
+			"Top_Level_Classes," +
+			"Average_Depth_Inheritance_Tree," +
+			"Average_Number_Of_Children_Per_Base_Class," +
+			"Number_Of_Inheritance_Relationships," +
+			"Depth_Inheritance_Tree," +
+			"para_num,usage_num," +
+			"real_num,assoc_num," +
+			"externaloper_num," +
+			"objectdata_num," +
+			"avg_operation," +
+			"avg_attribute," +
+			"avg_parameter," +
+			"avg_usage," +
+			"avg_real," +
+			"avg_assoc," +
+			"avg_instVar," +
+			"weightedoper_num," +
+			"method_size";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
@@ -913,7 +934,8 @@
 
 //		var totalTransactionLength = 0;
 		var totalActorNum = 0;
-//		var totalDegree = 0;
+
+		// var totalDegree = 0;
 		
 		for ( var i in repoInfo.Models) {
 			var modelInfo = repoInfo.Models[i];
@@ -937,14 +959,15 @@
 			
 //			totalTransactionLength += modelInfo["ComponentAnalytics"].AvgTransactionLength*modelInfo["ComponentAnalytics"].TranNum;
 			totalActorNum += modelInfo["ComponentAnalytics"].ActorNum;
-//			totalDegree += modelInfo["ComponentAnalytics"].AvgDegree*modelInfo["ComponentAnalytics"].ComponentNum;
+			// totalDegree += modelInfo["ComponentAnalytics"].AvgDegree*modelInfo["ComponentAnalytics"].ComponentNum;
 			
 			}
 		}
 
 //		repoInfo["ComponentAnalytics"].AvgTransactionLength = repoInfo["ComponentAnalytics"].TransactionNum == 0 ? 0 : totalTransactionLength / repoInfo["ComponentAnalytics"].TransactionNum;
 //		repoInfo["ComponentAnalytics"].AvgDegree = repoInfo["ComponentAnalytics"].ComponentNum == 0 ? 0 : totalDegree / repoInfo["ComponentAnalytics"].ComponentNum;
-		repoInfo["ComponentAnalytics"].AvgActorNum = repoInfo["ComponentAnalytics"].UseCaseNum == 0 ? 0 : totalDegree / repoInfo["ComponentAnalytics"].UseCaseNum;
+		
+		repoInfo["ComponentAnalytics"].AvgActorNum = repoInfo["ComponentAnalytics"].UseCaseNum == 0 ? 0 : repoInfo["ComponentAnalytics"].ActorNum / repoInfo["ComponentAnalytics"].UseCaseNum;
 
 		repoInfo["ComponentAnalytics"].repoModelEvaluationResultsTransaction = repoInfo.OutputDir + "/Model_Evaluation_Results";
 

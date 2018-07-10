@@ -949,58 +949,52 @@ function deleteRepo(repoId, callbackfunc) {
                  var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') +
                      (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
 
-                     db.collection('noOfTransactions').find(
-                         {
-                             timestamp: '2018/06/30'
-                         },
-                         {
-                             NT:1,UseCaseNum:1,EntityNum:1
-                         }).toArray(
-                                function (err, res) {
-                                	
-                                if(!res[0]){
-                                	res[0]={
-                                			NT: 1,
-                                			UseCaseNum: 1,
-                                			EntityNum: 1
-                                	}
-                                }
-
-                                 console.log(res[0]);
-
-                                 repoInfo.NT = res[0].NT;
-                                 repoInfo.UseCaseNum = res[0].UseCaseNum;
-                                 repoInfo.EntityNum = res[0].EntityNum;
-
-                                 db.collection("modelInfo").aggregate([
+                         db.collection("modelInfo").aggregate([
+                             {
+                                 "$match":
                                      {
-                                         "$match":
-                                             {
-                                                 "repo_id":new mongo.ObjectID(repoid)
-                                             }
-                                     },
-                                     {
-                                         $skip: pageParameter
-                                     }, // pagination skip
-                                     {
-                                         $limit: stepParameter
+                                         "repo_id":new mongo.ObjectID(repoid)
                                      }
-                                 ],function(err, result)
-                                 {
-                                     if (err) throw err;
-                                     //console.log("*******Shown result for queryRepoInfoByPage*******");
-                                     db.close();
-                                     repoInfo.Models = result;
-                                     console.log(repoInfo);
-                                     callbackfunc(repoInfo);
-                                 });
-                     });
+                             },
+                             {
+                                 $skip: pageParameter
+                             }, // pagination skip
+                             {
+                                 $limit: stepParameter
+                             }
+                         ],function(err, result)
+                         {
+                             if (err) throw err;
+                             //console.log("*******Shown result for queryRepoInfoByPage*******");
+                             db.close();
+                             repoInfo.Models = result;
+                             console.log(repoInfo);
+                             callbackfunc(repoInfo);
+                         });
 				});
 			    	
 		  });
 			
 	}
-	
+
+	function queryAllModelBrief(repoId, callbackfunc){
+	    MongoClient.connect(url, function(err, db){
+
+	        db.collection("modelInfo").find({repo_id: new mongo.ObjectID(repoId)}).toArray(function(err, models){
+	            if (err) throw err;
+                var resultForRepoInfo = {NT: 0, UseCaseNum: 0, EntityNum: 0};
+
+	            for(element of models) {
+                    resultForRepoInfo.NT += element['TransactionAnalytics']['NT'];
+                    resultForRepoInfo.UseCaseNum += element['ComponentAnalytics']['UseCaseNum'];
+                    resultForRepoInfo.EntityNum += element['ComponentAnalytics']['EntityNum'];
+                }
+                callbackfunc(resultForRepoInfo);
+	            db.close();
+            });
+        });
+    }
+
 	
 	function queryModelNumByRepoID(repoId, callbackfunc){
 		MongoClient.connect(url, function(err, db) 
@@ -1115,8 +1109,8 @@ function deleteRepo(repoId, callbackfunc) {
 							   for(i=0;i<result.length;i++)
 							   {
 									sum_nt+=result[i]['TransactionAnalytics']['NT'];
-									sum_useCase+=result[i]['ComponentAnalytics']['EntityNum'];
-									sum_entityNum+=result[i]['ComponentAnalytics']['UseCaseNum'];
+									sum_useCase+=result[i]['ComponentAnalytics']['UseCaseNum'];
+									sum_entityNum+=result[i]['ComponentAnalytics']['EntityNum'];
 							   }
 								//console.log("sum_nt"+sum_nt);
 						  
@@ -2112,7 +2106,8 @@ function deleteRepo(repoId, callbackfunc) {
 //        saveEffortEstimationQueryResult:saveEffortEstimationQueryResult,
         queryModelNumByRepoID: queryModelNumByRepoID,
         queryFullRepoInfo: queryFullRepoInfo,
-        requestRepoBrief: requestRepoBrief
+        requestRepoBrief: requestRepoBrief,
+        queryAllModelBrief: queryAllModelBrief
     }
 	
 }());

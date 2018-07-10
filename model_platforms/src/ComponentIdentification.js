@@ -23,6 +23,7 @@
 	var jp = require('jsonpath');
 	var codeAnalysis = require("./codeAnalysis.js");
 	var util = require('util');
+<<<<<<< HEAD
     const uuidv4 = require('uuid/v4');
 
 //	var xpath = require('xpath');
@@ -35,6 +36,16 @@
 		var classArray = [];
 		var methods = []; // store the number of methods in each class
 		var classesByName = {};
+=======
+
+//	var xpath = require('xpath');
+//	var dom = require('xmldom').DOMParser;
+//
+  function calculateMetric(callGraph, accessGraph, typeDependencyGraph, classes) {
+		var classDic = {};
+		var classArray = [];
+		var methods = []; // store the number of methods in each class
+>>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 		for(var i in classes) {
 			var classUnit = classes[i];
@@ -45,7 +56,10 @@
 			}
 			classArray.push(classU);
 			methods.push(classUnit.MethodUnits.length);
+<<<<<<< HEAD
 			classesByName[classUnit.name] = classUnit;
+=======
+>>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 		}
 
 		var callMetric = calculateCallMetric(callGraph, classes, classDic, methods);
@@ -75,6 +89,7 @@
 			}
 			relations.push(row);
 		}
+<<<<<<< HEAD
 		console.log(classArray);
 		console.log("relations");
 		console.log(metric);
@@ -169,6 +184,17 @@
 		console.log("components");
 		console.log(components);
 		
+=======
+    console.log(classArray);
+    console.log("relations");
+		console.log(metric);
+		console.log(relations);
+
+		var components = identifyComponents(classArray, relations);
+		console.log(util.inspect(components, false, null))
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("components", classClusters);
+>>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 		return components;
 
 	}
@@ -192,9 +218,12 @@
 
 	function calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods) {
 		console.log("type dependency metric");
+<<<<<<< HEAD
 
 		  console.log("typeDependencyGraph");
 		  console.log(typeDependencyGraph);
+=======
+>>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 		// console.log(typeDependencyGraph);
 
 		// var classDic = {};
@@ -286,6 +315,7 @@
 		var accessors = {};
 		var accessed = {};
 		var accessMetrics = zeroArray(classes.length, classes.length);
+<<<<<<< HEAD
 
 		for (var i in accessGraph.edges) {
       var edge = accessGraph.edges[i];
@@ -395,6 +425,117 @@
 			}
 		}
 
+=======
+
+		for (var i in accessGraph.edges) {
+      var edge = accessGraph.edges[i];
+			var col = classDic[edge.start.component.classUnit];
+			var row = classDic[edge.end.component.classUnit];
+			access[col][row]++;
+
+			if (!(col in accessors)) {
+				accessors[col] = {}
+			}
+			if (!(row in accessors[col])) {
+				accessors[col][row] = new Set([edge.start.UUID]);
+			}
+			// else if (!(callers[col][row].has(edge.start.UUID))) {
+			else {
+				accessors[col][row].add(edge.start.UUID);
+			}
+
+			if (!(col in accessed)) {
+				accessed[col] = {}
+			}
+			if (!(row in accessed[col])) {
+				accessed[col][row] = new Set([edge.end.UUID]);
+			}
+			// else if (!(callees[col][row].has(edge.end.UUID))) {
+			else {
+				callees[col][row].add(edge.start.UUID);
+			}
+		}
+
+		for (var key1 in accessors) {
+			if (accessors.hasOwnProperty(key1)) {
+				for (var key2 in accessors[key1]) {
+					if (accessors[key1].hasOwnProperty(key2)) {
+						// callersNumber[parseInt(key1)][parseInt(key2)] = callers[key1][key2].size;
+						// calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
+						accessMetrics[parseInt(key1)][parseInt(key2)] = access[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(accessors[key1][key2].size+accessed[key1][key2].size)/(methods[parseInt(key1)]+attrs[parseInt(key2)]);
+					}
+				}
+			}
+		}
+
+    // console.log(classArray);
+		console.log(accessMetrics);
+		return accessMetrics;
+
+	}
+
+	function calculateCallMetric(callGraph, classes, classDic, methods){
+		console.log("call metric")
+		// console.log(callGraph.nodes);
+		// console.log(callGraph.edges);
+		// console.log("classUnitCheck");
+		// console.log(classes);
+		// var classDic = {};
+		// var classArray = [];
+		// var methods = []; // store the number of methods in each class
+    //
+		// for(var i in classes) {
+		// 	var classUnit = classes[i];
+		// 	classDic[classUnit.UUID] = i;
+		// 	var classU = {
+		// 		UUID: classUnit.UUID,
+		// 		name: classUnit.name
+		// 	}
+		// 	classArray.push(classU);
+		// 	methods.push(classUnit.MethodUnits.length);
+		// }
+
+		var calls = zeroArray(classes.length, classes.length);
+		// var callersNumber = zeroArray(classes.length, classes.length);
+		// var calleesNumber = zeroArray(classes.length, classes.length);
+		var callers = {};
+		var callees = {};
+		var callMetrics = zeroArray(classes.length, classes.length);
+
+    // console.log(calls);
+
+		for (var i in callGraph.edges) {
+      var edge = callGraph.edges[i];
+			var col = classDic[edge.start.component.classUnit];
+			var row = classDic[edge.end.component.classUnit];
+			console.log("checkcheck");
+			console.log(edge);
+			console.log(col);
+			console.log(row);
+			calls[col][row]++;
+
+			if (!(col in callers)) {
+				callers[col] = {}
+			}
+			if (!(row in callers[col])) {
+				callers[col][row] = new Set([edge.start.UUID]);
+			}
+			else if (!(callers[col][row].has(edge.start.UUID))) {
+				callers[col][row].add(edge.start.UUID);
+			}
+
+			if (!(col in callees)) {
+				callees[col] = {}
+			}
+			if (!(row in callees[col])) {
+				callees[col][row] = new Set([edge.end.UUID]);
+			}
+			else if (!(callees[col][row].has(edge.end.UUID))) {
+				callees[col][row].add(edge.start.UUID);
+			}
+		}
+
+>>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 		for (var key1 in callers) {
 			if (callers.hasOwnProperty(key1)) {
 				for (var key2 in callers[key1]) {
@@ -425,7 +566,11 @@
 	}
 
 
+<<<<<<< HEAD
 	function findClusters(classArray, metrics) {
+=======
+	function identifyComponents(classArray, metrics) {
+>>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 		var clusterfck = require("clusterfck");
 
@@ -501,6 +646,7 @@
 
 		return classClusters;
 
+<<<<<<< HEAD
 	}
 
 	// function convertSingle(cluster, rowDic) {
@@ -537,5 +683,43 @@
 			// calculateAccessMetric: calculateAccessMetric,
 			// calculateTypeDependencyMetric: calculateTypeDependencyMetric,
 			identifyComponents: identifyComponents
+=======
+	}
+
+	// function convertSingle(cluster, rowDic) {
+	// 	var row = cluster["value"].toString();
+	// 	var classes = rowDic[row];
+	// 	var classSelected = classes[classes.length-1];
+	// 	return classSelected;
+	// }
+
+	function convertTree(cluster, rowDic) {
+		  var classClusters = {};
+			// console.log(cluster);
+			if (cluster["size"] == 1) {
+				var row = cluster["value"].toString();
+				var classes = rowDic[row];
+				var classSelected = classes[classes.length-1];
+				classClusters["size"] = 1;
+				classClusters["value"] = classSelected;
+				classes.pop();
+			}
+			else {
+				var left = convertTree(cluster["left"], rowDic);
+				var right = convertTree(cluster["right"], rowDic);
+				classClusters["left"] = left;
+				classClusters["right"] = right;
+			}
+			return classClusters;
+	}
+
+
+	module.exports = {
+			identifyComponents : identifyComponents,
+			// calculateCallMetric: calculateCallMetric,
+			// calculateAccessMetric: calculateAccessMetric,
+			// calculateTypeDependencyMetric: calculateTypeDependencyMetric,
+			calculateMetric: calculateMetric
+>>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 	}
 }());

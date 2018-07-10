@@ -47,14 +47,14 @@
 //							   results[valueSet[1]] = valueSet[2];
 //							   }
 //						   }
-						   
+
 //						   modelInfo.EffortEstimationResults = JSON.parse(str);
 //						   modelInfo.predicted_effort = 1302;
-						   
-						   
+
+
 //						   calculateProjectDecisions(modelInfo, modelInfo.predicted_effort);
 //						    console.log(data);
-						   
+
 						   console.log(str);
 						   
 						   if(callbackfunc){

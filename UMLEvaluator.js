@@ -442,24 +442,27 @@
 						console.log("apply statistical analysis on the output evaluation");
 						var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.UseCaseEvaluationFileName+'" "'+model.UseCaseStatisticsOutputDir+'" "."';
 						console.log(command);
-						RScriptExec.runRScript(command,function(result){
+						RScriptExec.runRScript(command,function(result2){
 							
-							// if (!result) {
-							// 	if(callbackfunc){
-							// 		callbackfunc(false);
-							// 	}
-							// 	return;
-							// }
+							if (!result2) {
+								console.log("=========no result2==========");
+								if(callbackfunc){
+									callbackfunc(false);
+								}
+								return;
+							}
 							
 							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
-							
-							RScriptExec.runRScript(command,function(result){
-								// if (!result) {
-								// 	if(callbackfunc){
-								// 		callbackfunc(false);
-								// 	}
-								// 	return;
-								// }
+							console.log(command);
+
+							RScriptExec.runRScript(command,function(result3){
+								if (!result3) {
+									if(callbackfunc){
+										console.log("=========no result3==========");
+										callbackfunc(false);
+									}
+									return;
+								}
 								if(callbackfunc){
 									callbackfunc(model);
 								}
@@ -618,17 +621,17 @@
 						var command = './Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo.ModelStatisticsOutputDir+'" "."';
 							console.log(command);
 
-							// RScriptExec.runRScript(command,function(result){
-							// 	if (!result) {
-							// 		if(callbackfunc){
-							// 			callbackfunc("false umlFileManager.makeDir");
-							// 		}
-							// 		return;
-							// 	}
+							RScriptExec.runRScript(command,function(result){
+								if (!result) {
+									if(callbackfunc){
+										callbackfunc("false umlFileManager.makeDir");
+									}
+									return;
+								}
 								if(callbackfunc){
 									callbackfunc(repoInfo);
 								}
-							// });
+							});
 						
 					}
 					else {

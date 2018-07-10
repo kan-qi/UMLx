@@ -7,11 +7,7 @@ args = commandArgs(trailingOnly=TRUE)
 # arg4: output name
 
 if (length(args) < 1) {
-  args[1] = 'public/output/repo5b2edf2d7dd4861d80414fed/modelEvaluation.csv'
-	args[2] = 'public/output/repo5b2edf2d7dd4861d80414fed/model_evaluation_statistics'
-  args[3] = '.'
-  args[4] = 'statistics.json'
-  # stop("At least 1 arguments must be supplied (input file).", call.=FALSE)
+  stop("At least 1 arguments must be supplied (input file).", call.=FALSE)
 } else if (length(args)==1) {
   # default output file
   args[2] = "."
@@ -22,8 +18,12 @@ if (length(args) < 1) {
   args[4] = "statistics.json";
 } else if (length(args) == 3){
   args[4] = "statistics.json";
+  print("length == 3")
 }
 
+print(args[1])
+print(args[2])
+print(args[3])
 print(args[4])
 
 analyticInfoPath = args[1]
