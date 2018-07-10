@@ -232,8 +232,8 @@ app.get('/login',function(req,res){
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
 
-	res.end("error");
-	return;
+//	res.end("error");
+//	return;
 
 	var username = req.body['username'];
 	var pwd = req.body['password'];

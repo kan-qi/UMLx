@@ -51,6 +51,7 @@ discretizeAndClassify <- function(data, mean, sd, n) {
   #   mean: mean of the normal distribution to use
   #   sd: sd of the normal distribution to use
   #   n: number of bins to classify into
+  
   #
   # Returns:
   #   A vector of length n that indicates how many data points fall into each bin.
