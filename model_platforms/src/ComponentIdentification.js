@@ -12,7 +12,6 @@
  * Identify the boundary.
  */
 
-// TODO: UUID as key. Some classes do not have UUID
 
 
 (function() {
@@ -27,14 +26,22 @@
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
-  
-  
-  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classes) {
-	  
+
+
+  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classesAll, outputDir) {
+
 		var classDic = {};
 		var classArray = [];
 		var methods = []; // store the number of methods in each class
 		var classesByName = {};
+
+		var classes = []
+		for (var i in classesAll) {
+			var classUnit = classesAll[i];
+			if (classUnit.isWithinBoundary) {
+				classes.push(classUnit);
+			}
+		}
 
 		for(var i in classes) {
 			var classUnit = classes[i];
@@ -80,17 +87,22 @@
 		console.log(metric);
 		console.log(relations);
 
-		var clusteredClasses = findClusters(classArray, relations);
+		var nodesNullAll = [];
+		var nodesClassAll = [];
+		var edgesAll = [];
+
+		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll);
 		console.log(util.inspect(clusteredClasses, false, null))
 		var debug = require("../../utils/DebuggerOutput.js");
-		
-		
+
+		drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "components.dotty");
+
 		debug.writeJson("clusteredClasses", clusteredClasses);
-		
+
 		var cutoffDepth = 4; //there might be multiple criterion to determining the cutoff tree
-		
+
 		var clusters = [];
-		
+
 		var currentLevel = [];
 		var currentLevelDepth = 0;
 		currentLevel.push(clusteredClasses[0]);
@@ -115,21 +127,21 @@
 			currentLevel = nextLevel;
 			currentLevelDepth++;
 		}
-		
+
 		clusters = clusters.concat(currentLevel);
-		
+
 		// components are collections of classes and with interface class which are determined based on clusters.
 		// need more thinking about the interface class
-		
+
 		function searchClassesFromCluster(cluster, level){
 			if(!cluster){
 				return [];
 			}
-			
+
 			if(!level){
 				level = 0;
 			}
-			
+
 			var classes = [];
 			if(!cluster.left && !cluster.right){
 				cluster.level = level;
@@ -141,23 +153,23 @@
 				classes = classes.concat(leftClasses);
 				classes = classes.concat(rightClasses);
 			}
-			
+
 			return classes;
 		}
-		
+
 		var components = [];
-		
+
 		for(var i in clusters){
 			var classes = searchClassesFromCluster(clusters[i]);
 //			var interfaceClass = null;
-			
+
 			var classUnits = [];
 			for(var j in classes){
 				var identifiedClass = classes[j];
 				var referencedClassUnit = classesByName[identifiedClass.name];
 				classUnits.push(referencedClassUnit);
 			}
-			
+
 			var component = {
 					name: i,
 					uuid: uuidv4(),
@@ -165,11 +177,57 @@
 			}
 			components.push(component);
 		}
-		
+
 		console.log("components");
 		console.log(components);
-		
+
 		return components;
+
+	}
+
+	function drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, fileName) {
+
+		if(!fileName){
+			fileName = "kdm_clusters.dotty";
+		}
+		var path = outputDir+"/"+fileName;
+		let graph = 'digraph g {\
+			fontsize=26\
+			rankdir="LR"';
+
+		graph += 'node [fontsize=24 shape=rectangle]';
+		for (var i in nodesClassAll) {
+			var nodesClass = nodesClassAll[i];
+			for (var j in nodesClass) {
+				var node = nodesClass[j];
+				graph += '"'+node['name'].replace(/\s+/g, '')+'" [label="'+node['name'].replace(/\s+/g, '')+'"]';
+			}
+		}
+
+		graph += 'node [shape=point label=""]';
+		for (var i in nodesNullAll) {
+			var nodesNull = nodesNullAll[i];
+			for (var j in nodesNull) {
+				var node = nodesNull[j];
+				graph += node+' ';
+			}
+		}
+
+		for (var i in edgesAll) {
+			var edges = edgesAll[i];
+			for (var j in edges) {
+				var edge = edges[j];
+				graph += edge['start']+' -> {'+edge['end'].replace(/\s+/g, '')+'}';
+			}
+		}
+
+		graph += 'imagepath = \"./\"}';
+		dottyUtil = require("../../utils/DottyUtil.js");
+		dottyUtil.drawDottyGraph(graph, path, function(){
+			console.log("drawing is down");
+		});
+
+		return graph;
 
 	}
 
@@ -219,19 +277,19 @@
 		var paras = zeroArray(classes.length, classes.length);
 		var typeDependencyMetrics = zeroArray(classes.length, classes.length);
 
-		for (var i in typeDependencyGraph.edgesAttr) {
-      var edge = typeDependencyGraph.edgesAttr[i];
-			var col = classDic[edge.start.component.classUnit];
-			var row = classDic[edge.end.component.classUnit];
-			attrs[col][row]++;
-		}
-
-
-    for (var i in typeDependencyGraph.edgesP) {
-			var edge = typeDependencyGraph.edgesP[i];
-			var col = classDic[edge.start.component.classUnit];
-			var row = classDic[edge.end.component.classUnit];
-      paras[col][row]++;
+		if (typeDependencyGraph) {
+			for (var i in typeDependencyGraph.edgesAttr) {
+	      var edge = typeDependencyGraph.edgesAttr[i];
+				var col = classDic[edge.start.component.classUnit];
+				var row = classDic[edge.end.component.classUnit];
+				attrs[col][row]++;
+			}
+			for (var i in typeDependencyGraph.edgesP) {
+				var edge = typeDependencyGraph.edgesP[i];
+				var col = classDic[edge.start.component.classUnit];
+				var row = classDic[edge.end.component.classUnit];
+	      paras[col][row]++;
+			}
 		}
 
 		for (var i = 0; i < classes.length; i++) {
@@ -425,7 +483,7 @@
 	}
 
 
-	function findClusters(classArray, metrics) {
+	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll) {
 
 		var clusterfck = require("clusterfck");
 
@@ -489,10 +547,19 @@
 		// console.log("check");
     // var classClusters = convertTree(clusters, rowDic);
 		var classClusters = [];
+		// var nodesNullAll = [];
+		// var nodesClassAll = [];
+		// var edgesAll = [];
 		for (var i in clusters) {
 			var cluster = clusters[i];
 			// console.log(cluster);
-			var classCluster = convertTree(cluster, rowDic)
+			nodesNull = [];
+			nodesClass = [];
+			edges = [];
+			var classCluster = convertTree(cluster, rowDic, nodesNull, nodesClass, edges, "m")
+			nodesClassAll.push(nodesClass);
+			nodesNullAll.push(nodesNull);
+			edgesAll.push(edges);
 			classClusters.push(classCluster);
 		}
 		// console.log("check");
@@ -510,7 +577,7 @@
 	// 	return classSelected;
 	// }
 
-	function convertTree(cluster, rowDic) {
+	function convertTree(cluster, rowDic, nodesNull, nodesClass, edges, rootName) {
 		  var classClusters = {};
 			// console.log(cluster);
 			if (cluster["size"] == 1) {
@@ -520,19 +587,26 @@
 				classClusters["size"] = 1;
 				classClusters["value"] = classSelected;
 				classes.pop();
+				nodesClass.push(classSelected);
+				edges.push({start: rootName, end: classSelected['name']});
 			}
 			else {
-				var left = convertTree(cluster["left"], rowDic);
-				var right = convertTree(cluster["right"], rowDic);
+				var left = convertTree(cluster["left"], rowDic, nodesNull, nodesClass, edges, rootName+'l');
+				var right = convertTree(cluster["right"], rowDic, nodesNull, nodesClass, edges, rootName+'r');
 				classClusters["left"] = left;
 				classClusters["right"] = right;
+				classClusters["size"] = 2;
+				nodesNull.push(rootName+'l');
+				nodesNull.push(rootName+'r');
+				edges.push({start: rootName, end: rootName+'l'});
+				edges.push({start: rootName, end: rootName+'r'});
 			}
 			return classClusters;
 	}
 
 
 	module.exports = {
-			findClusters : findClusters,
+			// findClusters : findClusters,
 			// calculateCallMetric: calculateCallMetric,
 			// calculateAccessMetric: calculateAccessMetric,
 			// calculateTypeDependencyMetric: calculateTypeDependencyMetric,
