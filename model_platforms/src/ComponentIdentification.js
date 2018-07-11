@@ -39,6 +39,7 @@
 		for (var i in classesAll) {
 			var classUnit = classesAll[i];
 			if (classUnit.isWithinBoundary) {
+				// classUnit['notReferenced'] = true;
 				classes.push(classUnit);
 			}
 		}
@@ -48,7 +49,8 @@
 			classDic[classUnit.UUID] = i;
 			var classU = {
 				UUID: classUnit.UUID,
-				name: classUnit.name
+				name: classUnit.name,
+				// notReferenced: true
 			}
 			classArray.push(classU);
 			methods.push(classUnit.MethodUnits.length);
@@ -62,6 +64,17 @@
 		var metric = zeroArray(classes.length, classes.length);
 		var maxMetric = 0;
 		var relations = [];
+
+		// TODO: eliminate the classes not referenced by any class
+		// var classes = []
+		// for (var i in classes) {
+		// 	var classUnit = classes[i];
+		// 	if (classUnit.isWithinBoundary) {
+		// 		// classUnit['notReferenced'] = true;
+		// 		classes.push(classUnit);
+		// 	}
+		// }
+
 
 		for (var i = 0; i < classes.length; i++) {
 			for (var j = 0; j < classes.length; j++) {
@@ -204,7 +217,7 @@
 			var nodesClass = nodesClassAll[i];
 			for (var j in nodesClass) {
 				var node = nodesClass[j];
-				graph += '"'+node['UUID'].replace(/\-/g, '')+'" [label="'+node['name'].replace(/\s+/g, '')+'"]';
+				graph += '"a'+node['UUID'].replace(/-/g, '')+'" [label="'+node['name'].replace(/\s+/g, '')+'"]';
 			}
 		}
 
@@ -287,12 +300,16 @@
 				var col = classDic[edge.start.component.classUnit];
 				var row = classDic[edge.end.component.classUnit];
 				attrs[col][row]++;
+				// classArray[col] = false;
+				// classArray[row] = false;
 			}
 			for (var i in typeDependencyGraph.edgesP) {
 				var edge = typeDependencyGraph.edgesP[i];
 				var col = classDic[edge.start.component.classUnit];
 				var row = classDic[edge.end.component.classUnit];
 	      paras[col][row]++;
+				// classArray[col] = false;
+				// classArray[row] = false;
 			}
 		}
 
@@ -354,6 +371,8 @@
 			var col = classDic[edge.start.component.classUnit];
 			var row = classDic[edge.end.component.classUnit];
 			access[col][row]++;
+			// classArray[col] = false;
+			// classArray[row] = false;
 
 			if (!(col in accessors)) {
 				accessors[col] = {}
@@ -430,10 +449,12 @@
       var edge = callGraph.edges[i];
 			var col = classDic[edge.start.component.classUnit];
 			var row = classDic[edge.end.component.classUnit];
-			console.log("checkcheck");
-			console.log(edge);
-			console.log(col);
-			console.log(row);
+			// classArray[col] = false;
+			// classArray[row] = false;
+			// console.log("checkcheck");
+			// console.log(edge);
+			// console.log(col);
+			// console.log(row);
 			calls[col][row]++;
 
 			if (!(col in callers)) {
@@ -592,7 +613,7 @@
 				classClusters["value"] = classSelected;
 				classes.pop();
 				nodesClass.push(classSelected);
-				edges.push({start: rootName, end: classSelected['UUID'].replace(/\-/g, '')});
+				edges.push({start: rootName, end: 'a'+classSelected['UUID'].replace(/-/g, '')});
 			}
 			else {
 				var left = convertTree(cluster["left"], rowDic, nodesNull, nodesClass, edges, rootName+'l');
