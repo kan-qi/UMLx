@@ -55,7 +55,7 @@
 //					topClassUnits: classUnits
 //				};
 
-				var components = componentIdentifier.identifyComponents(result.callGraph, result.accessGraph, result.typeDependenceGraph, result.classUnits, Model.OutputDir);
+				var components = componentIdentifier.identifyComponents(result.callGraph, result.accessGraph, result.typeDependencyGraph, result.classUnits, Model.OutputDir);
 				debug.writeJson("constructed_model_by_kdm_components_7_5", components);
 
 //				Model.DomainModel = createDomainModel(components, ModelOutput, ModelAccessDir).DomainModel;

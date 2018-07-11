@@ -73,7 +73,8 @@
 		for (var i = 0; i < classes.length; i++) {
 			var row = [];
 			for (var j = 0; j < classes.length; j++) {
-				if (metric[i][j] >= maxMetric/10) {
+				if (metric[i][j] > 0) {
+				// if (metric[i][j] >= maxMetric/100) {
 					row.push(true);
 				}
 				else {
@@ -187,6 +188,9 @@
 
 	function drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, fileName) {
 
+		console.log(util.inspect(nodesClassAll, false, null))
+		console.log(util.inspect(edgesAll, false, null))
+
 		if(!fileName){
 			fileName = "kdm_clusters.dotty";
 		}
@@ -200,7 +204,7 @@
 			var nodesClass = nodesClassAll[i];
 			for (var j in nodesClass) {
 				var node = nodesClass[j];
-				graph += '"'+node['name'].replace(/\s+/g, '')+'" [label="'+node['name'].replace(/\s+/g, '')+'"]';
+				graph += '"'+node['UUID'].replace(/\-/g, '')+'" [label="'+node['name'].replace(/\s+/g, '')+'"]';
 			}
 		}
 
@@ -217,7 +221,7 @@
 			var edges = edgesAll[i];
 			for (var j in edges) {
 				var edge = edges[j];
-				graph += edge['start']+' -> {'+edge['end'].replace(/\s+/g, '')+'}';
+				graph += edge['start']+' -> {'+edge['end']+'}';
 			}
 		}
 
@@ -538,7 +542,7 @@
 		  return d;
 		}
 
-		var threshold = 10;
+		var threshold = 1.05;
 
 		var clusters = clusterfck.hcluster(metrics, distance, clusterfck.SINGLE_LINKAGE, threshold);
 		console.log("clusterfck");
@@ -588,7 +592,7 @@
 				classClusters["value"] = classSelected;
 				classes.pop();
 				nodesClass.push(classSelected);
-				edges.push({start: rootName, end: classSelected['name']});
+				edges.push({start: rootName, end: classSelected['UUID'].replace(/\-/g, '')});
 			}
 			else {
 				var left = convertTree(cluster["left"], rowDic, nodesNull, nodesClass, edges, rootName+'l');
