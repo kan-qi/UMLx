@@ -23,18 +23,14 @@ var fs = require('fs');
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\model_platforms\\src\\tests\\experimentExample_kdm.xmi";
 	// var filePath = ".\\model_platforms\\src\\tests\\experimentExample_kdm_simplified.xmi";
 	var filePath = "./model_platforms/src/tests/experimentExample_kdm_simplified.xmi"
-<<<<<<< HEAD
 		
 		var modelDrawer = require("../../../model_drawers/UserSystemInteractionModelDrawer.js");
-=======
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 
 var srcParser = require("../SrcParser.js");
 				console.log("hello");
 
 				fs.readFile(filePath, "utf8", function(err, data) {
 					parser.parseString(data, function(err, xmiString) {
-<<<<<<< HEAD
 				srcParser.extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelOutputDir, function(Model){
 					
 					for(var i in Model.UseCases){
@@ -44,9 +40,6 @@ var srcParser = require("../SrcParser.js");
 					});
 					}
 					
-=======
-				srcParser.extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelOutputDir, function(){
->>>>>>> 7356a5df6fa1a169dc83a800f9bd1a0d937a95e9
 					console.log("finished");
 				});
 
