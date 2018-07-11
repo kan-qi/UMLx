@@ -1297,15 +1297,15 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //	var sizeMetric = "UEUCW";
 	if(umlEstimationInfo.model === "EUCP"){
 		umlEstimationInfo.sizeMetric = "UEUCW";
-		umlEstimationInfo.transactionMetric = "swti";
+		umlEstimationInfo.transactionMetric = "SWTI";
 	}
 	if(umlEstimationInfo.model === "EXUCP"){
 		umlEstimationInfo.sizeMetric = "UEXUCW";
-		umlEstimationInfo.transactionMetric = "swtii";
+		umlEstimationInfo.transactionMetric = "SWTII";
 	}
 	else{
 		umlEstimationInfo.sizeMetric = "UDUCW"
-		umlEstimationInfo.transactionMetric = "swtiii";
+		umlEstimationInfo.transactionMetric = "SWTIII";
 	}
 
 //	console.log("check");
@@ -1337,46 +1337,50 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
+
+
+
 			});
 //			console.log(modelInfo);
-			
-			effortPredictor.predictEffort(modelInfo, umlEstimationInfo, function(estimatedEffort){
-				if(!estimatedEffort){
-					console.log("error");
-					res.render('estimationResultPane', {error: "inter process error"});
-				}
-				
-				console.log("predicted effort");
-				console.log(estimatedEffort);
-				
-				var estimationResults = effortPredictor.makeProjectManagementDecisions(modelInfo, umlEstimationInfo, estimatedEffort);
-				
-				modelInfo.EstimationResults = estimationResults;
-				modelInfo.repo_id = repoId;
-				modelInfo.estimationResultsFile = "estimationResult.json"
+
+            effortPredictor.predictEffort(modelInfo, umlEstimationInfo, function(estimatedEffort){
+                if(!estimatedEffort){
+                    console.log("error");
+                    res.render('estimationResultPane', {error: "inter process error"});
+                    return;
+                }
+
+                console.log("predicted effort");
+                console.log(estimatedEffort);
+
+                var estimationResults = effortPredictor.makeProjectManagementDecisions(modelInfo, umlEstimationInfo, estimatedEffort);
+
+                modelInfo.EstimationResults = estimationResults;
+                modelInfo.repo_id = repoId;
+                modelInfo.estimationResultsFile = "estimationResult.json"
 //				modelInfo.SizeMetric = sizeMetric;
 //				modelInfo.EstimationModel = model;
-				
-				modelInfo.umlEstimationInfo = umlEstimationInfo;
-				
-				umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
+
+                modelInfo.umlEstimationInfo = umlEstimationInfo;
+
+                umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 //					console.log(modelInfo);
-					var files = [{fileName : modelInfo.estimationResultsFile , content : JSON.stringify(estimationResults)}];
-					
-					umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
-					if(err){
-						res.end("error");
-						return;
-					}
-					console.log("estimation result is saved");
-					console.log(estimationResults);
-					res.render('estimationResultPane', {estimationResults:estimationResults, estimationModel: umlEstimationInfo.model, sizeMetric: umlEstimationInfo.sizeMetric, modelInfo: modelInfo});
+                    var files = [{fileName : modelInfo.estimationResultsFile , content : JSON.stringify(estimationResults)}];
+
+                    umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
+                        if(err){
+                            res.end("error");
+                            return;
+                        }
+                        console.log("estimation result is saved");
+                        console.log(estimationResults);
+                        res.render('estimationResultPane', {estimationResults:estimationResults, estimationModel: umlEstimationInfo.model, sizeMetric: umlEstimationInfo.sizeMetric, modelInfo: modelInfo});
 ////
-					});
-				});
-				
-	
-			});
+                    });
+                });
+
+
+            });
 			
 		});
 	});
