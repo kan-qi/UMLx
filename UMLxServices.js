@@ -1337,9 +1337,11 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
+
+
+
 			});
 //			console.log(modelInfo);
-			
 			effortPredictor.predictEffort(modelInfo, umlEstimationInfo, function(estimatedEffort){
 				if(!estimatedEffort){
 					console.log("error");
@@ -1361,10 +1363,10 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 				modelInfo.estimationResultsFile = "estimationResult.json"
 //				modelInfo.SizeMetric = sizeMetric;
 //				modelInfo.EstimationModel = model;
-				
-				modelInfo.umlEstimationInfo = umlEstimationInfo;
-				
-				umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
+
+                modelInfo.umlEstimationInfo = umlEstimationInfo;
+
+                umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 //					console.log(modelInfo);
 					var files = [{fileName : modelInfo.estimationResultsFile , content : JSON.stringify(estimationResults)}];
 					
@@ -1375,12 +1377,13 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 					}
 					
 					res.render('estimationResultPane', {estimationResults:estimationResults, estimationModel: umlEstimationInfo.model, sizeMetric: umlEstimationInfo.sizeMetric, transactionMetric: umlEstimationInfo.transactionMetric, modelInfo: modelInfo});
+
 ////
-					});
-				});
-				
-	
-			});
+                    });
+                });
+
+
+            });
 			
 		});
 	});
@@ -1614,7 +1617,7 @@ app.get('/', function(req, res){
        
         console.log("total Records"+totalRec);
         
-console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
+        console.log("INSIDE INDEX API pageCount "+ pageCount+ " pageSize "+pageSize+" Current page "+ currentPage+" Start "+start );
     
       //console.log("INSIDE UMLXSERVICES: "+ repoId);
 //      console.log("INSIDE UMLXSERVICES"+ repoInfo.Models[0].creationTime);
