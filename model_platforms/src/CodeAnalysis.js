@@ -102,9 +102,11 @@
 
 		console.log("control flow construction");
 
-		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir);
-		var typeDependencyGraph = constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir);
-		var accessGraph = constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir);
+		var referencedClassUnits = [];
+
+		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits);
+		var typeDependencyGraph = constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits);
+		var accessGraph = constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits);
 
 		// console.log("typeDependencyGraph");
 		// console.log(typeDependencyGraph);
@@ -118,11 +120,12 @@
 			classUnits: classUnits,
 			callGraph: callGraph,
 			typeDependencyGraph: typeDependencyGraph,
-			accessGraph: accessGraph
+			accessGraph: accessGraph,
+			referencedClassUnits: referencedClassUnits
 		};
 	}
 
-	function constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir){
+	function constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits){
 
 		// var edges = [];
 		// var nodes = [];
@@ -145,7 +148,7 @@
 		var nodesByNameP = {};
 
 		console.log("top classes");
-		console.log(topClassUnits); //TODO: why String class in top class units? should we consider it?
+		console.log(topClassUnits);
 
 		for (var i in topClassUnits) {
 			var classUnit = topClassUnits[i];
@@ -173,6 +176,21 @@
 				if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within classUnits, like string, int...
 					continue;
 				}
+
+				if (classUnit != targetClassUnit) {
+					if (!referencedClassUnits.includes(classUnit)) {
+						referencedClassUnits.push(classUnit);
+					}
+
+					if (!referencedClassUnits.includes(targetClassUnit)) {
+						referencedClassUnits.push(targetClassUnit);
+					}
+				}
+				else {
+					continue;
+				}
+
+
 
 				var startNode = nodesByNameAttr[classUnit.UUID];
 				if(!startNode){
@@ -239,6 +257,21 @@
 						if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within classUnits, like string, int...
 							continue;
 						}
+
+						if (methodClassUnit != targetClassUnit) {
+							if (!referencedClassUnits.includes(methodClassUnit)) {
+								referencedClassUnits.push(methodClassUnit);
+							}
+
+							if (!referencedClassUnits.includes(targetClassUnit)) {
+								referencedClassUnits.push(targetClassUnit);
+							}
+						}
+						else {
+							continue;
+						}
+
+
 						var startNode = nodesByNameLocal[methodUnit.UUID];
 						if(!startNode){
 							startNode = {
@@ -282,8 +315,6 @@
 				}
 
          // targeted at input and return parameters of this method
-         // (TODO: if distinguishment among return and input type needed, then we can just use methodParameter.kind
-         // "return" -> return, "unknown" -> input)
 				for (var i in methodParameters) {
 					var methodParameter = methodParameters[i];
 					var XMIParameterType = jp.query(xmiString, convertToJsonPath(methodParameter.type));
@@ -298,6 +329,20 @@
 					if (!targetClassUnit || !targetClassUnit.isWithinBoundary) { // the type of the parameter is not within classUnits, like string, int...
 						continue;
 					}
+
+					if (methodClassUnit != targetClassUnit) {
+						if (!referencedClassUnits.includes(methodClassUnit)) {
+							referencedClassUnits.push(methodClassUnit);
+						}
+
+						if (!referencedClassUnits.includes(targetClassUnit)) {
+							referencedClassUnits.push(targetClassUnit);
+						}
+					}
+					else {
+						continue;
+					}
+
 
 
 					var startNode = nodesByNamePara[methodUnit.UUID];
@@ -352,7 +397,7 @@
 
 	}
 
-	function constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir){
+	function constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits){
 
 
 		var edges = []; // call relation
@@ -439,6 +484,21 @@
 									// console.log(targetStorableUnit);
 									// console.log("targetUUIDResult");
 									// console.log(targetClassUnit);
+
+									if (classUnit != targetClassUnit) {
+										if (!referencedClassUnits.includes(classUnit)) {
+											referencedClassUnits.push(classUnit);
+										}
+
+										if (!referencedClassUnits.includes(targetClassUnit)) {
+											referencedClassUnits.push(targetClassUnit);
+										}
+									}
+									else {
+										continue;
+									}
+
+
 									var startNode = nodesByName[methodUnit.UUID];
 									if(!startNode){
 										startNode = {
@@ -486,8 +546,7 @@
 		return {nodes: nodes, edges: edges};
 	}
 
-  // TODO: why trasnfer classUnits in?
-	function constructCallGraph(classUnits, topClassUnits, xmiString, outputDir){
+	function constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits){
 
 		//the edges are now defined between methods...
 
@@ -556,6 +615,19 @@
 //				console.log(callMethodUnit);
 
 				if(!callMethodUnit.Signature || !targetMethodUnit.Signature || !targetClassUnit.isWithinBoundary){
+					continue;
+				}
+
+				if (callClassUnit != targetClassUnit) {
+					if (!referencedClassUnits.includes(callClassUnit)) {
+						referencedClassUnits.push(callClassUnit);
+					}
+
+					if (!referencedClassUnits.includes(targetClassUnit)) {
+						referencedClassUnits.push(targetClassUnit);
+					}
+				}
+				else {
 					continue;
 				}
 
@@ -794,7 +866,7 @@
 		return false;
 	}
 
-	
+
 //	function isResponseClass(ClassUnit){
 //		for(var i in ClassUnit.MethodUnits){
 //			if(ClassUnit.MethodUnits[i].isResponse){
@@ -804,7 +876,7 @@
 //		return false;
 //	}
 
-	
+
 
 
 
