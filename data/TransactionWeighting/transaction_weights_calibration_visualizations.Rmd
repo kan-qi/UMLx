@@ -1,0 +1,48 @@
+---
+title: "Transaction Weight Calibration Visualized"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("transaction_weights_calibration.R")
+```
+Combined Data Effort Values
+```{r combined}
+combined <- combineData("./Transaction Data")
+effort <- as.data.frame(matrix(c(263, 268.5, 1482.5, 1392, 804.5, 3113, 1592), nrow = 7, ncol = 1))
+colnames(effort) <- c("Effort")
+rownames(effort) <- c("F14a_REFERsy.csv", 
+                      "F14a_soccer_data_web_crawler.csv", 
+                      "F15a_construction_meeting_minutes_application.csv",
+                      "s16_bad_driver.csv",
+                      "S16b_flower_seeker.csv",
+                      "s16b_Picshare_AA.csv",
+                      "s16b_Picshare_RA.csv")
+ggplot(combined, aes(x=TL)) + 
+  geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
+  stat_function(fun = dnorm, args = list(mean = mean(combined$TL), sd(combined$TL))) + 
+  xlab("TL") + ggtitle("Combined TL Data Summary")
+
+ggplot(combined, aes(x=TD)) + 
+  geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
+  stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) + 
+  xlab("TD") + ggtitle("Combined TD Data Summary")
+
+ggplot(combined, aes(x=DETs)) + 
+  geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
+  stat_function(fun = dnorm, args = list(mean = mean(combined$DETs), sd(combined$DETs))) + 
+  xlab("DETs") + ggtitle("Combined DETs Data Summary")
+
+```
+SWTI Search Results
+```{r swti}
+SWTIresults <- performSearch(5, "./Transaction Data", effort, c("TL"))
+for (result in SWTIresults) {
+  df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
+  g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
+    geom_bar(stat = "identity") +
+    xlab("Category")
+  print(g)
+}
+```
