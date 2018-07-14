@@ -173,7 +173,9 @@ performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DET
     }
     regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
     regressionData <- as.data.frame(regressionData)
-    searchResults[[i]] <- list(MSE = crossValidate(regressionData, k), model = lm(Effort ~ ., regressionData), data = regressionData)
+    searchResults[[i]] <- list(MSE = crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k), 
+                               model = lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]),
+                               data = regressionData)
   }
   searchResults
 }
