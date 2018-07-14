@@ -1,6 +1,7 @@
 library(moments)
 
-DUC <- c(15,
+# testing difficult use case weights
+DUCW <- c(15,
          18.95,
          15,
          16.84,
@@ -8,13 +9,14 @@ DUC <- c(15,
          14.19
 )
 
-summary(DUC)
-hist(DUC)
-mean(DUC)
-skewness(DUC)
-kurtosis(DUC)
+summary(DUCW)
+hist(DUCW)
+mean(DUCW)
+skewness(DUCW)
+kurtosis(DUCW)
 
-AUC <- c(10,
+# testing average use case weights
+AUCW <- c(10,
          10.24,
          7.66,
          7.66,
@@ -22,14 +24,15 @@ AUC <- c(10,
          8.49
 )
 
-summary(AUC)
-hist(AUC)
-mean(DUC)
-skewness(AUC)
-kurtosis(AUC)
+summary(AUCW)
+hist(AUCW)
+mean(DUCW)
+skewness(AUCW)
+kurtosis(AUCW)
 
+# testing simple use case weights
 
-SUC <- c(5,
+SUCWW <- c(5,
          5.93,
          5,
          5,
@@ -37,9 +40,161 @@ SUC <- c(5,
          5.81
 )
 
-summary(SUC)
-hist(SUC)
-mean(SUC)
-skewness(SUC)
-kurtosis(SUC)
+summary(SUCWW)
+hist(SUCWW)
+mean(SUCWW)
+skewness(SUCWW)
+kurtosis(SUCWW)
 
+# testing simple use cases
+
+SUCW <- c(8,
+         11,
+         11,
+         9,
+         8,
+         12,
+         9,
+         12,
+         15,
+         6,
+         13,
+         6,
+         6,
+         6,
+         16,
+         9,
+         13,
+         33,
+         11,
+         9,
+         16,
+         10,
+         6,
+         8,
+         3,
+         2,
+         2,
+         2,
+         2,
+         5,
+         2,
+         2,
+         5,
+         16
+)
+
+summary(SUCW)
+hist(log(SUCW))
+mean(SUCW)
+skewness(log(SUCW))
+kurtosis(log(SUCW))
+
+
+
+#testing simple use cases
+
+SUCW <- c(8,
+          11,
+          11,
+          9,
+          8,
+          12,
+          9,
+          12,
+          15,
+          6,
+          13,
+          6,
+          6,
+          6,
+          16,
+          9,
+          13,
+          33,
+          11,
+          9,
+          16,
+          10,
+          6,
+          8,
+          3,
+          2,
+          2,
+          2,
+          2,
+          5,
+          2,
+          2,
+          5,
+          16
+)
+
+summary(SUCW)
+hist(log(SUCW))
+mean(SUCW)
+skewness(log(SUCW))
+kurtosis(log(SUCW))
+
+#testing average use cases
+
+AUC <- c(8,
+          1,
+          3,
+          1,
+          2,
+          6,
+          5,
+          33,
+          6,
+          2,
+          4,
+          4,
+          4,
+          12,
+          16,
+          5,
+          2,
+          8,
+          4,
+          2,
+          11,
+          13,
+          15,
+          6,
+          4,
+          4,
+          12,
+          3,
+          18,
+          4,
+          3,
+          12,
+          11,
+          1
+)
+
+summary(AUC)
+hist(AUC)
+mean(AUC)
+skewness(log(AUC))
+kurtosis(log(AUC))
+
+#useCaseData <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/use_case_data_point.csv")
+useCaseData <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/UCP_Dataset_OnlineV1.0.csv")
+
+
+lmodel1 <- lm(Real_Effort_Person_Hours~UCP, data=useCaseData)
+a <- summary(lmodel1)$coefficients[2,1]
+
+useCaseData$UUCP_Norm = useCaseData$Real_Effort_Person_Hours/(a*useCaseData$EF*useCaseData$TCF) - useCaseData$UAW
+
+
+print(useCaseData$Average_UC)
+
+lmodel <- lm(useCaseData$UUCP_Norm~Simple_UC+Complex_UC+AVG, data=useCaseData)
+summary(lmodel)
+res<-resid(lmodel)
+hist(res)
+skewness(res)
+kurtosis(res)

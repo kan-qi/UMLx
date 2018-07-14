@@ -7,7 +7,7 @@ html
     
   body#upload-body
     .container.estimation_page_container
-        form#project-effort-prediction-form.form-horizontal(novalidate='', enctype='multipart/form-data', method='post', action='/predictProjectEffort')
+        form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
             #page1
                 .alert.alert-info
                     | Technical Complexity Factor
@@ -254,7 +254,7 @@ html
                             h4.panel-title
                                 | Estimation Results
                         #collapse1.panel-collapse
-                        div(id="estimation-result-panel-body")
+                            div(id="estimation-result-panel-body")
                 
                 input#uuid-page5(type='hidden', name='uuid-page5', value='')
 
