@@ -45,4 +45,37 @@ for (result in SWTIresults) {
     xlab("Category")
   print(g)
 }
+
+MSEdata <- data.frame(NumBins = 1:length(SWTIresults), MSE = sapply(SWTIresults, function(x) { x$MSE }))
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point()
+```
+SWTII Search Results
+```{r swtii, warning = FALSE}
+SWTIIresults <- performSearch(5, "./Transaction Data", effort, c("TL", "TD"))
+for (result in SWTIIresults) {
+  df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
+  g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
+    geom_bar(stat = "identity") +
+    xlab("Category") +
+    theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+  print(g)
+}
+  
+MSEdata <- data.frame(NumBins = 1:length(SWTIIresults), MSE = sapply(SWTIIresults, function(x) { x$MSE }))
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point()
+```
+SWTIII Search Results
+```{r swtiii, warning = FALSE}
+SWTIIIresults <- performSearch(3, "./Transaction Data", effort, c("TL", "TD", "DETs"))
+for (result in SWTIIIresults) {
+  df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
+  g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
+    geom_bar(stat = "identity") +
+    xlab("Category") +
+    theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+  print(g)
+}
+  
+MSEdata <- data.frame(NumBins = 1:length(SWTIIIresults), MSE = sapply(SWTIIIresults, function(x) { x$MSE }))
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point()
 ```
