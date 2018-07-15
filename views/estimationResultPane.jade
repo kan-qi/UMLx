@@ -16,7 +16,7 @@ if estimationResults
             th Full Stack
             th Database Developer
         tbody
-          tr
+          tr.estimation-table
             td #{estimationModel}
             td #{estimationResults.Effort}
             td #{estimationResults.Duration}
@@ -42,7 +42,7 @@ if estimationResults
           th Database Developer
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
-            tr
+            tr.estimation-table
               td #{i}
               td #{estimationResults.UseCases[i].Name}
               td #{estimationResults.UseCases[i].Effort}
