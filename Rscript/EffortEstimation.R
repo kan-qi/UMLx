@@ -6,6 +6,8 @@
 
 args = commandArgs(trailingOnly=TRUE)
 
+.libPaths(c("C:/Users/flyqk/Documents/R/win-library/3.5", "C:/Program Files/R/R-3.5.1/library"))
+
 if (length(args) < 2) {
 	stop("At least two arguments must be supplied (input file).", call.=FALSE)
 } else if (length(args)==2) {
@@ -28,8 +30,6 @@ resultPath <- paste(outputDir, "effort_prediction_result.json", sep="/")
 
 
 #print(.libPaths())
-
-.libPaths(c("C:/Users/flyqk/Documents/R/win-library/3.5", "C:/Program Files/R/R-3.5.1/library"))
 
 library(lattice)
 #library(ggplot2)

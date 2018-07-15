@@ -154,7 +154,9 @@
 						SizeMeasurement: useCase['ExtendedUseCasePointData'][transactionMetric]
 				};
 				
-				useCaseEstimates.Effort = projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+				var useCaseEffort = projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+				
+				useCaseEstimates.Effort = useCaseEffort.toFixed(2);
 //				useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
 				
