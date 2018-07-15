@@ -20,6 +20,7 @@
 #       c. Return the discretization/classification data for i bins: results[[i]]$data
 
 library(ggplot2)
+library(MASS)
 
 combineData <- function(folder) {
   # Combines all the data from multiple transaction analytics files into one
@@ -105,8 +106,8 @@ crossValidate <- function(data, k) {
     testIndexes <- which(folds == i, arr.ind = TRUE)
     testData <- data[testIndexes, ]
     trainData <- data[-testIndexes, ]
-    model <- lm(Effort ~ ., data = trainData)
-    predicted <- predict.lm(model, newdata = testData)
+    model <- bayesfit(lm(Effort ~ ., data = trainData), 10000)
+    predicted <- predict.blm(model, newdata = testData)
     foldMSE[i] <- mean((predicted - testData$Effort)^2)
   }
   mean(foldMSE)
@@ -137,6 +138,72 @@ genColNames <- function(parameters, nBins) {
     result <- sapply(sapply(first, paste, second, sep = ""), paste, third, sep = "")
     return(as.vector(result))
   }
+}
+
+bayesfit<-function(lmfit, N) {
+  # Function to compute the bayesian analog of the lmfit using non-informative 
+  # priors and Monte Carlo scheme based on N samples. Taken from:
+  # https://www.r-bloggers.com/bayesian-linear-regression-analysis-without-tears-r/
+  # 6/14/18.
+  #
+  # Args:
+  #   lmfit: a lm object created from lmfit()
+  #   N: the number of data points to use for Monte Carlo method
+  #
+  # Returns:
+  #   A dataframe containing results of the Bayes line fit.
+  QR<-lmfit$qr
+  df.residual<-lmfit$df.residual
+  R<-qr.R(QR) ## R component
+  coef<-lmfit$coef
+  Vb<-chol2inv(R) ## variance(unscaled)
+  s2<-(t(lmfit$residuals)%*%lmfit$residuals)
+  s2<-s2[1,1]/df.residual
+  
+  ## now to sample residual variance
+  sigma<-df.residual*s2/rchisq(N,df.residual)
+  coef.sim<-sapply(sigma,function(x) mvrnorm(1,coef,Vb*x))
+  ret<-data.frame(t(coef.sim))
+  names(ret)<-names(lmfit$coef)
+  ret$sigma<-sqrt(sigma)
+  ret
+}
+
+Bayes.sum<-function(x) {
+  # Provides a summary for a variable of a Bayesian linear regression.
+  #
+  # Args:
+  #   x: a column of the data frame returned by the bayesfit() function
+  #
+  # Returns:
+  #   A vector containing the summary 
+  c("mean"=mean(x),
+    "se"=sd(x),
+    "t"=mean(x)/sd(x),
+    "median"=median(x),
+    "CrI"=quantile(x,prob=0.025),
+    "CrI"=quantile(x,prob=0.975)
+  )
+}
+
+predict.blm <- function(model, newdata) {
+  # predict.lm() analogue for Bayesian linear regression
+  #
+  # Args:
+  #   model: a bayes linear regression model
+  #   newdata: new data to perform prediction
+  #
+  # Returns:
+  #   Vector of new predictions
+  newdata <- subset(newdata, select = -c(Effort))
+  ret <- apply(newdata, 1, function(x) {
+    effort <- 0
+    for (col in colnames(newdata)) {
+      effort <- effort + (mean(model[, col]) * x[col])
+    }
+    effort <- effort + mean(model[, "(Intercept)"])
+  })
+  ret
 }
 
 performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DETs"), k = 5) {
@@ -174,7 +241,7 @@ performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DET
     regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
     regressionData <- as.data.frame(regressionData)
     searchResults[[i]] <- list(MSE = crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k), 
-                               model = lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]),
+                               model = bayesfit(lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]), 10000),
                                data = regressionData)
   }
   searchResults
