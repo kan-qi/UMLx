@@ -188,9 +188,9 @@
 					var personnel_FS = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
 					
 					
-					useCaseEstimates.Personnel_UI = personnel_UI;
-					useCaseEstimates.Personnel_DB = personnel_DB;
-					useCaseEstimates.Personnel_FS = personnel_FS;
+					useCaseEstimates.Personnel_UI = personnel_UI.toFixed(2);
+					useCaseEstimates.Personnel_DB = personnel_DB.toFixed(2);
+					useCaseEstimates.Personnel_FS = personnel_FS.toFixed(2);
 					
 					estimationResults.UseCases.push(useCaseEstimates);
 			}
