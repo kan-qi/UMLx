@@ -503,7 +503,7 @@ print(cvResults)
 
 
 #for(i in 1:nfold){
-	#print(foldResults1[,,i])
+#print(foldResults1[,,i])
 #}
 
 avgPreds <- matrix(,nrow=100,ncol=5)
@@ -544,7 +544,7 @@ print(meltAvgPreds)
 svg(paste(outputPath,"use_case_weight_calibration_err_plot.svg", sep="/"), width=6, height=4)
 ggplot(meltAvgPreds) + theme_bw() + 
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
-				ylab("Percentage")+ theme(legend.position="bottom")
+		ylab("Percentage")+ theme(legend.position="bottom")
 
 print("melt avg preds info as lines and smooth function")
 svg(paste(outputPath,"use_case_weight_calibration_err_plot_lines_smooth.svg", sep="/"), width=6, height=4)

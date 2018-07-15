@@ -180,21 +180,68 @@ mean(AUC)
 skewness(log(AUC))
 kurtosis(log(AUC))
 
-#useCaseData <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/use_case_data_point.csv")
-useCaseData <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/UCP_Dataset_OnlineV1.0.csv")
+#normality test on internal dataset
+useCaseData_internal <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/use_case_data_point.csv")
+
+#useCaseData <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/UCP_Dataset_OnlineV1.0.csv")
 
 
-lmodel1 <- lm(Real_Effort_Person_Hours~UCP, data=useCaseData)
+lmodel1 <- lm(Real_Effort_Person_Hours~UCP, data=useCaseData_internal)
 a <- summary(lmodel1)$coefficients[2,1]
 
-useCaseData$UUCP_Norm = useCaseData$Real_Effort_Person_Hours/(a*useCaseData$EF*useCaseData$TCF) - useCaseData$UAW
+useCaseData_internal$UUCP_Norm = useCaseData_internal$Real_Effort_Person_Hours/(a*useCaseData_internal$EF*useCaseData_internal$TCF) - useCaseData_internal$UAW
 
 
-print(useCaseData$Average_UC)
+print(useCaseData_internal$Average_UC)
 
-lmodel <- lm(useCaseData$UUCP_Norm~Simple_UC+Complex_UC+AVG, data=useCaseData)
+lmodel <- lm(useCaseData_internal$UUCP_Norm~Simple_UC+Complex_UC+Average_UC, data=useCaseData_internal)
 summary(lmodel)
 res<-resid(lmodel)
-hist(res)
+hist(res, main="internal_residual_distribution")
+skewness(res)
+kurtosis(res)
+
+#normality test on external dataset
+
+#useCaseData_external <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/use_case_data_point.csv")
+
+useCaseData_external <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/UCP_Dataset_OnlineV1.0.csv")
+
+
+lmodel1 <- lm(Real_Effort_Person_Hours~UCP, data=useCaseData_external)
+a <- summary(lmodel1)$coefficients[2,1]
+
+useCaseData_external$UUCP_Norm = useCaseData_external$Real_Effort_Person_Hours/(a*useCaseData_external$EF*useCaseData_external$TCF) - useCaseData_external$UAW
+
+
+print(useCaseData_external$Average_UC)
+
+lmodel <- lm(useCaseData_external$UUCP_Norm~Simple_UC+Complex_UC+Average_UC, data=useCaseData_external)
+summary(lmodel)
+res<-resid(lmodel)
+hist(res, main="external_residual_distribution")
+skewness(res)
+kurtosis(res)
+
+#normality test on mixed dataset
+
+useCaseData_mixed <- useCaseData_internal
+useCaseData_mixed <- rbind(useCaseData_mixed, useCaseData_external[,colnames(useCaseData_external) %in% colnames(useCaseData_internal)], stringsAsFactors=FALSE)
+
+#useCaseData <- read.csv("C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/UMLx/data/UseCaseWeighting/7-9/UCP_Dataset_OnlineV1.0.csv")
+
+
+lmodel1 <- lm(Real_Effort_Person_Hours~UCP, data=useCaseData_mixed)
+a <- summary(lmodel1)$coefficients[2,1]
+
+useCaseData_mixed$UUCP_Norm = useCaseData_mixed$Real_Effort_Person_Hours/(a*useCaseData_mixed$EF*useCaseData_mixed$TCF) - useCaseData_mixed$UAW
+
+
+print(useCaseData_mixed$Average_UC)
+
+lmodel <- lm(useCaseData_mixed$UUCP_Norm~Simple_UC+Complex_UC+Average_UC, data=useCaseData_mixed)
+summary(lmodel)
+res<-resid(lmodel)
+hist(res, main="mixed_residual_distribution")
 skewness(res)
 kurtosis(res)
