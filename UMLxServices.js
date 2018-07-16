@@ -29,6 +29,10 @@ var download = require('download');
 //var removeDir = require('some-custom-fs');
 //var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 
+analyseUML(pathToUMLfile, outputDir){
+	
+}
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
 	var date = new Date();
