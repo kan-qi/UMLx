@@ -15,6 +15,7 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	var uuidV1 = require('uuid/v1');
+	var kdmModelUtils = require("./KDMModelUtils.js");
 	
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
@@ -130,8 +131,8 @@
 			
 			for(var j in calls){
 				var call = calls[j];
-				var callXMIActionElement = jp.query(xmiString, convertToJsonPath(call.from))[0];
-				var targetXMIMethodUnit = jp.query(xmiString, convertToJsonPath(call.to))[0];
+				var callXMIActionElement = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.from))[0];
+				var targetXMIMethodUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.to))[0];
 				console.log("target xmi method");
 				console.log(callXMIActionElement);
 				console.log(targetXMIMethodUnit);
@@ -581,16 +582,7 @@
 		return ClassUnit;
 		
 	}
-	
-	function isResponseClass(ClassUnit){
-		for(var i in ClassUnit.MethodUnits){
-			if(ClassUnit.MethodUnits[i].isResponse){
-				return true;
-			}
-		}
-		return false;
-	}
-	
+
 	function identifyMethodUnit(XMIMethodUnit, xmiString){
 
 		var MethodUnit = {
@@ -634,7 +626,7 @@
 			});
 //			MethodUnit.key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
 			
-			var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameters[j]["$"]['type']));
+			var XMIParameterType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(XMIParameters[j]["$"]['type']));
 			console.log("parameter type");
 			console.log(XMIParameterType);
 			if(XMIParameterType){
@@ -891,7 +883,7 @@
 			
 			for(var j in XMIParameters){
 				var XMIParameter = XMIParameters[j];
-				var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameter["$"]['type']));
+				var XMIParameterType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(XMIParameter["$"]['type']));
 				console.log("parameter type");
 				console.log(XMIParameterType);
 				if(XMIParameterType){
@@ -975,28 +967,7 @@
 ////		console.log(nodes[0].localName + ": " + nodes[0].firstChild.data)
 ////		console.log("Node: " + nodes[0].toString())
 //	}
-	
-	function convertToJsonPath(path){
-//		var toNode = queryByXPath(data, toString);
-		var toNodes = path.split('/');
-//		controlElement.toNodes = toNodes;
-		console.log(toNodes);
-		var jsonPath = "$['xmi:XMI']['kdm:Segment'][0]";
-		for(var i in toNodes){
-			var toNode = toNodes[i];
-			if(!toNode.startsWith("@")){
-				continue;
-			}
-			var parts = toNode.replace("@", "").split(".");
-			jsonPath += "['"+parts[0]+"']["+parts[1]+"]";
-		}
-		
-//		jsonPath = "$['xmi:XMI']['kdm:Segment'][0]['model'][1]";
-		console.log("json path");
-		console.log(jsonPath);
-		
-		return jsonPath;
-	}
+
 	
 //	function drawCallGraph(controlElements){
 //		

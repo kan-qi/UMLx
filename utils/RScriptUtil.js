@@ -3,7 +3,7 @@
 
 	var exec = require('child_process').exec;
 	
-	var RExec = '\"C:/Program Files/R/R-3.2.5/bin/Rscript\"';
+	var RExec = '\"C:/Program Files/R/R-3.5.1/bin/Rscript\"';
 	
 
 	var debug = require("./DebuggerOutput.js");

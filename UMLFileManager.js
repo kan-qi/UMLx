@@ -145,7 +145,9 @@
 			 umlFileInfo.fileId = path.parse(umlFilePath).base;
 			 umlFileInfo.fileSize = fileSizeInMegabytes;
 			 umlFileInfo.creationTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');      // replace T with a space
-			 umlFileInfo.fileUrl = umlFilePath.replace(/\\/g, '/').match(/public\/(.*)/)[1];
+			 if (umlFilePath.replace(/\\/g, '/').match(/public\/(.*)/) !== null) {
+			 	umlFileInfo.fileUrl = umlFilePath.replace(/\\/g, '/').match(/public\/(.*)/)[1];
+			 }			 
 			 umlFileInfo.umlFilePath = umlFilePath.replace(/\\/g, '/');
 			 umlFileInfo.umlModelType = umlModelType;
 			 // should put in the repo dir.

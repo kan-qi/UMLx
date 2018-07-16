@@ -76,21 +76,21 @@ div.block.panel.panel-default
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{repoInfoBrief.UseCaseNum}
+                h2 #{repoInfo.UseCaseNum}
                 span Use Cases
           div.col-sm-3
             div.green-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{repoInfoBrief.NT}
+                h2 #{repoInfo.NT}
                 span Transactions
           div.col-sm-3 
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{repoInfoBrief.EntityNum}
+                h2 #{repoInfo.EntityNum}
                 span Classes
        div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
         //div.col-sm-12.chart-row  
@@ -112,7 +112,7 @@ div.block.panel.panel-default
              .list-group
                  - var pageIndex = (currentPage - 1)*(pageSize) + 1
                  div(id='page-panel')
-                     each item in repoPageInfo
+                     each item in repoInfo.Models
                          a.list-group-item.row.model-title(href="queryModelInfo?model_id=" + item._id)
                              .col-sm-2 #{pageIndex++}
                              .col-sm-8 #{item.Name}

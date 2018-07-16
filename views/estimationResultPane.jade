@@ -1,56 +1,56 @@
 //- var data = [{"Number": "1", "UC": "UC1", "EXUCP":"4", "DUCP":"8", "Effort":"4", "Schedule":"8", "Personnel":"7", "UIDeveloper":"9", "FullStack":"19", "DatabaseDeveloper":"12"},{"Number": "2", "UC": "UC2", "EXUCP":"3", "DUCP":"1", "Effort":"3", "Schedule":"8", "Personnel":"3", "UIDeveloper":"3", "FullStack":"10", "DatabaseDeveloper":"23"}];
 if error
- p error
+  p #{error}
 if estimationResults
-div(id='estimation-results-tables')
-      div.model-predictions
-       table.table.table-bordered
-         thead
-             tr
-                 th Model
-                 th Effort
-                 th Schedule
-                 th #{sizeMetric}
-                 th Personnel
-                 th UI Developer
-                 th Full Stack
-                 th Database Developer
-         tbody
-             tr
-                 td #{estimationModel}
-                 td #{estimationResults.Effort}
-                 td #{estimationResults.Duration}
-                 td #{estimationResults.SizeMeasurement}
-                 td #{estimationResults.Personnel}
-                 td #{estimationResults.Personnel_UI}
-                 td #{estimationResults.Personnel_FS}
-                 td #{estimationResults.Personnel_DB}
-     div(id='estimation-results-charts' data-url="#{modelInfo.AccessDir}/#{modelInfo.estimationResultsFile}")
-       div(id='estimation-charts')
-     div.use-case-predictions
-       table.table.table-bordered
-         thead
-             tr
-                 th Number
-                 th Name
-                 th Effort
-                 th #{sizeMetric}
-                 th Schedule
-                 th Personnel
-                 th UI Developer
-                 th Full Stack
-                 th Database Developer
-         tbody
-            - for (var i = 0; i < estimationResults.UseCases.length; i++) {
-                 tr
-                     td #{i}
-                     td #{estimationResults.UseCases[i].Name}
-                     td #{estimationResults.UseCases[i].Effort}
-                     td #{estimationResults.UseCases[i].SizeMeasurement}
-                     td #{estimationResults.UseCases[i].Duration}
-                     td #{estimationResults.UseCases[i].Personnel}
-                     td #{estimationResults.UseCases[i].Personnel_UI}
-                     td #{estimationResults.UseCases[i].Personnel_FS}
-                     td #{estimationResults.UseCases[i].Personnel_DB}
-             - }
-      
+  div(id='estimation-results-tables')
+    div.model-predictions
+      table.table.table-bordered
+        thead
+          tr
+            th Model
+            th Effort (PH)
+            th Schedule (Months)
+            th #{sizeMetric}
+            th Personnel (FT Developers)
+            th UI Developer
+            th Full Stack
+            th Database Developer
+        tbody
+          tr.estimation-table
+            td #{estimationModel}
+            td #{estimationResults.Effort}
+            td #{estimationResults.Duration}
+            td #{estimationResults.SizeMeasurement}
+            td #{estimationResults.Personnel}
+            td #{estimationResults.Personnel_UI}
+            td #{estimationResults.Personnel_FS}
+            td #{estimationResults.Personnel_DB}
+  div(id='estimation-results-charts' data-url="#{modelInfo.AccessDir}/#{modelInfo.estimationResultsFile}")
+    div(id='estimation-charts')
+  div.use-case-predictions.table-responsive
+    table.table.table-bordered
+      thead
+        tr
+          th Number
+          th Use Case
+          th Effort (PH)
+          th #{sizeMetric}
+          th Schedule (Months)
+          th Personnel (FT Developers)
+          th UI Developer
+          th Full Stack
+          th Database Developer
+      tbody
+        - for (var i = 0; i < estimationResults.UseCases.length; i++) {
+            tr.estimation-table
+              td #{i}
+              td #{estimationResults.UseCases[i].Name}
+              td #{estimationResults.UseCases[i].Effort}
+              td #{estimationResults.UseCases[i].SizeMeasurement}
+              td #{estimationResults.UseCases[i].Duration}
+              td #{estimationResults.UseCases[i].Personnel}
+              td #{estimationResults.UseCases[i].Personnel_UI}
+              td #{estimationResults.UseCases[i].Personnel_FS}
+              td #{estimationResults.UseCases[i].Personnel_DB}
+        - }
+

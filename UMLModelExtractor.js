@@ -5,10 +5,10 @@
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
-	var parser = new xml2js.Parser();
+    var parser = new xml2js.Parser();
 	var eaParser = require('./model_platforms/ea/XMI2.1Parser.js');
 	var srcParser = require('./model_platforms/src/SrcParser.js');
-	var vpParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
+	var vpParser = require('./model_platforms/visual_paradigm/XMI2.1Parser.js');
 	var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
 	var modelDrawer = require("./model_drawers/UserSystemInteractionModelDrawer.js");
 	var domainModelDrawer = require("./model_drawers/DomainModelDrawer.js");
@@ -17,7 +17,6 @@
 	var jp = require('jsonpath');
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
-		console.log("extract model info");
 		console.log(umlModelInfo);
 		mkdirp(umlModelInfo.OutputDir, function(err) {
 			console.log("create dir");
@@ -32,25 +31,15 @@
 				parser.parseString(data, function(err, xmiString) {
 			// determine what type xmi file it is.
 			var xmiParser = null;
-			var token = jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0];
-			if(token){
+			if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
 				xmiParser = eaParser;
 			}
-			else{
-				token = jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0];
-				if(token){
-					xmiParser = vpParser;
-				}
-				else{
-					token = jp.query(xmiString, '$..["kdm:Segment"]')[0];
-					if(token){
-						xmiParser = srcParser;
-					}
-					
-				}
+			else if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0]) {
+				xmiParser = vpParser;
 			}
-			console.log("segment");
-			console.log(token);
+			else if(jp.query(xmiString, '$..["kdm:Segment"]')[0]){
+				xmiParser = srcParser;
+			}
 			
 			if(xmiParser == null){
 				if(callbackfunc){
@@ -100,19 +89,19 @@
 //								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
 								
-								useCase.Paths = traverseUseCaseForPaths(useCase);
+								useCase.Transactions = traverseUseCaseForTransactions(useCase);
 								
 								var debug = require("./utils/DebuggerOutput.js");
 								debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
 								
-								for(var j in useCase.Paths){
-									var path = useCase.Paths[j];
-									var PathStrByIDs = "";
-									for(var k in path.Elements){
-										var node = path.Elements[k];
-										PathStrByIDs += node._id+"->";
+								for(var j in useCase.Transactions){
+									var transaction = useCase.Transactions[j];
+									var TransactionStrByIDs = "";
+									for(var k in transaction.Elements){
+										var node = transaction.Elements[k];
+										TransactionStrByIDs += node._id+"->";
 									}
-									path.PathStrByIDs = path.PathStrByIDs;
+									transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
 								}
 								
 								
@@ -155,7 +144,7 @@
 		});
 	}
 	
-	function traverseUseCaseForPaths(useCase){
+	function traverseUseCaseForTransactions(useCase){
 		
 		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
 		

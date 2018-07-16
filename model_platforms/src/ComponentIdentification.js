@@ -1,934 +1,278 @@
 /**
- *  This module is to identify the system components by clustering the classes. We follow the method introduced in this paper:
- *  
- *  "Component identification from existing object oriented system using hiearchical clustering"
- * 
+ * This module is to identify the components by the clustering algorithms.
+ *
+ * The clustering algorithm should be based on the three kinds of graphs: call graph, access graph, and type dependency graph that are constructed in Code Analysis.js
+ *
+ * This script relies on KDM and Java model
+ *
  * The goal is the establish the control flow between the modules...
+ * Identify the sytem components.....
+ * Establish the control flow between the components
  * Identify the stimuli.
  * Identify the boundary.
- * Identify the sytem components.....
  */
+
+
+
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
+	var codeAnalysis = require("./codeAnalysis.js");
+	var util = require('util');
+    const uuidv4 = require('uuid/v4');
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
-	
-	var xmiSring = "";
 
-	
-	function constructCallGraph(xmiString, outputDir){
 
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("KDM_Example", xmiString);
-//		console.log("determine the class units within the model");
+  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classes, classUnits, dicChildrenClasses, outputDir) {
 
-		
-		console.log("========================================");
-		
-		console.log("identify the structured class units");
-		var XMIModels = jp.query(xmiString, '$..model[?(@[\'$\'][\'xsi:type\']==\'code:CodeModel\')]');
-		var topClassUnits = [];
-		var classUnits = [];
-		for(var i in XMIModels){
-			var XMIModel = XMIModels[i];
-			console.log("inspect models....");
-			var isWithinBoundary = true;
-			if(XMIModel['$']['name'] === "externals"){
-				isWithinBoundary = false;
+		// console.log("!!!!!!!!!!!");
+		// console.log(dicChildrenClasses);
+
+		var classDic = {};
+		var classArray = [];
+		var methods = []; // store the number of methods in each class
+		var classesByName = {};
+
+		// var classes = []
+		// for (var i in classesAll) {
+		// 	var classUnit = classesAll[i];
+		// 	if (classUnit.isWithinBoundary) {
+		// 		// classUnit['notReferenced'] = true;
+		// 		classes.push(classUnit);
+		// 	}
+		// }
+
+		for(var i in classes) {
+			var classUnit = classes[i];
+			classDic[classUnit.UUID] = i;
+			var classU = {
+				UUID: classUnit.UUID,
+				name: classUnit.name,
+				// notReferenced: true
 			}
-			//search the top level classes under the packages.
-			var XMIPackages = jp.query(XMIModel, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:Package\')]');
-			for(var j in XMIPackages){
-				console.log("inspect packages....");
-				var XMIPackage = XMIPackages[j];
-				var XMIClasses = jp.query(XMIPackage, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:ClassUnit\')]');
-					for(var k in XMIClasses){
-						console.log("inspect Classes....");
-						var XMIClass = XMIClasses[k];
-						var identifiedClassUnit = identifyClassUnit(XMIClass, xmiString);
-						identifiedClassUnit.isWithinBoundary = isWithinBoundary;
-						classUnits.push(identifiedClassUnit);
-//						classUnits = classUnits.concat(identifiedClassUnit.ClassUnits);
-						for(l in identifiedClassUnit.ClassUnits){
-							identifiedClassUnit.ClassUnits[l].isWithinBoundary = isWithinBoundary;
-							classUnits.push(identifiedClassUnit.ClassUnits[l]);
-						}
-						
-						topClassUnits.push(identifiedClassUnit);
-					}
+			classArray.push(classU);
+			methods.push(classUnit.MethodUnits.length);
+			classesByName[classUnit.name] = classUnit;
+		}
+
+    // console.log("classesAll");
+		// console.log(classesAll);
+		// console.log("classes");
+		// console.log(classes);
+		// console.log("classDic");
+		// console.log(classDic);
+		// console.log("classArray");
+		// console.log(classArray);
+
+		var callMetric = calculateCallMetric(callGraph, classes, classDic, methods);
+		var accessMetric = calculateAccessMetric(accessGraph, classes, classDic, methods);
+		var typeDependencyMetric = calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods);
+
+		var metric = zeroArray(classes.length, classes.length);
+		var maxMetric = 0;
+		var relations = [];
+
+		// TODO: eliminate the classes not referenced by any class
+		// var classes = []
+		// for (var i in classes) {
+		// 	var classUnit = classes[i];
+		// 	if (classUnit.isWithinBoundary) {
+		// 		// classUnit['notReferenced'] = true;
+		// 		classes.push(classUnit);
+		// 	}
+		// }
+
+
+		for (var i = 0; i < classes.length; i++) {
+			for (var j = 0; j < classes.length; j++) {
+				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j];
+				maxMetric = metric[i][j] > maxMetric ? metric[i][j] : maxMetric;
 			}
 		}
-		
-		console.log("=====================================");
-		
-		console.log("determine the entry points");
 
-		identifyStimulus(xmiString);
-		
-		console.log("control flow construction");
-
-		var edges = [];
-		var nodes = [];
-		var nodesByName = {};
-		
-		for(var i in classUnits){
-			var classUnit = classUnits[i];
-			var calls = classUnit.Calls; 
-			var index = 0;
-			
-			var startNode = nodesByName[classUnit.name];
-			if(!startNode){
-				startNode = {
-						name: classUnit.name,
-						isResponse: isReponseClass(classUnit),
-						isWithinBoundary: classUnit.isWithinBoundary
-					};
-				nodes.push(startNode);
-				nodesByName[classUnit.name] = startNode;
-			}
-			
-			for(var j in calls){
-				var call = calls[j];
-				var targetXMIMethodUnit = jp.query(xmiString, convertToJsonPath(call.to))[0];
-				console.log("target xmi method");
-				
-				console.log(targetXMIMethodUnit);
-				if(!targetXMIMethodUnit){
-					continue;
+		for (var i = 0; i < classes.length; i++) {
+			var row = [];
+			for (var j = 0; j < classes.length; j++) {
+				if (metric[i][j] > 0) {
+				// if (metric[i][j] >= maxMetric/100) {
+					row.push(true);
 				}
-				var targetMethodUnit = identifyMethodUnit(targetXMIMethodUnit, xmiString);
-				console.log(targetMethodUnit);
-				var targetClassUnit = locateClassUnitForMethod(targetMethodUnit, topClassUnits);
-				
-				console.log("located class");
-				console.log(targetClassUnit);
-
-//				var start = startNode;
-				
-				var endNode = nodesByName[targetClassUnit.name];
-				if(!endNode){
-					endNode = {
-							name: targetClassUnit.name,
-							isResponse: isReponseClass(targetClassUnit),
-							isWithinBoundary: targetClassUnit.isWithinBoundary
-						};
-					nodes.push(endNode);
-					nodesByName[targetClassUnit.name] = endNode;
-				}
-//				var end = targetClassUnit.name;
-				edges.push({start: startNode, end: endNode});
-			}
-			
-		}
-		
-//		var controlElements = identifyCalls(xmiString, actionElements, methodUnits);
-		
-
-//		console.log("========================================");
-//		
-//		console.log("========================================");
-//		
-//		
-//		fs.writeFile("./model_platforms/src/structured_class_units.json", JSON.stringify(classUnits), function(err){
-//			if(err) {
-//			 	console.log(err);
-//			}
-////			 	if(callbackfunc){
-////			    	callbackfunc(false);
-////				} 
-////		    }
-////			else{
-////				if(callbackfunc){
-////			    	callbackfunc(true);
-////				} 
-////			}
-//			
-//		});
-		
-//		console.log("nodes");
-//		console.log(nodes);
-//		console.log("edges");
-//		console.log(edges);
-		
-		drawCallGraph(edges, nodes, outputDir)
-		
-		return {nodes: nodes, edges: edges};
-		
-	}
-	
-	function locateClassUnitForMethod(toCompareMethodUnit, ClassUnits){
-		console.log("key");
-		console.log(toCompareMethodUnit.Key);
-//		var classUnitToSelect = null;
-		for(var i in ClassUnits){
-			var classUnit = ClassUnits[i];
-			var MethodUnits = classUnit.MethodUnits;
-			for(var j in MethodUnits){
-				var methodUnit = MethodUnits[j];
-				if(methodUnit.Key === toCompareMethodUnit.Key){
-					console.log("key equal");
-					var selectedSubClass = locateClassUnitForMethod(toCompareMethodUnit, classUnit.ClassUnits);
-					if(selectedSubClass){
-						console.log("select class");
-						console.log(selectedSubClass);
-						return selectedSubClass;
-					}
-					else{
-						console.log("select class");
-						console.log(classUnit);
-						return classUnit;
-					}
+				else {
+					row.push(false);
 				}
 			}
+			relations.push(row);
 		}
-		
-		return false;
-	}
-	
-	function identifyActionElement(XMIActionElement, xmiString){
-		var ActionElement = {
-						name:XMIActionElement['$']['name'],
-						kind:XMIActionElement['$']['kind'],
-						MethodUnits : [],
-						StorableUnits: [],
-						Calls : [],
-						ClassUnits: [],
-						InterfaceUnits : [],
-						Imports : [],
-						BlockUnits : [],
-						Addresses: [],
-						Reads:[],
-						Calls:[],
-						Creates:[],
-						ActionElements:[]
-		}
-		
-		var XMIAddresses = jp.query(XMIActionElement, '$.actionRelation[?(@[\'$\'][\'xsi:type\']==\'action:Addresses\')]');
-		for(var i in XMIAddresses){
-			var XMIAddress = XMIAddresses[i];
-			ActionElement.Addresses.push({
-				to: XMIAddress['$']['to'],
-				from:XMIAddress['$']['from']
-			})
-		}
-		var XMIReads = jp.query(XMIActionElement, '$.actionRelation[?(@[\'$\'][\'xsi:type\']==\'action:Reads\')]');
-		for(var i in XMIReads){
-			var XMIRead = XMIReads[i];
-			ActionElement.Reads.push({
-				to: XMIRead['$']['to'],
-				from:XMIRead['$']['from']
-			})
-		}
-		
-		var XMICalls = jp.query(XMIActionElement, '$.actionRelation[?(@[\'$\'][\'xsi:type\']==\'action:Calls\')]');
-		for(var i in XMICalls){
-			var XMICall = XMICalls[i];
-			ActionElement.Calls.push({
-				to: XMICall['$']['to'],
-				from:XMICall['$']['from']
-			})
-		}
-		
-		var XMICreates = jp.query(XMIActionElement, '$.actionRelation[?(@[\'$\'][\'xsi:type\']==\'action:Creates\')]');
-		for(var i in XMICreates){
-			var XMICreate = XMICreates[i];
-			ActionElement.Creates.push({
-				to: XMICreate['$']['to'],
-				from:XMICreate['$']['from']
-			})
-		}
-		
-		var XMIActionElements = jp.query(XMIActionElement, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'action:ActionElement\')]');
-		
-		for(var i in XMIActionElements){
-			var XMIActionElement = XMIActionElements[i];
-			var includedActionElement = identifyActionElement(XMIActionElement, xmiString);
-			
-			ActionElement.MethodUnits = ActionElement.MethodUnits.concat(includedActionElement.MethodUnits);
-			ActionElement.StorableUnits = ActionElement.StorableUnits.concat(includedActionElement.StorableUnits);
-			ActionElement.Calls = ActionElement.Calls.concat(includedActionElement.Calls);
-			ActionElement.ClassUnits=ActionElement.ClassUnits.concat(includedActionElement.ClassUnits);
-			ActionElement.InterfaceUnits=ActionElement.InterfaceUnits.concat(includedActionElement.InterfaceUnits);
-			ActionElement.Imports=ActionElement.Imports.concat(includedActionElement.Imports);
-			ActionElement.BlockUnits=ActionElement.BlockUnits.concat(includedActionElement.BlockUnits);
-			ActionElement.Addresses=ActionElement.Addresses.concat(includedActionElement.Addresses);
-			ActionElement.Reads=ActionElement.Reads.concat(includedActionElement.Reads);
-			ActionElement.Calls=ActionElement.Calls.concat(includedActionElement.Calls);
-			ActionElement.Creates=ActionElement.Creates.concat(includedActionElement.Creates);
-			ActionElement.ActionElements=ActionElement.ActionElements.concat(includedActionElement.ActionElements);
-		}
-		
-		var XMIClassUnits = jp.query(XMIActionElement, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:ClassUnit\')]');
-		console.log("---inner classes------");
-		console.log(XMIClassUnits);	
-		for(var i in XMIClassUnits){
-			console.log("---------------inner classes--------------");
-			var XMIClassUnit = XMIClassUnits[i];
-			var includedClassUnit = identifyClassUnit(XMIClassUnit, xmiString);
-			
-			if(!includedClassUnit.name){
-				includedClassUnit.name = XMIActionElement.name+"_inner_"+i;
-			}
-			
-			ActionElement.MethodUnits = ActionElement.MethodUnits.concat(includedClassUnit.MethodUnits);
-			ActionElement.StorableUnits = ActionElement.StorableUnits.concat(includedClassUnit.StorableUnits);
-			ActionElement.Calls = ActionElement.Calls.concat(includedClassUnit.Calls);
-			ActionElement.ClassUnits=ActionElement.ClassUnits.concat(includedClassUnit.ClassUnits);
-			ActionElement.ClassUnits.push(includedClassUnit);
-			ActionElement.InterfaceUnits=ActionElement.InterfaceUnits.concat(includedClassUnit.InterfaceUnits);
-			ActionElement.Imports=ActionElement.Imports.concat(includedClassUnit.Imports);
-			ActionElement.BlockUnits=ActionElement.BlockUnits.concat(includedClassUnit.BlockUnits);
-			ActionElement.Addresses=ActionElement.Addresses.concat(includedClassUnit.Addresses);
-			ActionElement.Reads=ActionElement.Reads.concat(includedClassUnit.Reads);
-			ActionElement.Calls=ActionElement.Calls.concat(includedClassUnit.Calls);
-			ActionElement.Creates=ActionElement.Creates.concat(includedClassUnit.Creates);
-			ActionElement.ActionElements=ActionElement.ActionElements.concat(includedClassUnit.ActionElements);
-		}
-		
-		return ActionElement;
-	}
-	
-	/*
-	 * There are three layers:
-	 * codeElement-code:ClassUnit
-	 * 		-source
-	 * 			- region
-	 * 		-codeRelation-code:Imports
-	 *		-codeElement-code:StorableUnit
-	 *      -codeElement-code:MethodUnit
-	 *        -source
-	 *        -codeElement-code:signature
-	 *        	-parameterUnit
-	 *        -codeElement-action:BlockUnit
-	 *          -codeElement-action:ActionElement
-	 *            -codeElement-action:ActionElement
-	 *            -actionRelation-action:Address
-	 *            -actionRelation-action:Reads
-	 *            -actionRelation-action:Calls
-	 *            -actionRelation-action:Creates
-	 *            -codeElement-code:ClassUnit
-	 *      -codeElement-code:InterfaceUnit
-	 *           -codeRelation-code:Imports
-	 *           -codeRelation-code:MethodUnit
-	 *      -codeElement-code:ClassUnit
-	 *           
-	 * The function is recursively designed to take care of the structure.
-	 *           
-	 */
-	function identifyClassUnit(XMIClassUnit, xmiString){
-		
-		console.log("identify:"+XMIClassUnit['$']['name']);
-		
-		// those elements store all the same type of elements in the sub classes.
-		var ClassUnit = {
-				name: XMIClassUnit['$']['name'],
-				isAbstract: XMIClassUnit['$']['isAbstract'],
-				Source: null,
-				MethodUnits : [],
-				StorableUnits: [],
-				Calls : [],
-				ClassUnits: [],
-				InterfaceUnits : [],
-				Imports : [],
-				BlockUnits : [],
-				Addresses: [],
-				Reads:[],
-				Calls:[],
-				Creates:[],
-				ActionElements:[],
-//				isResponse: false,
-		}
-		
-		var XMISource = jp.query(XMIClassUnit, '$.source[?(@[\'$\'][\'xsi:language\'])]')[0];
-		
-		if(XMISource){
-		var XMIRegion = jp.query(XMISource, '$.region[?(@[\'$\'][\'xsi:language\'])]')[0];
-		ClassUnit.Source = {
-				Region: {
-					language: XMIRegion['$']['language']
-				}
-		}
-		}
-		var XMIImports = jp.query(XMIClassUnit, '$.codeRelation[?(@[\'$\'][\'xsi:type\']==\'code:Imports\')]');
-		
-		for(var i in XMIImports){
-			var XMIImport = XMIImports[i];
-			ClassUnit.Imports.push({
-				from:XMIImport['$']['from'],
-				to:XMIImport['$']['to']
-			})
-		}
-		
-		var XMIStorableUnits = jp.query(XMIClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
-		
-		for(var i in XMIStorableUnits){
-			var XMIStorableUnit = XMIStorableUnits[i];
-			ClassUnit.StorableUnits.push({
-				name: XMIStorableUnit['$']['name'],
-				kind: XMIStorableUnit['$']['kind']
-			})
-		}
-		
-		
-		var XMIMethodUnits = jp.query(XMIClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
-		
-		for(var i in XMIMethodUnits){
-			var XMIMethodUnit = XMIMethodUnits[i];
-			
-			var methodUnit = identifyMethodUnit(XMIMethodUnit, xmiString);
-			ClassUnit.MethodUnits = ClassUnit.MethodUnits.concat(methodUnit.MethodUnits);
-			
-			ClassUnit.StorableUnits = ClassUnit.StorableUnits.concat(methodUnit.StorableUnits);
-			ClassUnit.Calls = ClassUnit.Calls.concat(methodUnit.Calls);
-			ClassUnit.ClassUnits=ClassUnit.ClassUnits.concat(methodUnit.ClassUnits);
-			ClassUnit.InterfaceUnits=ClassUnit.InterfaceUnits.concat(methodUnit.InterfaceUnits);
-			ClassUnit.Imports=ClassUnit.Imports.concat(methodUnit.Imports);
-			ClassUnit.BlockUnits=ClassUnit.BlockUnits.concat(methodUnit.BlockUnits);
-			ClassUnit.Addresses=ClassUnit.Addresses.concat(methodUnit.Addresses);
-			ClassUnit.Reads=ClassUnit.Reads.concat(methodUnit.Reads);
-			ClassUnit.Calls=ClassUnit.Calls.concat(methodUnit.Calls);
-			ClassUnit.Creates=ClassUnit.Creates.concat(methodUnit.Creates);
-			ClassUnit.ActionElements=ClassUnit.ActionElements.concat(methodUnit.ActionElements);
-			
-			ClassUnit.MethodUnits.push(methodUnit);
-//			
-//			for(var j in methodUnit.MethodUnits){
-//				if(methodUnit.MethodUnits[j].isResponse){
-//					ClassUnit.isResponse = true;
-//					break;
-//				}
-//			}
-//			
-//			if(methodUnit.isResponse){
-//				ClassUnit.isResponse = true;
-//			}
-		}
-		
-		
-		var XMIInterfaceUnits = jp.query(XMIClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:InterfaceUnit\')]');
-		for(var i in XMIInterfaceUnits){
-			var XMIInterfaceUnit = XMIInterfaceUnits[i];
-			ClassUnit.InterfaceUnits.push({
-				name:XMIInterfaceUnit['$']['name']
-			});
-		}
-		
-		
-		var includedXMIClassUnits = jp.query(XMIClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:ClassUnit\')]');
-		
-		for(var i in includedXMIClassUnits){
-			var includedXMIClassUnit = includedXMIClassUnits[i];
-			
-			var IncludedClassUnit = identifyClassUnit(includedXMIClassUnit, xmiString);
-			if(!IncludedClassUnit.name){
-				IncludedClassUnit.name = XMIClassUnit.name+"_inner_"+i;
-			}
-			
-//			ClassUnit.MethodUnits.concat(includedClassUnit.MethodUnits);
-//			ClassUnit.StorableUnits.concat(includedClassUnit.StorableUnits);
-//			ClassUnit.Calls.concat(includedClassUnit.Calls);
-//			ClassUnit.ClassUnits.concat(includedClassUnit.ClassUnits);
-//			ClassUnit.InterfaceUnits.concat(includedClassUnit.InterfaceUnits);
-//			ClassUnit.Imports.concat(includedClassUnit.Imports);
-//			ClassUnit.BlockUnits.concat(includedClassUnit.BlockUnits);
-//			ClassUnit.Addresses.concat(includedClassUnit.Addresses);
-//			ClassUnit.Reads.concat(includedClassUnit.Reads);
-//			ClassUnit.Calls.concat(includedClassUnit.Calls);
-//			ClassUnit.Creates.concat(includedClassUnit.Creates);
-//			ClassUnit.ActionElements.push(includedClassUnit.ActionElements);
-			
-			ClassUnit.MethodUnits = ClassUnit.MethodUnits.concat(includedClassUnit.MethodUnits);
-			ClassUnit.StorableUnits = ClassUnit.StorableUnits.concat(includedClassUnit.StorableUnits);
-			ClassUnit.Calls = ClassUnit.Calls.concat(includedClassUnit.Calls);
-			ClassUnit.ClassUnits=ClassUnit.ClassUnits.concat(includedClassUnit.ClassUnits);
-			ClassUnit.InterfaceUnits=ClassUnit.InterfaceUnits.concat(includedClassUnit.InterfaceUnits);
-			ClassUnit.Imports=ClassUnit.Imports.concat(includedClassUnit.Imports);
-			ClassUnit.BlockUnits=ClassUnit.BlockUnits.concat(includedClassUnit.BlockUnits);
-			ClassUnit.Addresses=ClassUnit.Addresses.concat(includedClassUnit.Addresses);
-			ClassUnit.Reads=ClassUnit.Reads.concat(includedClassUnit.Reads);
-			ClassUnit.Calls=ClassUnit.Calls.concat(includedClassUnit.Calls);
-			ClassUnit.Creates=ClassUnit.Creates.concat(includedClassUnit.Creates);
-			ClassUnit.ActionElements=ClassUnit.ActionElements.concat(includedClassUnit.ActionElements);
-			
-			ClassUnit.ClassUnit.push(includedClassUnit);
-			
-//				if(includedClassUnit.isResponse){
-//					ClassUnit.isResponse = true;
-//				}
-			
-		}
-		
-		return ClassUnit;
-		
-	}
-	
-	function isReponseClass(ClassUnit){
-		for(var i in ClassUnit.MethodUnits){
-			if(ClassUnit.MethodUnits[i].isResponse){
-				return true;
-			}
-		}
-		return false;
-	}
-	
-	function identifyMethodUnit(XMIMethodUnit, xmiString){
+		// console.log(classArray);
+		// console.log("relations");
+		// console.log(metric);
+		// console.log(relations);
 
-		var MethodUnit = {
-				Key: '',
-				Signature: null,
-				Parameters: [],
-				BlockUnit: null,
-				MethodUnits : [],
-				StorableUnits: [],
-				Calls : [],
-				ClassUnits: [],
-				InterfaceUnits : [],
-				Imports : [],
-				BlockUnits : [],
-				Addresses: [],
-				Reads:[],
-				Creates:[],
-				ActionElements:[],
-				isResponse: false
+		var nodesNullAll = [];
+		var nodesClassAll = [];
+		var edgesAll = [];
+
+		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits);
+		console.log("checkcheckcheck")
+		console.log(util.inspect(clusteredClasses, false, null))
+		var debug = require("../../utils/DebuggerOutput.js");
+
+		drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "componentsComposite.dotty");
+
+		debug.writeJson("clusteredClasses", clusteredClasses);
+
+		var cutoffDepth = 4; //there might be multiple criterion to determining the cutoff tree
+
+		var clusters = [];
+
+		var currentLevel = [];
+		var currentLevelDepth = 0;
+		currentLevel.push(clusteredClasses[0]);
+		while(currentLevelDepth < cutoffDepth){
+			var nextLevel = [];
+			var nodeToExpand = null;
+			console.log("currentLevel");
+			console.log(currentLevel);
+			while ((nodeToExpand = currentLevel.shift())){
+				console.log("nodeToExpand");
+				console.log(nodeToExpand);
+				// TODO: deal with the situations with multiple children
+				if (nodeToExpand.size == 1) {
+					clusters.push(nodeToExpand.value);
+				}
+				else {
+					nextLevel = nextLevel.concat(nodeToExpand.children);
+					// var children = []
+					// for (var i in nodeToExpand.children) {
+					// 	nextLevel.push()
+					// }
+				}
+
+				// var leftNode = nodeToExpand.left;
+				// var rightNode = nodeToExpand.right;
+				// if(!leftNode && !rightNode){
+				// 	clusters.push(nodeToExpand);
+				// }
+				// else{
+				// 	nextLevel.push(leftNode);
+				// 	nextLevel.push(rightNode);
+				// }
+			}
+			currentLevel = nextLevel;
+			currentLevelDepth++;
 		}
 
-		
-		
-		var XMISignature = jp.query(XMIMethodUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:Signature\')]')[0];
-		if(XMISignature){
-		var XMIParameters = jp.query(XMISignature, '$.parameterUnit[?(@[\'$\'][\'type\'])]');
-		
-		MethodUnit.Key = XMISignature['$']['name'];
-		MethodUnit.Signature = {
-				name: XMISignature['$']['name'],
-				parameterUnits: []
-		};
-		
-		console.log("iterate signature");
-		
-		for(var j in XMIParameters){
-			console.log("iterate parameters");
-			MethodUnit.Signature.parameterUnits.push({
-				name: XMIParameters[j]["$"]["name"],
-				kind: XMIParameters[j]['$']['kind']
-			});
-			MethodUnit.Key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
-			
-			var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameters[j]["$"]['type']));
-			console.log("parameter type");
-			console.log(XMIParameterType);
-			if(XMIParameterType){
-				if(XMIParameterType[0]['$']['name'].indexOf("event") !=-1 || XMIParameterType[0]['$']['name'].indexOf("Event") !=-1) {
-					MethodUnit.isResponse = true;
-					console.log("found response method");
-				}
+		clusters = clusters.concat(currentLevel);
+
+		// components are collections of classes and with interface class which are determined based on clusters.
+		// need more thinking about the interface class
+
+		function searchClassesFromCluster(cluster, level){
+			if(!cluster){
+				return [];
 			}
-		}
-		}
-		
-		//identify action elements from blockUnit
-		var XMIBlockUnit = jp.query(XMIMethodUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'action:BlockUnit\')]')[0];
-		if(XMIBlockUnit){
-		MethodUnit.BlockUnit = {
-				actionElements: []
-		}
-		var XMIActionElements = jp.query(XMIBlockUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'action:ActionElement\')]');
-		for(var j in XMIActionElements){
-			var XMIActionElement = XMIActionElements[j];
-			actionElement = identifyActionElement(XMIActionElement, xmiString);
-			
-			MethodUnit.BlockUnit.actionElements.push(actionElement);
-			
-//			ClassUnit.MethodUnits.concat(actionElement.MethodUnits);
-//			ClassUnit.StorableUnits.concat(actionElement.StorableUnits);
-//			ClassUnit.Calls.concat(actionElement.Calls);
-//			ClassUnit.ClassUnits.concat(actionElement.ClassUnits);
-//			ClassUnit.InterfaceUnits.concat(actionElement.InterfaceUnits);
-//			ClassUnit.Imports.concat(actionElement.Imports);
-//			ClassUnit.BlockUnits.concat(actionElement.BlockUnits);
-//			ClassUnit.Addresses.concat(actionElement.Addresses);
-//			ClassUnit.Reads.concat(actionElement.Reads);
-//			ClassUnit.Calls.concat(actionElement.Calls);
-//			ClassUnit.Creates.concat(actionElement.Creates);
-//			ClassUnit.ActionElements.concat(actionElement.ActionElements);
-//			ClassUnit.ActionElements.push(actionElement);
-			
-			MethodUnit.MethodUnits=MethodUnit.MethodUnits.concat(actionElement.MethodUnits);
-			MethodUnit.StorableUnits=MethodUnit.StorableUnits.concat(actionElement.StorableUnits);
-			MethodUnit.Calls = MethodUnit.Calls.concat(actionElement.Calls);
-			MethodUnit.ClassUnits=MethodUnit.ClassUnits.concat(actionElement.ClassUnits);
-			MethodUnit.InterfaceUnits=MethodUnit.InterfaceUnits.concat(actionElement.InterfaceUnits);
-			MethodUnit.Imports=MethodUnit.Imports.concat(actionElement.Imports);
-			MethodUnit.BlockUnits=MethodUnit.BlockUnits.concat(actionElement.BlockUnits);
-			MethodUnit.Addresses=MethodUnit.Addresses.concat(actionElement.Addresses);
-			MethodUnit.Reads=MethodUnit.Reads.concat(actionElement.Reads);
-			MethodUnit.Calls=MethodUnit.Calls.concat(actionElement.Calls);
-			MethodUnit.Creates=MethodUnit.Creates.concat(actionElement.Creates);
-			MethodUnit.ActionElements=MethodUnit.ActionElements.concat(actionElement.ActionElements);
-			
-//			for(var k in actionElement.MethodUnits){
-//				var foundMethodUnit = actionElement.MethodUnits[k];
-//				if(foundMethodUnit.isResponse){
-//					MethodUnit.isResponse = true;
-//					break;
-//				}
-//			}
-		}
-		}
-		
-		return MethodUnit;
-	}
-	
-	
-	function identifyActionElements(xmiString){
-		var XMIActionElements = jp.query(xmiString, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'action:ActionElement\')]');
-		var actionElementsByName = {};
-		for(var i in XMIActionElements){
-			var XMIActionElement = XMIActionElements[i];
-			console.log(XMIActionElement);
-			var actionElement = createActionElement(XMIActionElement);
-			actionElementsByName[actionElement.key] = actionElement;
-		}
-		
-		return actionElementsByName;
-	}
-	
-	function identifyMethodUnits(xmiString){
-		var XMIMethodUnits = jp.query(xmiString, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
-		var methodUnitsByName = {};
-		for(var i in XMIMethodUnits){
-			var XMIMethodUnit = XMIMethodUnits[i];
-			console.log(XMIMethodUnit);
-			var actionElement = createMethodUnit(XMIMethodUnit);
-			methodUnitsByName[actionElement.key] = actionElement;
-		}
-		
-		return methodUnitsByName;
-	}
-	
-	function createMethodUnit(XMIMethodUnit){
-		return {
-				name: XMIMethodUnit['$']['name'],
-				kind: XMIMethodUnit['$']['kind'],
-				key: XMIMethodUnit['$']['name']+"_"+ XMIMethodUnit['$']['kind']
-		};
-	}
-	
-	function createActionElement(XMIActionElement){
-		return {
-				name: XMIActionElement['$']['name'],
-				kind: XMIActionElement['$']['kind'],
-				key: XMIActionElement['$']['name']+"_"+ XMIActionElement['$']['kind']
-		}
-		
-	}
-	
-	
-	
-	// system components only include the ones that are the system level. Extra rules or manual effort is required.
-	function identifyComponentsFromExternalResources(filePath, callbackfunc){
-		fs.readFile(filePath, "utf8", function(err, data){
-			if(err) {
-			 	console.log(err);
-			 	if(callbackfunc){
-			    	callbackfunc(false);
-				} 
-		    }
-			
-			var taggedClassUnits = JSON.parse(data);
-			for (var i in taggedClassUnits.systemClassUnits){
-				var systemClassUnit = taggedClassUnits.systemClassUnits[i];
-				if(systemClassUnit.isSystemComponent){
-					taggedClassUnits.sysemComponentClassUnits.push(systemClassUnit);
-				}
+
+			if(!level){
+				level = 0;
 			}
-			
-			if(callbackfunc){
-				callbackfunc(taggedClassUnits);
+
+			var classes = [];
+			if (cluster.size == 1 && cluster.hasOwnProperty('value')) {
+				cluster.level = level;
+				classes.push(cluster.value);
 			}
-			
-		});
-	}
-	
-	// system classes include all the class elements which are developed in the project. The classes don't include the classes from the third party applications.
-	function identifyExternalClass(xmiString){
-		//the system classes are determined by excluding the classes that are within the external packages.
-		console.log("determine external class units");
-		
-//		var externalClassUnits = [];
-		var externalClassUnitsByName = {};
-//		for(var i in externalClassUnits){
-//			var externalClassUnit = externalClassUnits[i];
-//			externalClassUnitsByName[externalClassUnit.name] = externaClassUnit; 
-//		}
-		var XMIExternalModels = jp.query(xmiString, '$..model[?(@[\'$\'][\'xsi:type\']==\'code:CodeModel\' && @[\'$\'][\'name\']==\'externals\')]');
-	
-		for(var i in XMIExternalModels){
-			var XMIExternalModel = XMIExternalModels[i];
-			var XMIExternalClasses = jp.query(XMIExternalModel, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:ClassUnit\' || @[\'$\'][\'xsi:type\']==\'code:InterfaceUnit\' || @[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
-			console.log("ok");
-			console.log(XMIExternalClasses);
-//			var XMIExternalClasses = [];
-			for(var j in XMIExternalClasses){
-			var XMIExternalClassUnit = XMIExternalClasses[j];
-			var classUnit = {
-					name: XMIExternalClassUnit['$']['name'],
-					type: XMIExternalClassUnit['$']['xsi:type'],
-			}
-			
-			externalClassUnitsByName[classUnit.name] = classUnit;
-		}
-		}
-		
-		console.log("================================");
-		return externalClassUnitsByName;
-	}
-	
-	// classes include all the classes, including the third party classes.
-	function identifyClasses(xmiString, callbackfunc){
-		
-		console.log("determine class units");
-//		var XMIControlElements = jp.query(xmiString, "$['xmi:XMI']['kdm:Segment'][0]['model'][1]");
-		
-		var XMIClassUnits = jp.query(xmiString, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:ClassUnit\')]');
-		var externalClass
-		var classUnits = [];
-		var externalClassUnitsByName = identifyExternalClass(xmiString);
-		console.log("external class names");
-		console.log(externalClassUnitsByName);
-		var externalClassUnits = [];
-		var systemClassUnits = [];
-		var systemComponetClassUnits = [];
-		for(var i in XMIClassUnits){
-			var XMIClassUnit = XMIClassUnits[i];
-//	 '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
-			var XMICodeElements = jp.query(XMIClassUnit, "$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\' || @[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]");
-			var classUnit = {
-					name: XMIClassUnit['$']['name'],
-					codeElements:[],
-					isSystemComponent:false
-			}
-			
-			for(var j in XMICodeElements){
-				var XMICodeElement = XMICodeElements[j];
-				var codeElement = createCodeElement(XMICodeElement);
-				classUnit.codeElements.push(codeElement);
-			    //create key for the code element and associate with class unit
-//				codeElementToClassUnit[codeElement.key] = classUnit;
-			}
-			
-			classUnits.push(classUnit);
-			
-			if(externalClassUnitsByName[classUnit.name]){
-				externalClassUnits.push(classUnit);
-			}
+			// if(!cluster.left && !cluster.right){
+			// 	cluster.level = level;
+			// 	classes.push(cluster.value)
+			// }
 			else{
-				systemClassUnits.push(classUnit);
-			}
-		}
-		
-		console.log("class units");
-		console.log(classUnits);
-		
-		classUnitsByCategories = {
-				classUnits: classUnits,
-				systemClassUnits: systemClassUnits,
-//				systemComponentClassUnits: systemComponentClassUnits,
-				systemComponentClassUnits: systemClassUnits, //just for experimental purpose.
-				externalClassUnits: externalClassUnits
-			};
-		
-		fs.writeFile("./model_platforms/src/class_units.json", JSON.stringify(classUnitsByCategories), function(err){
-			if(err) {
-			 	console.log(err);
-			 	if(callbackfunc){
-			    	callbackfunc(false);
-				} 
-		    }
-			else{
-				if(callbackfunc){
-			    	callbackfunc(true);
-				} 
-			}
-			
-		});
-		
-		return classUnitsByCategories;
-	}
-	
-	
-	function identifyStimulus(xmiString){
-		
-		var XMIMethods = jp.query(xmiString, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
-		var stimuli = [];
-		for(var i in XMIMethods){
-			var XMIMethod = XMIMethods[i];
-			var XMIParameters = jp.query(XMIMethod, '$..parameterUnit[?(@[\'$\'][\'type\'])]');
-			
-			for(var j in XMIParameters){
-				var XMIParameter = XMIParameters[j];
-				var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameter["$"]['type']));
-				console.log("parameter type");
-				console.log(XMIParameterType);
-				if(XMIParameterType){
-					if(XMIParameterType[0]['$']['name'].indexOf("event") !=-1 || XMIParameterType[0]['$']['name'].indexOf("Event") !=-1) {
-						var stimulus = {
-								name: XMIMethod['$']['name']
-						}
-						
-						stimuli.push(stimulus);
-						continue;
-					}
+				var children = cluster.children;
+				for (var i in children) {
+					var childClass = searchClassesFromCluster(children[i], level++);
+					classes.concat(childClass);
 				}
+				// var leftClasses = searchClassesFromCluster(cluster.left, level++);
+				// var rightClasses = searchClassesFromCluster(cluster.right, level++);
+				// classes = classes.concat(leftClasses);
+				// classes = classes.concat(rightClasses);
 			}
-			
-			
-		}
-		
-		
-		
-		console.log("stimuli");
-		console.log(stimuli);
-		
-		return stimuli;
-	}
-	
-	function identifyExternalClass(xmiString){
-//		
-//		var classUnitsWithinBoundary = [];
-//		var classUnits
-//		var XMIModels = jp.query(xmiString, '$..model[?(@[\'$\'][\'xsi:type\']==\'code:CodeModel\')]');
-//		for(var i in XMIModels){
-//			var XMIModel = XMIModels[i];
-//			console.log(XMIModel);
-//			
-//			if(XMIModel['$']['name'] === "externals"){
-//				continue;
-//			}
-//			
-//			var XMIClassUnits = jp.query(XMIModel, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:ClassUnit\')]');
-//			
-//			for(var j in XMIClassUnits){
-//				var XMIClassUnit = XMIClassUnits[j];
-//				classUnitsWithinBoundary.push(createCodeElement(XMIClassUnit));
-//			}
-//		}
-//		
-//		console.log(classUnitsWithinBoundary);
-//		
-	}
-	
-	function createCodeElement(XMICodeElement){
-		var codeElement = {
-				name: XMICodeElement['$']['name'],
-				stereoType: XMICodeElement['$']['xsi:type'],
-		        type: XMICodeElement['$']['type']
-		}
-//		
-		codeElement.key = codeElement.name+"_"+codeElement.stereoType+"_"+codeElement.type;
-//		
-		return codeElement;
-	}
-	
-	
-//	function drawReferences(edges, nodes, graphFilePath){
-//		
-//		
-//	}
-	
-//	function queryByXPath(data, xpathQuery){
-//		 console.log("query");
-//		 console.log(xpathQuery);
-//		 xpathQuery = "xmi:XMI//0/@model.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.0/@codeElement.2/@codeElement.4";
-////		var xml = "<book><title>Harry Potter</title></book>"
-//		var doc = new dom().parseFromString(data)
-//		var nodes = xpath.select(xpathQuery, doc)
-////		console.log("nodes");
-////		console.log(nodes);
-//		return nodes;
-//		 
-////		console.log(nodes[0].localName + ": " + nodes[0].firstChild.data)
-////		console.log("Node: " + nodes[0].toString())
-//	}
-	
-	function convertToJsonPath(path){
-//		var toNode = queryByXPath(data, toString);
-		var toNodes = path.split('/');
-//		controlElement.toNodes = toNodes;
-		console.log(toNodes);
-		var jsonPath = "$['xmi:XMI']['kdm:Segment'][0]";
-		for(var i in toNodes){
-			var toNode = toNodes[i];
-			if(!toNode.startsWith("@")){
-				continue;
-			}
-			var parts = toNode.replace("@", "").split(".");
-			jsonPath += "['"+parts[0]+"']["+parts[1]+"]";
-		}
-		
-//		jsonPath = "$['xmi:XMI']['kdm:Segment'][0]['model'][1]";
-		console.log("json path");
-		console.log(jsonPath);
-		
-		return jsonPath;
-	}
-	
-//	function drawCallGraph(controlElements){
-//		
-//	}
-	
 
-	function drawCallGraph(edges, nodes, outputDir){
-		var path = outputDir+"/"+"kdm_callgraph_diagram.dotty"
-//		useCase.DiagramType = "kdm_diagram";
-		
+			return classes;
+		}
+
+		var components = [];
+
+		for(var i in clusters){
+			var classes = searchClassesFromCluster(clusters[i]);
+//			var interfaceClass = null;
+			console.log("!!!!!!!!!!!!");
+		  console.log(classes);
+
+			var classUnits = [];
+			for(var j in classes){
+				var identifiedClass = classes[j];
+				var referencedClassUnit = classesByName[identifiedClass.name];
+				classUnits.push(referencedClassUnit);
+			}
+
+			var component = {
+					name: i,
+					uuid: uuidv4(),
+					classUnits: classUnits
+			}
+			components.push(component);
+		}
+
+		console.log("components");
+		console.log(components);
+
+		return components;
+
+	}
+
+	function drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, fileName) {
+
+		console.log(util.inspect(nodesClassAll, false, null))
+		console.log(util.inspect(edgesAll, false, null))
+
+		if(!fileName){
+			fileName = "kdm_clusters.dotty";
+		}
+		var path = outputDir+"/"+fileName;
 		let graph = 'digraph g {\
 			fontsize=26\
-			rankdir="LR"\
-			node [fontsize=24 shape=rectangle]';
-		
-		nodes.forEach((node) => {
-			graph += '"'+node.name+'" [';
-			if(node.isWithinBoundary){
-				graph += " color=red";
+			rankdir="LR"';
+
+		graph += 'node [fontsize=24 shape=rectangle]';
+		for (var i in nodesClassAll) {
+			var nodesClass = nodesClassAll[i];
+			for (var j in nodesClass) {
+				var node = nodesClass[j];
+				graph += '"a'+node['UUID'].replace(/-/g, '')+'" [label="'+node['name'].replace(/\s+/g, '')+'"]';
 			}
-			else{
-				graph += " color=black";
+		}
+
+		graph += 'node [shape=point label=""]';
+		for (var i in nodesNullAll) {
+			var nodesNull = nodesNullAll[i];
+			for (var j in nodesNull) {
+				var node = nodesNull[j];
+				graph += node+' ';
 			}
-			
-			if(node.isResponse){
-				graph += " shape=circle";
+		}
+
+		for (var i in edgesAll) {
+			var edges = edgesAll[i];
+			for (var j in edges) {
+				var edge = edges[j];
+				graph += edge['start']+' -> {'+edge['end']+'}';
 			}
-			else{
-				graph += "";
-			}
-			
-			graph += "];";
-		});
-		
-		var drawnEdges = {
-				
-		};
-		
-		var filter = true;
-		
-		edges.forEach((edge) => {
-			var start = edge.start.name;
-			var end = edge.end.name;
-			var edge = '"'+start+'"->"'+end+'";';
-			if(!drawnEdges[edge]){
-			graph += '"'+start+'"->"'+end+'";';
-			}
-			
-			if(filter){
-				drawnEdges[edge] = 1;
-			}
-		});
+		}
 
 		graph += 'imagepath = \"./\"}';
 		dottyUtil = require("../../utils/DottyUtil.js");
@@ -937,11 +281,442 @@
 		});
 
 		return graph;
-		
+
 	}
-	
-	
+
+  function zeroArray(column, row) {
+		var array = [];
+		for (var i = 0; i < column; i++) {
+			var tmp = [];
+			if (row == 1) {
+				tmp = 0;
+			}
+			else {
+				for (var j = 0; j < row; j++) {
+					tmp.push(0);
+				}
+			}
+			array.push(tmp.slice());
+		}
+		return array;
+	}
+
+	function calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods) {
+		console.log("type dependency metric");
+
+		  console.log("typeDependencyGraph");
+		  console.log(typeDependencyGraph);
+		// console.log(typeDependencyGraph);
+
+		// var classDic = {};
+		// var classArray = [];
+		// var methods = [];
+    //
+		// for(var i in classes) {
+		// 	var classUnit = classes[i];
+		// 	classDic[classUnit.UUID] = i;
+		// 	var classU = {
+		// 		UUID: classUnit.UUID,
+		// 		name: classUnit.name
+		// 	}
+		// 	classArray.push(classU);
+		// 	methods.push(classUnit.MethodUnits.length);
+		// }
+
+		var attrs = zeroArray(classes.length, classes.length); //  the number of attributes of class Cli whose type is class Clj.
+		// var RtnTypes = {};
+		// var Params = {};
+		// var LocalVars = {};
+		var paras = zeroArray(classes.length, classes.length);
+		var typeDependencyMetrics = zeroArray(classes.length, classes.length);
+
+		if (typeDependencyGraph) {
+			for (var i in typeDependencyGraph.edgesAttrComposite) {
+	      var edge = typeDependencyGraph.edgesAttrComposite[i];
+				var col = classDic[edge.start.component.classUnit];
+				var row = classDic[edge.end.component.classUnit];
+				attrs[col][row]++;
+				// classArray[col] = false;
+				// classArray[row] = false;
+			}
+			for (var i in typeDependencyGraph.edgesPComposite) {
+				var edge = typeDependencyGraph.edgesPComposite[i];
+				var col = classDic[edge.start.component.classUnit];
+				var row = classDic[edge.end.component.classUnit];
+	      paras[col][row]++;
+				// classArray[col] = false;
+				// classArray[row] = false;
+			}
+		}
+
+		for (var i = 0; i < classes.length; i++) {
+			for (var j = 0; j < classes.length; j++) {
+				var addition = 0;
+				if (methods[i] != 0) {
+					addition = paras[i][j]/methods[i];
+				}
+				typeDependencyMetrics[i][j] = attrs[i][j]+addition;
+			}
+		}
+
+		// for (var key1 in accessors) {
+		// 	if (accessors.hasOwnProperty(key1)) {
+		// 		for (var key2 in accessors[key1]) {
+		// 			if (accessors[key1].hasOwnProperty(key2)) {
+		// 				// callersNumber[parseInt(key1)][parseInt(key2)] = callers[key1][key2].size;
+		// 				// calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
+		// 				accessMetrics[parseInt(key1)][parseInt(key2)] = access[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(accessors[key1][key2].size+accessed[key1][key2].size)/(methods[parseInt(key1)]+attrs[parseInt(key2)]);
+		// 			}
+		// 		}
+		// 	}
+		// }
+
+    // console.log(classArray);
+		console.log(typeDependencyMetrics);
+    return typeDependencyMetrics;
+	}
+
+	function calculateAccessMetric(accessGraph, classes, classDic, methods) {
+		console.log("access metric")
+		// console.log(callGraph.nodes);
+		// console.log(accessGraph.edges);
+		// var classDic = {};
+		// var classArray = [];
+		// var methods = [];
+		var attrs = []; // store the number of attributes for each class
+
+		for(var i in classes) {
+			var classUnit = classes[i];
+			// classDic[classUnit.UUID] = i;
+			// var classU = {
+			// 	UUID: classUnit.UUID,
+			// 	name: classUnit.name
+			// }
+			// classArray.push(classU);
+			// methods.push(classUnit.MethodUnits.length);
+			attrs.push(classUnit.StorableUnits.length);
+		}
+
+    var access = zeroArray(classes.length, classes.length);
+		var accessors = {};
+		var accessed = {};
+		var accessMetrics = zeroArray(classes.length, classes.length);
+
+		for (var i in accessGraph.edgesComposite) {
+      var edge = accessGraph.edgesComposite[i];
+			var col = classDic[edge.start.component.classUnit];
+			var row = classDic[edge.end.component.classUnit];
+			access[col][row]++;
+			// classArray[col] = false;
+			// classArray[row] = false;
+
+			if (!(col in accessors)) {
+				accessors[col] = {}
+			}
+			if (!(row in accessors[col])) {
+				accessors[col][row] = new Set([edge.start.UUID]);
+			}
+			// else if (!(callers[col][row].has(edge.start.UUID))) {
+			else {
+				accessors[col][row].add(edge.start.UUID);
+			}
+
+			if (!(col in accessed)) {
+				accessed[col] = {}
+			}
+			if (!(row in accessed[col])) {
+				accessed[col][row] = new Set([edge.end.UUID]);
+			}
+			// else if (!(callees[col][row].has(edge.end.UUID))) {
+			else {
+				callees[col][row].add(edge.start.UUID);
+			}
+		}
+
+		for (var key1 in accessors) {
+			if (accessors.hasOwnProperty(key1)) {
+				for (var key2 in accessors[key1]) {
+					if (accessors[key1].hasOwnProperty(key2)) {
+						// callersNumber[parseInt(key1)][parseInt(key2)] = callers[key1][key2].size;
+						// calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
+						accessMetrics[parseInt(key1)][parseInt(key2)] = access[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(accessors[key1][key2].size+accessed[key1][key2].size)/(methods[parseInt(key1)]+attrs[parseInt(key2)]);
+					}
+				}
+			}
+		}
+
+    // console.log(classArray);
+		console.log(accessMetrics);
+		return accessMetrics;
+
+	}
+
+	function calculateCallMetric(callGraph, classes, classDic, methods){
+		console.log("call metric")
+		// console.log(callGraph.nodes);
+		// console.log(callGraph.edges);
+		// console.log("classUnitCheck");
+		// console.log(classes);
+		// var classDic = {};
+		// var classArray = [];
+		// var methods = []; // store the number of methods in each class
+    //
+		// for(var i in classes) {
+		// 	var classUnit = classes[i];
+		// 	classDic[classUnit.UUID] = i;
+		// 	var classU = {
+		// 		UUID: classUnit.UUID,
+		// 		name: classUnit.name
+		// 	}
+		// 	classArray.push(classU);
+		// 	methods.push(classUnit.MethodUnits.length);
+		// }
+
+		var calls = zeroArray(classes.length, classes.length);
+		// var callersNumber = zeroArray(classes.length, classes.length);
+		// var calleesNumber = zeroArray(classes.length, classes.length);
+		var callers = {};
+		var callees = {};
+		var callMetrics = zeroArray(classes.length, classes.length);
+
+    // console.log(calls);
+
+		for (var i in callGraph.edgesComposite) {
+      var edge = callGraph.edgesComposite[i];
+			var col = classDic[edge.start.component.classUnit];
+			var row = classDic[edge.end.component.classUnit];
+			// classArray[col] = false;
+			// classArray[row] = false;
+			// console.log("checkcheck");
+			// console.log("classDic");
+			// console.log(classDic);
+			// console.log("classArray");
+			// console.log(classArray);
+			// console.log(edge);
+			// console.log(col);
+			// console.log(row);
+			calls[col][row]++;
+
+			if (!(col in callers)) {
+				callers[col] = {}
+			}
+			if (!(row in callers[col])) {
+				callers[col][row] = new Set([edge.start.UUID]);
+			}
+			else if (!(callers[col][row].has(edge.start.UUID))) {
+				callers[col][row].add(edge.start.UUID);
+			}
+
+			if (!(col in callees)) {
+				callees[col] = {}
+			}
+			if (!(row in callees[col])) {
+				callees[col][row] = new Set([edge.end.UUID]);
+			}
+			else if (!(callees[col][row].has(edge.end.UUID))) {
+				callees[col][row].add(edge.start.UUID);
+			}
+		}
+
+		for (var key1 in callers) {
+			if (callers.hasOwnProperty(key1)) {
+				for (var key2 in callers[key1]) {
+					if (callers[key1].hasOwnProperty(key2)) {
+						// callersNumber[parseInt(key1)][parseInt(key2)] = callers[key1][key2].size;
+						// calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
+						callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(callers[key1][key2].size+callees[key1][key2].size)/(methods[parseInt(key1)]+methods[parseInt(key2)]);
+					}
+				}
+			}
+		}
+
+    // console.log(classArray);
+		console.log(callMetrics);
+		return callMetrics;
+
+		// for (var key1 in callees) {
+		// 	if (callers.hasOwnProperty(key1)) {
+		// 		for (var key2 in callees[key1]) {
+		// 			if (callees[key1].hasOwnProperty(key2)) {
+		// 				calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
+		// 			}
+		// 		}
+		// 	}
+		// }
+		// console.log(classDic);
+		// console.log(classArray);
+	}
+
+
+	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits) {
+
+		var clusterfck = require("clusterfck");
+
+		var rowDic = {}
+		for (var i in metrics) {
+			var metric = metrics[i].toString();
+			if (metric in rowDic) {
+				rowDic[metric].push(classArray[i]);
+			}
+			else {
+				var classes = new Array(classArray[i]);
+				rowDic[metric] = classes;
+			}
+		}
+
+		// coupling metric table for class c1 to c5
+//		     c1  c2  c3  c4  c5
+		// c1 [  ,   ,   ,   ,   ]
+		// c2 [  ,   ,   ,   ,   ]
+		// c3 [  ,   ,   ,   ,   ]
+		// c4 [  ,   ,   ,   ,   ]
+		// c5 [  ,   ,   ,   ,   ]
+		// true: W(i, j) > threshold, class i has the relatively strong relationship to class j
+		// var metrics = [
+		//     [true, false, true, false, true],
+		//     [false, true, false, false, true],
+		//     [false, true, true, true, false],
+		//     [false, true, false, false, false],
+		//     [false, true, true, false, false]
+		// ];
+
+		function distance(a, b) {
+		  var d = 0;
+		  var inter = 0
+		  var union = 0
+		  for (var i = 0; i < a.length; i++) {
+		    if (a[i] && b[i]) {
+		      inter++;
+		    }
+		    if (a[i] || b[i]) {
+		      union++;
+		    }
+		  }
+		  var JaccSimi;
+		  if (union == 0) {
+		    JaccSimi = 0
+		  }
+		  else {
+		    JaccSimi = inter/union;
+		  }
+		  d = 1 - JaccSimi;
+		  return d;
+		}
+
+		var threshold = 1.05;
+
+		var clusters = clusterfck.hcluster(metrics, distance, clusterfck.SINGLE_LINKAGE, threshold);
+		console.log("clusterfck");
+		console.log(clusters);
+
+		// console.log("check");
+    // var classClusters = convertTree(clusters, rowDic);
+		var classClusters = [];
+		// var nodesNullAll = [];
+		// var nodesClassAll = [];
+		// var edgesAll = [];
+		for (var i in clusters) {
+			var cluster = clusters[i];
+			// console.log(cluster);
+			nodesNull = [];
+			nodesClass = [];
+			edges = [];
+			var classCluster = convertTree(cluster, rowDic, nodesNull, nodesClass, edges, "m", dicChildrenClasses, classUnits);
+			console.log("classcluster")
+			console.log(util.inspect(classCluster, false, null))
+			nodesClassAll.push(nodesClass);
+			nodesNullAll.push(nodesNull);
+			edgesAll.push(edges);
+			classClusters.push(classCluster);
+		}
+		// console.log("check");
+    // console.log(classClusters);
+
+
+		return classClusters;
+
+	}
+
+	// function convertSingle(cluster, rowDic) {
+	// 	var row = cluster["value"].toString();
+	// 	var classes = rowDic[row];
+	// 	var classSelected = classes[classes.length-1];
+	// 	return classSelected;
+	// }
+	function findClassUnit(classUUID, classUnits) {
+
+		for (var i in classUnits) {
+			var classUnit = classUnits[i];
+			if (classUUID == classUnit.UUID) {
+				return classUnit;
+			}
+		}
+		return null;
+
+	}
+
+	function convertTree(cluster, rowDic, nodesNull, nodesClass, edges, rootName, dicChildrenClasses, classUnits) {
+		  var classClusters = {};
+			// console.log(cluster);
+			// console.log("?????????????");
+			// console.log(dicChildrenClasses);
+			if (cluster["size"] == 1) {
+				var row = cluster["value"].toString();
+				var classes = rowDic[row];
+				var classSelected = classes[classes.length-1];
+        var children = dicChildrenClasses[classSelected.UUID];
+				classClusters["size"] = children.length;
+				nodesNull.push(rootName+"mid");
+				edges.push({start: rootName, end: rootName+"mid"});
+				var childrenClasses = [];
+				for (var i in children) {
+					var childClass = {};
+					var child = findClassUnit(children[i], classUnits);
+					childClass['size'] = 1;
+					childClass['value'] = child;
+					childrenClasses.push(childClass);
+					nodesClass.push(child);
+					edges.push({start: rootName+"mid", end: 'a'+child['UUID'].replace(/-/g, '')});
+				}
+				classClusters["children"] = childrenClasses;
+				classes.pop();
+				// classClusters["size"] = 1;
+				// classClusters["value"] = classSelected;
+				// classes.pop();
+				// nodesClass.push(classSelected);
+				// edges.push({start: rootName, end: 'a'+classSelected['UUID'].replace(/-/g, '')});
+			}
+			else {
+				var children = [];
+				for (var property in cluster) {
+					if (cluster.hasOwnProperty(property) && property != "size") {
+						var child = convertTree(cluster[property], rowDic, nodesNull, nodesClass, edges, rootName+property, dicChildrenClasses, classUnits);
+						children.push(child);
+						nodesNull.push(rootName+property);
+						edges.push({start: rootName, end: rootName+property});
+					}
+				}
+				classClusters["children"] = children;
+				classClusters["size"] = children.length;
+				// var left = convertTree(cluster["left"], rowDic, nodesNull, nodesClass, edges, rootName+'l');
+				// var right = convertTree(cluster["right"], rowDic, nodesNull, nodesClass, edges, rootName+'r');
+				// classClusters["left"] = left;
+				// classClusters["right"] = right;
+				// classClusters["size"] = 2;
+				// nodesNull.push(rootName+'l');
+				// nodesNull.push(rootName+'r');
+				// edges.push({start: rootName, end: rootName+'l'});
+				// edges.push({start: rootName, end: rootName+'r'});
+			}
+			return classClusters;
+	}
+
+
 	module.exports = {
-			constructCallGraph : constructCallGraph,
+			// findClusters : findClusters,
+			// calculateCallMetric: calculateCallMetric,
+			// calculateAccessMetric: calculateAccessMetric,
+			// calculateTypeDependencyMetric: calculateTypeDependencyMetric,
+			identifyComponents: identifyComponents
 	}
 }());

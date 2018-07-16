@@ -230,16 +230,32 @@
 		return {Activities: activities, ActivitiesbyID: activitiesbyID, PrecedenceRelations:precedenceRelations};//, PrecedenceRelations: precedenceRelations, startActivity: startActivity, endActivity: endActivity};
 	}
 
-	function parseSequenceDiagram(Interaction, XMIInteraction, XMIClassesByStandardizedName){
+//	function parseSequenceDiagram(Interaction, XMIInteraction, XMIClassesByStandardizedName, callback){
+	function parseSequenceDiagram(XMIUMLModel, XMIClassesByStandardizedName, Model){
 		//var XMIInteractions = jp.query(XMICollaboration, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Interaction\')]');
 	
 		//console.log(XMIInteractions);
+		
+		var XMIInteractions = jp.query(XMIUMLModel, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Interaction\')]');
+		
+		for(var i in XMIInteractions){
+			var XMIInteraction = XMIInteractions[i];
+			
+			var Interaction = {
+					_id: XMIInteraction['$']['xmi:id'],
+					Name: XMIInteraction['$']['name'],
+					PrecedenceRelations : [],
+					Activities : [],
+					OutputDir : Model.OutputDir+"/"+XMIInteraction['$']['xmi:id'],
+					AccessDir : Model.AccessDir+"/"+XMIInteraction['$']['xmi:id'],
+			}
 
 		//for(var i in XMIInteractions){
 		//var XMIInteraction = XMIInteractions[i];
 		var XMILifelines = jp.query(XMIInteraction, '$..lifeline[?(@[\'$\'][\'xmi:type\']==\'uml:Lifeline\')]');
 		if(XMILifelines.length==0){ 
-			return 1;}
+			continue;
+		}
 		else{
 			console.log("life lines");
 			console.log(XMILifelines);
@@ -369,7 +385,11 @@
 					Interaction.PrecedenceRelations.push({start: stimulus, end: activity});
 				}
 			}
-			return 0;
+		}
+		
+
+		Model.UseCases.push(Interaction);
+
 		}
 		
 	}

@@ -13,19 +13,19 @@
 	}
 
 
-	function parseClassDiagram(filePath, callbackfunc){
-		fs.readFile(filePath, function(err, data) {
-			parser.parseString(data, function(err, xmiString) {
+	function parseClassDiagram(XMIUMLModel, Model, callbackfunc){
+//		fs.readFile(filePath, function(err, data) {
+//			parser.parseString(data, function(err, xmiString) {
 		
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("XMIString", xmiString);
-		console.log(xmiString);
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("XMIString", xmiString);
+//		console.log(xmiString);
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		
-        var Model = {
-				Elements: [],
-				Edges:[]
-		};
+//        var Model = {
+//				Elements: [],
+//				Edges:[]
+//		};
 		
 		
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');	
@@ -82,7 +82,7 @@
 				Operations: operations,
 				Attributes: attributes
 			};
-				Model.Elements.push(XMIClassesByStandard);
+				Model.DomainModel.Elements.push(XMIClassesByStandard);
 		}
 	
       
@@ -104,15 +104,15 @@
 				Source:XMIEdge['$']['source'],
 				Target:XMIEdge['$']['target']
 			}
-			  Model.Edges.push(Edge);
+			Model.DomainModel.Associations.push(Edge);
 		}
 		
 		console.log("finished class diagram processing");
 		if(callbackfunc){
 			callbackfunc(Model);
 		}
-		});
-		});
+//		});
+//		});
 	}
 	
 	module.exports = {

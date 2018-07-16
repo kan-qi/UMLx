@@ -6,12 +6,15 @@
 
 args = commandArgs(trailingOnly=TRUE)
 
+.libPaths(c("C:/Users/flyqk/Documents/R/win-library/3.5", "C:/Program Files/R/R-3.5.1/library"))
+
 if (length(args) < 2) {
 	stop("At least two arguments must be supplied (input file).", call.=FALSE)
 } else if (length(args)==2) {
 	# default output file
 	args[3] = "./temp"
 }
+
 
 modelUrl <- paste("./statistical_models", args[1], sep="/")
 dataUrl <- args[2]
@@ -25,9 +28,12 @@ resultPath <- paste(outputDir, "effort_prediction_result.json", sep="/")
 # outputPath <- "./Temp"
 # reportPath <- paste(outputPath,'risk-predication-model-training-report.txt', sep='/')
 
+
+#print(.libPaths())
+
 library(lattice)
-library(ggplot2)
-library(neuralnet)
+#library(ggplot2)
+#library(neuralnet)
 library(jsonlite)
 # setwd("E:/WorkSpace/Huawei/R/Risk_Prediction_Model_Calibration")
 #sink(reportPath, append=TRUE, split=TRUE)

@@ -25,19 +25,33 @@
 	var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
 	
 	// current available evaluators
-	var umlModelElementEvaluator = require('./evaluators/UMLModelElementsEvaluator/UMLModelElementEvaluator.js');
-	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
+	var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
+//	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 	var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
 	var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
-	var useCasePointCalculator = require('./evaluators/UseCasePointEvaluator/UseCasePointCalculator.js');
 	var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
+	var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
+	var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
 	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
-	var useCasePointWeightEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointWeightEvaluator.js');
+	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
+
+	var userStoryEvaluator = require('./evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
 	
 //	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
-	var evaluators = [umlModelElementEvaluator,functionPointEvaluator, transactionEvaluator,modelVersionEvaluator, projectTypeEvaluator, cocomoCalculator,useCasePointWeightEvaluator,useCasePointCalculator];
+	var evaluators = [
+			useCaseComponentsEvaluator,
+			transactionEvaluator,
+			modelVersionEvaluator,
+			projectTypeEvaluator,
+			cocomoCalculator,
+			useCasePointEvaluator,
+			extendedUseCasePointEvaluator,
+			UMLSizeMetricEvaluator,
+			userStoryEvaluator
+			];
+	
 //	function setUp(){
-//		evaluators = [cocomoCalculator, useCaseCalculator, umlModelElementEvaluator];
+//		evaluators = [cocomoCalculator, useCaseCalculator, useCaseComponentsEvaluator];
 //		for(var i in evaluators){
 //			evaluators[i].steUp();
 //		}
@@ -428,9 +442,10 @@
 						console.log("apply statistical analysis on the output evaluation");
 						var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.UseCaseEvaluationFileName+'" "'+model.UseCaseStatisticsOutputDir+'" "."';
 						console.log(command);
-						RScriptExec.runRScript(command,function(result){
+						RScriptExec.runRScript(command,function(result2){
 							
-							if (!result) {
+							if (!result2) {
+								console.log("=========no result2==========");
 								if(callbackfunc){
 									callbackfunc(false);
 								}
@@ -438,10 +453,12 @@
 							}
 							
 							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
-							
-							RScriptExec.runRScript(command,function(result){
-								if (!result) {
+							console.log(command);
+
+							RScriptExec.runRScript(command,function(result3){
+								if (!result3) {
 									if(callbackfunc){
+										console.log("=========no result3==========");
 										callbackfunc(false);
 									}
 									return;
@@ -519,7 +536,7 @@
 //				}
 				var model = repoInfo.Models[i];
 				evaluateModel(model, function(){
-					console.log('model analysis is complete');
+					console.log('model analysis is complete!!!!!!!!!!');
 				})
 				
 //				var useCaseEmpirics = evaluateUseCase(useCase, model.umlModelName);
@@ -556,7 +573,7 @@
 				domainModelNum ++;
 				}
 			}
-			
+			console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 			// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
 			for(var i in evaluators){
 				var evaluator = evaluators[i];
@@ -576,12 +593,14 @@
 		var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr},
 			{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
 			{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
+
+		console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
 		
 		umlFileManager.writeFiles(repoInfo.OutputDir, files, function(err){
 			if(err) {
 			 	console.log(err);
 			 	if(callbackfunc){
-			    	callbackfunc(false);
+			    	callbackfunc("false umlFileManager.writeFiles");
 				} 
 		    }
 			else {
@@ -592,17 +611,20 @@
 						evaluator.analyseRepoEvaluation(repoInfo);
 					}
 				}
-				
+
+                console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+
 				umlFileManager.makeDir(repoInfo.ModelStatisticsOutputDir, function(result){
 					if(result){
 						//Needs to be upgraded soon
 						console.log("apply statistical analysis on the repo output evaluation");
 						var command = './Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo.ModelStatisticsOutputDir+'" "."';
 							console.log(command);
+
 							RScriptExec.runRScript(command,function(result){
 								if (!result) {
 									if(callbackfunc){
-										callbackfunc(false);
+										callbackfunc("false umlFileManager.makeDir");
 									}
 									return;
 								}
@@ -614,7 +636,7 @@
 					}
 					else {
 						if(callbackfunc){
-							callbackfunc(false);
+							callbackfunc("false umlFileManager.makeDir else");
 						}
 					}
 					

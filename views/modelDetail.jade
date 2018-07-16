@@ -2,8 +2,10 @@
 -var modelName = modelInfo.Name
 -var repoID = repo_id
 -var filePath = modelInfo.AccessDir
+-var loadsPath = upLoadsPath
 input(type='hidden', value=model_id)#mymodelId
 input(type='hidden', value=repoID)#myrepoId
+input(type='hidden', value=loadsPath)#myupLoadsPath
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -53,7 +55,9 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#model-evaluation') Model Info
      li
-      a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', onclick="walkDir(this);") Archive
+      a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', data-type='archive', onclick="walkDir(this);") Archive
+     li
+      a(data-toggle='tab', id='modelUploads' href='#loadsPath', data-url='#{loadsPath}', data-type='upload', onclick="walkDir(this);") Uploads
 
      //li
       //a(data-toggle='tab', href='#model-representation') Representation
@@ -66,7 +70,7 @@ div.block.panel.panel-default
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{modelInfo.ElementAnalytics.UseCaseNum}
+                h2 #{modelInfo.ComponentAnalytics.UseCaseNum}
                 span Use Cases
           div.col-sm-3
             div.red-card.analytics-card
@@ -80,14 +84,14 @@ div.block.panel.panel-default
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{modelInfo.ClassNum}
+                h2 #{modelInfo.ComponentAnalytics.EntityNum}
                 span Classes
           div.col-sm-3
             div.purple-card.analytics-card
               .col-sm-4.image-box
                 img(src="img/project.png", alt="")
               .col-sm-8.text-box
-                h2 #{modelInfo.ElementAnalytics.ActorNum}
+                h2 #{modelInfo.Actors.length}
                 span Actors
         //div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{modelInfo.AccessDir}/modelVersionInfo.csv")
         div(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
@@ -466,6 +470,8 @@ div.block.panel.panel-default
          button.btn.btn-default.buttonForModel#cancelButton.hidden(type='button', onclick='cancelEdit();') Cancel
      div.tab-pane.fade(id="repo_archive")
         div#displayArchive
+     div.tab-pane.fade(id="loadsPath")
+        div#displayUploads
 
      //div.tab-pane.fade(id="model-evaluation")
       div.model-evaluation-ops

@@ -8,17 +8,30 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
   /* Parse csv file using d3.js and display the required data  */
   d3.csv(chart_url, function(data) {
 
-      var ueucw = [];
-      var uexucw = [];
-      var uducw =[];
+      var swti = [];
+      var swtii = [];
+      var swtiii =[];
       var categories=[];
       for(var i=0;i<data.length;i++)
       {
-        ueucw.push([parseInt(data[i].UEUCW)]);
-        uexucw.push([parseInt(data[i].UEXUCW)]);
-        uducw.push([parseInt(data[i].UDUCW)]);
+        swti.push([parseInt(data[i].SWTI)]);
+        swtii.push([parseInt(data[i].SWTII)]);
+        swtiii.push([parseInt(data[i].SWTIII)]);
         categories.push(["UC"+data[i].NUM]);
       }
+
+      // console.log("===============chart_url================");
+      // console.log(chart_url);
+      // console.log("====================data=====================");
+      // console.log(data);
+      // console.log("====================swti=====================");
+      // console.log(swti);
+      // console.log("====================swtii=====================");
+      // console.log(swtii);
+      // console.log("====================swtiii=====================");
+      // console.log(swtiii);
+      // console.log("====================categories=====================");
+      // console.log(categories);
 
       $('#chart-1').highcharts({
         chart: {
@@ -55,16 +68,16 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
         }
     },
     series: [ {
-        name: 'UDUCW',
-        data: ueucw
+        name: 'SWTI',
+        data: swti
 
     }, {
-        name: 'UEXUCW',
-        data: uexucw
+        name: 'SWTII',
+        data: swtii
 
     }, {
-        name: 'UDUCW',
-        data: uducw
+        name: 'SWTIII',
+        data: swtiii
 
     }]
 
@@ -73,58 +86,60 @@ var chart_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length
 
 
   var url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/use_case_evaluation_statistics/statistics.json";
-  var domain_model_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/domain_model_evaluation_statistics/statistics.json";
+  var domain_model_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) +
+      "/domain_model_evaluation_statistics/statistics.json";
 
   console.log(url);
-      $.ajax({
-        url: url,
-        type:"GET",
-        dataType: "json",
-
-        success: function(response)
-        {
-
-              document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal1' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div<h3>Use case evaluation statistics</h3><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
-                for (var i=0;i<response.length;i++)
-                {
-                      var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
-                      $('.modal-body').html('<img src="' + img_link + '">');
-                      document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light'onclick = 'showModalDetails(\"" + img_link +  "\")'> Display Chart</button></td></tr>" ;
-
-                }
-
-        },
-        error:function(error){
-          console.log("failed");
-        }
-
-
-      });
-      //The below code is to populate the json data for domain model evaluation statistics (model level)
-      $.ajax({
-        url: domain_model_url,
-        type:"GET",
-        dataType: "json",
-
-        success: function(response)
-        {
-
-                document.getElementById("details").innerHTML +="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal2' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><h3>Domain Model evaluation statistics</h3><table class='table table-hover table-bordered'; id='domain_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
-                  for (var i=0;i<response.length;i++)
-                  {
-                    var img_link2 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
-                    $('.modal-body').html('<img src="' + img_link2 + '">');
-                        document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' onclick = 'showModal(\"" + img_link2 +  "\")'>Display Chart</button></td></tr>" ;
-
-                  }
-
-        },
-        error:function(error){
-          console.log("failed");
-        }
-
-
-      });
+  //do not know the function of the two ajaxes below!!!
+      // $.ajax({
+      //   url: url,
+      //   type:"GET",
+      //   dataType: "json",
+      //
+      //   success: function(response)
+      //   {
+      //
+      //         document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal1' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div<h3>Use case evaluation statistics</h3><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+      //           for (var i=0;i<response.length;i++)
+      //           {
+      //                 var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
+      //                 $('.modal-body').html('<img src="' + img_link + '">');
+      //                 document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light'onclick = 'showModalDetails(\"" + img_link +  "\")'> Display Chart</button></td></tr>" ;
+      //
+      //           }
+      //
+      //   },
+      //   error:function(error){
+      //     console.log("failed");
+      //   }
+      //
+      //
+      // });
+      // //The below code is to populate the json data for domain model evaluation statistics (model level)
+      // $.ajax({
+      //   url: domain_model_url,
+      //   type:"GET",
+      //   dataType: "json",
+      //
+      //   success: function(response)
+      //   {
+      //
+      //           document.getElementById("details").innerHTML +="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal2' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><h3>Domain Model evaluation statistics</h3><table class='table table-hover table-bordered'; id='domain_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+      //             for (var i=0;i<response.length;i++)
+      //             {
+      //               var img_link2 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
+      //               $('.modal-body').html('<img src="' + img_link2 + '">');
+      //                   document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' onclick = 'showModal(\"" + img_link2 +  "\")'>Display Chart</button></td></tr>" ;
+      //
+      //             }
+      //
+      //   },
+      //   error:function(error){
+      //     console.log("failed");
+      //   }
+      //
+      //
+      // });
 
 }
 // The below code is to populate the json data at the repo level
