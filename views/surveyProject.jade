@@ -3,6 +3,64 @@ html
     title UMLx
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
     link(href='css/style.css', rel='stylesheet')
+    script.
+        window.onload = function () {
+            console.log("==================Date222======================");
+            document.getElementById("uuid_page1").value = UUID().toString();
+            document.getElementById("uuid_page2").value = UUID().toString();
+            document.getElementById("uuid_page3").value = UUID().toString();
+            document.getElementById("uuid_page4").value = UUID().toString();
+            document.getElementById("survey_date").value = new Date();
+            console.log("==================Date======================");
+            console.log(document.getElementById("uuid_page1").value);
+            console.log(document.getElementById("survey_date").value);
+        };
+        function showPage(pageNumber) {
+            var uuid = "";
+            for (var i = 1; i <= 4; i++) {
+                var uuidElementName = "uuid_page" + pageNumber;
+                var classList = document.getElementById("page" + i).classList;
+                if (i != pageNumber) {
+                    classList.add("hidden");
+                } else {
+                    uuid = document.getElementById(uuidElementName).value;
+                    classList.remove("hidden");
+                }
+            }
+            send_analytics_data(uuid, ipAdress, pageNumber);
+        }
+
+        var ipAdress = "localhost--";
+
+        document.addEventListener("DOMContentLoaded", function (event) {
+            $.getJSON("https://api.ipify.org/?format=json", function (data) {
+                //console.log("IP Address received");
+                ipAdress = data.ip;
+            });
+        });
+
+        function UUID() {
+            var uuid = (function () {
+                var i,
+                    c = "89ab",
+                    u = [];
+                for (i = 0; i < 36; i += 1) {
+                    u[i] = (Math.random() * 16 | 0).toString(16);
+                }
+                u[8] = u[13] = u[18] = u[23] = "-";
+                u[14] = "4";
+                u[19] = c.charAt(Math.random() * 4 | 0);
+                return u.join("");
+            })();
+            return {
+                toString: function () {
+                    return uuid;
+                },
+                valueOf: function () {
+                    return uuid;
+                }
+            };
+        }
 
 
 
@@ -399,106 +457,11 @@ html
               button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
               button.btn.btn-success.pull-right(type='submit') Submit
 
-    script(type='text/javascript').
-        document.getElementById("uuid_page1").value = uuidv4();
-        document.getElementById("uuid_page2").value = uuidv4();
-        document.getElementById("uuid_page3").value = uuidv4();
-        document.getElementById("uuid_page4").value = uuidv4();
-        document.getElementById("survey_date").value = new Date();
     script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
     script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
     script(type='text/javascript', src='https://code.highcharts.com/highcharts.src.js')
     script(type='text/javascript', src='http://d3js.org/d3.v4.min.js')
     script(type='text/javascript', src='js/scripts.js')
     script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv4@latest')
-    script.
-        function showPage(pageNumer) {
-            var uuid = "";
-            for (var i = 1; i <= 4; i++) {
-                var uuidElementName = "uuid_page" + pageNumer;
-                var classList = document.getElementById("page" + i).classList;
-                if (i != pageNumer) {
-                    classList.add("hidden");
-                } else {
-                    uuid = document.getElementById(uuidElementName).value;
-                    classList.remove("hidden");
-                }
-            }
-            send_analytics_data(uuid, ipAdress, pageNumer);
-        }
-
-        var ipAdress = "localhost--";
-
-        document.addEventListener("DOMContentLoaded", function (event) {
-            $.getJSON("https://api.ipify.org/?format=json", function (data) {
-                //console.log("IP Address received");
-                ipAdress = data.ip;
-            });
-        });
 
 
-    script(type = 'text/javascript', src = 'http://code.jquery.com/jquery-1.9.1.min.js')
-    script(type = 'text/javascript', src = 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-    script(type = 'text/javascript', src = 'https://code.highcharts.com/highcharts.src.js')
-    script(type = 'text/javascript', src = 'http://d3js.org/d3.v4.min.js')
-    script(type = 'text/javascript', src = 'js/scripts.js')
-    script(type = 'text/javascript', src = 'http://wzrd.in/standalone/uuid%2Fv4@latest')
-
-    script.
-      window.onload = function () {
-          console.log("==================Date222======================");
-          document.getElementById("uuid_page1").value = UUID().toString();
-          document.getElementById("uuid_page2").value = UUID().toString();
-          document.getElementById("uuid_page3").value = UUID().toString();
-          document.getElementById("uuid_page4").value = UUID().toString();
-          document.getElementById("survey_date").value = new Date();
-          console.log("==================Date======================");
-          console.log(document.getElementById("uuid_page1").value);
-          console.log(document.getElementById("survey_date").value);
-      };
-      function showPage(pageNumber) {
-        var uuid = "";
-        for (var i = 1; i <= 4; i++) {
-            var uuidElementName = "uuid_page" + pageNumber;
-            var classList = document.getElementById("page" + i).classList;
-            if (i != pageNumber) {
-                classList.add("hidden");
-            } else {
-                uuid = document.getElementById(uuidElementName).value;
-                classList.remove("hidden");
-            }
-        }
-        send_analytics_data(uuid, ipAdress, pageNumber);
-      }
-
-      var ipAdress = "localhost--";
-
-      document.addEventListener("DOMContentLoaded", function (event) {
-          $.getJSON("https://api.ipify.org/?format=json", function (data) {
-              //console.log("IP Address received");
-              ipAdress = data.ip;
-          });
-      });
-      
-      function UUID() {
-          var uuid = (function () {
-              var i,
-                  c = "89ab",
-                  u = [];
-              for (i = 0; i < 36; i += 1) {
-                  u[i] = (Math.random() * 16 | 0).toString(16);
-              }
-              u[8] = u[13] = u[18] = u[23] = "-";
-              u[14] = "4";
-              u[19] = c.charAt(Math.random() * 4 | 0);
-              return u.join("");
-          })();
-          return {
-              toString: function () {
-                  return uuid;
-              },
-              valueOf: function () {
-                  return uuid;
-              }
-          };
-      }

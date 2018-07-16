@@ -43,7 +43,7 @@ var evaluators = [
 ];
 
 //Input xml file directory 
-var inputDir = "data/2014_spring_577b_use_case_model_uml2.1.xml"//process.argv[2];
+var inputDir = process.argv[2];
 //Manully setted output directory
 let date = new Date();
 let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
