@@ -597,6 +597,11 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 				}
 				umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
 					console.log("model analysis complete");
+					
+					if(!modelInfo2){
+						 res.redirect('/');
+						 return;
+					}
 
                     umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
                         //				console.log(modelInfo);

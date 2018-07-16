@@ -157,4 +157,4 @@ simEffort <- function(url, user, pw) {
   effort
 }
 
-simEffort("https://github.com/apache/carbondata", "flyqk", "qk@github/910304")
+simEffort("https://api.github.com/repos/apache/carbondata", "flyqk", "qk@github/910304")

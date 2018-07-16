@@ -1347,7 +1347,6 @@ function deleteRepo(repoId, callbackfunc) {
                 	domainModelInfo._id="domainModel_["+modelId+"]";
 				}
 
-
                 db.collection("modelInfo").save(modelInfo, function(err, res) 
                 {
                         if (err) throw err;
