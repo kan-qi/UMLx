@@ -26,7 +26,7 @@ var fs = require('fs');
 
 		var modelDrawer = require("../../../model_drawers/UserSystemInteractionModelDrawer.js");
 
-var srcParser = require("../SrcParser.js");
+				var srcParser = require("../SrcParser.js");
 				console.log("hello");
 
 				fs.readFile(filePath, "utf8", function(err, data) {
