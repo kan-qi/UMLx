@@ -822,6 +822,20 @@ app.get('/requestRepoBrief', function (req, res){
 			});
 })
 
+app.get('/queryAllModelNames', function (req, res){
+//	console.log("/reanalyseRepo");
+//	app.get('/queryRepoInfo', function(req, res){
+		//temporary analysis
+		var repoId = req.userInfo.repoId;
+
+		console.log("refresh");
+		umlModelInfoManager.queryAllModelNames(repoId, function(names){
+			console.log('==========totalRec===========');
+			console.log("names");
+				res.end(JSON.stringify(names));
+			});
+})
+
 
 
 
