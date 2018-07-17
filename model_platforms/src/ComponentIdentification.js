@@ -77,17 +77,6 @@
 		var maxMetric = 0;
 		var relations = [];
 
-		// TODO: eliminate the classes not referenced by any class
-		// var classes = []
-		// for (var i in classes) {
-		// 	var classUnit = classes[i];
-		// 	if (classUnit.isWithinBoundary) {
-		// 		// classUnit['notReferenced'] = true;
-		// 		classes.push(classUnit);
-		// 	}
-		// }
-
-
 		for (var i = 0; i < classes.length; i++) {
 			for (var j = 0; j < classes.length; j++) {
 				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j];
@@ -118,17 +107,17 @@
 		var edgesAll = [];
 
 		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits);
-		console.log("checkcheckcheck")
-		console.log(util.inspect(clusteredClasses, false, null))
+		// console.log("checkcheckcheck")
+		// console.log(util.inspect(clusteredClasses, false, null))
 		var debug = require("../../utils/DebuggerOutput.js");
 
 		drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "componentsComposite.dotty");
 
 		debug.writeJson("clusteredClasses", clusteredClasses);
 
-		var cutoffDepth = 4; //there might be multiple criterion to determining the cutoff tree
+		var cutoffDepth = 7; //there might be multiple criterion to determining the cutoff tree
 
-		var clusters = [];
+		var clusters = []; // [[component1], [component2], ...]
 
 		var currentLevel = [];
 		var currentLevelDepth = 0;
@@ -136,89 +125,105 @@
 		while(currentLevelDepth < cutoffDepth){
 			var nextLevel = [];
 			var nodeToExpand = null;
-			console.log("currentLevel");
-			console.log(currentLevel);
+			// console.log("currentLevel");
+			// console.log(currentLevel);
 			while ((nodeToExpand = currentLevel.shift())){
-				console.log("nodeToExpand");
-				console.log(nodeToExpand);
-				// TODO: deal with the situations with multiple children
-				if (nodeToExpand.size == 1) {
-					clusters.push(nodeToExpand.value);
+				// console.log("nodeToExpand");
+				// console.log(nodeToExpand);
+				if (nodeToExpand.size == 1 && nodeToExpand.hasOwnProperty('value')) {
+					clusters.push([nodeToExpand.value]);
 				}
 				else {
 					nextLevel = nextLevel.concat(nodeToExpand.children);
-					// var children = []
-					// for (var i in nodeToExpand.children) {
-					// 	nextLevel.push()
-					// }
 				}
-
-				// var leftNode = nodeToExpand.left;
-				// var rightNode = nodeToExpand.right;
-				// if(!leftNode && !rightNode){
-				// 	clusters.push(nodeToExpand);
-				// }
-				// else{
-				// 	nextLevel.push(leftNode);
-				// 	nextLevel.push(rightNode);
-				// }
 			}
 			currentLevel = nextLevel;
 			currentLevelDepth++;
 		}
 
-		clusters = clusters.concat(currentLevel);
+		// console.log("currentLevel");
+		// console.log(currentLevel);
+
+		for (var i in currentLevel) {
+			var newComponent = [];
+			var bfs = [currentLevel[i]];
+			while (bfs.length > 0) {
+				// console.log("bfs");
+				// console.log(bfs);
+				var node = bfs.pop(0);
+				// console.log("node");
+				// console.log(node);
+				if (node.size == 1 && node.hasOwnProperty('value')) {
+					newComponent.push(node.value);
+				}
+				else {
+					bfs = bfs.concat(node.children);
+				}
+			}
+			clusters.push(newComponent)
+		}
+
+		// clusters = clusters.concat(currentLevel);
 
 		// components are collections of classes and with interface class which are determined based on clusters.
 		// need more thinking about the interface class
 
-		function searchClassesFromCluster(cluster, level){
-			if(!cluster){
-				return [];
-			}
+		// function searchClassesFromCluster(cluster, level){
+		// 	if(!cluster){
+		// 		return [];
+		// 	}
+    //
+		// 	if(!level){
+		// 		level = 0;
+		// 	}
+    //
+		// 	var classes = [];
+		// 	if (cluster.size == 1 && cluster.hasOwnProperty('value')) {
+		// 		cluster.level = level;
+		// 		classes.push(cluster.value);
+		// 	}
+		// 	// if(!cluster.left && !cluster.right){
+		// 	// 	cluster.level = level;
+		// 	// 	classes.push(cluster.value)
+		// 	// }
+		// 	else{
+		// 		var children = cluster.children;
+		// 		for (var i in children) {
+		// 			var childClass = searchClassesFromCluster(children[i], level++);
+		// 			classes.concat(childClass);
+		// 		}
+		// 		// var leftClasses = searchClassesFromCluster(cluster.left, level++);
+		// 		// var rightClasses = searchClassesFromCluster(cluster.right, level++);
+		// 		// classes = classes.concat(leftClasses);
+		// 		// classes = classes.concat(rightClasses);
+		// 	}
+    //
+		// 	return classes;
+		// }
+		//
 
-			if(!level){
-				level = 0;
-			}
 
-			var classes = [];
-			if (cluster.size == 1 && cluster.hasOwnProperty('value')) {
-				cluster.level = level;
-				classes.push(cluster.value);
-			}
-			// if(!cluster.left && !cluster.right){
-			// 	cluster.level = level;
-			// 	classes.push(cluster.value)
-			// }
-			else{
-				var children = cluster.children;
-				for (var i in children) {
-					var childClass = searchClassesFromCluster(children[i], level++);
-					classes.concat(childClass);
-				}
-				// var leftClasses = searchClassesFromCluster(cluster.left, level++);
-				// var rightClasses = searchClassesFromCluster(cluster.right, level++);
-				// classes = classes.concat(leftClasses);
-				// classes = classes.concat(rightClasses);
-			}
-
-			return classes;
-		}
+    // console.log("clusters!!!");
+		// console.log(util.inspect(clusters, false, null))
+		// console.log(clusters);
 
 		var components = [];
 
 		for(var i in clusters){
-			var classes = searchClassesFromCluster(clusters[i]);
+			var classUnits = clusters[i];
+			// var classes = searchClassesFromCluster(clusters[i]);
 //			var interfaceClass = null;
-			console.log("!!!!!!!!!!!!");
-		  console.log(classes);
+			// console.log("!!!!!!!!!!!!");
+		  // console.log(classes);
 
-			var classUnits = [];
-			for(var j in classes){
-				var identifiedClass = classes[j];
-				var referencedClassUnit = classesByName[identifiedClass.name];
-				classUnits.push(referencedClassUnit);
-			}
+			// var classUnits = [];
+			// for(var j in classes){
+			// 	var identifiedClass = classes[j];
+			// 	var referencedClassUnit = classesByName[identifiedClass.name];
+			// 	classUnits.push(referencedClassUnit);
+			// }
+			// console.log("classUnits")
+			// console.log(classUnits)
 
 			var component = {
 					name: i,
