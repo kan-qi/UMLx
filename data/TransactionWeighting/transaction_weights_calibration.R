@@ -33,14 +33,16 @@ combineData <- function(folder) {
 	#   A data frame containing all the data in all the files.
 	data <- NULL
 	for (file in dir(folder)) {
-		filepath <- paste(folder, file, sep="/")
-		if (is.null(data)) {
-			data <- read.csv(filepath)[, -c(1)]
-		}
-		else {
-			new <- read.csv(filepath)[, -c(1)]
-			data <- rbind(data, new)
-		}
+	  if (grepl(".csv", file, ignore.case = TRUE)) {
+		  filepath <- paste(folder, file, sep="/")
+		  if (is.null(data)) {
+			  data <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
+		  }
+		  else {
+			  new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
+			  data <- rbind(data, new)
+		  }
+	  }
 	}
 	data
 }
@@ -231,12 +233,15 @@ performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DET
 		for (p in parameters) {
 			cutPoints[p, ] <- discretize(combinedData[, p], i)
 		}
-		regressionData <- matrix(nrow = length(dir(folder)), ncol = i^length(parameters) + 1)
-		rownames(regressionData) <- c(dir(folder))
+		numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
+		regressionData <- matrix(nrow = numFiles, ncol = i^length(parameters) + 1)
+		rownames(regressionData) <- dir(folder)[grepl(".csv", dir(folder), ignore.case = TRUE)]
 		colnames(regressionData) <- c(genColNames(parameters, i), "Effort")
 		for (file in dir(folder)) {
-			fileData <- read.csv(paste(folder, file, sep = "/"))
-			regressionData[file, ] <- c(classify(fileData, cutPoints), effortData[file, "Effort"])
+		  if (grepl(".csv", file, ignore.case = TRUE)) {
+			  fileData <- read.csv(paste(folder, file, sep = "/"))
+			  regressionData[file, ] <- c(classify(fileData, cutPoints), effortData[file, "Effort"])
+		  }
 		}
 		regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
 		regressionData <- as.data.frame(regressionData)

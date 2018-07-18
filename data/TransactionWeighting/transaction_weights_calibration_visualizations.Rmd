@@ -6,19 +6,14 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 source("transaction_weights_calibration.R")
+library(tidyverse)
 ```
 Combined Data Effort Values
 ```{r combined}
 combined <- combineData("./Transaction Data")
-effort <- as.data.frame(matrix(c(263, 268.5, 1482.5, 1392, 804.5, 3113, 1592), nrow = 7, ncol = 1))
-colnames(effort) <- c("Effort")
-rownames(effort) <- c("F14a_REFERsy.csv", 
-                      "F14a_soccer_data_web_crawler.csv", 
-                      "F15a_construction_meeting_minutes_application.csv",
-                      "s16_bad_driver.csv",
-                      "S16b_flower_seeker.csv",
-                      "s16b_Picshare_AA.csv",
-                      "s16b_Picshare_RA.csv")
+effort <- read.csv("effortValues.csv")
+rownames(effort) <- effort$Project
+effort$Project <- NULL
 ggplot(combined, aes(x=TL)) + 
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
   stat_function(fun = dnorm, args = list(mean = mean(combined$TL), sd(combined$TL))) + 
@@ -37,7 +32,8 @@ ggplot(combined, aes(x=DETs)) +
 ```
 SWTI Search Results
 ```{r swti}
-SWTIresults <- performSearch(5, "./Transaction Data", effort, c("TL"))
+SWTIresults <- performSearch(3, "./Transaction Data", effort, c("TL"))
+# Plot classification results
 for (result in SWTIresults) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
@@ -46,12 +42,31 @@ for (result in SWTIresults) {
   print(g)
 }
 
+# Plot predicted vs. actual effort values
+predictedValues <- sapply(1:length(SWTIresults), function(i) {
+  predicted <- apply(SWTIresults[[i]]$data, 1, function(x) {
+    predict.blm(SWTIresults[[i]]$model, newdata = as.data.frame(t(x)))
+  })
+})
+colnames(predictedValues) <- paste(1:length(SWTIresults), "Bins")
+predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
+predictedValues <- cbind(predictedValues, effort)
+predictedValues <- as.data.frame(predictedValues)
+predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
+ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
+  facet_grid(. ~ numBins) + xlab("Predicted Effort") +
+  ylab("Actual Effort") +
+  theme(panel.spacing = unit(1, "lines"))
+
+# Plot cross validation results
 MSEdata <- data.frame(NumBins = 1:length(SWTIresults), MSE = sapply(SWTIresults, function(x) { x$MSE }))
-ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point()
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
 ```
 SWTII Search Results
 ```{r swtii, warning = FALSE}
-SWTIIresults <- performSearch(5, "./Transaction Data", effort, c("TL", "TD"))
+SWTIIresults <- performSearch(3, "./Transaction Data", effort, c("TL", "TD"))
+# Plot classification results
 for (result in SWTIIresults) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
@@ -60,13 +75,32 @@ for (result in SWTIIresults) {
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   print(g)
 }
-  
+
+# Plot predicted vs. actual effort values
+predictedValues <- sapply(1:length(SWTIIresults), function(i) {
+  predicted <- apply(SWTIIresults[[i]]$data, 1, function(x) {
+    predict.blm(SWTIIresults[[i]]$model, newdata = as.data.frame(t(x)))
+  })
+})
+colnames(predictedValues) <- paste(1:length(SWTIIresults), "Bins")
+predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
+predictedValues <- cbind(predictedValues, effort)
+predictedValues <- as.data.frame(predictedValues)
+predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
+ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
+  facet_grid(. ~ numBins) + xlab("Predicted Effort") +
+  ylab("Actual Effort") +
+  theme(panel.spacing = unit(1, "lines"))
+
+# Plots cross validation results  
 MSEdata <- data.frame(NumBins = 1:length(SWTIIresults), MSE = sapply(SWTIIresults, function(x) { x$MSE }))
-ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point()
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
 ```
 SWTIII Search Results
 ```{r swtiii, warning = FALSE}
-SWTIIIresults <- performSearch(3, "./Transaction Data", effort, c("TL", "TD", "DETs"))
+SWTIIIresults <- performSearch(2, "./Transaction Data", effort, c("TL", "TD", "DETs"))
+# Plot classification results
 for (result in SWTIIIresults) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
@@ -75,7 +109,25 @@ for (result in SWTIIIresults) {
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   print(g)
 }
-  
+
+# Plot predicted vs. actual effort values
+predictedValues <- sapply(1:length(SWTIIIresults), function(i) {
+  predicted <- apply(SWTIIIresults[[i]]$data, 1, function(x) {
+    predict.blm(SWTIIIresults[[i]]$model, newdata = as.data.frame(t(x)))
+  })
+})
+colnames(predictedValues) <- paste(1:length(SWTIIIresults), "Bins")
+predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
+predictedValues <- cbind(predictedValues, effort)
+predictedValues <- as.data.frame(predictedValues)
+predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
+ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
+  facet_grid(. ~ numBins) + xlab("Predicted Effort") +
+  ylab("Actual Effort") +
+  theme(panel.spacing = unit(1, "lines"))
+
+# Plots cross validation results
 MSEdata <- data.frame(NumBins = 1:length(SWTIIIresults), MSE = sapply(SWTIIIresults, function(x) { x$MSE }))
-ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point()
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
 ```
