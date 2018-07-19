@@ -226,8 +226,8 @@ app.get('/signup',function(req,res){
 });
 
 app.get('/login',function(req,res){
-	res.render('login');
-//	res.redirect('/surveyproject');
+//	res.render('login');
+	res.redirect('/surveyproject');
 });
 
 app.get('/logout',function(req,res){
@@ -240,8 +240,8 @@ app.get('/logout',function(req,res){
 
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
 
-//	res.end("error");
-//	return;
+	res.end("error");
+	return;
 
 	var username = req.body['username'];
 	var pwd = req.body['password'];
@@ -1977,20 +1977,20 @@ app.get('/deactivateUser', function(req,res){
 
 //==================== local machine code for development ==========================
 
-var server = app.listen(8081,'127.0.0.1', function () {
-  var host = server.address().address
-  var port = server.address().port
-  console.log("Example app listening at http://%s:%s", host, port)
-});
+//var server = app.listen(8081,'127.0.0.1', function () {
+//  var host = server.address().address
+//  var port = server.address().port
+//  console.log("Example app listening at http://%s:%s", host, port)
+//});
 
 //==================== remote server code for production ==========================
-//var vhost = require('vhost');
-//var webServer = module.exports = express();
-//
-//webServer.use(vhost('umlx.kanqi.org', app)); // Serves top level domain via Main server app
-//
-///* istanbul ignore next */
-//if (!module.parent) {
-//  webServer.listen(8081);
-//  console.log('Express started on port 8081');
-//}
+var vhost = require('vhost');
+var webServer = module.exports = express();
+
+webServer.use(vhost('umlx.kanqi.org', app)); // Serves top level domain via Main server app
+
+/* istanbul ignore next */
+if (!module.parent) {
+  webServer.listen(8081);
+  console.log('Express started on port 8081');
+}
