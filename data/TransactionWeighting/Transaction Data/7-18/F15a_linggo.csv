@@ -1,0 +1,72 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Language Learner:Login successful message->Language Learner:Login successful message,Login,undefined,1,0,0,0
+2,stl#Language Learner:Login Button->Language Learner:Login Button->Login Button:Check Password->Check Password:Profile Information,Login,undefined,0,3,0,0
+3,stl#Language Learner:Login Button->Language Learner:Login Button->Login Button:Check Password->Check Password:Login successful message,Login,undefined,1,2,0,0
+4,stl#Language Learner:Home page->Language Learner:Home page,Logout,undefined,1,0,0,0
+5,stl#Language Learner:Logout button->Language Learner:Logout button->Logout button:Clear user session->Clear user session:Home page,Logout,undefined,1,1,0,0
+6,stl#Language Learner:choose language button->Language Learner:choose language button->choose language button:system check language preferences->system check language preferences:language preference info,Search for Native Speaker,undefined,0,0,0,0
+7,stl#Language Learner:choose language button->Language Learner:choose language button->choose language button:system check language preferences->system check language preferences:No matching message,Search for Native Speaker,undefined,1,0,0,0
+8,stl#Language Learner:choose language button->Language Learner:choose language button->choose language button:system check language preferences->system check language preferences:List of language learners,Search for Native Speaker,undefined,0,0,0,0
+9,stl#Language Learner:Langugage choose page->Language Learner:Langugage choose page,Search for Native Speaker,undefined,0,0,0,0
+10,stl#Language Learner:List of language learners->Language Learner:List of language learners,Search for Native Speaker,undefined,0,0,0,0
+11,stl#Language Learner:No matching message->Language Learner:No matching message,Search for Native Speaker,undefined,1,0,0,0
+12,stl#Match other learner->Match other learner->send_match_request->validate_request()->get_matched_user()->matched user list->matched user list->display matched user,Search for Native Speaker,undefined,0,0,0,1
+13,stl#Language learner:profile page of other language larner->Language learner:profile page of other language larner,Send Messages to Other Language Learner,undefined,0,0,0,0
+14,stl#Language learner:"please fill in the content" page->Language learner:"please fill in the content" page,Send Messages to Other Language Learner,undefined,0,1,0,0
+15,stl#Language learner:send message button->Language learner:send message button->send message button:display send message page->display send message page:type message content,Send Messages to Other Language Learner,undefined,3,0,0,0
+16,stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:save message into database->save message into database:successfully sent page,Send Messages to Other Language Learner,undefined,3,1,0,0
+17,stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:save message into database->save message into database:successful message,Send Messages to Other Language Learner,undefined,3,1,0,0
+18,stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:save message into database->save message into database:message,Send Messages to Other Language Learner,undefined,3,1,0,0
+19,stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:"please fill in the content" page,Send Messages to Other Language Learner,undefined,1,2,0,0
+20,stl#Language learner:successful message->Language learner:successful message,Send Messages to Other Language Learner,undefined,1,0,0,0
+21,stl#Language learner:successfully sent page->Language learner:successfully sent page,Send Messages to Other Language Learner,undefined,1,0,0,0
+22,stl#Language learner:type message content->Language learner:type message content,Send Messages to Other Language Learner,undefined,1,0,0,0
+23,stl#Send message to other learner->Send message to other learner->Validate_access_token()->Validate_access_token()->response->response->call_message_receive_api()->validate_data()->validate_request()->call_message_api()->callect_target_user_message->Validate_data()->result message list->Update_message_table()->Update_result->result message list->Api call status->display message list,Send Messages to Other Language Learner,undefined,12,0,0,1
+24,stl#Check message box with one learner->Check message box with one learner,Send Messages to Other Language Learner,undefined,1,0,0,0
+25,stl#Language learner:Sign up message->Language learner:Sign up message,Sign Up,undefined,1,0,0,0
+26,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Sign up message,Sign Up,undefined,1,2,0,0
+27,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Create account->Create account:Log in user->Log in user:Home page,Sign Up,undefined,1,2,0,0
+28,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Create account->Create account:Object1,Sign Up,undefined,0,3,0,0
+29,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Create account->Create account:Account,Sign Up,undefined,0,2,0,0
+30,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:Sign up message,Sign Up,undefined,1,1,0,0
+31,stl#Language learner:Home page->Language learner:Home page,Sign Up,undefined,1,0,0,0
+32,stl#Language learner:Sign up form->Language learner:Sign up form,Sign Up,undefined,0,1,0,0
+33,stl#Lanugage learner:Submit button->Lanugage learner:Submit button->Submit button:check required fields->check required fields:Update language learner information->Update language learner information:account,Update Profile,undefined,0,3,0,0
+34,stl#Lanugage learner:Submit button->Lanugage learner:Submit button->Submit button:check required fields->check required fields:Update language learner information->Update language learner information:Update successful message,Update Profile,undefined,1,3,0,0
+35,stl#Lanugage learner:Profile update form->Lanugage learner:Profile update form,Update Profile,undefined,1,0,0,0
+36,stl#Lanugage learner:Update successful message->Lanugage learner:Update successful message,Update Profile,undefined,1,0,0,0
+37,stl#Update learner's profile->Update learner's profile->validate_access_tocken()->response->validate_data()->update_profile()->validate_data()->update_user_data()->update_result->Api call status->Display update result,Update Profile,undefined,4,3,0,1
+2,0,24,48
+17,stl#Send message to other learner->Send message to other learner->Validate_access_token()->Validate_access_token()->response->response->call_message_receive_api()->validate_data()->validate_request()->call_message_api()->callect_target_user_message->Validate_data()->result message list->Update_message_table()->Update_result->result message list->Api call status->display message list,Send Messages to Other Language Learner,TRAN_NA,18,10,17.647058823529413,317.64705882352945
+18,stl#Check message box with one learner->Check message box with one learner,Send Messages to Other Language Learner,CTRL,2,0,24,48
+19,stl#Check message box with one learner->Check message box with one learner,Send Messages to Other Language Learner,EXTCLL,2,0,24,48
+20,stl#Check message box with one learner->Check message box with one learner,Send Messages to Other Language Learner,INT,2,0,24,48
+1,stl#Language learner:Sign up message->Language learner:Sign up message,Sign Up,CTRL,2,0,5,10
+2,stl#Language learner:Sign up message->Language learner:Sign up message,Sign Up,EXTCLL,2,0,5,10
+3,stl#Language learner:Sign up message->Language learner:Sign up message,Sign Up,INT,2,0,5,10
+4,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Sign up message,Sign Up,CTRL,5,5,2.75,13.75
+5,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Sign up message,Sign Up,EXTCLL,5,5,2.75,13.75
+6,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Sign up message,Sign Up,INT,5,5,2.75,13.75
+7,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Create account->Create account:Log in user->Log in user:Home page,Sign Up,CTRL,7,10,2.5,17.5
+8,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Create account->Create account:Log in user->Log in user:Home page,Sign Up,EXTCLL,7,10,2.5,17.5
+9,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Create account->Create account:Log in user->Log in user:Home page,Sign Up,INT,7,10,2.5,17.5
+10,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Create account->Create account:Object1,Sign Up,CTRL,6,7,2,12
+11,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:checks required fields->checks required fields:Create account->Create account:Account,Sign Up,CTRL,6,9,2,12
+12,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:Sign up message,Sign Up,CTRL,4,3,3,12
+13,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:Sign up message,Sign Up,EXTCLL,4,3,3,12
+14,stl#Language learner:Submit button->Language learner:Submit button->Submit button:check username/email exist->check username/email exist:Sign up message,Sign Up,INT,4,3,3,12
+15,stl#Language learner:Home page->Language learner:Home page,Sign Up,CTRL,2,0,5,10
+16,stl#Language learner:Home page->Language learner:Home page,Sign Up,EXTCLL,2,0,5,10
+17,stl#Language learner:Home page->Language learner:Home page,Sign Up,INT,2,0,5,10
+18,stl#Language learner:Sign up form->Language learner:Sign up form,Sign Up,CTRL,2,3,2,4
+1,stl#Lanugage learner:Submit button->Lanugage learner:Submit button->Submit button:check required fields->check required fields:Update language learner information->Update language learner information:account,Update Profile,CTRL,5,4,1.75,8.75
+2,stl#Lanugage learner:Submit button->Lanugage learner:Submit button->Submit button:check required fields->check required fields:Update language learner information->Update language learner information:Update successful message,Update Profile,CTRL,5,2,2.75,13.75
+3,stl#Lanugage learner:Submit button->Lanugage learner:Submit button->Submit button:check required fields->check required fields:Update language learner information->Update language learner information:Update successful message,Update Profile,EXTCLL,5,2,2.75,13.75
+4,stl#Lanugage learner:Submit button->Lanugage learner:Submit button->Submit button:check required fields->check required fields:Update language learner information->Update language learner information:Update successful message,Update Profile,INT,5,2,2.75,13.75
+5,stl#Lanugage learner:Profile update form->Lanugage learner:Profile update form,Update Profile,CTRL,2,3,1,2
+6,stl#Lanugage learner:Profile update form->Lanugage learner:Profile update form,Update Profile,EXTCLL,2,3,1,2
+7,stl#Lanugage learner:Profile update form->Lanugage learner:Profile update form,Update Profile,INT,2,3,1,2
+8,stl#Lanugage learner:Update successful message->Lanugage learner:Update successful message,Update Profile,CTRL,2,0,6,12
+9,stl#Lanugage learner:Update successful message->Lanugage learner:Update successful message,Update Profile,EXTCLL,2,0,6,12
+10,stl#Lanugage learner:Update successful message->Lanugage learner:Update successful message,Update Profile,INT,2,0,6,12
+11,stl#Update learner's profile->Update learner's profile->validate_access_tocken()->response->validate_data()->update_profile()->validate_data()->update_user_data()->update_result->Api call status->Display update result,Update Profile,TRAN_NA,11,14,3.7,40.7

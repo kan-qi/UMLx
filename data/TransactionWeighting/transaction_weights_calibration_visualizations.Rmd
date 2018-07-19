@@ -32,7 +32,7 @@ ggplot(combined, aes(x=DETs)) +
 ```
 SWTI Search Results
 ```{r swti}
-SWTIresults <- performSearch(3, "./Transaction Data", effort, c("TL"))
+SWTIresults <- performSearch(6, "./Transaction Data", effort, c("TL"))
 # Plot classification results
 for (result in SWTIresults) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))

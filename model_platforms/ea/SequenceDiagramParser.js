@@ -10,6 +10,9 @@
 	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
 	
 function standardizeName(name){
+	if(!name){
+		return null;
+	}
 	return name.replace(/\s/g, '').toUpperCase();
 }
 	
