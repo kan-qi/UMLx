@@ -247,7 +247,8 @@ performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DET
 		regressionData <- as.data.frame(regressionData)
 		searchResults[[i]] <- list(MSE = crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k), 
 				model = bayesfit(lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]), 10000),
-				data = regressionData)
+				data = regressionData,
+				cuts = cutPoints)
 	}
 	searchResults
 }
