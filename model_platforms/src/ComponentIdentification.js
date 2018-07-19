@@ -20,7 +20,7 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var codeAnalysis = require("./codeAnalysis.js");
+	var codeAnalysis = require("./CodeAnalysis.js");
 	var util = require('util');
     const uuidv4 = require('uuid/v4');
 
