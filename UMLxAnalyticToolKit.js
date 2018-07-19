@@ -1,4 +1,5 @@
 var fs = require("fs");
+var csv = require('csv-parser')
 var mkdirp = require("mkdirp");
 var rimraf = require('rimraf');
 
@@ -20,7 +21,6 @@ var RScriptExec = require('./utils/RScriptUtil.js');
 
 // current available evaluators
 var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
-//var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
 var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
 var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
@@ -28,31 +28,46 @@ var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCaseP
 var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
 var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
 var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
-
 var userStoryEvaluator = require('./evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
 
-//var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
 var evaluators = [
-		useCaseComponentsEvaluator,
-		transactionEvaluator,
-		modelVersionEvaluator,
-		projectTypeEvaluator,
-		cocomoCalculator,
-		useCasePointEvaluator,
-		extendedUseCasePointEvaluator,
-		UMLSizeMetricEvaluator,
-		userStoryEvaluator
-		];
-
+    useCaseComponentsEvaluator,
+    transactionEvaluator,
+    modelVersionEvaluator,
+    projectTypeEvaluator,
+    cocomoCalculator,
+    useCasePointEvaluator,
+    extendedUseCasePointEvaluator,
+    UMLSizeMetricEvaluator,
+    userStoryEvaluator
+];
 
 //Input xml file directory 
 var inputDir = process.argv[2];
+var outputDir = process.argv[3];
 //Manully setted output directory
 let date = new Date();
 let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
-var outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now();
+//var outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now();
+var outputDir = outputDir+"/"+analysisDate+"@"+Date.now();
 
-function analyzeUML() {
+var useCasesSum = 0;
+var transactionsSum = 0;
+var classesSum = 0;
+var actorsSum = 0;
+var swti = [];
+var swtii = [];
+var swtiii = [];
+var categories=[];
+var rt_object = {swtI:[],swtII:[],swtIII:[],category:[]};
+
+var useCaseEvaluationStr = "";
+var domainModelEvaluationStr = "";
+var modelEvaluationStr = "";
+
+var useCaseNum = 1;
+
+function analyzeUML(callback) {
     //create output directory for analysis result
 	mkdirp(outputDir, (err) => {
 		if(err) {
@@ -96,7 +111,11 @@ function analyzeUML() {
 					modelExtractor(model);
 					model.OutputDir = outputDir;
 					model.AccessDir = inputDir;
-					modelEvaluator(model);
+					modelEvaluator(model, function(model2){
+						if (callback) {
+							callback(model2);
+						}
+					});
 				});
 			});
 	    });
@@ -117,18 +136,33 @@ function modelExtractor(model) {
 	});
 
 	for(let i in model.UseCases) {
-		var useCase = model.UseCases[i];
-		useCase.Paths = traverseUseCaseForPaths(useCase);
-	
-		for(let j in useCase.Paths){
-			let path = useCase.Paths[j];
-			var PathStrByIDs = "";
-			for(let k in path.Elements){
-				let node = path.Elements[k];
-				PathStrByIDs += node._id+"->";
-			}
-			path.PathStrByIDs = path.PathStrByIDs;
-		}
+		// var useCase = model.UseCases[i];
+		// useCase.Paths = traverseUseCaseForPaths(useCase);
+        //
+		// for(let j in useCase.Paths){
+		// 	let path = useCase.Paths[j];
+		// 	var PathStrByIDs = "";
+		// 	for(let k in path.Elements){
+		// 		let node = path.Elements[k];
+		// 		PathStrByIDs += node._id+"->";
+		// 	}
+		// 	path.PathStrByIDs = path.PathStrByIDs;
+		// }
+        var useCase = model.UseCases[i];
+        useCase.Transactions = traverseUseCaseForTransactions(useCase);
+
+        var debug = require("./utils/DebuggerOutput.js");
+        debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
+
+        for(var j in useCase.Transactions){
+            var transaction = useCase.Transactions[j];
+            var TransactionStrByIDs = "";
+            for(var k in transaction.Elements){
+                var node = transaction.Elements[k];
+                TransactionStrByIDs += node._id+"->";
+            }
+            transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
+        }
 		
 		modelDrawer.drawPrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase.dotty", () => {
 			console.log("Use Case is drawn");
@@ -238,6 +272,106 @@ function traverseUseCaseForPaths(useCase){
 		}
 	}		
 	return Paths;		
+}
+
+function traverseUseCaseForTransactions(useCase){
+
+    console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+
+
+    function isCycled(path){
+        var lastNode = path[path.length-1];
+        for(var i=0; i < path.length-1; i++){
+            if(path[i] == lastNode){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    var toExpandCollection = new Array();
+
+    for (var j in useCase.Activities){
+        var activity = useCase.Activities[j];
+        //define the node structure to keep the infor while traversing the graph
+        if(activity.Stimulus){
+            var node = {
+                //id: startElement, //ElementGUID
+                Node: activity,
+                PathToNode: [activity],
+                OutScope: activity.OutScope
+            };
+            toExpandCollection.push(node);
+        }
+    }
+
+    var Paths = new Array();
+    var toExpand;
+
+    var debug = require("./utils/DebuggerOutput.js");
+    debug.writeJson("use_cas_toExpand_"+useCase._id, toExpandCollection);
+
+    while((toExpand = toExpandCollection.pop()) != null){
+        var node = toExpand.Node;
+        var pathToNode = toExpand.PathToNode;
+
+        var childNodes = [];
+        for(var j in useCase.PrecedenceRelations){
+            var edge = useCase.PrecedenceRelations[j];
+            if(edge.start == node){
+                childNodes.push(edge.end);
+            }
+        }
+
+        if(childNodes.length == 0){
+            Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+        }
+        else{
+            for(var j in childNodes){
+                var childNode = childNodes[j];
+                if(!childNode){
+                    continue;
+                }
+
+                //if childNode is an outside activity
+
+                var OutScope = false;
+                if(toExpand.OutScope||childNode.OutScope){
+                    OutScope = true;
+                }
+
+                var toExpandNode = {
+                    Node: childNode,
+                    PathToNode: pathToNode.concat(childNode),
+                    OutScope: OutScope
+                }
+
+                console.log("toExpandNode");
+                console.log(toExpandNode);
+
+                console.log("child node");
+                console.log(childNodes);
+                console.log(childNode);
+                console.log(childNode.Name);
+                console.log(childNode.Group);
+
+                if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
+                    toExpandCollection.push(toExpandNode);
+                }
+                else{
+                    Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+                }
+            }
+        }
+
+
+    }
+
+//			console.log(Paths);
+//			useCase.Paths = Paths;
+
+    return Paths;
+
 }
 
 function evaluateUseCase(useCase, model, callbackfunc){
@@ -383,7 +517,7 @@ function toModelEvaluationStr(model, modelNum){
 	return modelEvaluationStr;
 }
 
-function modelEvaluator(model) {
+function modelEvaluator(model, callback) {
 
 	var useCaseNum = 1;
 	var useCaseEvaluationStr = "";
@@ -456,7 +590,11 @@ function modelEvaluator(model) {
 						RScriptExec.runRScript(command,function(result){
 							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
 									
-							RScriptExec.runRScript(command);
+							RScriptExec.runRScript(command, function(result){
+								if (callback) {
+									callback(model);
+								}
+							});
 						});
 					}
 				});
@@ -464,4 +602,348 @@ function modelEvaluator(model) {
 	});
 }
 
-analyzeUML();
+function readUsecaseJson(model, callback) {
+    let html_table = `<div style='height:6%'>&nbsp;</div>
+						<table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'>
+							<tr>
+								<th>Usecase ID</th>
+								<th>Column Name</th>
+								<th>Mean</th>
+								<th>Variance</th>
+								<th>First Quartile</th>
+								<th>Median</th>
+								<th>Third Quartile</th>
+								<th>Kurtosis</th>
+							</tr>
+						`;
+
+	let count = 0;
+
+	for(usecase of model.UseCases) {
+		let filePath = usecase.OutputDir + "/element_statistics.json";
+		fs.exists(filePath, (exists) => {
+			count ++;
+			if (exists) {
+				count --;
+                fs.readFile(filePath, (err, data) => {
+                	count ++;
+                    if (err) throw err;
+                    let obj = JSON.parse(data);
+                    console.log(obj);
+
+                    for(let i = 0;i < obj.length;i++){
+                    	let element = obj[i];
+                    	if(i === 0) {
+                            html_table += `<tr class="estimation-table">
+									<td rowspan="${obj.length}"> ID </td>
+									<td> ${element['column name']} </td>
+									<td> ${element.statistics['mean']} </td>
+									<td> ${element.statistics.variance} </td>
+									<td> ${element.statistics.first_quartile} </td>
+									<td> ${element.statistics.median} </td>
+									<td> ${element.statistics.third_quartile} </td>
+									<td> ${element.statistics.kurtosis} </td>
+									</tr>
+                    			`;
+						}
+						else {
+                            html_table += `<tr class="estimation-table">
+									<td> ${element['column name']} </td>
+									<td> ${element.statistics['mean']} </td>
+									<td> ${element.statistics.variance} </td>
+									<td> ${element.statistics.first_quartile} </td>
+									<td> ${element.statistics.median} </td>
+									<td> ${element.statistics.third_quartile} </td>
+									<td> ${element.statistics.kurtosis} </td>
+									</tr>
+								`;
+						}
+					}
+
+                    if (count === model.UseCases.length && callback) {
+                        html_table += `</table>`;
+                        callback(html_table);
+					}
+                });
+			}
+        });
+	}
+}
+
+
+function createStream(callback) {
+	let chart_url = outputDir + "/useCaseEvaluation.csv";
+	fs.createReadStream(chart_url)
+		.pipe(csv())
+		.on('data', function (data) {
+			swti.push(parseInt(data.SWTI));
+			swtii.push([parseInt(data.SWTII)]);
+			swtiii.push([parseInt(data.SWTIII)]);
+			categories.push("'"+("UC"+data.NUM)+"'");
+		})
+		.on('end', function(data) {
+			// console.log("hello" + swti);
+			// console.log("hello" + swtii);
+			// console.log("hello" + swtiii);
+			// console.log("hello" + categories);
+			rt_object.swtI = swti;
+			rt_object.swtII = swtii;
+			rt_object.swtIII = swtiii;
+			rt_object.category = categories;
+			if (callback) {
+				callback();
+			}
+		});
+}
+
+function getHTML(xcategories,yswti,yswtii,yswtiii,html_table,callback) {
+	let model_analysis_button =
+		`
+		<div class='model-analytics-ops pull-right'>
+			<div class="dropdown">
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Dump Repo<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="./modelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Models</a></li>
+					<li><a href="./modelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Models (simulation)</a></li>
+					<li><a href="./useCaseEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Use Cases</a></li>
+					<li><a href="./domainModelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Domain Models</a></li>
+					<li><a href="./transactionAnalytics.csv" class="dumpEvaluationData dropdown-item">Evaluation For Transactions</a></li>
+					<li><a href="./entityAnalytics.csv.csv" class="dumpEvaluationData dropdown-item">Evaluation For Classes</a></li>
+					<li><a href="./elementAnalytics.csv" class="dumpEvaluationData dropdown-item">Evaluation For Elements</a></li>
+				</ul>
+			</div>
+			
+			<div class='dropdown'>
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Load<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a id="update-model" onclick="" href="javaScript:void(0);" class="dropdown-item">Model Version</a></li>
+				</ul>
+			</div>
+			
+			<div class="dropdown">
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn dropdown-toggle btn-default">Analysis<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="javaScript:void(0);"class="request-repo-analytics dropdown-item">Reanalyse Repo</a></li>
+					<li><a href="javaScript:void(0);" class="dropdown-item">Reload Repo</a></li>
+				</ul>
+			</div>
+		</div>
+		`;
+
+	let cards_selection =
+		`
+		<div class="col-sm-12 status-row">
+			<div class="col-sm-3">
+				<div class="blue-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="../../img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>${useCasesSum}</h2>
+						<span>Use Cases</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="red-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="../../img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>${transactionsSum}</h2>
+						<span>Transactions</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="green-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="../../img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>${classesSum}</h2>
+						<span>Classes</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="purple-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="../../img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>${actorsSum}</h2>
+						<span>Actors</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div id="result_chart">here should be distributions</div>
+		`;
+
+	let model_analysis_chart =
+		`
+		<div class="model-info-content">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a data-toggle="tab" href="#model-analytics">Overview</a>
+				</li>
+				<li>
+					<a data-toggle="tab" href="#usecase-analysis" onclick="">Model Elements</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div id="model-analytics" class="tab-pane fade in active">
+					${cards_selection}
+				</div>
+				<div id="usecase-analysis" class="tab-pane fade">
+					<div id="model-usecase-analysis">
+						<h3>loading...</h3>
+					</div>
+				</div>
+				<div id="repo-analysis-detail" class="panel-body">
+					<div class="repo-metrics table-responsive">
+						${html_table}
+					</div>
+				</div> 
+			</div>
+		</div>	  
+		`
+	;
+
+	let htmlBody =
+		`
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<title>UMLx</title>
+				<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet'>
+				<link href='../../css/style.css', rel='stylesheet'>
+				<link href="../../css/lightgallery.css" rel="stylesheet">
+			</head>
+			
+			<body>
+				<div class="banner">
+					<div class="content-flex">
+						<div class="col-md-10 banner-title">
+							<h2>UMLx</h2>
+						</div>
+					</div>
+				</div>
+	
+				<div id='main-panel'>
+					<div id='display-panel'>
+						<div class='block panel panel-default'>
+							<div id='panel-heading'>
+								${model_analysis_button}
+							</div>
+	
+							<div id="model-stats-chart" class="panel-body">
+								${model_analysis_chart}
+							</div>
+						</div>
+					</div>
+				</div>
+				
+	
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+				<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+				<script type="text/javascript" src="https://code.highcharts.com/highcharts.src.js"></script>
+				<script type="text/javascript" src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+				<script type="text/javascript" src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+				<script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
+				<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+				<script type="text/javascript" src="../../js/scripts.js"></script>
+				<script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
+				<script> 
+					function display(){
+						$('#result_chart').highcharts({
+							chart: {
+								type: 'column',
+								spacingLeft: 0
+							},
+	
+							title: {
+								text: 'Evaluation of Use Case Complexity'
+							},
+			
+							xAxis: {
+								categories: [${xcategories}],
+								crosshair: true
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: 'Frequency'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+									'<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0.2,
+									borderWidth: 0
+								}
+							},
+							series: [ 
+								{
+									name: 'SWTI',
+									data: [${yswti}]
+								}, 
+								{
+									name: 'SWTII',
+									data: [${yswtii}]
+								}, 
+								{
+									name: 'SWTIII',
+									data: [${yswtiii}]
+								}
+							]
+						});
+					}
+	
+					window.onload = display;
+				</script>
+			</body>
+		</html>
+		`;
+	if (callback) {
+		callback(htmlBody);
+	}
+}
+
+function writeHTML(htmlBody){
+    fs.writeFile(outputDir + "/result.html", htmlBody, (err) => {
+        if(err) throw err;
+        console.log("Result HTML Page has been successfully created!");
+    });
+}
+
+
+
+analyzeUML(function (model) {
+    readUsecaseJson(model, function (html_table) {
+        createStream(function () {
+            const yswi = rt_object.swtI;
+            const yswtii = rt_object.swtII;
+            const yswtiii = rt_object.swtIII;
+            const xcategories = rt_object.category;
+            console.log("xcategories"+xcategories);
+            console.log("yswi"+yswi);
+            console.log("yswii"+yswtii);
+            console.log("yswiii"+yswtiii);
+            getHTML(xcategories,yswi,yswtii,yswtiii,html_table, function (data) {
+                writeHTML(data);
+                console.log(`result : [${xcategories}]`);
+            });
+        });
+    });
+
+});
