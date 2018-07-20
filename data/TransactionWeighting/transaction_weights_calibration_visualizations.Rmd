@@ -40,6 +40,12 @@ for (result in SWTIresults) {
     geom_bar(stat = "identity") +
     xlab("Category")
   print(g)
+  cat(paste("Cut points for", length(result$cuts[1, ]) - 1, "bins:\n"))
+  for (i in 1:nrow(result$cuts)) {
+    cat(paste(rownames(result$cuts)[i],": ", sep = ""))
+    cat(result$cuts[i, ])
+    cat("\n")
+  }
 }
 
 # Plot predicted vs. actual effort values
@@ -74,6 +80,12 @@ for (result in SWTIIresults) {
     xlab("Category") +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   print(g)
+  cat(paste("Cut points for", length(result$cuts[1, ]) - 1, "bins:\n"))
+  for (i in 1:nrow(result$cuts)) {
+    cat(paste(rownames(result$cuts)[i],":", sep = ""))
+    cat(result$cuts[i, ])
+    cat("\n")
+  }
 }
 
 # Plot predicted vs. actual effort values
@@ -108,6 +120,12 @@ for (result in SWTIIIresults) {
     xlab("Category") +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   print(g)
+  cat(paste("Cut points for", length(result$cuts[1, ]) - 1, "bins:\n"))
+  for (i in 1:nrow(result$cuts)) {
+    cat(paste(rownames(result$cuts)[i],":", sep = ""))
+    cat(result$cuts[i, ])
+    cat("\n")
+  }
 }
 
 # Plot predicted vs. actual effort values
