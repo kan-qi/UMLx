@@ -15,7 +15,7 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var codeAnalysis = require("./codeAnalysis.js");
+	var codeAnalysis = require("./CodeAnalysis.js");
 	var kdmModelUtils = require("./KDMModelUtils.js");
 	var kdmModelDrawer = require("./KDMModelDrawer.js");
 

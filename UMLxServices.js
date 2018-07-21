@@ -230,6 +230,14 @@ app.get('/login',function(req,res){
 //	res.redirect('/surveyproject');
 });
 
+app.get('/logout',function(req,res){
+	if(req.cookies){
+		req.cookies.appToken = null;
+	}
+	
+	res.redirect('/login');
+});
+
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
 
 //	res.end("error");
@@ -347,7 +355,7 @@ app.get('/surveyProject', function(req, res){
 
 app.get('/clearDB', function(req, res){
 	var userId = req.query.user_id;
-	if(userId === "flyqk"){
+	if(userId === "flyqk191829189181810282"){
 	umlModelInfoManager.clearDB(function(result){
 		res.end('database is clear');
 	    });
@@ -357,12 +365,47 @@ app.get('/clearDB', function(req, res){
 
 app.get('/setupRepoStorage', function(req, res){
 	var userId = req.query.user_id;
-	if(userId === "flyqk"){
+	if(userId === "flyqk191829189181810282"){
 	umlModelInfoManager.setupRepoStorage(function(){
 		res.end('database is set up');
 	    });
 	}
 })
+
+
+app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxCount: 1}, {name: 'requirements', maxCount:1},
+	{name: 'use_cases', maxCount: 1}, {name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
+	console.log(req.body);
+	var formInfo = req.body;
+
+	console.log("==========req.files=============");
+    console.log(req.files);
+
+    // save the file names in DB
+    // formInfo.project_plans = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
+    // formInfo.requirements = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
+    // formInfo.use_cases = (umlSurveyFiles[2]==undefined) ? "" : umlSurveyFiles[2];
+    // formInfo.uml_file = (umlSurveyFiles[3]==undefined) ? "" : umlSurveyFiles[3];
+    // formInfo.uml_other = (umlSurveyFiles[4]==undefined) ? "" : umlSurveyFiles[4];
+
+    formInfo.project_plans = (req.files.project_plans==undefined) ? "" : Date.now()+ "-" + req.files.project_plans[0].originalname;
+    formInfo.requirements = (req.files.requirements==undefined) ? "" : Date.now()+ "-" + req.files.requirements[0].originalname;
+    formInfo.use_cases = (req.files.use_cases==undefined) ? "" : Date.now()+ "-" + req.files.use_cases[0].originalname;
+    formInfo.uml_file = (req.files.uml_file==undefined) ? "" : Date.now()+ "-" + req.files.uml_file[0].originalname;
+    formInfo.uml_other = (req.files.uml_other==undefined) ? "" : Date.now()+ "-" + req.files.uml_other[0].originalname;
+
+    console.log('=================formInfo==================');
+    console.log(formInfo);
+
+	umlModelInfoManager.saveSurveyData(formInfo);
+	res.redirect("thankYou");
+});
+
+
+app.get('/thankYou', function(req, res){
+	res.render('thankYou');
+});
+
 
 
 //route middleware to verify a token
@@ -498,36 +541,6 @@ app.get('/surveyAnalytics', function (req, res){
     // console.log(data)
     // res.sendStatus(200);
 });
-
-
-app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxCount: 1}, {name: 'requirements', maxCount:1},
-	{name: 'use_cases', maxCount: 1}, {name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
-	console.log(req.body);
-	var formInfo = req.body;
-
-	console.log("==========req.files=============");
-    console.log(req.files);
-
-    // save the file names in DB
-    // formInfo.project_plans = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
-    // formInfo.requirements = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
-    // formInfo.use_cases = (umlSurveyFiles[2]==undefined) ? "" : umlSurveyFiles[2];
-    // formInfo.uml_file = (umlSurveyFiles[3]==undefined) ? "" : umlSurveyFiles[3];
-    // formInfo.uml_other = (umlSurveyFiles[4]==undefined) ? "" : umlSurveyFiles[4];
-
-    formInfo.project_plans = (req.files.project_plans==undefined) ? "" : Date.now()+ "-" + req.files.project_plans[0].originalname;
-    formInfo.requirements = (req.files.requirements==undefined) ? "" : Date.now()+ "-" + req.files.requirements[0].originalname;
-    formInfo.use_cases = (req.files.use_cases==undefined) ? "" : Date.now()+ "-" + req.files.use_cases[0].originalname;
-    formInfo.uml_file = (req.files.uml_file==undefined) ? "" : Date.now()+ "-" + req.files.uml_file[0].originalname;
-    formInfo.uml_other = (req.files.uml_other==undefined) ? "" : Date.now()+ "-" + req.files.uml_other[0].originalname;
-
-    console.log('=================formInfo==================');
-    console.log(formInfo);
-
-	umlModelInfoManager.saveSurveyData(formInfo);
-	res.redirect("thankYou");
-});
-
 
 
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
@@ -1683,13 +1696,6 @@ app.get('/', function(req, res){
 
 
 
-});
-
-
-
-
-app.get('/thankYou', function(req, res){
-	res.render('thankYou');
 });
 
 var testingParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
