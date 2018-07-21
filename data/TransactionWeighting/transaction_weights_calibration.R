@@ -93,6 +93,36 @@ classify <- function(data, cutPoints) {
 	result
 }
 
+calcMMRE <- function(testData, pred) {
+  # Calculates mean magnitude relative error (MMRE).
+  #
+  # Args:
+  #   testData: known results to validate against
+  #   pred: predicted results from the model
+  #
+  # Returns:
+  #   MMRE
+  mmre <- abs(testData - pred)/testData
+  mean_value <- mean(mmre)
+  mean_value
+}
+
+calcPRED <- function(testData, pred, percent) {
+  # Calculates percentage relative error deviation (PRED).
+  #
+  # Args:
+  #   testData: known results to validate against
+  #   pred: predicted results from the model
+  #   percent: percent error threshold to accept predicted value
+  #
+  # Returns:
+  #   PRED
+  value <- abs(testData - pred)/testData
+  percent_value <- percent/100
+  pred_value <- value <= percent_value
+  mean(pred_value)
+}
+
 crossValidate <- function(data, k) {
 	# Performs k-fold cross validation with linear regression as training method.
 	#
@@ -101,9 +131,11 @@ crossValidate <- function(data, k) {
 	#   k: number of folds to use
 	#
 	# Returns:
-	#   The mean MSE for all folds.
+	#   A vector of mean MSE, MMRE, PRED(0.25) for all folds.
 	folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
 	foldMSE <- vector(length = k)
+	foldMMRE <- vector(length = k)
+	foldPRED <- vector(length = k)
 	for (i in 1:k) {
 		testIndexes <- which(folds == i, arr.ind = TRUE)
 		testData <- data[testIndexes, ]
@@ -111,8 +143,10 @@ crossValidate <- function(data, k) {
 		model <- bayesfit(lm(Effort ~ ., data = trainData), 10000)
 		predicted <- predict.blm(model, newdata = testData)
 		foldMSE[i] <- mean((predicted - testData$Effort)^2)
+		foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
+		foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
 	}
-	mean(foldMSE)
+	results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
 }
 
 genColNames <- function(parameters, nBins) {
@@ -245,10 +279,13 @@ performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DET
 		}
 		regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
 		regressionData <- as.data.frame(regressionData)
-		searchResults[[i]] <- list(MSE = crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k), 
-				model = bayesfit(lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]), 10000),
-				data = regressionData,
-				cuts = cutPoints)
+		validationResults <- crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k)
+		searchResults[[i]] <- list(MSE = validationResults["MSE"], 
+		                           MMRE = validationResults["MMRE"], 
+		                           PRED = validationResults["PRED"],
+		                           model = bayesfit(lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]), 10000),
+		                           data = regressionData,
+		                           cuts = cutPoints)
 	}
 	searchResults
 }
