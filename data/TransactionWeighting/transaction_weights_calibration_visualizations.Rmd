@@ -7,6 +7,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 source("transaction_weights_calibration.R")
 library(tidyverse)
+
+cutsAsVec <- function(x) {
+  ret <- c("Cut Points:")
+  for (row in rownames(x)) {
+    cutPoints <- round(x[row, ], digits = 1)
+    ret <- c(ret, paste(row,":", paste(cutPoints, collapse = ", ")))
+  }
+  ret
+}
 ```
 Combined Data Effort Values
 ```{r combined}
@@ -39,13 +48,11 @@ for (result in SWTIresults) {
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
     xlab("Category")
+  cutsVec <- cutsAsVec(result$cuts)
+  g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
+  theme(legend.key=element_blank(), legend.title = element_blank()) +
+  guides(colour=guide_legend(override.aes=list(size=0)), reverse = TRUE)
   print(g)
-  cat(paste("Cut points for", length(result$cuts[1, ]) - 1, "bins:\n"))
-  for (i in 1:nrow(result$cuts)) {
-    cat(paste(rownames(result$cuts)[i],": ", sep = ""))
-    cat(result$cuts[i, ])
-    cat("\n")
-  }
 }
 
 # Plot predicted vs. actual effort values
@@ -79,13 +86,11 @@ for (result in SWTIIresults) {
     geom_bar(stat = "identity") +
     xlab("Category") +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+  cutsVec <- cutsAsVec(result$cuts)
+  g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
+  theme(legend.key=element_blank(), legend.title = element_blank()) +
+  guides(colour=guide_legend(override.aes=list(size=0)), reverse = TRUE)
   print(g)
-  cat(paste("Cut points for", length(result$cuts[1, ]) - 1, "bins:\n"))
-  for (i in 1:nrow(result$cuts)) {
-    cat(paste(rownames(result$cuts)[i],":", sep = ""))
-    cat(result$cuts[i, ])
-    cat("\n")
-  }
 }
 
 # Plot predicted vs. actual effort values
@@ -119,13 +124,11 @@ for (result in SWTIIIresults) {
     geom_bar(stat = "identity") +
     xlab("Category") +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+  cutsVec <- cutsAsVec(result$cuts)
+  g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
+  theme(legend.key=element_blank(), legend.title = element_blank()) +
+  guides(colour=guide_legend(override.aes=list(size=0)), reverse = TRUE)
   print(g)
-  cat(paste("Cut points for", length(result$cuts[1, ]) - 1, "bins:\n"))
-  for (i in 1:nrow(result$cuts)) {
-    cat(paste(rownames(result$cuts)[i],":", sep = ""))
-    cat(result$cuts[i, ])
-    cat("\n")
-  }
 }
 
 # Plot predicted vs. actual effort values
