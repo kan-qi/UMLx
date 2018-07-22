@@ -5,11 +5,12 @@
  *
  * This script relies on KDM and Java model
  *
- * The goal is the establish the control flow between the modules...
- * Identify the sytem components.....
+ * The goal is the establish the control flow between the modules:
+ * Identify the boundary (via KDM).
+ * Identify the system components.
  * Establish the control flow between the components
  * Identify the stimuli.
- * Identify the boundary.
+ * 
  */
 
 
@@ -232,6 +233,7 @@
 					uuid: uuidv4(),
 					classUnits: classUnits
 			}
+			
 			components.push(component);
 
 			for (var j in classUnits) {

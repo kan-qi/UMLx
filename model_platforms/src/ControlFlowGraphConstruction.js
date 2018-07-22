@@ -139,9 +139,11 @@
 			}
 		}
 		
+		console.log("edges");
+		console.log(edges);
 		
 		
-		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "kdm_cfg_graph.dotty")
+		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "kdm_cfg_graph.dotty");
 		
 		return {nodes: nodes, edges: edges};
 	}
@@ -211,13 +213,19 @@
 //			console.log(actionElement);
 //			var calls = actionElement.Calls;
 		
+		console.log("xmi string");
+		console.log(xmiString);
+		
 			var calls = findCallsForMethod(methodUnit);
 			
-			console.log("output calls");
-			console.log(calls);
+//			console.log("output calls");
+//			console.log(calls);
 
 			for(var i in calls){
 			var call = calls[i];
+			
+			console.log("output call");
+			console.log(call);
 			
 			var callXMIActionElement = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.from))[0];
 			var targetXMIMethodUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.to))[0];
