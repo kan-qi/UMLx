@@ -7,6 +7,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 source("transaction_weights_calibration.R")
 library(tidyverse)
+library(ggpmisc)
 
 cutsAsVec <- function(x) {
   ret <- c("Cut Points:")
@@ -15,6 +16,15 @@ cutsAsVec <- function(x) {
     ret <- c(ret, paste(row,":", paste(cutPoints, collapse = ", ")))
   }
   ret
+}
+
+lm_eqn <- function(df){
+    m <- lm(y ~ x, df);
+    eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
+         list(a = format(coef(m)[1], digits = 2), 
+              b = format(coef(m)[2], digits = 2), 
+             r2 = format(summary(m)$r.squared, digits = 3)))
+    as.character(as.expression(eq));                 
 }
 ```
 Combined Data Effort Values
@@ -65,12 +75,22 @@ colnames(predictedValues) <- paste(1:length(SWTIresults), "Bins")
 predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
 predictedValues <- cbind(predictedValues, effort)
 predictedValues <- as.data.frame(predictedValues)
+r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
+  dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
+  model <- lm(Effort ~ ., data = dat)
+  summary(model)$r.squared
+})
+r2Vals <- round(r2Vals, digits = 5)
+r2Vals <- paste("r²:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
+r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ numBins) + xlab("Predicted Effort") +
   ylab("Actual Effort") +
-  theme(panel.spacing = unit(1, "lines"))
+  theme(panel.spacing = unit(1, "lines")) +
+  geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
+            hjust = -0.1, vjust = -1)
 
 # Plot cross validation results
 MSEdata <- data.frame(NumBins = 1:length(SWTIresults), MSE = sapply(SWTIresults, function(x) { x$MSE }))
@@ -107,12 +127,22 @@ colnames(predictedValues) <- paste(1:length(SWTIIresults), "Bins")
 predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
 predictedValues <- cbind(predictedValues, effort)
 predictedValues <- as.data.frame(predictedValues)
+r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
+  dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
+  model <- lm(Effort ~ ., data = dat)
+  summary(model)$r.squared
+})
+r2Vals <- round(r2Vals, digits = 5)
+r2Vals <- paste("r²:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
+r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ numBins) + xlab("Predicted Effort") +
   ylab("Actual Effort") +
-  theme(panel.spacing = unit(1, "lines"))
+  theme(panel.spacing = unit(1, "lines")) +
+  geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
+            hjust = -0.1, vjust = -1)
 
 # Plots cross validation results  
 MSEdata <- data.frame(NumBins = 1:length(SWTIIresults), MSE = sapply(SWTIIresults, function(x) { x$MSE }))
@@ -149,12 +179,22 @@ colnames(predictedValues) <- paste(1:length(SWTIIIresults), "Bins")
 predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
 predictedValues <- cbind(predictedValues, effort)
 predictedValues <- as.data.frame(predictedValues)
+r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
+  dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
+  model <- lm(Effort ~ ., data = dat)
+  summary(model)$r.squared
+})
+r2Vals <- round(r2Vals, digits = 5)
+r2Vals <- paste("r²:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
+r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIIIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ numBins) + xlab("Predicted Effort") +
   ylab("Actual Effort") +
-  theme(panel.spacing = unit(1, "lines"))
+  theme(panel.spacing = unit(1, "lines")) +
+  geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
+            hjust = -0.1, vjust = -1)
 
 # Plots cross validation results
 MSEdata <- data.frame(NumBins = 1:length(SWTIIIresults), MSE = sapply(SWTIIIresults, function(x) { x$MSE }))
