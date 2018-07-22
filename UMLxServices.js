@@ -243,6 +243,14 @@ app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password'
 
 })
 
+app.get('/logout', function (req, res) {
+	if (req.cookies){
+		req.cookies.appTooken = null;
+	}
+
+	res.redirect('/login')
+})
+
 
 app.post('/updateModel', function (req, res){
 

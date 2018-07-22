@@ -42,12 +42,36 @@ var evaluators = [
     userStoryEvaluator
 ];
 
+
 //Input xml file directory 
 var inputDir = process.argv[2];
+
 //Manully setted output directory
 let date = new Date();
 let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
-var outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now();
+
+var outputDir;
+var times = 1;
+var location_transfer = "";
+//var test_loca = "./abc/analysisresults";
+
+if (process.argv[3]) {//
+    outputDir = process.argv[3]+"/"+analysisDate+"@"+Date.now();
+
+    for (let j of process.argv[3]) {
+        if (j === '/') times ++;
+    }
+
+    for (let i = 0; i < times; i ++) {
+        location_transfer += "../"
+    }
+    location_transfer += 'public/'
+}
+else {
+    outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now();
+    location_transfer = '../../'
+}
+
 
 var useCasesSum = 0;
 var transactionsSum = 0;
@@ -734,7 +758,7 @@ function getHTML(xcategories,yswti,yswtii,yswtiii,html_table,callback) {
 			<div class="col-sm-3">
 				<div class="blue-card analytics-card">
 					<div class="col-sm-4 image-box">
-						<img src="../../img/project.png" alt="">
+						<img src="${location_transfer}img/project.png" alt="">
 					</div>
 					<div class="col-sm-8 text-box">
 						<h2>${useCasesSum}</h2>
@@ -745,7 +769,7 @@ function getHTML(xcategories,yswti,yswtii,yswtiii,html_table,callback) {
 			<div class="col-sm-3">
 				<div class="red-card analytics-card">
 					<div class="col-sm-4 image-box">
-						<img src="../../img/project.png" alt="">
+						<img src="${location_transfer}img/project.png" alt="">
 					</div>
 					<div class="col-sm-8 text-box">
 						<h2>${transactionsSum}</h2>
@@ -756,7 +780,7 @@ function getHTML(xcategories,yswti,yswtii,yswtiii,html_table,callback) {
 			<div class="col-sm-3">
 				<div class="green-card analytics-card">
 					<div class="col-sm-4 image-box">
-						<img src="../../img/project.png" alt="">
+						<img src="${location_transfer}img/project.png" alt="">
 					</div>
 					<div class="col-sm-8 text-box">
 						<h2>${classesSum}</h2>
@@ -767,7 +791,7 @@ function getHTML(xcategories,yswti,yswtii,yswtiii,html_table,callback) {
 			<div class="col-sm-3">
 				<div class="purple-card analytics-card">
 					<div class="col-sm-4 image-box">
-						<img src="../../img/project.png" alt="">
+						<img src="${location_transfer}img/project.png" alt="">
 					</div>
 					<div class="col-sm-8 text-box">
 						<h2>${actorsSum}</h2>
@@ -817,8 +841,8 @@ function getHTML(xcategories,yswti,yswtii,yswtiii,html_table,callback) {
 			<head>
 				<title>UMLx</title>
 				<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet'>
-				<link href='../../css/style.css', rel='stylesheet'>
-				<link href="../../css/lightgallery.css" rel="stylesheet">
+				<link href='${location_transfer}css/style.css', rel='stylesheet'>
+				<link href="${location_transfer}css/lightgallery.css" rel="stylesheet">
 			</head>
 			
 			<body>
@@ -852,7 +876,7 @@ function getHTML(xcategories,yswti,yswtii,yswtiii,html_table,callback) {
 				<script type="text/javascript" src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
 				<script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
 				<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
-				<script type="text/javascript" src="../../js/scripts.js"></script>
+				<script type="text/javascript" src="${location_transfer}/js/scripts.js"></script>
 				<script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
 				<script> 
 					function display(){
