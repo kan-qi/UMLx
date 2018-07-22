@@ -74,7 +74,11 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
 
 # Plot cross validation results
 MSEdata <- data.frame(NumBins = 1:length(SWTIresults), MSE = sapply(SWTIresults, function(x) { x$MSE }))
+MMREdata <- data.frame(NumBins = 1:length(SWTIresults), MMRE = sapply(SWTIresults, function(x) { x$MMRE }))
+PREDdata <- data.frame(NumBins = 1:length(SWTIresults), PRED = sapply(SWTIresults, function(x) { x$PRED }))
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
+ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
+ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
 ```
 SWTII Search Results
 ```{r swtii, warning = FALSE}
@@ -112,7 +116,11 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
 
 # Plots cross validation results  
 MSEdata <- data.frame(NumBins = 1:length(SWTIIresults), MSE = sapply(SWTIIresults, function(x) { x$MSE }))
+MMREdata <- data.frame(NumBins = 1:length(SWTIIresults), MMRE = sapply(SWTIIresults, function(x) { x$MMRE }))
+PREDdata <- data.frame(NumBins = 1:length(SWTIIresults), PRED = sapply(SWTIIresults, function(x) { x$PRED }))
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
+ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
+ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
 ```
 SWTIII Search Results
 ```{r swtiii, warning = FALSE}
@@ -150,5 +158,9 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
 
 # Plots cross validation results
 MSEdata <- data.frame(NumBins = 1:length(SWTIIIresults), MSE = sapply(SWTIIIresults, function(x) { x$MSE }))
+MMREdata <- data.frame(NumBins = 1:length(SWTIIIresults), MMRE = sapply(SWTIIIresults, function(x) { x$MMRE }))
+PREDdata <- data.frame(NumBins = 1:length(SWTIIIresults), PRED = sapply(SWTIIIresults, function(x) { x$PRED }))
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
+ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
+ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
 ```
