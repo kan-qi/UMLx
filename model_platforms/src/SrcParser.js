@@ -18,6 +18,8 @@
 	var componentIdentifier = require("./ComponentIdentification.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var stimulusIdentifier = require("./StimulusIdentification.js");
+	var util = require('util');
+
 
 
 //	var xpath = require('xpath');
@@ -56,9 +58,10 @@
 //				};
 
 				var components = componentIdentifier.identifyComponents(result.callGraph, result.accessGraph, result.typeDependencyGraph, result.referencedClassUnitsComposite, result.classUnits, result.dicChildrenClasses, Model.OutputDir);
-				debug.writeJson("constructed_model_by_kdm_components_7_5", components);
+				debug.writeJson("constructed_model_by_kdm_components_7_5", components.components);
 
-//				Model.DomainModel = createDomainModel(components, ModelOutput, ModelAccessDir).DomainModel;
+				Model.DomainModel = createDomainModel(components, Model.OutputDir, Model.OutputDir, result.callGraph, result.accessGraph, result.typeDependencyGraph).DomainModel;
+				// Model.DomainModel = createDomainModel(components, ModelOutput, ModelAccessDir, result.callGraph, result.accessGraph, result.typeDependencyGraph).DomainModel;
 
 //				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(components, ModelOutputDir);
 
@@ -118,7 +121,12 @@
 //			attachment: XMIClassUnit
 //	}
 
-	function createDomainModel(classUnits, ModelOutputDir, ModelAccessDir){
+	function createDomainModel(components, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph){
+
+		var classUnits = components.components;
+		var dicComponents = components.dicComponents;
+		console.log("dicComponents");
+		console.log(dicComponents);
 
 		var DomainModel = {
 			Elements: [],
@@ -130,80 +138,270 @@
 			DiagramType : "class_diagram",
 		}
 
-		function createDomainElement(classUnit){
-			var attributes = new Array();
-
-			for(var i in classUnit.StorableUnits){
-				var storableUnit = classUnit.StorableUnits[i];
-
-				var attribute = {
-						Name: storableUnit.name,
-						Type: storableUnit.kind,
-						_id: storableUnit.UUID.replace(/\-/g, "")
-				}
-				attributes.push(attribute);
-			}
-
-			var operations = new Array();
-
-			for(var i in classUnit.MethodUnits){
-				var methodUnit = classUnit.MethodUnits[i];
-
-				console.log(methodUnit.Signature);
-
-				var parameters = [];
-				var methodName = "undefined";
-
-
-				console.log("signatures");
-				console.log(methodUnit.Signature);
-
-				if(methodUnit.Signature){
-				for(var j in methodUnit.Signature.parameterUnits){
-					var parameterUnit = methodUnit.Signature.parameterUnits[j];
-					var parameter = {
-							Name: parameterUnit.name,
-							Type: parameterUnit.kind
-					}
-					parameters.push(parameter);
-				}
-
-				methodName = methodUnit.Signature.name;
-				}
-
-				var operation = {
-						Name: methodName,
-						Parameters: parameters,
-						_id: methodUnit.UUID.replace(/\-/g, "")
-				}
-				operations.push(operation);
-			}
-
-//			var id = classUnit.UUID.replace(/\-/g, "");
-//			console.log("id");
-//			console.log(id);
-
-			return {
-					_id: classUnit.UUID.replace(/\-/g, ""),
-					Name: classUnit.name,
-					Operations: operations,
-					Attributes: attributes,
-	                InheritanceStats: {},
-	                Associations: []
-//					Attachment: XMIClass
-				}
-		}
+// 		function createDomainElement(classUnit){
+// 			var attributes = new Array();
+//
+// 			for(var i in classUnit.StorableUnits){
+// 				var storableUnit = classUnit.StorableUnits[i];
+//
+// 				var attribute = {
+// 						Name: storableUnit.name,
+// 						Type: storableUnit.kind,
+// 						_id: storableUnit.UUID.replace(/\-/g, "")
+// 				}
+// 				attributes.push(attribute);
+// 			}
+//
+// 			var operations = new Array();
+//
+// 			for(var i in classUnit.MethodUnits){
+// 				var methodUnit = classUnit.MethodUnits[i];
+//
+// 				console.log(methodUnit.Signature);
+//
+// 				var parameters = [];
+// 				var methodName = "undefined";
+//
+//
+// 				console.log("signatures");
+// 				console.log(methodUnit.Signature);
+//
+// 				if(methodUnit.Signature){
+// 				for(var j in methodUnit.Signature.parameterUnits){
+// 					var parameterUnit = methodUnit.Signature.parameterUnits[j];
+// 					var parameter = {
+// 							Name: parameterUnit.name,
+// 							Type: parameterUnit.kind
+// 					}
+// 					parameters.push(parameter);
+// 				}
+//
+// 				methodName = methodUnit.Signature.name;
+// 				}
+//
+// 				var operation = {
+// 						Name: methodName,
+// 						Parameters: parameters,
+// 						_id: methodUnit.UUID.replace(/\-/g, "")
+// 				}
+// 				operations.push(operation);
+// 			}
+//
+// //			var id = classUnit.UUID.replace(/\-/g, "");
+// //			console.log("id");
+// //			console.log(id);
+//
+// 			return {
+// 					_id: classUnit.UUID.replace(/\-/g, ""),
+// 					Name: classUnit.name,
+// 					Operations: operations,
+// 					Attributes: attributes,
+// 	                InheritanceStats: {},
+// 	                Associations: []
+// //					Attachment: XMIClass
+// 				}
+// 		}
 
 		var domainElementsByID = [];
+		var domainElements = [];
 
 		for(var i in classUnits){
 			var classUnit = classUnits[i];
 			console.log('exam class');
 			console.log(classUnit);
-			var domainElement = createDomainElement(classUnit);
-			DomainModel.Elements.push(domainElement);
+			var domainElement = {
+				name: classUnit.name,
+				_id: 'a'+classUnit.uuid.replace(/\-/g, ""),
+				Attributes: [],
+				Operations: [],
+				InheritanceStats: {},
+				Associations: [],
+				// Attachment: XMIClass
+			};
+			domainElements.push(domainElement);
+			// var domainElement = createDomainElement(classUnit);
+			// DomainModel.Elements.push(domainElement);
 			domainElementsByID[domainElement._id] = domainElement;
 		}
+
+		for (var i in callGraph.edges) {
+			var edge = callGraph.edges[i];
+			var startNode = edge.start;
+			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
+			var domainElement = domainElementsByID[componentUUID];
+			var foundMethod = false;
+			for (var j in domainElement.Operations) {
+				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
+					var method = domainElement.Operations[j];
+					foundMethod = true;
+				}
+			}
+			if (!foundMethod) {
+				var method = {
+					Name: startNode.methodName,
+					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
+					Parameters: []
+				}
+				domainElement.Operations.push(method);
+			}
+			var endNode = edge.end;
+			var componentUUID = 'a'+dicComponents[endNode.component.classUnit].replace(/\-/g, "");
+			var domainElement = domainElementsByID[componentUUID];
+			foundMethod = false;
+			for (var j in domainElement.Operations) {
+				if (domainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
+					var method = domainElement.Operations[j];
+					foundMethod = true;
+				}
+			}
+			if (!foundMethod) {
+				var method = {
+					Name: endNode.methodName,
+					_id: 'a'+endNode.UUID.replace(/\-/g, ""),
+					Parameters: []
+				}
+				domainElement.Operations.push(method);
+			}
+		}
+
+		for (var i in accessGraph.edges) {
+			var edge = accessGraph.edges[i];
+			var startNode = edge.start;
+			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
+			var domainElement = domainElementsByID[componentUUID];
+			var foundMethod = false;
+			for (var j in domainElement.Operations) {
+				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
+					var method = domainElement.Operations[j];
+					foundMethod = true;
+				}
+			}
+			if (!foundMethod) {
+				var method = {
+					Name: startNode.methodName,
+					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
+					Parameters: []
+				}
+				domainElement.Operations.push(method);
+			}
+			var endNode = edge.end;
+			var endComponentUUID = 'a'+dicComponents[endNode.component.classUnit].replace(/\-/g, "");
+			var domainElement = domainElementsByID[componentUUID];
+			var foundAttr = false;
+			for (var j in domainElement.Attributes) {
+				if (domainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
+					foundAttr = true;
+				}
+			}
+			if (!foundAttr) {
+				var attr = {
+					Name: endNode.attributeName,
+					_id: 'a'+endNode.UUID.replace(/\-/g, ""),
+					Type: endNode.attributeType,
+					TypeUUID: 'a'+endNode.attributeTypeUUID.replace(/\-/g, "")
+				};
+				domainElement.Attributes.push(attr);
+			}
+		}
+
+		for (var i in typeDependencyGraph.edgesAttr) {
+			var edge = typeDependencyGraph.edgesAttr[i];
+			var startNode = edge.start;
+			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
+			var domainElement = domainElementsByID[componentUUID];
+			var foundAttr = false;
+			for (var j in domainElement.Attributes) {
+				if (domainElement.Attributes[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
+					foundAttr = true;
+				}
+			}
+			if (!foundAttr) {
+				var attr = {
+					Name: startNode.attributeName,
+					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
+					Type: edge.end.name,
+					TypeUUID: 'a'+edge.end.UUID.replace(/\-/g, "")
+				};
+				domainElement.Attributes.push(attr);
+			}
+		}
+
+		// console.log("domainElements");
+		// console.log(domainElements);
+		// console.log("domainElementsByID");
+		// console.log(domainElementsByID);
+
+		// console.log("check edgesPara");
+		// console.log(typeDependencyGraph.edgesPara);
+
+		for (var i in typeDependencyGraph.edgesPara) {
+			var edge = typeDependencyGraph.edgesPara[i];
+			// console.log("check edge");
+			// console.log(util.inspect(edge, false, null));
+			var startNode = edge.start;
+			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
+			var domainElement = domainElementsByID[componentUUID];
+			var foundMethod = false;
+			var foundParameter = false;
+			for (var j in domainElement.Operations) {
+				if (domainElement.Operations[j]._id == 'a'+startNode.method.UUID.replace(/\-/g, "")) {
+					var method = domainElement.Operations[j];
+					foundMethod = true;
+					for (var k in method.Parameters) {
+						if (method.Parameters[k].Type == startNode.method.parameter.name) {
+							foundParameter = true;
+						}
+					}
+					if (!foundParameter) {
+						var parameter = {
+							Name: startNode.method.parameter.name,
+							// _id: startNode.method.parameter.UUID.replace(/\-/g, ""),
+							Type: edge.end.name,
+							TypeUUID: 'a'+edge.end.UUID.replace(/\-/g, "")
+						};
+						method.Parameters.push(parameter);
+					}
+				}
+			}
+			if (!foundMethod) {
+				// console.log("not foundMethod");
+				var method = {
+					Name: startNode.method.name,
+					_id: 'a'+startNode.method.UUID.replace(/\-/g, ""),
+					Parameters: [{
+						Name: startNode.method.parameter.name,
+						// _id: startNode.method.parameter.UUID.replace(/\-/g, ""),
+						Type: edge.end.name,
+						TypeUUID: 'a'+edge.end.UUID.replace(/\-/g, "")
+					}]
+				}
+				// console.log("method");
+				// console.log(util.inspect(method, false, null));
+				domainElement.Operations.push(method);
+				// console.log("domainElement");
+				// console.log(util.inspect(domainElement, false, null));
+			}
+			domainElementsByID[componentUUID] = domainElement;
+			// console.log("check domainElement");
+			// console.log(util.inspect(domainElement, false, null));
+		}
+
+		console.log("domainElements");
+		console.log(util.inspect(domainElements, false, null));
+		console.log("domainElementsByID");
+		console.log(util.inspect(domainElementsByID, false, null));
+
+		DomainModel.Elements = domainElements;
+
+
+		// for(var i in classUnits){
+		// 	var classUnit = classUnits[i];
+		// 	console.log('exam class');
+		// 	console.log(classUnit);
+		// 	var domainElement = createDomainElement(classUnit);
+		// 	DomainModel.Elements.push(domainElement);
+		// 	domainElementsByID[domainElement._id] = domainElement;
+		// }
 
 
 		DomainModel.DiagramType = "class_diagram";
@@ -425,7 +623,7 @@
 //				Attachment: XMIUseCase
 		}
 
-
+// TODO: Actitivity => the method of its original class or the component?
 		function findNextActivities(currentActivity, activities){
 			var nextActivities = [];
 			for(var i in activities){
