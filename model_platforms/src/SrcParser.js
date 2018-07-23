@@ -226,6 +226,8 @@
 
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
+			// console.log(edge)
+			console.log(util.inspect(edge, false, null));
 			var startNode = edge.start;
 			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
 			var domainElement = domainElementsByID[componentUUID];

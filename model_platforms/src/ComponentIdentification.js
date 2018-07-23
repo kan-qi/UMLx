@@ -111,17 +111,27 @@
 		// console.log(util.inspect(clusteredClasses, false, null))
 		var debug = require("../../utils/DebuggerOutput.js");
 
+		// console.log("666666666");
+		// console.log(nodesNullAll);
+		// console.log(nodesClassAll);
+		// console.log(edgesAll);
+
+
 		drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "componentsComposite.dotty");
 
 		debug.writeJson("clusteredClasses", clusteredClasses);
 
-		var cutoffDepth = 6; //there might be multiple criterion to determining the cutoff tree
+		console.log("clusteredClasses");
+		console.log(clusteredClasses);
+
+		var cutoffDepth = 0; //there might be multiple criterion to determining the cutoff tree
 
 		var clusters = []; // [[component1], [component2], ...]
 
+
 		var currentLevel = [];
 		var currentLevelDepth = 0;
-		currentLevel.push(clusteredClasses[0]);
+		currentLevel = currentLevel.concat(clusteredClasses);
 		while(currentLevelDepth < cutoffDepth){
 			var nextLevel = [];
 			var nodeToExpand = null;
@@ -143,6 +153,9 @@
 
 		// console.log("currentLevel");
 		// console.log(currentLevel);
+		//
+		//
+
 
 		for (var i in currentLevel) {
 			var newComponent = [];
@@ -251,11 +264,11 @@
 
 	function drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, fileName) {
 
-		console.log("!!!!!!!!!!!!");
-
-		console.log(util.inspect(nodesClassAll, false, null));
-		console.log(util.inspect(nodesNullAll, false, null));
-		console.log(util.inspect(edgesAll, false, null));
+		// console.log("!!!!!!!!!!!!");
+    //
+		// console.log(util.inspect(nodesClassAll, false, null));
+		// console.log(util.inspect(nodesNullAll, false, null));
+		// console.log(util.inspect(edgesAll, false, null));
 
 		if(!fileName){
 			fileName = "kdm_clusters.dotty";
@@ -624,7 +637,7 @@
 		  return d;
 		}
 
-		var threshold = 1.05;
+		var threshold = 0.6;
 
 		var clusters = clusterfck.hcluster(metrics, distance, clusterfck.SINGLE_LINKAGE, threshold);
 		console.log("clusterfck");
@@ -636,6 +649,7 @@
 		// var nodesNullAll = [];
 		// var nodesClassAll = [];
 		// var edgesAll = [];
+		var ind = 0
 		for (var i in clusters) {
 			var cluster = clusters[i];
 			// console.log(cluster);
@@ -645,6 +659,8 @@
 			if (!("value" in cluster)) {
 				var left = findAllClass(cluster.left);
 				var right = findAllClass(cluster.right);
+				// var sum = 0;
+				// var count = 0;
 				var min = Number.MAX_VALUE;
 				for (var i in left) {
 					var a = left[i];
@@ -668,6 +684,8 @@
 							JaccSimi = inter/union;
 						}
 						d = 1 - JaccSimi;
+						// sum += d;
+						// count++;
 						if (d < min) {
 							min = d;
 						}
@@ -677,10 +695,15 @@
 			if (min == Number.MAX_VALUE) {
 				min = null;
 			}
+			// var distance = 0;
+			// if (count != 0) {
+			// 	distance = sum/count;
+			// }
 			var startNode = {
-				name: "m",
+				name: 'a'+ind,
 				distance: min
 			}
+			ind++;
 			var classCluster = convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicChildrenClasses, classUnits);
 			console.log("classcluster")
 			console.log(util.inspect(classCluster, false, null))
@@ -770,6 +793,8 @@
 							var left = findAllClass(cluster[property].left);
 							var right = findAllClass(cluster[property].right);
 							var min = Number.MAX_VALUE;
+							// var sum = 0;
+							// var count = 0;
 							for (var i in left) {
 								var a = left[i];
 								for (var j in right) {
@@ -795,12 +820,18 @@
 									if (d < min) {
 										min = d;
 									}
+									// sum += d;
+									// count++;
 								}
 							}
 						}
 						if (min == Number.MAX_VALUE) {
 							min = null;
 						}
+						// var distance = 0;
+						// if (count != 0) {
+						// 	distance = sum/count;
+						// }
 						var endNode = {
 							name: startNode.name+property,
 							distance: min
