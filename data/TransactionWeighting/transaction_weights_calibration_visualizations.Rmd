@@ -99,6 +99,26 @@ PREDdata <- data.frame(NumBins = 1:length(SWTIresults), PRED = sapply(SWTIresult
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
 ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
 ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
+
+# Plot marginal posteriors for each parameter
+for (i in 1:length(SWTIresults)) {
+  marginalData <- SWTIresults[[i]]$model[, !names(SWTIresults[[i]]$model) %in% c("(Intercept)", "sigma")]
+  if (is.vector(marginalData)) {
+    marginalData <- data.frame(TL1 = marginalData)
+  }
+  for (col in names(marginalData)) {
+    mean <- mean(marginalData[, col])
+    sd <- sd(marginalData[, col])
+    peakDensity <- dnorm(mean, mean, sd)
+    g <- ggplot(marginalData, aes(x=marginalData[, col])) + 
+    geom_histogram(aes(y = ..density..), binwidth = 1, colour="black", fill="white") + 
+    stat_function(fun = dnorm, args = list(mean = mean(mean), sd = sd)) + 
+    xlab(col) + ggtitle(paste(col, i, "bins")) +
+    annotate("text", x = mean, y = peakDensity * ((sd/3 *.1) + 1), label = paste("mean:", round(mean,2),",", "sd:", round(sd,2)))
+    print(g)
+  }
+}
+
 ```
 SWTII Search Results
 ```{r swtii, warning = FALSE}
@@ -151,6 +171,25 @@ PREDdata <- data.frame(NumBins = 1:length(SWTIIresults), PRED = sapply(SWTIIresu
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
 ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
 ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
+
+# Plot marginal posteriors for each parameter
+for (i in 1:length(SWTIIresults)) {
+  marginalData <- SWTIIresults[[i]]$model[, !names(SWTIIresults[[i]]$model) %in% c("(Intercept)", "sigma")]
+  if (is.vector(marginalData)) {
+    marginalData <- data.frame(TL1TD1 = marginalData)
+  }
+  for (col in names(marginalData)) {
+    mean <- mean(marginalData[, col])
+    sd <- sd(marginalData[, col])
+    peakDensity <- dnorm(mean, mean, sd)
+    g <- ggplot(marginalData, aes(x=marginalData[, col])) + 
+    geom_histogram(aes(y = ..density..), binwidth = 1, colour="black", fill="white") + 
+    stat_function(fun = dnorm, args = list(mean = mean(mean), sd = sd)) + 
+    xlab(col) + ggtitle(paste(col, i, "bins")) +
+    annotate("text", x = mean, y = peakDensity * ((sd/3 *.1) + 1), label = paste("mean:", round(mean,2),",", "sd:", round(sd,2)))
+    print(g)
+  }
+}
 ```
 SWTIII Search Results
 ```{r swtiii, warning = FALSE}
@@ -203,4 +242,23 @@ PREDdata <- data.frame(NumBins = 1:length(SWTIIIresults), PRED = sapply(SWTIIIre
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
 ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
 ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
+
+# Plot marginal posteriors for each parameter
+for (i in 1:length(SWTIIIresults)) {
+  marginalData <- SWTIIIresults[[i]]$model[, !names(SWTIIIresults[[i]]$model) %in% c("(Intercept)", "sigma")]
+  if (is.vector(marginalData)) {
+    marginalData <- data.frame(TL1TD1DETs1 = marginalData)
+  }
+  for (col in names(marginalData)) {
+    mean <- mean(marginalData[, col])
+    sd <- sd(marginalData[, col])
+    peakDensity <- dnorm(mean, mean, sd)
+    g <- ggplot(marginalData, aes(x=marginalData[, col])) + 
+    geom_histogram(aes(y = ..density..), binwidth = 1, colour="black", fill="white") + 
+    stat_function(fun = dnorm, args = list(mean = mean(mean), sd = sd)) + 
+    xlab(col) + ggtitle(paste(col, i, "bins")) +
+    annotate("text", x = mean, y = peakDensity * ((sd/3 *.1) + 1), label = paste("mean:", round(mean,2),",", "sd:", round(sd,2)))
+    print(g)
+  }
+}
 ```
