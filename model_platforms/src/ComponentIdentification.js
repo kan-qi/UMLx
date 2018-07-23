@@ -10,7 +10,7 @@
  * Identify the system components.
  * Establish the control flow between the components
  * Identify the stimuli.
- * 
+ *
  */
 
 
@@ -107,22 +107,38 @@
 		var nodesClassAll = [];
 		var edgesAll = [];
 
-		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits);
+		var nodesNullAllTree = [];
+		var nodesClassAllTree = [];
+		var edgesAllTree = [];
+
+		var clusterTree = findClusters(classArray, relations, nodesNullAllTree, nodesClassAllTree, edgesAllTree, dicChildrenClasses, classUnits, 2, 1.5);
+		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits, 2, 0.6);
 		// console.log("checkcheckcheck")
 		// console.log(util.inspect(clusteredClasses, false, null))
 		var debug = require("../../utils/DebuggerOutput.js");
 
+		console.log("666666666");
+		console.log(nodesNullAllTree);
+		console.log(nodesClassAllTree);
+		console.log(edgesAllTree);
+
+
 		drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "componentsComposite.dotty");
+		drawGraph(nodesNullAllTree, nodesClassAllTree, edgesAllTree, outputDir, "componentsTree.dotty");
 
 		debug.writeJson("clusteredClasses", clusteredClasses);
 
-		var cutoffDepth = 6; //there might be multiple criterion to determining the cutoff tree
+		console.log("clusteredClasses");
+		console.log(clusteredClasses);
+
+		var cutoffDepth = 0; //there might be multiple criterion to determining the cutoff tree
 
 		var clusters = []; // [[component1], [component2], ...]
 
+
 		var currentLevel = [];
 		var currentLevelDepth = 0;
-		currentLevel.push(clusteredClasses[0]);
+		currentLevel = currentLevel.concat(clusteredClasses);
 		while(currentLevelDepth < cutoffDepth){
 			var nextLevel = [];
 			var nodeToExpand = null;
@@ -144,6 +160,9 @@
 
 		// console.log("currentLevel");
 		// console.log(currentLevel);
+		//
+		//
+
 
 		for (var i in currentLevel) {
 			var newComponent = [];
@@ -227,13 +246,21 @@
 			// }
 			// console.log("classUnits")
 			// console.log(classUnits)
+			
+			
+			//determine the component name by using the top level class or the class that has the largest number of methods.
+			// for now the simple implementation is to use the first class unit.
+			
+			if(classUnits.length < 1){
+				continue;
+			}
 
 			var component = {
-					name: i,
+					name: classUnits[0].name,
 					uuid: uuidv4(),
 					classUnits: classUnits
 			}
-			
+
 			components.push(component);
 
 			for (var j in classUnits) {
@@ -253,11 +280,11 @@
 
 	function drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, fileName) {
 
-		console.log("!!!!!!!!!!!!");
-
-		console.log(util.inspect(nodesClassAll, false, null));
-		console.log(util.inspect(nodesNullAll, false, null));
-		console.log(util.inspect(edgesAll, false, null));
+		// console.log("!!!!!!!!!!!!");
+    //
+		// console.log(util.inspect(nodesClassAll, false, null));
+		// console.log(util.inspect(nodesNullAll, false, null));
+		// console.log(util.inspect(edgesAll, false, null));
 
 		if(!fileName){
 			fileName = "kdm_clusters.dotty";
@@ -570,8 +597,8 @@
 		// console.log(classArray);
 	}
 
-
-	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits) {
+// mode => 0: SINGLE_LINKAGE; 1: CONPLETE_LINKAGE; 2: AVERAGE_LINKAGE
+	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits, mode, threshold) {
 
 		var clusterfck = require("clusterfck");
 
@@ -626,9 +653,19 @@
 		  return d;
 		}
 
-		var threshold = 1.05;
+		// var threshold = 0.6;
+		var linkage = null;
+		if (mode == 0) {
+			linkage = clusterfck.SINGLE_LINKAGE;
+		}
+		else if (mode == 1) {
+			linkage = clusterfck.COMPLETE_LINKAGE;
+		}
+		else if (mode == 2) {
+			linkage = clusterfck.AVERAGE_LINKAGE;
+		}
 
-		var clusters = clusterfck.hcluster(metrics, distance, clusterfck.SINGLE_LINKAGE, threshold);
+		var clusters = clusterfck.hcluster(metrics, distance, linkage, threshold);
 		console.log("clusterfck");
 		console.log(clusters);
 
@@ -638,52 +675,24 @@
 		// var nodesNullAll = [];
 		// var nodesClassAll = [];
 		// var edgesAll = [];
+		var ind = 0
 		for (var i in clusters) {
 			var cluster = clusters[i];
 			// console.log(cluster);
 			nodesNull = [];
 			nodesClass = [];
 			edges = [];
-			if (!("value" in cluster)) {
-				var left = findAllClass(cluster.left);
-				var right = findAllClass(cluster.right);
-				var min = Number.MAX_VALUE;
-				for (var i in left) {
-					var a = left[i];
-					for (var j in right) {
-						var b = right[j];
-						var inter = 0;
-						var union = 0;
-						for (var i = 0; i < a.length; i++) {
-							if (a[i] && b[i]) {
-								inter++;
-							}
-							if (a[i] || b[i]) {
-								union++;
-							}
-						}
-						var JaccSimi;
-						if (union == 0) {
-							JaccSimi = 0
-						}
-						else {
-							JaccSimi = inter/union;
-						}
-						d = 1 - JaccSimi;
-						if (d < min) {
-							min = d;
-						}
-					}
-				}
-			}
-			if (min == Number.MAX_VALUE) {
-				min = null;
-			}
+			var dis = calculateDis(cluster, mode);
+			// var distance = 0;
+			// if (count != 0) {
+			// 	distance = sum/count;
+			// }
 			var startNode = {
-				name: "m",
-				distance: min
+				name: 'a'+ind,
+				distance: dis
 			}
-			var classCluster = convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicChildrenClasses, classUnits);
+			ind++;
+			var classCluster = convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicChildrenClasses, classUnits, mode);
 			console.log("classcluster")
 			console.log(util.inspect(classCluster, false, null))
 			nodesClassAll.push(nodesClass);
@@ -729,23 +738,103 @@
 		}
 	}
 
-	function convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicChildrenClasses, classUnits) {
+	function calculateDis(node, mode) {
+
+    var dis = null;
+		if (!(node.hasOwnProperty("value"))) {
+			var left = findAllClass(node.left);
+			var right = findAllClass(node.right);
+			var sum = 0;
+			var count = 0;
+			if (mode == 0) {
+				dis = Number.MAX_VALUE;
+			}
+			else if (mode == 1) {
+				dis = Number.MIN_VALUE;
+			}
+			for (var i in left) {
+				var a = left[i];
+				for (var j in right) {
+					var b = right[j];
+					var inter = 0;
+					var union = 0;
+					for (var i = 0; i < a.length; i++) {
+						if (a[i] && b[i]) {
+							inter++;
+						}
+						if (a[i] || b[i]) {
+							union++;
+						}
+					}
+					var JaccSimi;
+					if (union == 0) {
+						JaccSimi = 0
+					}
+					else {
+						JaccSimi = inter/union;
+					}
+					d = 1 - JaccSimi;
+					// sum += d;
+					// count++;
+					if (mode == 0) {
+						if (d < dis) {
+							dis = d;
+						}
+					}
+					else if (mode == 1) {
+						if (d > dis) {
+							dis = d;
+						}
+					}
+					else if (mode == 2) {
+						sum += d;
+						count++;
+					}
+				}
+			}
+		}
+		else {
+			dis = -1;
+		}
+		if (mode == 0 && dis == Number.MAX_VALUE) {
+			dis = null;
+		}
+		else if (mode == 1 && dis == Number.MIN_VALUE) {
+			dis = null;
+		}
+		else if (mode == 2) {
+			if (count == 0) {
+				dis = 0;
+			}
+			else {
+				dis = sum/count;
+			}
+		}
+
+		return dis;
+
+	}
+
+	function convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicChildrenClasses, classUnits, mode) {
 		  var classClusters = {};
+			// console.log("check!!!!!!!!!!");
+			// console.log("mode");
+			// console.log(mode);
 			// console.log(cluster);
 			// console.log("?????????????");
 			// console.log(dicChildrenClasses);
-			if (cluster["size"] == 1) {
+			if (cluster.size == 1) {
 				var row = cluster["value"].toString();
 				var classes = rowDic[row];
 				var classSelected = classes[classes.length-1];
         var children = dicChildrenClasses[classSelected.UUID];
 				classClusters["size"] = children.length;
-				var endNode = {
-					name: startNode.name+"mid",
-					distance: null
-				}
-				nodesNull.push(endNode);
-				edges.push({start: startNode, end: endNode});
+				// var endNode = {
+				// 	name: startNode.name+"mid",
+				// 	distance: null
+				// }
+				// nodesNull.push(endNode);
+				// edges.push({start: startNode, end: endNode});
 				var childrenClasses = [];
 				for (var i in children) {
 					var childClass = {};
@@ -754,7 +843,7 @@
 					childClass['value'] = child;
 					childrenClasses.push(childClass);
 					nodesClass.push(child);
-					edges.push({start: endNode, end: {name: 'a'+child['UUID'].replace(/-/g, ''), distance: null}});
+					edges.push({start: startNode, end: {name: 'a'+child['UUID'].replace(/-/g, ''), distance: null}});
 				}
 				classClusters["children"] = childrenClasses;
 				classes.pop();
@@ -767,52 +856,114 @@
 			else {
 				var children = [];
 				for (var property in cluster) {
-					if (cluster.hasOwnProperty(property) && property != "size") {
-						if (!("value" in cluster[property])) {
-							var left = findAllClass(cluster[property].left);
-							var right = findAllClass(cluster[property].right);
-							var min = Number.MAX_VALUE;
-							for (var i in left) {
-								var a = left[i];
-								for (var j in right) {
-									var b = right[j];
-									var inter = 0;
-									var union = 0;
-									for (var i = 0; i < a.length; i++) {
-								    if (a[i] && b[i]) {
-								      inter++;
-								    }
-								    if (a[i] || b[i]) {
-								      union++;
-								    }
-								  }
-								  var JaccSimi;
-								  if (union == 0) {
-								    JaccSimi = 0
-								  }
-								  else {
-								    JaccSimi = inter/union;
-								  }
-								  d = 1 - JaccSimi;
-									if (d < min) {
-										min = d;
-									}
-								}
+					// if (cluster.hasOwnProperty(property) && property != "size") {
+					if (property == "left" || property == "right") {
+						var dis = calculateDis(cluster[property], mode);
+
+						// if (!("value" in cluster[property])) {
+						// 	var left = findAllClass(cluster[property].left);
+						// 	var right = findAllClass(cluster[property].right);
+						// 	var sum = 0;
+						// 	var count = 0;
+						// 	var dis = null;
+						// 	if (mode == 0) {
+						// 		dis = Number.MAX_VALUE;
+						// 		console.log("check!!!!!!!!!!");
+						// 	}
+						// 	else if (mode == 1) {
+						// 		dis = Number.MIN_VALUE;
+						// 	}
+						// 	// var min = Number.MAX_VALUE;
+						// 	// var sum = 0;
+						// 	// var count = 0;
+						// 	for (var i in left) {
+						// 		var a = left[i];
+						// 		for (var j in right) {
+						// 			var b = right[j];
+						// 			var inter = 0;
+						// 			var union = 0;
+						// 			for (var i = 0; i < a.length; i++) {
+						// 		    if (a[i] && b[i]) {
+						// 		      inter++;
+						// 		    }
+						// 		    if (a[i] || b[i]) {
+						// 		      union++;
+						// 		    }
+						// 		  }
+						// 		  var JaccSimi;
+						// 		  if (union == 0) {
+						// 		    JaccSimi = 0
+						// 		  }
+						// 		  else {
+						// 		    JaccSimi = inter/union;
+						// 		  }
+						// 		  d = 1 - JaccSimi;
+						// 			if (mode == 0) {
+						// 				if (d < dis) {
+						// 					dis = d;
+						// 					console.log("check!!!!!!!!!!");
+						// 					console.log(dis);
+						// 				}
+						// 			}
+						// 			else if (mode == 1) {
+						// 				if (d > dis) {
+						// 					dis = d;
+						// 				}
+						// 			}
+						// 			else if (mode == 2) {
+						// 				sum += d;
+						// 				count++;
+						// 			}
+						// 			// if (d < min) {
+						// 			// 	min = d;
+						// 			// }
+						// 			// sum += d;
+						// 			// count++;
+						// 		}
+						// 	}
+						// }
+						// if (mode == 0 && dis == Number.MAX_VALUE) {
+						// 	dis = null;
+						// 	// console.log("check????");
+						// }
+						// else if (mode == 1 && dis == Number.MIN_VALUE) {
+						// 	dis = null;
+						// }
+						// else if (mode == 2) {
+						//   if (count == 0) {
+						// 		dis = 0;
+						// 	}
+						// 	else {
+						// 		dis = sum/count;
+						// 	}
+						// }
+						// if (min == Number.MAX_VALUE) {
+						// 	min = null;
+						// }
+						// var distance = 0;
+						// if (count != 0) {
+						// 	distance = sum/count;
+						// }
+						var nodeF = null;
+						if (cluster[property]["size"] != 1) {
+							var endNode = {
+								name: startNode.name+property,
+								distance: dis
 							}
+							nodeF = endNode;
+							nodesNull.push(endNode);
+							edges.push({start: startNode, end: endNode});
 						}
-						if (min == Number.MAX_VALUE) {
-							min = null;
+						else {
+							nodeF = startNode;
 						}
-						var endNode = {
-							name: startNode.name+property,
-							distance: min
-						}
-						var child = convertTree(cluster[property], rowDic, nodesNull, nodesClass, edges, endNode, dicChildrenClasses, classUnits);
+
+						var child = convertTree(cluster[property], rowDic, nodesNull, nodesClass, edges, nodeF, dicChildrenClasses, classUnits, mode);
 						children.push(child);
 						// nodesNull.push(rootName+property);
-						nodesNull.push(endNode);
+
 						// edges.push({start: rootName, end: rootName+property});
-						edges.push({start: startNode, end: endNode});
+
 					}
 				}
 				classClusters["children"] = children;
