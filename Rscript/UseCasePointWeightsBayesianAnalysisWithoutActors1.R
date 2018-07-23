@@ -63,41 +63,26 @@ png(filename=paste(outputPath,"project_counting_statistics_for_bayesian_analysis
 		pointsize=12,
 		res=96)
 
-UCPHist1 <- ggplot(useCaseData, aes(x=UAW))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("UAW")+ylab("Count")
-UCPHist2 <- ggplot(useCaseData, aes(x=UUCW))+geom_histogram(binwidth=10, colour="black", fill="white")+xlab("UUCW")+ylab("Count")
-UCPHist3 <- ggplot(useCaseData, aes(x=TCF))+geom_histogram(binwidth=0.02, colour="black", fill="white")+xlab("TCF")+ylab("Count")
+UCPHist1 <- ggplot(useCaseData, aes(x=UAW))+geom_histogram(binwidth=1.2, colour="black", fill="white")+xlab("UAW")+ylab("Count")
+UCPHist2 <- ggplot(useCaseData, aes(x=UUCW))+geom_histogram(binwidth=20, colour="black", fill="white")+xlab("UUCW")+ylab("Count")
+UCPHist3 <- ggplot(useCaseData, aes(x=TCF))+geom_histogram(binwidth=0.05, colour="black", fill="white")+xlab("TCF")+ylab("Count")
 UCPHist4 <- ggplot(useCaseData, aes(x=EF))+geom_histogram(binwidth=0.02, colour="black", fill="white")+xlab("EF")+ylab("Count")
-UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=10, colour="black", fill="white")+xlab("UCP")+ylab("Count")
+UCPHist5 <- ggplot(useCaseData, aes(x=UCP))+geom_histogram(binwidth=30, colour="black", fill="white")+xlab("UCP")+ylab("Count")
 
 print(grid.arrange(UCPHist1, UCPHist2, UCPHist3, UCPHist4, UCPHist5, ncol=2))
 
 png(filename=paste(outputPath,"project_UC_counting_statistics_for_bayesian_analysis.png", sep="/"),
 		units="in",
-		width=4*4, 
-		height=4*2, 
+		width=4*2, 
+		height=3*2, 
 		pointsize=12,
 		res=96)
 
-UCHist1 <- ggplot(useCaseData, aes(x=Simple_UC))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("Simple Use Case")+ylab("Count")
+UCHist1 <- ggplot(useCaseData, aes(x=Simple_UC))+geom_histogram(binwidth=1.3, colour="black", fill="white")+xlab("Simple Use Case")+ylab("Count")
 UCHist2 <- ggplot(useCaseData, aes(x=Average_UC))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("Average Use Case")+ylab("Count")
-UCHist3 <- ggplot(useCaseData, aes(x=Complex_UC))+geom_histogram(binwidth=1, colour="black", fill="white")+xlab("Complex Use Case")+ylab("Count")
+UCHist3 <- ggplot(useCaseData, aes(x=Complex_UC))+geom_histogram(binwidth=1.1, colour="black", fill="white")+xlab("Complex Use Case")+ylab("Count")
 
 print(grid.arrange(UCHist1, UCHist2, UCHist3, ncol=2))
-
-#print out the log transformation item
-
-#output the project descriptive data for number valued data
-png(filename=paste(outputPath,"log_transformed_effort_ucp_for_bayesian_analysis.png", sep="/"),
-		units="in",
-		width=4*2, 
-		height=3*1, 
-		pointsize=12,
-		res=96)
-
-logEffortHist <- ggplot(useCaseData, aes(x=log(Real_Effort_Person_Hours)))+geom_histogram(binwidth=0.1, colour="black", fill="white")+xlab("Log(Effort)")+ylab("Count")
-logUCPHist <- ggplot(useCaseData, aes(x=log(UCP)))+geom_histogram(binwidth=0.1, colour="black", fill="white")+xlab("Log(UCP)")+ylab("Count")
-
-print(grid.arrange(logEffortHist, logUCPHist, ncol=2))
 
 #Calcualte the apriroi means and variances
 aprioriData <- aprioriData[c("Simple_UC","Average_UC", "Complex_UC")]
@@ -111,63 +96,8 @@ aprioriVariance = cbind(var(aprioriData[,'Simple_UC']),var(aprioriData[,'Average
 colnames(aprioriVariance) = c('Simple_UC', 'Average_UC', 'Complex_UC')
 print(aprioriVariance)
 
-#log transformation for the data needed.
-#useCaseDataLog = data.frame(col1=as.numeric(log(useCaseData$Real_Effort_Person_Hours)), col2=as.numeric(log(useCaseData$UCP)))
-useCaseData$Real_Effort_Person_Hours_log = log(useCaseData$Real_Effort_Person_Hours)
-useCaseData$UCP_log = log(useCaseData$UCP)
-
-# clibrate between the UCP and effort to get the normalizing factor
-ucpFit <- lm(Real_Effort_Person_Hours_log ~ UCP_log - 1, data = useCaseData)
-normFactor <- exp(coef(ucpFit)[c('UCP_log')])
-print("norm factor")
-print(normFactor)
-
-print("normalized UUCW")
-normUUCW <- useCaseData[,'Real_Effort_Person_Hours']/(useCaseData[,'TCF']*useCaseData[,'EF']*normFactor)
-print(normUUCW)
-useCaseData$norm_UUCW = normUUCW
-
-
-#print("log transformation of the data")
-useCaseData$Norm_UUCW_log = log(normUUCW)
-useCaseData$Simple_UC_log = log(useCaseData$Simple_UC)
-useCaseData$Simple_UC_log[is.infinite(useCaseData$Simple_UC_log)] <- 0
-useCaseData$Average_UC_log = log(useCaseData$Average_UC)
-useCaseData$Average_UC_log[is.infinite(useCaseData$Average_UC_log)] <- 0
-useCaseData$Complex_UC_log = log(useCaseData$Complex_UC)
-useCaseData$Complex_UC_log[is.infinite(useCaseData$Complex_UC_log)] <- 0
-
-
-png(filename=paste(outputPath,"log_transformed_uc_and_uucw_for_bayesian_analysis.png", sep="/"),
-		units="in",
-		width=4*2, 
-		height=3*2, 
-		pointsize=12,
-		res=96)
-
-simple_uc_plot <- ggplot(useCaseData, aes(x=log(Simple_UC)))+geom_histogram(binwidth=0.1, colour="black", fill="white")+xlab("log(Simple Use Case)")+ylab("Count")
-average_uc_plot <- ggplot(useCaseData, aes(x=log(Average_UC)))+geom_histogram(binwidth=0.1, colour="black", fill="white")+xlab("log(Average Use Case)")+ylab("Count")
-complex_uc_plot <- ggplot(useCaseData, aes(x=log(Complex_UC)))+geom_histogram(binwidth=0.1, colour="black", fill="white")+xlab("log(Complex Use Case)")+ylab("Count")
-uucw_log_plot <- ggplot(useCaseData, aes(x=Norm_UUCW_log))+geom_histogram(binwidth=0.1, colour="black", fill="white")+xlab("log(Norm UUCW)")+ylab("Count")
-
-
-print(grid.arrange(simple_uc_plot, average_uc_plot, complex_uc_plot, uucw_log_plot, ncol=2))
-
-
-#print(useCaseData)
-#print('covariance matrix for apriori data')
-#print(cor(aprioriData))
 print('variance-covariance matrix for apriori data')
 print(var(aprioriData))
-#print(c(var(aprioriData$Simple_UC),var(aprioriData$Average_UC), var(aprioriData$Complex_UC)))
-#print("apriori w1")
-#w1 <- solve(var(aprioriData))
-#print(w1)
-
-#print("apriori variance")
-#aprioriVariance <- c(var(aprioriData$Simple_UC),var(aprioriData$Average_UC), var(aprioriData$Complex_UC))
-#colnames(aprioriVariance) <- c("Simple_UC", "Average_UC", "Complex_UC")
-#print(aprioriVariance)
 
 print("apriori w1")
 w1 <- 1/aprioriVariance
@@ -180,37 +110,39 @@ c1 <- w1*aprioriMeans
 print(c1)
 
 
-fit <- lm(Norm_UUCW_log ~ Simple_UC_log + Average_UC_log + Complex_UC_log, data=useCaseData)
+ucpFit <- lm(Real_Effort_Person_Hours ~ UCP - 1, data = useCaseData)
+normFactor <- coef(ucpFit)[c('UCP')]
+print("norm factor")
+#normFactor <- 12
+print(normFactor)
+
+print("normalized UUCW")
+normUUCW <- useCaseData[,'Real_Effort_Person_Hours']/(useCaseData[,'TCF']*useCaseData[,'EF']*normFactor)
+print(normUUCW)
+useCaseData$norm_UUCW = normUUCW
+
+fit <- lm(norm_UUCW ~ Simple_UC + Average_UC + Complex_UC-1, data=useCaseData)
 
 print("regression residual variance")
-logResVariance <- var(resid(fit))
-print(logResVariance)
+resVariance <- var(resid(fit))
+print(resVariance)
 #w2 <- t(useCaseDataX) %*% as.matrix(useCaseDataX) / logResVariance #the variance generated by the normal linear regression
 #regressionVariance <- solve(w2)
 
 print("regression variance")
-useCaseDataX <- useCaseData[c("Simple_UC_log","Average_UC_log", "Complex_UC_log")]	
-logRegVariance <- logResVariance * solve(t(useCaseDataX) %*% as.matrix(useCaseDataX))
-logRegVariance <- c(logRegVariance["Simple_UC_log", "Simple_UC_log"], logRegVariance["Average_UC_log", "Average_UC_log"], logRegVariance["Complex_UC_log", "Complex_UC_log"])
+useCaseDataX <- useCaseData[c("Simple_UC","Average_UC", "Complex_UC")]	
+regVariance <- resVariance * solve(t(useCaseDataX) %*% as.matrix(useCaseDataX))
+regressionVariance <- cbind(regVariance["Simple_UC", "Simple_UC"], regVariance["Average_UC", "Average_UC"], regVariance["Complex_UC", "Complex_UC"])
+colnames(regressionVariance) <- c("Simple_UC", "Average_UC", "Complex_UC")
 #print(logRegVariance)
-print(logRegVariance)
+print(regressionVariance)
 
-#bias <- coefs[c("(Intercept)")]
-print('exp regression parameters')
+print("regression parameters")
 coefs <- coef(fit)
-coefs <- exp(coefs[c("Simple_UC_log","Average_UC_log", "Complex_UC_log")])*(1+logRegVariance/2);
-regressionCoefs <- t(as.matrix(coefs))
-#regressionCoefs = cbind(coefs[c("Simple_UC_log")], coefs[c("Average_UC_log")], coefs[c("Complex_UC_log")])
+regressionCoefs <- coefs[c("Simple_UC","Average_UC", "Complex_UC")];
+regressionCoefs <- t(as.matrix(regressionCoefs))
 colnames(regressionCoefs) <- c("Simple_UC", "Average_UC", "Complex_UC")
 print(regressionCoefs)
-
-print("exp regression variance")
-regressionVariance <- t(as.matrix((coefs^2)*logRegVariance));
-colnames(regressionVariance) <- c("Simple_UC", "Average_UC", "Complex_UC")
-#regressionVariance$Simple_UC = expVariance$Simple_UC_log
-#regressionVariance$Average_UC = expVariance$Average_UC_log
-#regressionVariance$Complex_UC = expVariance$Complex_UC_log
-print(regressionVariance)
 
 print("regression w2")
 w2 <- 1/regressionVariance
@@ -243,17 +175,23 @@ print(bayesianVariance)
 #print(by(useCaseDataX, 1:nrow(useCaseDataX), function(row) row * averageCoefs))
 
 print("comparison between the means")
+print("bayesian estimates")
 print(averageCoefs)
+print(bayesianVariance)
+print("regression estimates")
 print(regressionCoefs)
-aprioriMeans = cbind(Simple_UC=5, Average_UC=10, Complex_UC=25)
+print(regressionVariance)
+#aprioriMeans = cbind(Simple_UC=5, Average_UC=10, Complex_UC=25)
+print("apriori estimates")
 print(aprioriMeans)
+print(aprioriVariance)
 
 useCaseDataSet <-  useCaseData[c("Simple_UC","Average_UC", "Complex_UC")]	
 bayesianPredictedUUCW <- as.matrix(useCaseDataSet) %*% t(averageCoefs)
-testRegressionCoefs <- coef(fit)
-print("test regression coefs")
-print(testRegressionCoefs)
-print(cbind(useCaseDataSet, 1))
+#testRegressionCoefs <- coef(fit)
+#print("test regression coefs")
+#print(testRegressionCoefs)
+#print(cbind(useCaseDataSet, 1))
 regressionPredictedUUCW <- as.matrix(useCaseDataSet) %*% t(regressionCoefs)
 aprioriPredictedUUCW <- as.matrix(useCaseDataSet) %*% t(aprioriMeans)
 actualUUCW <- useCaseData[,"norm_UUCW"]
@@ -282,21 +220,21 @@ dat1 <- data.frame(dens1 = c(rnorm(100, aprioriMeans[,'Simple_UC'], aprioriVaria
 print("data frame 1")
 print(dat1)
 svg(paste(outputPath,"simple_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-simplePlot <- ggplot(dat1, aes(x = dens1, fill = lines1)) + geom_density(alpha = 0.5)+labs(x="Simple Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(0:8)))
+simplePlot <- ggplot(dat1, aes(x = dens1, fill = lines1)) + geom_density(alpha = 0.5)+labs(x="Simple Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5, 15)))
 print(simplePlot)
 
 #Average use case bayesian averaging plot
 dat2 <- data.frame(dens2 = c(rnorm(100, aprioriMeans[,'Average_UC'], aprioriVariance[,'Average_UC']), rnorm(100, regressionCoefs[,'Average_UC'], regressionVariance[1, 'Average_UC']),rnorm(100, averageCoefs[1,'Average_UC'], bayesianVariance[1, 'Average_UC']))
 		, lines2 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
 svg(paste(outputPath,"average_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-averagePlot <- ggplot(dat2, aes(x = dens2, fill = lines2)) + geom_density(alpha = 0.5)+labs(x="Average Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-10:20)))
+averagePlot <- ggplot(dat2, aes(x = dens2, fill = lines2)) + geom_density(alpha = 0.5)+labs(x="Average Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-10:25)))
 print(averagePlot)
 
 #Complex use case bayesian averaging plot
 dat3 <- data.frame(dens3 = c(rnorm(100, aprioriMeans[,'Complex_UC'], aprioriVariance[,'Complex_UC']), rnorm(100, regressionCoefs[,'Complex_UC'], regressionVariance[1, 'Complex_UC']),rnorm(100, averageCoefs[1,'Complex_UC'], bayesianVariance[1, 'Complex_UC']))
 		, lines3 = rep(c("A-Priori", "Regression", "Bayesian"), each = 100))
 svg(paste(outputPath,"complex_use_case_bayesian_average_plot.svg", sep="/"), width=3, height=3)
-complexPlot <- ggplot(dat3, aes(x = dens3, fill = lines3)) + geom_density(alpha = 0.5)+labs(x="Complex Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-10:30)))
+complexPlot <- ggplot(dat3, aes(x = dens3, fill = lines3)) + geom_density(alpha = 0.5)+labs(x="Complex Use Case Weight", y="Density", fill="Methods")+ xlim(range(c(-5:35)))
 print(complexPlot)
 
 #print("output dat")
@@ -319,7 +257,7 @@ print(grid.arrange(arrangeGrob(simplePlot+guides(fill=FALSE), averagePlot+guides
 #Randomly shuffle the data
 useCaseData<-useCaseData[sample(nrow(useCaseData)),]
 #Create 10 equally size folds
-nfold = 20
+nfold = 5
 folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 
 #function
@@ -344,7 +282,7 @@ folds <- cut(seq(1,nrow(useCaseData)),breaks=nfold,labels=FALSE)
 foldResults <- matrix(,nrow=nfold,ncol=12)
 colnames(foldResults) <- c('bayesian_mmre','bayesian_pred15','bayesian_pred25','bayesian_pred50','apriori_mmre','apriori_pred15','apriori_pred25','apriori_pred50','regression_mmre','regression_pred15','regression_pred25','regression_pred50')
 #data structure to hold
-foldResults1 <- array(0,dim=c(100,3,nfold))
+foldResults1 <- array(0,dim=c(100,4,nfold))
 #colnames(foldResults1) <- c('baye_pred','apriori_pred','regression_pred')
 #Perform 10 fold cross validation
 for(i in 1:nfold){
@@ -355,43 +293,55 @@ for(i in 1:nfold){
 	
 	testDataX <- testData[c("Simple_UC","Average_UC", "Complex_UC")]
 	trainDataX <- trainData[c("Simple_UC","Average_UC", "Complex_UC")]
-	logTrainDataX <- trainData[c("Norm_UUCW_log", "Simple_UC_log","Average_UC_log", "Complex_UC_log")]	
-	logTestDataX <- testData[c("Norm_UUCW_log", "Simple_UC_log","Average_UC_log", "Complex_UC_log")]
+	#trainDataX <- trainData[c("Norm_UUCW", "Simple_UC","Average_UC", "Complex_UC")]	
+	#logTestDataX <- testData[c("Norm_UUCW", "Simple_UC","Average_UC", "Complex_UC")]
 	
 	
 	print('calculate regression parameters')
 	
-	foldFit <- lm(Norm_UUCW_log ~ Simple_UC_log + Average_UC_log + Complex_UC_log - 1, data=logTrainDataX)
+	foldTrainingUCPFit <- lm(Real_Effort_Person_Hours ~ UCP - 1, data = trainData)
+	foldTrainNormFactor <- coef(foldTrainingUCPFit)[c('UCP')]
+	print("fold norm factor")
+#normFactor <- 12
+	print(foldTrainNormFactor)
+	
+	print("normalized UUCW")
+	foldTrainNormUUCW <- trainData[,'Real_Effort_Person_Hours']/(trainData[,'TCF']*trainData[,'EF']*foldTrainNormFactor)
+	print(foldTrainNormUUCW)
+	trainData$fold_train_norm_UUCW = foldTrainNormUUCW
+	
+	foldFit <- lm(fold_train_norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
 	
 	print("regression residual variance")
-	foldLogResVariance <- var(resid(foldFit))
-	print(foldLogResVariance)
-#w2 <- t(useCaseDataX) %*% as.matrix(useCaseDataX) / foldLogResVariance #the variance generated by the normal linear regression
+	foldResVariance <- var(resid(foldFit))
+	print(foldResVariance)
+#w2 <- t(useCaseDataX) %*% as.matrix(useCaseDataX) / foldResVariance #the variance generated by the normal linear regression
 #regressionVariance <- solve(w2)
 	
 	print("regression variance")
-#	useCaseDataX <- useCaseData[c("Simple_UC_log","Average_UC_log", "Complex_UC_log")]	
-	foldLogRegVariance <- foldLogResVariance * solve(t(logTrainDataX) %*% as.matrix(logTrainDataX))
-	foldLogRegVariance <- c(foldLogRegVariance["Simple_UC_log", "Simple_UC_log"], foldLogRegVariance["Average_UC_log", "Average_UC_log"], foldLogRegVariance["Complex_UC_log", "Complex_UC_log"])
-#print(foldLogRegVariance)
-	print(foldLogRegVariance)
+#	useCaseDataX <- useCaseData[c("Simple_UC","Average_UC", "Complex_UC")]	
+	foldRegVariance <- foldResVariance * solve(t(trainDataX) %*% as.matrix(trainDataX))
+	foldRegressionVariance <- cbind(foldRegVariance["Simple_UC", "Simple_UC"], foldRegVariance["Average_UC", "Average_UC"], foldRegVariance["Complex_UC", "Complex_UC"])
+	colnames(foldRegressionVariance) <- c("Simple_UC", "Average_UC", "Complex_UC")
+#print(foldRegVariance)
+	print(foldRegressionVariance)
 	
 #bias <- coefs[c("(Intercept)")]
 	print('fold regression parameters')
 	foldCoefs <- coef(foldFit)
-	foldCoefs <- exp(foldCoefs[c("Simple_UC_log","Average_UC_log", "Complex_UC_log")])*(1+foldLogRegVariance/2);
+	foldCoefs <- foldCoefs[c("Simple_UC","Average_UC", "Complex_UC")];
 	foldRegressionCoefs <- t(as.matrix(foldCoefs))
-#foldRegressionCoefs = cbind(foldCoefs[c("Simple_UC_log")], foldCoefs[c("Average_UC_log")], foldCoefs[c("Complex_UC_log")])
+#foldRegressionCoefs = cbind(foldCoefs[c("Simple_UC")], foldCoefs[c("Average_UC")], foldCoefs[c("Complex_UC")])
 	colnames(foldRegressionCoefs) <- c("Simple_UC", "Average_UC", "Complex_UC")
 	print(foldRegressionCoefs)
 	
-	print("fold regression variance")
-	foldRegressionVariance <- t(as.matrix((foldCoefs^2)*foldLogRegVariance));
-	colnames(foldRegressionVariance) <- c("Simple_UC", "Average_UC", "Complex_UC")
-#foldRegressionVariance$Simple_UC = expVariance$Simple_UC_log
-#foldRegressionVariance$Average_UC = expVariance$Average_UC_log
-#foldRegressionVariance$Complex_UC = expVariance$Complex_UC_log
-	print(foldRegressionVariance)
+	#print("fold regression variance")
+	#foldRegressionVariance <- t(as.matrix((foldCoefs^2)*foldRegVariance));
+	#colnames(foldRegressionVariance) <- c("Simple_UC", "Average_UC", "Complex_UC")
+#foldRegressionVariance$Simple_UC = expVariance$Simple_UC
+#foldRegressionVariance$Average_UC = expVariance$Average_UC
+#foldRegressionVariance$Complex_UC = expVariance$Complex_UC
+	#print(foldRegressionVariance)
 	
 	print("regression w2")
 	foldW2 <- 1/foldRegressionVariance
@@ -406,8 +356,22 @@ for(i in 1:nfold){
 	print("foldAverageCoefs")
 	print(foldAverageCoefs)
 	
+	print('calculate fold testing norm factor')
+	
+	foldTestingUCPFit <- lm(Real_Effort_Person_Hours ~ UCP - 1, data = testData)
+	foldTestingNormFactor <- coef(foldTestingUCPFit)[c('UCP')]
+	print("fold testing norm factor")
+#normFactor <- 12
+	print(foldTestingNormFactor)
+	
+	print("normalized UUCW")
+	foldTestNormUUCW <- testData[,'Real_Effort_Person_Hours']/(testData[,'TCF']*testData[,'EF']*foldTestingNormFactor)
+	print(foldTestNormUUCW)
+	testData$fold_test_norm_UUCW = foldTestNormUUCW
+	
+	print('bayesian testing set predication')
 	#bayesian.mre = apply(testData, 1, function(x))
-	bayesian.predict = cbind(as.matrix(testDataX) %*% t(foldAverageCoefs), testData$norm_UUCW)
+	bayesian.predict = cbind(as.matrix(testDataX) %*% t(foldAverageCoefs), testData$fold_test_norm_UUCW)
 	colnames(bayesian.predict) = c('predicted', "actual")
 	print(bayesian.predict)
 	bayesian.mre = apply(bayesian.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -426,7 +390,7 @@ for(i in 1:nfold){
 	
 	print('apriori testing set predication')
 	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
-	aprioriMeans = cbind(Simple_UC=5, Average_UC=10, Complex_UC=15)
+	#aprioriMeans = cbind(Simple_UC=5, Average_UC=15, Complex_UC=20)
 	apriori.predict = cbind(as.matrix(testDataX) %*% t(aprioriMeans), testData$norm_UUCW)
 	colnames(apriori.predict) = c('predicted', "actual")
 	print(apriori.predict)
@@ -446,7 +410,7 @@ for(i in 1:nfold){
 	
 	print('regression testing set predication')
 	#regression.m = lm(norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
-	#regression.m <- lm(Norm_UUCW_log ~ Simple_UC_log + Average_UC_log + Complex_UC_log - 1, data=logTrainDataX)
+	#regression.m <- lm(Norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainDataX)
 	regression.predict = cbind(predicted=as.matrix(testDataX) %*% t(foldRegressionCoefs), actual=testData$norm_UUCW)
 	print(regression.predict)
 	regression.mre = apply(regression.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -464,8 +428,29 @@ for(i in 1:nfold){
 	}
 	
 	
-	foldResults[i,] = c(bayesian.mmre,bayesian.pred15,bayesian.pred25,bayesian.pred50,apriori.mmre,apriori.pred15,apriori.pred25,apriori.pred50,regression.mmre,regression.pred15,regression.pred25,regression.pred50)
-	foldResults1[,,i] = array(c(bayesian.pred, apriori.pred, regression.pred),c(100,3))
+	print('original use case weights testing set predication')
+	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
+	originalWeights = cbind(Simple_UC=5, Average_UC=10, Complex_UC=15)
+	original.predict = cbind(as.matrix(testDataX) %*% t(originalWeights), testData$norm_UUCW)
+	colnames(original.predict) = c('predicted', "actual")
+	print(original.predict)
+	original.mre = apply(original.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	original.mmre = mean(original.mre)
+	print(original.mmre)
+	#original.preds = sapply(original.mre, function(x) calculatePreds(x))
+	original.pred15 = length(original.mre[original.mre<=0.15])/length(original.mre)
+	original.pred25 = length(original.mre[original.mre<=0.25])/length(original.mre)
+	original.pred50 = length(original.mre[original.mre<=0.50])/length(original.mre)
+	print(c(original.pred15, original.pred25, original.pred50))
+	
+	original.pred <- 0
+	for(j in 1:99){
+		original.pred <- c(original.pred, length(original.mre[original.mre<=0.01*j])/length(original.mre))
+	}
+	
+	
+	foldResults[i,] = c(bayesian.mmre,bayesian.pred15,bayesian.pred25,bayesian.pred50,apriori.mmre,apriori.pred15,apriori.pred25,apriori.pred50,original.mmre,original.pred15,original.pred25,original.pred50,regression.mmre,regression.pred15,regression.pred25,regression.pred50)
+	foldResults1[,,i] = array(c(bayesian.pred, apriori.pred, original.pred, regression.pred),c(100,3))
 	
 }
 
