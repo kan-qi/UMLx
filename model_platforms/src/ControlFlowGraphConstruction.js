@@ -114,18 +114,18 @@
 				var node = nodesByID[targetMethodUnit.UUID];
 				if(!node){
 					node = {
-							Name: targetComponent.name+"_"+targetMethodUnit.Signature.name,
+							name: targetComponent.name+"_"+targetMethodUnit.Signature.name,
 							isResponse: targetMethodUnit.isResponse,
-							Component: {
+							component: {
 								uuid: targetComponent.uuid
 							},
 							trigger: action,
-							_id: targetMethodUnit.UUID
+							uuid: targetMethodUnit.UUID
 //							classUnit: targetClassUnit
 //							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 					nodes.push(node);
-					nodesByID[node._id] = node;
+					nodesByID[node.uuid] = node;
 				}
 
 //				var end = targetClassUnit.name;

@@ -87,7 +87,7 @@
 				
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
 				
-				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir);
+				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 				
 				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
 				
@@ -123,7 +123,7 @@
 			console.log(component);
 			var domainElement = {
 				Name: component.name,
-				_id: 'a'+component.uuid.replace(/\-/g, ""),
+				_id: 'c'+component.uuid.replace(/\-/g, "_"),
 				Attributes: [],
 				Operations: [],
 				InheritanceStats: {},
@@ -139,7 +139,7 @@
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
 			var startNode = edge.start;
-			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
+			var componentUUID = 'c'+dicComponents[startNode.component.classUnit].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			var foundMethod = false;
 			for (var j in domainElement.Operations) {
@@ -157,7 +157,7 @@
 				domainElement.Operations.push(method);
 			}
 			var endNode = edge.end;
-			var componentUUID = 'a'+dicComponents[endNode.component.classUnit].replace(/\-/g, "");
+			var componentUUID = 'c'+dicComponents[endNode.component.classUnit].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			foundMethod = false;
 			for (var j in domainElement.Operations) {
@@ -179,7 +179,7 @@
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
 			var startNode = edge.start;
-			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
+			var componentUUID = 'c'+dicComponents[startNode.component.classUnit].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			var foundMethod = false;
 			for (var j in domainElement.Operations) {
@@ -219,7 +219,7 @@
 		for (var i in typeDependencyGraph.edgesAttr) {
 			var edge = typeDependencyGraph.edgesAttr[i];
 			var startNode = edge.start;
-			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
+			var componentUUID = 'c'+dicComponents[startNode.component.classUnit].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			var foundAttr = false;
 			for (var j in domainElement.Attributes) {
@@ -251,7 +251,7 @@
 			// console.log("check edge");
 			// console.log(util.inspect(edge, false, null));
 			var startNode = edge.start;
-			var componentUUID = 'a'+dicComponents[startNode.component.classUnit].replace(/\-/g, "");
+			var componentUUID = 'c'+dicComponents[startNode.component.classUnit].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			var foundMethod = false;
 			var foundParameter = false;
@@ -328,7 +328,7 @@
 
 		return {
 			DomainModel:DomainModel,
-			domainElementsByID: domainElementsByID
+			DomainElementsByID: domainElementsByID
 		}
 
 	}
@@ -449,7 +449,7 @@
              return graph;
 		}
 
-	function createUseCasesbyCFG(cfgGraph, ModelOutputDir, ModelAccessDir){
+	function createUseCasesbyCFG(cfgGraph, ModelOutputDir, ModelAccessDir, domainElementsByID){
 
 		var UseCases = [];
 
@@ -471,8 +471,25 @@
 
 		for(var i in nodes){
 			var node = nodes[i];
-			var activity = node;
-			activity._id = activity._id.replace(/\-/g, "_");
+			
+			var domainElement = null;
+			
+			if(node.component){
+				domainElement = domainElementsByID["c"+node.component.uuid.replace(/\-/g, "_")];
+			}
+			
+			var activity = {
+					Name: node['name'],
+					_id: "a"+node['uuid'].replace(/\-/g, "_"),
+					Type: "activity",
+					isResponse: node.isResponse,
+					Stimulus: node.type === "stimulus" ? true: false,
+					OutScope: false,
+					Group: "System",
+					Component: domainElement
+			}
+			
+			
 			activities.push(activity);
 			activitiesByID[activity._id] = activity;
 		}
@@ -483,18 +500,23 @@
 		for(var i in edges){
 			var edge = edges[i];
 			
+			console.log("edge");
 			console.log(edge);
 			
-			var startId = edge.start._id.replace(/\-/g, "_");
-			var endId = edge.end._id.replace(/\-/g, "_");
+			var startId = "a"+edge.start.uuid.replace(/\-/g, "_");
+			var endId = "a"+edge.end.uuid.replace(/\-/g, "_");
 			
 			var start = activitiesByID[startId];
 			var end = activitiesByID[endId];
-			
+//			
+//			var start = edge.start;
+//			var end = edge.end;
+//			
 			if(!start || !end){
 				continue;
 			}
 			
+			console.log("push edge");
 			precedenceRelations.push({start: start, end: end});
 		}
 

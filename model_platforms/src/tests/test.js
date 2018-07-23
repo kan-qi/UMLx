@@ -13,16 +13,16 @@ var fs = require('fs');
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\CarbonData_java.xmi";
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\fabric-sdk-java\\fabric-sdk-java_kdm.xmi";
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\alltheapps\\alltheapps_kdm.xmi";
-	var ModelOutputDir = "./model_platforms/src/experimentExample";
-//	var ModelOutputDir = "./model_platforms/src/repoAnalyzer";
+//	var ModelOutputDir = "./model_platforms/src/experimentExample";
+	var ModelOutputDir = "./model_platforms/src/repoAnalyzer";
 //	var ModelOutputDir = "./model_platforms/src/carbonData";
 //	var ModelOutputDir = "./model_platforms/src/repoAnalyzer";
 //	var ModelOutputDir = "./model_platforms/src/alltheapps";
 
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\model_platforms\\src\\tests\\repoAnalyzer_kdm.xmi";
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\model_platforms\\src\\tests\\experimentExample_kdm.xmi";
-	var filePath = "./model_platforms/src/tests/experimentExample_kdm_simplified.xmi";
-//	var filePath = "./model_platforms/src/tests/repoAnalyzer_kdm.xmi"
+//	var filePath = "./model_platforms/src/tests/experimentExample_kdm_simplified.xmi";
+	var filePath = "./model_platforms/src/tests/repoAnalyzer_kdm.xmi"
 
 		var modelDrawer = require("../../../model_drawers/UserSystemInteractionModelDrawer.js");
 

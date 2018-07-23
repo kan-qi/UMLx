@@ -22,11 +22,11 @@
 			var path = outputDir+"/"+fileName;
 //			useCase.DiagramType = "kdm_diagram";
 			
-			var nodesByID = {};
-			for(var i in nodes){
-				var node = nodes[i];
-				nodesByID[node._id] = node;
-			}
+//			var nodesByID = {};
+//			for(var i in nodes){
+//				var node = nodes[i];
+//				nodesByID[node._id] = node;
+//			}
 
 			let graph = 'digraph g {\
 				fontsize=26\

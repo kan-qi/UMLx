@@ -237,7 +237,7 @@
 			components.push(component);
 
 			for (var j in classUnits) {
-				dicComponents[classUnits[j].UUID] = component.uuid
+				dicComponents[classUnits[j].UUID] = component.uuid;
 			}
 		}
 
