@@ -227,9 +227,17 @@
 			// }
 			// console.log("classUnits")
 			// console.log(classUnits)
+			
+			
+			//determine the component name by using the top level class or the class that has the largest number of methods.
+			// for now the simple implementation is to use the first class unit.
+			
+			if(classUnits.length < 1){
+				continue;
+			}
 
 			var component = {
-					name: i,
+					name: classUnits[0].name,
 					uuid: uuidv4(),
 					classUnits: classUnits
 			}
