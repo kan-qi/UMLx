@@ -43,11 +43,13 @@ SWTI Search Results
 ```{r swti}
 SWTIresults <- performSearch(6, "./Transaction Data", effort, c("TL"))
 # Plot classification results
-for (result in SWTIresults) {
+for (i in 1:length(SWTIresults)) {
+  result <- SWTIresults[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-    xlab("Category")
+    xlab("Category") +
+    ggtitle(paste("Classification Results:", i, "bins"))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
@@ -71,13 +73,13 @@ r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   summary(model)$r.squared
 })
 r2Vals <- round(r2Vals, digits = 5)
-r2Vals <- paste("r?:", r2Vals, sep = "")
+r2Vals <- paste("r2:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
 r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ numBins) + xlab("Predicted Effort") +
-  ylab("Actual Effort") +
+  ylab("Actual Effort") + ggtitle("Model Accuracy") +
   theme(panel.spacing = unit(1, "lines")) +
   geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
             hjust = -0.1, vjust = -1)
@@ -86,15 +88,15 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
 MSEdata <- data.frame(NumBins = 1:length(SWTIresults), MSE = sapply(SWTIresults, function(x) { x$MSE }))
 MMREdata <- data.frame(NumBins = 1:length(SWTIresults), MMRE = sapply(SWTIresults, function(x) { x$MMRE }))
 PREDdata <- data.frame(NumBins = 1:length(SWTIresults), PRED = sapply(SWTIresults, function(x) { x$PRED }))
-ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
-ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
-ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line() + ggtitle("MSE Results")
+ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line() + ggtitle("MMRE Results")
+ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)") + ggtitle("PRED(0.25) Results")
 
 # Plot marginal posteriors for each parameter
 for (i in 1:length(SWTIresults)) {
   marginalData <- SWTIresults[[i]]$model[, !names(SWTIresults[[i]]$model) %in% c("(Intercept)", "sigma")]
   if (is.vector(marginalData)) {
-    marginalData <- data.frame(TL1 = marginalData)
+    marginalData <- data.frame(l1 = marginalData)
   }
   for (col in names(marginalData)) {
     mean <- mean(marginalData[, col])
@@ -103,22 +105,23 @@ for (i in 1:length(SWTIresults)) {
     g <- ggplot(marginalData, aes(x=marginalData[, col])) + 
     geom_histogram(aes(y = ..density..), binwidth = 1, colour="black", fill="white") + 
     stat_function(fun = dnorm, args = list(mean = mean(mean), sd = sd)) + 
-    xlab(col) + ggtitle(paste(col, i, "bins")) +
+    xlab(col) + ggtitle("Posterior Weight", paste(col, i, "bins")) +
     annotate("text", x = mean, y = peakDensity * ((sd/3 *.1) + 1), label = paste("mean:", round(mean,2),",", "sd:", round(sd,2)))
     print(g)
   }
 }
-
 ```
 SWTII Search Results
 ```{r swtii, warning = FALSE}
-SWTIIresults <- performSearch(3, "./Transaction Data", effort, c("TL", "TD"))
+SWTIIresults <- performSearch(5, "./Transaction Data", effort, c("TL", "TD"))
 # Plot classification results
-for (result in SWTIIresults) {
+for (i in 1:length(SWTIIresults)) {
+  result <- SWTIIresults[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
     xlab("Category") +
+    ggtitle(paste("Classification Results:", i, "bins")) +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
@@ -143,13 +146,13 @@ r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   summary(model)$r.squared
 })
 r2Vals <- round(r2Vals, digits = 5)
-r2Vals <- paste("r?:", r2Vals, sep = "")
+r2Vals <- paste("r2:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
 r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ numBins) + xlab("Predicted Effort") +
-  ylab("Actual Effort") +
+  ylab("Actual Effort") + ggtitle("Model Accuracy") +
   theme(panel.spacing = unit(1, "lines")) +
   geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
             hjust = -0.1, vjust = -1)
@@ -158,15 +161,15 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
 MSEdata <- data.frame(NumBins = 1:length(SWTIIresults), MSE = sapply(SWTIIresults, function(x) { x$MSE }))
 MMREdata <- data.frame(NumBins = 1:length(SWTIIresults), MMRE = sapply(SWTIIresults, function(x) { x$MMRE }))
 PREDdata <- data.frame(NumBins = 1:length(SWTIIresults), PRED = sapply(SWTIIresults, function(x) { x$PRED }))
-ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
-ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
-ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line() + ggtitle("MSE Results")
+ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line() + ggtitle("MMRE Results")
+ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)") + ggtitle("PRED(0.25) Results")
 
 # Plot marginal posteriors for each parameter
 for (i in 1:length(SWTIIresults)) {
   marginalData <- SWTIIresults[[i]]$model[, !names(SWTIIresults[[i]]$model) %in% c("(Intercept)", "sigma")]
   if (is.vector(marginalData)) {
-    marginalData <- data.frame(TL1TD1 = marginalData)
+    marginalData <- data.frame(l1 = marginalData)
   }
   for (col in names(marginalData)) {
     mean <- mean(marginalData[, col])
@@ -175,7 +178,7 @@ for (i in 1:length(SWTIIresults)) {
     g <- ggplot(marginalData, aes(x=marginalData[, col])) + 
     geom_histogram(aes(y = ..density..), binwidth = 1, colour="black", fill="white") + 
     stat_function(fun = dnorm, args = list(mean = mean(mean), sd = sd)) + 
-    xlab(col) + ggtitle(paste(col, i, "bins")) +
+    xlab(col) + ggtitle("Posterior Weight", paste(col, i, "bins")) +
     annotate("text", x = mean, y = peakDensity * ((sd/3 *.1) + 1), label = paste("mean:", round(mean,2),",", "sd:", round(sd,2)))
     print(g)
   }
@@ -185,11 +188,13 @@ SWTIII Search Results
 ```{r swtiii, warning = FALSE}
 SWTIIIresults <- performSearch(2, "./Transaction Data", effort, c("TL", "TD", "DETs"))
 # Plot classification results
-for (result in SWTIIIresults) {
+for (i in 1:length(SWTIIIresults)) {
+  result <- SWTIIIresults[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
     xlab("Category") +
+    ggtitle(paste("Classification Results:", i, "bins")) +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
@@ -214,13 +219,13 @@ r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   summary(model)$r.squared
 })
 r2Vals <- round(r2Vals, digits = 5)
-r2Vals <- paste("r?:", r2Vals, sep = "")
+r2Vals <- paste("r2:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
 r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIIIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ numBins) + xlab("Predicted Effort") +
-  ylab("Actual Effort") +
+  ylab("Actual Effort") + ggtitle("Model Accuracy") +
   theme(panel.spacing = unit(1, "lines")) +
   geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
             hjust = -0.1, vjust = -1)
@@ -229,9 +234,9 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
 MSEdata <- data.frame(NumBins = 1:length(SWTIIIresults), MSE = sapply(SWTIIIresults, function(x) { x$MSE }))
 MMREdata <- data.frame(NumBins = 1:length(SWTIIIresults), MMRE = sapply(SWTIIIresults, function(x) { x$MMRE }))
 PREDdata <- data.frame(NumBins = 1:length(SWTIIIresults), PRED = sapply(SWTIIIresults, function(x) { x$PRED }))
-ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line()
-ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line()
-ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)")
+ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line() + ggtitle("MSE Results")
+ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line() + ggtitle("MMRE Results")
+ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)") + ggtitle("PRED Results")
 
 # Plot marginal posteriors for each parameter
 for (i in 1:length(SWTIIIresults)) {
@@ -246,7 +251,7 @@ for (i in 1:length(SWTIIIresults)) {
     g <- ggplot(marginalData, aes(x=marginalData[, col])) + 
     geom_histogram(aes(y = ..density..), binwidth = 1, colour="black", fill="white") + 
     stat_function(fun = dnorm, args = list(mean = mean(mean), sd = sd)) + 
-    xlab(col) + ggtitle(paste(col, i, "bins")) +
+    xlab(col) + ggtitle(paste("Posterior Weight", col, i, "bins")) +
     annotate("text", x = mean, y = peakDensity * ((sd/3 *.1) + 1), label = paste("mean:", round(mean,2),",", "sd:", round(sd,2)))
     print(g)
   }

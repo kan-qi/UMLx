@@ -16,8 +16,11 @@
 #   4. Examine the object returned by performSearch().
 #       Ex. results <- performSearch(4, "./Transaction Data", effort)
 #       a. Return the mean MSE result for i bins: results[[i]]$MSE
-#       b. Return the weights results for i bins: results[[i]]$model
-#       c. Return the discretization/classification data for i bins: results[[i]]$data
+#       b. Return the mean MMRE result for i bins: results[[i]]$MMRE
+#       c. Return the mean PRED(0.25) result for i bins: results[[i]]$PRED
+#       d. Return the cut point results for i bins: results[[i]]$cuts
+#       e. Return the weights results for i bins: results[[i]]$model
+#       f. Return the discretization/classification data for i bins: results[[i]]$data
 
 library(ggplot2)
 library(MASS)
@@ -66,31 +69,60 @@ discretize <- function(data, n) {
 }
 
 classify <- function(data, cutPoints) {
-	# Classify data into different levels of complexity based on
-	# the quantile the data falls in.
-	#
-	# Args:
-	#   data: A dataframe of transactions to classfiy.
-	#   cutPoints: Matrix where each row is a vector of cut points. Each row
-	#     should be named according to the parameter they cut.
-	#
-	# Returns:
-	#   A vector that indicates how many data points fall into each bin.
-	numVariables <- nrow(cutPoints)
-	numBins <- length(cutPoints[1, ]) - 1
-	totalClassifications <- numBins^numVariables
-	result <- rep(0, totalClassifications)
-	names(result) <- genColNames(rownames(cutPoints), numBins)
-	for (i in 1:nrow(data)) {
-		classifications <- c()
-		for (p in rownames(cutPoints)) {
-			parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
-			classifications <- c(classifications, paste(p, parameterResult, sep = ""))
-		}
-		combinedClass <- paste(classifications, sep = "", collapse = "")
-		result[combinedClass] <- result[combinedClass] + 1
-	}
-	result
+  # Classify data into different levels of complexity based on
+  # the quantile the data falls in.
+  #
+  # Args:
+  #   data: A dataframe of transactions to classfiy.
+  #   cutPoints: Matrix where each row is a vector of cut points. Each row
+  #     should be named according to the parameter they cut.
+  #
+  # Returns:
+  #   A vector that indicates how many data points fall into each bin.
+  #
+  # TODO: Develop a classification scheme for SWTIII (3 variables)
+  numVariables <- nrow(cutPoints)
+  numBins <- ncol(cutPoints) - 1
+  if (numVariables == 1) {
+    dataVec <- data[, rownames(cutPoints)]
+    classifications <- cut(dataVec, breaks = cutPoints[1, ], labels = FALSE)
+    result <- rep(0, numBins)
+    names(result) <- genColNames(rownames(cutPoints), numBins)
+    for (i in 1:numBins) {
+      result[paste("l", i, sep = "")] <- sum(classifications == i)
+    }
+    return(result)
+  }
+  else if (numVariables == 2) {
+    totalClassifications <- numBins + (numBins - 1)
+    result <- rep(0, totalClassifications)
+    names(result) <- genColNames(rownames(cutPoints), numBins)
+    for (i in 1:nrow(data)) {
+      classifications <- c()
+      for (p in rownames(cutPoints)) {
+        parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
+        classifications <- c(classifications, parameterResult)
+      }
+      combinedClass <- paste("l", classifications[1] + (classifications[2] - 1), sep = "")
+      result[combinedClass] <- result[combinedClass] + 1
+    }
+    return(result)
+  }
+  else { # Old classification schema currently used for SWTIII
+    totalClassifications <- (numBins)^numVariables
+    result <- rep(0, totalClassifications)
+    names(result) <- genColNames(rownames(cutPoints), numBins)
+    for (i in 1:nrow(data)) {
+      classifications <- c()
+      for (p in rownames(cutPoints)) {
+        parameterResult <- cut(data[i, p], breaks = cutPoints[p, ], labels = FALSE)
+        classifications <- c(classifications, paste(p, parameterResult, sep = ""))
+      }
+      combinedClass <- paste(classifications, sep = "", collapse = "")
+      result[combinedClass] <- result[combinedClass] + 1
+    }
+    return(result)
+  }
 }
 
 calcMMRE <- function(testData, pred) {
@@ -150,30 +182,29 @@ crossValidate <- function(data, k) {
 }
 
 genColNames <- function(parameters, nBins) {
-	# Helper function that generates a vector strings representing all possible
-	# classifications.
-	#
-	# Args:
-	#   parameters: vector of parameters being analyzed
-	#   nBins: number of bins being analyzed
-	#
-	# Returns:
-	#   A vector of strings for all possible classifications.
-	if (length(parameters) == 1) {
-		return(paste(parameters[1], 1:nBins, sep = ""))
-	}
-	else if (length(parameters) == 2) {
-		first <- paste(parameters[1], 1:nBins, sep = "")
-		second <- paste(parameters[2], 1:nBins, sep = "")
-		return (as.vector(sapply(first, paste, second, sep = "")))
-	}
-	else {
-		first <- paste(parameters[1], 1:nBins, sep = "")
-		second <- paste(parameters[2], 1:nBins, sep = "")
-		third <- paste(parameters[3], 1:nBins, sep = "")
-		result <- sapply(sapply(first, paste, second, sep = ""), paste, third, sep = "")
-		return(as.vector(result))
-	}
+  # Helper function that generates a vector strings representing all possible
+  # classifications.
+  #
+  # Args:
+  #   parameters: vector of parameters being analyzed
+  #   nBins: number of bins being analyzed
+  #
+  # Returns:
+  #   A vector of strings for all possible classifications.
+  if (length(parameters) == 1) {
+    return(paste("l", 1:nBins, sep = ""))
+  }
+  else if (length(parameters) == 2) {
+    numLevels <- nBins + (nBins - 1)
+    return(paste("l", 1:numLevels, sep = ""))
+  }
+  else {
+    first <- paste(parameters[1], 1:nBins, sep = "")
+    second <- paste(parameters[2], 1:nBins, sep = "")
+    third <- paste(parameters[3], 1:nBins, sep = "")
+    result <- sapply(sapply(first, paste, second, sep = ""), paste, third, sep = "")
+    return(as.vector(result))
+  }
 }
 
 bayesfit<-function(lmfit, N) {
@@ -243,49 +274,50 @@ predict.blm <- function(model, newdata) {
 }
 
 performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DETs"), k = 5) {
-	# Performs search for the optimal number of bins and weights to apply to each
-	# bin through linear regression.
-	#
-	# Args:
-	#   n: Specifies up to how many bins per parameter to search.
-	#   folder: Folder containg all the transaction analytics data to analyze.
-	#   effortData: a data frame containing effort data corresponding to each of
-	#               the files contained in the folder argument. Rows must be named
-	#               the same as the filename and effort column should be named "Effort".
-	#   parameters: A vector of which parameters to analyze. Ex. "TL", "TD", "DETs"
-	#   k: How many folds to use for k-fold cross validation.
-	#
-	# Returns:
-	#   A list in which the ith index gives the results of the search for i bins.
-	combinedData <- combineData(folder)
-	paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
-	paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
-	searchResults <- list()
-	for (i in seq(1,n)) {
-		cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
-		rownames(cutPoints) <- parameters
-		for (p in parameters) {
-			cutPoints[p, ] <- discretize(combinedData[, p], i)
-		}
-		numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
-		regressionData <- matrix(nrow = numFiles, ncol = i^length(parameters) + 1)
-		rownames(regressionData) <- dir(folder)[grepl(".csv", dir(folder), ignore.case = TRUE)]
-		colnames(regressionData) <- c(genColNames(parameters, i), "Effort")
-		for (file in dir(folder)) {
-		  if (grepl(".csv", file, ignore.case = TRUE)) {
-			  fileData <- read.csv(paste(folder, file, sep = "/"))
-			  regressionData[file, ] <- c(classify(fileData, cutPoints), effortData[file, "Effort"])
-		  }
-		}
-		regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
-		regressionData <- as.data.frame(regressionData)
-		validationResults <- crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k)
-		searchResults[[i]] <- list(MSE = validationResults["MSE"], 
-		                           MMRE = validationResults["MMRE"], 
-		                           PRED = validationResults["PRED"],
-		                           model = bayesfit(lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]), 10000),
-		                           data = regressionData,
-		                           cuts = cutPoints)
-	}
-	searchResults
+  # Performs search for the optimal number of bins and weights to apply to each
+  # bin through linear regression.
+  #
+  # Args:
+  #   n: Specifies up to how many bins per parameter to search.
+  #   folder: Folder containg all the transaction analytics data to analyze.
+  #   effortData: a data frame containing effort data corresponding to each of
+  #               the files contained in the folder argument. Rows must be named
+  #               the same as the filename and effort column should be named "Effort".
+  #   parameters: A vector of which parameters to analyze. Ex. "TL", "TD", "DETs"
+  #   k: How many folds to use for k-fold cross validation.
+  #
+  # Returns:
+  #   A list in which the ith index gives the results of the search for i bins.
+  combinedData <- combineData(folder)
+  paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
+  paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
+  searchResults <- list()
+  for (i in seq(1,n)) {
+    cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
+    rownames(cutPoints) <- parameters
+    for (p in parameters) {
+      cutPoints[p, ] <- discretize(combinedData[, p], i)
+    }
+    numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
+    levels <- genColNames(parameters, i)
+    regressionData <- matrix(nrow = numFiles, ncol = length(levels) + 1)
+    rownames(regressionData) <- dir(folder)[grepl(".csv", dir(folder), ignore.case = TRUE)]
+    colnames(regressionData) <- c(levels, "Effort")
+    for (file in dir(folder)) {
+      if (grepl(".csv", file, ignore.case = TRUE)) {
+        fileData <- read.csv(paste(folder, file, sep = "/"))
+        regressionData[file, ] <- c(classify(fileData, cutPoints), effortData[file, "Effort"])
+      }
+    }
+    regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
+    regressionData <- as.data.frame(regressionData)
+    validationResults <- crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k)
+    searchResults[[i]] <- list(MSE = validationResults["MSE"], 
+                               MMRE = validationResults["MMRE"], 
+                               PRED = validationResults["PRED"],
+                               model = bayesfit(lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]), 10000),
+                               data = regressionData,
+                               cuts = cutPoints)
+  }
+  searchResults
 }
