@@ -1,0 +1,522 @@
+
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<title>UMLx</title>
+				<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet'>
+				<link href='../../css/style.css', rel='stylesheet'>
+				<link href="../../css/lightgallery.css" rel="stylesheet">
+			</head>
+			
+			<body>
+				<div class="banner">
+					<div class="content-flex">
+						<div class="col-md-10 banner-title">
+							<h2>UMLx</h2>
+						</div>
+					</div>
+				</div>
+	
+				<div id='main-panel'>
+					<div id='display-panel'>
+						<div class='block panel panel-default'>
+							<div id='panel-heading'>
+								
+		<div class='model-analytics-ops pull-right'>
+			<div class="dropdown">
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Dump Repo<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="./modelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Models</a></li>
+					<li><a href="./modelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Models (simulation)</a></li>
+					<li><a href="./useCaseEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Use Cases</a></li>
+					<li><a href="./domainModelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Domain Models</a></li>
+					<li><a href="./transactionAnalytics.csv" class="dumpEvaluationData dropdown-item">Evaluation For Transactions</a></li>
+					<li><a href="./entityAnalytics.csv.csv" class="dumpEvaluationData dropdown-item">Evaluation For Classes</a></li>
+					<li><a href="./elementAnalytics.csv" class="dumpEvaluationData dropdown-item">Evaluation For Elements</a></li>
+				</ul>
+			</div>
+			
+			<div class='dropdown'>
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Load<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a id="update-model" onclick="" href="javaScript:void(0);" class="dropdown-item">Model Version</a></li>
+				</ul>
+			</div>
+			
+			<div class="dropdown">
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn dropdown-toggle btn-default">Analysis<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="javaScript:void(0);"class="request-repo-analytics dropdown-item">Reanalyse Repo</a></li>
+					<li><a href="javaScript:void(0);" class="dropdown-item">Reload Repo</a></li>
+				</ul>
+			</div>
+		</div>
+		
+							</div>
+	
+							<div id="model-stats-chart" class="panel-body">
+								
+		<div class="model-info-content">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a data-toggle="tab" href="#model-analytics">Overview</a>
+				</li>
+				<li>
+					<a data-toggle="tab" href="#usecase-analysis" onclick="">Model Elements</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div id="model-analytics" class="tab-pane fade in active">
+					
+		<div class="col-sm-12 status-row">
+			<div class="col-sm-3">
+				<div class="blue-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="../../img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Use Cases</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="red-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="../../img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Transactions</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="green-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="../../img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Classes</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="purple-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="../../img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Actors</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div id="result_chart">here should be distributions</div>
+		
+				</div>
+				<div id="usecase-analysis" class="tab-pane fade">
+					<div id="model-usecase-analysis">
+						<h3>loading...</h3>
+					</div>
+				</div>
+				<div id="repo-analysis-detail" class="panel-body">
+					<div class="repo-metrics table-responsive">
+						<div style='height:6%'>&nbsp;</div>
+						<table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'>
+							<tr>
+								<th>Usecase ID</th>
+								<th>Column Name</th>
+								<th>Mean</th>
+								<th>Variance</th>
+								<th>First Quartile</th>
+								<th>Median</th>
+								<th>Third Quartile</th>
+								<th>Kurtosis</th>
+							</tr>
+						<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 17.5 </td>
+									<td> 99.1667 </td>
+									<td> 9.25 </td>
+									<td> 17.5 </td>
+									<td> 25.75 </td>
+									<td> -1.3063 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 24 </td>
+									<td> 188 </td>
+									<td> 12.5 </td>
+									<td> 24 </td>
+									<td> 35.5 </td>
+									<td> -1.2768 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 16 </td>
+									<td> 82.6667 </td>
+									<td> 8.5 </td>
+									<td> 16 </td>
+									<td> 23.5 </td>
+									<td> -1.3166 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 10.5 </td>
+									<td> 35 </td>
+									<td> 5.75 </td>
+									<td> 10.5 </td>
+									<td> 15.25 </td>
+									<td> -1.3809 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 10.5 </td>
+									<td> 35 </td>
+									<td> 5.75 </td>
+									<td> 10.5 </td>
+									<td> 15.25 </td>
+									<td> -1.3809 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 23 </td>
+									<td> 172.5 </td>
+									<td> 12 </td>
+									<td> 23 </td>
+									<td> 34 </td>
+									<td> -1.2802 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 14.5 </td>
+									<td> 67.6667 </td>
+									<td> 7.75 </td>
+									<td> 14.5 </td>
+									<td> 21.25 </td>
+									<td> -1.3291 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 10 </td>
+									<td> 31.6667 </td>
+									<td> 5.5 </td>
+									<td> 10 </td>
+									<td> 14.5 </td>
+									<td> -1.3905 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 16.5 </td>
+									<td> 88 </td>
+									<td> 8.75 </td>
+									<td> 16.5 </td>
+									<td> 24.25 </td>
+									<td> -1.3129 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 19 </td>
+									<td> 117.1667 </td>
+									<td> 10 </td>
+									<td> 19 </td>
+									<td> 28 </td>
+									<td> -1.2976 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 21.5 </td>
+									<td> 150.5 </td>
+									<td> 11.25 </td>
+									<td> 21.5 </td>
+									<td> 31.75 </td>
+									<td> -1.286 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 20 </td>
+									<td> 130 </td>
+									<td> 10.5 </td>
+									<td> 20 </td>
+									<td> 29.5 </td>
+									<td> -1.2926 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 15 </td>
+									<td> 72.5 </td>
+									<td> 8 </td>
+									<td> 15 </td>
+									<td> 22 </td>
+									<td> -1.3247 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 15 </td>
+									<td> 72.5 </td>
+									<td> 8 </td>
+									<td> 15 </td>
+									<td> 22 </td>
+									<td> -1.3247 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 15.5 </td>
+									<td> 77.5 </td>
+									<td> 8.25 </td>
+									<td> 15.5 </td>
+									<td> 22.75 </td>
+									<td> -1.3205 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								<tr class="estimation-table">
+									<td rowspan="2"> ID </td>
+									<td> id </td>
+									<td> 19 </td>
+									<td> 117.1667 </td>
+									<td> 10 </td>
+									<td> 19 </td>
+									<td> 28 </td>
+									<td> -1.2976 </td>
+									</tr>
+                    			<tr class="estimation-table">
+									<td> type </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> 0 </td>
+									<td> NaN </td>
+									</tr>
+								</table>
+					</div>
+				</div> 
+			</div>
+		</div>	  
+		
+							</div>
+						</div>
+					</div>
+				</div>
+				
+	
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+				<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+				<script type="text/javascript" src="https://code.highcharts.com/highcharts.src.js"></script>
+				<script type="text/javascript" src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+				<script type="text/javascript" src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+				<script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
+				<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+				<script type="text/javascript" src="../../js/scripts.js"></script>
+				<script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
+				<script> 
+					function display(){
+						$('#result_chart').highcharts({
+							chart: {
+								type: 'column',
+								spacingLeft: 0
+							},
+	
+							title: {
+								text: 'Evaluation of Use Case Complexity'
+							},
+			
+							xAxis: {
+								categories: ['UC1','UC2','UC3','UC4','UC5','UC6','UC7','UC8','UC9','UC10','UC11','UC12','UC13','UC14','UC15','UC16'],
+								crosshair: true
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: 'Frequency'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+									'<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0.2,
+									borderWidth: 0
+								}
+							},
+							series: [ 
+								{
+									name: 'SWTI',
+									data: [15,15,10,10,20,20,15,15,20,15,10,20,10,10,20,15]
+								}, 
+								{
+									name: 'SWTII',
+									data: [15,15,12,9,20,22,15,15,28,15,10,20,10,15,20,15]
+								}, 
+								{
+									name: 'SWTIII',
+									data: [12,12,11,7,19,19,12,12,20,12,9,19,9,13,19,12]
+								}
+							]
+						});
+					}
+	
+					window.onload = display;
+				</script>
+			</body>
+		</html>
+		

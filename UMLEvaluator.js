@@ -743,7 +743,7 @@
 			evaluateUseCase: evaluateUseCase,
 			evaluateDomainModel: evaluateDomainModel,
 			evaluateModel: evaluateModel,
-			evaluateRepo: evaluateRepo,
+			evaluateRepo: evaluateRepo
 //			evaluateRepoByID: evaluateRepoByID
 	}
 }());

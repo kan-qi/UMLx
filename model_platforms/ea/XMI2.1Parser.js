@@ -512,11 +512,14 @@
                     	 graph += '+   ' ;
                          graph += classOperations[j]["Name"] + '(';
                          var para_len = classOperations[j]["Parameters"].length;
-                         for (k = 0; k < classOperations[j]["Parameters"].length - 1; k++) {
+                         for (k = 0; k < para_len - 1; k++) {
                         	 graph += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
                          }
                          graph += ')';
+
+                         if(para_len > 0){
                          graph += ':'+classOperations[j]["Parameters"][para_len - 1]["Type"];
+                         }
                          graph += "\\l";
                      }
                  }

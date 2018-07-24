@@ -871,9 +871,11 @@ function deleteRepo(repoId, callbackfunc) {
 
                             if (modelInfo.DomainModels) {
                                 var domainModel = modelInfo.DomainModels[0];
+                                if(domainModel){
                                 delete modelInfo.DomainModels;
                                 delete domainModel._id;
                                 modelInfo.DomainModel = domainModel;
+                                }
                             }
 
                             repoInfo.UnfoldedModels.push(modelInfo);
@@ -990,6 +992,23 @@ function deleteRepo(repoId, callbackfunc) {
                     resultForRepoInfo.EntityNum += element['ComponentAnalytics']['EntityNum'];
                 }
                 callbackfunc(resultForRepoInfo);
+	            db.close();
+            });
+        });
+    }
+	
+	function queryAllModelNames(repoId, callbackfunc){
+	    MongoClient.connect(url, function(err, db){
+
+	        db.collection("modelInfo").find({repo_id: new mongo.ObjectID(repoId)}).toArray(function(err, models){
+	            if (err) throw err;
+                var resultForRepoInfo = {NT: 0, UseCaseNum: 0, EntityNum: 0};
+                var names = [];
+
+	            for(model of models) {
+                    names.push(model.Name);
+                }
+                callbackfunc(names);
 	            db.close();
             });
         });
@@ -1346,7 +1365,6 @@ function deleteRepo(repoId, callbackfunc) {
 					domainModelInfo.model_id=modelId;
                 	domainModelInfo._id="domainModel_["+modelId+"]";
 				}
-
 
                 db.collection("modelInfo").save(modelInfo, function(err, res) 
                 {
@@ -2048,13 +2066,14 @@ function deleteRepo(repoId, callbackfunc) {
 			}
 			
 
-
+			var umlEvaluator = require("./UMLEvaluator.js");
 		return Promise.all(repo.Models.map(model=>{
 	    	return reloadModel(model,newRepo);
 		})).then(
 				function(){
 				return new Promise((resolve, reject) => {
-					setTimeout(function(){	
+					setTimeout(function(){
+					console.log(umlEvaluator);	
 					umlEvaluator.evaluateRepo(newRepo, function(newRepo){
 						
 					if(callbackfunc){
@@ -2107,7 +2126,8 @@ function deleteRepo(repoId, callbackfunc) {
         queryModelNumByRepoID: queryModelNumByRepoID,
         queryFullRepoInfo: queryFullRepoInfo,
         requestRepoBrief: requestRepoBrief,
-        queryAllModelBrief: queryAllModelBrief
+        queryAllModelBrief: queryAllModelBrief,
+        queryAllModelNames: queryAllModelNames
     }
 	
 }());

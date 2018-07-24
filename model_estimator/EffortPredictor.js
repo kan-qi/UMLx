@@ -25,13 +25,13 @@
 			
 			console.log("estimation command");
 			console.log(command);
-
 			
 			RScriptExec.runRScript(command,function(result){
 				if (!result) {
 //					console.log('exec error: ' + error);
 					console.log("project effort estimation error");
 					if(callbackfunc){
+						// error because of the R script
 						callbackfunc(false);
 					}
 				} else {
@@ -57,7 +57,7 @@
 //						    console.log(data);
 
 						   console.log(str);
-
+						   
 						   if(callbackfunc){
 							   callbackfunc(JSON.parse(str).result);
 						   }
@@ -80,9 +80,9 @@
 			var transactionMetric = umlEstimationInfo.transactionMetric;
 			
 			var estimationResults = {
-					Effort: projectEffort,
+					Effort: projectEffort.toFixed(2),
 					UseCases: [],
-					SizeMeasurement: modelInfo['ExtendedUseCasePointData'][transactionMetric]
+					SizeMeasurement: modelInfo['ExtendedUseCasePointData'][sizeMetric]
 			};
 			
 //			calculateResourceAllocation(modelInfo, personnel);
@@ -108,6 +108,8 @@
 			 * P = PM_NS/TDEV_NS
 			 * 
 			 * 152 is for PH/PM ratio
+			 * 
+			 * y = 3.67*(x)^(0.28+0.2*(1.15-0.91))
 			 */
 			
 //			modelInfo.predictedDuration = projectDuration;
@@ -115,20 +117,29 @@
 			
 			var projectEffortInPM = projectEffort/152;
 			
-			var projectDuration = 3.67*(projectEffortInPM)^(0.28+0.2*(1.15-0.91))
+			console.log("project effort");
+			console.log(projectEffortInPM);
 			
-			estimationResults.Duration = projectDuration;
+			var projectDuration = 3.67*Math.pow(projectEffortInPM, 0.28+0.2*(1.15-0.91));
+			
+			console.log(projectDuration);
+			
+			estimationResults.Duration = projectDuration.toFixed(2);
 			
 
 //			var personnel = projectEffort/12;
 			
 			var personnel = projectEffortInPM/projectDuration;
 			
-
-			estimationResults.Personnel = personnel;
-			estimationResults.Personnel_UI = personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
-			estimationResults.Personnel_DB = personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
-			estimationResults.Personnel_FS = personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
+			estimationResults.Personnel = personnel.toFixed(2);
+			
+			var personnel_UI = personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
+			var personnel_DB = personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
+			var personnel_FS = personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
+			
+			estimationResults.Personnel_UI = personnel_UI.toFixed(2);
+			estimationResults.Personnel_DB = personnel_DB.toFixed(2);
+			estimationResults.Personnel_FS = personnel_FS.toFixed(2);
 			
 			
 			//calculate distributions
@@ -143,27 +154,50 @@
 						SizeMeasurement: useCase['ExtendedUseCasePointData'][transactionMetric]
 				};
 				
-				useCaseEstimates.Effort = projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+				var useCaseEffort = projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+				
+				useCaseEstimates.Effort = useCaseEffort.toFixed(2);
 //				useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
 				
+				var useCaseEffortInPM = useCaseEstimates.Effort/152;
+				
+				var useCaseDuration = 3.67*Math.pow(useCaseEffortInPM, 0.28+0.2*(1.15-0.91));
+				
+				useCaseEstimates.Duration = useCaseDuration.toFixed(2);
+
+//				var personnel = projectEffort/12;
+				
+				var useCasePersonnel = useCaseEffortInPM/useCaseDuration;
+				
 //				var useCase = modelInfo.UseCases[i];
-				useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+//				useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+			
 //				useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
 				
 				//distribute project effort
 				
-					useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+//					useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+					useCaseEstimates.Personnel = useCasePersonnel.toFixed(2);
 //					useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //					useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
 					
-					useCaseEstimates.Personnel_UI = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
-					useCaseEstimates.Personnel_DB = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
-					useCaseEstimates.Personnel_FS = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+					var personnel_UI = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
+					var personnel_DB = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
+					var personnel_FS = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+					
+					
+					useCaseEstimates.Personnel_UI = personnel_UI.toFixed(2);
+					useCaseEstimates.Personnel_DB = personnel_DB.toFixed(2);
+					useCaseEstimates.Personnel_FS = personnel_FS.toFixed(2);
 					
 					estimationResults.UseCases.push(useCaseEstimates);
 			}
+			
+
+			console.log("estimation result");
+			console.log(estimationResults);
 			
 			return estimationResults;
 			

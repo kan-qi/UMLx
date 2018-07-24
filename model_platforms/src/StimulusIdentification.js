@@ -14,105 +14,45 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var codeAnalysis = require("./codeAnalysis.js");
+	var codeAnalysis = require("./CodeAnalysis.js");
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
 	
 	var xmiSring = "";
 	
-	function identifyStimuli(components, classes, relations, callbackfunc) {
-
-//		var XMISignature = jp.query(XMIMethodUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:Signature\')]')[0];
-//		if(XMISignature){
-//		var XMIParameters = jp.query(XMISignature, '$.parameterUnit[?(@[\'$\'][\'type\'])]');
-//		
-////		MethodUnit.UUID = XMISignature['$']['name'];
-//		MethodUnit.Signature = {
-//				name: XMISignature['$']['name'],
-//				parameterUnits: []
-//		};
-//		
-//		console.log("iterate signature");
-//		
-//		for(var j in XMIParameters){
-//			console.log("iterate parameters");
-//			MethodUnit.Signature.parameterUnits.push({
-//				name: XMIParameters[j]["$"]["name"],
-//				kind: XMIParameters[j]['$']['kind']
-//			});
-////			MethodUnit.key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
-//			
-//			var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameters[j]["$"]['type']));
-//			console.log("parameter type");
-//			console.log(XMIParameterType);
-//			if(XMIParameterType){
-//				if(XMIParameterType[0]['$']['name'].indexOf("event") !=-1 || XMIParameterType[0]['$']['name'].indexOf("Event") !=-1) {
-//					MethodUnit.isResponse = true;
-//					console.log("found response method");
-//				}
-//			}
-//			
-//			
-//		}
-//		
-//
-//		if(XMISignature["$"]["name"] === "main"){
-//			MethodUnit.isResponse = true;
-//		}
-//		
-//		}
-//		
-	}
+	/*
+	 * The response has been identified int he control flow construction step. Stimulus nodes are constructed by creating triggering nodes connecting to those stimulus.
+	 */
 	
-	
-function identifyStimulus(xmiString){
+	function identifyStimuli(controlFlowGraph, callbackfunc) {
+		var stimulusNodes = [];
+		var triggeringEdges = [];
 		
-		var XMIMethods = jp.query(xmiString, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
-		var stimuli = [];
-		for(var i in XMIMethods){
-			var XMIMethod = XMIMethods[i];
-			var XMIParameters = jp.query(XMIMethod, '$..parameterUnit[?(@[\'$\'][\'type\'])]');
-			
-			for(var j in XMIParameters){
-				var XMIParameter = XMIParameters[j];
-				var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameter["$"]['type']));
-				console.log("parameter type");
-				console.log(XMIParameterType);
-				if(XMIParameterType){
-					if(XMIParameterType[0]['$']['name'].indexOf("event") !=-1 || XMIParameterType[0]['$']['name'].indexOf("Event") !=-1) {
-						var stimulus = {
-								name: XMIMethod['$']['name']
-						}
-						
-						stimuli.push(stimulus);
-						continue;
+		for(var i in controlFlowGraph.nodes){
+//			var component = components[i];
+//			var classUnits = component.classUnits;
+			var node = controlFlowGraph.nodes[i];
+			node.type = "node";
+			if(node.isResponse){
+							node.tye = "response";
+							//create a stimulus nodes for the activity.
+							var stimulusNode = {
+									type: "stimulus",
+									name: "stl#"+node.name,
+									uuid: node.uuid+"_STL",
+//									Attachment: XMIActivity,
+									trigger: "stimulus"
+							}
+							
+							node.trigger = stimulusNode._id;
+							
+							controlFlowGraph.nodes.push(stimulusNode);
+							controlFlowGraph.edges.push({start: stimulusNode, end: node});
 					}
 				}
-			}
-			
-			
-		}
-		
-		
-		
-		console.log("stimuli");
-		console.log(stimuli);
-		
-		return stimuli;
 	}
-
-
-function isResponseClass(ClassUnit){
-	for(var i in ClassUnit.MethodUnits){
-		if(ClassUnit.MethodUnits[i].isResponse){
-			return true;
-		}
-	}
-	return false;
-}
-
-	
+		
 	
 	module.exports = {
 			identifyStimuli : identifyStimuli,

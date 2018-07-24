@@ -290,31 +290,92 @@ lines(log(lambda_list),overall_mean_pred,xlim=range(log(lambda_list)), ylim=rang
 ```{r}
 plot(cvfit)
 ```
-## Adjusted r²
-Exhaustive search up to 9 variables for model with highest adjusted r².
-```{r echo=FALSE, error=FALSE, message=FALSE, warning=FALSE}
-library(leaps)
-models <- regsubsets(x = as.matrix(X_data), y = as.vector(Y_data), nbest = 1, method = "exhaustive")
-models.summary <- summary(models)
-t(models.summary$which[9,])
-```
-## AIC/BIC
-Performed stepwise with forward and backward selection starting from the 9-variable model obtained above in the adjusted r² analysis.
+## Feature ranking
 ```{r}
-start <- lm(Y_data ~ Average_Depth_Inheritance_Tree + Number_Of_Inheritance_Relationships + Number_Of_Children + Depth_Inheritance_Tree + FUNC_NA + INT + UEXUCW + TCF + DUCP, data = X_data)
-null <- lm(Y_data ~ 1, data = X_data)
-full <- lm(Y_data ~ ., data = X_data)
+library(BayesFactor)
+features = c(
+  "Effort",
+  "KSLOC",
+  "Path_Num",
+  "UseCase_Num",
+  "Element_Num",
+  "Entity_Num",
+  "attribute_num",
+  "operation_num",
+  "class_num",
+  "Top_Level_Classes",
+  "Average_Depth_Inheritance_Tree",
+  "Average_Number_Of_Children_Per_Base_Class",
+  "Number_Of_Inheritance_Relationships",
+  "Number_Of_Derived_Classes",
+  "Number_Of_Classes_Inherited",
+  "Number_Of_Classes_Inherited_From",
+  "Number_Of_Children",
+  "Depth_Inheritance_Tree",
+  "Coupling_Between_Objects",
+  "para_num",
+  "externaloper_num",
+  "objectdata_num",
+  "avg_operation",
+  "avg_attribute",
+  "avg_parameter",
+  "avg_instVar",
+  "FUNC_NA",
+  "EI",
+  "INT",
+  "DM",
+  "CTRL",
+  "EXTCLL",
+  "TRAN_NA",
+  "NT",
+  "Complex_UC",
+  "UEUCW",
+  "UEXUCW",
+  "UDUCW",
+  "UAW",
+  "TCF",
+  "EF",
+  "EUCP",
+  "EXUCP",
+  "DUCP",
+  "SWTI",
+  "SWTII",
+  "SWTIII"
+  )
+model_data = subset(raw_data, select = features)
+stats <- data.frame(matrix(nrow = 0, ncol = 5))
+colnames(stats) <- c("var", "r2", "AIC", "BIC", "BF")
+for (var in features[2:47]) {
+  regression_formula <- as.formula(paste("Effort ~ ", var))
+  model <- lm(regression_formula, data = model_data)
+  r2 = summary(model)$r.squared
+  aic = AIC(model)
+  bic = BIC(model)
+  bf = lmBF(regression_formula, data = model_data)
+  stats[nrow(stats) + 1,] <- list(var, r2, aic, bic, bf)
+}
+```
+rï¿½
+```{r}
+r2_data <- stats[, c("var", "r2")]
+r2_data.sort <- r2_data[order(-r2_data$r2), ]
+r2_data.sort
 ```
 AIC
 ```{r}
-AIC_model <- step(start, scope = list(upper = full), data = X_data, direction = "both")
+aic_data <- stats[, c("var", "AIC")]
+aic_data.sort <- aic_data[order(aic_data$AIC), ]
+aic_data.sort
 ```
 BIC
 ```{r}
-BIC_model <- step(start, scope = list(upper = full), data = X_data, direction = "both", k = log(ncol(X_data)))
+bic_data <- stats[, c("var", "BIC")]
+bic_data.sort <- bic_data[order(bic_data$BIC), ]
+bic_data.sort
 ```
-## Bayes Factor
+Bayes Factor
 ```{r}
-library(BayesFactor)
-BF <- regressionBF(Y_data ~ ., data = X_data)
+bf_data <- stats[, c("var", "BF")]
+bf_data.sort <- bf_data[order(-bf_data$BF), ]
+bf_data.sort
 ```
