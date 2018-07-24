@@ -8,7 +8,7 @@
  * Identify the system components.
  * Establish the control flow between the components
  * Identify the stimuli.
- * 
+ *
  */
 (function() {
 	var fs = require('fs');
@@ -127,9 +127,11 @@
 		var referencedClassUnits = [];
 		var referencedClassUnitsComposite = [];
 
-		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits);
-		var typeDependencyGraph = constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits);
-		var accessGraph = constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits);
+		var dicMethodParameters = {};
+
+		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters);
+		var typeDependencyGraph = constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters);
+		var accessGraph = constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters);
 
     console.log("dicChildrenClasses");
 		console.log(dicChildrenClasses);
@@ -148,7 +150,8 @@
 			accessGraph: accessGraph,
 			referencedClassUnits: referencedClassUnits,
 			referencedClassUnitsComposite: referencedClassUnitsComposite,
-			dicChildrenClasses: dicChildrenClasses
+			dicChildrenClasses: dicChildrenClasses,
+			dicMethodParameters: dicMethodParameters
 		};
 	}
 
@@ -209,7 +212,7 @@
 
 	}
 
-	function constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits){
+	function constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters){
 
 		// var edges = [];
 		// var nodes = [];
@@ -476,6 +479,36 @@
 							continue;
 						}
 
+						if (!(dicMethodParameters.hasOwnProperty(methodUnit.UUID))) {
+							var methodParameters = methodUnit.Signature.parameterUnits;
+							var name = null;
+							var dicParameters = [];
+							for (var l in methodParameters) {
+								if (methodParameters[l].hasOwnProperty('name')) {
+									name = methodParameters[l].name;
+								}
+								var type = jp.query(xmiString, convertToJsonPath(methodParameters[l].type));
+								var typeClass = null;
+								for (var j in classUnits) {
+									var classUnitCandidate = classUnits[j];
+									if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+										typeClass = classUnitCandidate;
+									}
+								}
+								if (!typeClass) {
+									continue;
+								}
+								var parameter = {
+									Name: name,
+									// kind: methodParameters[l].kind,
+									Type: typeClass.name,
+									TypeUUID: typeClass.UUID,
+								};
+								dicParameters.push(parameter);
+							}
+							dicMethodParameters[methodUnit.UUID] = dicParameters;
+						}
+
 						var startNode = nodesByNameLocal[methodUnit.UUID];
 						if(!startNode){
 							startNode = {
@@ -679,7 +712,7 @@
 
 	}
 
-	function constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits){
+	function constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters){
 
 
 		var edges = []; // call relation
@@ -834,6 +867,37 @@
 										continue;
 									}
 
+									if (!(dicMethodParameters.hasOwnProperty(methodUnit.UUID))) {
+										var methodParameters = methodUnit.Signature.parameterUnits;
+										var name = null;
+										var dicParameters = [];
+										for (var l in methodParameters) {
+											if (methodParameters[l].hasOwnProperty('name')) {
+												name = methodParameters[l].name;
+											}
+											var type = jp.query(xmiString, convertToJsonPath(methodParameters[l].type));
+											var typeClass = null;
+											for (var j in classUnits) {
+												var classUnitCandidate = classUnits[j];
+												if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+													typeClass = classUnitCandidate;
+												}
+											}
+											if (!typeClass) {
+												continue;
+											}
+											var parameter = {
+												Name: name,
+												// kind: methodParameters[l].kind,
+												Type: typeClass.name,
+												TypeUUID: typeClass.UUID,
+											};
+											dicParameters.push(parameter);
+										}
+										dicMethodParameters[methodUnit.UUID] = dicParameters;
+									}
+
+
 
 									var startNode = nodesByName[methodUnit.UUID];
 									if(!startNode){
@@ -887,7 +951,7 @@
 		return {nodes: nodes, edges: edges, nodesComposite: nodesComposite, edgesComposite: edgesComposite};
 	}
 
-	function constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits){
+	function constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters){
 
 		//the edges are now defined between methods...
 
@@ -1030,6 +1094,40 @@
 				}
 				else {
 					continue;
+				}
+
+        if (!(dicMethodParameters.hasOwnProperty(callMethodUnit.UUID))) {
+					var methodParameters = callMethodUnit.Signature.parameterUnits;
+					var name = null;
+					var dicParameters = [];
+					for (var l in methodParameters) {
+						if (methodParameters[l].hasOwnProperty('name')) {
+							name = methodParameters[l].name;
+						}
+						var type = jp.query(xmiString, convertToJsonPath(methodParameters[l].type));
+						// console.log("type");
+						// console.log(type);
+						var typeClass = null;
+						for (var j in classUnits) {
+							var classUnitCandidate = classUnits[j];
+							if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+								typeClass = classUnitCandidate;
+							}
+						}
+						if (!typeClass) {
+							continue;
+						}
+						// console.log("typeClass");
+						// console.log(typeClass);
+						var parameter = {
+							Name: name,
+							// kind: methodParameters[l].kind,
+							Type: typeClass.name,
+							TypeUUID: typeClass.UUID,
+						};
+						dicParameters.push(parameter);
+					}
+					dicMethodParameters[callMethodUnit.UUID] = dicParameters;
 				}
 
 				var startNode = nodesByName[callMethodUnit.UUID];

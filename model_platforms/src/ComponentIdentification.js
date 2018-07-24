@@ -111,16 +111,16 @@
 		var nodesClassAllTree = [];
 		var edgesAllTree = [];
 
-		var clusterTree = findClusters(classArray, relations, nodesNullAllTree, nodesClassAllTree, edgesAllTree, dicChildrenClasses, classUnits, 2, 1.5);
-		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits, 2, 0.6);
+		var clusterTree = findClusters(classArray, relations, nodesNullAllTree, nodesClassAllTree, edgesAllTree, dicChildrenClasses, classUnits, 0, 1.5);
+		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits, 0, 0.6);
 		// console.log("checkcheckcheck")
 		// console.log(util.inspect(clusteredClasses, false, null))
 		var debug = require("../../utils/DebuggerOutput.js");
 
-		console.log("666666666");
-		console.log(nodesNullAllTree);
-		console.log(nodesClassAllTree);
-		console.log(edgesAllTree);
+		// console.log("666666666");
+		// console.log(nodesNullAllTree);
+		// console.log(nodesClassAllTree);
+		// console.log(edgesAllTree);
 
 
 		drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "componentsComposite.dotty");
@@ -246,11 +246,11 @@
 			// }
 			// console.log("classUnits")
 			// console.log(classUnits)
-			
-			
+
+
 			//determine the component name by using the top level class or the class that has the largest number of methods.
 			// for now the simple implementation is to use the first class unit.
-			
+
 			if(classUnits.length < 1){
 				continue;
 			}
@@ -304,7 +304,7 @@
 		}
 
 		// graph += 'node [fontsize=24 shape=point]';
-		graph += 'node [fontsize=24 shape=rectangle]';
+		graph += 'node [fontsize=24 shape=ellipse]';
 		for (var i in nodesNullAll) {
 			var nodesNull = nodesNullAll[i];
 			for (var j in nodesNull) {
@@ -688,7 +688,7 @@
 			// 	distance = sum/count;
 			// }
 			var startNode = {
-				name: 'a'+ind,
+				name: 'c'+ind,
 				distance: dis
 			}
 			ind++;
