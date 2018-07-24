@@ -7,7 +7,6 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 source("transaction_weights_calibration.R")
 library(tidyverse)
-library(ggpmisc)
 
 cutsAsVec <- function(x) {
   ret <- c("Cut Points:")
@@ -16,15 +15,6 @@ cutsAsVec <- function(x) {
     ret <- c(ret, paste(row,":", paste(cutPoints, collapse = ", ")))
   }
   ret
-}
-
-lm_eqn <- function(df){
-    m <- lm(y ~ x, df);
-    eq <- substitute(italic(y) == a + b %.% italic(x)*","~~italic(r)^2~"="~r2, 
-         list(a = format(coef(m)[1], digits = 2), 
-              b = format(coef(m)[2], digits = 2), 
-             r2 = format(summary(m)$r.squared, digits = 3)))
-    as.character(as.expression(eq));                 
 }
 ```
 Combined Data Effort Values
@@ -81,7 +71,7 @@ r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   summary(model)$r.squared
 })
 r2Vals <- round(r2Vals, digits = 5)
-r2Vals <- paste("r²:", r2Vals, sep = "")
+r2Vals <- paste("r?:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
 r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
@@ -153,7 +143,7 @@ r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   summary(model)$r.squared
 })
 r2Vals <- round(r2Vals, digits = 5)
-r2Vals <- paste("r²:", r2Vals, sep = "")
+r2Vals <- paste("r?:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
 r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
@@ -224,7 +214,7 @@ r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   summary(model)$r.squared
 })
 r2Vals <- round(r2Vals, digits = 5)
-r2Vals <- paste("r²:", r2Vals, sep = "")
+r2Vals <- paste("r?:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, numBins, Predicted, -Effort)
 r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIIIresults), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
