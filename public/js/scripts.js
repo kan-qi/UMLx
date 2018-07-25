@@ -666,7 +666,7 @@ var gloablUrlForDownload;
 
 function fileDownload() {
 
-    gloablUrlForDownload = gloablUrlForDownload.substring(7);
+    gloablUrlForDownload = gloablUrlForDownload.substring(1);
 
     $.ajax({
         type: 'GET',
@@ -674,6 +674,7 @@ function fileDownload() {
 
         success: function (response) {
             console.log(response);
+            alert("The file has been downloaded!");
         },
         error: function () {
             console.log("fail");
@@ -690,6 +691,7 @@ function openFile() {
     // console.log(url);
 
     gloablUrlForDownload = url;
+    url = "public" + url;
 
     //var url = $(this).data("url");
 
@@ -2317,7 +2319,7 @@ function buildTable(data) {
         if (level >= 2) {
             //backLink = dirLink.split("/")[level+1];
 
-            out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
+            out += "<button id='backButton' class='btn btn-default col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
             out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
         } else {
             out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
@@ -2497,7 +2499,7 @@ function buildTable2(data) {
 
     if (levels >= 2) {
         backUrl = repoLink.split("/")[levels];
-        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + backUrl + " onclick='walkRepoDir(this)'>Back</button>";
+        out += "<button id='backButton' class='btn btn-default col-sm-1' data-url=" + backUrl + " onclick='walkRepoDir(this)'>Back</button>";
         out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
     } else {
         out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
@@ -2522,27 +2524,27 @@ function buildTable2(data) {
         if (type[newKeys[i]] === "File") {
             var path = data[0].parent + "/" + newKeys[i];
             if (newKeys[i].endsWith(".csv")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".txt")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".svg")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".json")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }
             else {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
                 newKeys[i] +
                 "</td><td>file</td>";
             }

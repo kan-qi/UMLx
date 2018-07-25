@@ -597,29 +597,36 @@ function deleteRepo(repoId, callbackfunc) {
 
                 console.log("---------------modelInfoStart----------------");
                   //restore the ids
-                  var modelInfo = result[0];
-                  var arr = [];
-                  result.forEach(function (element) {
-                      arr.push(element.UseCases);
-                  });
 
-                  modelInfo.UseCases = arr;
-                  for (var i in modelInfo.UseCases) {
-                      var useCase = modelInfo.UseCases[i];
-                      if (useCase) {
-                          useCase._id = useCase._id.replace(/\[.*\]/g, "");
-                      }
-                  }
+                //TODO: what should be returned if the result is undefined
 
-                  if (modelInfo.DomainModels) {
-                      var domainModel = modelInfo.DomainModels[0];
-                      delete modelInfo.DomainModels;
-                      delete domainModel._id;
-                      modelInfo.DomainModel = domainModel;
-                  }
-                  console.log("---------------modelInfo----------------");
+                var modelInfo = result[0];
+
+                if (result) {
+                    var arr = [];
+                    result.forEach(function (element) {
+                        arr.push(element.UseCases);
+                    });
+
+                    modelInfo.UseCases = arr;
+                    for (var i in modelInfo.UseCases) {
+                        var useCase = modelInfo.UseCases[i];
+                        if (useCase) {
+                            useCase._id = useCase._id.replace(/\[.*\]/g, "");
+                        }
+                    }
+
+                    if (modelInfo.DomainModels) {
+                        var domainModel = modelInfo.DomainModels[0];
+                        delete modelInfo.DomainModels;
+                        delete domainModel._id;
+                        modelInfo.DomainModel = domainModel;
+                    }
+                    console.log("---------------modelInfo----------------");
                     //console.log(modelInfo);
-                  callbackfunc(modelInfo);
+                }
+
+                callbackfunc(modelInfo);
 
               });              
         });

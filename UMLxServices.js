@@ -1685,14 +1685,14 @@ app.get('/', function(req, res){
 				        
 						repoInfo.requestUUID = requestUUID;
 						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
-							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise,
+							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
 							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
                 	});
 				});
 
 			} else {
                 repoInfo.requestUUID = requestUUID;
-				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
+				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
 					repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, pageSize: pageSize,
 					pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
 			}
