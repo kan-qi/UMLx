@@ -467,6 +467,15 @@ function deleteRepo(repoId, callbackfunc) {
     function updateUseCaseInfo(repoId, modelId, useCaseInfo, callbackfunc){
         //update here. It is not efficient.
         queryModelInfo(modelId, repoId, function(modelInfo){
+
+            if(!modelInfo){
+                console.log("No corresponding modelInfo can be found!!!");
+                if(callbackfunc){
+                    callbackfunc(false);
+                }
+                return;
+            }
+
             for(var i in modelInfo.useCases){
                 var useCase = modelInfo.useCases[i];
                 if(useCase._id === useCaseInfo._id){
@@ -1478,6 +1487,13 @@ function deleteRepo(repoId, callbackfunc) {
 			    	  return;
 			      }
 				  queryModelInfo(modelId, repoId, function(modelInfo){
+                      if(!modelInfo){
+                          console.log("No corresponding modelInfo can be found!!!");
+                          if(callbackfunc){
+                              callbackfunc(false);
+                          }
+                          return;
+                      }
 				 	 umlEvaluator.evaluateModel(modelInfo, function(){
 		    	 		 console.log('model analysis is complete');
 		    	 	 });
@@ -1761,6 +1777,7 @@ function deleteRepo(repoId, callbackfunc) {
     	queryModelInfo(modelId, repoId, function(modelInfo){
 			//to update the current version to the newly uploaded model file, and put the older versions into the arrays of versions.
 			if(!modelInfo){
+                console.log("No corresponding modelInfo can be found!!!");
 				if(callbackfunc){
 					callbackfunc(false);
 				}
