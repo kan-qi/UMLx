@@ -321,6 +321,43 @@ function predict_project_effort_func() {
     return false;
 }
 
+function re_analyse_repo(){
+    let repo_id = $("reanalyse_repo").data("my");
+    console.log(repo_id);
+
+    $.ajax({
+        type: 'GET',
+        url: "reanalyseRepo?repo_id=" + repo_id,
+        async: false,
+        success: function (response) {
+            console.log(response);
+            $.ajax({
+                type: 'GET',
+                url: "reanalyseRepocontinue",
+                async: false,
+                success: function (response) {
+                    alert("The calculation has been finished!")
+                },
+                error: function () {
+                    // $("#commentList").append($("#name").val() + "<br/>" +
+                    // $("#body").val());
+                    console.log("fail");
+                    //alert("There was an error");
+                }
+            });
+
+        },
+        error: function () {
+            // $("#commentList").append($("#name").val() + "<br/>" +
+            // $("#body").val());
+            console.log("fail");
+            alert("There was an error");
+        }
+    });
+
+    return false;
+}
+
 function query_exist_models_fnc(projectId) {
     $.ajax({
         type: 'GET',
@@ -1268,6 +1305,8 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '#reanalyse-model', re_analyze_model_func);
+
+    $(document).on('click', '#reanalyse_repo', re_analyse_repo);
 
 
     $('.nav.nav-tabs').tab();

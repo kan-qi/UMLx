@@ -24,7 +24,7 @@ var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
 var download = require('download');
-var Worker = require('webworker-threads').Worker;
+//var Worker = require('webworker-threads').Worker;
 
 //var csv=require('csvtojson')
 //var removeDir = require('some-custom-fs');
@@ -791,22 +791,19 @@ app.get('/deleteModel', function (req, res){
 	});
 })
 
-// let counter = 0;
+// let counter = true;
+let median_value;
 
 app.get('/reanalyseRepo', function (req, res){
 	//	console.log("/reanalyseRepo");
 	//	app.get('/queryRepoInfo', function(req, res){
 	//temporary analysis
 
-	// counter ++;
-
-	// if (counter !== 1) {
-	// 	counter --;
+	// if (counter !== true) {
 	// 	return;
 	// }
 
-
-
+    // counter = false;
 
 	var repoId = req.userInfo.repoId;
 
@@ -819,13 +816,15 @@ app.get('/reanalyseRepo', function (req, res){
 		//   			debug.writeJson("new_full_repo_info_"+repoId, repoInfo);
 		console.log("==================SURPRISE================");
 
+        median_value = repoInfo;
+        res.redirect('/');
 
-		umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
-
-			umlModelInfoManager.updateRepoInfo(repoInfo, function(){
-				// counter --;
-				res.redirect('/');
-			});
+		// umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
+        //
+		// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(){
+		// 		// counter = true;
+		// 		res.redirect('/');
+		// 	});
 
 		// var object = repoInfo;
 		//
@@ -1103,12 +1102,25 @@ app.get('/reanalyseRepo', function (req, res){
 
 		// console.log("==================SURPRISE================");
 		//
-		// worker.postMessage('good');
+		// worker.postMessage(repoInfo);
 		// console.log("Please wait for results!");
 		// res.redirect('/');
 
-		});
+		// });
 	});
+})
+
+
+app.get('/reanalyseRepocontinue', function (req, res){
+
+    umlEvaluator.evaluateRepo(median_value, function(repoInfo){
+
+        umlModelInfoManager.updateRepoInfo(repoInfo, function(){
+            // counter = true;
+			console.log("Finish All Calculation!");
+            res.end("true");
+        });
+    });
 })
 
 
