@@ -2,34 +2,34 @@
 
 var mongo = require('mongodb');
 var MongoClient = mongo.MongoClient;
-var umlModelExtractor = require("./UMLModelExtractor.js");
-var umlEvaluator = require("./UMLEvaluator.js");
+var umlModelExtractor = require("../UMLModelExtractor.js");
+var umlEvaluator = require("../UMLEvaluator.js");
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
-var umlFileManager = require("./UMLFileManager.js");
+var umlFileManager = require("../UMLFileManager.js");
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('./config'); // get our config file
+var config = require('../config'); // get our config file
 
-var umlFileManager = require("./UMLFileManager.js");
+var umlFileManager = require("../UMLFileManager.js");
 var fs = require('fs');
 var mkdirp = require('mkdirp');
 //	var umlFileManager = require('./UMLFileManager');
 
-var RScriptExec = require('./utils/RScriptUtil.js');
+var RScriptExec = require('../utils/RScriptUtil.js');
 
-var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
+var umlModelInfoManager = require("../UMLModelInfoManagerMongoDB.js");
 
 // current available evaluators
-var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
+var useCaseComponentsEvaluator = require('../evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
 //	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
-var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
-var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
-var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
-var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
-var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
-var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
-var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
+var transactionEvaluator = require('../evaluators/TransactionEvaluator/TransactionEvaluator.js');
+var modelVersionEvaluator = require('../evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
+var cocomoCalculator = require('../evaluators/COCOMOEvaluator/COCOMOCalculator.js');
+var useCasePointEvaluator = require('../evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
+var extendedUseCasePointEvaluator = require('../evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
+var projectTypeEvaluator = require('../evaluators/ProjectTypeEvaluator.js');
+var UMLSizeMetricEvaluator = require('../evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
 
-var userStoryEvaluator = require('./evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
+var userStoryEvaluator = require('../evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
 
 //	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
 var evaluators = [
