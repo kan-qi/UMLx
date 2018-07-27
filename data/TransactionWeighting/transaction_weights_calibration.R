@@ -3,11 +3,11 @@
 # transactions calculated in the following manner:
 # 1. Discretize the transaction data based on quantiles of a normal distribution
 #    obtained from aggregate data.
-# 2. Classify each transaction based on the quantile it falls in.
+# 2. Classify each transaction based on the quantiles it falls in.
 # 3. Count the number of points that fall into each quantile and apply weights.
 # 4. Sum all the weights.
 # This script determines the optimal number of bins and the weights to apply
-# using linear regression and k-fold cross validation.
+# using Bayesian linear regression and k-fold cross validation.
 #
 # Usage:
 #   1. Put all the transaction analytics files into a folder.
@@ -156,7 +156,8 @@ calcPRED <- function(testData, pred, percent) {
 }
 
 crossValidate <- function(data, k) {
-	# Performs k-fold cross validation with linear regression as training method.
+	# Performs k-fold cross validation with Bayesian linear regression as training 
+  # method.
 	#
 	# Args:
 	#   data: the data to perform cross-validation with
@@ -172,7 +173,7 @@ crossValidate <- function(data, k) {
 		testIndexes <- which(folds == i, arr.ind = TRUE)
 		testData <- data[testIndexes, ]
 		trainData <- data[-testIndexes, ]
-		model <- bayesfit(lm(Effort ~ ., data = trainData), 10000)
+		model <- bayesfit(lm(Effort ~ . - 1, data = trainData), 100)
 		predicted <- predict.blm(model, newdata = testData)
 		foldMSE[i] <- mean((predicted - testData$Effort)^2)
 		foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
@@ -207,30 +208,132 @@ genColNames <- function(parameters, nBins) {
   }
 }
 
+genMeans <- function(n) {
+  # Generates a vector of mean values to define the multivariate Guassian prior
+  # for Bayesian linear regression. The means are the Fibonacci sequence.
+  #
+  # Args:
+  #   n: number of values to generate
+  #
+  # Returns:
+  #   A vector of the first n Fibonnaci numbers
+  if (n <= 2) {
+    return(c(l1 = 1, l2 = 1)[1:n])
+  }
+  else {
+    ret <- c(1, 1)
+    while (length(ret) != n) {
+      nextFib <- ret[length(ret)] + ret[length(ret) - 1]
+      ret <- c(ret, nextFib)
+    }
+    names(ret) <- paste("l", 1:n)
+    return(ret)
+  }
+}
+
+genVariance <- function(mu) {
+  # Generates a covariance matrix to define the multivariate Guassian prior
+  # for Bayesian linear regression. The variance for each level is 
+  # 1/3*(L_n - L_(n-1)).
+  #
+  # Args:
+  #   mu: vector of the means of the Gaussian prior
+  #
+  # Returns:
+  #   Covariance matrix for the Gaussian prior
+  ret <- matrix(rep(0, length(mu)^2), nrow = length(mu), ncol = length(mu))
+  rownames(ret) <- names(mu)
+  colnames(ret) <- names(mu)
+  ret[1,1] <- 1/3
+  if (length(mu) == 1) {
+    return(ret)
+  }
+  ret[2,2] <- 1/3
+  if (length(mu) == 2) {
+    return(ret)
+  }
+  for (i in 3:length(mu)) {
+    ret[i, i] <- 1/3 * (mu[i] - mu[i - 1])
+  }
+  ret
+}
+
+calcVn <- function(sigma, variance, lmfit) {
+  # Function to compute the covariance matrix of the posterior distribution of
+  # Bayesian linear regression with Gaussian prior.
+  #
+  # Args:
+  #   sigma: the variance of the residuals from OLS regression
+  #   variance: the covariance matrix of the parameters (prior)
+  #   lmfit: the OLS model lm object
+  #
+  # Returns:
+  #   The covariance matrix of the posterior Gaussian distribution
+  X <- model.matrix(lmfit)
+  V0.inv <- chol2inv(chol(variance))
+  ret <- sigma * chol2inv(chol((sigma * V0.inv) + (t(X)%*%X)))
+  ret
+}
+
+calcWn <- function(Vn, sigma, means, variance, lmfit) {
+  # Function to compute the mean vector of the posterior distribution of
+  # Bayesian linear regression with Gaussian prior.
+  #
+  # Args:
+  #   Vn: covariance matrix of the posterior Gaussian
+  #   sigma: the variance of the residuals from OLS regression
+  #   means: vector of means of the parameters (prior)
+  #   variance: the covariance matrix of the parameters (prior)
+  #   lmfit: the OLS model lm object
+  V0.inv <- chol2inv(chol(variance))
+  residualVar.inv <- 1/sigma
+  X <- model.matrix(lmfit)
+  y <- lmfit$model$Effort
+  ret <- (Vn %*% V0.inv %*% means) + (residualVar.inv * (Vn %*% t(X) %*% y))
+  ret <- as.vector(ret)
+  names(ret) <- names(lmfit$coef)
+  ret
+}
+
+
 bayesfit<-function(lmfit, N) {
-	# Function to compute the bayesian analog of the lmfit using non-informative 
-	# priors and Monte Carlo scheme based on N samples. Taken from:
+	# Function to compute the bayesian analog of the lmfit using Gaussian
+	# priors and Monte Carlo scheme based on N samples. Adapted from:
 	# https://www.r-bloggers.com/bayesian-linear-regression-analysis-without-tears-r/
 	# 6/14/18.
-	#
+	# The solution for the posterior distribution of Bayesian linear regression
+  # with Gaussian likelihood and Gaussian prior:
+  # N ~ (w | Wn, Vn)
+  # Wn = Vn(V0)^-1w0 + (1/sigma^2)VnX'y
+  # Vn = sigma^2(sigma^2(V0)^-1 + X'X)^-1
+  #
+  # Reference: Murphy, Kevin. Machine Learning: A Probabilistic Perspective. 
+  # Cambridge: The MIT Press, 2012. Print. Section 7.6.1.
+  #
 	# Args:
 	#   lmfit: a lm object created from lmfit()
 	#   N: the number of data points to use for Monte Carlo method
 	#
 	# Returns:
 	#   A dataframe containing results of the Bayes line fit.
-	QR<-lmfit$qr
 	df.residual<-lmfit$df.residual
-	R<-qr.R(QR) ## R component
-	coef<-lmfit$coef
-	Vb<-chol2inv(R) ## variance(unscaled)
 	s2<-(t(lmfit$residuals)%*%lmfit$residuals)
 	s2<-s2[1,1]/df.residual
-	
+	means <- genMeans(lmfit$rank)
+	covar <- genVariance(means)
 	## now to sample residual variance
 	sigma<-df.residual*s2/rchisq(N,df.residual)
-	coef.sim<-sapply(sigma,function(x) mvrnorm(1,coef,Vb*x))
-	ret<-data.frame(t(coef.sim))
+	coef.sim<-sapply(sigma, function(x) {
+	  Vn <- calcVn(x, covar, lmfit)
+	  Wn <- calcWn(Vn, x, means, covar, lmfit)
+	  mvrnorm(1,Wn,Vn)
+	})
+	if (is.vector(coef.sim)) {
+	  ret <- data.frame(coef.sim)
+	}
+	else {
+	  ret<-data.frame(t(coef.sim))
+	}
 	names(ret)<-names(lmfit$coef)
 	ret$sigma<-sqrt(sigma)
 	ret
@@ -268,7 +371,7 @@ predict.blm <- function(model, newdata) {
 				for (col in colnames(newdata)) {
 					effort <- effort + (mean(model[, col]) * x[col])
 				}
-				effort <- effort + mean(model[, "(Intercept)"])
+				effort
 			})
 	ret
 }
@@ -315,7 +418,7 @@ performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DET
     searchResults[[i]] <- list(MSE = validationResults["MSE"], 
                                MMRE = validationResults["MMRE"], 
                                PRED = validationResults["PRED"],
-                               model = bayesfit(lm(Effort ~ ., regressionData[rownames(regressionData) != "Aggregate", ]), 10000),
+                               model = bayesfit(lm(Effort ~ . - 1, regressionData[rownames(regressionData) != "Aggregate", ]), 100),
                                data = regressionData,
                                cuts = cutPoints)
   }
