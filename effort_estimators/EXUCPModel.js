@@ -9,6 +9,7 @@
 	var classPath = "C:/Users/Kan Qi/Google Drive/ResearchSpace/Research Projects/Repo Analyser/bin/"
 	var projectDir = "C:/Users/Kan Qi/Google Drive/ResearchSpace/Research Projects/UMLx";
 	var umlModelEvaluator = require("../UMLEvaluator.js");
+	var umlFileManager = require("../UMLFileManager.js");
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
@@ -264,7 +265,7 @@
 			console.log("model info");
 			console.log(modelInfo);
 //		
-			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'"';
+			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "exucp_effort_prediction';
 			
 			console.log("estimation command");
 			console.log(command);
@@ -278,13 +279,17 @@
 						callbackfunc(false);
 					}
 				} else {
-					fs.readFile(modelInfo.OutputDir+"/effort_prediction_result.json", 'utf-8', (err, str) => {
+					fs.readFile(modelInfo.OutputDir+"/exucp_effort_prediction_result.json", 'utf-8', (err, str) => {
 						   if (err) throw err;
 						   console.log(str);
 						   
 						   var projectEffort = JSON.parse(str).result;
 						   
 						   var estimationResults = {
+								   	EstimationModel: key,
+								    PredictionModel : predictionModel,
+									SizeMetric : sizeMetric,
+									TransactionMetric : transactionMetric,
 									Effort: projectEffort.toFixed(2),
 									UseCases: [],
 									DomainModel: {},
@@ -295,12 +300,24 @@
 						   estimateMVCEffort(modelInfo, estimationResults, projectEffort);
 						   syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort);
 						   
+						   estimationResults.EstimationResultsFile = "estimationResultEXUCP.json"
+							   
+							   var files = [{fileName : estimationResults.EstimationResultsFile , content : JSON.stringify(estimationResults)}];
+								
+								umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
+								if(err){
+									 if(callbackfunc){
+										   callbackfunc(false);
+									   }
+									return;
+								}
 
-						   modelInfo[key] = estimationResults;
-						  
-						   if(callbackfunc){
-							   callbackfunc(modelInfo);
-						   }
+								   modelInfo[key] = estimationResults;
+								  
+								   if(callbackfunc){
+									   callbackfunc(modelInfo);
+								   }
+								});
 					});
 				}
 			});

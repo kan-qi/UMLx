@@ -13,14 +13,18 @@ if (length(args) < 2) {
 } else if (length(args)==2) {
 	# default output file
 	args[3] = "./temp"
+	args[4] = "effort_prediction"
+} else if(length(args) ==3){
+	args[4] = "effort_prediction"
 }
 
 
 modelUrl <- paste("./statistical_models", args[1], sep="/")
 dataUrl <- args[2]
 outputDir <- args[3]
-reportPath <- paste(outputDir, "effort_prediction_report.txt", sep="/")
-resultPath <- paste(outputDir, "effort_prediction_result.json", sep="/")
+outputFileName <- args[4]
+reportPath <- paste(outputDir, paste(ourputFileName, '_report.txt', sep=''), sep="/")
+resultPath <- paste(outputDir, paste(ourputFileName, '_result.json', sep=''), sep="/")
 
 #modelUrl <- "./Model/riskPredictionModel.rds"
 

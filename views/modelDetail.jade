@@ -53,7 +53,7 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#usecase-analysis', onClick="query_model_usecase_func('#{modelInfo._id}');") Model Elements
      li
-      a(data-toggle='tab', href='#model-evaluation') Model Info
+      a(data-toggle='tab', href='#model-evaluation', id="model-evaluation-tab") Model Info
      li
       a(data-toggle='tab', href='#project-properties') Project Info
      li
@@ -117,26 +117,31 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="model-evaluation")
       div.model-evaluation
        div.eucp-evaluation
+        h4 EUCP
         -var estimationResults = modelInfo['eucp_lm']
         include estimationResultPane
-       div.excup_lm
+       div.excup-evaluation
+        h4 EXUCP
         -var estimationResults = modelInfo['exucp_lm']
         include estimationResultPane
-       div.ducp_lm
+       div.ducp-evaluation
+        h4 DUCP
         -var estimationResults = modelInfo['ducp_lm']
         include estimationResultPane
      div.tab-pane.fade(id="project-properties")
        div.project-properties
         div
-          p #{modelInfo.umlFilePath}
-          p #{modelInfo.OutputDir}
+        h3 Upload Path
+        p #{modelInfo.umlFilePath}
+        h3 Output Path
+        p #{modelInfo.OutputDir}
         h3 Evaluation
          button.btn.btn-default.buttonForModel#modifyButton(type='button', onclick='editFunction(this);') Modify
          table#dataTable.table.table-striped
             tbody
                 tr
                     td
-                     h3 Technical Complexity Factors
+                     h4 Technical Complexity Factors
                     td
                 tr
                     td Distributed System
@@ -348,7 +353,7 @@ div.block.panel.panel-default
                               option 5
                 tr
                     td
-                     h3 Environmental Complexity Factors
+                     h4 Environmental Complexity Factors
                     td
                 tr
                     td Familiar with the project model that is used

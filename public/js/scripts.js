@@ -310,7 +310,9 @@ function predict_project_effort_func() {
         success: function (response) {
             console.log(response);
             $("#estimation-result-panel-body").html(response);
-            showEstimationChart();
+            var estimationModel = $(response).data("estimation-model");
+            console.log(estimationModel);
+            showEstimationChart('#'+estimationModel+'-estimation-results-charts');
         },
         error: function () {
             console.log("fail");
@@ -1236,6 +1238,13 @@ function drawChartBySVG() {
         </div>');
 }
 
+function requestUseCaseDistributionCharts(){
+            //show different charts for different estimations.
+            showEstimationChart('#eucp_lm-estimation-results-charts');
+            showEstimationChart('#exucp_lm-estimation-results-charts');
+            showEstimationChart('#ducp_lm-estimation-results-charts');
+}
+
 $(document).ready(function () {
     $(document).on('click', 'a.sub-model-title', query_sub_model_detail_func);
     //  $(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
@@ -1251,6 +1260,8 @@ $(document).ready(function () {
     $(document).on('click', '.dumpEvaluationData', request_display_data);
     $(document).on('click', '.dumpAnalyticsData', request_display_data);
     $(document).on('click', '.fileLink', openFile);
+    
+    $(document).on("click", '#model-evaluation-tab', requestUseCaseDistributionCharts);
 
     $(document).on('click', '#estimator-selector-box .dropdown-menu li a', function () {
         //       alert($(this).closest('.dropdown').find('.btn').text());

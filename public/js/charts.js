@@ -316,12 +316,13 @@ function showModalDetails(domainurl)
   $('#myModal1').modal('toggle');
 }
 // This function displays the chart for the estimation result (estimation tab)
-function showEstimationChart()
+function showEstimationChart(chartsTag)
 {
             console.log("inside estimation chart function");
-            console.log($('#estimation-result-panel-body').html());
+            //console.log($('#estimation-result-panel-body').html());
 //            var effort_estimation_url = "output/repo"+ repoID  +  "/estimationResult.json";
-            var effort_estimation_url = $('#estimation-results-charts').data('url');
+            var effort_estimation_url = $(chartsTag).data('url');
+            console.log(effort_estimation_url);
               $.ajax({
                     url: effort_estimation_url,
                     type:"GET",
@@ -344,7 +345,7 @@ function showEstimationChart()
                                 name.push(response.UseCases[i].Name);
                             }
                             console.log(Effort);
-                            $('#estimation-charts').highcharts({
+                            $(chartsTag).find('#estimation-charts').highcharts({
                               chart: {
                               type: 'column',
                               spacingLeft: 0

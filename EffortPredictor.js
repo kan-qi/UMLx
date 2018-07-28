@@ -40,7 +40,15 @@
 			}
 			
 			predictionModel.predictEffort(modelInfo, estimationModel, function(modelInfo){
-    			console.log("finished prediction");
+    			console.log("finished prediction 1");
+    			
+    			if(!modelInfo){
+    				if(callbackfunc){
+    					callbackfunc(false);
+    				}
+    				return;
+    			}
+    			
     			if(callbackfunc){
     				callbackfunc(modelInfo[estimationModel]);
     			}

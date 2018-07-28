@@ -616,7 +616,7 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 						 return;
 					}
 					
-					effortPredictor.predictEffort(modelInfo, function(modelInfo3){
+					effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
 						if(!modelInfo3){
 							 res.redirect('/');
 							 return;
@@ -876,8 +876,14 @@ app.get('/reanalyseModel', function (req, res){
 			}
 			umlEvaluator.evaluateModel(extractedModelInfo, function(modelInfo2){
 				console.log("model analysis complete");
+				
+				effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
+					if(!modelInfo3){
+						 res.redirect('/');
+						 return;
+					}
 
-                umlModelInfoManager.updateModelInfo(modelInfo2, repoId, function(modelInfo){
+                umlModelInfoManager.updateModelInfo(modelInfo3, repoId, function(modelInfo){
 //				console.log(modelInfo);
 //				umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
 //					console.log("=============repoInfo==========");
@@ -892,7 +898,7 @@ app.get('/reanalyseModel', function (req, res){
                     res.render('modelDetail', { modelInfo: modelInfo, repo_id: repoId, upLoadsPath: uploadsFile });
                     console.log("Re ana Now is good!2");
 
-//				});
+				});
                 });
 			});
 //			console.log(modelInfo);
@@ -1401,9 +1407,8 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //				var estimationResults = effortPredictor.makeProjectManagementDecisions(modelInfo, umlEstimationInfo, estimatedEffort);
 //				
 				
-				modelInfo['estimationModel'] = estimationResults;
+				modelInfo[estimationModel] = estimationResults;
 				modelInfo.repo_id = repoId;
-				modelInfo.estimationResultsFile = "estimationResult.json"
 //				modelInfo.SizeMetric = sizeMetric;
 //				modelInfo.EstimationModel = model;
 
@@ -1411,18 +1416,11 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
                 umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 //					console.log(modelInfo);
-					var files = [{fileName : modelInfo.estimationResultsFile , content : JSON.stringify(estimationResults)}];
 					
-					umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
-					if(err){
-						res.end("error");
-						return;
-					}
 					
 					res.render('estimationResultPane', {estimationResults:estimationResults, modelInfo: modelInfo});
 
 ////
-                    });
                 });
 
 
