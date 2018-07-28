@@ -157,6 +157,34 @@
 		
 		
 	}
+	
+	// evaluate business value
+	function evaluateBusinessValue(modelInfo, estimationResults, projectEffort){
+		
+		var useCaseEstimatesById = {};
+		
+		for(var i in estimationResults.UseCases){
+			useCaseEstimatesById[estimationResults.UseCases[i]._id] = estimationResults.UseCases[i];
+		}
+		
+		for(var i in modelInfo.UseCases){
+			var useCase = modelInfo.UseCases[i];
+			
+			var useCaseEstimates = useCaseEstimatesById[useCase._id];
+			if(!useCaseEstimates){
+				useCaseEstimatesById[useCase._id] = {
+						Name: useCase.Name,
+						_id: useCase._id
+				}
+				useCaseEstimates = useCaseEstimatesById[useCase._id];
+			}
+			
+			useCaseEstimates.BusinessValue = 3;
+			useCaseEstimates.EffortBVRatio = 5;
+		}
+		
+	}
+	
 	// distribute the effort to different types of components.
 	function estimateMVCEffort(modelInfo, estimationResults, projectEffort){
 		
@@ -265,7 +293,7 @@
 			console.log("model info");
 			console.log(modelInfo);
 //		
-			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "ducp_effort_prediction';
+			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "ducp_effort_prediction"';
 			
 			console.log("estimation command");
 			console.log(command);
@@ -299,8 +327,8 @@
 						   estimateUseCaseEffort(modelInfo, estimationResults, projectEffort);
 						   estimateMVCEffort(modelInfo, estimationResults, projectEffort);
 						   syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort);
+						   evaluateBusinessValue(modelInfo, estimationResults, projectEffort)
 						   
-
 						   estimationResults.EstimationResultsFile = "estimationResultDUCP.json"
 							   
 							   var files = [{fileName : estimationResults.EstimationResultsFile , content : JSON.stringify(estimationResults)}];

@@ -23,8 +23,8 @@ modelUrl <- paste("./statistical_models", args[1], sep="/")
 dataUrl <- args[2]
 outputDir <- args[3]
 outputFileName <- args[4]
-reportPath <- paste(outputDir, paste(ourputFileName, '_report.txt', sep=''), sep="/")
-resultPath <- paste(outputDir, paste(ourputFileName, '_result.json', sep=''), sep="/")
+reportPath <- paste(outputDir, paste(outputFileName, '_report.txt', sep=''), sep="/")
+resultPath <- paste(outputDir, paste(outputFileName, '_result.json', sep=''), sep="/")
 
 #modelUrl <- "./Model/riskPredictionModel.rds"
 
