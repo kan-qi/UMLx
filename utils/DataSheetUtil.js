@@ -70,6 +70,21 @@
 				    }
 			});
 		},
+		loadJSONFile: function(jsonFilePath, callbackfunc){
+			fs.readFile(jsonFilePath, 'utf-8', (err, str) => {
+				   if (err) throw err;
+//				    console.log(str);
+				  
+				   var result = JSON.parse(str);
+				    
+//				    console.log("csv data is loaded");
+//				    console.log(data);
+				    
+				    if(callbackfunc){
+				    	callbackfunc(result);
+				    }
+			});
+		},
 		parseCSVData: parseCSVData
 	}
 }())

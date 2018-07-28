@@ -230,22 +230,14 @@ html
             //Page 4
             #page4.hidden
                 .alert.alert-info
-                    | Select Estimator
-                
-                .form-group
-                    label.control-label(for='estimator') Select Estimator
-                    select#estimator.estimation-form-control(name='estimator')
-                        option Linear Regression
-                        option Ridge Regression
-                        option Linear Spline
-                        option Bayesian
+                    | Select Estimation Model
 
                 .form-group
                     label.control-label(for='model') Select Model
                     select#model.estimation-form-control(name='model')
-                        option EUCP
-                        option EXUCP
-                        option DUCP
+                         option(value="eucp_lm") EUCP
+                         option(value="exucp_lm") EXUCP
+                         option(value="ducp_lm") DUCP
 
                 input#uuid-page4(type='hidden', name='uuid-page4', value='')
 

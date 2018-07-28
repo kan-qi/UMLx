@@ -55,6 +55,8 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#model-evaluation') Model Info
      li
+      a(data-toggle='tab', href='#project-properties') Project Info
+     li
       a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', data-type='archive', onclick="walkDir(this);") Archive
      li
       a(data-toggle='tab', id='modelUploads' href='#loadsPath', data-url='#{loadsPath}', data-type='upload', onclick="walkDir(this);") Uploads
@@ -113,7 +115,18 @@ div.block.panel.panel-default
       div(id="model-usecase-analysis")
        h3 loading...
      div.tab-pane.fade(id="model-evaluation")
-       div.model-evaluation
+      div.model-evaluation
+       div.eucp-evaluation
+        -var estimationResults = modelInfo['eucp_lm']
+        include estimationResultPane
+       div.excup_lm
+        -var estimationResults = modelInfo['exucp_lm']
+        include estimationResultPane
+       div.ducp_lm
+        -var estimationResults = modelInfo['ducp_lm']
+        include estimationResultPane
+     div.tab-pane.fade(id="project-properties")
+       div.project-properties
         div
           p #{modelInfo.umlFilePath}
           p #{modelInfo.OutputDir}

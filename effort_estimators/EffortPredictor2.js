@@ -15,6 +15,7 @@
 	var RScriptExec = require('../utils/RScriptUtil.js');
 	
 	module.exports = {
+		// this function will predict project effort in different forms
 		predictEffort: function(modelInfo, umlEstimationInfo, callbackfunc){
 			var estimator = umlEstimationInfo.estimator;
 			var model = umlEstimationInfo.model;
@@ -73,7 +74,7 @@
 		 *  This function calculate the project management decisions based on estimated effort, including the duration and personnel.
 		 */
 		
-		makeProjectManagementDecisions: function(modelInfo, umlEstimationInfo, projectEffort){
+		estimateUseCaseEffort: function(modelInfo, umlEstimationInfo, projectEffort){
 			//predict presonnel, schedule based on predicted effort
 			//need to update
 			var sizeMetric = umlEstimationInfo.sizeMetric;
@@ -201,7 +202,53 @@
 			
 			return estimationResults;
 			
+		},
+		// distribute the effort to different types of components.
+		estimateMVCEffort: function(modelInfo, umlEstimationInfo, projectEffort){
+			var domainModelInfo = modelInfo.DomainModel;
+			var viewWeight = 0;
+			var modelWeight = 0;
+			var controlWeight = 0;
+			for(var i in domainModelInfo.Elements){
+				var element = domainModelInfo.Elements[i];
+				if(element.type = ""){
+					viewWeight += element.methodNum;
+				}
+				else if(element.type = ""){
+					modelWeight += element.methodNum;
+				}
+				else {
+					controlWeight += element.methodNum;
+				}
+			}
+			
+			var totalWeight = viewWeight + controlWeight + modelWeight;
+			
+			modelInfo.ViewEffort = viewWeight/totalWeight*projectEffort;
+			modelInfo.ModelEffort = modelWeight/totalWeight*projectEffort;
+			modelInfo.ControlEffort = controlWeight/totalWeight*projectEffort;
+		},
+		
+		// synthesize different proposals of effort estimation.
+		syntehsizeEffortProposals: function(modelInfo, umlEstimationInfo, projectEffort){
+			var projectManagerWeight = 0.5;
+			var developerWeight = 0.2;
+			var analysisWeight = 0.3;
+			
+			var totalSynthesizedEffort = 0;
+			
+			for(var i in modelInfo.UseCases){
+				var useCase = modelInfo.UseCases[i];
+				var useCaseEffort = useCase.Effort;
+				var useCaseEfforrtProjectManager = useCase.projectManagerEffort;
+				var useCaseEffortDeveloper = useCase.developerEstimate;
+				useCase.synthesizedEffort = useCaseEffort*analysisWeight + useCaseEfforrtProjectManager*projectManagerWeight+useCaseEffortDeveloper*developerWeight;
+			}
+			
+			totalSynthesizedEffort = useCaseEffort+useCaseEffortProjectManager+useCaseEffortDeveloper;
+			modelInfo.TotalSynthesizedEffort = totalSynthesizedEffort;
 		}
+		
 		
 	}
 }())
