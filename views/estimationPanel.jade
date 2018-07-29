@@ -225,17 +225,11 @@ if repoInfo
                         #collapse1.panel-collapse
                             .panel-body
                                 div(id="model-query-box")
-                                    div.row-item(id='estimator-selector-box')
-                                        select#estimator.estimation-form-control(name='estimator')
-                                            option Linear Regression
-                                            option Ridge Regression
-                                            option Linear Spline
-                                            option Bayesian
                                     div.row-item(id='model-selector-box')
-                                        select#model.estimation-form-control(name='model')
-                                            option EUCP
-                                            option EXUCP
-                                            option DUCP
+                                         select#model.estimation-form-control(name='model')
+                                           option(value="eucp_lm") EUCP
+                                           option(value="exucp_lm") EXUCP
+                                           option(value="ducp_lm") DUCP
                                     //div.checkbox.row-item
                                      //label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       //input(type='checkbox' value='simulation-data')

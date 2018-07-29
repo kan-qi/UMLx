@@ -21,9 +21,9 @@
 	var models = [EUCPModel, EXUCPModel, DUCPModel];
 	
 	var models = {
-			EUCP: EUCPModel,
-			EXUCP : EXUCPModel,
-			DUCP: DUCPModel
+			eucp_lm: EUCPModel,
+			exucp_lm : EXUCPModel,
+			ducp_lm: DUCPModel
 			};
 	
 	module.exports = {
@@ -34,12 +34,12 @@
 			var predictionModel = models[estimationModel];
 			if(!predictionModel){
 				if(callbackfunc){
-					callbackfunc(false);
+					calbackfunc(false);
 				}
 				return;
 			}
 			
-			predictionModel.predictEffort(modelInfo, function(modelInfo){
+			predictionModel.predictEffort(modelInfo, estimationModel, function(modelInfo){
     			console.log("finished prediction 1");
     			
     			if(!modelInfo){
