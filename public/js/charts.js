@@ -370,7 +370,7 @@ function showEstimationChart()
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
@@ -390,16 +390,16 @@ function showEstimationChart()
                     data: Duration
 
                 },
-                    {
-                        name: 'Effort',
-                        data: Effort
+                {
+                    name: 'Effort',
+                    data: Effort
 
-                    },
-                    {
-                        name: 'Personnel',
-                        data: Personnel
+                },
+                {
+                    name: 'Personnel',
+                    data: Personnel
 
-                    }]
+                }]
 
             });
             //});
@@ -417,6 +417,19 @@ var column_data_name='';
 var column_name='';
 function drawNewHighCharts(column_data_name,column_name)
 {
+    var unit = "";
+    if (column_data_name === "SizeMeasurement") {
+        unit = "units";
+    }
+    else if (column_data_name === "Duration") {
+        unit = "months";
+    }
+    else if (column_data_name === "Effort") {
+        unit = "person-hours"
+    }
+    else if (column_data_name === "Personnel") {
+        unit = "FT"
+    }
     column_data_name = column_data_name;
     column_name = column_name;
     console.log(column_data_name, column_name);
@@ -465,8 +478,8 @@ function drawNewHighCharts(column_data_name,column_name)
                 },
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
-                    pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
-                    '<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+                    pointFormat: `<tr><td style="color:{series.color};padding:0">{series.name}: </td>` +
+                    `<td style="padding:0"><b>{point.y:.1f} ${unit} </b></td></tr>`,
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
