@@ -39,7 +39,7 @@
 				return;
 			}
 			
-			predictionModel.predictEffort(modelInfo, function(modelInfo){
+			predictionModel.predictEffort(modelInfo, estimationModel, function(modelInfo){
     			console.log("finished prediction 1");
     			
     			if(!modelInfo){

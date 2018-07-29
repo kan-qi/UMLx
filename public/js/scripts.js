@@ -311,7 +311,8 @@ function predict_project_effort_func() {
             console.log(response);
             $("#estimation-result-panel-body").html(response);
             var estimationModel = $(response).data("estimation-model");
-            console.log(estimationModel);
+            // console.log(estimationModel);
+            console.log('#'+estimationModel+'-estimation-results-charts');
             showEstimationChart('#'+estimationModel+'-estimation-results-charts');
         },
         error: function () {
@@ -1317,7 +1318,7 @@ $(document).ready(function () {
 
     $(document).on('click', '#reanalyse_repo', re_analyse_repo);
 
-    $(document).on('click', '#Effort', function(){drawNewHighCharts("Effort",$('#Effort').text())});
+    $(document).on('click', '#EffortPH', function(){drawNewHighCharts("Effort",$('#Effort').text())});
 
     $(document).on('click', '#SizeMeasurement', function(){drawNewHighCharts("SizeMeasurement",$('#SizeMeasurement').text())});
 

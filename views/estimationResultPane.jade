@@ -37,20 +37,20 @@ if estimationResults
     table.table.table-bordered
       thead
         tr
-          th Number
-          th Use Case
-          th Effort (PH)
-          th Effort Dev
-          th Effort PM
-          th Effort Syn
-          th Business Value
-          th Effort/BV
-          th #{estimationResults.SizeMetric}
-          th Schedule (Months)
-          th Personnel (FT Developers)
-          th UI Developer
-          th Full Stack
-          th Database Developer
+          th#number_column Number
+          th#Use_Case Use Case
+          th#EffortPH Effort (PH)
+          th#EffortDev Effort Dev
+          th#EffortPM Effort PM
+          th#EffortSyn Effort Syn
+          th#Business Business Value
+          th#EffortBV Effort/BV
+          th#SizeMeasurement #{estimationResults.SizeMetric}
+          th#Duration Schedule (Months)
+          th#Personnel Personnel (FT Developers)
+          th#Personnel_UI UI Developer
+          th#Personnel_FS Full Stack
+          th#Personnel_DB Database Developer
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
             tr.estimation-table

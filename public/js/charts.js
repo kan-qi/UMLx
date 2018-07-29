@@ -323,8 +323,11 @@ function showEstimationChart(chartsTag)
 {
     console.log("inside estimation chart function");
     console.log($('#estimation-result-panel-body').html());
+    // console.log(chartsTag);
+    // console.log("-------------------------");
+    // console.log($(chartsTag).data('url'));
 //            var effort_estimation_url = "output/repo"+ repoID  +  "/estimationResult.json";
-    var effort_estimation_url = $('#estimation-results-charts').data('url');
+    var effort_estimation_url = $(chartsTag).data('url');
     $.ajax({
         url: effort_estimation_url,
         type:"GET",
@@ -424,7 +427,7 @@ function drawNewHighCharts(column_data_name,column_name)
     else if (column_data_name === "Duration") {
         unit = "months";
     }
-    else if (column_data_name === "Effort") {
+    else if (column_data_name === "EffortPH") {
         unit = "person-hours"
     }
     else if (column_data_name === "Personnel") {
