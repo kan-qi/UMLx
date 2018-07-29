@@ -1,8 +1,6 @@
 require('chromedriver');
 var webdriver = require('selenium-webdriver');
 
-
-
 // https://www.npmjs.com/package/chromedriver
 // https://stackoverflow.com/questions/27733731/passing-requirechromedriver-path-directly-to-selenium-webdriver
 // more package will be added as per need
