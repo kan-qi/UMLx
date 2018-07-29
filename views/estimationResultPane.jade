@@ -10,7 +10,7 @@ if estimationResults
             th Model
             th Effort (PH)
             th Schedule (Months)
-            th #{sizeMetric}
+            th #{estimationModel}
             th Personnel (FT Developers)
             th UI Developer
             th Full Stack
@@ -31,26 +31,35 @@ if estimationResults
     table.table.table-bordered
       thead
         tr
-          th Number
-          th Use Case
-          th Effort (PH)
-          th #{sizeMetric}
-          th Schedule (Months)
-          th Personnel (FT Developers)
-          th UI Developer
-          th Full Stack
-          th Database Developer
+          th#number_column Number
+          th#Use_Case Use Case
+          th#Effort Effort (PH)
+          th#SizeMeasurement #{estimationModel}
+          th#Duration Schedule (Months)
+          th#Personnel Personnel (FT Developers)
+          th#Personnel_UI UI Developer
+          th#Personnel_FS Full Stack
+          th#Personnel_DB Database Developer
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
-            tr.estimation-table
-              td #{i}
-              td #{estimationResults.UseCases[i].Name}
-              td #{estimationResults.UseCases[i].Effort}
-              td #{estimationResults.UseCases[i].SizeMeasurement}
-              td #{estimationResults.UseCases[i].Duration}
-              td #{estimationResults.UseCases[i].Personnel}
-              td #{estimationResults.UseCases[i].Personnel_UI}
-              td #{estimationResults.UseCases[i].Personnel_FS}
-              td #{estimationResults.UseCases[i].Personnel_DB}
+        tr.estimation-table
+          td #{i}
+          td #{estimationResults.UseCases[i].Name}
+          td #{estimationResults.UseCases[i].Effort}
+          td #{estimationResults.UseCases[i].SizeMeasurement}
+          td #{estimationResults.UseCases[i].Duration}
+          td #{estimationResults.UseCases[i].Personnel}
+          td #{estimationResults.UseCases[i].Personnel_UI}
+          td #{estimationResults.UseCases[i].Personnel_FS}
+          td #{estimationResults.UseCases[i].Personnel_DB}
+          //- td #{i}
+          //- td #{estimationResults.UseCases[i].[column_param[0]]}
+          //- td #{estimationResults.UseCases[i].[column_param[1]]}
+          //- td #{estimationResults.UseCases[i].[column_param[2]]}
+          //- td #{estimationResults.UseCases[i].[column_param[3]]}
+          //- td #{estimationResults.UseCases[i].[column_param[4]]}
+          //- td #{estimationResults.UseCases[i].[column_param[5]]}
+          //- td #{estimationResults.UseCases[i].[column_param[6]]}
+          //- td #{estimationResults.UseCases[i].[column_param[7]]}
         - }
 
