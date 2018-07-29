@@ -8,8 +8,10 @@ var testProject5 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Re
 var testProject6 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\datamap";
 var testProject7 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\examples";
 var testProject8 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\hadoop";
+var testProject9 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\workspace\\experimentExample1";
+var testProject10 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\workspace\\experimentExample2";
 
-EclipseUtil.generateKDMModel2(testProject8, function(tasks){
+EclipseUtil.generateKDMModel2(testProject3, function(tasks){
 	console.log("parsed tasks");
 	console.log(tasks);
 
