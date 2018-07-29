@@ -20,13 +20,8 @@ if (length(args) < 1) {
   args[4] = "statistics.json";
 } else if (length(args) == 3){
   args[4] = "statistics.json";
-  print("length == 3")
 }
 
-print(args[1])
-print(args[2])
-print(args[3])
-print(args[4])
 
 analyticInfoPath = args[1]
 outputDir <- args[2]
