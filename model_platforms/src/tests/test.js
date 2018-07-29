@@ -18,13 +18,17 @@ var fs = require('fs');
 //	var ModelOutputDir = "./model_platforms/src/carbonData";
 //	var ModelOutputDir = "./model_platforms/src/repoAnalyzer";
 //	var ModelOutputDir = "./model_platforms/src/alltheapps";
-	var ModelOutputDir = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\datamap";
-
+//	var ModelOutputDir = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\datamap";
+//	var ModelOutputDir = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\examples";
+	var ModelOutputDir = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\hadoop";
+	
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\model_platforms\\src\\tests\\repoAnalyzer_kdm.xmi";
 //	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\model_platforms\\src\\tests\\experimentExample_kdm.xmi";
 //	var filePath = "./model_platforms/src/tests/repoAnalyzer_kdm.xmi";
 //	var filePath = "./model_platforms/src/tests/repoAnalyzer_kdm.xmi"
-	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\datamap\\eclipse_gen_umlx_kdm.xmi";
+//	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\datamap\\eclipse_gen_umlx_kdm.xmi";
+//	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\examples\\eclipse_gen_umlx_kdm.xmi";
+	var filePath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata\\hadoop\\eclipse_gen_umlx_kdm.xmi";
 
 		var modelDrawer = require("../../../model_drawers/UserSystemInteractionModelDrawer.js");
 
