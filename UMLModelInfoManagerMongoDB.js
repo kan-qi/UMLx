@@ -467,6 +467,15 @@ function deleteRepo(repoId, callbackfunc) {
     function updateUseCaseInfo(repoId, modelId, useCaseInfo, callbackfunc){
         //update here. It is not efficient.
         queryModelInfo(modelId, repoId, function(modelInfo){
+
+            if(!modelInfo){
+                console.log("No corresponding modelInfo can be found!!!");
+                if(callbackfunc){
+                    callbackfunc(false);
+                }
+                return;
+            }
+
             for(var i in modelInfo.useCases){
                 var useCase = modelInfo.useCases[i];
                 if(useCase._id === useCaseInfo._id){
@@ -597,29 +606,36 @@ function deleteRepo(repoId, callbackfunc) {
 
                 console.log("---------------modelInfoStart----------------");
                   //restore the ids
-                  var modelInfo = result[0];
-                  var arr = [];
-                  result.forEach(function (element) {
-                      arr.push(element.UseCases);
-                  });
 
-                  modelInfo.UseCases = arr;
-                  for (var i in modelInfo.UseCases) {
-                      var useCase = modelInfo.UseCases[i];
-                      if (useCase) {
-                          useCase._id = useCase._id.replace(/\[.*\]/g, "");
-                      }
-                  }
+                //TODO: what should be returned if the result is undefined
 
-                  if (modelInfo.DomainModels) {
-                      var domainModel = modelInfo.DomainModels[0];
-                      delete modelInfo.DomainModels;
-                      delete domainModel._id;
-                      modelInfo.DomainModel = domainModel;
-                  }
-                  console.log("---------------modelInfo----------------");
+                var modelInfo = result[0];
+
+                if (result) {
+                    var arr = [];
+                    result.forEach(function (element) {
+                        arr.push(element.UseCases);
+                    });
+
+                    modelInfo.UseCases = arr;
+                    for (var i in modelInfo.UseCases) {
+                        var useCase = modelInfo.UseCases[i];
+                        if (useCase) {
+                            useCase._id = useCase._id.replace(/\[.*\]/g, "");
+                        }
+                    }
+
+                    if (modelInfo.DomainModels) {
+                        var domainModel = modelInfo.DomainModels[0];
+                        delete modelInfo.DomainModels;
+                        delete domainModel._id;
+                        modelInfo.DomainModel = domainModel;
+                    }
+                    console.log("---------------modelInfo----------------");
                     //console.log(modelInfo);
-                  callbackfunc(modelInfo);
+                }
+
+                callbackfunc(modelInfo);
 
               });              
         });
@@ -1471,6 +1487,13 @@ function deleteRepo(repoId, callbackfunc) {
 			    	  return;
 			      }
 				  queryModelInfo(modelId, repoId, function(modelInfo){
+                      if(!modelInfo){
+                          console.log("No corresponding modelInfo can be found!!!");
+                          if(callbackfunc){
+                              callbackfunc(false);
+                          }
+                          return;
+                      }
 				 	 umlEvaluator.evaluateModel(modelInfo, function(){
 		    	 		 console.log('model analysis is complete');
 		    	 	 });
@@ -1754,6 +1777,7 @@ function deleteRepo(repoId, callbackfunc) {
     	queryModelInfo(modelId, repoId, function(modelInfo){
 			//to update the current version to the newly uploaded model file, and put the older versions into the arrays of versions.
 			if(!modelInfo){
+                console.log("No corresponding modelInfo can be found!!!");
 				if(callbackfunc){
 					callbackfunc(false);
 				}
