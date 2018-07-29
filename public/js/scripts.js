@@ -1318,7 +1318,7 @@ $(document).ready(function () {
 
     $(document).on('click', '#reanalyse_repo', re_analyse_repo);
 
-    $(document).on('click', '#EffortPH', function(){drawNewHighCharts("Effort",$('#Effort').text())});
+    $(document).on('click', '#EffortPH', function(){drawNewHighCharts("Effort",$('#EffortPH').text())});
 
     $(document).on('click', '#SizeMeasurement', function(){drawNewHighCharts("SizeMeasurement",$('#SizeMeasurement').text())});
 

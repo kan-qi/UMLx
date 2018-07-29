@@ -31,7 +31,7 @@ if estimationResults
             td #{estimationResults.DomainModel.MVCEstimates.ModelEffort}
             td #{estimationResults.DomainModel.MVCEstimates.ViewEffort}
             td #{estimationResults.DomainModel.MVCEstimates.ControlEffort}
-  div(id='#{estimationResults.EstimationModel}-estimation-results-charts' data-url="#{modelInfo.AccessDir}/#{estimationResults.EstimationResultsFile}")
+  div(id='#{estimationResults.EstimationModel}-estimation-results-charts' data-url="#{modelInfo.AccessDir}/#{estimationResults.EstimationResultsFile}" data-myURL='url_id')
     div(id='estimation-charts')
   div.use-case-predictions.table-responsive
     table.table.table-bordered
