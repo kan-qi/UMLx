@@ -1698,43 +1698,41 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
-			});
-//			console.log(modelInfo);
-			effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
-				if(!estimationResults){
-					console.log("error");
-					res.render('estimationResultPane', {error: "inter process error"});
-					return;
-				}
-				
-				console.log("estimation results");
-				console.log(estimationResults);
-				
+                effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
+                    if(!estimationResults){
+                        console.log("error");
+                        res.render('estimationResultPane', {error: "inter process error"});
+                        return;
+                    }
+
+                    console.log("estimation results");
+                    console.log(estimationResults);
+
 //				console.log("estimation request");
 //				console.log(umlEstimationInfo);
-				
+
 //				var estimationResults = effortPredictor.makeProjectManagementDecisions(modelInfo, umlEstimationInfo, estimatedEffort);
-//				
-				
-				modelInfo[estimationModel] = estimationResults;
-				modelInfo.repo_id = repoId;
+//
+
+                    modelInfo[estimationModel] = estimationResults;
+                    modelInfo.repo_id = repoId;
 //				modelInfo.SizeMetric = sizeMetric;
 //				modelInfo.EstimationModel = model;
 
 //                modelInfo.umlEstimationInfo = umlEstimationInfo;
 
-                umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
+                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 //					console.log(modelInfo);
-					
-					
-					res.render('estimationResultPane', {estimationResults:estimationResults, modelInfo: modelInfo});
+
+
+                        res.render('estimationResultPane', {estimationResults:estimationResults, modelInfo: modelInfo});
 
 ////
+                    });
+
                 });
-
 			});
-
-			
+//			console.log(modelInfo);
 		});
 	});
 });
