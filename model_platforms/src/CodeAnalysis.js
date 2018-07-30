@@ -1014,7 +1014,7 @@
 				var targetMethodUnit = kdmModelUtils.identifyMethodUnit(targetXMIMethodUnit, xmiString);
 				console.log("target method unit");
 				console.log(targetMethodUnit);
-				var targetClassUnit = locateClassUnitForMethod(targetMethodUnit, 	s);
+				var targetClassUnit = locateClassUnitForMethod(targetMethodUnit, classUnits);
 
 				if(!callMethodUnit.Signature || !targetMethodUnit.Signature || !targetClassUnit.isWithinBoundary){
 					continue;

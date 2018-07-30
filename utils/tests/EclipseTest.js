@@ -37,6 +37,8 @@ var testProject30 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 
 var testProject31 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\carbondata_archive\\carbondata";
 
+var testProject32 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata";
+
 var openSourceProjects = [
 //	testProject14, 
 //	testProject15, 
@@ -59,16 +61,16 @@ var openSourceProjects = [
 	testProject30
 	];
 
-for(var i in openSourceProjects){
-	EclipseUtil.generateKDMModel2(openSourceProjects[i], function(tasks){
-		console.log("parsed tasks");
-		console.log(tasks);
-	});
-}
+//for(var i in openSourceProjects){
+//	EclipseUtil.generateKDMModel2(openSourceProjects[i], function(tasks){
+//		console.log("parsed tasks");
+//		console.log(tasks);
+//	});
+//}
 
-//EclipseUtil.generateKDMModel2(testProject31, function(tasks){
-//	console.log("parsed tasks");
-//	console.log(tasks);
-//});
+EclipseUtil.generateKDMModel(testProject32, function(tasks){
+	console.log("parsed tasks");
+	console.log(tasks);
+});
 
 
