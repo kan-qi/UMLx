@@ -324,7 +324,7 @@ function showEstimationChart(chartsTag)
     console.log("inside estimation chart function");
     console.log($('#estimation-result-panel-body').html());
 //            var effort_estimation_url = "output/repo"+ repoID  +  "/estimationResult.json";
-    var effort_estimation_url = $('#estimation-results-charts').data('url');
+    var effort_estimation_url = $('div [data-myURL="url_id"]').data('url');
     $.ajax({
         url: effort_estimation_url,
         type:"GET",
@@ -434,7 +434,7 @@ function drawNewHighCharts(column_data_name,column_name)
     column_name = column_name;
     console.log(column_data_name, column_name);
     console.log("begin drawwing");
-    var effort_estimation_url = $('#estimation-results-charts').data('url');
+    var effort_estimation_url = $('div [data-myURL="url_id"]').data('url');
     console.log(effort_estimation_url);
     $.ajax({
         url: effort_estimation_url,
@@ -448,6 +448,8 @@ function drawNewHighCharts(column_data_name,column_name)
             console.log("column_data_name");
             console.log(column_data_name);
             console.log(column_name);
+            console.log("response");
+            console.log(response);
             var th_param=[];
             var name = [];
             for(var i=0;i<response.UseCases.length;i++)
