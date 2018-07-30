@@ -47,6 +47,7 @@ combineData <- function(folder) {
 		  }
 	  }
 	}
+	data <- na.omit(data)
 	data
 }
 
@@ -173,7 +174,7 @@ crossValidate <- function(data, k) {
 		testIndexes <- which(folds == i, arr.ind = TRUE)
 		testData <- data[testIndexes, ]
 		trainData <- data[-testIndexes, ]
-		model <- bayesfit(lm(Effort ~ . - 1, data = trainData), 100)
+		model <- bayesfit(lm(Effort ~ . - 1, data = trainData), 1000)
 		predicted <- predict.blm(model, newdata = testData)
 		foldMSE[i] <- mean((predicted - testData$Effort)^2)
 		foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
@@ -409,6 +410,7 @@ performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DET
     for (file in dir(folder)) {
       if (grepl(".csv", file, ignore.case = TRUE)) {
         fileData <- read.csv(paste(folder, file, sep = "/"))
+        fileData <- na.omit(fileData)
         regressionData[file, ] <- c(classify(fileData, cutPoints), effortData[file, "Effort"])
       }
     }
@@ -418,7 +420,7 @@ performSearch <- function(n, folder, effortData, parameters = c("TL", "TD", "DET
     searchResults[[i]] <- list(MSE = validationResults["MSE"], 
                                MMRE = validationResults["MMRE"], 
                                PRED = validationResults["PRED"],
-                               model = bayesfit(lm(Effort ~ . - 1, regressionData[rownames(regressionData) != "Aggregate", ]), 100),
+                               model = bayesfit(lm(Effort ~ . - 1, regressionData[rownames(regressionData) != "Aggregate", ]), 1000),
                                data = regressionData,
                                cuts = cutPoints)
   }
