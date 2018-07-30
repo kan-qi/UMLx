@@ -232,29 +232,30 @@ genMeans <- function(n) {
   }
 }
 
-genVariance <- function(mu) {
+genVariance <- function(mu, varFactor) {
   # Generates a covariance matrix to define the multivariate Guassian prior
   # for Bayesian linear regression. The variance for each level is 
-  # 1/3*(L_n - L_(n-1)).
+  # varFactor*(L_n - L_(n-1)).
   #
   # Args:
   #   mu: vector of the means of the Gaussian prior
+  #   varFactor: used to tune the amount of variance in the prior
   #
   # Returns:
   #   Covariance matrix for the Gaussian prior
   ret <- matrix(rep(0, length(mu)^2), nrow = length(mu), ncol = length(mu))
   rownames(ret) <- names(mu)
   colnames(ret) <- names(mu)
-  ret[1,1] <- 1/3
+  ret[1,1] <- varFactor
   if (length(mu) == 1) {
     return(ret)
   }
-  ret[2,2] <- 1/3
+  ret[2,2] <- varFactor
   if (length(mu) == 2) {
     return(ret)
   }
   for (i in 3:length(mu)) {
-    ret[i, i] <- 1/3 * (mu[i] - mu[i - 1])
+    ret[i, i] <- varFactor * (mu[i] - mu[i - 1])
   }
   ret
 }
@@ -321,7 +322,7 @@ bayesfit<-function(lmfit, N) {
 	s2<-(t(lmfit$residuals)%*%lmfit$residuals)
 	s2<-s2[1,1]/df.residual
 	means <- genMeans(lmfit$rank)
-	covar <- genVariance(means)
+	covar <- genVariance(means, 1)
 	## now to sample residual variance
 	sigma<-df.residual*s2/rchisq(N,df.residual)
 	coef.sim<-sapply(sigma, function(x) {
