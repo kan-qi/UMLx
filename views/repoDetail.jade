@@ -42,7 +42,7 @@ div.block.panel.panel-default
             span.caret
           ul.dropdown-menu
             li
-              a.request-repo-analytics.dropdown-item(href='reanalyseRepo?repo_id=#{repoInfo._id}') Reanalyse Repo
+              a.request-repo-analytics.dropdown-item(id="reanalyse_repo", href="#", data-my="#{repoInfo._id}") Reanalyse Repo
             li
               a.dropdown-item(href='reloadRepo?repo_id=#{repoInfo._id}') Reload Repo
    div.clearFix
@@ -57,7 +57,7 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#repo_estimation') Estimation
      li
       a(data-toggle='tab', href='#project_list') Projects 
-        span(class="badge") #{repoInfo.Models.length}
+        span(class="badge") #{modelAllNum}
      li
       a(data-toggle='tab', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
     div.tab-content

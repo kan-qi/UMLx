@@ -4,6 +4,35 @@
 	var path = require('path');
 	var mkdirp = require('mkdirp');
 	
+	function drawPlainDiagram(nodes, edges, graphFilePath, callbackfunc){
+		var graph = 'digraph g {';
+		for(var i in nodes){
+			var node = nodes[i];
+			if(node !== undefined){
+			graph += '"'+start+'";';
+			}
+		}
+		
+		for(var i in edges){
+			var edge = edges[i];
+			if(edge !== undefined){
+			for(var j in edges){
+				var start = edge.start;
+				var end = edge.end;
+				if(start && end){
+					graph += '"'+start+'"->"'+end+'";';
+				}
+				
+			}
+			}
+		}
+		
+		graph += '}';
+		
+		drawDottyGraph(graph, graphFilePath,callbackfunc);
+	
+	}
+	
 	function drawDottyGraph(dottyGraph, graphFilePath, callbackfunc){
 		var dir = path.dirname(graphFilePath);
 		var fileName = path.parse(graphFilePath).base.replace(/\.[^/.]+$/, "");
@@ -54,6 +83,7 @@
 	}
 	
 	module.exports = {
-			drawDottyGraph: drawDottyGraph
+			drawDottyGraph: drawDottyGraph,
+			drawPlainDiagram: drawPlainDiagram
 	}
 })();

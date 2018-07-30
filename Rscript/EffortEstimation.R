@@ -6,21 +6,25 @@
 
 args = commandArgs(trailingOnly=TRUE)
 
-.libPaths(c("C:/Users/flyqk/Documents/R/win-library/3.5", "C:/Program Files/R/R-3.5.1/library"))
+#.libPaths(c("C:/Users/flyqk/Documents/R/win-library/3.5", "C:/Program Files/R/R-3.5.1/library"))
 
 if (length(args) < 2) {
 	stop("At least two arguments must be supplied (input file).", call.=FALSE)
 } else if (length(args)==2) {
 	# default output file
 	args[3] = "./temp"
+	args[4] = "effort_prediction"
+} else if(length(args) ==3){
+	args[4] = "effort_prediction"
 }
 
 
 modelUrl <- paste("./statistical_models", args[1], sep="/")
 dataUrl <- args[2]
 outputDir <- args[3]
-reportPath <- paste(outputDir, "effort_prediction_report.txt", sep="/")
-resultPath <- paste(outputDir, "effort_prediction_result.json", sep="/")
+outputFileName <- args[4]
+reportPath <- paste(outputDir, paste(outputFileName, '_report.txt', sep=''), sep="/")
+resultPath <- paste(outputDir, paste(outputFileName, '_result.json', sep=''), sep="/")
 
 #modelUrl <- "./Model/riskPredictionModel.rds"
 

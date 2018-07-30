@@ -310,7 +310,10 @@ function predict_project_effort_func() {
         success: function (response) {
             console.log(response);
             $("#estimation-result-panel-body").html(response);
-            showEstimationChart();
+            var estimationModel = $(response).data("estimation-model");
+            // console.log(estimationModel);
+            console.log('#'+estimationModel+'-estimation-results-charts');
+            showEstimationChart('#'+estimationModel+'-estimation-results-charts');
         },
         error: function () {
             console.log("fail");
@@ -318,6 +321,43 @@ function predict_project_effort_func() {
             alert("There was an error");
         }
     });
+    return false;
+}
+
+function re_analyse_repo(){
+    let repo_id = $("reanalyse_repo").data("my");
+    console.log(repo_id);
+
+    $.ajax({
+        type: 'GET',
+        url: "reanalyseRepo?repo_id=" + repo_id,
+        async: false,
+        success: function (response) {
+            console.log(response);
+            $.ajax({
+                type: 'GET',
+                url: "reanalyseRepocontinue",
+                async: false,
+                success: function (response) {
+                    alert("The calculation has been finished!")
+                },
+                error: function () {
+                    // $("#commentList").append($("#name").val() + "<br/>" +
+                    // $("#body").val());
+                    console.log("fail");
+                    //alert("There was an error");
+                }
+            });
+
+        },
+        error: function () {
+            // $("#commentList").append($("#name").val() + "<br/>" +
+            // $("#body").val());
+            console.log("fail");
+            alert("There was an error");
+        }
+    });
+
     return false;
 }
 
@@ -421,10 +461,10 @@ function query_model_detail_func() {
 }
 
 var loaded = false;
-
 function re_analyze_model_func() {
     var url = $(this).attr("href");
     console.log(url);
+    if(loaded) return;
 
     if (loaded) return;
 
@@ -436,7 +476,6 @@ function re_analyze_model_func() {
         async: false,
         success: function (response) {
             loaded = false;
-
             console.log(response);
             $("#display-panel").html("");
             $("#display-panel").append(response);
@@ -454,7 +493,6 @@ function re_analyze_model_func() {
         },
         error: function () {
             loaded = false;
-
             console.log("fail");
             alert("There was an error");
         }
@@ -666,7 +704,7 @@ var gloablUrlForDownload;
 
 function fileDownload() {
 
-    gloablUrlForDownload = gloablUrlForDownload.substring(7);
+    gloablUrlForDownload = gloablUrlForDownload.substring(1);
 
     $.ajax({
         type: 'GET',
@@ -674,6 +712,7 @@ function fileDownload() {
 
         success: function (response) {
             console.log(response);
+            alert("The file has been downloaded!");
         },
         error: function () {
             console.log("fail");
@@ -690,6 +729,7 @@ function openFile() {
     // console.log(url);
 
     gloablUrlForDownload = url;
+    url = "public" + url;
 
     //var url = $(this).data("url");
 
@@ -801,13 +841,13 @@ function display_csv_data(url) {
                 .append("table").attr('class', 'table table-striped table-bordered table-hover')
                 .append("tbody")
                 .selectAll("tr")
-                    .data(parsedCSV).enter()
-                    .append("tr")
+                .data(parsedCSV).enter()
+                .append("tr")
 
                 .selectAll("td")
-                    .data(function (d) { return d; }).enter()
-                    .append("td")
-                    .text(function (d) { return d == "undefined" ? "-" : d; });
+                .data(function (d) { return d; }).enter()
+                .append("td")
+                .text(function (d) { return d == "undefined" ? "-" : d; });
 
         },
         error: function () {
@@ -899,10 +939,10 @@ function signUpFormSubmit(e) {
     var pwdMissing = $('#sign-up #password').val().length > 0 ? false : true;
 
     var successDiv = '<div class="alert alert-success alert-dismissible">' +
-    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+        '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
 
     var alertDiv = '<div class="alert alert-danger alert-dismissible">' +
-    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+        '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
 
     if (emailMissing) {
         alertDiv += 'Please enter your email </div>'
@@ -969,10 +1009,10 @@ function loginFormSubmit(e) {
     var pwdMissing = $('#login-form #password').val().length > 0 ? false : true;
 
     var successDiv = '<div class="alert alert-success alert-dismissible">' +
-    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+        '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
 
     var alertDiv = '<div class="alert alert-danger alert-dismissible">' +
-    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+        '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
 
     if (usernameMissing && pwdMissing) {
         alertDiv += 'Please enter the Username and Password </div>'
@@ -1023,10 +1063,10 @@ function inviteFormSubmit(e) {
     var emailMissing = $('#invite-form #email').val().length > 0 ? false : true;
 
     var successDiv = '<div class="alert alert-success alert-dismissible">' +
-    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+        '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
 
     var alertDiv = '<div class="alert alert-danger alert-dismissible">' +
-    '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
+        '<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>';
 
     if (emailMissing) {
         alertDiv += 'Please enter your email </div>'
@@ -1097,9 +1137,9 @@ function drawChartBySVG() {
     var yMap = function (d) { return y(yValue(d)); }; // data -> display
 
     var lineData = [],
-    n = 100,
-    a = 1,
-    b = 2;
+        n = 100,
+        a = 1,
+        b = 2;
 
     for (var k = 0; k < 1000; k++) {
         lineData.push({ x: k, y: a * k + 300 });
@@ -1108,8 +1148,8 @@ function drawChartBySVG() {
     console.log(lineData);
 
     var line = d3.line()
-    .x(function (d) { return x(d.x); })
-    .y(function (d) { return y(d.y); });
+        .x(function (d) { return x(d.x); })
+        .y(function (d) { return y(d.y); });
 
 
 
@@ -1128,9 +1168,9 @@ function drawChartBySVG() {
     var svg = d3.select("#repo-stats-chart").append("svg")
         .attr("width", width + margin.left + margin.right)
         .attr("height", height + margin.top + margin.bottom)
-      .append("g")
+        .append("g")
         .attr("transform",
-              "translate(" + margin.left + "," + margin.top + ")");
+            "translate(" + margin.left + "," + margin.top + ")");
 
     // Get the data
     d3.csv("output/model-analytics.csv", function (error, data) {
@@ -1156,8 +1196,8 @@ function drawChartBySVG() {
         // text label for the x axis
         svg.append("text")
             .attr("transform",
-                  "translate(" + (width / 2) + " ," +
-                                 (height + margin.top + 20) + ")")
+                "translate(" + (width / 2) + " ," +
+                (height + margin.top + 20) + ")")
             .style("text-anchor", "middle")
             .text("Measurement");
 
@@ -1177,7 +1217,7 @@ function drawChartBySVG() {
         //  // draw dots
         svg.selectAll(".dot")
             .data(data)
-          .enter().append("circle")
+            .enter().append("circle")
             .attr("class", "dot")
             .attr("r", 3.5)
             .attr("cx", xMap)
@@ -1185,17 +1225,17 @@ function drawChartBySVG() {
             .style("fill", function (d) { return color(cValue(d)); })
             .on("mouseover", function (d) {
                 tooltip.transition()
-                     .duration(200)
-                     .style("opacity", .9);
+                    .duration(200)
+                    .style("opacity", .9);
                 tooltip.html(d["Cereal Name"] + "<br/> (" + xValue(d)
-                  + ", " + yValue(d) + ")")
-                     .style("left", (d3.event.pageX + 5) + "px")
-                     .style("top", (d3.event.pageY - 28) + "px");
+                    + ", " + yValue(d) + ")")
+                    .style("left", (d3.event.pageX + 5) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
             })
             .on("mouseout", function (d) {
                 tooltip.transition()
-                     .duration(500)
-                     .style("opacity", 0);
+                    .duration(500)
+                    .style("opacity", 0);
             });
 
 
@@ -1236,6 +1276,13 @@ function drawChartBySVG() {
         </div>');
 }
 
+function requestUseCaseDistributionCharts(){
+            //show different charts for different estimations.
+            showEstimationChart('#eucp_lm-estimation-results-charts');
+            showEstimationChart('#exucp_lm-estimation-results-charts');
+            showEstimationChart('#ducp_lm-estimation-results-charts');
+}
+
 $(document).ready(function () {
     $(document).on('click', 'a.sub-model-title', query_sub_model_detail_func);
     //  $(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
@@ -1251,6 +1298,8 @@ $(document).ready(function () {
     $(document).on('click', '.dumpEvaluationData', request_display_data);
     $(document).on('click', '.dumpAnalyticsData', request_display_data);
     $(document).on('click', '.fileLink', openFile);
+    
+    $(document).on("click", '#model-evaluation-tab', requestUseCaseDistributionCharts);
 
     $(document).on('click', '#estimator-selector-box .dropdown-menu li a', function () {
         //       alert($(this).closest('.dropdown').find('.btn').text());
@@ -1267,6 +1316,25 @@ $(document).ready(function () {
 
     $(document).on('click', '#reanalyse-model', re_analyze_model_func);
 
+    $(document).on('click', '#reanalyse_repo', re_analyse_repo);
+
+    $(document).on('click', '#EffortPH', function(){drawNewHighCharts("Effort",$('#EffortPH').text())});
+
+    $(document).on('click', '#SizeMeasurement', function(){drawNewHighCharts("SizeMeasurement",$('#SizeMeasurement').text())});
+
+    $(document).on('click', '#Duration', function(){drawNewHighCharts("Duration",$('#Duration').text())});
+
+    $(document).on('click', '#Personnel', function(){drawNewHighCharts("Personnel",$('#Personnel').text())});
+
+    $(document).on('click', '#Personnel_UI', function(){drawNewHighCharts("Personnel_UI",$('#Personnel_UI').text())});
+
+    $(document).on('click', '#Personnel_FS', function(){drawNewHighCharts("Personnel_FS",$('#Personnel_FS').text())});
+
+    $(document).on('click', '#Personnel_DB', function(){drawNewHighCharts("Personnel_DB",$('#Personnel_DB').text())});
+
+    $(document).on('click', '#Use_Case', showEstimationChart);
+
+    $(document).on('click', '#number_column', showEstimationChart);
 
     $('.nav.nav-tabs').tab();
 
@@ -1398,9 +1466,9 @@ function toggleDiagram(diagramType) {
     else if (diagramType === "robustness_diagram") {
         umlDiagram = "/robustness_diagram.svg";
     }
-        //else if(diagramType === "class_diagram"){
-        //umlDiagram = "/class_diagram.svg";
-        //}
+    //else if(diagramType === "class_diagram"){
+    //umlDiagram = "/class_diagram.svg";
+    //}
     else if (diagramType === "sequence_diagram") {
         umlDiagram = "/sequence_diagram.svg";
     }
@@ -1883,7 +1951,7 @@ function createHistogram(dataList, max) {
                 tooltip: {
                     headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
                     pointFormat: '<tr><td style="color:{series.color};padding:0">&#x26AB;: </td>' +
-                        '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
+                    '<td style="padding:0"><b>{point.y:.1f}</b></td></tr>',
                     footerFormat: '</table>',
                     shared: true,
                     useHTML: true
@@ -2317,7 +2385,7 @@ function buildTable(data) {
         if (level >= 2) {
             //backLink = dirLink.split("/")[level+1];
 
-            out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
+            out += "<button id='backButton' class='btn btn-default col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
             out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
         } else {
             out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
@@ -2497,7 +2565,7 @@ function buildTable2(data) {
 
     if (levels >= 2) {
         backUrl = repoLink.split("/")[levels];
-        out += "<button id='backButton' class='btn btn-default col-sm-offset-1 col-sm-1' data-url=" + backUrl + " onclick='walkRepoDir(this)'>Back</button>";
+        out += "<button id='backButton' class='btn btn-default col-sm-1' data-url=" + backUrl + " onclick='walkRepoDir(this)'>Back</button>";
         out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
     } else {
         out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
@@ -2522,29 +2590,29 @@ function buildTable2(data) {
         if (type[newKeys[i]] === "File") {
             var path = data[0].parent + "/" + newKeys[i];
             if (newKeys[i].endsWith(".csv")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
-                newKeys[i] +
-                "</td><td>file</td>";
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    newKeys[i] +
+                    "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".txt")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
-                newKeys[i] +
-                "</td><td>file</td>";
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    newKeys[i] +
+                    "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".svg")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
-                newKeys[i] +
-                "</td><td>file</td>";
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    newKeys[i] +
+                    "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".json")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
-                newKeys[i] +
-                "</td><td>file</td>";
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    newKeys[i] +
+                    "</td><td>file</td>";
             }
             else {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public/", "") + "'>" +
-                newKeys[i] +
-                "</td><td>file</td>";
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    newKeys[i] +
+                    "</td><td>file</td>";
             }
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
         }
