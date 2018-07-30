@@ -3,7 +3,17 @@ html
     title UMLx
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet') 
     link(href='css/style.css', rel='stylesheet')
-    //link(href="lightgallery.css" rel="stylesheet")
+    script.
+        function showPage(pageNumer) {
+            for (var i = 1; i <= 5; i++) {
+                var classList = document.getElementById("page" + i).classList;
+                if (i != pageNumer) {
+                    classList.add("hidden");
+                } else {
+                    classList.remove("hidden");
+                }
+            }
+        }
     
   body#upload-body
     .container.estimation_page_container
@@ -225,7 +235,6 @@ html
                 .form-group
                     label.control-label(for='estimator') Select Estimator
                     select#estimator.estimation-form-control(name='estimator')
-                        option Select Estimator
                         option Linear Regression
                         option Ridge Regression
                         option Linear Spline
@@ -234,7 +243,6 @@ html
                 .form-group
                     label.control-label(for='model') Select Model
                     select#model.estimation-form-control(name='model')
-                        option Select Model
                         option EUCP
                         option EXUCP
                         option DUCP
@@ -264,15 +272,3 @@ html
         script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
         script(type='text/javascript', src='js/scripts.js')
         script(type='text/javascript', src="js/charts.js")
-        script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv1@latest')
-        script.
-            function showPage(pageNumer) {
-                for (var i = 1; i <= 5; i++) {
-                    var classList = document.getElementById("page" + i).classList;
-                    if (i != pageNumer) {
-                        classList.add("hidden");
-                    } else {
-                        classList.remove("hidden");
-                    }
-                }
-            }

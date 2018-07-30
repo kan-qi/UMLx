@@ -2,7 +2,7 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	function generateKDMModel(projectPath, callbackfunc){
-			var eclipseInstall = "\"C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Research Projects\tools\eclipse-java-luna-SR2-win32-x86_64\eclipse\eclipse\"";
+			var eclipseInstall = "\"C:/Users/flyqk/Documents/Google Drive/ResearchSpace/Research Projects/tools/eclipse-java-luna-SR2-win32-x86_64/eclipse/eclipse\"";
 			var outputFile = projectPath + "/umlx_kdm.xmi";
 		    //to generate svg file.
 		    var command = eclipseInstall+' -consoleLog -console -noExit -application test21.test "' + projectPath + '" "'+outputFile+'"';

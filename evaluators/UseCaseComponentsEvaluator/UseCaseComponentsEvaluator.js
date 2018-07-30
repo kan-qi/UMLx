@@ -240,7 +240,7 @@
 
 		console.log("test use case element analytics");
 		console.log(useCase);
-		dumpUseCaseElementsInfo(useCase, function(err){
+		dumpUseCaseElementsInfo(useCase, function(err, res){
 
 				if(err){
 					console.log(err);
@@ -1108,10 +1108,11 @@
 
 		if(callbackfunc){
 
-		var files = [{fileName : useCase["ComponentAnalytics"].ElementAnalyticsFileName, content : elementAnalyticsStr},
-			{fileName : useCase["ComponentAnalytics"].TransactionAnalyticsFileName, content : transactionAnalyticsStr}];
+			var files = [{fileName : useCase["ComponentAnalytics"].ElementAnalyticsFileName, content : elementAnalyticsStr},
+				{fileName : useCase["ComponentAnalytics"].TransactionAnalyticsFileName, content : transactionAnalyticsStr}];
 
-		umlFileManager.writeFiles(useCase.OutputDir, files, callbackfunc);
+			umlFileManager.writeFiles(useCase.OutputDir, files, callbackfunc);
+			callbackfunc();
 		}
 
 		return {
