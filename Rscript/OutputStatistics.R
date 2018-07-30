@@ -6,6 +6,8 @@ args = commandArgs(trailingOnly=TRUE)
 # arg3: working directory
 # arg4: output name
 
+#.libPaths(c("C:/Users/flyqk/Documents/R/win-library/3.5", "C:/Program Files/R/R-3.5.1/library"))
+
 if (length(args) < 1) {
   stop("At least 1 arguments must be supplied (input file).", call.=FALSE)
 } else if (length(args)==1) {
@@ -18,13 +20,8 @@ if (length(args) < 1) {
   args[4] = "statistics.json";
 } else if (length(args) == 3){
   args[4] = "statistics.json";
-  print("length == 3")
 }
 
-print(args[1])
-print(args[2])
-print(args[3])
-print(args[4])
 
 analyticInfoPath = args[1]
 outputDir <- args[2]

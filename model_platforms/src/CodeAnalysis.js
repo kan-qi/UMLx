@@ -3,11 +3,12 @@
  *
  * This script relies on KDM and Java model
  *
- * The goal is the establish the control flow between the modules...
- * Identify the system boundary
- * Identify the sytem components.....
+ * The goal is the establish the control flow between the modules:
+ * Identify the boundary (via KDM).
+ * Identify the system components.
+ * Establish the control flow between the components
  * Identify the stimuli.
- * Identify the boundary.
+ *
  */
 (function() {
 	var fs = require('fs');
@@ -126,9 +127,11 @@
 		var referencedClassUnits = [];
 		var referencedClassUnitsComposite = [];
 
-		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits);
-		var typeDependencyGraph = constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits);
-		var accessGraph = constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits);
+		var dicMethodParameters = {};
+
+		var callGraph = constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters);
+		var typeDependencyGraph = constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters);
+		var accessGraph = constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters);
 
     console.log("dicChildrenClasses");
 		console.log(dicChildrenClasses);
@@ -147,7 +150,8 @@
 			accessGraph: accessGraph,
 			referencedClassUnits: referencedClassUnits,
 			referencedClassUnitsComposite: referencedClassUnitsComposite,
-			dicChildrenClasses: dicChildrenClasses
+			dicChildrenClasses: dicChildrenClasses,
+			dicMethodParameters: dicMethodParameters
 		};
 	}
 
@@ -208,7 +212,7 @@
 
 	}
 
-	function constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits){
+	function constructTypeDependencyGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters){
 
 		// var edges = [];
 		// var nodes = [];
@@ -256,7 +260,7 @@
         var targetClassUnit = null;
 				// console.log('StorableUnit');
 				// console.log(XMIClassStorableUnitType[0]['$']['UUID']);
-				for (var j in classUnits) { //TODO: only consider topClassUnits, is it okay?
+				for (var j in classUnits) {
 					var classUnitCandidate = classUnits[j];
 					if (classUnitCandidate.UUID == XMIClassStorableUnitType[0]['$']['UUID']) {
 						targetClassUnit = classUnitCandidate;
@@ -339,13 +343,14 @@
 				var startNode = nodesByNameAttr[classUnit.UUID];
 				if(!startNode){
 					startNode = {
-						name: classUnit.name,
+						name: classUnit.name+":"+XMIClassStorableUnit.name,
 						// isResponse: methodUnit.isResponse,
 						component: {
 							name: classUnit.name,
 							classUnit: classUnit.UUID
 						},
-						UUID: classUnit.UUID
+						UUID: XMIClassStorableUnit.UUID,
+						attributeName: XMIClassStorableUnit.name
 //							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodesAttr.push(startNode);
@@ -472,6 +477,36 @@
 						}
 						else {
 							continue;
+						}
+
+						if (!(dicMethodParameters.hasOwnProperty(methodUnit.UUID))) {
+							var methodParameters = methodUnit.Signature.parameterUnits;
+							var name = null;
+							var dicParameters = [];
+							for (var l in methodParameters) {
+								if (methodParameters[l].hasOwnProperty('name')) {
+									name = methodParameters[l].name;
+								}
+								var type = jp.query(xmiString, convertToJsonPath(methodParameters[l].type));
+								var typeClass = null;
+								for (var j in classUnits) {
+									var classUnitCandidate = classUnits[j];
+									if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+										typeClass = classUnitCandidate;
+									}
+								}
+								if (!typeClass) {
+									continue;
+								}
+								var parameter = {
+									Name: name,
+									// kind: methodParameters[l].kind,
+									Type: typeClass.name,
+									TypeUUID: typeClass.UUID,
+								};
+								dicParameters.push(parameter);
+							}
+							dicMethodParameters[methodUnit.UUID] = dicParameters;
 						}
 
 						var startNode = nodesByNameLocal[methodUnit.UUID];
@@ -613,7 +648,15 @@
 								name: methodClassUnit.name,
 								classUnit: methodClassUnit.UUID
 							},
-							// UUID: methodParameter.UUID
+							method: {
+								name: methodUnit.Signature.name,
+								UUID: methodUnit.UUID,
+								parameter: {
+									name: methodParameter.name,
+									UUID: methodParameter.UUID
+								}
+							},
+							UUID: methodParameter.UUID
 //							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 						nodesPara.push(startNode);
@@ -665,11 +708,11 @@
 		kdmModelDrawer.drawGraph(edgesAttrComposite, nodesAttrComposite, outputDir, "testAttrComposite.dotty");
 		kdmModelDrawer.drawGraph(edgesPComposite, nodesPComposite, outputDir, "testPComposite.dotty");
 
-		return {nodesAttr: nodesAttr, edgesAttr: edgesAttr, nodesP: nodesP, edgesP: edgesP, nodesAttrComposite: nodesAttrComposite, edgesAttrComposite: edgesAttrComposite, nodesPComposite: nodesPComposite, edgesPComposite: edgesPComposite};
+		return {nodesAttr: nodesAttr, edgesAttr: edgesAttr, nodesP: nodesP, edgesP: edgesP, nodesPara: nodesPara, edgesPara: edgesPara, nodesAttrComposite: nodesAttrComposite, edgesAttrComposite: edgesAttrComposite, nodesPComposite: nodesPComposite, edgesPComposite: edgesPComposite};
 
 	}
 
-	function constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits){
+	function constructAccessGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters){
 
 
 		var edges = []; // call relation
@@ -705,7 +748,6 @@
 				// console.log("methodUnitAbove");
 				var methodBlockUnit = methodUnit.BlockUnit;
 				// console.log(methodBlockUnit);
-				// TODO: should care about no ActionElement in blockUnit?
 				// if (methodBlockUnit.length > 0) {
 					var methodActionElementsOut = methodUnit.BlockUnit.ActionElements;
 					for (var z in methodActionElementsOut) {
@@ -741,6 +783,20 @@
 
 									if (!targetClassUnit || !targetClassUnit.isWithinBoundary) {
 										continue;
+									}
+
+									if (targetStorableUnit.type == undefined) {
+										continue;
+									}
+									var XMIClassStorableUnitType = jp.query(xmiString, convertToJsonPath(targetStorableUnit.type));
+					        var targetStorableType = null;
+									// console.log('StorableUnit');
+									// console.log(XMIClassStorableUnitType[0]['$']['UUID']);
+									for (var j in classUnits) {
+										var classUnitCandidate = classUnits[j];
+										if (classUnitCandidate.UUID == XMIClassStorableUnitType[0]['$']['UUID']) {
+											targetStorableType = classUnitCandidate;
+										}
 									}
 
 									var compositeClassUnitUUID = dicCompositeClass[classUnit.UUID];
@@ -811,6 +867,37 @@
 										continue;
 									}
 
+									if (!(dicMethodParameters.hasOwnProperty(methodUnit.UUID))) {
+										var methodParameters = methodUnit.Signature.parameterUnits;
+										var name = null;
+										var dicParameters = [];
+										for (var l in methodParameters) {
+											if (methodParameters[l].hasOwnProperty('name')) {
+												name = methodParameters[l].name;
+											}
+											var type = jp.query(xmiString, convertToJsonPath(methodParameters[l].type));
+											var typeClass = null;
+											for (var j in classUnits) {
+												var classUnitCandidate = classUnits[j];
+												if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+													typeClass = classUnitCandidate;
+												}
+											}
+											if (!typeClass) {
+												continue;
+											}
+											var parameter = {
+												Name: name,
+												// kind: methodParameters[l].kind,
+												Type: typeClass.name,
+												TypeUUID: typeClass.UUID,
+											};
+											dicParameters.push(parameter);
+										}
+										dicMethodParameters[methodUnit.UUID] = dicParameters;
+									}
+
+
 
 									var startNode = nodesByName[methodUnit.UUID];
 									if(!startNode){
@@ -821,7 +908,8 @@
 													name: classUnit.name,
 													classUnit: classUnit.UUID
 												},
-												UUID: methodUnit.UUID
+												UUID: methodUnit.UUID,
+												methodName: methodUnit.Signature.name,
 					//							isWithinBoundary: targetClassUnit.isWithinBoundary
 											};
 										nodes.push(startNode);
@@ -832,12 +920,15 @@
 									if(!endNode){
 										endNode = {
 												name: targetClassUnit.name+":"+targetStorableUnit.name,
-												// isResponse: targetMethodUnit.isResponse, //TODO isResponse?
+												// isResponse: targetMethodUnit.isResponse,
 												component: {
 													name: targetClassUnit.name,
 													classUnit: targetClassUnit.UUID,
 												},
-												UUID: targetStorableUnit.UUID
+												UUID: targetStorableUnit.UUID,
+												attributeName: targetStorableUnit.name,
+												attributeType: targetStorableType.name,
+												attributeTypeUUID: targetStorableType.UUID,
 					//							isWithinBoundary: targetClassUnit.isWithinBoundary
 											};
 										nodes.push(endNode);
@@ -860,7 +951,7 @@
 		return {nodes: nodes, edges: edges, nodesComposite: nodesComposite, edgesComposite: edgesComposite};
 	}
 
-	function constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits){
+	function constructCallGraph(classUnits, topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicCompositeClass, compositeClassUnits, dicMethodParameters){
 
 		//the edges are now defined between methods...
 
@@ -1005,6 +1096,40 @@
 					continue;
 				}
 
+        if (!(dicMethodParameters.hasOwnProperty(callMethodUnit.UUID))) {
+					var methodParameters = callMethodUnit.Signature.parameterUnits;
+					var name = null;
+					var dicParameters = [];
+					for (var l in methodParameters) {
+						if (methodParameters[l].hasOwnProperty('name')) {
+							name = methodParameters[l].name;
+						}
+						var type = jp.query(xmiString, convertToJsonPath(methodParameters[l].type));
+						// console.log("type");
+						// console.log(type);
+						var typeClass = null;
+						for (var j in classUnits) {
+							var classUnitCandidate = classUnits[j];
+							if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+								typeClass = classUnitCandidate;
+							}
+						}
+						if (!typeClass) {
+							continue;
+						}
+						// console.log("typeClass");
+						// console.log(typeClass);
+						var parameter = {
+							Name: name,
+							// kind: methodParameters[l].kind,
+							Type: typeClass.name,
+							TypeUUID: typeClass.UUID,
+						};
+						dicParameters.push(parameter);
+					}
+					dicMethodParameters[callMethodUnit.UUID] = dicParameters;
+				}
+
 				var startNode = nodesByName[callMethodUnit.UUID];
 				if(!startNode){
 					startNode = {
@@ -1015,7 +1140,8 @@
 								classUnit: callClassUnit.UUID,
 								// methodNumber: callClassUnit.MethodUnits.length
 							},
-							UUID: callMethodUnit.UUID
+							UUID: callMethodUnit.UUID,
+							methodName: callMethodUnit.Signature.name,
 
 //							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
@@ -1033,7 +1159,8 @@
 								classUnit: targetClassUnit.UUID,
 								// methodNumber: callClassUnit.MethodUnits.length
 							},
-							UUID: targetMethodUnit.UUID
+							UUID: targetMethodUnit.UUID,
+							methodName: targetMethodUnit.Signature.name,
 
 //							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};

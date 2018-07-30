@@ -1,7 +1,7 @@
 if repoID
   -var repID = repoID
 else
-   -var repID = repoId 
+  -var repID = repoId
 
 //-var repID = #{repoID}
 
@@ -10,39 +10,39 @@ div
 div
 - var pageIndex = (currentPage - 1)*(pageSize) + 1
 
-                if pageR
-                  each item in pageR
-                    div 
-                    - console.log("Checking index "+ item.index)
-                    div
-                    a.list-group-item.row#model-title(href="queryModelInfo?model_id="+item._id)
-                        .col-sm-2 #{pageIndex++}
-                        .col-sm-8 #{item.Name}
-                        .col-sm-2 #{item.creationTime}
+    if pageR
+      each item in pageR
+        div
+        - console.log("Checking index "+ item.index)
+        div
+        a.list-group-item.row.model-title(href="queryModelInfo?model_id="+item._id)
+            .col-sm-2 #{pageIndex++}
+            .col-sm-8 #{item.Name}
+            .col-sm-2 #{item.creationTime}
                   
-              if pageCount > 1
-                        ul.pagination
-                                if currentPage > 1
-                                 li
-                                  a(href='#'+1 onclick="pagination_call('#{repID}','1')")  &laquo;
-                                - var x = 1
-                                if currentPage > 5
-                                 - x = x + (currentPage - 4)
-                                if (x !== 1)
-                                   li.disabled
-                                      a(href='#') ...
-                                - for (x; x <= pageCount; x++)
-                                   if( currentPage == x)
-                                    li.active
-                                       span.sr_only
-                                           = currentPage
-                                   else
-                                     li
-                                      a(href="#"+x onclick="pagination_call('#{repID}','#{x}')")
-                                        = x
+    if pageCount > 1
+        ul.pagination
+            if currentPage > 1
+              li
+                a(href='#'+1 onclick="pagination_call('#{repID}','1')")  &laquo;
+            - var x = 1
+            if currentPage > 5
+             - x = x + (currentPage - 4)
+            if (x !== 1)
+               li.disabled
+                  a(href='#') ...
+            - for (x; x <= pageCount; x++)
+                if( currentPage == x)
+                    li.active
+                        span.sr_only
+                            = currentPage
+                else
+                    li
+                        a(href="#"+x onclick="pagination_call('#{repID}','#{x}')")
+                            = x
 
-                                  if currentPage != pageCount
-                                  li
-                                    a(href= "#"+pageCount onclick="pagination_call('#{repID}','#{Math.floor(pageCount)}')") &raquo;
+              if currentPage != pageCount
+              li
+                a(href= "#"+pageCount onclick="pagination_call('#{repID}','#{Math.floor(pageCount)}')") &raquo;
 
-                                    
+

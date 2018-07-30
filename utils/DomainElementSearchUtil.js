@@ -7,6 +7,14 @@
 	function matchComponent(activityName, DomainElementsBySN){
 		//flatout the domainModel
 		
+		if(!activityName){
+			
+			return {
+				component: null,
+				method: null
+			}
+		}
+		
 		var domainElementStrings = [];
 		var domainElementsByString = {};
 		for(var i in DomainElementsBySN){

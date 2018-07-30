@@ -32,10 +32,11 @@ library(lattice)
 
 #for draw the density plots
 
-library(ggplot2)
+#library(ggplot2)
 library(data.table)
 library(gridExtra)
 sink(reportPath)
+
 
 useCaseData <- read.csv(dataUrl, header=TRUE)
 aprioriData <- read.csv(apriori, header=TRUE)
@@ -417,7 +418,7 @@ for(i in 1:nfold){
 	print('apriori testing set predication')
 	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
 	#aprioriMeans = cbind(Simple_UC=5, Average_UC=15, Complex_UC=20)
-	apriori.predict = cbind(as.matrix(testDataX) %*% t(aprioriMeans), testData$norm_UUCW)
+	apriori.predict = cbind(as.matrix(testDataX) %*% t(aprioriMeans), testData$fold_test_norm_UUCW)
 	colnames(apriori.predict) = c('predicted', "actual")
 	print(apriori.predict)
 	apriori.mre = apply(apriori.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -437,7 +438,7 @@ for(i in 1:nfold){
 	print('original use case weights testing set predication')
 	testDataDesignMatrix = testData[c("Simple_UC","Average_UC", "Complex_UC")]
 	originalWeights = cbind(Simple_UC=5, Average_UC=10, Complex_UC=15)
-	original.predict = cbind(as.matrix(testDataX) %*% t(originalWeights), testData$norm_UUCW)
+	original.predict = cbind(as.matrix(testDataX) %*% t(originalWeights), testData$fold_test_norm_UUCW)
 	colnames(original.predict) = c('predicted', "actual")
 	print(original.predict)
 	original.mre = apply(original.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -457,7 +458,7 @@ for(i in 1:nfold){
 	print('regression testing set predication')
 	#regression.m = lm(norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainData)
 	#regression.m <- lm(Norm_UUCW ~ Simple_UC + Average_UC + Complex_UC - 1, data=trainDataX)
-	regression.predict = cbind(predicted=as.matrix(testDataX) %*% t(foldRegressionCoefs), actual=testData$norm_UUCW)
+	regression.predict = cbind(predicted=as.matrix(testDataX) %*% t(foldRegressionCoefs), actual=testData$fold_test_norm_UUCW)
 	print(regression.predict)
 	regression.mre = apply(regression.predict, 1, function(x) abs(x[1] - x[2])/x[2])
 	regression.mmre = mean(regression.mre)

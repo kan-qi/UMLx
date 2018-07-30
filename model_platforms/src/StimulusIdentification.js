@@ -14,7 +14,7 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var codeAnalysis = require("./codeAnalysis.js");
+	var codeAnalysis = require("./CodeAnalysis.js");
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
@@ -32,23 +32,23 @@
 		for(var i in controlFlowGraph.nodes){
 //			var component = components[i];
 //			var classUnits = component.classUnits;
-			var node = controlFlowGraph.nodes[i];		
+			var node = controlFlowGraph.nodes[i];
+			node.type = "node";
 			if(node.isResponse){
+							node.tye = "response";
 							//create a stimulus nodes for the activity.
-							var stimulus = {
-									Type: "Stimulus",
-									Name: "stl#"+node.Name,
-									_id: node._id+"_STL",
+							var stimulusNode = {
+									type: "stimulus",
+									name: "stl#"+node.name,
+									uuid: node.uuid+"_STL",
 //									Attachment: XMIActivity,
-									Stimulus: true,
-									trigger: "stimulus",
-									OutScope: false
+									trigger: "stimulus"
 							}
 							
-							node.trigger = stimulus._id;
+							node.trigger = stimulusNode._id;
 							
-							controlFlowGraph.nodes.push(stimulus);
-							controlFlowGraph.edges.push({start: stimulus, end: node});
+							controlFlowGraph.nodes.push(stimulusNode);
+							controlFlowGraph.edges.push({start: stimulusNode, end: node});
 					}
 				}
 	}

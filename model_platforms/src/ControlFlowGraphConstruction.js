@@ -15,7 +15,7 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var codeAnalysis = require("./codeAnalysis.js");
+	var codeAnalysis = require("./CodeAnalysis.js");
 	var kdmModelUtils = require("./KDMModelUtils.js");
 	var kdmModelDrawer = require("./KDMModelDrawer.js");
 
@@ -114,18 +114,18 @@
 				var node = nodesByID[targetMethodUnit.UUID];
 				if(!node){
 					node = {
-							Name: targetComponent.name+"_"+targetMethodUnit.Signature.name,
+							name: targetComponent.name+"_"+targetMethodUnit.Signature.name,
 							isResponse: targetMethodUnit.isResponse,
-							Component: {
+							component: {
 								uuid: targetComponent.uuid
 							},
 							trigger: action,
-							_id: targetMethodUnit.UUID
+							uuid: targetMethodUnit.UUID
 //							classUnit: targetClassUnit
 //							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 					nodes.push(node);
-					nodesByID[node._id] = node;
+					nodesByID[node.uuid] = node;
 				}
 
 //				var end = targetClassUnit.name;
@@ -139,9 +139,11 @@
 			}
 		}
 		
+		console.log("edges");
+		console.log(edges);
 		
 		
-		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "kdm_cfg_graph.dotty")
+		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "kdm_cfg_graph.dotty");
 		
 		return {nodes: nodes, edges: edges};
 	}
@@ -211,13 +213,19 @@
 //			console.log(actionElement);
 //			var calls = actionElement.Calls;
 		
+		console.log("xmi string");
+		console.log(xmiString);
+		
 			var calls = findCallsForMethod(methodUnit);
 			
-			console.log("output calls");
-			console.log(calls);
+//			console.log("output calls");
+//			console.log(calls);
 
 			for(var i in calls){
 			var call = calls[i];
+			
+			console.log("output call");
+			console.log(call);
 			
 			var callXMIActionElement = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.from))[0];
 			var targetXMIMethodUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.to))[0];

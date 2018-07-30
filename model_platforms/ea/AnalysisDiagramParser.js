@@ -158,6 +158,9 @@
 		for(var i in extensionUseCase.useCaseElementsByID){
 			var extensionElementByUseCase = extensionUseCase.useCaseElementsByID[i];
 			
+			if(!extensionElementByUseCase){
+				continue;
+			}
 			
 			var XMIInstanceSpecification = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+extensionElementByUseCase['$']['xmi:idref']+'\')]')[0];
 //			XMIInstanceSpecifications = XMIInstanceSpecifications.concat(jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]'));
@@ -197,6 +200,10 @@
 		console.log("construct the graph based on the associations");
 		for(var i in extensionUseCase.useCaseAssociationsByID){
 			var extensionAssociationByUseCase = extensionUseCase.useCaseAssociationsByID[i];
+			
+			if(!extensionAssociationByUseCase || !extensionAssociationByUseCase.start || !extensionAssociationByUseCase.end){
+				continue;
+			}
 			
 //			var XMIInstanceSpecification = XMIInstanceSpecificationsByID[i];
 //			console.log(XMIUseCase);

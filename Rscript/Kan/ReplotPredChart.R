@@ -63,14 +63,14 @@ print("melt avg preds info")
 print(meltAvgPreds)
 svg(paste(outputPath,"use_case_weight_calibration_err_plot_pred_50.svg", sep="/"), width=2, height=4)
 ggplot(meltAvgPreds) + theme_bw() + 
-		geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (x%)") +
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Error (x%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 print("melt avg preds info as lines and smooth function")
 svg(paste(outputPath,"use_case_weight_calibration_err_plot_lines_smooth_pred_50.svg", sep="/"), width=2, height=4)
 ggplot(meltAvgPreds) +theme_bw()+
 		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
-		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (x%)") +
+		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Error (x%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 print("melt avg preds info as dots and smooth function")
@@ -78,7 +78,7 @@ svg(paste(outputPath,"use_case_weight_calibration_err_plot_dots_smooth_pred_50.s
 ggplot(meltAvgPreds) +theme_bw()+
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
 		scale_shape_manual(values=c(0,1,2,3))+
-		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (x%)") +
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Error (x%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 #also have linear regression on sloc and normalized effort.
