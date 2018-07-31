@@ -445,11 +445,7 @@
 						RScriptExec.runRScript(command,function(result2){
 							
 							if (!result2) {
-								console.log("=========no result2==========");
-								if(callbackfunc){
-									callbackfunc(false);
-								}
-								return;
+								console.log("=========output statistics error==========");
 							}
 							
 							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
@@ -458,25 +454,19 @@
 							RScriptExec.runRScript(command,function(result3){
 								if (!result3) {
 									if(callbackfunc){
-										console.log("=========no result3==========");
-										callbackfunc(false);
+										console.log("=========output statistics error==========");
 									}
-									return;
 								}
 								if(callbackfunc){
 									callbackfunc(model);
 								}
 							});
 						});
-						
-//						 if(callbackfunc){
-////								console.log(repoEvaluationsForUseCaseStr);
-//						    	callbackfunc(model);
-//							}
 					}
 					else {
 						if(callbackfunc){
-							callbackfunc(false);
+							console.log("=========output statistics save error==========");
+							callbackfunc(model);
 						}
 					}
 					
