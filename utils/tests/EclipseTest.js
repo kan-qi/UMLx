@@ -39,6 +39,37 @@ var testProject31 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 
 var testProject32 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\CaseStudies\\carbondata_archive\\carbondata";
 
+var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\all-apps";
+var testProject34 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\alltheapps";
+var testProject35 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\btchatprotobuf";
+var testProject36 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\cuffbackgroundservice";
+var testProject37 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\dialer";
+var testProject38 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\incallui";
+var testProject39 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\incomingcallscreen";
+var testProject40 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\integrated-nav-bar";
+var testProject41 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\launcher-3";
+var testProject42 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\lockscreen";
+
+var testProject43 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\musicplayer";
+var testProject44 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\musicplayerwithlockscreencom";
+var testProject45 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\navigationbar";
+var testProject46 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\old_dialer";
+var testProject47 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\old_rufusconnect";
+
+var testProject48 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufus_connect_ios";
+var testProject49 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufusconnectandroid";
+var testProject50 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufuscuffbackgroundservices";
+var testProject51 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufuscufflauncher";
+var testProject52 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufuscuffprotocolbuffers";
+var testProject53 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufuslabsupdateservice";
+var testProject54 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufuslocation";
+var testProject55 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufusmms";
+var testProject56 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\serviceuser";
+var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\weather-widget";
+
+
+
+
 var openSourceProjects = [
 //	testProject14, 
 //	testProject15, 
@@ -61,6 +92,64 @@ var openSourceProjects = [
 	testProject30
 	];
 
+
+var rufuslabsProjects = [
+//	testProject33,
+//	testProject34,
+//	testProject35, 
+	
+//	testProject36, 
+//	testProject37, 
+//	testProject38, 
+//	testProject39, 
+//	testProject40,
+//	
+//	testProject41, 
+//	testProject42,
+//	testProject43, 
+//	testProject44,
+//	testProject45,
+//	testProject46,
+//	testProject47
+	
+//	testProject48, 
+//	testProject49,
+//	testProject50, 
+//	testProject51,
+//	testProject52,
+//	testProject53,
+	testProject54,
+	testProject55,
+	testProject56,
+	testProject57
+	];
+
+
+var fs = require('fs');
+
+var deleteFolderRecorsive = function(dir, rmSelf) {
+    var files;
+    rmSelf = (rmSelf === undefined) ? true : rmSelf;
+    dir = dir + "/";
+    try { files = fs.readdirSync(dir); } catch (e) { console.log("!Oops, directory not exist."); return; }
+    if (files.length > 0) {
+        files.forEach(function(x, i) {
+            if (fs.statSync(dir + x).isDirectory()) {
+            	deleteFolderRecorsive(dir + x);
+            } else {
+                fs.unlinkSync(dir + x);
+            }
+        });
+    }
+    if (rmSelf) {
+        // check if user want to delete the directory ir just the files in this directory
+        fs.rmdirSync(dir);
+    }
+}
+
+//var currentWorkSpace = "C:\\Users\\flyqk\\workspace\\.metadata"
+//deleteFolderRecorsive(currentWorkSpace);
+
 //for(var i in openSourceProjects){
 //	EclipseUtil.generateKDMModel2(openSourceProjects[i], function(tasks){
 //		console.log("parsed tasks");
@@ -68,9 +157,16 @@ var openSourceProjects = [
 //	});
 //}
 
-EclipseUtil.generateKDMModel(testProject32, function(tasks){
+for(var i in rufuslabsProjects){
+EclipseUtil.generateKDMModel(rufuslabsProjects[i], function(tasks){
 	console.log("parsed tasks");
 	console.log(tasks);
 });
+}
+
+//EclipseUtil.generateKDMModel(testProject32, function(tasks){
+//	console.log("parsed tasks");
+//	console.log(tasks);
+//});
 
 

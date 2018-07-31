@@ -1319,6 +1319,16 @@ $(document).ready(function () {
     $(document).on('click', '#reanalyse_repo', re_analyse_repo);
 
     $(document).on('click', '#EffortPH', function(){drawNewHighCharts("Effort",$('#EffortPH').text())});
+    
+    $(document).on('click', '#EffortDev', function(){drawNewHighCharts("useCaseEffortProjectManager",$('#EffortDev').text())});
+    
+    $(document).on('click', '#EffortPM', function(){drawNewHighCharts("useCaseEffortDeveloper",$('#EffortPM').text())});
+    
+    $(document).on('click', '#EffortSyn', function(){drawNewHighCharts("synthesizedEffort",$('#EffortSyn').text())});
+    
+    $(document).on('click', '#Business', function(){drawNewHighCharts("BusinessValue",$('#Business').text())});
+    
+    $(document).on('click', '#EffortBV', function(){drawNewHighCharts("EffortBVRatio",$('#EffortBV').text())}); 
 
     $(document).on('click', '#SizeMeasurement', function(){drawNewHighCharts("SizeMeasurement",$('#SizeMeasurement').text())});
 
