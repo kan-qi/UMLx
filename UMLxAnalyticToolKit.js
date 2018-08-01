@@ -26,7 +26,7 @@ var outputDir = process.argv[3];
 //}
 
 
-UMLxAnalyticToolKit.analyseSrc(inputDir, outputDir, function(){
+UMLxAnalyticToolKitCore.analyseSrc(inputDir, outputDir, function(){
 	
 	console.log('analysis finished!');
 	  
