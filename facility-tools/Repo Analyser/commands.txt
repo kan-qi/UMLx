@@ -1,0 +1,10 @@
+./tools/scripts/IterationScript.sh "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Rufuslabs"
+
+./tools/scripts/CountingScript.sh "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Rufuslabs"
+
+cmd dir /s /b /a > filelist.txt
+
+1. create a list of projects in the repositories
+cmd dir /s /b /a
+
+for /f "tokens=*" %a in (repsitories.txt) do (echo "C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Repositories\rufus_labs"%a) >> output.txt
