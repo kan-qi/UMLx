@@ -28,13 +28,13 @@ var testProject56 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\weather-widget";
 
 var rufuslabsProjects = [
-//	testProject33,
-//	testProject34,
-//	testProject35, 
-	
-//	testProject36, 
-//	testProject37, 
-//	testProject38, 
+	testProject33, // generated
+//	testProject34, // not exists
+//	testProject35, // not exists 
+//		
+//	testProject36, // not exists 
+//	testProject37, // generated
+//	testProject38, // not exists
 //	testProject39, 
 //	testProject40,
 //	
@@ -44,22 +44,24 @@ var rufuslabsProjects = [
 //	testProject44,
 //	testProject45,
 //	testProject46,
-//	testProject47
-	
+//	testProject47,
+//	
 //	testProject48, 
 //	testProject49,
 //	testProject50, 
 //	testProject51,
 //	testProject52,
 //	testProject53,
-	testProject54,
-	testProject55,
-	testProject56,
-	testProject57
+//	testProject54,
+//	testProject55,
+//	testProject56,
+//	testProject57
 	];
 
 var fs = require('fs');
 var exec = require('child_process').exec;
+
+var UMLxAnalyticToolKit = require("../../utils/UMLxAnalyticToolKitCore.js");
 
 function analyseRepo(){
 	
@@ -77,17 +79,14 @@ function analyseRepo(){
         	}
         	else{
             //to generate svg file.
-            var command = 'node UMLxAnalyticToolKit.js "' + inputFile + '" "'+outputFolder+'"';
-        	console.log(command);
-        	var child = exec(command, function(error, stdout, stderr) {
-        		if (error !== null) {
-        			console.log('exec error: ' + error);
-        		}
-        		console.log('The file was saved!');
+        	UMLxAnalyticToolKit.analyseSrc(inputFile, outputFolder, function(){
+        		
+        		console.log('analysis finished!');
         		
         		resolve();
         		  
         	});
+        	
         	}
       	  });
         	
@@ -112,6 +111,67 @@ function analyseRepo(){
     });
 	
 }
+
+//function analyseRepo(){
+//	
+//	  //use promise to construct the repo objects
+//  function analyseProject(projectPath){
+//      return new Promise((resolve, reject) => {
+//      		
+//      	var outputFolder = projectPath;
+//      	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+//      	var logFile = projectPath+"/src_analysis.log"
+//      	
+//      	var access = fs.createWriteStream(logFile);
+//      	
+//      	fs.exists(inputFile, (exists) => {
+//      	if(!exists){
+//      		console.log(inputFile+" doesn't exist.");
+//      		resolve();
+//      	}
+//      	else{
+//          //to generate svg file.
+//          var command = 'node --max_old_space_size=4096 UMLxAnalyticToolKit.js "' + inputFile + '" "'+outputFolder+'"';
+//      	console.log(command);
+//      	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+//      		if (error !== null) {
+//      			console.log('exec error: ' + error);
+//      		}
+//      		console.log('The file was saved!');
+//      		
+//      		resolve();
+//      		  
+//      	});
+//      	
+//      	child.stdout.write = child.stderr.write = access.write.bind(access);
+//      	
+//      	child.stdout.on('data', function(data) {
+//      	    console.log(data); 
+//      	});
+//      	}
+//    	  });
+//      	
+//      });
+//  }
+//  
+//  return Promise.all(rufuslabsProjects.map(projectPath=>{
+//      return analyseProject(projectPath);
+//  })).then(
+//      function(){
+//          return new Promise((resolve, reject) => {
+//              setTimeout(function(){
+//              	console.log("analysis finished");
+//                  resolve();
+//
+//              }, 0);
+//          });
+//      }
+//
+//  ).catch(function(err){
+//      console.log(err);
+//  });
+//	
+//}
 
 analyseRepo();
 
