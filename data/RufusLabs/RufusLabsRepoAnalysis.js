@@ -1,4 +1,14 @@
-
+/*
+ * case study steps:
+ * 
+ * 1. create a list of projects:
+ * 		dir /b /a > repo.txt
+ * 2. scan the projects in repo
+ * 		use repo scan files for each project and establish a repo record
+ * 3. open repo browser to select the files that should be include in the list
+ * 4. calculate sloc for each repo
+ * 
+ */
 var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\all-apps";
 var testProject34 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\alltheapps";
 var testProject35 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\btchatprotobuf";
@@ -173,6 +183,77 @@ function analyseRepo(){
 //	
 //}
 
-analyseRepo();
 
+function scanRepo(repoListPath, repoRecordPath){
+	
+      //to generate svg file.
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+    var command = 'java -classpath '+classPath+' repo.AnalysisKit "scan-repo" "'+repoListPath+'" "'+repoRecordPath+'"';
+  	console.log(command);
+  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+  		if (error !== null) {
+  			console.log('exec error: ' + error);
+  		}
+  		console.log('The file was saved!');
+  		  
+  	});
+  	
+  	child.stdout.on('data', function(data) {
+  	    console.log(data); 
+  	});
+  	
+}
+
+function selectFiles(repoRecordPath){
+	 //to generate svg file.
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+    var command = 'java -classpath '+classPath+' repo.AnalysisKit "select-files" "'+repoRecordPath+'"';
+  	console.log(command);
+  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+  		if (error !== null) {
+  			console.log('exec error: ' + error);
+  		}
+  		console.log('The file was saved!');
+  		  
+  	});
+  	
+  	child.stdout.on('data', function(data) {
+  	    console.log(data); 
+  	});
+}
+
+function analyseSloc(repoRecordPath){
+	 //to generate svg file.
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+   var command = 'java -classpath '+classPath+' repo.AnalysisKit "analyse-sloc" "'+repoRecordPath+'"';
+ 	console.log(command);
+ 	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+ 		if (error !== null) {
+ 			console.log('exec error: ' + error);
+ 		}
+ 		console.log('The file was saved!');
+ 		  
+ 	});
+ 	
+ 	child.stdout.on('data', function(data) {
+ 	    console.log(data); 
+ 	});
+}
+
+var repoListPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Rufuslabs\\repositories.txt";
+//var repoRecordPath = ".\\data\\RufusLabs\\sloc";
+var repoRecordPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\RufusLabs\\sloc";
+
+//1. create a list of projects:
+ 		
+//2. scan the projects in repo
+//scanRepo(repoListPath, repoRecordPath);
+
+//3. open repo browser to select the files that should be include in the list
+//selectFiles(repoRecordPath);
+
+//4. calculate sloc for each repo
+analyseSloc(repoRecordPath);
+
+//analyseRepo();
 

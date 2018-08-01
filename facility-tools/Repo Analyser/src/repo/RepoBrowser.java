@@ -28,20 +28,19 @@ public class RepoBrowser extends JFrame{
 	
 	private FileListModel attribute;
 	private RepositoryTreePanel attribute2;
-	public static String projectRoot = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser";
 //	public static String projectPath = projectRoot+"\\tools\\Projects\\UMLCounter577";
 //	public static String projectRepoPath = projectPath+"\\repo_UML_Counter_Mac_Windows.txt";
-	public static String projectPath = projectRoot+"\\tools\\Projects\\rufus_labs";
+	public static String projectPath = Config.projectRoot+"\\tools\\Projects\\rufus_labs";
 	public static String projectRepoPath = projectPath+"\\repositories.txt";
 //	public static String projectPath = projectRoot+"\\tools\\Projects\\ResilientAgileSrcCount";
 //	public static String projectRepoPath = projectPath+"\\repo_resilient_agile.txt";
 	public static String projectTempPath = projectPath+"\\temp";
 //	public static String projectRepoListFilePath = projectTempPath+"\\filelist.txt";
-	public static String projectRepoListFilePath = projectTempPath+"\\repositories.txt";
+//	public static String projectRepoListFilePath = projectTempPath+"\\repositories.txt";
 	private FileListModel fileListModel;
 	private RepositoryTreePanel newContentPane;
 	
-	public RepoBrowser(String projectPath){
+	public RepoBrowser(String workpath){
 		
 		
 		//Create and set up the window.
@@ -50,6 +49,10 @@ public class RepoBrowser extends JFrame{
  
         //Create and set up the content pane.
 //        fileListModel = new FileListModel(filelist);
+        
+        projectPath = workpath;
+        projectRepoPath = projectPath + "\\repositories.txt";
+        projectTempPath = projectPath + "\\temp";
         
         File projectFolder = new File(projectPath);
         if(!projectFolder.exists()){

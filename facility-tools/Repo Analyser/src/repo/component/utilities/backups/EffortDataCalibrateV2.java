@@ -1,4 +1,4 @@
-package repo.component.utilities;
+package repo.component.utilities.backups;
 
 import java.awt.Desktop;
 import java.io.BufferedReader;
@@ -12,27 +12,26 @@ import java.util.List;
 
 import repo.RepoBrowser;
 
-public class EffortDataCalibrateV3 {
+public class EffortDataCalibrateV2 {
 	
 	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWithout0";
 //	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWith0";
-//	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWidthNormalizedDataWithout0";
+//	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWidthNormalizedDataWithout0TwoPhases";
 //	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWithNormalizedDataWith0";
 //	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWidthNormalizedDataWithRidgeRegression";
 	static String rawDataFilePath = workingDirPath+"\\EffortDataV0.2.txt";
+//	static String rawDataFilePath = workingDirPath+"\\EffortDataV0.3.txt";
 	
 	static String EUCPEffortDataPath = workingDirPath+"\\EUCPEffortData.txt";
 	static String EXUCPEffortDataPath = workingDirPath+"\\EXUCPEffortData.txt";
 	static String AFPCEffortDataPath = workingDirPath+"\\AFPCEffortData.txt";
 	
 	public static void main(String... args) {
+
 		File workingDir = new File(workingDirPath);
 		if(!workingDir.exists() || !workingDir.isDirectory()){
 			workingDir.mkdir();
 		}
-
-
-//		System.out.println(workingDirPath);
 		
 		File rawDataFile = new File(rawDataFilePath);
 		if(! rawDataFile.exists()){
@@ -84,12 +83,7 @@ public class EffortDataCalibrateV3 {
 			
 //			String workingDir = RepoBrowser.projectTempPath;
 //			String outputDir = workingDir + "\\resultWithout0";
-			String outputDir = workingDirPath;
-			if(args.length > 0){
-				outputDir = args[0];
-				System.out.println(outputDir);
-			}
-			String command = "\"C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript\" \""+RepoBrowser.projectRoot+"\\tools\\Rscript\\EffortCalibrationV1.1.R\" \"" + workingDirPath +"\" \""+ outputDir +"\"";
+			String command = "\"C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript\" .\\tools\\Rscript\\EffortCalibration.R \"" + workingDirPath +"\" \""+ workingDirPath +"\"";
 //			String command = "\"C:\\Program Files\\R\\R-3.3.2\\bin\\Rscript\" .\\tools\\Rscript\\EffortCalibrationWithRidgeRegression.R \"" + workingDirPath +"\" \""+ workingDirPath +"\"";
 //			String command = "\"C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript\" .\\tools\\Rscript\\EffortCalibrationV1.0.R \"" + workingDirPath +"\" \""+ workingDirPath +"\"";
 
@@ -108,8 +102,8 @@ public class EffortDataCalibrateV3 {
 			
 //			Runtime.getRuntime().exec("start Z:\\Documents\\Research Space\\Experiment projects\\Repo Analyser\\tools\\temp\\Rplots.pdf");
 //			Desktop.getDesktop().open(new File(workingDirPath+"\\effort_regression_plot.pdf"));
-//			Desktop.getDesktop().open(new File(workingDirPath+"\\effort_regression_summary.txt"));
-//			Desktop.getDesktop().open(new File(workingDirPath+"\\effort_regression_plot.png"));
+			Desktop.getDesktop().open(new File(workingDirPath+"\\effort_regression_summary.txt"));
+			Desktop.getDesktop().open(new File(workingDirPath+"\\effort_regression_plot.png"));
 			
 			
 		} catch (IOException | InterruptedException e) {

@@ -1,6 +1,5 @@
-package repo.component.utilities;
+package repo.component.utilities.backups;
 
-import java.awt.Desktop;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,12 +11,12 @@ import java.util.List;
 
 import repo.RepoBrowser;
 
-public class NormalizedDataCalibrateV2 {
+public class NormalizedDataCalibrate {
 	
-	static String rawDataFilePath = RepoBrowser.projectPath+"\\NormalizedEffortData.txt";
-	static String EUCPEffortDataPath = RepoBrowser.projectTempPath+"\\EUCPEffortData.txt";
-	static String EXUCPEffortDataPath = RepoBrowser.projectTempPath+"\\EXUCPEffortData.txt";
-	static String AFPCEffortDataPath = RepoBrowser.projectTempPath+"\\AFPCEffortData.txt";
+	static String rawDataFilePath = "Tools\\Data\\"+"NormalizedEffortData.txt";
+	static String EUCPEffortDataPath = "Tools\\Temp\\"+"EUCPEffortData.txt";
+	static String EXUCPEffortDataPath = "Tools\\Temp\\"+"EXUCPEffortData.txt";
+	static String AFPCEffortDataPath = "Tools\\Temp\\"+"AFPCEffortData.txt";
 	
 	public static void main(String... args) {
 		File rawDataFile = new File(rawDataFilePath);
@@ -64,29 +63,17 @@ public class NormalizedDataCalibrateV2 {
 				writer2.write(data[i][2]+"\t"+data[i][4]+"\tPH\n");
 				writer2.write(data[i][2]+"\t"+data[i][5]+"\tPH_norm\n");
 				writer3.write(data[i][3]+"\t"+data[i][4]+"\tPH\n");
-				writer3.write(data[i][3]+"\t"+data[i][5]+"\tPH_norm\n");
+				writer3.write(data[i][3]+"\t"+data[i][6]+"\tPH_norm\n");
 			}
 			
 			writer1.close();
 			writer2.close();
 			writer3.close();
 			
-			String workingDir = RepoBrowser.projectTempPath;
-			String command = "\"C:\\Program Files\\R\\R-3.3.2\\bin\\Rscript\" .\\tools\\Rscript\\NormalizedEffortCalibrationV1.1.R \"" + RepoBrowser.projectTempPath +"\" \""+ workingDir +"\"";
-//			String command = "\"C:\\Program Files\\R\\R-3.3.2\\bin\\Rscript\" .\\tools\\Rscript\\NormalizedEffortCalibration.R \"" + RepoBrowser.projectTempPath +"\" \""+ workingDir +"\"";
-
-			System.out.println(command);
-			Process p = Runtime.getRuntime().exec(command); 
-			p.waitFor();
-//			Path currentRelativePath = Paths.get("");
-//			String s = currentRelativePath.toAbsolutePath().toString();
-//			System.out.println("Current relative path is: " + s);
-			
-//			Runtime.getRuntime().exec("start Z:\\Documents\\Research Space\\Experiment projects\\Repo Analyser\\tools\\temp\\Rplots.pdf");
-			Desktop.getDesktop().open(new File(workingDir+"\\normalized_regression_plot.png"));
 			
 			
-		} catch (IOException | InterruptedException e) {
+			
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		

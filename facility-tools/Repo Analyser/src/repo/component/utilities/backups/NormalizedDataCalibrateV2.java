@@ -1,4 +1,4 @@
-package repo.component.utilities;
+package repo.component.utilities.backups;
 
 import java.awt.Desktop;
 import java.io.BufferedReader;
@@ -12,27 +12,14 @@ import java.util.List;
 
 import repo.RepoBrowser;
 
-public class EffortDataCalibrateV2 {
+public class NormalizedDataCalibrateV2 {
 	
-	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWithout0";
-//	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWith0";
-//	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWidthNormalizedDataWithout0TwoPhases";
-//	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWithNormalizedDataWith0";
-//	static String workingDirPath = RepoBrowser.projectTempPath+"\\resultWidthNormalizedDataWithRidgeRegression";
-	static String rawDataFilePath = workingDirPath+"\\EffortDataV0.2.txt";
-//	static String rawDataFilePath = workingDirPath+"\\EffortDataV0.3.txt";
-	
-	static String EUCPEffortDataPath = workingDirPath+"\\EUCPEffortData.txt";
-	static String EXUCPEffortDataPath = workingDirPath+"\\EXUCPEffortData.txt";
-	static String AFPCEffortDataPath = workingDirPath+"\\AFPCEffortData.txt";
+	static String rawDataFilePath = RepoBrowser.projectPath+"\\NormalizedEffortData.txt";
+	static String EUCPEffortDataPath = RepoBrowser.projectTempPath+"\\EUCPEffortData.txt";
+	static String EXUCPEffortDataPath = RepoBrowser.projectTempPath+"\\EXUCPEffortData.txt";
+	static String AFPCEffortDataPath = RepoBrowser.projectTempPath+"\\AFPCEffortData.txt";
 	
 	public static void main(String... args) {
-
-		File workingDir = new File(workingDirPath);
-		if(!workingDir.exists() || !workingDir.isDirectory()){
-			workingDir.mkdir();
-		}
-		
 		File rawDataFile = new File(rawDataFilePath);
 		if(! rawDataFile.exists()){
 			return;
@@ -68,42 +55,35 @@ public class EffortDataCalibrateV2 {
 //				writer3.write(data[i][0]+"\t"+data[i][3]+"\t"+data[i][6]+"\tPH'\n");
 //			}
 			
-			writer1.write("EUCP\tEffort\tType\n");
-			writer2.write("EXUCP\tEffort\tType\n");
+			writer1.write("EUCPW\tEffort\tType\n");
+			writer2.write("EXUCPW\tEffort\tType\n");
 			writer3.write("AFPC\tEffort\tType\n");
 			for(int i = 1; i<data.length; i++){
 				writer1.write(data[i][1]+"\t"+data[i][4]+"\tPH\n");
+				writer1.write(data[i][1]+"\t"+data[i][5]+"\tPH_norm\n");
 				writer2.write(data[i][2]+"\t"+data[i][4]+"\tPH\n");
+				writer2.write(data[i][2]+"\t"+data[i][5]+"\tPH_norm\n");
 				writer3.write(data[i][3]+"\t"+data[i][4]+"\tPH\n");
+				writer3.write(data[i][3]+"\t"+data[i][5]+"\tPH_norm\n");
 			}
 			
 			writer1.close();
 			writer2.close();
 			writer3.close();
 			
-//			String workingDir = RepoBrowser.projectTempPath;
-//			String outputDir = workingDir + "\\resultWithout0";
-			String command = "\"C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript\" .\\tools\\Rscript\\EffortCalibration.R \"" + workingDirPath +"\" \""+ workingDirPath +"\"";
-//			String command = "\"C:\\Program Files\\R\\R-3.3.2\\bin\\Rscript\" .\\tools\\Rscript\\EffortCalibrationWithRidgeRegression.R \"" + workingDirPath +"\" \""+ workingDirPath +"\"";
-//			String command = "\"C:\\Program Files\\R\\R-3.2.2\\bin\\Rscript\" .\\tools\\Rscript\\EffortCalibrationV1.0.R \"" + workingDirPath +"\" \""+ workingDirPath +"\"";
+			String workingDir = RepoBrowser.projectTempPath;
+			String command = "\"C:\\Program Files\\R\\R-3.3.2\\bin\\Rscript\" .\\tools\\Rscript\\NormalizedEffortCalibrationV1.1.R \"" + RepoBrowser.projectTempPath +"\" \""+ workingDir +"\"";
+//			String command = "\"C:\\Program Files\\R\\R-3.3.2\\bin\\Rscript\" .\\tools\\Rscript\\NormalizedEffortCalibration.R \"" + RepoBrowser.projectTempPath +"\" \""+ workingDir +"\"";
 
 			System.out.println(command);
 			Process p = Runtime.getRuntime().exec(command); 
-			BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
-			String outputLine = "";
-			  while ((outputLine = input.readLine()) != null) {
-			    System.out.println(outputLine);
-			  }
-			input.close();
 			p.waitFor();
 //			Path currentRelativePath = Paths.get("");
 //			String s = currentRelativePath.toAbsolutePath().toString();
 //			System.out.println("Current relative path is: " + s);
 			
 //			Runtime.getRuntime().exec("start Z:\\Documents\\Research Space\\Experiment projects\\Repo Analyser\\tools\\temp\\Rplots.pdf");
-//			Desktop.getDesktop().open(new File(workingDirPath+"\\effort_regression_plot.pdf"));
-			Desktop.getDesktop().open(new File(workingDirPath+"\\effort_regression_summary.txt"));
-			Desktop.getDesktop().open(new File(workingDirPath+"\\effort_regression_plot.png"));
+			Desktop.getDesktop().open(new File(workingDir+"\\normalized_regression_plot.png"));
 			
 			
 		} catch (IOException | InterruptedException e) {
