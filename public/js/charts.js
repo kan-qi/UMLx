@@ -430,7 +430,6 @@ function drawNewHighCharts(column_data_name,column_name)
     else if (column_data_name === "Personnel") {
         unit = "FT"
     }
-    
     column_data_name = column_data_name;
     column_name = column_name;
     console.log(column_data_name, column_name);
