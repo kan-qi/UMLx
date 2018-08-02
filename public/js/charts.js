@@ -450,14 +450,28 @@ function drawNewHighCharts(column_data_name,column_name)
             console.log(column_name);
             console.log("response");
             console.log(response);
-            var th_param=[];
-            var name = [];
+            var items = [];
             for(var i=0;i<response.UseCases.length;i++)
             {
-                th_param.push([parseFloat(response.UseCases[i][column_data_name])]);
-                name.push(response.UseCases[i].Name);
+                var temp = {};
+                temp.th_param = parseFloat(response.UseCases[i][column_data_name]);
+                temp.name = response.UseCases[i].Name;
+                items.push(temp);
             }
-            console.log(th_param);
+
+            items.sort(function(a,b) {
+                return (a.th_param > b.th_param) ? 1 : ((b.th_param > a.th_param) ? -1 : 0);
+            });
+
+            var name = [];
+            var th_param = [];
+
+            for (let j of items) {
+                name.push(j.name);
+                th_param.push(j.th_param);
+            }
+
+            console.log(items);
             $('#estimation-charts').highcharts({
                 chart: {
                     type: 'column',

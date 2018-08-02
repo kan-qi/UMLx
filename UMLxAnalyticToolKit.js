@@ -876,6 +876,7 @@ function getHTML(xcategories,yswti,yswtii,yswtiii,html_table,callback) {
 				<script type="text/javascript" src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
 				<script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
 				<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+				<script type="text/javascript" src="${location_transfer}/js/charts.js"></script>
 				<script type="text/javascript" src="${location_transfer}/js/scripts.js"></script>
 				<script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
 				<script> 
