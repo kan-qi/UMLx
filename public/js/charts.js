@@ -460,7 +460,7 @@ function drawNewHighCharts(column_data_name,column_name)
             }
 
             items.sort(function(a,b) {
-                return (a.th_param > b.th_param) ? 1 : ((b.th_param > a.th_param) ? -1 : 0);
+                return (a.th_param > b.th_param) ? -1 : ((b.th_param > a.th_param) ? 1 : 0);
             });
 
             var name = [];
