@@ -28,16 +28,16 @@ var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject34 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\carbondata_archive\\carbondata";
 
 var openSourceProjects = [
-	testProject12, 
+//	testProject12, 
 	testProject13, 
-	
-	testProject14, 
-	testProject15, 
-	testProject16, 
-	testProject17, 
-	testProject18, 
-	testProject19, 
-	testProject20,
+//	
+//	testProject14, 
+//	testProject15, 
+//	testProject16, 
+//	testProject17, 
+//	testProject18, 
+//	testProject19, 
+//	testProject20,
 //	
 //	testProject21, 
 //	testProject22,
@@ -60,6 +60,7 @@ var fs = require('fs');
 var exec = require('child_process').exec;
 var EclipseUtil = require("../../utils/EclipseUtil.js");
 var FileManagerUtil = require("../../utils/FileManagerUtil.js");
+var RScriptExec = require('../../utils/RScriptUtil.js');
 
 var UMLxAnalyticToolKit = require("../../utils/UMLxAnalyticToolKitCore.js");
 
@@ -195,7 +196,7 @@ function requestEffortData(xmiModelFileName){
 // 				    console.log(data);
  				   
       		var gitUrl = str;
-      		var command = '../TransactionWeighting/active_contributors_every_30.R "'+gitUrl+'" "'+outputFilePath+'" ';
+      		var command = './data/TransactionWeighting/active_contributors_every_30.R "'+gitUrl+'" "'+outputFilePath+'" ';
 			
           //to generate svg file.
       		RScriptExec.runRScript(command,function(result){
@@ -203,16 +204,16 @@ function requestEffortData(xmiModelFileName){
 //					console.log('exec error: ' + error);
 					console.log("project effort estimation error");
 				}
+				console.log(gitUrl+": effort request finished.");
 				resolve();
 			});
 
  			});
       	      	}
-      		)
-      	}
     	  });
-      	
+      	}
       });
+  });
   }
   
   return Promise.all(openSourceProjects.map(projectPath=>{

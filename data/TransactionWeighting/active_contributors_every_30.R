@@ -20,7 +20,7 @@ if (length(args) < 1) {
 }
 
 gitUrl <- args[1]
-outputPath <- args[2]
+outputFile <- args[2]
 
 
 library(jsonlite)
