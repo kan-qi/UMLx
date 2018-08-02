@@ -1,59 +1,13 @@
-var fs = require("fs");
-var csv = require('csv-parser')
-var mkdirp = require("mkdirp");
-var rimraf = require('rimraf');
-
-var jp = require('jsonpath');
-var xml2js = require('xml2js');
-
-var parser = new xml2js.Parser();
-var eaParser = require('./model_platforms/ea/XMI2.1Parser.js');
-var srcParser = require('./model_platforms/src/SrcParser.js');
-
-var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
-var vpParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
-var modelDrawer = require("./model_drawers/UserSystemInteractionModelDrawer.js");
-var domainModelDrawer = require("./model_drawers/DomainModelDrawer.js");
-
-var umlEvaluator = require("./UMLEvaluator.js");
-var umlFileManager = require("./UMLFileManager.js");
-var RScriptExec = require('./utils/RScriptUtil.js');
-
-// current available evaluators
-var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
-var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
-var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
-var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
-var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
-var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
-var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
-var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
-var userStoryEvaluator = require('./evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
-
-var evaluators = [
-    useCaseComponentsEvaluator,
-    transactionEvaluator,
-    modelVersionEvaluator,
-    projectTypeEvaluator,
-    cocomoCalculator,
-    useCasePointEvaluator,
-    extendedUseCasePointEvaluator,
-    UMLSizeMetricEvaluator,
-    userStoryEvaluator
-];
-
+var UMLxAnalyticToolKitCore = require("./utils/UMLxAnalyticToolKitCore.js");
 
 //Input xml file directory 
 var inputDir = process.argv[2];
 
-//Manully setted output directory
-let date = new Date();
-let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
-
-var outputDir;
-var times = 1;
-var location_transfer = "";
+var outputDir = process.argv[3];
+//var times = 1;
+//var location_transfer = "";
 //var test_loca = "./abc/analysisresults";
+<<<<<<< HEAD
 
 if (process.argv[3]) {//
     outputDir = process.argv[3]+"/"+analysisDate+"@"+Date.now();
@@ -969,4 +923,29 @@ analyzeUML(function (model) {
         });
     });
 
+=======
+//
+//if (process.argv[3]) {//
+//    outputDir = +"/"+analysisDate+"@"+Date.now();
+//
+//    for (let j of process.argv[3]) {
+//        if (j === '/') times ++;
+//    }
+//
+//    for (let i = 0; i < times; i ++) {
+//        location_transfer += "../"
+//    }
+//    location_transfer += 'public/'
+//}
+//else {
+//    outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now();
+//    location_transfer = '../../'
+//}
+
+
+UMLxAnalyticToolKitCore.analyseSrc(inputDir, outputDir, function(){
+	
+	console.log('analysis finished!');
+	  
+>>>>>>> kqi
 });

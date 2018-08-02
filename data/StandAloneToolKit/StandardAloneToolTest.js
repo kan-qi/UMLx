@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+=======
+
+>>>>>>> kqi
 var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\all-apps";
 var testProject34 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\alltheapps";
 var testProject35 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\btchatprotobuf";
@@ -26,11 +30,16 @@ var testProject55 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject56 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\serviceuser";
 //var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\weather-widget";
 
+<<<<<<< HEAD
 var testProject57 = "D:/UML-project/UMLx/data/StandAloneToolKit";
+=======
+var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\StandAloneToolKit";
+>>>>>>> kqi
 
 var rufuslabsProjects = [
 //	testProject33, // generated
 //	testProject34, // not exists
+<<<<<<< HEAD
 //	testProject35, // not exists
 //
 //	testProject36, // not exists
@@ -42,22 +51,47 @@ var rufuslabsProjects = [
 //	testProject41,
 //	testProject42,
 //	testProject43,
+=======
+//	testProject35, // not exists 
+//		
+//	testProject36, // not exists 
+//	testProject37, // generated
+//	testProject38, // not exists
+//	testProject39, 
+//	testProject40,
+//	
+//	testProject41, 
+//	testProject42,
+//	testProject43, 
+>>>>>>> kqi
 //	testProject44,
 //	testProject45,
 //	testProject46,
 //	testProject47,
+<<<<<<< HEAD
 //
 //	testProject48,
 //	testProject49,
 //	testProject50,
+=======
+//	
+//	testProject48, 
+//	testProject49,
+//	testProject50, 
+>>>>>>> kqi
 //	testProject51,
 //	testProject52,
 //	testProject53,
 //	testProject54,
 //	testProject55,
 //	testProject56,
+<<<<<<< HEAD
     testProject57
 ];
+=======
+	testProject57
+	];
+>>>>>>> kqi
 
 var fs = require('fs');
 var exec = require('child_process').exec;
@@ -65,6 +99,7 @@ var exec = require('child_process').exec;
 var UMLxAnalyticToolKit = require("../../utils/UMLxAnalyticToolKitCore.js");
 
 function analyseRepo(){
+<<<<<<< HEAD
 
     //use promise to construct the repo objects
     function analyseProject(projectPath){
@@ -94,13 +129,48 @@ function analyseRepo(){
         });
     }
 
+=======
+	
+	  //use promise to construct the repo objects
+    function analyseProject(projectPath){
+        return new Promise((resolve, reject) => {
+        		
+        	var outputFolder = projectPath;
+        	var inputFile = projectPath + "/f14a_e_lock_box.xml";
+        	
+        	fs.exists(inputFile, (exists) => {
+        	if(!exists){
+        		console.log(inputFile+" doesn't exist.");
+        		resolve();
+        	}
+        	else{
+            //to generate svg file.
+        	UMLxAnalyticToolKit.analyseSrc(inputFile, outputFolder, function(){
+        		
+        		console.log('analysis finished!');
+        		
+        		resolve();
+        		  
+        	});
+        	
+        	}
+      	  });
+        	
+        });
+    }
+    
+>>>>>>> kqi
     return Promise.all(rufuslabsProjects.map(projectPath=>{
         return analyseProject(projectPath);
     })).then(
         function(){
             return new Promise((resolve, reject) => {
                 setTimeout(function(){
+<<<<<<< HEAD
                     console.log("analysis finished");
+=======
+                	console.log("analysis finished");
+>>>>>>> kqi
                     resolve();
 
                 }, 0);
@@ -110,6 +180,7 @@ function analyseRepo(){
     ).catch(function(err){
         console.log(err);
     });
+<<<<<<< HEAD
 
 }
 
@@ -125,6 +196,23 @@ function analyseRepo(){
 //
 //      	var access = fs.createWriteStream(logFile);
 //
+=======
+	
+}
+
+//function analyseRepo(){
+//	
+//	  //use promise to construct the repo objects
+//  function analyseProject(projectPath){
+//      return new Promise((resolve, reject) => {
+//      		
+//      	var outputFolder = projectPath;
+//      	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+//      	var logFile = projectPath+"/src_analysis.log"
+//      	
+//      	var access = fs.createWriteStream(logFile);
+//      	
+>>>>>>> kqi
 //      	fs.exists(inputFile, (exists) => {
 //      	if(!exists){
 //      		console.log(inputFile+" doesn't exist.");
@@ -139,6 +227,7 @@ function analyseRepo(){
 //      			console.log('exec error: ' + error);
 //      		}
 //      		console.log('The file was saved!');
+<<<<<<< HEAD
 //
 //      		resolve();
 //
@@ -155,6 +244,24 @@ function analyseRepo(){
 //      });
 //  }
 //
+=======
+//      		
+//      		resolve();
+//      		  
+//      	});
+//      	
+//      	child.stdout.write = child.stderr.write = access.write.bind(access);
+//      	
+//      	child.stdout.on('data', function(data) {
+//      	    console.log(data); 
+//      	});
+//      	}
+//    	  });
+//      	
+//      });
+//  }
+//  
+>>>>>>> kqi
 //  return Promise.all(rufuslabsProjects.map(projectPath=>{
 //      return analyseProject(projectPath);
 //  })).then(
@@ -171,7 +278,16 @@ function analyseRepo(){
 //  ).catch(function(err){
 //      console.log(err);
 //  });
+<<<<<<< HEAD
 //
 //}
 
 analyseRepo();
+=======
+//	
+//}
+
+analyseRepo();
+
+
+>>>>>>> kqi

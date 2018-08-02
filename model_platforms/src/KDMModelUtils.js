@@ -262,6 +262,12 @@
 //			}
 		}
 		}
+		
+		//testing for what are the response methods.
+		var debug = require("../../utils/DebuggerOutput.js");
+		if(MethodUnit.isResponse){
+		debug.appendFile("identified_response_method_units", MethodUnit.Signature.name);
+		}
 
 		return MethodUnit;
 	}

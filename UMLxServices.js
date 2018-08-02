@@ -620,6 +620,8 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 				umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
 					console.log("model analysis complete");
 					
+					console.log(modelInfo2);
+					
 					if(!modelInfo2){
 						 res.redirect('/');
 						 return;
@@ -627,15 +629,14 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 					
 					effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
 						if(!modelInfo3){
-							 res.redirect('/');
-							 return;
+							console.log("effort prediction failed");
 						}
 					
 					
 					var debug = require("./utils/DebuggerOutput.js");
-					debug.writeJson("evaluated_model_example"+modelInfo3._id, modelInfo3);
+					debug.writeJson("evaluated_model_example"+modelInfo2._id, modelInfo2);
 
-                    umlModelInfoManager.saveModelInfo(modelInfo3, repoId, function(modelInfo){
+                    umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
                         //				console.log(modelInfo);
                         umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo2){
                             console.log("=============repoInfo==========");

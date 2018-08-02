@@ -6,7 +6,8 @@
 			var outputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
 		    //to generate svg file.
 		    var command = eclipseInstall+' -consoleLog -console -noExit -application test21.test "' + projectPath + '" "'+outputFile+'"';
-//			console.log(command);
+//		    var command = eclipseInstall+' -application test21.test "' + projectPath + '" "'+outputFile+'"';
+//		    console.log(command);
 			var child = exec(command, function(error, stdout, stderr) {
 				if (error !== null) {
 					console.log('exec error: ' + error);
@@ -33,6 +34,10 @@
 				  callbackfunc(outputFile);
 				 }
 			});
+			
+			child.stdout.on('data', function(data) {
+		  	    console.log(data); 
+		  	});
 		    
 	}
 	

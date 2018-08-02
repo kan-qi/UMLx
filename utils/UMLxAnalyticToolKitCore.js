@@ -1,4 +1,5 @@
 (function() {
+<<<<<<< HEAD
 
     var fs = require("fs");
     var csv = require('csv-parser')
@@ -70,14 +71,94 @@
         //Manully setted output directory
         let date = new Date();
         let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+=======
+	
+var fs = require("fs");
+var csv = require('csv-parser')
+var mkdirp = require("mkdirp");
+var rimraf = require('rimraf');
+var fs_extra = require('fs-extra');
+
+var jp = require('jsonpath');
+var xml2js = require('xml2js');
+
+var parser = new xml2js.Parser();
+var eaParser = require('../model_platforms/ea/XMI2.1Parser.js');
+var srcParser = require('../model_platforms/src/SrcParser.js');
+
+var pathsDrawer = require("../model_drawers/TransactionsDrawer.js");
+var vpParser = require('../model_platforms/visual_paradigm/XML2.1Parser.js');
+var modelDrawer = require("../model_drawers/UserSystemInteractionModelDrawer.js");
+var domainModelDrawer = require("../model_drawers/DomainModelDrawer.js");
+
+var umlEvaluator = require("../UMLEvaluator.js");
+var umlFileManager = require("../UMLFileManager.js");
+var RScriptExec = require('../utils/RScriptUtil.js');
+
+// current available evaluators
+var useCaseComponentsEvaluator = require('../evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
+var transactionEvaluator = require('../evaluators/TransactionEvaluator/TransactionEvaluator.js');
+var modelVersionEvaluator = require('../evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
+var cocomoCalculator = require('../evaluators/COCOMOEvaluator/COCOMOCalculator.js');
+var useCasePointEvaluator = require('../evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
+var extendedUseCasePointEvaluator = require('../evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
+var projectTypeEvaluator = require('../evaluators/ProjectTypeEvaluator.js');
+var UMLSizeMetricEvaluator = require('../evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
+var userStoryEvaluator = require('../evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
+
+var evaluators = [
+    useCaseComponentsEvaluator,
+    transactionEvaluator,
+    modelVersionEvaluator,
+    projectTypeEvaluator,
+    cocomoCalculator,
+    useCasePointEvaluator,
+    extendedUseCasePointEvaluator,
+    UMLSizeMetricEvaluator,
+    userStoryEvaluator
+];
+
+
+var useCasesSum = 0;
+var transactionsSum = 0;
+var classesSum = 0;
+var actorsSum = 0;
+var swti = [];
+var swtii = [];
+var swtiii = [];
+var categories=[];
+var rt_object = {swtI:[],swtII:[],swtIII:[],category:[]};
+
+var useCaseEvaluationStr = "";
+var domainModelEvaluationStr = "";
+var modelEvaluationStr = "";
+
+var useCaseNum = 1;
+
+function analyseUML(inputDir, outputDir, callback) {
+
+	//Input xml file directory 
+//	var inputDir = process.argv[2];
+
+	//Manully setted output directory
+	let date = new Date();
+	let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+>>>>>>> kqi
 
 //	var outputDir;
 //	var times = 1;
 //	var location_transfer = "";
+<<<<<<< HEAD
         //var test_loca = "./abc/analysisresults";
 
 //	if (outputDir1) {//
         outputDir = outputDir+"/"+analysisDate+"@"+Date.now();
+=======
+	//var test_loca = "./abc/analysisresults";
+
+//	if (outputDir1) {//
+	    outputDir = outputDir+"/"+analysisDate+"@"+Date.now();
+>>>>>>> kqi
 //
 //	    for (let j of outputDir1) {
 //	        if (j === '/') times ++;
@@ -92,6 +173,7 @@
 //	    outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now();
 //	    location_transfer = '../../'
 //	}
+<<<<<<< HEAD
 
         //create output directory for analysis result
         mkdirp(outputDir, (err) => {
@@ -630,6 +712,546 @@
 
     function readUsecaseJson(model, callback) {
         let html_table = `<div style='height:6%'>&nbsp;</div>
+=======
+	
+    //create output directory for analysis result
+	mkdirp(outputDir, (err) => {
+		if(err) {
+			console.log("Error: Fail to create output directory!");
+			throw(err);
+		}
+
+		fs.readFile(inputDir, "utf8", (err, data) => {
+			if(err) { 
+				console.log("Error: Fail to read XMI file!");
+				throw(err);
+			}
+			
+			parser.parseString(data, (err, str) => {
+				if(err) {
+					console.log("Error: Fail to convert file data to string!");
+					throw(err);
+				}
+
+				//determine what type of xmi it is
+				var xmiParser = null;
+
+				if(jp.query(str, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
+					xmiParser = eaParser;
+				}
+
+				if(jp.query(str, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0]) {
+					xmiParser = vpParser;
+				}
+
+				if(jp.query(str, '$..["kdm:Segment"]')[0]){
+					xmiParser = srcParser;
+				}
+
+				if(xmiParser === null) {
+					console.log("Error: Could not find XMI Parser!");
+					return;
+				}
+				//extract model information due to different xmi parser
+				xmiParser.extractUserSystermInteractionModel(str, outputDir, inputDir, (model) => {
+					modelExtractor(model);
+					model.OutputDir = outputDir;
+					model.AccessDir = inputDir;
+					modelEvaluator(model, function(model2){
+						console.log("finish analysing model");
+						if (callback) {
+							callback(model2);
+						}
+					});
+				});
+			});
+	    });
+	});
+
+	return outputDir;
+}
+
+function modelExtractor(model) {
+	var domainModel = model.DomainModel;
+	domainModel.DotGraphFile = '';
+	domainModel.SvgGraphFile = 'domainModel.svg';
+
+	// console.log(`Fucking: ${JSON.stringify(domainModel)}`);
+
+	domainModelDrawer.drawDomainModel(domainModel, model.OutputDir+"/domainModel.dotty", () => {
+		console.log("Domain Model is drawn");
+	});
+
+	for(let i in model.UseCases) {
+		// var useCase = model.UseCases[i];
+		// useCase.Paths = traverseUseCaseForPaths(useCase);
+        //
+		// for(let j in useCase.Paths){
+		// 	let path = useCase.Paths[j];
+		// 	var PathStrByIDs = "";
+		// 	for(let k in path.Elements){
+		// 		let node = path.Elements[k];
+		// 		PathStrByIDs += node._id+"->";
+		// 	}
+		// 	path.PathStrByIDs = path.PathStrByIDs;
+		// }
+        var useCase = model.UseCases[i];
+        useCase.Transactions = traverseUseCaseForTransactions(useCase);
+
+        var debug = require("../utils/DebuggerOutput.js");
+        debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
+
+        for(var j in useCase.Transactions){
+            var transaction = useCase.Transactions[j];
+            var TransactionStrByIDs = "";
+            for(var k in transaction.Elements){
+                var node = transaction.Elements[k];
+                TransactionStrByIDs += node._id+"->";
+            }
+            transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
+        }
+		
+		modelDrawer.drawPrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase.dotty", () => {
+			console.log("Use Case is drawn");
+		});
+
+		modelDrawer.drawSimplePrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase_simple.dotty", () => {
+			console.log("Simple Use Case is drawn");
+		});
+		
+		pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
+			console.log("Paths are drawn");
+		});
+	}
+
+	modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
+		console.log("Domain Model is drawn");
+	});
+}
+
+
+function traverseUseCaseForPaths(useCase){
+	console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+	
+	function isCycled(path){
+		var lastNode = path[path.length-1];
+			for(var i=0; i < path.length-1; i++){
+				if(path[i] == lastNode){
+					return true;
+				}
+			}
+		return false;
+	}
+
+	var toExpandCollection = new Array();
+	
+	for (var j in useCase.Activities){
+		var activity = useCase.Activities[j];
+		//define the node structure to keep the infor while traversing the graph
+		if(activity.Stimulus){
+		var node = {
+			//id: startElement, //ElementGUID
+			Node: activity,
+			PathToNode: [activity],
+			OutScope: activity.OutScope
+		};
+		toExpandCollection.push(node);
+		}
+	}
+	
+	var Paths = new Array();
+	var toExpand;
+	
+	var debug = require("../utils/DebuggerOutput.js");
+	debug.writeJson("use_cas_toExpand_"+useCase._id, toExpandCollection);
+	
+	while((toExpand = toExpandCollection.pop()) != null){
+		var node = toExpand.Node;
+		var pathToNode = toExpand.PathToNode;
+
+			var childNodes = [];
+			for(var j in useCase.PrecedenceRelations){
+				var edge = useCase.PrecedenceRelations[j];
+				if(edge.start == node){
+					childNodes.push(edge.end);
+				}
+			}
+		
+		if(childNodes.length == 0){
+			Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+		}
+		else{
+			for(var j in childNodes){
+				var childNode = childNodes[j];
+				if(!childNode){
+					continue;
+				}
+				
+				//if childNode is an outside activity
+				
+				var OutScope = false;
+				if(toExpand.OutScope||childNode.OutScope){
+					OutScope = true;
+				}
+				
+				var toExpandNode = {
+					Node: childNode,
+					PathToNode: pathToNode.concat(childNode),
+					OutScope: OutScope
+				}
+				
+				console.log("toExpandNode");
+				console.log(toExpandNode);
+				
+				console.log("child node");
+				console.log(childNodes);
+				console.log(childNode);
+				console.log(childNode.Name);
+				console.log(childNode.Group);
+
+				if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
+					toExpandCollection.push(toExpandNode);
+				}
+				else{
+					Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+				}
+			}		
+		}
+	}		
+	return Paths;		
+}
+
+function traverseUseCaseForTransactions(useCase){
+
+    console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+
+
+    function isCycled(path){
+        var lastNode = path[path.length-1];
+        for(var i=0; i < path.length-1; i++){
+            if(path[i] == lastNode){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    var toExpandCollection = new Array();
+
+    for (var j in useCase.Activities){
+        var activity = useCase.Activities[j];
+        //define the node structure to keep the infor while traversing the graph
+        if(activity.Stimulus){
+            var node = {
+                //id: startElement, //ElementGUID
+                Node: activity,
+                PathToNode: [activity],
+                OutScope: activity.OutScope
+            };
+            toExpandCollection.push(node);
+        }
+    }
+
+    var Paths = new Array();
+    var toExpand;
+
+    var debug = require("../utils/DebuggerOutput.js");
+    debug.writeJson("use_cas_toExpand_"+useCase._id, toExpandCollection);
+
+    while((toExpand = toExpandCollection.pop()) != null){
+        var node = toExpand.Node;
+        var pathToNode = toExpand.PathToNode;
+
+        var childNodes = [];
+        for(var j in useCase.PrecedenceRelations){
+            var edge = useCase.PrecedenceRelations[j];
+            if(edge.start == node){
+                childNodes.push(edge.end);
+            }
+        }
+
+        if(childNodes.length == 0){
+            Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+        }
+        else{
+            for(var j in childNodes){
+                var childNode = childNodes[j];
+                if(!childNode){
+                    continue;
+                }
+
+                //if childNode is an outside activity
+
+                var OutScope = false;
+                if(toExpand.OutScope||childNode.OutScope){
+                    OutScope = true;
+                }
+
+                var toExpandNode = {
+                    Node: childNode,
+                    PathToNode: pathToNode.concat(childNode),
+                    OutScope: OutScope
+                }
+
+                console.log("toExpandNode");
+                console.log(toExpandNode);
+
+                console.log("child node");
+                console.log(childNodes);
+                console.log(childNode);
+                console.log(childNode.Name);
+                console.log(childNode.Group);
+
+                if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
+                    toExpandCollection.push(toExpandNode);
+                }
+                else{
+                    Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+                }
+            }
+        }
+
+
+    }
+
+//			console.log(Paths);
+//			useCase.Paths = Paths;
+
+    return Paths;
+
+}
+
+function evaluateUseCase(useCase, model, callbackfunc){
+		
+	if(callbackfunc){
+	// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
+
+		if(!useCase){
+			callbackfunc(false);
+			return;
+		}
+		
+	for(var i in evaluators){
+		var evaluator = evaluators[i];
+		if(evaluator.evaluateUseCase){
+			evaluator.evaluateUseCase(useCase, model, function(){
+				console.log("use case evaluation finishes");
+			});
+		}
+	}
+	
+	callbackfunc(useCase);
+	
+	}
+	else{
+		return useCase;
+	}
+}
+
+function evaluateDomainModel(domainModel, callbackfunc){
+	if(callbackfunc){
+		// iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
+		if(!domainModel){
+			callbackfunc(false);
+			return;
+		}
+		
+		for(var i in evaluators){
+			var evaluator = evaluators[i];
+			if(evaluator.evaluateDomainModel){
+				evaluator.evaluateDomainModel(domainModel, function(){
+					console.log("domain model evaluation finishes");
+				});
+			}
+		}
+		
+		callbackfunc(domainModel);
+		
+	}
+	else{
+		return domainModel;
+	}
+}
+// to converge use case empirics and use case analytics, dump it and evaluate it.
+function toUseCaseEvaluationStr(useCase, useCaseNum){
+		var useCaseEvaluationStr = "NUM,UC";
+		
+		for(var i in evaluators){
+			var evaluator = evaluators[i];
+			if(evaluator.toUseCaseEvaluationHeader){
+				useCaseEvaluationStr += "," + evaluator.toUseCaseEvaluationHeader();
+			}
+		}
+		
+		useCaseEvaluationStr += "\n";
+		
+		if(useCaseNum !== 1){
+			useCaseEvaluationStr = "";
+		}
+		
+		useCaseEvaluationStr += useCaseNum+","+ useCase.Name.replace(/,/gi, "");
+		
+		for(var i in evaluators){
+			var evaluator = evaluators[i];
+			if(evaluator.toUseCaseEvaluationRow){
+				useCaseEvaluationStr += "," + evaluator.toUseCaseEvaluationRow(useCase, useCaseNum);
+			}
+		}
+		
+		useCaseEvaluationStr += "\n";
+		
+		return useCaseEvaluationStr;
+}
+
+function toDomainModelEvaluationStr(domainModel, domainModelNum){
+	var domainModelEvaluationStr = "NUM,DM";
+	
+	for(var i in evaluators){
+		var evaluator = evaluators[i];
+		if(evaluator.toDomainModelEvaluationHeader){
+			domainModelEvaluationStr += "," + evaluator.toDomainModelEvaluationHeader();
+		}
+	}
+	
+	domainModelEvaluationStr += "\n";
+	
+	if(domainModelNum !== 1){
+		domainModelEvaluationStr = "";
+	}
+	
+	domainModelEvaluationStr += domainModelNum+",domain_model";
+	
+	for(var i in evaluators){
+		var evaluator = evaluators[i];
+		if(evaluator.toDomainModelEvaluationRow){
+			domainModelEvaluationStr += "," + evaluator.toDomainModelEvaluationRow(domainModel, domainModelNum);
+		}
+	}
+	
+	domainModelEvaluationStr += "\n";
+	
+	return domainModelEvaluationStr;
+}
+
+function toModelEvaluationStr(model, modelNum){
+	var modelEvaluationStr = "NUM,PROJ";
+			
+	for(var i in evaluators){
+		var evaluator = evaluators[i];
+		if(evaluator.toModelEvaluationHeader){
+			modelEvaluationStr += ","+evaluator.toModelEvaluationHeader();
+		}
+	}
+			
+	modelEvaluationStr += "\n";
+		
+	if(modelNum !== 1){
+		modelEvaluationStr = "";
+	}
+			
+			
+	// modelEvaluationStr += modelNum+","+ model.Name.replace(/,/gi, "");
+			
+	for(var i in evaluators){
+		var evaluator = evaluators[i];
+		if(evaluator.toModelEvaluationRow){
+			modelEvaluationStr += "," + evaluator.toModelEvaluationRow(model, modelNum);
+		}
+	}
+			
+	modelEvaluationStr += "\n";
+		
+	return modelEvaluationStr;
+}
+
+function modelEvaluator(model, callback) {
+
+	var useCaseNum = 1;
+	var useCaseEvaluationStr = "";
+	
+	var domainModelNum = 1;
+	var domainModelEvaluationStr = "";
+	
+	var modelNum = 1;
+	var modelEvaluationStr = "";
+
+	for(var i in model.UseCases){
+		var useCase = model.UseCases[i];
+		evaluateUseCase(useCase, model, function(){
+			console.log('use case analysis is complete');
+		});	
+
+		useCaseEvaluationStr += toUseCaseEvaluationStr(useCase, useCaseNum);
+		useCaseNum ++;
+	}
+	// console.log(`toUseCaseStr: ${useCaseEvaluationStr} has number: ${useCaseNum}`);
+	var domainModel = model.DomainModel;
+	if(domainModel){
+		evaluateDomainModel(domainModel, function(){
+			console.log('doamin model analysis is complete');
+		});
+		
+		domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
+		domainModelNum ++;
+	}
+	// console.log(`toDomainModelStr: ${domainModelEvaluationStr} has number: ${domainModelNum}`);
+
+//	model.OutputDir = outputDir;
+	for(var i in evaluators){
+		var evaluator = evaluators[i];
+		if(evaluator.evaluateModel){
+			evaluator.evaluateModel(model, function(){
+				console.log('model evaluation finishes');
+			});
+		}
+	}
+	modelEvaluationStr += toModelEvaluationStr(model, modelNum);
+	// console.log(`modelStr: ${modelEvaluationStr} has number: ${modelNum}`);
+	model.ModelEvaluationFileName = "modelEvaluation.csv";
+	model.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
+	model.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
+	model.UseCaseStatisticsOutputDir = model.OutputDir+"/use_case_evaluation_statistics";
+	model.DomainModelStatisticsOutputDir = model.OutputDir+"/domain_model_evaluation_statistics";
+	
+	var files = [{fileName : model.UseCaseEvaluationFileName , content : useCaseEvaluationStr},
+				{fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
+				{fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
+
+	umlFileManager.writeFiles(model.OutputDir, files, function(err){
+			if(err) {
+				console.log(err);
+			}
+			else {
+				for(var i in evaluators){
+					var evaluator = evaluators[i];
+					if(evaluator.analyseModelEvaluation){
+						evaluator.analyseModelEvaluation(model);
+					}
+				}
+						
+				umlFileManager.makeDirs([model.UseCaseStatisticsOutputDir, model.DomainModelStatisticsOutputDir], function(result){
+					console.log("test for model mkdir");
+					if(result){
+						console.log("apply statistical analysis on the output evaluation");
+						var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.UseCaseEvaluationFileName+'" "'+model.UseCaseStatisticsOutputDir+'" "."';
+						RScriptExec.runRScript(command,function(result){
+							var command = './Rscript/OutputStatistics.R "'+model.OutputDir+"/"+model.DomainModelEvaluationFileName+'" "'+model.DomainModelStatisticsOutputDir+'" "."';
+									
+							RScriptExec.runRScript(command, function(result){
+								if (callback) {
+									callback(model);
+								}
+							});
+						});
+					}
+				});
+			}
+	});
+}
+
+function readUsecaseJson(model, callback) {
+    let html_table = `<div style='height:6%'>&nbsp;</div>
+>>>>>>> kqi
 						<table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'>
 							<tr>
 								<th>Usecase ID</th>
@@ -643,6 +1265,7 @@
 							</tr>
 						`;
 
+<<<<<<< HEAD
         let count = 0;
 
         for(usecase of model.UseCases) {
@@ -661,6 +1284,26 @@
                             let element = obj[i];
                             if(i === 0) {
                                 html_table += `<tr class="estimation-table">
+=======
+	let count = 0;
+
+	for(usecase of model.UseCases) {
+		let filePath = usecase.OutputDir + "/element_statistics.json";
+		fs.exists(filePath, (exists) => {
+			count ++;
+			if (exists) {
+				count --;
+                fs.readFile(filePath, (err, data) => {
+                	count ++;
+                    if (err) throw err;
+                    let obj = JSON.parse(data);
+                    console.log(obj);
+
+                    for(let i = 0;i < obj.length;i++){
+                    	let element = obj[i];
+                    	if(i === 0) {
+                            html_table += `<tr class="estimation-table">
+>>>>>>> kqi
 									<td rowspan="${obj.length}"> ID </td>
 									<td> ${element['column name']} </td>
 									<td> ${element.statistics['mean']} </td>
@@ -671,9 +1314,15 @@
 									<td> ${element.statistics.kurtosis} </td>
 									</tr>
                     			`;
+<<<<<<< HEAD
                             }
                             else {
                                 html_table += `<tr class="estimation-table">
+=======
+						}
+						else {
+                            html_table += `<tr class="estimation-table">
+>>>>>>> kqi
 									<td> ${element['column name']} </td>
 									<td> ${element.statistics['mean']} </td>
 									<td> ${element.statistics.variance} </td>
@@ -683,6 +1332,7 @@
 									<td> ${element.statistics.kurtosis} </td>
 									</tr>
 								`;
+<<<<<<< HEAD
                             }
                         }
 
@@ -775,6 +1425,103 @@
 
         var location_transfer = "public/";
         //var test_loca = "./abc/analysisresults";
+=======
+						}
+					}
+
+                    
+                });
+			}
+        });
+	}
+	
+
+    html_table += `</table>`;
+    
+	if (callback) {
+        callback(html_table);
+	}
+}
+
+
+function createStream(model, callback) {
+	let chart_url = model.OutputDir + "/useCaseEvaluation.csv";
+	fs.createReadStream(chart_url)
+		.pipe(csv())
+		.on('data', function (data) {
+			swti.push(parseInt(data.SWTI));
+			swtii.push([parseInt(data.SWTII)]);
+			swtiii.push([parseInt(data.SWTIII)]);
+			categories.push("'"+("UC"+data.NUM)+"'");
+		})
+		.on('end', function(data) {
+			// console.log("hello" + swti);
+			// console.log("hello" + swtii);
+			// console.log("hello" + swtiii);
+			// console.log("hello" + categories);
+			rt_object.swtI = swti;
+			rt_object.swtII = swtii;
+			rt_object.swtIII = swtiii;
+			rt_object.category = categories;
+			if (callback) {
+				callback();
+			}
+		});
+}
+
+function copyAuxiliaryFiles(model, callbackfunc){
+	var folderList = [
+			"public/css/",
+			'public/js/',
+			"public/fonts/",
+			"public/img/"
+	];
+	
+	
+	
+	 //use promise to construct the repo objects
+    function copyFolder(source, destination){
+        return new Promise((resolve, reject) => {
+        		
+        	// copy source folder to destination
+        	fs_extra.copy(source, destination, function (err) {
+        	    if (err){
+        	        console.log('An error occured while copying the folder.');
+        	   
+        	    }
+        	    console.log('Copy completed!');
+        	     resolve();
+        	});
+        	
+        });
+    }
+    
+    return Promise.all(folderList.map(source=>{
+        return copyFolder(source, model.OutputDir+"/"+source);
+    })).then(
+        function(){
+            return new Promise((resolve, reject) => {
+                setTimeout(function(){
+                	console.log("copying finished");
+                	if(callbackfunc){
+                		callbackfunc("copy finished");
+                	}
+                    resolve();
+
+                }, 0);
+            });
+        }
+
+    ).catch(function(err){
+        console.log(err);
+    });
+}
+
+function getHTML(xcategories,yswti,yswtii,yswtiii,html_table, model, callback) {
+	
+	var location_transfer = "public/";
+	//var test_loca = "./abc/analysisresults";
+>>>>>>> kqi
 
 //	if (outputDir1) {//
 //	    outputDir = outputDir1+"/"+analysisDate+"@"+Date.now();
@@ -794,9 +1541,15 @@
 //	    outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now();
 //	    location_transfer = '../../'
 //	}
+<<<<<<< HEAD
 
         let model_analysis_button =
             `
+=======
+	
+	let model_analysis_button =
+		`
+>>>>>>> kqi
 		<div class='model-analytics-ops pull-right'>
 			<div class="dropdown">
 				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Dump Repo<span class="caret"></span></button>
@@ -817,11 +1570,27 @@
 					<li><a id="update-model" onclick="" href="javaScript:void(0);" class="dropdown-item">Model Version</a></li>
 				</ul>
 			</div>
+<<<<<<< HEAD
 		</div>
 		`;
 
         let cards_selection =
             `
+=======
+			
+			<div class="dropdown">
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn dropdown-toggle btn-default">Analysis<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="javaScript:void(0);"class="request-repo-analytics dropdown-item">Reanalyse Repo</a></li>
+					<li><a href="javaScript:void(0);" class="dropdown-item">Reload Repo</a></li>
+				</ul>
+			</div>
+		</div>
+		`;
+
+	let cards_selection =
+		`
+>>>>>>> kqi
 		<div class="col-sm-12 status-row">
 			<div class="col-sm-3">
 				<div class="blue-card analytics-card">
@@ -872,8 +1641,13 @@
 		<div id="result_chart">here should be distributions</div>
 		`;
 
+<<<<<<< HEAD
         let model_analysis_chart =
             `
+=======
+	let model_analysis_chart =
+		`
+>>>>>>> kqi
 		<div class="model-info-content">
 			<ul class="nav nav-tabs">
 				<li class="active">
@@ -900,10 +1674,17 @@
 			</div>
 		</div>	  
 		`
+<<<<<<< HEAD
         ;
 
         let htmlBody =
             `
+=======
+	;
+
+	let htmlBody =
+		`
+>>>>>>> kqi
 		<!DOCTYPE html>
 		<html>
 			<head>
@@ -1004,6 +1785,7 @@
 			</body>
 		</html>
 		`;
+<<<<<<< HEAD
         if (callback) {
             callback(htmlBody);
         }
@@ -1048,6 +1830,52 @@
             });
         }
     }
+=======
+	if (callback) {
+		callback(htmlBody);
+	}
+}
+
+function writeHTML(model, htmlBody){
+    fs.writeFile(model.OutputDir + "/analysis_report.html", htmlBody, (err) => {
+        if(err) throw err;
+        console.log("Result HTML Page has been successfully created!");
+    });
+}
+
+module.exports = {
+		analyseSrc: function(inputDir, outputDir, callbackfunc){
+			console.log("analysi src");
+			analyseUML(inputDir, outputDir, function (model) {
+				console.log("analyse UML finishes");
+				readUsecaseJson(model, function (html_table) {
+				console.log("generate use cases");
+		        createStream(model, function () {
+		            const yswi = rt_object.swtI;
+		            const yswtii = rt_object.swtII;
+		            const yswtiii = rt_object.swtIII;
+		            const xcategories = rt_object.category;
+		            console.log("xcategories"+xcategories);
+		            console.log("yswi"+yswi);
+		            console.log("yswii"+yswtii);
+		            console.log("yswiii"+yswtiii);
+		            getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
+		                writeHTML(model, data);
+		                console.log(`result : [${xcategories}]`);
+		                copyAuxiliaryFiles(model, function(message){
+		                	console.log(message);
+			                if(callbackfunc){
+			                	callbackfunc();
+			                }
+		                });
+		            });
+		        });
+		    });
+
+		});
+	}
+}
+>>>>>>> kqi
 
 
 }())

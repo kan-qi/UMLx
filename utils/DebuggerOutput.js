@@ -19,6 +19,9 @@
 			fs.appendFile(OutputDir+'/'+token+'.txt', message,function (err) {
 				  if (err) throw err;
 				  console.log('Saved!');
+				  if(callbackfunc){
+					  callbackfunc(OutputDir+'/'+token+'.txt');
+				  }
 				});
 			});
 	}

@@ -73,3 +73,11 @@ node ./utils/UMLxAnalyticToolKit.js "./data/StandAloneToolKit/f14a_e_lock_box.xm
 
 node utils/tests/EclipseTest.js
 node model_platforms\src\tests\test.js
+
+node UMLxServices.js --max_old_space_size=4096
+
+node data\RufusLabs\RufusLabsRepoAnalysis.js --max_old_space_size=8192
+
+node .\data\RufusLabs\RufusLabsRepoAnalysis.js --generate-report
+
+node .\data\OpenSource\OpenSourceAnalysis.js --generate-report

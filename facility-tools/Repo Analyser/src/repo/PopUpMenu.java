@@ -43,7 +43,8 @@ public class PopUpMenu extends JPopupMenu {
 
 	JMenuItem openArchiveItem;
 	JMenuItem checkItem;
-    
+
+	AnalysisKit analysisKit = new AnalysisKit();
     
     public PopUpMenu(RepositoryTree tree){
     	this.tree = tree;
@@ -175,7 +176,7 @@ public class PopUpMenu extends JPopupMenu {
 		    		String clocDumpFile = RepoBrowser.projectTempPath+"\\dump_cloc_"+tree.getNodeFileName(currentSelectedNode)+".txt";
 					
 		    		tree.dumpSelectedPaths(clocDumpFile, currentSelectedNode);
-		    		AnalysisKit.calCloc(clocDumpFile, filePath);
+		    		analysisKit.calCloc(clocDumpFile, filePath);
 //		    		Path currentRelativePath = Paths.get("");
 //		    		String s = currentRelativePath.toAbsolutePath().toString();
 //		    		System.out.println("Current relative path is: " + s);
@@ -186,7 +187,7 @@ public class PopUpMenu extends JPopupMenu {
 		    		System.out.println(RepoBrowser.projectTempPath+"\\dump_"+tree.getNodeFileName(currentSelectedNode)+".txt");
 		    	}
 		    	else if(e.getActionCommand().equals("SearchFiles")){
-		    		RepoFileFinder fileFinder = new RepoFileFinder();
+		    		RepoFileFinder fileFinder = new RepoFileFinder(RepoBrowser.projectPath);
 		    		try {
 						fileFinder.findFiles(filePath);
 					} catch (IOException e1) {
@@ -253,7 +254,7 @@ public class PopUpMenu extends JPopupMenu {
 		    	}
 		    	else if(e.getActionCommand().equals("AnalyzeUI")){
 		    		String fileListPath = repoArchivePath+"\\dump_web_analysis_file_list.txt";
-		    		tree.dumpPaths(fileListPath, currentSelectedNode, false, new PathFilterCallback(){
+		    		tree.dumpPaths(fileListPath, currentSelectedNode, true, new PathFilterCallback(){
 
 						@Override
 						public boolean onPathFilter(Path path) {

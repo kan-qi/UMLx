@@ -144,7 +144,7 @@ public class RepositoryTree extends JPanel {
 		boolean onPathFilter(Path path);
 	}
 	
-	public void dumpPaths(String file, DefaultMutableTreeNode currentSelectedNode, boolean thorough, PathFilterCallback filter){
+	public void dumpPaths(String file, DefaultMutableTreeNode currentSelectedNode, boolean filter, PathFilterCallback filterCallback){
 		// DefaultMutableTreeNode root = (DefaultMutableTreeNode)
 				// tree.getModel().getRoot();
 				List<Path> paths = new ArrayList<Path>();
@@ -153,28 +153,16 @@ public class RepositoryTree extends JPanel {
 
 				Enumeration enumeration = currentSelectedNode.children();
 				while (enumeration.hasMoreElements()) {
-					for (Path path : getPaths((CheckBoxNode) enumeration.nextElement(), thorough)) {
+					for (Path path : getPaths((CheckBoxNode) enumeration.nextElement(), filter)) {
 						path.path = pathToNode + "\\" + path.path;
 						paths.add(path);
 					}
 				}
 
-				// if(paths.isEmpty()){
-				// Path path = new Path();
-				// path.path = pathToNode;
-				// if(currentSelectedNode instanceof CheckBoxNode){
-				// path.include = ((CheckBoxNode)currentSelectedNode).isSelected();
-				// }
-				// else {
-				// path.include = true;
-				// }
-				// paths.add(path);
-				// }
-
 				try {
 					PrintWriter writer = new PrintWriter(file);
 					for (Path path : paths) {
-						if (filter == null || filter.onPathFilter(path)) {
+						if (filterCallback == null || filterCallback.onPathFilter(path)) {
 							writer.println(path.path);
 							System.out.println(path.path);
 						}
@@ -186,7 +174,7 @@ public class RepositoryTree extends JPanel {
 	}
 
 	public void dumpSelectedPaths(String file, DefaultMutableTreeNode currentSelectedNode) {
-		this.dumpPaths(file, currentSelectedNode, false, null);
+		this.dumpPaths(file, currentSelectedNode, true, null);
 	}
 
 	public void dumpSelectedPaths(String filePath) {
@@ -195,7 +183,7 @@ public class RepositoryTree extends JPanel {
 	
 
 	public void saveRepo(CheckBoxNode repo) {
-		this.saveRepoTo(repo, RepoBrowser.projectPath+"\\"+this.getNodeFileName(repo)+"\\filelist.txt");
+		this.saveRepoTo(repo, RepoBrowser.projectPath+"\\"+this.getNodeFileName(repo)+"\\filelist.txt", RepoBrowser.projectPath+"\\"+this.getNodeFileName(repo)+"\\selectedfilelist.txt");
 	}
 	
 	public DefaultMutableTreeNode getContainingRepoNode(DefaultMutableTreeNode node){
@@ -209,26 +197,39 @@ public class RepositoryTree extends JPanel {
 		return parent;
 	}
 
-	private void saveRepoTo(CheckBoxNode repo, String fileListPath) {
+	private void saveRepoTo(CheckBoxNode project, String fileListPath, String selectedFileListPath) {
 
 		try {
-			List<Path> repoList = new ArrayList<Path>();
-			Path repoPath = new Path();
-			repoPath.path = repo.toString();
-			repoPath.include = repo.isSelected();
-			repoList.add(repoPath);
-			List<Path> paths = getPaths(repo, false);
+//			List<Path> projectList = new ArrayList<Path>();
+			Path projectPath = new Path();
+			projectPath.path = project.toString();
+			projectPath.include = project.isSelected();
+//			projectList.add(projectPath);
+			List<Path> paths = getPaths(project, false);
+			List<Path> selectedPaths = getPaths(project, true);
 			File file = new File(fileListPath);
 			if (!file.exists()) {
 				file.createNewFile();
 			}
-
+			
 			PrintWriter writer = new PrintWriter(file);
 			for (Path path : paths) {
 				writer.println((path.include ? "" : "-") + path.path);
 				System.out.println("saving path: " + (path.include ? "" : "-") + path.path);
 			}
 			writer.close();
+			
+			File selectedFile = new File(selectedFileListPath);
+			if(!selectedFile.exists()) {
+				selectedFile.createNewFile();
+			}
+
+			PrintWriter writer2 = new PrintWriter(selectedFile);
+			for (Path selectedPath : selectedPaths) {
+				writer2.println((selectedPath.include ? "" : "-") + selectedPath.path);
+				System.out.println("saving path: " + (selectedPath.include ? "" : "-") + selectedPath.path);
+			}
+			writer2.close();
 
 		} catch (IOException e) {
 			// do something
@@ -250,65 +251,53 @@ public class RepositoryTree extends JPanel {
 		return false;
 	}
 
-	public void saveToProject(String projectPath) throws FileNotFoundException {
-		List<String> repos = new ArrayList<String>();
+	public void saveToProject(String repoPath) throws FileNotFoundException {
+		List<String> projects = new ArrayList<String>();
 		DefaultMutableTreeNode root = (DefaultMutableTreeNode) tree.getModel().getRoot();
 		Enumeration enumeration = root.children();
 		while (enumeration.hasMoreElements()) {
 			CheckBoxNode repo = (CheckBoxNode) enumeration.nextElement();
-			File folder = new File(projectPath + "\\" + this.getNodeFileName(repo));
-			if (!folder.exists() || !folder.isFile()) {
+			File folder = new File(repoPath + "\\" + this.getNodeFileName(repo));
+			if (!folder.exists() || !folder.isDirectory()) {
 				folder.mkdir();
 			}
-			saveRepoTo(repo, folder + "\\filelist.txt");
-			repos.add(repo.toString());
+			saveRepoTo(repo, folder + "\\filelist.txt", folder+"\\selectedfilelist.txt");
+			projects.add(repo.toString());
 		}
 		
-		
-		PrintWriter writer = new PrintWriter(projectPath + "\\repositories.txt");
-		for (String repoPath : repos) {
-			writer.println(repoPath);
+		PrintWriter writer = new PrintWriter(repoPath + "\\repositories.txt");
+		for (String projectPath : projects) {
+			writer.println(projectPath);
 		}
 		writer.flush();
 		writer.close();
 	
 	}
 	
-	private List<Path> getPaths(CheckBoxNode node, boolean thorough) {
-
+	private List<Path> getPaths(CheckBoxNode node, boolean filter) {
+		// ignore means ignore selection or not.
+		
 		List<Path> paths = new ArrayList<Path>();
 
 		System.out.println(node.toString());
 
-		if (!node.isSelected() && !thorough) {
-			return paths;
-		}
-
-		if (node.getChildCount() == 0 || thorough) {
-			Path path = new Path();
-			path.path = node.toString();
-			path.include = node.isSelected();
-			paths.add(path);
-			System.out.println(path.path);
-		}
+		if(!filter || node.isSelected()) {
+		Path path = new Path();
+		path.path = node.toString();
+		path.include = node.isSelected();
+		paths.add(path);
+		System.out.println(path.path);
 
 		Enumeration enumeration = node.children();
 		while (enumeration.hasMoreElements()) {
 			CheckBoxNode child = (CheckBoxNode) enumeration.nextElement();
-			// System.out.println("included: " + child.toString());
-			// if(!filter){
-			// Path childPath = new Path();
-			// childPath.include = child.selected;
-			// childPath.path = node.toString()+"/"+child.toString();
-			// paths.add(childPath);
-			// }
-			if (!thorough && !child.isSelected()) {
-				continue;
+		
+			for (Path childPath : getPaths(child, filter)) {
+				childPath.path = node.toString() + "\\" + childPath.path;
+				paths.add(childPath);
 			}
-			for (Path path : getPaths(child, thorough)) {
-				path.path = node.toString() + "\\" + path.path;
-				paths.add(path);
-			}
+			
+		}
 		}
 
 		return paths;
