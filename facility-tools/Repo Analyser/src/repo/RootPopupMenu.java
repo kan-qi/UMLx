@@ -94,7 +94,7 @@ public class RootPopupMenu extends PopUpMenu {
 			    		String clocDumpFile = projectRepoPath+"\\cloc_dump_file_list.txt";
 						
 						tree.dumpSelectedPaths(clocDumpFile, node);
-						AnalysisKit.calCloc(clocDumpFile, projectRepoPath);
+						analysisKit.calCloc(clocDumpFile, projectRepoPath);
 					}
 				}
 				

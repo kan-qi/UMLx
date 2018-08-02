@@ -7,28 +7,44 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import repo.RepoBrowser;
 
 public class RepoFileFinder {
-	String outputFileName = "fileList.txt";
-	String repositoryFileName = "repositories.txt";
+	String fileListName = "fileList.txt";
+	String repositoryListFileName = "repositories.txt";
+	String outputDirPath = RepoBrowser.projectPath;
+//	String tempOutputDirPath = RepoBrowser.projectPath+"\\temp";
 	PrintWriter writer = null;
 //	List<String> repoPaths = new ArrayList<String>();
 	
-	public void searchRepositoryFiles(File fin) throws Exception{
+	public RepoFileFinder(String outputDirPath) {
+		this.outputDirPath = outputDirPath;
+//		this.tempOutputDirPath = outputDirPath+"\\temp";
+
+		File outputDir = new File(this.outputDirPath);
+		if(!outputDir.exists()){
+			outputDir.mkdirs();
+		}
+		
+//		File tempOutputDir = new File(this.tempOutputDirPath);
+//		if(!tempOutputDir.exists()){
+//			tempOutputDir.mkdirs();
+//		}
+		
+	}
+
+
+	public Map<String, String> searchRepositoryFiles(File fin) throws Exception{
 		if(fin == null || !fin.exists()){
 			throw new Exception("repo doesn't exist!");
 		}
 		FileInputStream fis = new FileInputStream(fin);
 		
-		File tempDir = new File(RepoBrowser.projectTempPath);
-		if(!tempDir.exists()){
-			tempDir.mkdirs();
-		}
-
-		String tempRepoPath = RepoBrowser.projectTempPath+"\\"+repositoryFileName;
+		String repositoryListFilePath = this.outputDirPath+"\\"+repositoryListFileName;
 
 		//Construct BufferedReader from InputStreamReader
 		BufferedReader br = new BufferedReader(new InputStreamReader(fis));
@@ -43,7 +59,7 @@ public class RepoFileFinder {
 	 
 		br.close();
 		
-		File repositoriesFile = new File(tempRepoPath);
+		File repositoriesFile = new File(repositoryListFilePath);
 		if(repositoriesFile.exists()){
 			repositoriesFile.delete();
 			repositoriesFile.createNewFile();
@@ -54,17 +70,18 @@ public class RepoFileFinder {
 		}
 		writer.close();
 		
-		this.findFiles(repoPaths);
+		return this.findFiles(repoPaths);
 //		this.findFilesCMD(repoPaths);
 	}
 
 
 	public static void main(String... args) {
 	   String repoPath = RepoBrowser.projectRepoPath;
+	   String projectPath = RepoBrowser.projectPath;
 //	   String repoPath = "F:\\research\\Experiment projects\\Repo Analyser\\tools\\Repos\\repo_577_storage.txt";
 //	   String repoPath = "Z:\\Documents\\Research Space\\Experiment projects\\Repo Analyser\\tools\\Repos\\repo_577_mac_windows.txt";
 	   try {
-		RepoFileFinder fileFinder = new RepoFileFinder();
+		RepoFileFinder fileFinder = new RepoFileFinder(projectPath);
 		File fin = new File(repoPath);
 		fileFinder.searchRepositoryFiles(fin);
 	   } catch (Exception e) {
@@ -82,7 +99,7 @@ public class RepoFileFinder {
 		try {
 //			Desktop.getDesktop().open(new File(filePath));
 			for(String repoPath : repoPaths){
-			String command = "cmd.exe /c dir \""+repoPath+"\""+" /B /S >> \""+RepoBrowser.projectPath+"\\"+getRepoDirNameByPath(repoPath)+"\\"+"filelist.txt"+"\"";
+			String command = "cmd.exe /c dir \""+repoPath+"\""+" /B /S >> \""+outputDirPath+"\\"+getRepoDirNameByPath(repoPath)+"\\"+"filelist.txt"+"\"";
 			 Process p = Runtime.getRuntime().exec(command);
 			 System.out.println(command);
 	            BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
@@ -104,14 +121,16 @@ public class RepoFileFinder {
 			return repoDirName;
 	}
 
-	public void findFiles(List<String> repoPaths) throws IOException{
+	public Map<String, String> findFiles(List<String> repoPaths) throws IOException{
+		Map<String, String> fileLists = new HashMap<String, String>();
 		for(String repoPath : repoPaths){
 		String repoDirName = this.getRepoDirNameByPath(repoPath);
-		File repoDir = new File(RepoBrowser.projectPath+"\\"+repoDirName);
+		File repoDir = new File(outputDirPath+"\\"+repoDirName);
 		if(!repoDir.exists() || ! repoDir.isDirectory() ){
 			repoDir.mkdir();
 		}
-		File outputFile = new File(repoDir.getAbsolutePath()+"\\"+outputFileName);
+		String fileListPath = repoDir.getAbsolutePath()+"\\"+fileListName;
+		File outputFile = new File(fileListPath);
 		if(outputFile.exists()){
 			outputFile.delete();
 			outputFile.createNewFile();
@@ -120,15 +139,23 @@ public class RepoFileFinder {
 		searchFiles(new File(repoPath));
 		writer.flush();
 		writer.close();
+		
+		fileLists.put(repoPath, fileListPath);
+		
 		}
+		
+		return fileLists;
 	}
 
-	private void searchFiles(File dir) {
-			writer.println(dir.getAbsolutePath());
+	private List<String> searchFiles(File dir) {
+		List<String> paths = new ArrayList<String>();
+		
+		writer.println(dir.getAbsolutePath());
 	
 		if(!dir.exists() || !dir.isDirectory()){
-			return;
+			return paths;
 		}
+		
 		File[] files = dir.listFiles();
 		
 //    	String path = dir.getAbsolutePath();
@@ -136,11 +163,13 @@ public class RepoFileFinder {
 	    	String filePath = file.getAbsolutePath();
 	        if (file.isDirectory()) {
 	            System.out.println("Directory: " + filePath);
-	            searchFiles(file); // Calls same method again.
+	            paths.addAll(searchFiles(file)); // Calls same method again.
 	        } else {
 	        	writer.println(filePath);
 	            System.out.println("File: " + filePath);
+	            paths.add(filePath);
 	        }
 	    }
+		return paths;
 	}
 }
