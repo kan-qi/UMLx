@@ -45,7 +45,7 @@ var openSourceProjects = [
 	testProject24,
 	testProject25,
 	testProject26,
-	testProject27
+	testProject27,
 	
 	testProject28, 
 	testProject29,
@@ -171,6 +171,104 @@ function analyseRepo(){
 //	
 //}
 
-analyseRepo();
 
+function scanRepo(repoListPath, repoRecordPath){
+	
+      //to generate svg file.
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+    var command = 'java -classpath '+classPath+' repo.AnalysisKit "scan-repo" "'+repoListPath+'" "'+repoRecordPath+'"';
+  	console.log(command);
+  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+  		if (error !== null) {
+  			console.log('exec error: ' + error);
+  		}
+  		console.log('The file was saved!');
+  		  
+  	});
+  	
+  	child.stdout.on('data', function(data) {
+  	    console.log(data); 
+  	});
+  	
+}
+
+function selectFiles(repoRecordPath){
+	 //to generate svg file.
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+    var command = 'java -classpath '+classPath+' repo.AnalysisKit "select-files" "'+repoRecordPath+'"';
+  	console.log(command);
+  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+  		if (error !== null) {
+  			console.log('exec error: ' + error);
+  		}
+  		console.log('The file was saved!');
+  		  
+  	});
+  	
+  	child.stdout.on('data', function(data) {
+  	    console.log(data); 
+  	});
+}
+
+function analyseSloc(repoRecordPath){
+	 //to generate svg file.
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+   var command = 'java -classpath '+classPath+' repo.AnalysisKit "analyse-sloc" "'+repoRecordPath+'"';
+ 	console.log(command);
+ 	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+ 		if (error !== null) {
+ 			console.log('exec error: ' + error);
+ 		}
+ 		console.log('The file was saved!');
+ 		  
+ 	});
+ 	
+ 	child.stdout.on('data', function(data) {
+ 	    console.log(data); 
+ 	});
+}
+
+function generateReport(repoRecordPath){
+	 //to generate svg file.
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+  var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoRecordPath+'"';
+	console.log(command);
+	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+		if (error !== null) {
+			console.log('exec error: ' + error);
+		}
+		console.log('The file was saved!');
+		  
+	});
+	
+	child.stdout.on('data', function(data) {
+	    console.log(data); 
+	});
+}
+
+var repoListPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\repositories.txt";
+//var repoRecordPath = ".\\data\\RufusLabs\\sloc";
+var repoRecordPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\OpenSource\\sloc";
+
+var functionSelection = process.argv[2];
+
+//1. create a list of projects:
+ 		
+if(functionSelection === "--scan-repo"){
+//2. scan the projects in repo
+scanRepo(repoListPath, repoRecordPath);
+}
+else if(functionSelection === "--select-files"){
+//3. open repo browser to select the files that should be include in the list
+selectFiles(repoRecordPath);
+}
+else if(functionSelection === "--analyse-sloc"){
+//4. calculate sloc for each repo
+analyseSloc(repoRecordPath);
+}
+else if(functionSelection === "--generate-report"){
+	//4. calculate sloc for each repo
+generateReport(repoRecordPath);
+}
+//analyseRepo();
 
