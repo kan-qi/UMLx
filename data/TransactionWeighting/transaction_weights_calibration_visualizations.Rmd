@@ -65,8 +65,9 @@ predictedValues <- sapply(1:length(SWTIresults), function(i) {
 })
 colnames(predictedValues) <- paste(1:length(SWTIresults), "Bins")
 predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
-predictedValues <- cbind(predictedValues, effort)
-predictedValues <- as.data.frame(predictedValues)
+predictedValues <- merge(as.data.frame(predictedValues), effort, by='row.names', all=TRUE)
+rownames(predictedValues) <- predictedValues$Row.names
+predictedValues$Row.names <- NULL
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
   model <- lm(Effort ~ ., data = dat)
@@ -138,8 +139,9 @@ predictedValues <- sapply(1:length(SWTIIresults), function(i) {
 })
 colnames(predictedValues) <- paste(1:length(SWTIIresults), "Bins")
 predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
-predictedValues <- cbind(predictedValues, effort)
-predictedValues <- as.data.frame(predictedValues)
+predictedValues <- merge(as.data.frame(predictedValues), effort, by='row.names', all=TRUE)
+rownames(predictedValues) <- predictedValues$Row.names
+predictedValues$Row.names <- NULL
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
   model <- lm(Effort ~ ., data = dat)
@@ -211,8 +213,9 @@ predictedValues <- sapply(1:length(SWTIIIresults), function(i) {
 })
 colnames(predictedValues) <- paste(1:length(SWTIIIresults), "Bins")
 predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggregate")
-predictedValues <- cbind(predictedValues, effort)
-predictedValues <- as.data.frame(predictedValues)
+predictedValues <- merge(as.data.frame(predictedValues), effort, by='row.names', all=TRUE)
+rownames(predictedValues) <- predictedValues$Row.names
+predictedValues$Row.names <- NULL
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
   model <- lm(Effort ~ ., data = dat)
