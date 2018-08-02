@@ -254,7 +254,7 @@ public class PopUpMenu extends JPopupMenu {
 		    	}
 		    	else if(e.getActionCommand().equals("AnalyzeUI")){
 		    		String fileListPath = repoArchivePath+"\\dump_web_analysis_file_list.txt";
-		    		tree.dumpPaths(fileListPath, currentSelectedNode, false, new PathFilterCallback(){
+		    		tree.dumpPaths(fileListPath, currentSelectedNode, true, new PathFilterCallback(){
 
 						@Override
 						public boolean onPathFilter(Path path) {

@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -27,7 +28,7 @@ public class AnalysisKit {
 //	String commandString = "C:\\Users\\flyqk\\Documents\\Research Workspace\\filelist\\tools\\cloc\\cloc-1.64.exe --list-file=\"C:\\Users\\flyqk\\Documents\\Research Workspace\\filelist\\tools\\temp\\dump_cloc.txt\" --report-file=\""+filePath.replace("/", "\\")+"\\cloc_report.txt\"";
 //	String commandString = "tools\\cloc\\cloc-1.64.exe --list-file=\"tools\\temp\\dump_cloc.txt\" --report-file=\""+fileListPath.replace("/", "\\")+"\\cloc_report.txt\"";
 	String clocPath = Config.projectRoot+"\\tools\\cloc\\cloc-1.64.exe";
-	String commandString = clocPath+" --list-file=\""+fileListPath+"\" --report-file=\""+outputDir+"\\cloc_report.txt\"";
+	String commandString = "\""+clocPath+"\" --list-file=\""+fileListPath+"\" --report-file=\""+outputDir+"\\cloc_report.txt\"";
 	System.out.println(commandString);
 	System.out.println("start calculate cloc: "+fileListPath);
 	try {
@@ -36,6 +37,7 @@ public class AnalysisKit {
 		e.printStackTrace();
 	}
 	System.out.println("end of command: "+commandString);
+	
 	}
 	
 	public void calCloc(String repoRecordPath) throws Exception {
@@ -66,12 +68,84 @@ public class AnalysisKit {
 
 					@Override
 					public void run() {
-						System.out.println(projectRecordPath+"\\filelist.txt");
-						calCloc(projectRecordPath+"\\filelist.txt", projectRecordPath);
+						System.out.println(projectRecordPath+"\\selectedfilelist.txt");
+						calCloc(projectRecordPath+"\\selectedfilelist.txt", projectRecordPath);
 					}
 					
 				});
 		}
+	}
+	
+	public void generateSlocReport(String repoRecordPath) throws Exception {
+		System.out.println(repoRecordPath+"\\sloc_report.csv");
+		
+		File repoListFile = new File(repoRecordPath+"\\repositories.txt");
+		
+		FileInputStream fis = new FileInputStream(repoListFile);
+
+		//Construct BufferedReader from InputStreamReader
+		BufferedReader br = new BufferedReader(new InputStreamReader(fis));
+	 
+		Map<String, String> projectRecordPaths = new HashMap<String, String>();
+		String line = null;
+		while ((line = br.readLine()) != null) {
+			if(!line.startsWith("-")){
+				File repoDir = new File(line);
+				if(!repoDir.exists()) {
+					continue;
+				}
+				projectRecordPaths.put(repoDir.getName(), repoRecordPath+"\\"+getRepoDirNameByPath(line.replaceAll("\\s+$", "")));
+			}
+		}
+	 
+		br.close();
+		
+		StringBuilder reportString = new StringBuilder();
+		reportString.append("projecct, files, blank, comment, code\n");
+		for(String projectName : projectRecordPaths.keySet()) {
+				String projectRecordPath = projectRecordPaths.get(projectName);
+				System.out.println(projectRecordPath+"\\cloc_report.txt");
+				//Construct BufferedReader from InputStreamReader
+				File clocFile = new File(projectRecordPath+"\\cloc_report.txt");
+				if(!clocFile.exists()) {
+					continue;
+				}
+
+				FileInputStream clocfis = new FileInputStream(clocFile);
+				BufferedReader clocbr = new BufferedReader(new InputStreamReader(clocfis));
+				
+				String recordLine = null;
+				while ((recordLine = clocbr.readLine()) != null) {
+						if(!recordLine.startsWith("SUM:")) {
+							continue;
+						}
+						String[] records = recordLine.split("\\s+");
+						reportString.append(projectName);
+						for(int i = 1; i < records.length; i++) {
+							reportString.append(","+records[i]);
+						}
+						reportString.append("\n");
+				}
+			 
+				br.close();
+		}
+		
+		File reportFile = new File(repoRecordPath+"\\sloc_report.csv");
+		
+		if(repoListFile == null || !repoListFile.exists()){
+			throw new Exception("repo doesn't exist!");
+		}
+		
+		if(reportFile.exists()) {
+			reportFile.delete();
+		}
+		
+		reportFile.createNewFile();
+		
+		PrintWriter writer = new PrintWriter(reportFile);
+		writer.print(reportString.toString());
+		writer.flush();
+		writer.close();
 	}
 	
 	private String getRepoDirNameByPath(String repoPath){
@@ -159,6 +233,18 @@ public class AnalysisKit {
 	                new RepoBrowser(repoRecordPath).setVisible(true);
 	            }
 	        });
+		}
+		else if(command.equals("generate-report")) {
+//			final String fileListPath = "./tools/temp/repositories.txt";
+			
+			String repoRecordPath = args[1];
+			AnalysisKit analysisKit = new AnalysisKit();
+			try {
+				analysisKit.generateSlocReport(repoRecordPath);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 		else {
 			System.out.println("invalid command");
