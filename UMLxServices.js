@@ -1146,10 +1146,10 @@ app.get('/requestRepoBrief', function (req, res){
 		umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
 			console.log('==========totalRec===========');
 			// console.log(totalRec);
-            repoInfoBrief.projectNum[repoInfoBrief.projectNum.length - 1] = totalRec;
-            repoInfoBrief.NT[repoInfoBrief.NT.length - 1] = totalNT;
-            repoInfoBrief.UseCaseNum[repoInfoBrief.UseCaseNum.length - 1] = totalUseCaseNum;
-            repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length - 1] = totalEntityNum;
+            repoInfoBrief.projectNum[repoInfoBrief.projectNum.length] = totalRec;
+            repoInfoBrief.NT[repoInfoBrief.NT.length] = totalNT;
+            repoInfoBrief.UseCaseNum[repoInfoBrief.UseCaseNum.length] = totalUseCaseNum;
+            repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length] = totalEntityNum;
 
 				res.end(JSON.stringify(repoInfoBrief));
 			});
