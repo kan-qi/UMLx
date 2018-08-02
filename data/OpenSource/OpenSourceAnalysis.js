@@ -38,37 +38,92 @@ var openSourceProjects = [
 	testProject18, 
 	testProject19, 
 	testProject20,
-	
-	testProject21, 
-	testProject22,
-	testProject23, 
-	testProject24,
-	testProject25,
-	testProject26,
-	testProject27,
-	
-	testProject28, 
-	testProject29,
-	testProject30,
-	testProject31, 
-	testProject32,
-	testProject33,
-	testProject34
+//	
+//	testProject21, 
+//	testProject22,
+//	testProject23, 
+//	testProject24,
+//	testProject25,
+//	testProject26,
+//	testProject27,
+//	
+//	testProject28, 
+//	testProject29,
+//	testProject30,
+//	testProject31, 
+//	testProject32,
+//	testProject33,
+//	testProject34
 	];
 
 var fs = require('fs');
 var exec = require('child_process').exec;
+var EclipseUtil = require("../../utils/EclipseUtil.js");
+var FileManagerUtil = require("../../utils/FileManagerUtil.js");
 
 var UMLxAnalyticToolKit = require("../../utils/UMLxAnalyticToolKitCore.js");
 
-function analyseRepo(){
+function recoverKDMModel(repoListPath){
+	
+	var currentWorkSpace = "C:\\Users\\flyqk\\workspace\\.metadata"
+	FileManagerUtil.deleteFolderRecursive(currentWorkSpace);
+
+	  //use promise to construct the repo objects
+    function recoverModel(projectPath, override){
+        return new Promise((resolve, reject) => {
+        		
+        	var modelFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+        	
+        	console.log(modelFile);
+        	
+        	fs.exists(modelFile, (exists) => {
+        	if(exists && !override){
+        		console.log(modelFile +" already exist.");
+        		resolve();
+        	}
+        	else{
+            //to recover kdm model
+        		
+        		EclipseUtil.generateKDMModel2(projectPath, function(filePath){
+        			console.log("finished recovering kdm model");
+        			console.log(filePath);
+            		resolve();
+        		});
+        		
+        	}
+      	  });
+        	
+        });
+    }
+    
+    return Promise.all(openSourceProjects.map(projectPath=>{
+        return recoverModel(projectPath, false);
+    })).then(
+        function(){
+            return new Promise((resolve, reject) => {
+                setTimeout(function(){
+                	console.log("recoverFinished");
+                    resolve();
+
+                }, 0);
+            });
+        }
+
+    ).catch(function(err){
+        console.log(err);
+    });
+
+}
+
+function analyseXMIModel(xmiModelFileName){
 	
 	  //use promise to construct the repo objects
-    function analyseProject(projectPath){
+    function analyseModel(projectPath){
         return new Promise((resolve, reject) => {
         		
         	var outputFolder = projectPath;
-        	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+//        	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+        	var inputFile = projectPath + "/"+xmiModelFileName;
         	
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
@@ -92,7 +147,7 @@ function analyseRepo(){
     }
     
     return Promise.all(openSourceProjects.map(projectPath=>{
-        return analyseProject(projectPath);
+        return analyseModel(projectPath);
     })).then(
         function(){
             return new Promise((resolve, reject) => {
@@ -110,10 +165,10 @@ function analyseRepo(){
 	
 }
 
-//function analyseRepo(){
+//function analyseXMIModel(){
 //	
 //	  //use promise to construct the repo objects
-//  function analyseProject(projectPath){
+//  function analyseModel(projectPath){
 //      return new Promise((resolve, reject) => {
 //      		
 //      	var outputFolder = projectPath;
@@ -153,7 +208,7 @@ function analyseRepo(){
 //  }
 //  
 //  return Promise.all(openSourceProjects.map(projectPath=>{
-//      return analyseProject(projectPath);
+//      return analyseModel(projectPath);
 //  })).then(
 //      function(){
 //          return new Promise((resolve, reject) => {
@@ -173,7 +228,6 @@ function analyseRepo(){
 
 
 function scanRepo(repoListPath, repoRecordPath){
-	
       //to generate svg file.
 	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
     var command = 'java -classpath '+classPath+' repo.AnalysisKit "scan-repo" "'+repoListPath+'" "'+repoRecordPath+'"';
@@ -270,5 +324,15 @@ else if(functionSelection === "--generate-report"){
 	//4. calculate sloc for each repo
 generateReport(repoRecordPath);
 }
-//analyseRepo();
+
+else if(functionSelection === "--recover-kdm"){
+	
+recoverKDMModel(repoListPath)
+
+}
+else if(functionSelection === "--analyse-xmi-model"){
+	
+analyseXMIModel("eclipse_gen_umlx_kdm.xmi");
+
+}
 

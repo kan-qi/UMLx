@@ -73,7 +73,7 @@ var exec = require('child_process').exec;
 
 var UMLxAnalyticToolKit = require("../../utils/UMLxAnalyticToolKitCore.js");
 
-function analyseRepo(){
+function recoverKDM(repoListPath){
 	
 	  //use promise to construct the repo objects
     function analyseProject(projectPath){
@@ -103,6 +103,8 @@ function analyseRepo(){
         });
     }
     
+    
+    
     return Promise.all(rufuslabsProjects.map(projectPath=>{
         return analyseProject(projectPath);
     })).then(
@@ -122,7 +124,7 @@ function analyseRepo(){
 	
 }
 
-//function analyseRepo(){
+//function recoverKDM(){
 //	
 //	  //use promise to construct the repo objects
 //  function analyseProject(projectPath){
@@ -282,5 +284,8 @@ else if(functionSelection === "--generate-report"){
 	//4. calculate sloc for each repo
 generateReport(repoRecordPath);
 }
-//analyseRepo();
+else if(functionSelection === "--recover-kdm"){
+
+recoveryKDM(repoListPath);
+}
 
