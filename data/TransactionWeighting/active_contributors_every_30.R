@@ -1,9 +1,27 @@
+#!/usr/bin/env Rscript
+
 # This script calculates the number of active contributors of an open source
 # project using the Github API. Active contributors are defined as in:
 # Software effort estimation based on open source projects: Case study of Github
 # Information and Software Technology 92(2017)145-157
 # After calculating the number of active and inactive contributors. The effort
 # is simulated using simEffort().
+
+#arg1: git url
+#arg2: result output path
+
+args = commandArgs(trailingOnly=TRUE)
+
+if (length(args) < 1) {
+	stop("At least 1 argument must be supplied (input file).", call.=FALSE)
+} else if (length(args)==1) {
+	# default output file
+	args[2] = "./temp/git_effort_request_results.txt"
+}
+
+gitUrl <- args[1]
+outputPath <- args[2]
+
 
 library(jsonlite)
 library(httr)
@@ -157,4 +175,12 @@ simEffort <- function(url, user, pw) {
   effort
 }
 
-simEffort("https://api.github.com/repos/apache/carbondata", "flyqk", "qk@github/910304")
+sink(outputFile)
+
+#effortResult <- simEffort("https://api.github.com/repos/apache/carbondata", "flyqk", "qk@github/910304")
+
+effortResult <- simEffort(gitUrl, "flyqk", "qk@github/910304")
+
+print(effortResult);
+
+sink()

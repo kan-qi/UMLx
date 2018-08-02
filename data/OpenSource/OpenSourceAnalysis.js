@@ -165,6 +165,75 @@ function analyseXMIModel(xmiModelFileName){
 	
 }
 
+function requestEffortData(xmiModelFileName){
+	
+	  //use promise to construct the repo objects
+  function requestEffort(projectPath, override){
+      return new Promise((resolve, reject) => {
+      		
+//      	var outputFolder = projectPath;
+//      	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+      	var outputFilePath = projectPath + "/requested_effort.txt";
+      	
+      	fs.exists(outputFilePath, (exists) => {
+      	if(exists && !override){
+      		console.log(outputFilePathe+" doesn't exist.");
+      		resolve();
+      	}
+      	else{
+
+          	var gitUrlFile = projectPath + "/git-url.txt";
+          	
+      		fs.exists(gitUrlFile, (exists) => {
+      	      	if(!exists){
+      	      		console.log(gitUrlFile+" doesn't exist.");
+      	      		resolve();
+      	      	}
+      	      	else{
+      	      	fs.readFile(gitUrlFile, 'utf-8', (err, str) => {
+ 				   if (err) throw err;
+// 				    console.log(data);
+ 				   
+      		var gitUrl = str;
+      		var command = '../TransactionWeighting/active_contributors_every_30.R "'+gitUrl+'" "'+outputFilePath+'" ';
+			
+          //to generate svg file.
+      		RScriptExec.runRScript(command,function(result){
+				if (!result) {
+//					console.log('exec error: ' + error);
+					console.log("project effort estimation error");
+				}
+				resolve();
+			});
+
+ 			});
+      	      	}
+      		)
+      	}
+    	  });
+      	
+      });
+  }
+  
+  return Promise.all(openSourceProjects.map(projectPath=>{
+      return requestEffort(projectPath);
+  })).then(
+      function(){
+          return new Promise((resolve, reject) => {
+              setTimeout(function(){
+              	console.log("analysis finished");
+                  resolve();
+
+              }, 0);
+          });
+      }
+
+  ).catch(function(err){
+      console.log(err);
+  });
+	
+}
+
 //function analyseXMIModel(){
 //	
 //	  //use promise to construct the repo objects
@@ -333,6 +402,11 @@ recoverKDMModel(repoListPath)
 else if(functionSelection === "--analyse-xmi-model"){
 	
 analyseXMIModel("eclipse_gen_umlx_kdm.xmi");
+
+}
+else if(functionSelection === "--request-effort-data"){
+	
+requestEffortData(repoListPath);
 
 }
 
