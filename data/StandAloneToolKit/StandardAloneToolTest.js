@@ -26,7 +26,7 @@ var testProject55 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject56 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\serviceuser";
 //var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\weather-widget";
 
-var testProject57 = "D:/UML-project/UMLx/data/StandAloneToolKit";
+var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\StandAloneToolKit";
 
 var rufuslabsProjects = [
 //	testProject33, // generated
@@ -71,6 +71,7 @@ function analyseRepo(){
         return new Promise((resolve, reject) => {
 
             var outputFolder = projectPath;
+//            var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
             var inputFile = projectPath + "/f14a_e_lock_box.xml";
 
             fs.exists(inputFile, (exists) => {
