@@ -27,7 +27,7 @@ var testProject32 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\webAnalyzer";
 var testProject34 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\carbondata_archive\\carbondata";
 
-var openSourceProjects = [
+var targetProjects = [
 //	testProject12, 
 	testProject13, 
 //	
@@ -97,7 +97,7 @@ function recoverKDMModel(repoListPath){
         });
     }
     
-    return Promise.all(openSourceProjects.map(projectPath=>{
+    return Promise.all(targetProjects.map(projectPath=>{
         return recoverModel(projectPath, false);
     })).then(
         function(){
@@ -147,7 +147,7 @@ function analyseXMIModel(xmiModelFileName){
         });
     }
     
-    return Promise.all(openSourceProjects.map(projectPath=>{
+    return Promise.all(targetProjects.map(projectPath=>{
         return analyseModel(projectPath);
     })).then(
         function(){
@@ -216,7 +216,7 @@ function requestEffortData(xmiModelFileName){
   });
   }
   
-  return Promise.all(openSourceProjects.map(projectPath=>{
+  return Promise.all(targetProjects.map(projectPath=>{
       return requestEffort(projectPath);
   })).then(
       function(){
@@ -277,7 +277,7 @@ function requestEffortData(xmiModelFileName){
 //      });
 //  }
 //  
-//  return Promise.all(openSourceProjects.map(projectPath=>{
+//  return Promise.all(targetProjects.map(projectPath=>{
 //      return analyseModel(projectPath);
 //  })).then(
 //      function(){

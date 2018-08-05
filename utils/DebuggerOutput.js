@@ -5,6 +5,7 @@
 	var OutputDir = './debug';
 	
 	function writeJson(token, message, callbackfunc){
+		console.log(token);
 		mkdirp(OutputDir, function(err) { 
 		fs.writeFile(OutputDir+'/'+token+'.json', JSON.stringify(message), function(err){
 			if(err){

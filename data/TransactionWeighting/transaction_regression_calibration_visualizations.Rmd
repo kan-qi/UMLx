@@ -1,0 +1,27 @@
+---
+title: "Transaction Weight Calibration Visualized"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("transaction_regression_calibration.R")
+library(tidyverse)
+
+```
+Combined Data Effort Values
+```{r combined}
+#combined <- combineData("./Transaction Data")
+effort <- read.csv("effortValues.csv")
+rownames(effort) <- effort$Project
+effort$Project <- NULL
+print(effort)
+```
+SWTII Search Results
+```{r SWTII}
+SWTIIresults <- performSearch("./Transaction Data", effort, c("TL", "TD", "DETs"))
+
+# Plot cross validation results
+print(c(SWTIIresults$MSE, SWTIIresults$MMRE, SWTIIresults$PRED))
+print(summary(SWTIIresults$model))
+```

@@ -19,13 +19,11 @@ var testProject39 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject40 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\integrated-nav-bar";
 var testProject41 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\launcher-3";
 var testProject42 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\lockscreen";
-
 var testProject43 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\musicplayer";
 var testProject44 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\musicplayerwithlockscreencom";
 var testProject45 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\navigationbar";
 var testProject46 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\old_dialer";
 var testProject47 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\old_rufusconnect";
-
 var testProject48 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufus_connect_ios";
 var testProject49 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufusconnectandroid";
 var testProject50 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\rufuscuffbackgroundservices";
@@ -37,20 +35,20 @@ var testProject55 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject56 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\serviceuser";
 var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\weather-widget";
 
-var rufuslabsProjects = [
-	testProject33, // generated
-//	testProject34, // not exists
+var targetProjects = [
+//	testProject33, // generated
+//	testProject34, // not exists alltheapps
 //	testProject35, // not exists 
 //		
 //	testProject36, // not exists 
 //	testProject37, // generated
 //	testProject38, // not exists
-//	testProject39, 
-//	testProject40,
-//	
-//	testProject41, 
-//	testProject42,
-//	testProject43, 
+//	testProject39, // generated incomingcallscreen
+	testProject40, // integrated-nav-bar
+	
+//	testProject41, //launcher-3
+//	testProject42, //lockscreen
+//	testProject43, //musicplayer
 //	testProject44,
 //	testProject45,
 //	testProject46,
@@ -70,17 +68,73 @@ var rufuslabsProjects = [
 
 var fs = require('fs');
 var exec = require('child_process').exec;
+var EclipseUtil = require("../../utils/EclipseUtil.js");
+var FileManagerUtil = require("../../utils/FileManagerUtil.js");
+var RScriptExec = require('../../utils/RScriptUtil.js');
 
 var UMLxAnalyticToolKit = require("../../utils/UMLxAnalyticToolKitCore.js");
 
-function recoverKDM(repoListPath){
+function recoverKDMModel(repoListPath){
+	
+	var currentWorkSpace = "C:\\Users\\flyqk\\workspace\\.metadata"
+	FileManagerUtil.deleteFolderRecursive(currentWorkSpace);
+
+	  //use promise to construct the repo objects
+    function recoverModel(projectPath, override){
+        return new Promise((resolve, reject) => {
+        		
+        	var modelFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+        	
+        	console.log(modelFile);
+        	
+        	fs.exists(modelFile, (exists) => {
+        	if(exists && !override){
+        		console.log(modelFile +" already exist.");
+        		resolve();
+        	}
+        	else{
+            //to recover kdm model
+        		
+        		EclipseUtil.generateKDMModel2(projectPath, function(filePath){
+        			console.log("finished recovering kdm model");
+        			console.log(filePath);
+            		resolve();
+        		});
+        		
+        	}
+      	  });
+        	
+        });
+    }
+    
+    return Promise.all(targetProjects.map(projectPath=>{
+        return recoverModel(projectPath, false);
+    })).then(
+        function(){
+            return new Promise((resolve, reject) => {
+                setTimeout(function(){
+                	console.log("recoverFinished");
+                    resolve();
+
+                }, 0);
+            });
+        }
+
+    ).catch(function(err){
+        console.log(err);
+    });
+
+}
+
+function analyseXMIModel(xmiModelFileName){
 	
 	  //use promise to construct the repo objects
-    function analyseProject(projectPath){
+    function analyseModel(projectPath){
         return new Promise((resolve, reject) => {
         		
         	var outputFolder = projectPath;
-        	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+//        	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+        	var inputFile = projectPath + "/"+xmiModelFileName;
         	
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
@@ -103,10 +157,8 @@ function recoverKDM(repoListPath){
         });
     }
     
-    
-    
-    return Promise.all(rufuslabsProjects.map(projectPath=>{
-        return analyseProject(projectPath);
+    return Promise.all(targetProjects.map(projectPath=>{
+        return analyseModel(projectPath);
     })).then(
         function(){
             return new Promise((resolve, reject) => {
@@ -124,10 +176,172 @@ function recoverKDM(repoListPath){
 	
 }
 
-//function recoverKDM(){
+function requestEffortData(xmiModelFileName){
+	
+	  //use promise to construct the repo objects
+  function requestEffort(projectPath, override){
+      return new Promise((resolve, reject) => {
+      		
+//      	var outputFolder = projectPath;
+//      	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+      	var outputFilePath = projectPath + "/requested_effort.txt";
+      	
+      	fs.exists(outputFilePath, (exists) => {
+      	if(exists && !override){
+      		console.log(outputFilePathe+" doesn't exist.");
+      		resolve();
+      	}
+      	else{
+
+          	var gitUrlFile = projectPath + "/git-url.txt";
+          	
+      		fs.exists(gitUrlFile, (exists) => {
+      	      	if(!exists){
+      	      		console.log(gitUrlFile+" doesn't exist.");
+      	      		resolve();
+      	      	}
+      	      	else{
+      	      	fs.readFile(gitUrlFile, 'utf-8', (err, str) => {
+ 				   if (err) throw err;
+// 				    console.log(data);
+ 				   
+      		var gitUrl = str;
+      		var command = './data/TransactionWeighting/active_contributors_every_30.R "'+gitUrl+'" "'+outputFilePath+'" ';
+			
+          //to generate svg file.
+      		RScriptExec.runRScript(command,function(result){
+				if (!result) {
+//					console.log('exec error: ' + error);
+					console.log("project effort estimation error");
+				}
+				console.log(gitUrl+": effort request finished.");
+				resolve();
+			});
+
+ 			});
+      	      	}
+    	  });
+      	}
+      });
+  });
+  }
+  
+  return Promise.all(targetProjects.map(projectPath=>{
+      return requestEffort(projectPath);
+  })).then(
+      function(){
+          return new Promise((resolve, reject) => {
+              setTimeout(function(){
+              	console.log("analysis finished");
+                  resolve();
+
+              }, 0);
+          });
+      }
+
+  ).catch(function(err){
+      console.log(err);
+  });
+	
+}
+
+function estimateEffort(xmiModelFileName){
+	  //use promise to construct the repo objects
+    function predictEffort(projectPath){
+        return new Promise((resolve, reject) => {
+      	  
+      	console.log(projectPath);
+
+      	var command = './Rscript/EffortEstimation.R "eucp_linear_regression_model.rds" "'+projectPath+'/modelEvaluation.csv" "'+projectPath+'" "eucp_effort_prediction"';
+			
+			console.log("estimation command");
+			console.log(command);
+			
+			RScriptExec.runRScript(command,function(result){
+				if (!result) {
+//					console.log('exec error: ' + error);
+					console.log("project effort estimation error");
+					
+				} else {
+					fs.readFile(projectPath+"/eucp_effort_prediction_result.json", 'utf-8', (err, str) => {
+						if (err) throw err;
+						   console.log(str);
+						   var projectEffort = JSON.parse(str).result;
+						   console.log("eucp estimate: "+projectEffort);
+                //console.log(modelInfo);
+					});
+				}
+				
+				var command2 = './Rscript/EffortEstimation.R "exucp_linear_regression_model.rds" "'+projectPath+'/modelEvaluation.csv" "'+projectPath+'" "exucp_effort_prediction"';
+	  			
+				RScriptExec.runRScript(command2,function(result){
+	  				if (!result) {
+//	  					console.log('exec error: ' + error);
+	  					console.log("project effort estimation error");
+	  					
+	  				} else {
+	  					fs.readFile(projectPath+"/exucp_effort_prediction_result.json", 'utf-8', (err, str) => {
+	  						   if (err) throw err;
+	  						   console.log(str);
+	  						   
+	  						   var projectEffort = JSON.parse(str).result;
+	  						   
+	  						   console.log("exucp estimate: "+projectEffort);
+	                  //console.log(modelInfo);
+	  					});
+	  				}
+	  				
+	  				var command3 = './Rscript/EffortEstimation.R "ducp_linear_regression_model.rds" "'+projectPath+'/modelEvaluation.csv" "'+projectPath+'" "ducp_effort_prediction"';
+	  			
+	  				RScriptExec.runRScript(command3,function(result){
+	  				if (!result) {
+//	  					console.log('exec error: ' + error);
+	  					console.log("project effort estimation error");
+	  					
+	  				} else {
+	  					fs.readFile(projectPath+"/ducp_effort_prediction_result.json", 'utf-8', (err, str) => {
+	  						   if (err) throw err;
+	  						   console.log(str);
+	  						   
+	  						   var projectEffort = JSON.parse(str).result;
+	  						   
+	  						   console.log("ducp estimate: "+projectEffort);
+	                  //console.log(modelInfo);
+	  					});
+	  				}
+	  				
+	  				resolve();
+	          });
+	          });
+			});
+        });
+    }
+    
+	    return Promise.all(targetProjects.map(projectPath=>{
+        return predictEffort(projectPath);
+    })).then(
+        function(){
+            return new Promise((resolve, reject) => {
+                setTimeout(function(){
+              	  console.log("prediction effort finishes");
+
+                    resolve();
+
+                }, 0);
+            });
+        }
+
+    ).catch(function(err){
+        console.log(err);
+    });
+  }
+
+
+
+//function analyseXMIModel(){
 //	
 //	  //use promise to construct the repo objects
-//  function analyseProject(projectPath){
+//  function analyseModel(projectPath){
 //      return new Promise((resolve, reject) => {
 //      		
 //      	var outputFolder = projectPath;
@@ -166,8 +380,8 @@ function recoverKDM(repoListPath){
 //      });
 //  }
 //  
-//  return Promise.all(rufuslabsProjects.map(projectPath=>{
-//      return analyseProject(projectPath);
+//  return Promise.all(targetProjects.map(projectPath=>{
+//      return analyseModel(projectPath);
 //  })).then(
 //      function(){
 //          return new Promise((resolve, reject) => {
@@ -187,7 +401,6 @@ function recoverKDM(repoListPath){
 
 
 function scanRepo(repoListPath, repoRecordPath){
-	
       //to generate svg file.
 	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
     var command = 'java -classpath '+classPath+' repo.AnalysisKit "scan-repo" "'+repoListPath+'" "'+repoRecordPath+'"';
@@ -260,9 +473,9 @@ function generateReport(repoRecordPath){
 	});
 }
 
-var repoListPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\repositories.txt";
+var repoListPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\repositories.txt";
 //var repoRecordPath = ".\\data\\RufusLabs\\sloc";
-var repoRecordPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\RufusLabs\\sloc";
+var repoRecordPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\OpenSource\\sloc";
 
 var functionSelection = process.argv[2];
 
@@ -275,17 +488,38 @@ scanRepo(repoListPath, repoRecordPath);
 else if(functionSelection === "--select-files"){
 //3. open repo browser to select the files that should be include in the list
 selectFiles(repoRecordPath);
+
 }
 else if(functionSelection === "--analyse-sloc"){
 //4. calculate sloc for each repo
 analyseSloc(repoRecordPath);
+
 }
 else if(functionSelection === "--generate-report"){
 	//4. calculate sloc for each repo
 generateReport(repoRecordPath);
-}
-else if(functionSelection === "--recover-kdm"){
 
-recoveryKDM(repoListPath);
 }
+
+else if(functionSelection === "--recover-kdm"){
+	
+recoverKDMModel(repoListPath)
+
+}
+else if(functionSelection === "--analyse-xmi-model"){
+	
+analyseXMIModel("eclipse_gen_umlx_kdm.xmi");
+
+}
+else if(functionSelection === "--request-effort-data"){
+	
+requestEffortData(repoListPath);
+
+}
+else if(functionSelection === "--estimate-effort"){
+	
+estimateEffort(repoListPath);
+
+}
+
 

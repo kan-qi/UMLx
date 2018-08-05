@@ -15,7 +15,7 @@
 	var mkdirp = require('mkdirp');
 	var RScriptExec = require('../utils/RScriptUtil.js');
 	
-	var predictionModel = "eucp_linear_regression_model.rds";
+	var predictionModel = "ducp_linear_regression_model.rds";
 	var sizeMetric = "DUCP"
 	var transactionMetric = "SWTIII";
 	
