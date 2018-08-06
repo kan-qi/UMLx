@@ -2,8 +2,10 @@
 
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
-	var OutputDir = './debug';
-	
+	var config = require("../config.js");
+//	var OutputDir = './debug';
+	var OutputDir = config.debugOutputDir;
+
 	function writeJson(token, message, callbackfunc){
 		console.log(token);
 		mkdirp(OutputDir, function(err) { 

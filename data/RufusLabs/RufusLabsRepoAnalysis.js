@@ -35,35 +35,34 @@ var testProject55 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject56 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\serviceuser";
 var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\weather-widget";
 
+var config = require("../../config.js");
+
 var targetProjects = [
-//	testProject33, // generated
-//	testProject34, // not exists alltheapps
-//	testProject35, // not exists 
-//		
-//	testProject36, // not exists 
-//	testProject37, // generated
-//	testProject38, // not exists
-//	testProject39, // generated incomingcallscreen
-	testProject40, // integrated-nav-bar
-	
-//	testProject41, //launcher-3
-//	testProject42, //lockscreen
+//	testProject33, //all-apps
+//	testProject34, //alltheapps
+//	testProject35, //btchatprotobuf
+//	testProject36, //cuffbackgroundservice
+//	testProject37, //dialer
+//	testProject38, //incallui
+//	testProject39, //incomingcallscreen
+//	testProject40, //integrated-nav-bar
+//	testProject41, //launcher-3 // invalid string length.
+//	testProject42, //lockscreen // error invalid string length
 //	testProject43, //musicplayer
-//	testProject44,
-//	testProject45,
-//	testProject46,
-//	testProject47,
-//	
-//	testProject48, 
-//	testProject49,
-//	testProject50, 
-//	testProject51,
-//	testProject52,
-//	testProject53,
-//	testProject54,
-//	testProject55,
-//	testProject56,
-//	testProject57
+//	testProject44, //musicplayerwithlockscreencom
+//	testProject45, //navigationbar
+//	testProject46, //old_dialer // xmi is not available.
+//	testProject47, //old_rufusconnect
+//	testProject48, //rufus_connect_ios
+//	testProject49, //rufusconnectandroid
+//	testProject50, //rufuscuffbackgroundservices // xmi is not available
+//	testProject51, //rufuscufflauncher//xmi doesn't exist
+//	testProject52, //rufuscuffprotocolbuffers //xmi doesn't exist
+//	testProject53, //rufuslabsupdateservice
+//	testProject54, //rufuslocation
+//	testProject55, //rufusmms // xmi doesn't exist
+//	testProject56, //serviceuser //xmi doesn't exist
+	testProject57 //weather-widget
 	];
 
 var fs = require('fs');
@@ -131,7 +130,7 @@ function analyseXMIModel(xmiModelFileName){
 	  //use promise to construct the repo objects
     function analyseModel(projectPath){
         return new Promise((resolve, reject) => {
-        		
+        	config.setDebugOutputDir(projectPath+"/debug");
         	var outputFolder = projectPath;
 //        	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
         	var inputFile = projectPath + "/"+xmiModelFileName;
@@ -507,7 +506,6 @@ recoverKDMModel(repoListPath)
 
 }
 else if(functionSelection === "--analyse-xmi-model"){
-	
 analyseXMIModel("eclipse_gen_umlx_kdm.xmi");
 
 }

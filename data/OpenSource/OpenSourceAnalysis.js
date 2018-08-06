@@ -28,32 +28,33 @@ var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject34 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\carbondata_archive\\carbondata";
 
 var targetProjects = [
-//	testProject12, 
-	testProject13, 
-//	
-//	testProject14, 
-//	testProject15, 
-//	testProject16, 
-//	testProject17, 
-//	testProject18, 
-//	testProject19, 
-//	testProject20,
-//	
-//	testProject21, 
-//	testProject22,
-//	testProject23, 
-//	testProject24,
-//	testProject25,
-//	testProject26,
-//	testProject27,
-//	
-//	testProject28, 
-//	testProject29,
-//	testProject30,
-//	testProject31, 
-//	testProject32,
-//	testProject33,
-//	testProject34
+//	testProject12, //alltheapps
+//
+//	testProject13, //fabric-sdk-java
+	testProject14, //fluo-yarn
+//	testProject15, //hise
+//	testProject16, //httpasyncclient
+//	testProject17, //httpcomponents-core
+//	testProject18, //jackrabbit
+//	testProject19, //jackrabbit-filevault
+//	testProject20, //jackrabbit-oak
+//
+//	testProject21, //jackrabbit-ocm
+//	testProject22, //james-jspf
+//	testProject23, //james-mime4j
+//	testProject24, //james-project
+//	testProject25, //JBREX_work_space
+//	testProject26, //jbrex-master
+//	testProject27, //jclouds
+//
+//	testProject28, //kalumet
+//	testProject29, //karaf
+//	testProject30, //mybatis-3
+//
+//	testProject31, //Repo Analyser
+//	testProject32, //Thunder Fighter 2048
+//	testProject33, //webAnalyzer
+//	testProject34, //carbondata_archive\\carbondata
 	];
 
 var fs = require('fs');

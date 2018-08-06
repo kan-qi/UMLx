@@ -95,7 +95,7 @@ predict.lm <- function(model, newdata) {
   newdata <- subset(newdata, select = -c(Effort))
   ret <- apply(newdata, 1, function(x) {
     effort <- 0
-    effort <- x*coef(model)
+    effort <- t(coef(model))%*%x
     effort
   })
   ret
@@ -117,23 +117,44 @@ performSearch <- function(folder, effortData, parameters = c("TL", "TD", "DETs")
   # Returns:
   #   A list in which the ith index gives the results of the search for i bins.
   #combinedData <- combineData(folder)
-    numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
-    regressionData <- matrix(nrow = numFiles, ncol = length(parameters) + 1)
-    rownames(regressionData) <- dir(folder)[grepl(".csv", dir(folder), ignore.case = TRUE)]
+    #numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
+    regressionData <- matrix(nrow = nrow(effortData), ncol = length(parameters) + 1)
+    rownames(regressionData) <- effortData$Project
     colnames(regressionData) <- c(parameters, "Effort")
-    for (file in dir(folder)) {
-      if (grepl(".csv", file, ignore.case = TRUE)) {
-        fileData <- read.csv(paste(folder, file, sep = "/"))
-        fileData <- na.omit(fileData)
-        regressionData[file, ] <- c(colSums(subset(fileData, select=parameters)), effortData[file, "Effort"])
+    #for (file in dir(folder)) {
+    #  if (grepl(".csv", file, ignore.case = TRUE)) {
+    #    fileData <- read.csv(paste(folder, file, sep = "/"))
+    #    fileData <- na.omit(fileData)
+    #    regressionData[file, ] <- c(colSums(subset(fileData, select=parameters)), effortData[file, "Effort"])
+    #  }
+    #}
+    for(i in 1:nrow(effortData)){
+      project <- effortData[i, ]$Project
+      csvFile <- paste(folder, paste(project, "csv", sep="."), sep="/")
+      if (file.exists(csvFile)) {
+      transactionData <- subset(read.csv(csvFile), select=parameters)
+      for(j in 1:ncol(transactionData)){
+        transactionData[,j] = as.numeric(transactionData[, j])
+      }
+      transactionData <- na.omit(transactionData)
+      print(transactionData)
+      regressionData[project,] <- c(colSums(transactionData), effortData[i, "Effort"])
       }
     }
+    
+    regressionData <- na.omit(regressionData)
+    
+    #print(regressionData)
+    
     regressionData <- as.data.frame(regressionData)
     validationResults <- crossValidate(regressionData, k)
-    searchResults <- list(MSE = validationResults["MSE"], 
-                               MMRE = validationResults["MMRE"], 
+    searchResults <- list(MSE = validationResults["MSE"],
+                              MMRE = validationResults["MMRE"], 
                                PRED = validationResults["PRED"],
                                model = lm(Effort ~ . - 1, regressionData),
                                data = regressionData)
-  searchResults
+    searchResults
 }
+
+
+

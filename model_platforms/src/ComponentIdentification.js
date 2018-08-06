@@ -29,10 +29,10 @@
 //	var dom = require('xmldom').DOMParser;
 
 
-  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classes, classUnits, dicChildrenClasses, outputDir) {
+  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classes, classUnits, dicCompositeSubclasses, outputDir) {
 
 		// console.log("!!!!!!!!!!!");
-		// console.log(dicChildrenClasses);
+		// console.log(dicCompositeSubclasses);
 
 		var classDic = {};
 		var classArray = [];
@@ -111,8 +111,8 @@
 		var nodesClassAllTree = [];
 		var edgesAllTree = [];
 
-		var clusterTree = findClusters(classArray, relations, nodesNullAllTree, nodesClassAllTree, edgesAllTree, dicChildrenClasses, classUnits, 0, 1.5);
-		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits, 0, 0.6);
+		var clusterTree = findClusters(classArray, relations, nodesNullAllTree, nodesClassAllTree, edgesAllTree, dicCompositeSubclasses, classUnits, 0, 1.5);
+		var clusteredClasses = findClusters(classArray, relations, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, 0, 0.6);
 		// console.log("checkcheckcheck")
 		// console.log(util.inspect(clusteredClasses, false, null))
 		var debug = require("../../utils/DebuggerOutput.js");
@@ -598,7 +598,7 @@
 	}
 
 // mode => 0: SINGLE_LINKAGE; 1: CONPLETE_LINKAGE; 2: AVERAGE_LINKAGE
-	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicChildrenClasses, classUnits, mode, threshold) {
+	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, mode, threshold) {
 
 		var clusterfck = require("clusterfck");
 
@@ -692,9 +692,9 @@
 				distance: dis
 			}
 			ind++;
-			var classCluster = convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicChildrenClasses, classUnits, mode);
-			console.log("classcluster")
-			console.log(util.inspect(classCluster, false, null))
+			var classCluster = convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, mode);
+//			console.log("classcluster")
+//			console.log(util.inspect(classCluster, false, null))
 			nodesClassAll.push(nodesClass);
 			nodesNullAll.push(nodesNull);
 			edgesAll.push(edges);
@@ -815,19 +815,19 @@
 
 	}
 
-	function convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicChildrenClasses, classUnits, mode) {
+	function convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, mode) {
 		  var classClusters = {};
 			// console.log("check!!!!!!!!!!");
 			// console.log("mode");
 			// console.log(mode);
 			// console.log(cluster);
 			// console.log("?????????????");
-			// console.log(dicChildrenClasses);
+			// console.log(dicCompositeSubclasses);
 			if (cluster.size == 1) {
 				var row = cluster["value"].toString();
 				var classes = rowDic[row];
 				var classSelected = classes[classes.length-1];
-        var children = dicChildrenClasses[classSelected.UUID];
+				var children = dicCompositeSubclasses[classSelected.UUID];
 				classClusters["size"] = children.length;
 				// var endNode = {
 				// 	name: startNode.name+"mid",
@@ -958,7 +958,7 @@
 							nodeF = startNode;
 						}
 
-						var child = convertTree(cluster[property], rowDic, nodesNull, nodesClass, edges, nodeF, dicChildrenClasses, classUnits, mode);
+						var child = convertTree(cluster[property], rowDic, nodesNull, nodesClass, edges, nodeF, dicCompositeSubclasses, classUnits, mode);
 						children.push(child);
 						// nodesNull.push(rootName+property);
 

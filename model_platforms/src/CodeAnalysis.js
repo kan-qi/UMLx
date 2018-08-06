@@ -327,6 +327,11 @@
 				var targetClassUnit = null;
 				// console.log('StorableUnit');
 				// console.log(XMIClassStorableUnitType[0]['$']['UUID']);
+				
+				if(!XMIClassStorableUnitType || XMIClassStorableUnitType.length<1){
+					continue;
+				}
+				
 				for (var j in dicClassUnits) {
 					var classUnitCandidate = dicClassUnits[j];
 					if (classUnitCandidate.UUID == XMIClassStorableUnitType[0]['$']['UUID']) {
@@ -469,6 +474,9 @@
 					for (var p in methodLocalVariables) {
 						var methodLocalVariable = methodLocalVariables[p];
 						var localVariableType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodLocalVariable.type));
+						if(!localVariableType || localVariableType.length < 1){
+							 continue;
+						}
 						var targetClassUnit = null;
 						for (var j in dicClassUnits) {
 							var classUnitCandidate = dicClassUnits[j];
@@ -628,6 +636,13 @@
 				for (var i in methodParameters) {
 					var methodParameter = methodParameters[i];
 					var XMIParameterType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameter.type));
+					
+					if(!XMIParameterType || XMIParameterType.length < 1){
+						continue;
+					}
+					
+					console.log(XMIParameterType);
+					
 					var targetClassUnit = null;
 					for (var j in dicClassUnits) {
 						var classUnitCandidate = dicClassUnits[j];
@@ -829,7 +844,12 @@
 								var methodRead = methodReads[x];
 								var targetFrom = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodRead.from));
 								var targetTo = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodRead.to));
-								if ('xsi:type' in targetTo[0]['$'] && targetTo[0]['$']['xsi:type'] == 'code:StorableUnit') {
+								
+								if(!targetFrom || !targetTo || targetFrom.length < 1 || targetTo.length < 1){
+									continue;
+								}
+									
+								if (targetTo[0]['$']['xsi:type'] && targetTo[0]['$']['xsi:type'] == 'code:StorableUnit') {
 									var methodAccessType = targetTo[0]['$']['type'];
 									var methodAccessTypeResult = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodAccessType));
 									var methodAccessUUID = targetTo[0]['$']['UUID'];

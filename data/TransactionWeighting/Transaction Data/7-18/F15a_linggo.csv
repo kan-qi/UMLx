@@ -12,12 +12,12 @@ id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num,
 11,stl#Language Learner:No matching message->Language Learner:No matching message,Search for Native Speaker,undefined,1,0,0,0
 12,stl#Match other learner->Match other learner->send_match_request->validate_request()->get_matched_user()->matched user list->matched user list->display matched user,Search for Native Speaker,undefined,0,0,0,1
 13,stl#Language learner:profile page of other language larner->Language learner:profile page of other language larner,Send Messages to Other Language Learner,undefined,0,0,0,0
-14,stl#Language learner:"please fill in the content" page->Language learner:"please fill in the content" page,Send Messages to Other Language Learner,undefined,0,1,0,0
+14,"stl#Language learner:""please fill in the content"" page->Language learner:""please fill in the content"" page",Send Messages to Other Language Learner,undefined,0,1,0,0
 15,stl#Language learner:send message button->Language learner:send message button->send message button:display send message page->display send message page:type message content,Send Messages to Other Language Learner,undefined,3,0,0,0
 16,stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:save message into database->save message into database:successfully sent page,Send Messages to Other Language Learner,undefined,3,1,0,0
 17,stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:save message into database->save message into database:successful message,Send Messages to Other Language Learner,undefined,3,1,0,0
 18,stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:save message into database->save message into database:message,Send Messages to Other Language Learner,undefined,3,1,0,0
-19,stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:"please fill in the content" page,Send Messages to Other Language Learner,undefined,1,2,0,0
+19,"stl#Language learner:send button->Language learner:send button->send button:check message is not empty->check message is not empty:""please fill in the content"" page",Send Messages to Other Language Learner,undefined,1,2,0,0
 20,stl#Language learner:successful message->Language learner:successful message,Send Messages to Other Language Learner,undefined,1,0,0,0
 21,stl#Language learner:successfully sent page->Language learner:successfully sent page,Send Messages to Other Language Learner,undefined,1,0,0,0
 22,stl#Language learner:type message content->Language learner:type message content,Send Messages to Other Language Learner,undefined,1,0,0,0
@@ -36,8 +36,7 @@ id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num,
 35,stl#Lanugage learner:Profile update form->Lanugage learner:Profile update form,Update Profile,undefined,1,0,0,0
 36,stl#Lanugage learner:Update successful message->Lanugage learner:Update successful message,Update Profile,undefined,1,0,0,0
 37,stl#Update learner's profile->Update learner's profile->validate_access_tocken()->response->validate_data()->update_profile()->validate_data()->update_user_data()->update_result->Api call status->Display update result,Update Profile,undefined,4,3,0,1
-2,0,24,48
-17,stl#Send message to other learner->Send message to other learner->Validate_access_token()->Validate_access_token()->response->response->call_message_receive_api()->validate_data()->validate_request()->call_message_api()->callect_target_user_message->Validate_data()->result message list->Update_message_table()->Update_result->result message list->Api call status->display message list,Send Messages to Other Language Learner,TRAN_NA,18,10,17.647058823529413,317.64705882352945
+17,stl#Send message to other learner->Send message to other learner->Validate_access_token()->Validate_access_token()->response->response->call_message_receive_api()->validate_data()->validate_request()->call_message_api()->callect_target_user_message->Validate_data()->result message list->Update_message_table()->Update_result->result message list->Api call status->display message list,Send Messages to Other Language Learner,TRAN_NA,18,10,17.64705882,317.6470588
 18,stl#Check message box with one learner->Check message box with one learner,Send Messages to Other Language Learner,CTRL,2,0,24,48
 19,stl#Check message box with one learner->Check message box with one learner,Send Messages to Other Language Learner,EXTCLL,2,0,24,48
 20,stl#Check message box with one learner->Check message box with one learner,Send Messages to Other Language Learner,INT,2,0,24,48

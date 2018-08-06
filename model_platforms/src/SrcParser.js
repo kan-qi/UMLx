@@ -70,30 +70,30 @@
 				var codeAnalysisResults = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
 //				debug.writeJson("constructed_model_by_kdm_result_7_5", codeAnalysisResults);
 
-//				var componentInfo = componentIdentifier.identifyComponents(codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.referencedClassUnitsComposite, codeAnalysisResults.classUnits, codeAnalysisResults.dicChildrenClasses, Model.OutputDir);
-//
-//				debug.writeJson("constructed_model_by_kdm_components_7_5", componentInfo.components);
-//
-//				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.components, xmiString, ModelOutputDir);
-//
-//				stimulusIdentifier.identifyStimuli(controlFlowGraph);
-//
-//				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
-//
-//				console.log("domain model Info");
-//				console.log(domainModelInfo);
-//
-//				Model.DomainModel = domainModelInfo.DomainModel;
-//
-//				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
-//
-//				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
-//
-//				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
-//
-//				if(callbackfunc){
-//					callbackfunc(Model);
-//				}
+				var componentInfo = componentIdentifier.identifyComponents(codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.referencedClassUnitsComposite, codeAnalysisResults.classUnits, codeAnalysisResults.dicCompositeSubclasses, Model.OutputDir);
+
+				debug.writeJson("constructed_model_by_kdm_components_7_5", componentInfo.components);
+
+				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.components, xmiString, ModelOutputDir);
+
+				stimulusIdentifier.identifyStimuli(controlFlowGraph);
+
+				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
+
+				console.log("domain model Info");
+				console.log(domainModelInfo);
+
+				Model.DomainModel = domainModelInfo.DomainModel;
+
+				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
+
+				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
+
+				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
+
+				if(callbackfunc){
+					callbackfunc(Model);
+				}
 
 	}
 

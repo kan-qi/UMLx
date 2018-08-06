@@ -1053,6 +1053,7 @@
 
 			for ( var i in useCase.Transactions) {
 				var transaction = useCase.Transactions[i];
+				console.log(transaction);
 				useCaseComponentsProcessor.processTransaction(transaction, useCase);
 				transactionNum++;
 				transactionAnalyticsStr += transactionNum + ","
