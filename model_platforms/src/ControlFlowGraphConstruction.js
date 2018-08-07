@@ -139,13 +139,50 @@
 			}
 		}
 		
-		console.log("edges");
-		console.log(edges);
+//		console.log("edges");
+//		console.log(edges);
 		
+		identifyStimuli(nodes, edges);
 		
 		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "kdm_cfg_graph.dotty");
 		
 		return {nodes: nodes, edges: edges};
+	}
+	
+	/*
+	 * The response has been identified int he control flow construction step. Stimulus nodes are constructed by creating triggering nodes connecting to those stimulus.
+	 */
+	
+	function identifyStimuli(nodes, edges) {
+		var stimulusNodes = [];
+		var triggeringEdges = [];
+		
+		for(var i in nodes){
+//			var component = components[i];
+//			var classUnits = component.classUnits;
+			var node = nodes[i];
+			node.type = "node";
+			if(node.isResponse){
+							node.tye = "response";
+							//create a stimulus nodes for the activity.
+							var stimulusNode = {
+									type: "stimulus",
+									name: "stl#"+node.name,
+									uuid: node.uuid+"_STL",
+//									Attachment: XMIActivity,
+									trigger: "stimulus"
+							}
+							
+							node.trigger = stimulusNode._id;
+							
+							stimulusNodes.push(stimulusNode);
+							triggeringEdges.push({start: stimulusNode, end: node});
+					}
+
+		}
+		
+		nodes = nodes.concat(stimulusNodes);
+		edges = edges.concat(triggeringEdges);
 	}
 	
 	function locateComponentForMethod(targetMethodUnit, components){

@@ -282,7 +282,6 @@
 			modelEvaluationStr = "";
 		}
 		
-		
 		modelEvaluationStr += modelNum+","+ model.Name.replace(/,/gi, "");
 		
 		for(var i in evaluators){
@@ -352,7 +351,6 @@
 	
 	function evaluateModel(model, callbackfunc){
 		
-
 		var useCaseNum = 1;
 //		var useCaseEmpiricss = [];
 		var useCaseEvaluationStr = "";
@@ -365,7 +363,6 @@
 		
 		if(callbackfunc){
 			
-
 			if(!model){
 				callbackfunc(false);
 				return;

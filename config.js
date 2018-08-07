@@ -1,7 +1,7 @@
 var debugOutputDir = "./debug";
 
 function setDebugOutputDir(dir){
-	debugOutputDir = dir;
+	this.debugOutputDir = dir;
 }
 
 module.exports ={

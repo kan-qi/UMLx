@@ -40,15 +40,15 @@
 	var codeAnalysis = require("./CodeAnalysis.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
-	var stimulusIdentifier = require("./StimulusIdentification.js");
+	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
+	
+	var responsePatternsFile = "response-patterns.txt";
 
-	var xmiSring = "";
-
-	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
+	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
 //		fs.readFile(filePath, "utf8", function(err, data) {
 			console.log("file content");
 //			console.log(data);
@@ -69,14 +69,14 @@
 //				xmiString = result;
 				var codeAnalysisResults = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
 //				debug.writeJson("constructed_model_by_kdm_result_7_5", codeAnalysisResults);
+				
+				responseIdentifier.identifyResponse(codeAnalysisResults, workDir +"/"+responsePatternsFile);
 
-				var componentInfo = componentIdentifier.identifyComponents(codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.referencedClassUnitsComposite, codeAnalysisResults.classUnits, codeAnalysisResults.dicCompositeSubclasses, Model.OutputDir);
+				var componentInfo = componentIdentifier.identifyComponents(codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.referencedClassUnitsComposite, codeAnalysisResults.dicClassUnits, codeAnalysisResults.dicCompositeSubclasses, Model.OutputDir);
 
 				debug.writeJson("constructed_model_by_kdm_components_7_5", componentInfo.components);
 
 				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.components, xmiString, ModelOutputDir);
-
-				stimulusIdentifier.identifyStimuli(controlFlowGraph);
 
 				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
 

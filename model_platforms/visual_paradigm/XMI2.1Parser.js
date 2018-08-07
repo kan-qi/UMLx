@@ -107,7 +107,7 @@
 			}
 	}*/
 	
-	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
+	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
 		
 			
 //		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];

@@ -211,14 +211,15 @@
 
 
 		return {
-			classUnits: dicClassUnits,
+			dicClassUnits: dicClassUnits,
+			dicMethodUnits: dicMethodUnits,
 			callGraph: callGraph,
 			typeDependencyGraph: typeDependencyGraph,
 			accessGraph: accessGraph,
 			referencedClassUnits: referencedClassUnits,
 			referencedClassUnitsComposite: referencedClassUnitsComposite,
 			dicCompositeSubclasses: dicCompositeSubclasses,
-			dicMethodParameters: dicMethodParameters
+			dicMethodParameters: dicMethodParameters,
 		};
 	}
 
@@ -562,11 +563,12 @@
 								if (methodParameters[l].hasOwnProperty('name')) {
 									name = methodParameters[l].name;
 								}
-								var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
+//								var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
+								var type = methodParameters[l].type;
 								var typeClass = null;
 								for (var j in dicClassUnits) {
 									var classUnitCandidate = dicClassUnits[j];
-									if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+									if (classUnitCandidate.UUID == type.UUID) {
 										typeClass = classUnitCandidate;
 									}
 								}
@@ -635,18 +637,19 @@
          // targeted at input and return parameters of this method
 				for (var i in methodParameters) {
 					var methodParameter = methodParameters[i];
-					var XMIParameterType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameter.type));
+//					var XMIParameterType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameter.type));
+					var type = methodParameter.type;
+//					
+//					if(!XMIParameterType || XMIParameterType.length < 1){
+//						continue;
+//					}
 					
-					if(!XMIParameterType || XMIParameterType.length < 1){
-						continue;
-					}
-					
-					console.log(XMIParameterType);
+//					console.log(XMIParameterType);
 					
 					var targetClassUnit = null;
 					for (var j in dicClassUnits) {
 						var classUnitCandidate = dicClassUnits[j];
-						if (classUnitCandidate.UUID == XMIParameterType[0]['$']['UUID']) {
+						if (classUnitCandidate.UUID == type.UUID) {
 							targetClassUnit = classUnitCandidate;
 						}
 					}
@@ -967,11 +970,12 @@
 											if (methodParameters[l].hasOwnProperty('name')) {
 												name = methodParameters[l].name;
 											}
-											var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
+//											var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
+											var type = methodParameters[l].type;
 											var typeClass = null;
 											for (var j in dicClassUnits) {
 												var classUnitCandidate = dicClassUnits[j];
-												if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+												if (classUnitCandidate.UUID == type.UUID) {
 													typeClass = classUnitCandidate;
 												}
 											}
@@ -1246,13 +1250,14 @@
 						if (methodParameters[l].hasOwnProperty('name')) {
 							name = methodParameters[l].name;
 						}
-						var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
+//						var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
 						// console.log("type");
 						// console.log(type);
+						var type = methodParameters[l].type;
 						var typeClass = null;
 						for (var j in dicClassUnits) {
 							var classUnitCandidate = dicClassUnits[j];
-							if (classUnitCandidate.UUID == type[0]['$']['UUID']) {
+							if (classUnitCandidate.UUID == type.UUID) {
 								typeClass = classUnitCandidate;
 							}
 						}

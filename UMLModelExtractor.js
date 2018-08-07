@@ -15,6 +15,8 @@
 	var mkdirp = require('mkdirp');
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
+	var path = require('path');
+	
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
 		console.log(umlModelInfo);
@@ -28,7 +30,8 @@
 			}
 
 			fs.readFile(umlModelInfo.umlFilePath, "utf8", function(err, data) {
-				parser.parseString(data, function(err, xmiString) {
+			
+			parser.parseString(data, function(err, xmiString) {
 			// determine what type xmi file it is.
 			var xmiParser = null;
 			if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
@@ -49,7 +52,8 @@
 				return;
 			}
 			
-			xmiParser.extractUserSystermInteractionModel(xmiString, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
+			var workDir = path.dirname(umlModelInfo.umlFilePath);
+			xmiParser.extractUserSystermInteractionModel(xmiString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
 				console.log("extract model");
 				
 //				var debug = require("./utils/DebuggerOutput.js");

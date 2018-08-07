@@ -138,7 +138,7 @@
 			}
 	}
 	
-	function extractUserSystermInteractionModel(xmiString, ModelOutputDir, ModelAccessDir, callbackfunc) {
+	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
 		
 //		var debug = require("../../utils/DebuggerOutput.js");
 //		debug.writeJson("XMIString", xmiString);

@@ -38,7 +38,7 @@ var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var config = require("../../config.js");
 
 var targetProjects = [
-//	testProject33, //all-apps
+	testProject33, //all-apps
 //	testProject34, //alltheapps
 //	testProject35, //btchatprotobuf
 //	testProject36, //cuffbackgroundservice
@@ -62,7 +62,7 @@ var targetProjects = [
 //	testProject54, //rufuslocation
 //	testProject55, //rufusmms // xmi doesn't exist
 //	testProject56, //serviceuser //xmi doesn't exist
-	testProject57 //weather-widget
+//	testProject57 //weather-widget
 	];
 
 var fs = require('fs');

@@ -1,6 +1,4 @@
-
-var testProject12 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\alltheapps";
-
+var testProject12 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\carbondata_archive\\carbondata";
 var testProject13 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\fabric-sdk-java";
 var testProject14 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\fluo-yarn";
 var testProject15 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\hise";
@@ -25,14 +23,12 @@ var testProject30 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject31 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\Repo Analyser";
 var testProject32 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\Thunder Fighter 2048";
 var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\webAnalyzer";
-var testProject34 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\carbondata_archive\\carbondata";
 
 var targetProjects = [
-//	testProject12, //alltheapps
-//
-//	testProject13, //fabric-sdk-java
-	testProject14, //fluo-yarn
-//	testProject15, //hise
+//	testProject12, //carbondata_archive\\carbondata 	
+//	testProject13, //fabric-sdk-java xmi exists, analysis generated
+	testProject14, //fluo-yarn xmi exists, analysis generated
+//	testProject15, //hise failed
 //	testProject16, //httpasyncclient
 //	testProject17, //httpcomponents-core
 //	testProject18, //jackrabbit
@@ -54,7 +50,6 @@ var targetProjects = [
 //	testProject31, //Repo Analyser
 //	testProject32, //Thunder Fighter 2048
 //	testProject33, //webAnalyzer
-//	testProject34, //carbondata_archive\\carbondata
 	];
 
 var fs = require('fs');

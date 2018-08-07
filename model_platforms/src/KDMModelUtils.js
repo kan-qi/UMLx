@@ -190,7 +190,7 @@
 //				Reads:[],
 //				Creates:[],
 //				ActionElements:[],
-				isResponse: false,
+//				isResponse: false,
 				attachment: XMIMethodUnit
 		}
 
@@ -209,33 +209,25 @@
 		console.log("iterate signature");
 
 		for(var j in XMIParameters){
+			
+			var parameterType = {
+					name: "unknown",
+			}
+			
+			var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameters[j]['$']['type']))[0];
+			if(XMIParameterType){
+				parameterType.name = XMIParameterType['$']['name'];
+				parameterType.UUID = XMIParameterType['$']['UUID'];
+			}
+			
 			console.log("iterate parameters");
 			MethodUnit.Signature.parameterUnits.push({
 				name: XMIParameters[j]["$"]["name"],
 				kind: XMIParameters[j]['$']['kind'],
-				type: XMIParameters[j]['$']['type']
+				type: parameterType
 			});
 //			MethodUnit.key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
-
-			var XMIParameterType = jp.query(xmiString, convertToJsonPath(XMIParameters[j]["$"]['type']));
-			console.log("parameter type");
-			console.log(XMIParameterType);
-			console.log("determine response method");
-			if(XMIParameterType){
-				if(XMIParameterType[0]['$']['name'].indexOf("event") !=-1 || XMIParameterType[0]['$']['name'].indexOf("Event") !=-1) {
-					MethodUnit.isResponse = true;
-					console.log("found response method");
-				}
-			}
-
-
 		}
-
-
-		if(XMISignature["$"]["name"] === "main"){
-			MethodUnit.isResponse = true;
-		}
-
 		}
 
 		//identify action elements from blockUnit
