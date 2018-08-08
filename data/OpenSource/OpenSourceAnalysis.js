@@ -25,31 +25,31 @@ var testProject32 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\webAnalyzer";
 
 var targetProjects = [
-//	testProject12, //carbondata_archive\\carbondata 	
+//	testProject12, //carbondata_archive\\carbondata  analysis generated
 //	testProject13, //fabric-sdk-java xmi exists, analysis generated
-	testProject14, //fluo-yarn xmi exists, analysis generated
-//	testProject15, //hise failed
+//	testProject14, //fluo-yarn xmi exists, analysis generated
+//	testProject15, //hise failed/generated
 //	testProject16, //httpasyncclient
-//	testProject17, //httpcomponents-core
-//	testProject18, //jackrabbit
-//	testProject19, //jackrabbit-filevault
-//	testProject20, //jackrabbit-oak
+//	testProject17, //httpcomponents-core //generated
+//	testProject18, //jackrabbit // out of memory error
+//	testProject19, //jackrabbit-filevault //generated........
+//	testProject20, //jackrabbit-oak //met issue.
 //
-//	testProject21, //jackrabbit-ocm
-//	testProject22, //james-jspf
-//	testProject23, //james-mime4j
-//	testProject24, //james-project
-//	testProject25, //JBREX_work_space
-//	testProject26, //jbrex-master
-//	testProject27, //jclouds
-//
-//	testProject28, //kalumet
-//	testProject29, //karaf
-//	testProject30, //mybatis-3
+	testProject21, //jackrabbit-ocm //generated.
+	testProject22, //james-jspf //generated
+	testProject23, //james-mime4j //generated
+//	testProject24, //james-project //class cast exception
+//	testProject25, //JBREX_work_space //not a project
+//	testProject26, //jbrex-master // it has a series of projects.
+//	testProject27, //jclouds //has an issue when recovering.
+
+//	testProject28, //kalumet //generated, but has an issue.
+//	testProject29, //karaf //has an issue/
+//	testProject30, //mybatis-3 //has an issue
 //
 //	testProject31, //Repo Analyser
 //	testProject32, //Thunder Fighter 2048
-//	testProject33, //webAnalyzer
+//	testProject33, //webAnalyz er
 	];
 
 var fs = require('fs');

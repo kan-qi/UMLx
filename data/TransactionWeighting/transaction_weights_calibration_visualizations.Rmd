@@ -5,7 +5,7 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-source("transaction_weights_calibration.R")
+source("transaction_weights_calibration2.R")
 library(tidyverse)
 
 cutsAsVec <- function(x) {
@@ -68,6 +68,7 @@ predictedValues <- subset(predictedValues, rownames(predictedValues) != "Aggrega
 predictedValues <- merge(as.data.frame(predictedValues), effort, by='row.names', all=TRUE)
 rownames(predictedValues) <- predictedValues$Row.names
 predictedValues$Row.names <- NULL
+print(predictedValues)
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
   model <- lm(Effort ~ ., data = dat)
@@ -188,7 +189,7 @@ for (i in 1:length(SWTIIresults)) {
 ```
 SWTIII Search Results
 ```{r swtiii, warning = FALSE}
-SWTIIIresults <- performSearch(2, "./Transaction Data", effort, c("TL", "TD", "DETs"))
+SWTIIIresults <- performSearch(3, "./Transaction Data", effort, c("TL", "TD", "DETs"))
 # Plot classification results
 for (i in 1:length(SWTIIIresults)) {
   result <- SWTIIIresults[[i]]

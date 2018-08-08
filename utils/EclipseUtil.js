@@ -5,7 +5,7 @@
 			var eclipseInstall = "\"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\tools\\eclipse-java-luna-SR2-win32-x86_64\\eclipse\\eclipse\"";
 			var outputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
 		    //to generate svg file.
-		    var command = eclipseInstall+' -consoleLog -console -noExit -application test21.test "' + projectPath + '" "'+outputFile+'"';
+		    var command = eclipseInstall+' -consoleLog -console -noExit -application test21.test "' + projectPath + '" "'+outputFile+'" -vmargs -Xmx10240M';
 //		    var command = eclipseInstall+' -application test21.test "' + projectPath + '" "'+outputFile+'"';
 //		    console.log(command);
 			var child = exec(command, function(error, stdout, stderr) {
@@ -38,14 +38,13 @@
 			child.stdout.on('data', function(data) {
 		  	    console.log(data); 
 		  	});
-		    
 	}
 	
 	function generateKDMModel2(projectPath, callbackfunc){
 		var eclipseInstall = "\"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\tools\\eclipse-java-luna-SR2-win32-x86_64\\eclipse\\eclipse\"";
 		var outputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
 	    //to generate svg file.
-	    var command = eclipseInstall+' -consoleLog -console -noExit -application testMonitor3.id5 "' + projectPath + '" "'+outputFile+'"';
+	    var command = eclipseInstall+' -consoleLog -console -noExit -application testMonitor3.id5 "' + projectPath + '" "'+outputFile+'" -vmargs -Xmx10240M';
 //		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
 			if (error !== null) {
