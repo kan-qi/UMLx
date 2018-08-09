@@ -175,22 +175,27 @@
 		var controlWeight = 0;
 		for(var i in domainModelInfo.Elements){
 			var element = domainModelInfo.Elements[i];
-			if(element.type === "view"){
-				viewWeight += element.methodNum;
+			console.log("domain elements");
+			console.log(element);
+			if(element.Type === "boundary"){
+				viewWeight += element.Operations.length;
 			}
-			else if(element.type === "model"){
-				modelWeight += element.methodNum;
+			else if(element.Type === "entity"){
+				modelWeight += element.Operations.length;
 			}
 			else {
-				controlWeight += element.methodNum;
+				controlWeight += element.Operations.length;
 			}
 		}
 		
 		var totalWeight = viewWeight + controlWeight + modelWeight;
 		
-		mvcEstimates.ViewEffort = viewWeight/totalWeight*projectEffort;
-		mvcEstimates.ModelEffort = modelWeight/totalWeight*projectEffort;
-		mvcEstimates.ControlEffort = controlWeight/totalWeight*projectEffort;
+		mvcEstimates.ViewEffort = totalWeight == 0 ? 0: viewWeight/totalWeight*projectEffort;
+		mvcEstimates.ModelEffort = totalWeight == 0 ? 0 : modelWeight/totalWeight*projectEffort;
+		mvcEstimates.ControlEffort = totalWeight == 0 ? 0 : controlWeight/totalWeight*projectEffort;
+		
+		console.log("mvc estimates");
+		console.log(mvcEstimates);
 		
 		estimationResults.DomainModel.MVCEstimates = mvcEstimates;
 		
@@ -323,7 +328,7 @@
 						   if (err) throw err;
 						   console.log(str);
 						   
-						   var projectEffort = JSON.parse(str).result;
+						   var projectEffort = Number(JSON.parse(str).result);
 						   
 						   var estimationResults = {
 								   	EstimationModel: key,
@@ -333,7 +338,7 @@
 									Effort: projectEffort.toFixed(2),
 									UseCases: [],
 									DomainModel: {},
-									SizeMeasurement: modelInfo['ExtendedUseCasePointData'][sizeMetric]
+									SizeMeasurement: modelInfo['ExtendedUseCasePointData'][sizeMetric].toFixed(2)
 							};
 						   
 						   estimateUseCaseEffort(modelInfo, estimationResults, projectEffort);

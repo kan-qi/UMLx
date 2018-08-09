@@ -592,6 +592,29 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 	} else {
 		return false;
 	}
+	
+	var projectInfo = {};
+	projectInfo.distributedSystem = req.body['distributed_system'];
+	projectInfo.responseTime = req.body['response_time'];
+	projectInfo.endUserEfficiency = req.body['end_user_efficiency'];
+	projectInfo.complexInternalProcessing = req.body['complex_internal_processing'];
+	projectInfo.codeReusable = req.body['code_must_be_reusable'];
+	projectInfo.easyInstall = req.body['easy_to_install'];
+	projectInfo.easyUse = req.body['easy_to_use'];
+	projectInfo.portable = req.body['portable'];
+	projectInfo.easyToChange = req.body['easy_to_change'];
+	projectInfo.concurrent = req.body['concurrent'];
+	projectInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
+	projectInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
+	projectInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
+	projectInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
+	projectInfo.applicationExperience = req.body['application_experience'];
+	projectInfo.objectOrientedExperience = req.body['object_oriented_experience'];
+	projectInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
+	projectInfo.motivation = req.body['motivation'];
+	projectInfo.stableRequirements = req.body['stable_requirements'];
+	projectInfo.partTimeStaff = req.body['part_time_staff'];
+	projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
 	// e.g.
 	//  req.files['avatar'][0] -> File
 	//  req.files['gallery'] -> Array
@@ -608,6 +631,7 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 			var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
 			console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 			var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
+			modelInfo.projectInfo = projectInfo;
 			console.log('updated model info');
 			console.log(modelInfo);
 			umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
@@ -1605,28 +1629,28 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
 ,{name:'difficult_programming_language', maxCount:1},{name:'uml_file', maxCount:1},{name:'uml_other', maxCount:1}, {name:'model', maxCount:1},{name:'simulation', maxCount:1}]), function(req,res){
-//	var umlEstimationInfo = {};
-//	umlEstimationInfo.distributedSystem = req.body['distributed_system'];
-//	umlEstimationInfo.responseTime = req.body['response_time'];
-//	umlEstimationInfo.endUserEfficiency = req.body['end_user_efficiency'];
-//	umlEstimationInfo.complexInternalProcessing = req.body['complex_internal_processing'];
-//	umlEstimationInfo.codeReusable = req.body['code_must_be_reusable'];
-//	umlEstimationInfo.easyInstall = req.body['easy_to_install'];
-//	umlEstimationInfo.easyUse = req.body['easy_to_use'];
-//	umlEstimationInfo.portable = req.body['portable'];
-//	umlEstimationInfo.easyToChange = req.body['easy_to_change'];
-//	umlEstimationInfo.concurrent = req.body['concurrent'];
-//	umlEstimationInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
-//	umlEstimationInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
-//	umlEstimationInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
-//	umlEstimationInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
-//	umlEstimationInfo.applicationExperience = req.body['application_experience'];
-//	umlEstimationInfo.objectOrientedExperience = req.body['object_oriented_experience'];
-//	umlEstimationInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
-//	umlEstimationInfo.motivation = req.body['motivation'];
-//	umlEstimationInfo.stableRequirements = req.body['stable_requirements'];
-//	umlEstimationInfo.partTimeStaff = req.body['part_time_staff'];
-//	umlEstimationInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+	var projectInfo = {};
+	projectInfo.distributedSystem = req.body['distributed_system'];
+	projectInfo.responseTime = req.body['response_time'];
+	projectInfo.endUserEfficiency = req.body['end_user_efficiency'];
+	projectInfo.complexInternalProcessing = req.body['complex_internal_processing'];
+	projectInfo.codeReusable = req.body['code_must_be_reusable'];
+	projectInfo.easyInstall = req.body['easy_to_install'];
+	projectInfo.easyUse = req.body['easy_to_use'];
+	projectInfo.portable = req.body['portable'];
+	projectInfo.easyToChange = req.body['easy_to_change'];
+	projectInfo.concurrent = req.body['concurrent'];
+	projectInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
+	projectInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
+	projectInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
+	projectInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
+	projectInfo.applicationExperience = req.body['application_experience'];
+	projectInfo.objectOrientedExperience = req.body['object_oriented_experience'];
+	projectInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
+	projectInfo.motivation = req.body['motivation'];
+	projectInfo.stableRequirements = req.body['stable_requirements'];
+	projectInfo.partTimeStaff = req.body['part_time_staff'];
+	projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
 //	console.log("files");
 //	console.log(req.files);
 	var umlFilePath = req.files['uml_file'][0].path;
@@ -1688,6 +1712,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
 		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
+		modelInfo.projectInfo = projectInfo;
 		console.log('updated model info');
 		console.log(modelInfo);
 		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
@@ -2055,30 +2080,31 @@ app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_syst
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
 ,{name:'difficult_programming_language', maxCount:1},{name:'modelID', maxCount:1}]), function(req,res){
-	var umlEstimationInfo = {};
-	umlEstimationInfo.distributedSystem = req.body['distributed_system'];
-	umlEstimationInfo.responseTime = req.body['response_time'];
-	umlEstimationInfo.endUserEfficiency = req.body['end_user_efficiency'];
-	umlEstimationInfo.complexInternalProcessing = req.body['complex_internal_processing'];
-	umlEstimationInfo.codeReusable = req.body['code_must_be_reusable'];
-	umlEstimationInfo.easyInstall = req.body['easy_to_install'];
-	umlEstimationInfo.easyUse = req.body['easy_to_use'];
-	umlEstimationInfo.portable = req.body['portable'];
-	umlEstimationInfo.easyToChange = req.body['easy_to_change'];
-	umlEstimationInfo.concurrent = req.body['concurrent'];
-	umlEstimationInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
-	umlEstimationInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
-	umlEstimationInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
-	umlEstimationInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
-	umlEstimationInfo.applicationExperience = req.body['application_experience'];
-	umlEstimationInfo.objectOrientedExperience = req.body['object_oriented_experience'];
-	umlEstimationInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
-	umlEstimationInfo.motivation = req.body['motivation'];
-	umlEstimationInfo.stableRequirements = req.body['stable_requirements'];
-	umlEstimationInfo.partTimeStaff = req.body['part_time_staff'];
-	umlEstimationInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
-	umlEstimationInfo.modelID = req.body['modelID'];	
-	umlModelInfoManager.saveModelInfoCharacteristics(umlEstimationInfo, function(result,message){		
+//	var umlEstimationInfo = {};
+//	umlEstimationInfo.distributedSystem = req.body['distributed_system'];
+//	umlEstimationInfo.responseTime = req.body['response_time'];
+//	umlEstimationInfo.endUserEfficiency = req.body['end_user_efficiency'];
+//	umlEstimationInfo.complexInternalProcessing = req.body['complex_internal_processing'];
+//	umlEstimationInfo.codeReusable = req.body['code_must_be_reusable'];
+//	umlEstimationInfo.easyInstall = req.body['easy_to_install'];
+//	umlEstimationInfo.easyUse = req.body['easy_to_use'];
+//	umlEstimationInfo.portable = req.body['portable'];
+//	umlEstimationInfo.easyToChange = req.body['easy_to_change'];
+//	umlEstimationInfo.concurrent = req.body['concurrent'];
+//	umlEstimationInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
+//	umlEstimationInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
+//	umlEstimationInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
+//	umlEstimationInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
+//	umlEstimationInfo.applicationExperience = req.body['application_experience'];
+//	umlEstimationInfo.objectOrientedExperience = req.body['object_oriented_experience'];
+//	umlEstimationInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
+//	umlEstimationInfo.motivation = req.body['motivation'];
+//	umlEstimationInfo.stableRequirements = req.body['stable_requirements'];
+//	umlEstimationInfo.partTimeStaff = req.body['part_time_staff'];
+//	umlEstimationInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+//	umlEstimationInfo.modelID = req.body['modelID'];	
+	
+	umlModelInfoManager.saveModelInfoCharacteristics(req.body, function(result,message){		
 		res.json(result);
 	});
 });

@@ -121,6 +121,35 @@
 //		NormalizedUCEffort : 0
 //		}
 		
+		// calculate TCF and EF based on the input parameters
+//		var projectInfo = {};
+		var TFactor = 0;
+		TFactor += Number(modelInfo.projectInfo.distributedSystem)*2.0;
+		TFactor += Number(modelInfo.projectInfo.responseTime)*1.0;
+		TFactor += Number(modelInfo.projectInfo.endUserEfficiency)*1.0;
+		TFactor += Number(modelInfo.projectInfo.complexInternalProcessing)*1.0;
+		TFactor += Number(modelInfo.projectInfo.codeReusable)*1.0;
+		TFactor += Number(modelInfo.projectInfo.easyInstall)*0.5;
+		TFactor += Number(modelInfo.projectInfo.easyUse)*0.5;
+		TFactor += Number(modelInfo.projectInfo.portable)*2.0;
+		TFactor += Number(modelInfo.projectInfo.easyToChange)*1.0;
+		TFactor += Number(modelInfo.projectInfo.concurrent)*1.0;
+		TFactor += Number(modelInfo.projectInfo.specialSecurityObjectives)*1.0;
+		TFactor += Number(modelInfo.projectInfo.directAccessForThirdParties)*1.0;
+		TFactor += Number(modelInfo.projectInfo.userTrainingFacilitiesRequired)*1.0;
+		modelInfo['UseCasePointData'].TCF = 0.6 + (0.01 * TFactor);
+		
+		var EFactor = 0;
+		EFactor += Number(modelInfo.projectInfo.familiarWithProjectModel)*1.5;
+		EFactor += Number(modelInfo.projectInfo.applicationExperience)*0.5;
+		EFactor += Number(modelInfo.projectInfo.objectOrientedExperience)*1.0;
+		EFactor += Number(modelInfo.projectInfo.leadAnalystCapability)*0.5;
+		EFactor += Number(modelInfo.projectInfo.motivation)*1.0;
+		EFactor += Number(modelInfo.projectInfo.stableRequirements)*2.0;
+		EFactor += Number(modelInfo.projectInfo.partTimeStaff)*-1.0;
+		EFactor += Number(modelInfo.projectInfo.difficultProgrammingLanguage) * -1.0;
+		modelInfo['UseCasePointData'].EF = 1.4+(-0.03 * EFactor);
+		
 		
 		var simpleUC = 0;
 		var averageUC = 0;

@@ -19,6 +19,7 @@
 	var sizeMetric = "DUCP"
 	var transactionMetric = "SWTIII";
 	
+
 	/*
 	 *  This function calculate the project management decisions based on estimated effort, including the duration and personnel.
 	 */
@@ -77,9 +78,12 @@
 		
 		estimationResults.Personnel = personnel.toFixed(2);
 		
-		var personnel_UI = personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
-		var personnel_DB = personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
-		var personnel_FS = personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
+		console.log("transaction data");
+		console.log(modelInfo['TransactionAnalytics']);
+		
+		var personnel_UI = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
+		var personnel_DB = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
+		var personnel_FS = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
 		
 		estimationResults.Personnel_UI = personnel_UI.toFixed(2);
 		estimationResults.Personnel_DB = personnel_DB.toFixed(2);
@@ -110,7 +114,7 @@
 
 			useCaseEstimates.SizeMeasurement = useCase['ExtendedUseCasePointData'][transactionMetric];
 			
-			var useCaseEffort = projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+			var useCaseEffort = (useCase['ExtendedUseCasePointData'][transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
 			
 			useCaseEstimates.Effort = useCaseEffort.toFixed(2);
 //			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
@@ -124,7 +128,7 @@
 
 //			var personnel = projectEffort/12;
 			
-			var useCasePersonnel = useCaseEffortInPM/useCaseDuration;
+			var useCasePersonnel = useCaseDuration == 0 ? 0 : useCaseEffortInPM/useCaseDuration;
 			
 //			var useCase = modelInfo.UseCases[i];
 //			useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
@@ -139,9 +143,9 @@
 //				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
 				
-				var personnel_UI = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
-				var personnel_DB = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
-				var personnel_FS = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+				var personnel_UI = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
+				var personnel_DB = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
+				var personnel_FS = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
 				
 				
 				useCaseEstimates.Personnel_UI = personnel_UI.toFixed(2);
@@ -154,6 +158,49 @@
 
 		console.log("estimation result");
 		console.log(estimationResults);
+		
+		
+	}
+	// distribute the effort to different types of components.
+	function estimateMVCEffort(modelInfo, estimationResults, projectEffort){
+		
+		var mvcEstimates = {
+				ViewEffort : 0,
+				ModelEffort : 0,
+				ControlEffort : 0
+		}
+		
+		var domainModelInfo = modelInfo.DomainModel;
+		var viewWeight = 0;
+		var modelWeight = 0;
+		var controlWeight = 0;
+		for(var i in domainModelInfo.Elements){
+			var element = domainModelInfo.Elements[i];
+			console.log("domain elements");
+			console.log(element);
+			if(element.Type === "boundary"){
+				viewWeight += element.Operations.length;
+			}
+			else if(element.Type === "entity"){
+				modelWeight += element.Operations.length;
+			}
+			else {
+				controlWeight += element.Operations.length;
+			}
+		}
+		
+		var totalWeight = viewWeight + controlWeight + modelWeight;
+		
+		mvcEstimates.ViewEffort = totalWeight == 0 ? 0: viewWeight/totalWeight*projectEffort;
+		mvcEstimates.ModelEffort = totalWeight == 0 ? 0 : modelWeight/totalWeight*projectEffort;
+		mvcEstimates.ControlEffort = totalWeight == 0 ? 0 : controlWeight/totalWeight*projectEffort;
+		
+		console.log("mvc estimates");
+		console.log(mvcEstimates);
+		
+		estimationResults.DomainModel.MVCEstimates = mvcEstimates;
+		
+//		return mvcEstimate;
 	}
 	
 	// evaluate business value
@@ -176,48 +223,12 @@
 				}
 				useCaseEstimates = useCaseEstimatesById[useCase._id];
 			}
-		
+			
 			useCaseEstimates.BusinessValue = useCase.BusinessValue ? useCase.BusinessValue : 0;
-			useCaseEstimates.EffortBVRatio = useCaseEstimates.BusinessValue / useCaseEstimates.Effort;
+			useCaseEstimates.EffortBVRatio = useCaseEstimates.BusinessValue == 0? 0 : useCaseEstimates.Effort / useCaseEstimates.BusinessValue;
+			useCaseEstimates.EffortBVRatio = useCaseEstimates.EffortBVRatio.toFixed(2);
 		}
 		
-	}
-	
-	// distribute the effort to different types of components.
-	function estimateMVCEffort(modelInfo, estimationResults, projectEffort){
-		
-		var mvcEstimates = {
-				ViewEffort : 0,
-				ModelEffort : 0,
-				ControlEffort : 0
-		}
-		
-		var domainModelInfo = modelInfo.DomainModel;
-		var viewWeight = 0;
-		var modelWeight = 0;
-		var controlWeight = 0;
-		for(var i in domainModelInfo.Elements){
-			var element = domainModelInfo.Elements[i];
-			if(element.type = ""){
-				viewWeight += element.methodNum;
-			}
-			else if(element.type = ""){
-				modelWeight += element.methodNum;
-			}
-			else {
-				controlWeight += element.methodNum;
-			}
-		}
-		
-		var totalWeight = viewWeight + controlWeight + modelWeight;
-		
-		mvcEstimates.ViewEffort = viewWeight/totalWeight*projectEffort;
-		mvcEstimates.ModelEffort = modelWeight/totalWeight*projectEffort;
-		mvcEstimates.ControlEffort = controlWeight/totalWeight*projectEffort;
-		
-		estimationResults.DomainModel.MVCEstimates = mvcEstimates;
-		
-//		return mvcEstimate;
 	}
 	
 	// synthesize different proposals of effort estimation.
@@ -248,29 +259,38 @@
 			}
 			
 			var useCaseEffort = useCaseEstimates.Effort;
-			var useCasePMEffort = useCase.PMEffort ? useCase.PMEffort : -1;
-			var useCaseDEVEffort = useCase.DEVEffort ? useCase.DEVEffort : -1;
+			var useCasePMEffort = useCase.PMEffort ? Number(useCase.PMEffort) : -1;
+			var useCaseDEVEffort = useCase.DEVEffort ? Number(useCase.DEVEffort) : -1;
 			
 			var differentEstimates = [];
 			differentEstimates.push({estimate: useCaseEffort, weight:analysisWeight});
 			differentEstimates.push({estimate: useCasePMEffort, weight:developerWeight});
 			differentEstimates.push({estimate: useCaseDEVEffort, weight:projectManagerWeight});
 			
-			var synthesizedEffort = useCaseEffort;
+//			console.log("different estimates");
+//			console.log(differentEstimates);
+			
+
+//			console.log("synthesized effort");
+
+			
+			var synthesizedEffort = 0;
 			var totalWeight = 1;
 			for(var i in differentEstimates){
 				var differentEstimate = differentEstimates[i];
 				if(differentEstimate.estimate != -1){
 					totalWeight += differentEstimate.weight;
 					synthesizedEffort += differentEstimate.estimate*differentEstimate.weight;
+//					console.log(synthesizedEffort);
 				}
 			}
 			
 			synthesizedEffort = synthesizedEffort/totalWeight;
 			
-			useCaseEstimates.useCasePMEffort = useCasePMEffort;
-			useCaseEstimates.useCaseDEVEffort = useCaseDEVEffort;
-			useCaseEstimates.synthesizedEffort = synthesizedEffort;
+			
+			useCaseEstimates.useCasePMEffort = useCasePMEffort.toFixed(2);
+			useCaseEstimates.useCaseDEVEffort = useCaseDEVEffort.toFixed(2);
+			useCaseEstimates.synthesizedEffort = synthesizedEffort.toFixed(2);
 			
 			totalSynthesizedEffort += synthesizedEffort;
 		}
@@ -291,7 +311,7 @@
 			console.log("model info");
 			console.log(modelInfo);
 //		
-			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "ducp_effort_prediction"';
+			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "eucp_effort_prediction"';
 			
 			console.log("estimation command");
 			console.log(command);
@@ -305,11 +325,11 @@
 						callbackfunc(false);
 					}
 				} else {
-					fs.readFile(modelInfo.OutputDir+"/ducp_effort_prediction_result.json", 'utf-8', (err, str) => {
+					fs.readFile(modelInfo.OutputDir+"/eucp_effort_prediction_result.json", 'utf-8', (err, str) => {
 						   if (err) throw err;
 						   console.log(str);
 						   
-						   var projectEffort = JSON.parse(str).result;
+						   var projectEffort = Number(JSON.parse(str).result);
 						   
 						   var estimationResults = {
 								   	EstimationModel: key,
@@ -319,7 +339,7 @@
 									Effort: projectEffort.toFixed(2),
 									UseCases: [],
 									DomainModel: {},
-									SizeMeasurement: modelInfo['ExtendedUseCasePointData'][sizeMetric]
+									SizeMeasurement: modelInfo['ExtendedUseCasePointData'][sizeMetric].toFixed(2)
 							};
 						   
 						   estimateUseCaseEffort(modelInfo, estimationResults, projectEffort);
@@ -327,24 +347,25 @@
 						   syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort);
 						   evaluateBusinessValue(modelInfo, estimationResults, projectEffort)
 						   
-						   estimationResults.EstimationResultsFile = "estimationResultDUCP.json"
-							   
-							   var files = [{fileName : estimationResults.EstimationResultsFile , content : JSON.stringify(estimationResults)}];
-								
-								umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
-								if(err){
-									 if(callbackfunc){
-										   callbackfunc(false);
-									   }
-									return;
-								}
-
-								   modelInfo[key] = estimationResults;
-								  
-								   if(callbackfunc){
-									   callbackfunc(modelInfo);
+						   estimationResults.EstimationResultsFile = "estimationResultEUCP.json"
+						   
+						   var files = [{fileName : estimationResults.EstimationResultsFile , content : JSON.stringify(estimationResults)}];
+							
+							umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
+							if(err){
+								 if(callbackfunc){
+									   callbackfunc(false);
 								   }
-								});
+								return;
+							}
+
+							   modelInfo[key] = estimationResults;
+							  
+							   if(callbackfunc){
+								   callbackfunc(modelInfo);
+							   }
+							});
+
 					});
 				}
 			});
