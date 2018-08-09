@@ -77,6 +77,7 @@
 			var userStory = {
 					_id:  XMIScrumUserStory['$']['base_Class'],
 					Name: XMIScrumUserStoryClasses[0]['$']['name'],
+					BusinessValue: XMIScrumUserStory['$']['business_value'],
 					ProjectManagerEstimate: Number(XMIScrumUserStory['$']['Project_Manager_Estimate__Person-Hours_']),
 					EstimatedDuration: Number(XMIScrumUserStory['$']['Estimated_Duration__work_days_']),
 					ActualEffort: Number(XMIScrumUserStory['$']['Actual__Person-hours_']),

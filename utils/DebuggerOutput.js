@@ -4,10 +4,11 @@
 	var mkdirp = require('mkdirp');
 	var config = require("../config.js");
 //	var OutputDir = './debug';
-	var OutputDir = config.debugOutputDir;
 
 	function writeJson(token, message, callbackfunc){
+		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 		console.log(token);
+		console.log(OutputDir);
 		mkdirp(OutputDir, function(err) { 
 		fs.writeFile(OutputDir+'/'+token+'.json', JSON.stringify(message), function(err){
 			if(err){
@@ -18,6 +19,7 @@
 	}
 	
 	function appendFile(token, message, callbackfunc){
+		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 		mkdirp(OutputDir, function(err) { 
 			fs.appendFile(OutputDir+'/'+token+'.txt', message,function (err) {
 				  if (err) throw err;

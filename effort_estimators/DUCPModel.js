@@ -154,8 +154,6 @@
 
 		console.log("estimation result");
 		console.log(estimationResults);
-		
-		
 	}
 	
 	// evaluate business value
@@ -178,9 +176,9 @@
 				}
 				useCaseEstimates = useCaseEstimatesById[useCase._id];
 			}
-			
-			useCaseEstimates.BusinessValue = 3;
-			useCaseEstimates.EffortBVRatio = 5;
+		
+			useCaseEstimates.BusinessValue = useCase.BusinessValue ? useCase.BusinessValue : 0;
+			useCaseEstimates.EffortBVRatio = useCaseEstimates.BusinessValue / useCaseEstimates.Effort;
 		}
 		
 	}
@@ -250,13 +248,13 @@
 			}
 			
 			var useCaseEffort = useCaseEstimates.Effort;
-			var useCaseEffortProjectManager = modelInfo['UserStoryData'] ? modelInfo['UserStoryData'].project_manager_estimate : -1;
-			var useCaseEffortDeveloper = modelInfo['UserStoryData'] ? modelInfo['UserStoryData'].developer_estimate : -1;
+			var useCasePMEffort = useCase.PMEffort ? useCase.PMEffort : -1;
+			var useCaseDEVEffort = useCase.DEVEffort ? useCase.DEVEffort : -1;
 			
 			var differentEstimates = [];
 			differentEstimates.push({estimate: useCaseEffort, weight:analysisWeight});
-			differentEstimates.push({estimate: useCaseEffortProjectManager, weight:developerWeight});
-			differentEstimates.push({estimate: useCaseEffortDeveloper, weight:projectManagerWeight});
+			differentEstimates.push({estimate: useCasePMEffort, weight:developerWeight});
+			differentEstimates.push({estimate: useCaseDEVEffort, weight:projectManagerWeight});
 			
 			var synthesizedEffort = useCaseEffort;
 			var totalWeight = 1;
@@ -270,8 +268,8 @@
 			
 			synthesizedEffort = synthesizedEffort/totalWeight;
 			
-			useCaseEstimates.useCaseEffortProjectManager = useCaseEffortProjectManager;
-			useCaseEstimates.useCaseEffortDeveloper = useCaseEffortDeveloper;
+			useCaseEstimates.useCasePMEffort = useCasePMEffort;
+			useCaseEstimates.useCaseDEVEffort = useCaseDEVEffort;
 			useCaseEstimates.synthesizedEffort = synthesizedEffort;
 			
 			totalSynthesizedEffort += synthesizedEffort;

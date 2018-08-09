@@ -34,7 +34,7 @@
 			var predictionModel = models[estimationModel];
 			if(!predictionModel){
 				if(callbackfunc){
-					calbackfunc(false);
+					callbackfunc(false);
 				}
 				return;
 			}

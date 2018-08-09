@@ -77,9 +77,12 @@
 		
 		estimationResults.Personnel = personnel.toFixed(2);
 		
-		var personnel_UI = personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
-		var personnel_DB = personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
-		var personnel_FS = personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
+		console.log("transaction data");
+		console.log(modelInfo['TransactionAnalytics']);
+		
+		var personnel_UI = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
+		var personnel_DB = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
+		var personnel_FS = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
 		
 		estimationResults.Personnel_UI = personnel_UI.toFixed(2);
 		estimationResults.Personnel_DB = personnel_DB.toFixed(2);
@@ -110,7 +113,7 @@
 
 			useCaseEstimates.SizeMeasurement = useCase['ExtendedUseCasePointData'][transactionMetric];
 			
-			var useCaseEffort = projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+			var useCaseEffort = (useCase['ExtendedUseCasePointData'][transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
 			
 			useCaseEstimates.Effort = useCaseEffort.toFixed(2);
 //			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
@@ -124,7 +127,7 @@
 
 //			var personnel = projectEffort/12;
 			
-			var useCasePersonnel = useCaseEffortInPM/useCaseDuration;
+			var useCasePersonnel = useCaseDuration == 0 ? 0 : useCaseEffortInPM/useCaseDuration;
 			
 //			var useCase = modelInfo.UseCases[i];
 //			useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
@@ -139,9 +142,9 @@
 //				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
 				
-				var personnel_UI = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
-				var personnel_DB = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
-				var personnel_FS = useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+				var personnel_UI = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
+				var personnel_DB = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
+				var personnel_FS = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
 				
 				
 				useCaseEstimates.Personnel_UI = personnel_UI.toFixed(2);
@@ -172,10 +175,10 @@
 		var controlWeight = 0;
 		for(var i in domainModelInfo.Elements){
 			var element = domainModelInfo.Elements[i];
-			if(element.type = ""){
+			if(element.type === "view"){
 				viewWeight += element.methodNum;
 			}
-			else if(element.type = ""){
+			else if(element.type === "model"){
 				modelWeight += element.methodNum;
 			}
 			else {
@@ -215,8 +218,9 @@
 				useCaseEstimates = useCaseEstimatesById[useCase._id];
 			}
 			
-			useCaseEstimates.BusinessValue = 3;
-			useCaseEstimates.EffortBVRatio = 5;
+			useCaseEstimates.BusinessValue = useCase.BusinessValue ? useCase.BusinessValue : 0;
+			useCaseEstimates.EffortBVRatio = useCaseEstimates.BusinessValue == 0? 0 : useCaseEstimates.Effort / useCaseEstimates.BusinessValue;
+			useCaseEstimates.EffortBVRatio = useCaseEstimates.EffortBVRatio.toFixed(2);
 		}
 		
 	}
@@ -249,29 +253,38 @@
 			}
 			
 			var useCaseEffort = useCaseEstimates.Effort;
-			var useCaseEffortProjectManager = modelInfo['UserStoryData'] ? modelInfo['UserStoryData'].project_manager_estimate : -1;
-			var useCaseEffortDeveloper = modelInfo['UserStoryData'] ? modelInfo['UserStoryData'].developer_estimate : -1;
+			var useCasePMEffort = useCase.PMEffort ? Number(useCase.PMEffort) : -1;
+			var useCaseDEVEffort = useCase.DEVEffort ? Number(useCase.DEVEffort) : -1;
 			
 			var differentEstimates = [];
 			differentEstimates.push({estimate: useCaseEffort, weight:analysisWeight});
-			differentEstimates.push({estimate: useCaseEffortProjectManager, weight:developerWeight});
-			differentEstimates.push({estimate: useCaseEffortDeveloper, weight:projectManagerWeight});
+			differentEstimates.push({estimate: useCasePMEffort, weight:developerWeight});
+			differentEstimates.push({estimate: useCaseDEVEffort, weight:projectManagerWeight});
 			
-			var synthesizedEffort = useCaseEffort;
+//			console.log("different estimates");
+//			console.log(differentEstimates);
+			
+
+//			console.log("synthesized effort");
+
+			
+			var synthesizedEffort = 0;
 			var totalWeight = 1;
 			for(var i in differentEstimates){
 				var differentEstimate = differentEstimates[i];
 				if(differentEstimate.estimate != -1){
 					totalWeight += differentEstimate.weight;
 					synthesizedEffort += differentEstimate.estimate*differentEstimate.weight;
+//					console.log(synthesizedEffort);
 				}
 			}
 			
 			synthesizedEffort = synthesizedEffort/totalWeight;
 			
-			useCaseEstimates.useCaseEffortProjectManager = useCaseEffortProjectManager;
-			useCaseEstimates.useCaseEffortDeveloper = useCaseEffortDeveloper;
-			useCaseEstimates.synthesizedEffort = synthesizedEffort;
+			
+			useCaseEstimates.useCasePMEffort = useCasePMEffort.toFixed(2);
+			useCaseEstimates.useCaseDEVEffort = useCaseDEVEffort.toFixed(2);
+			useCaseEstimates.synthesizedEffort = synthesizedEffort.toFixed(2);
 			
 			totalSynthesizedEffort += synthesizedEffort;
 		}

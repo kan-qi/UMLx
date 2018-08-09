@@ -304,6 +304,29 @@
 //		console.log(XMIUseCases);
 //		debug.writeJson("XMIUseCases", XMIUseCases);
 		
+		//establish the dictionary that include pm_estimate, dev_estimate, and business_value data
+
+		var XMIPMEstimates = jp.query(XMIUMLModel, '$..["thecustomprofile:pm_effort"][?(@["$"])]');
+		var PMEstimates = {};
+		for(var i in XMIPMEstimates){
+			var XMIPMEstimate = XMIPMEstimates[i];
+			PMEstimates[XMIPMEstimate['$']['base_UseCase']] = XMIPMEstimate['$']['pm_effort'];
+		}
+		var XMIDEVEstimates = jp.query(XMIUMLModel, '$..["thecustomprofile:dev_effort"][?(@["$"])]');
+		var DEVEstimates = {};
+		for(var i in XMIDEVEstimates){
+			var XMIDEVEstimate = XMIDEVEstimates[i];
+			DEVEstimates[XMIDEVEstimate['$']['base_UseCase']] = XMIDEVEstimate['$']['dev_effort'];
+		}
+		
+		var XMIBusinessValues = jp.query(XMIUMLModel, '$..["thecustomprofile:business_value"][?(@["$"])]');
+		var BusinessValues = {};
+		for(var i in XMIBusinessValues){
+			var XMIBusinessValue = XMIBusinessValues[i];
+			BusinessValues[XMIBusinessValue['$']['base_UseCase']] = XMIBusinessValue['$']['business_value'];
+		}
+		
+		
 		for(var i in XMIUseCases){
 			var XMIUseCase = XMIUseCases[i];
 			var fileName = XMIUseCase['$']['xmi:id'];
@@ -315,10 +338,16 @@
 					Activities : [],
 					OutputDir : ModelOutputDir+"/"+fileName,
 					AccessDir : ModelAccessDir+"/"+fileName,
-					DiagramType : "none"
-			
+					DiagramType : "none",
+					BusinessValue: BusinessValues[XMIUseCase['$']['xmi:id']],
+					PMEffort: PMEstimates[XMIUseCase['$']['xmi:id']],
+					DEVEffort: DEVEstimates[XMIUseCase['$']['xmi:id']]
 //					Attachment: XMIUseCase
 			}
+			
+
+			//adding the extra values that are tagged to the use cases
+			
 			
 			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, ActorsByID);
 			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);

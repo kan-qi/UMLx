@@ -1,12 +1,12 @@
-var debugOutputDir = "./debug";
+//global.debugOutputDir = "./debug";
 
-function setDebugOutputDir(dir){
-	this.debugOutputDir = dir;
-}
+//function setDebugOutputDir(dir){
+//	global.debugOutputDir = dir;
+//}
 
 module.exports ={
 		'secret' :'projectumlx',
 		'secretUserInvite' :'umlxUserInvite',
-		'debugOutputDir': debugOutputDir,
-		setDebugOutputDir: setDebugOutputDir
+//		'debugOutputDir': debugOutputDir,
+//		setDebugOutputDir: setDebugOutputDir
 }

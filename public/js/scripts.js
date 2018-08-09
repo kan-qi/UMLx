@@ -1320,9 +1320,9 @@ $(document).ready(function () {
 
     $(document).on('click', '#EffortPH', function(){drawNewHighCharts("Effort",$('#EffortPH').text())});
     
-    $(document).on('click', '#EffortDev', function(){drawNewHighCharts("useCaseEffortProjectManager",$('#EffortDev').text())});
+    $(document).on('click', '#EffortDev', function(){drawNewHighCharts("useCasePMEffort",$('#EffortDev').text())});
     
-    $(document).on('click', '#EffortPM', function(){drawNewHighCharts("useCaseEffortDeveloper",$('#EffortPM').text())});
+    $(document).on('click', '#EffortPM', function(){drawNewHighCharts("useCaseDEVEffort",$('#EffortPM').text())});
     
     $(document).on('click', '#EffortSyn', function(){drawNewHighCharts("synthesizedEffort",$('#EffortSyn').text())});
     

@@ -24,6 +24,9 @@ var testProject31 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 var testProject32 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\Thunder Fighter 2048";
 var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\webAnalyzer";
 
+
+//var config = require("../../config.js");
+
 var targetProjects = [
 //	testProject12, //carbondata_archive\\carbondata  analysis generated
 //	testProject13, //fabric-sdk-java xmi exists, analysis generated
@@ -35,15 +38,16 @@ var targetProjects = [
 //	testProject19, //jackrabbit-filevault //generated........
 //	testProject20, //jackrabbit-oak //met issue.
 //
-	testProject21, //jackrabbit-ocm //generated.
-	testProject22, //james-jspf //generated
+//	testProject21, //jackrabbit-ocm //generated.
+//	testProject22, //james-jspf //generated
 	testProject23, //james-mime4j //generated
+	
 //	testProject24, //james-project //class cast exception
 //	testProject25, //JBREX_work_space //not a project
 //	testProject26, //jbrex-master // it has a series of projects.
 //	testProject27, //jclouds //has an issue when recovering.
 
-//	testProject28, //kalumet //generated, but has an issue.
+//	testProject28, //kalumet //generated, but has an issue. there was an issue when analysing xmi files.
 //	testProject29, //karaf //has an issue/
 //	testProject30, //mybatis-3 //has an issue
 //
@@ -117,7 +121,8 @@ function analyseXMIModel(xmiModelFileName){
 	  //use promise to construct the repo objects
     function analyseModel(projectPath){
         return new Promise((resolve, reject) => {
-        		
+//        	config.setDebugOutputDir(projectPath+"/debug");
+        	global.debugOutputDir = projectPath + "/debug";
         	var outputFolder = projectPath;
 //        	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
         	var inputFile = projectPath + "/"+xmiModelFileName;

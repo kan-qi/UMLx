@@ -85,7 +85,7 @@
 								for(var j in edges){
 									var edge = edges[j];
 									
-									if(edge.end.Component && edge.end.Component._id === node.Component._id){
+									if(edge.end && edge.end.Component && edge.end.Component._id === node.Component._id){
 //										outgoingEdges.push(edge);
 										console.log("checking degree");
 										totalDegree++;
