@@ -188,6 +188,9 @@
 			}
 			
 			Objects.push(Object);
+			
+			// each object is actually a domain element
+			DomainElementsBySN[object.name] = Object;
 		}
 		
 		console.log("check instance specifications");
@@ -223,18 +226,24 @@
 					
 					//matching with components
 					
-					var matchedResult = domainElementSearchUtil.matchComponent(standardizeName(ConnectedXMIInstanceSpecification['$']['name']), DomainElementsBySN);
+//					var matchedResult = domainElementSearchUtil.matchComponent(standardizeName(ConnectedXMIInstanceSpecification['$']['name']), DomainElementsBySN);
+//				
+//					if(!matchedResult.component){
+//						matchedResult.component = {};
+//					}
 				
-					if(!matchedResult.component){
-						matchedResult.component = {};
-					}
+					//components are identified from domain elements
+					var component = DomainElementsBySN[ConnectedXMIInstanceSpecification['$']['name']];
 					
 //					var component = matchedResult.component;
-//					if(!component){
-//						component = {};
-//					}
+					if(!component){
+						component = {
+							id: ConnectedXMIInstanceSpecification['$']['xmi:id']
+						};
+					}
+				
 					
-					matchedResult.component.Type = CustomProfiles[ConnectedXMIInstanceSpecification['$']['xmi:id']];
+					component.Type = CustomProfiles[ConnectedXMIInstanceSpecification['$']['xmi:id']];
 					
 					var activity = {
 							Type: "instanceSpecificationCall",
@@ -243,8 +252,8 @@
 //							Attachment: XMIInstanceSpecification,
 							Group: "System",
 							OutScope: false,
-							Component:  matchedResult.component,
-							MatchedMethod: matchedResult.method
+							Component:  component,
+//							MatchedMethod: matchedResult.method
 					}
 					
 					//decide the reponse node and group.

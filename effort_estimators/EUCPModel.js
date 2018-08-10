@@ -18,6 +18,8 @@
 	var predictionModel = "eucp_linear_regression_model.rds";
 	var sizeMetric = "EUCP"
 	var transactionMetric = "SWTI";
+	var estimationResultsFile = "estimationResultEUCP.json";
+	var label = "eucp_effort_prediction";
 	
 	/*
 	 *  This function calculate the project management decisions based on estimated effort, including the duration and personnel.
@@ -310,7 +312,7 @@
 			console.log("model info");
 			console.log(modelInfo);
 //		
-			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "eucp_effort_prediction"';
+			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+label+'"';
 			
 			console.log("estimation command");
 			console.log(command);
@@ -324,7 +326,7 @@
 						callbackfunc(false);
 					}
 				} else {
-					fs.readFile(modelInfo.OutputDir+"/eucp_effort_prediction_result.json", 'utf-8', (err, str) => {
+					fs.readFile(modelInfo.OutputDir+"/"+label+"_result.json", 'utf-8', (err, str) => {
 						   if (err) throw err;
 						   console.log(str);
 						   
@@ -346,7 +348,7 @@
 						   syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort);
 						   evaluateBusinessValue(modelInfo, estimationResults, projectEffort)
 						   
-						   estimationResults.EstimationResultsFile = "estimationResultEUCP.json"
+						   estimationResults.EstimationResultsFile = estimationResultsFile;
 						   
 						   var files = [{fileName : estimationResults.EstimationResultsFile , content : JSON.stringify(estimationResults)}];
 							

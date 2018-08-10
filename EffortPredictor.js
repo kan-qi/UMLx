@@ -14,17 +14,24 @@
 	var mkdirp = require('mkdirp');
 	var RScriptExec = require('./utils/RScriptUtil.js');
 	
-	var DUCPModel = require("./effort_estimators/DUCPModel.js");
-	var EUCPModel = require("./effort_estimators/EUCPModel.js");
-	var EXUCPModel = require("./effort_estimators/EXUCPModel.js");
+//	var DUCPModel = require("./effort_estimators/DUCPModel.js");
+//	var EUCPModel = require("./effort_estimators/EUCPModel.js");
+//	var EXUCPModel = require("./effort_estimators/EXUCPModel.js");
 	
-	var models = [EUCPModel, EXUCPModel, DUCPModel];
+	var EUCPModel = require("./effort_estimators/UCPModels.js").init("eucp_lm");
+	var EXUCPModel = require("./effort_estimators/UCPModels.js").init("exucp_lm");
+	var DUCPModel = require("./effort_estimators/UCPModels.js").init("ducp_lm");
+	
+//	var models = [EUCPModel, EXUCPModel, DUCPModel];
 	
 	var models = {
 			eucp_lm: EUCPModel,
 			exucp_lm : EXUCPModel,
 			ducp_lm: DUCPModel
 			};
+	
+//	console.log(models);
+//	process.exit();
 	
 	module.exports = {
 		// this function will predict project effort in different forms, for example, by mvc components and use cases.

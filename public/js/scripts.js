@@ -1301,11 +1301,11 @@ $(document).ready(function () {
     
     $(document).on("click", '#model-evaluation-tab', requestUseCaseDistributionCharts);
 
-    $(document).on('click', '#estimator-selector-box .dropdown-menu li a', function () {
-        //       alert($(this).closest('.dropdown').find('.btn').text());
-        $(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text() + '<span class="caret"></span>');
-        $('#estimator-selector-box').data('estimator', $(this).data('estimator'));
-    });
+    //$(document).on('click', '#estimator-selector-box .dropdown-menu li a', function () {
+    //    //       alert($(this).closest('.dropdown').find('.btn').text());
+    //    $(this).closest('.dropdown').find('.dropdown-toggle').html($(this).text() + '<span class="caret"></span>');
+    //    $('#estimator-selector-box').data('estimator', $(this).data('estimator'));
+    //});
 
     $(document).on('click', '#model-selector-box .dropdown-menu li a', function () {
         //        alert($(this).closest('.dropdown').find('.btn').text());

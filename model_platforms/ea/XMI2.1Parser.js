@@ -204,14 +204,84 @@
                     InheritanceStats: null
 				}
 		};
+	
+		
+		//search for the use cases
+		var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
+//		console.log(XMIUseCases);
+//		debug.writeJson("XMIUseCases", XMIUseCases);
+		
+		//establish the dictionary that include pm_estimate, dev_estimate, and business_value data
+
+		var XMIPMEstimates = jp.query(XMIUMLModel, '$..["thecustomprofile:pm_effort"][?(@["$"])]');
+		var PMEstimates = {};
+		for(var i in XMIPMEstimates){
+			var XMIPMEstimate = XMIPMEstimates[i];
+			PMEstimates[XMIPMEstimate['$']['base_UseCase']] = XMIPMEstimate['$']['pm_effort'];
+		}
+		var XMIDEVEstimates = jp.query(XMIUMLModel, '$..["thecustomprofile:dev_effort"][?(@["$"])]');
+		var DEVEstimates = {};
+		for(var i in XMIDEVEstimates){
+			var XMIDEVEstimate = XMIDEVEstimates[i];
+			DEVEstimates[XMIDEVEstimate['$']['base_UseCase']] = XMIDEVEstimate['$']['dev_effort'];
+		}
+		
+		var XMIBusinessValues = jp.query(XMIUMLModel, '$..["thecustomprofile:business_value"][?(@["$"])]');
+		var BusinessValues = {};
+		for(var i in XMIBusinessValues){
+			var XMIBusinessValue = XMIBusinessValues[i];
+			BusinessValues[XMIBusinessValue['$']['base_UseCase']] = XMIBusinessValue['$']['business_value'];
+		}
+		
+		var DomainElementBySN = {};
+		
+		for(var i in XMIUseCases){
+			var XMIUseCase = XMIUseCases[i];
+			var fileName = XMIUseCase['$']['xmi:id'];
+			
+			var UseCase = {
+					_id: XMIUseCase['$']['xmi:id'],
+					Name: XMIUseCase['$']['name'],
+					PrecedenceRelations : [],
+					Activities : [],
+					OutputDir : ModelOutputDir+"/"+fileName,
+					AccessDir : ModelAccessDir+"/"+fileName,
+					DiagramType : "none",
+					BusinessValue: BusinessValues[XMIUseCase['$']['xmi:id']],
+					PMEffort: PMEstimates[XMIUseCase['$']['xmi:id']],
+					DEVEffort: DEVEstimates[XMIUseCase['$']['xmi:id']]
+//					Attachment: XMIUseCase
+			}
+			
+			//adding the extra values that are tagged to the use cases
+			
+			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, ActorsByID);
+			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
+			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
+			
+			Model.UseCases.push(UseCase);
+		}
+		
+
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson("use_case_parsing_finished_"+Model._id, Model);
+		
+		
+//		for(var i in DomainElementsBySN){
+//			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
+//		}
+//        Model.DomainModel.InheritanceStats = inheritanceStats;
+		
+		
 		
 //		console.log(XMIUMLModel);
 
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
 //		var XMIClassesByStandardizedName = [];
-		var DomainElementsBySN = {};
+//		var DomainElementsBySN = {};
 		var DomainElements = [];
 		
+		//populate domain model with classes
 		for(var i in XMIClasses){
 			var XMIClass = XMIClasses[i];
 			console.log(XMIClass);
@@ -222,7 +292,23 @@
 //			}
 			var domainElement = createDomainElement(XMIClass);
 //			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
-			DomainElementsBySN[standardizeName(XMIClass['$']['name'])] = domainElement;
+			
+			var matchedDomainElement = domainElementSearchUtil.matchComponent(standardizeName(domainElement.Name), DomainElementsBySN);
+			
+			if(!matchedDomainElement){
+				DomainElementsBySN[standardizeName(domainElement.Name)] = domainElement;
+			}
+			else{
+//				DomainElementsBySN[standardizeName(XMIClass['$']['name'])] = domainElement;
+				//copy the attributes into the matched domain element
+				for(var i in domainElement){
+					if(i === 'Name' || i === "id"){
+						continue;
+					}
+					matchedDomainElement[i] = domainElement[i];
+				}
+			}
+			
 //			model.DomainModel.push(domainElement);
 			
 			/*
@@ -298,73 +384,6 @@
 		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
 	   });
 //		
-		
-		//search for the use cases
-		var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
-//		console.log(XMIUseCases);
-//		debug.writeJson("XMIUseCases", XMIUseCases);
-		
-		//establish the dictionary that include pm_estimate, dev_estimate, and business_value data
-
-		var XMIPMEstimates = jp.query(XMIUMLModel, '$..["thecustomprofile:pm_effort"][?(@["$"])]');
-		var PMEstimates = {};
-		for(var i in XMIPMEstimates){
-			var XMIPMEstimate = XMIPMEstimates[i];
-			PMEstimates[XMIPMEstimate['$']['base_UseCase']] = XMIPMEstimate['$']['pm_effort'];
-		}
-		var XMIDEVEstimates = jp.query(XMIUMLModel, '$..["thecustomprofile:dev_effort"][?(@["$"])]');
-		var DEVEstimates = {};
-		for(var i in XMIDEVEstimates){
-			var XMIDEVEstimate = XMIDEVEstimates[i];
-			DEVEstimates[XMIDEVEstimate['$']['base_UseCase']] = XMIDEVEstimate['$']['dev_effort'];
-		}
-		
-		var XMIBusinessValues = jp.query(XMIUMLModel, '$..["thecustomprofile:business_value"][?(@["$"])]');
-		var BusinessValues = {};
-		for(var i in XMIBusinessValues){
-			var XMIBusinessValue = XMIBusinessValues[i];
-			BusinessValues[XMIBusinessValue['$']['base_UseCase']] = XMIBusinessValue['$']['business_value'];
-		}
-		
-		
-		for(var i in XMIUseCases){
-			var XMIUseCase = XMIUseCases[i];
-			var fileName = XMIUseCase['$']['xmi:id'];
-			
-			var UseCase = {
-					_id: XMIUseCase['$']['xmi:id'],
-					Name: XMIUseCase['$']['name'],
-					PrecedenceRelations : [],
-					Activities : [],
-					OutputDir : ModelOutputDir+"/"+fileName,
-					AccessDir : ModelAccessDir+"/"+fileName,
-					DiagramType : "none",
-					BusinessValue: BusinessValues[XMIUseCase['$']['xmi:id']],
-					PMEffort: PMEstimates[XMIUseCase['$']['xmi:id']],
-					DEVEffort: DEVEstimates[XMIUseCase['$']['xmi:id']]
-//					Attachment: XMIUseCase
-			}
-			
-
-			//adding the extra values that are tagged to the use cases
-			
-			
-			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, ActorsByID);
-			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
-			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
-			
-			Model.UseCases.push(UseCase);
-		}
-		
-
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("use_case_parsing_finished_"+Model._id, Model);
-		
-		
-//		for(var i in DomainElementsBySN){
-//			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
-//		}
-//        Model.DomainModel.InheritanceStats = inheritanceStats;
 		
 		var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
 //		var DomainUsagesByID = [];

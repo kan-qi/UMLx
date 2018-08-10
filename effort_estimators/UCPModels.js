@@ -15,29 +15,39 @@
 	var mkdirp = require('mkdirp');
 	var RScriptExec = require('../utils/RScriptUtil.js');
 	
-	var predictionModel = "exucp_linear_regression_model.rds";
-	var sizeMetric = "EXUCP";
-	var transactionMetric = "SWTII";
-	var estimationResultsFile = "estimationResultEXUCP.json";
-	var label = "exucp_effort_prediction";
+//	var predictionModel = "exucp_linear_regression_model.rds";
+//	var sizeMetric = "EXUCP";
+//	var transactionMetric = "SWTII";
+//	var estimationResultsFile = "estimationResultEXUCP.json";
+//	var label = "eucp_effort_prediction";
 	
-//	var eucpConfig = {
-//	predictionModel : "exucp_linear_regression_model.rds",
-//	sizeMetric : "EXUCP",
-//	transactionMetric : "SWTII",
-//	estimationResultsFile : "estimationResultEUCP.json"
-//	}
-//	
-//	var exucpConfig = {
-//	predictionModel : "eucp_linear_regression_model.rds",
-//	sizeMetric : "EUCP",
-//	transactionMetric : "SWTI",
-//	
-//	}
-//	
-//	var ducpConfig = {
-//			
-//	}
+	
+	var defaultModelConfig = eucpConfig;
+
+	var eucpConfig = {
+	predictionModel : "eucp_linear_regression_model.rds",
+	sizeMetric : "EUCP",
+	transactionMetric : "SWTI",
+	estimationResultsFile : "estimationResultEUCP.json",
+	label: "eucp_effort_prediction"
+	}
+	
+	var exucpConfig = {
+	predictionModel : "exucp_linear_regression_model.rds",
+	sizeMetric : "EXUCP",
+	transactionMetric : "SWTII",
+	estimationResultsFile : "estimationResultEXUCP.json",
+	label: "exucp_effort_prediction"
+	}
+	
+	
+	var ducpConfig = {
+	predictionModel : "ducp_linear_regression_model.rds",
+	sizeMetric : "DUCP",
+	transactionMetric : "SWTIII",
+	estimationResultsFile : "estimationResultDUCP.json",
+	label: "ducp_effort_prediction"
+	}
 	
 	
 
@@ -45,7 +55,7 @@
 	 *  This function calculate the project management decisions based on estimated effort, including the duration and personnel.
 	 */
 	
-	function estimateUseCaseEffort(modelInfo, estimationResults, projectEffort){
+	function estimateUseCaseEffort(modelInfo, estimationResults, projectEffort, modelConfig){
 		//predict presonnel, schedule based on predicted effort
 		//need to update
 //		var sizeMetric = umlEstimationInfo.sizeMetric;
@@ -133,9 +143,9 @@
 			}
 
 
-			useCaseEstimates.SizeMeasurement = useCase['ExtendedUseCasePointData'][transactionMetric];
+			useCaseEstimates.SizeMeasurement = useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
 			
-			var useCaseEffort = (useCase['ExtendedUseCasePointData'][transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+			var useCaseEffort = (useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
 			
 			useCaseEstimates.Effort = useCaseEffort.toFixed(2);
 //			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
@@ -152,14 +162,14 @@
 			var useCasePersonnel = useCaseDuration == 0 ? 0 : useCaseEffortInPM/useCaseDuration;
 			
 //			var useCase = modelInfo.UseCases[i];
-//			useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+//			useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
 		
 //			useCase.duration_dist_2 = projectDuration/modelInfo.UEXUCW*useCase.UEXUCW;
 //			useCase.duration_dist_3 = projectDuration/modelInfo.UDUCW*useCase.UDUCW;
 			
 			//distribute project effort
 			
-//				useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][transactionMetric]*useCase['ExtendedUseCasePointData'][transactionMetric];
+//				useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
 				useCaseEstimates.Personnel = useCasePersonnel.toFixed(2);
 //				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
@@ -183,7 +193,7 @@
 		
 	}
 	// distribute the effort to different types of components.
-	function estimateMVCEffort(modelInfo, estimationResults, projectEffort){
+	function estimateMVCEffort(modelInfo, estimationResults, projectEffort, modelConfig){
 		
 		var mvcEstimates = {
 				ViewEffort : 0,
@@ -225,7 +235,7 @@
 	}
 	
 	// evaluate business value
-	function evaluateBusinessValue(modelInfo, estimationResults, projectEffort){
+	function evaluateBusinessValue(modelInfo, estimationResults, projectEffort, modelConfig){
 		
 		var useCaseEstimatesById = {};
 		
@@ -253,7 +263,7 @@
 	}
 	
 	// synthesize different proposals of effort estimation.
-	function syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort){
+	function syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort, modelConfig){
 		
 		var projectManagerWeight = 0.5;
 		var developerWeight = 0.2;
@@ -320,77 +330,116 @@
 	
 	}
 	
-	module.exports = {
-		// this function will predict project effort in different forms, for example, by mvc components and use cases.
-		predictEffort: function(modelInfo, key, callbackfunc){
-			
-//			var estimator = umlEstimationInfo.estimator;
-//			var model = umlEstimationInfo.model;
-			
-//			var predictionModel = model.replace(" ", "_")+"_"+estimator.replace(" ", "_")+"_model.rds";
-			
-			console.log("model info");
-			console.log(modelInfo);
-//		
-			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+label+'"';
-			
-			console.log("estimation command");
-			console.log(command);
-			
-			RScriptExec.runRScript(command,function(result){
-				if (!result) {
-//					console.log('exec error: ' + error);
-					console.log("project effort estimation error");
-					if(callbackfunc){
-						// error because of the R script
-						callbackfunc(false);
-					}
-				} else {
-					fs.readFile(modelInfo.OutputDir+"/"+label+"_result.json", 'utf-8', (err, str) => {
-						   if (err) throw err;
-						   console.log(str);
-						   
-						   var projectEffort = Number(JSON.parse(str).result);
-						   
-						   var estimationResults = {
-								   	EstimationModel: key,
-								    PredictionModel : predictionModel,
-									SizeMetric : sizeMetric,
-									TransactionMetric : transactionMetric,
-									Effort: projectEffort.toFixed(2),
-									UseCases: [],
-									DomainModel: {},
-									SizeMeasurement: modelInfo['ExtendedUseCasePointData'][sizeMetric].toFixed(2)
-							};
-						   
-						   estimateUseCaseEffort(modelInfo, estimationResults, projectEffort);
-						   estimateMVCEffort(modelInfo, estimationResults, projectEffort);
-						   syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort);
-						   evaluateBusinessValue(modelInfo, estimationResults, projectEffort)
-						   
-						   estimationResults.EstimationResultsFile = estimationResultsFile;
-						   
-						   var files = [{fileName : estimationResults.EstimationResultsFile , content : JSON.stringify(estimationResults)}];
-							
-							umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
-							if(err){
-								 if(callbackfunc){
-									   callbackfunc(false);
-								   }
-								return;
-							}
-
-							   modelInfo[key] = estimationResults;
-							  
-							   if(callbackfunc){
-								   callbackfunc(modelInfo);
-							   }
-							});
-
-					});
-				}
-			});
+	function predictEffort(modelInfo, key, callbackfunc){
+		var modelConfig = defaultConfig;
+		
+		if(this.modelConfig){
+			modelConfig = this.modelConfig;
 		}
+//		var estimator = umlEstimationInfo.estimator;
+//		var model = umlEstimationInfo.model;
+		
+//		var predictionModel = model.replace(" ", "_")+"_"+estimator.replace(" ", "_")+"_model.rds";
+		
+		console.log("model info");
+		console.log(modelInfo);
+//	
+		var command = './Rscript/EffortEstimation.R "'+modelConfig.predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+modelConfig.label+'"';
+		
+		console.log("estimation command");
+		console.log(command);
+		
+		RScriptExec.runRScript(command,function(result){
+			if (!result) {
+//				console.log('exec error: ' + error);
+				console.log("project effort estimation error");
+				if(callbackfunc){
+					// error because of the R script
+					callbackfunc(false);
+				}
+			} else {
+				fs.readFile(modelInfo.OutputDir+"/"+modelConfig.label+"_result.json", 'utf-8', (err, str) => {
+					   if (err) throw err;
+					   console.log(str);
+					   
+					   var projectEffort = Number(JSON.parse(str).result);
+					   
+					   var estimationResults = {
+							   	EstimationModel: key,
+							    PredictionModel : modelConfig.predictionModel,
+								SizeMetric : modelConfig.sizeMetric,
+								TransactionMetric : modelConfig.transactionMetric,
+								Effort: projectEffort.toFixed(2),
+								UseCases: [],
+								DomainModel: {},
+								SizeMeasurement: modelInfo['ExtendedUseCasePointData'][modelConfig.sizeMetric].toFixed(2)
+						};
+					   
+					   estimateUseCaseEffort(modelInfo, estimationResults, projectEffort, modelConfig);
+					   estimateMVCEffort(modelInfo, estimationResults, projectEffort, modelConfig);
+					   syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort, modelConfig);
+					   evaluateBusinessValue(modelInfo, estimationResults, projectEffort, modelConfig)
+					   
+					   estimationResults.EstimationResultsFile = modelConfig.estimationResultsFile;
+					   
+					   var files = [{fileName : estimationResults.EstimationResultsFile , content : JSON.stringify(estimationResults)}];
+						
+						umlFileManager.writeFiles(modelInfo.OutputDir, files, function(err){
+						if(err){
+							 if(callbackfunc){
+								   callbackfunc(false);
+							   }
+							return;
+						}
+
+						   modelInfo[key] = estimationResults;
+						  
+						   if(callbackfunc){
+							   callbackfunc(modelInfo);
+						   }
+						});
+
+				});
+			}
+		});
+	}
+	
+	module.exports = {
+		init: function(modelSelect){
+			var estimationModel = {
+					
+			};
+//			var modelConfig = null;
+			
+			if(modelSelect === "eucp_lm"){
+				estimationModel.modelConfig = eucpConfig;
+			}
+			else if(modelSelect === "exucp_lm"){
+				estimationModel.modelConfig = exucpConfig;
+			}
+			else if(modelSelect === "ducp_lm"){
+				estimationModel.modelConfig = ducpConfig;
+			}
+			
+//			if(!modelConfig){
+//				predictionModel = modelConfig.predictionModel;
+//				sizeMetric = modelConfig.sizeMetric;
+//				transactionMetric = modelConfig.transactionMetric;
+//				estimationResultsFile = modelConfig.estimationResultsFile;
+//				label = modelConfig.label;
+//				
+////				console.log("setting config");
+////				console.log(sizeMetric);
+//			}
+			
+			estimationModel.predictEffort = predictEffort;
+			
+//			console.log(modelConfig);
+			
+			return estimationModel;
+		},
+		// this function will predict project effort in different forms, for example, by mvc components and use cases.
+		predictEffort: predictEffort,
 		
 	}
 }())

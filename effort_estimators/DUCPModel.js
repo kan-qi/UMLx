@@ -18,7 +18,8 @@
 	var predictionModel = "ducp_linear_regression_model.rds";
 	var sizeMetric = "DUCP"
 	var transactionMetric = "SWTIII";
-	
+	var estimationResultsFile = "estimationResultDUCP.json";
+	var label = "ducp_effort_prediction";
 
 	/*
 	 *  This function calculate the project management decisions based on estimated effort, including the duration and personnel.
@@ -178,14 +179,18 @@
 			var element = domainModelInfo.Elements[i];
 			console.log("domain elements");
 			console.log(element);
+			
 			if(element.Type === "boundary"){
 				viewWeight += element.Operations.length;
+				viewWeight ++;
 			}
 			else if(element.Type === "entity"){
 				modelWeight += element.Operations.length;
+				modelWeight ++;
 			}
 			else {
 				controlWeight += element.Operations.length;
+				controlWeight ++;
 			}
 		}
 		
@@ -311,7 +316,7 @@
 			console.log("model info");
 			console.log(modelInfo);
 //		
-			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "eucp_effort_prediction"';
+			var command = './Rscript/EffortEstimation.R "'+predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+label+'"';
 			
 			console.log("estimation command");
 			console.log(command);
@@ -325,7 +330,7 @@
 						callbackfunc(false);
 					}
 				} else {
-					fs.readFile(modelInfo.OutputDir+"/eucp_effort_prediction_result.json", 'utf-8', (err, str) => {
+					fs.readFile(modelInfo.OutputDir+"/"+label+"_result.json", 'utf-8', (err, str) => {
 						   if (err) throw err;
 						   console.log(str);
 						   
@@ -347,7 +352,7 @@
 						   syntehsizeEffortProposals(modelInfo, estimationResults, projectEffort);
 						   evaluateBusinessValue(modelInfo, estimationResults, projectEffort)
 						   
-						   estimationResults.EstimationResultsFile = "estimationResultEUCP.json"
+						   estimationResults.EstimationResultsFile = estimationResultsFile;
 						   
 						   var files = [{fileName : estimationResults.EstimationResultsFile , content : JSON.stringify(estimationResults)}];
 							

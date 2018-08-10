@@ -143,6 +143,13 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				var XMILifelineID1 = XMIOccurrence1.$.covered;
 //				XMILifeline1 = XMILifeline;
 				
+				if(!DomainElementsBySN[XMILifelineID1['$']['name']]){
+					DomainElementsBySN[XMILifelineID1['$']['name']] = {
+						name: XMILifelineID1['$']['name'],
+						id: XMILifelineID1['$']['xmi:id']
+					}
+				}
+				
 //				XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
 				
 //				var isStimulus = false;
@@ -156,6 +163,13 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
 				var XMILifelineID2 = XMIOccurrence2.$.covered;
 //				XMILifeline2 = XMILifeline;
+				
+				if(!DomainElementsBySN[XMILifelineID2['$']['name']]){
+					DomainElementsBySN[XMILifelineID2['$']['name']] = {
+						name: XMILifelineID2['$']['name'],
+						id: XMILifelineID2['$']['xmi:id']
+					}
+				}
 				
 				if(XMILifelinesByID[XMILifelineID2].isActor){
 					group = XMILifelinesByID[XMILifelineID2]['$']['name'];
@@ -180,15 +194,21 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					}
 				}
 				
-//				var component = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
+				var component = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
 				
-				var matchedResult = domainElementSearchUtil.matchComponent(standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name']), DomainElementsBySN);
+//				var matchedResult = domainElementSearchUtil.matchComponent(standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name']), DomainElementsBySN);
+//				
+//				if(!matchedResult.component){
+//					matchedResult.component = {};
+//				}
 				
-				if(!matchedResult.component){
-					matchedResult.component = {};
+				if(!component){
+					component = {
+							id: XMILifelinesByID[XMILifelineID2]['$']['xmi:id']
+					}
 				}
 				
-				matchedResult.component.Type = CustomProfiles[XMILifelineID2];
+				component.Type = CustomProfiles[XMILifelineID2];
 //				
 //				var DomainElement = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
 //				if(DomainElement){
@@ -202,8 +222,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //						Stimulus: false,
 						Group: "System",
 						OutScope: outScope,
-						Component: matchedResult.component,
-						MatchedMethod: matchedResult.method
+						Component: .component,
+//						MatchedMethod: matchedResult.method
 //						Attachment: XMIMessage
 				}
 				
