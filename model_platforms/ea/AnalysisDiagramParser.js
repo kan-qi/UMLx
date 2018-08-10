@@ -7,7 +7,7 @@
 //	var parser = new xml2js.Parser();
 //	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
+//	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
 	
 	function queryExtensionElements(XMIExtension){
 		var extensionAnalysisElements = jp.query(XMIExtension, '$..element[?(@[\'$\'][\'xmi:type\']==\'uml:Object\' || @[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
@@ -190,7 +190,13 @@
 			Objects.push(Object);
 			
 			// each object is actually a domain element
-			DomainElementsBySN[object.name] = Object;
+			DomainElementsBySN[standardizeName(Object.name)] = {
+					_id: Object.id,
+					Name: Object.name,
+					Type: Object.type,
+					Operations: [],
+					Attributes: []
+			};
 		}
 		
 		console.log("check instance specifications");
@@ -233,12 +239,15 @@
 //					}
 				
 					//components are identified from domain elements
-					var component = DomainElementsBySN[ConnectedXMIInstanceSpecification['$']['name']];
+					var component = DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])];
 					
 //					var component = matchedResult.component;
 					if(!component){
 						component = {
-							id: ConnectedXMIInstanceSpecification['$']['xmi:id']
+							_id: ConnectedXMIInstanceSpecification['$']['xmi:id'],
+							Name: ConnectedXMIInstanceSpecification['$']['name'],
+							Operations: [],
+							Attributes: []
 						};
 					}
 				

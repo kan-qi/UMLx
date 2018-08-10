@@ -203,27 +203,30 @@
 		
 		var domainModelInfo = modelInfo.DomainModel;
 		var viewWeight = 0;
-		var modelWeight = 0;
+		var entityWeight = 0;
 		var controlWeight = 0;
 		for(var i in domainModelInfo.Elements){
 			var element = domainModelInfo.Elements[i];
 			console.log("domain elements");
 			console.log(element);
 			if(element.Type === "boundary"){
-				viewWeight += element.Operations.length;
+				viewWeight++;
+//				viewWeight += element.Operations.length;
 			}
 			else if(element.Type === "entity"){
-				modelWeight += element.Operations.length;
+				entityWeight++;
+//				modelWeight += element.Operations.length;
 			}
-			else {
-				controlWeight += element.Operations.length;
+			else if(element.Type === "control"){
+				controlWeight++;
+//				controlWeight += element.Operations.length;
 			}
 		}
 		
-		var totalWeight = viewWeight + controlWeight + modelWeight;
+		var totalWeight = viewWeight + controlWeight + entityWeight;
 		
 		mvcEstimates.ViewEffort = totalWeight == 0 ? 0: viewWeight/totalWeight*projectEffort;
-		mvcEstimates.ModelEffort = totalWeight == 0 ? 0 : modelWeight/totalWeight*projectEffort;
+		mvcEstimates.ModelEffort = totalWeight == 0 ? 0 : entityWeight/totalWeight*projectEffort;
 		mvcEstimates.ControlEffort = totalWeight == 0 ? 0 : controlWeight/totalWeight*projectEffort;
 		
 		console.log("mvc estimates");
@@ -331,7 +334,7 @@
 	}
 	
 	function predictEffort(modelInfo, key, callbackfunc){
-		var modelConfig = defaultConfig;
+		var modelConfig = defaultModelConfig;
 		
 		if(this.modelConfig){
 			modelConfig = this.modelConfig;
@@ -348,6 +351,8 @@
 		
 		console.log("estimation command");
 		console.log(command);
+		
+//		process.exit();
 		
 		RScriptExec.runRScript(command,function(result){
 			if (!result) {

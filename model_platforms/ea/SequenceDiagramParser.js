@@ -7,7 +7,6 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
 	
 function standardizeName(name){
 	if(!name){
@@ -139,14 +138,17 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			if(XMIOccurrence['$']['xmi:type'] === "uml:OccurrenceSpecification"){
 				var XMIOccurrence1 = XMIOccurrence;
 				console.log(XMIOccurrence1);
-//				var XMILifeline1 = XMILifelinesByID[XMIOccurrence1.$.covered];
 				var XMILifelineID1 = XMIOccurrence1.$.covered;
+				var XMILifeline1 = XMILifelinesByID[XMILifelineID1];
 //				XMILifeline1 = XMILifeline;
 				
-				if(!DomainElementsBySN[XMILifelineID1['$']['name']]){
-					DomainElementsBySN[XMILifelineID1['$']['name']] = {
-						name: XMILifelineID1['$']['name'],
-						id: XMILifelineID1['$']['xmi:id']
+				//create domain model elements
+				if(XMILifeline1 && !DomainElementsBySN[standardizeName(XMILifeline1['$']['name'])]){
+					DomainElementsBySN[standardizeName(XMILifeline1['$']['name'])] = {
+						Name: XMILifeline1['$']['name'],
+						_id: XMILifeline1['$']['xmi:id'],
+						Operations: [],
+						Attributes: []
 					}
 				}
 				
@@ -160,18 +162,20 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //				}
 				
 				var XMIOccurrence2 = XMIOccurrences[i++];
-//				var XMILifeline2 = XMILifelinesByID[XMIOccurrence2.$.covered];
 				var XMILifelineID2 = XMIOccurrence2.$.covered;
+				var XMILifeline2 = XMILifelinesByID[XMILifelineID2];
 //				XMILifeline2 = XMILifeline;
 				
-				if(!DomainElementsBySN[XMILifelineID2['$']['name']]){
-					DomainElementsBySN[XMILifelineID2['$']['name']] = {
-						name: XMILifelineID2['$']['name'],
-						id: XMILifelineID2['$']['xmi:id']
+				if(XMILifeline2 && !DomainElementsBySN[standardizeName(XMILifeline2['$']['name'])]){
+					DomainElementsBySN[standardizeName(XMILifeline2['$']['name'])] = {
+						Name: XMILifeline2['$']['name'],
+						_id: XMILifeline2['$']['xmi:id'],
+						Operations: [],
+						Attributes: []
 					}
 				}
 				
-				if(XMILifelinesByID[XMILifelineID2].isActor){
+				if(XMILifeline2.isActor){
 					group = XMILifelinesByID[XMILifelineID2]['$']['name'];
 				}
 				
@@ -204,8 +208,12 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				
 				if(!component){
 					component = {
-							id: XMILifelinesByID[XMILifelineID2]['$']['xmi:id']
+							_id: XMILifelinesByID[XMILifelineID2]['$']['xmi:id'],
+							Name: XMILifelinesByID[XMILifelineID2]['$']['name'],
+							Operations: [],
+							Attributes: []
 					}
+					DoaminElementBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])] = component;
 				}
 				
 				component.Type = CustomProfiles[XMILifelineID2];
@@ -222,7 +230,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //						Stimulus: false,
 						Group: "System",
 						OutScope: outScope,
-						Component: .component,
+						Component: component,
 //						MatchedMethod: matchedResult.method
 //						Attachment: XMIMessage
 				}
