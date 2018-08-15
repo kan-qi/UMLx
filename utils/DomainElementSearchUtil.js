@@ -129,6 +129,7 @@
 	
 	
 	module.exports = {
-			matchComponent:matchComponent
+			matchComponent:matchComponent,
+			matchDomainElement: matchDomainElement
 	}
 })();

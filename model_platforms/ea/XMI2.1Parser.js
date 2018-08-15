@@ -13,6 +13,8 @@
 	var analysisDiagramParser= require("./AnalysisDiagramParser.js");
 	var useCaseDiagramParser = require("./UseCaseDiagramParser.js");
 	var visualSprintDiagramParser = require("./VisualSprintDiagramParser.js");
+
+	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
 	
 //        var inheritanceStats = {
 //                'depth': 0,
@@ -233,7 +235,7 @@
 			BusinessValues[XMIBusinessValue['$']['base_UseCase']] = XMIBusinessValue['$']['business_value'];
 		}
 		
-		var DomainElementBySN = {};
+		var DomainElementsBySN = {};
 		
 		for(var i in XMIUseCases){
 			var XMIUseCase = XMIUseCases[i];
@@ -293,7 +295,7 @@
 			var domainElement = createDomainElement(XMIClass);
 //			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
 			
-			var matchedDomainElement = domainElementSearchUtil.matchComponent(standardizeName(domainElement.Name), DomainElementsBySN);
+			var matchedDomainElement = domainElementSearchUtil.matchDomainElement(standardizeName(domainElement.Name), DomainElementsBySN);
 			
 			if(!matchedDomainElement){
 				DomainElementsBySN[standardizeName(domainElement.Name)] = domainElement;
@@ -301,11 +303,13 @@
 			else{
 //				DomainElementsBySN[standardizeName(XMIClass['$']['name'])] = domainElement;
 				//copy the attributes into the matched domain element
-				for(var i in domainElement){
-					if(i === 'Name' || i === "id"){
-						continue;
-					}
-					matchedDomainElement[i] = domainElement[i];
+				console.log(matchedDomainElement);
+				for(var i in domainElement.Operations){
+					matchedDomainElement.Operations.push(domainElement.Operations[i]);
+				}
+				
+				for(var i in domainElement.Attributes){
+					matchedDomainElement.Attributes.push(domainElement.Attributes[i]);
 				}
 			}
 			
@@ -371,9 +375,11 @@
 //				domainElement.Associations.push(association);
 //			}
 			
-			Model.DomainModel.Elements.push(domainElement);
 		}
-
+		
+		for(var i in DomainElementsBySN){
+		Model.DomainModel.Elements.push(DomainElementsBySN[i]);
+		}
 		
 		console.log(XMIClasses);
 //		var debug = require("../../utils/DebuggerOutput.js");
