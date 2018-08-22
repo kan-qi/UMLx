@@ -6,6 +6,7 @@
 	
 //	var UMLDiagramTraverser = require("./UMLDiagramTraverser.js");
 	var transactionPatternMatchUtil = require("../../utils/TransactionPatternMatchUtil.js");
+	var domainModelSerchUtil = require("../../utils/DomainModelSearchUtil.js");
 
 //	var diagramDrawer = require('./DiagramProfilers/DiagramDrawer.js');
 
@@ -22,14 +23,9 @@
 	];
 	 
 	function matchCategories(categories, characteristic){
-//			console.log(categories);
-//			console.log("characteristic");
-//			console.log(characteristic);
 			var categoriesToReturn = [];
 			for(var category in categories){
 				var results = ((function(category, categories){
-//				console.log('categories.....');
-//				console.log(category);
 				if(category === characteristic){
 						return [category];
 				}
@@ -45,8 +41,6 @@
 				}
 			})(category, categories));
 			
-//			console.log("result------------");
-//			console.log(results);
 			for(var i in results){
 				if(categoriesToReturn.indexOf(results[i]) == -1){
 					categoriesToReturn.push(results[i]);
@@ -55,14 +49,12 @@
 			}
 			
 			return categoriesToReturn;
-		}
+	}
 
 	var transactionalPatternTreeRoot = transactionPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
 	
 	module.exports = {
 			processTransaction: function(transaction,  usecase, model){
-//				var components = [];
-//				var transactionStr = "";
 				
 				//the total degree should be determined differently. If an element has a component, then the degree is the number of components associated with the current component, and if not, it is the number of messages, associated with the current messages.
 				var totalDegree = 0;
@@ -79,33 +71,33 @@
 							console.log(node.Component);
 						
 							totalComponents ++;
-//							var outgoingEdges = [];
-//							for(var i in this.Diagrams){
 								var edges = usecase.PrecedenceRelations;
 								for(var j in edges){
 									var edge = edges[j];
 									
 									if(edge.end && edge.end.Component && edge.end.Component._id === node.Component._id){
-//										outgoingEdges.push(edge);
 										console.log("checking degree");
 										totalDegree++;
 									}
 								}
-//							}
 								
-								var matchedMethod = node.MatchedMethod;
-//								for(var k in node.Component.Operations){
-//									var operation = node.Component.Operations[k];
-//									totalOps++;
-//									if(operation.Name === matchedMethod){
-									if(matchedMethod){
-										for(var j in matchedMethod.Parameters){
+							
+							
+									var matchedOperation = domainModelSerchUtil.matchOperation(node.Name, node.Component);
+									
+									console.log("matched oepration");
+									
+									if(matchedOperation){
+										var debug = require("../../utils/DebuggerOutput.js");
+										debug.appendFile("matchedOperation", matchedOperation.Name);
+										
+										for(var j in matchedOperation.Parameters){
 											dataElementTypes++;
 										}
 									}
-//									}
-//								}
-							
+									else{
+										dataElementTypes++;
+									}
 						}
 						
 				}
@@ -123,8 +115,6 @@
 					if(transactionalOperationStr !== ''){
 						var operationalCharacteristics = transactionalOperationStr.split(/,/g);
 						// search the characteristics hierarchy to identify the categories
-//						console.log('operational characteristics');
-//						console.log(operationalCharacteristics);
 						var categories = {
 								CTRL: {
 									DM: {
@@ -141,8 +131,6 @@
 						var matchedCategories = [];
 						for(var j in operationalCharacteristics){
 							var returnedCategories = matchCategories(categories, operationalCharacteristics[j]);
-//							console.log("returned categories");
-//							console.log(returnedCategories);
 							for(var k in returnedCategories){
 								if(matchedCategories.indexOf(returnedCategories[k]) == -1){
 									matchedCategories.push(returnedCategories[k]);
@@ -150,7 +138,6 @@
 							}
 						}
 						transaction['TransactionAnalytics'].Transactional = matchedCategories;
-//						console.log(transaction.Operations.transactional);
 					}
 					else{
 						transaction['TransactionAnalytics'].Transactional = ['TRAN_NA'];
@@ -161,8 +148,6 @@
 					transaction['TransactionAnalytics'].TransactionalTag = transaction['TransactionAnalytics'].Transactional.join(',');
 				}
 				
-				
-//				transaction['TransactionAnalytics'].Components = components;
 				transaction['TransactionAnalytics'].TL = transaction.Nodes.length;
 				//The transaction length is defined as the number of operations of a transaction, which can be the number of activities, messages, interactions.
 				
@@ -176,7 +161,6 @@
 				
 				console.log("transaction process: transaction process");
 				console.log(transaction);
-				
 				
 				return true;
 			}

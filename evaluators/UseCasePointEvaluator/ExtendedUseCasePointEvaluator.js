@@ -1,9 +1,11 @@
-/**
+ /**
  * http://usejsdoc.org/
  * 
  * Integrate use case point evaluator to calculate eucp, exucp, ducp
  * 
- * Includes the methods  to calculate EUCP, EXUCP, DUCP, 
+ * Includes the methods  to calculate EUCP, EXUCP, DUCP.
+ * 
+ * Directly coding the parameters for performance consideration.
  */
 
 
@@ -14,41 +16,53 @@
 	var mkdirp = require('mkdirp');
 	var cocomoCalculator = require('../COCOMOEvaluator/COCOMOCalculator.js');
 	
+	// this json object should be copied from the trained model from transaction analysis
 	var transactionWeightingSchema = {
-			swti:{
-				classification:{
-					TL: [Number.NEGATIVE_INFINITY,3,5,10,Number.POSITIVE_INFINITY]
-				},
-				weights:[
-					10, 15, 20, 30
-				]
-			},
-			swtii: {
-				classification:{
-					TD: [Number.NEGATIVE_INFINITY,2,7,10,Number.POSITIVE_INFINITY],
-					TL: [Number.NEGATIVE_INFINITY,3,5,10,Number.POSITIVE_INFINITY],
-				},
-				weights:[
-					[9, 12, 18, 25],
-					[10, 15, 20, 30],
-					[12, 19, 22, 45],
-					[15, 21, 28, 50]
-				]
-			},
-			swtiii: {
-				classification:{
-					DETs: [Number.NEGATIVE_INFINITY,3,8,15,Number.POSITIVE_INFINITY],
-					TD: [Number.NEGATIVE_INFINITY,2,7,10,Number.POSITIVE_INFINITY],
-					TL: [Number.NEGATIVE_INFINITY,3,5,10,Number.POSITIVE_INFINITY]
-				},
-				weights:[
-					[[7, 9, 14, 18], [9, 12, 19, 25],[11, 15, 19, 22],[13, 18, 20, 25]],
-					[[9, 12, 18, 25],[10, 15, 20, 30],[12, 19, 22, 45],[15, 21, 28, 50]],
-					[[11, 14, 19, 21], [11, 16, 21, 28], [14, 21, 28, 38],[18, 19, 23, 51]],
-					[[12, 18, 21, 24], [14, 18, 25, 31], [18, 25, 31, 42],[21, 27, 28, 54]]
-				]
-			}
-			};
+			  "EUCP": {
+				    "normFactor": 6.5385,
+				    "cuts": [],
+				    "levels": {
+				      "l1": [1.0067, 0.0556]
+				    }
+				  },
+				  "EXUCP": {
+				    "normFactor": 0.9938,
+				    "cuts": {
+				      "TL": ["-Inf", 4.1256, 5.6526, 7.1796, "Inf"],
+				      "TD": ["-Inf", 3.466, 5.714, 7.9619, "Inf"]
+				    },
+				    "levels": {
+				      "l1": [1.1589, 1.0102],
+				      "l2": [1.3385, 1.0156],
+				      "l3": [2.2486, 0.9932],
+				      "l4": [3.2167, 1.073],
+				      "l5": [5.1356, 1.8595],
+				      "l6": [7.8923, 2.8829],
+				      "l7": [12.2764, 4.7942]
+				    }
+				  },
+				  "DUCP": {
+				    "normFactor": 0.9535,
+				    "cuts": {
+				      "TL": ["-Inf", 4.6775, 6.6278, "Inf"],
+				      "TD": ["-Inf", 4.2785, 7.1495, "Inf"],
+				      "DETs": ["-Inf", 6.5641, 15.0865, "Inf"]
+				    },
+				    "levels": {
+				      "l1": [1.2291, 0.955],
+				      "l2": [1.448, 0.9917],
+				      "l3": [2.3152, 0.9518],
+				      "l4": [3.2419, 1.002],
+				      "l5": [5.2473, 2.1658],
+				      "l6": [7.8886, 2.8567],
+				      "l7": [12.1638, 5.0031]
+				    }
+				  }
+				}
+
+
+
+
 
 	
 	var transactionWeightingJsonFile = "./transaction_weighting_schema.json";
@@ -64,43 +78,82 @@
 	}
 	
 	
+//	function determineTransactionWeight(dimensions, schema){
+//		var weightingSchema = transactionWeightingSchema[schema];
+//		var classification = weightingSchema.classification;
+//		
+//		console.log(classification);
+//		
+//		var levelsOfDimension = {};
+//		var dimensionIndex = 0;
+//		for(var i in classification){
+//			var dimensionLevels = classification[i];
+//			for(var j in dimensionLevels){
+//				if(dimensions[i] <= dimensionLevels[j]){
+//					levelsOfDimension[dimensionIndex] = j-1;
+//					break;
+//				}
+//			}
+//			dimensionIndex++;
+//		}
+//		
+//		console.log(levelsOfDimension);
+//		
+//		var weights = weightingSchema.weights;
+//		for(var i in levelsOfDimension){
+//			console.log("weights");
+//			console.log(weights);
+//			weights = weights[levelsOfDimension[i]];
+//		}
+//		
+//		console.log(weights);
+//		
+//		if(weights.length){
+//			console.log(dimensions);
+//			console.log(schema);
+//			throw "weights";
+//		}
+//		
+//		return weights;
+//	}
+	
 	function determineTransactionWeight(dimensions, schema){
 		var weightingSchema = transactionWeightingSchema[schema];
-		var classification = weightingSchema.classification;
-		
-		console.log(classification);
-		
-		var levelsOfDimension = {};
-		var dimensionIndex = 0;
-		for(var i in classification){
-			var dimensionLevels = classification[i];
-			for(var j in dimensionLevels){
-				if(dimensions[i] <= dimensionLevels[j]){
-					levelsOfDimension[dimensionIndex] = j-1;
+		var cuts = weightingSchema.cuts;
+		var levels = weightingSchema.levels;
+		var dimNum = Object.keys(dimensions).length;
+		var level = 0;
+		for(var i in cuts){
+			cutpoints = cuts[i];
+			value = dimensions[i];
+			for(var j in cutpoints){
+				var cutpoint = cutpoints[j];
+				if(cutpoint === "-Inf"){
+					cutpoint = Number.NEGATIVE_INFINITY
+				}
+				else if(cutpoint === "Inf"){
+					cutpoint = Number.POSITIVE_INFINITY;
+				}
+				else {
+					cutpoint = Number(cutpoint);
+				}
+				if(value > cutpoint){
+					level ++;
+				}
+				else{
 					break;
 				}
 			}
-			dimensionIndex++;
 		}
 		
-		console.log(levelsOfDimension);
-		
-		var weights = weightingSchema.weights;
-		for(var i in levelsOfDimension){
-			console.log("weights");
-			console.log(weights);
-			weights = weights[levelsOfDimension[i]];
+		level = level-dimNum+1;
+		if(level == 0){
+			level = 1;
 		}
 		
-		console.log(weights);
-		
-		if(weights.length){
-			console.log(dimensions);
-			console.log(schema);
-			throw "weights";
-		}
-		
-		return weights;
+//		console.log(level);
+//		console.log(levels);
+		return Number(levels["l"+level][0]);
 	}
 	
 	/*
@@ -154,14 +207,16 @@
 		var TD = transaction['TransactionAnalytics'].TD;
 		var archDiff = transaction['TransactionAnalytics'].Arch_Diff;
 		
-		var swti =  determineTransactionWeight({TL:TL}, "swti");
-		var swtii =  determineTransactionWeight({TD: TD, TL:TL}, "swtii")
-		var swtiii =  determineTransactionWeight({DETs: DETs, TD: TD, TL:TL}, "swtiii");
+//		console.log(TL+" "+DETs+" "+TD);
+		var swti =  determineTransactionWeight({}, "EUCP");
+		var swtii =  determineTransactionWeight({TD: TD, TL:TL}, "EXUCP")
+		var swtiii =  determineTransactionWeight({DETs: DETs, TD: TD, TL:TL}, "DUCP");
 				
-		useCaseInfo['ExtendedUseCasePointData'].SWTI = swti;
-		useCaseInfo['ExtendedUseCasePointData'].SWTII = swtii;
-		useCaseInfo['ExtendedUseCasePointData'].SWTIII = swtiii;
+		useCaseInfo['ExtendedUseCasePointData'].SWTI += swti;
+		useCaseInfo['ExtendedUseCasePointData'].SWTII += swtii;
+		useCaseInfo['ExtendedUseCasePointData'].SWTIII += swtiii;
 		}
+		
 				
 	}
 	
@@ -233,6 +288,10 @@
 			});
 	}
 	
+	function estimateProjectEffort(modelInfo, sizeMetric){
+		return Number(modelInfo['ExtendedUseCasePointData'][sizeMetric])*Number(transactionWeightingSchema[sizeMetric].normFactor);
+	}
+	
 
 	module.exports = {
 		toModelEvaluationHeader: toModelEvaluationHeader,
@@ -241,7 +300,8 @@
 		toUseCaseEvaluationRow: toUseCaseEvaluationRow,
 		evaluateUseCase: evaluateUseCase,
 		evaluateModel: evaluateModel,
-		analyseRepoEvaluation: analyseRepoEvaluation
+		analyseRepoEvaluation: analyseRepoEvaluation,
+		estimateProjectEffort: estimateProjectEffort
 	}
 	
 	

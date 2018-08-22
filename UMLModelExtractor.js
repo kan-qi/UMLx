@@ -15,7 +15,6 @@
 	var mkdirp = require('mkdirp');
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var path = require('path');
 	
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
@@ -51,7 +50,9 @@
 				console.log("parser not found");
 				return;
 			}
-			
+
+			var path = require('path');
+			console.log(umlModelInfo.umlFilePath);
 			var workDir = path.dirname(umlModelInfo.umlFilePath);
 			xmiParser.extractUserSystermInteractionModel(xmiString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
 				console.log("extract model");
@@ -96,7 +97,7 @@
 								useCase.Transactions = traverseUseCaseForTransactions(useCase);
 								
 								var debug = require("./utils/DebuggerOutput.js");
-								debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
+//								debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
 								
 								for(var j in useCase.Transactions){
 									var transaction = useCase.Transactions[j];
@@ -220,14 +221,14 @@
 							OutScope: OutScope
 						}
 						
-						console.log("toExpandNode");
-						console.log(toExpandNode);
-						
-						console.log("child node");
-						console.log(childNodes);
-						console.log(childNode);
-						console.log(childNode.Name);
-						console.log(childNode.Group);
+//						console.log("toExpandNode");
+//						console.log(toExpandNode);
+//						
+//						console.log("child node");
+//						console.log(childNodes);
+//						console.log(childNode);
+//						console.log(childNode.Name);
+//						console.log(childNode.Group);
 
 						if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
 						toExpandCollection.push(toExpandNode);
@@ -241,11 +242,32 @@
 				
 			}
 			
+			//eliminate the duplicates
+			var pathsByString = {};
+			var uniquePaths = [];
+			for(var i in Paths){
+				path = Paths[i];
+				var pathString = "";
+				for(var j in path.Nodes){
+					var node = path.Nodes[j];
+					pathString += node._id;
+				}
+//				var key = pathString.replace(/[^\w\s]/gi, '');
+				if(!pathsByString[pathString]){
+					pathsByString[pathString] = 1;
+					uniquePaths.push(path);
+				}
+				else{
+				console.log("duplicate");
+				}
+			}
+			
 //			console.log(Paths);
 //			useCase.Paths = Paths;
 			
-			return Paths;
+//			return Object.keys(pathsByString).map(k => pathsByString[k]);
 			
+			return uniquePaths;
 	}
 
 	

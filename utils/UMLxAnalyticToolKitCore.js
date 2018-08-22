@@ -8,30 +8,8 @@
 
     var jp = require('jsonpath');
     var xml2js = require('xml2js');
-
-//    var parser = new xml2js.Parser();
-//    var eaParser = require('../model_platforms/ea/XMI2.1Parser.js');
-//    var srcParser = require('../model_platforms/src/SrcParser.js');
-
-//    var pathsDrawer = require("../model_drawers/TransactionsDrawer.js");
-//    var vpParser = require('../model_platforms/visual_paradigm/XML2.1Parser.js');
-//    var modelDrawer = require("../model_drawers/UserSystemInteractionModelDrawer.js");
-//    var domainModelDrawer = require("../model_drawers/DomainModelDrawer.js");
-
-//    var umlEvaluator = require("../UMLEvaluator.js");
-//    var umlFileManager = require("../UMLFileManager.js");
-//    var RScriptExec = require('../utils/RScriptUtil.js');
-
-// current available evaluators
-//    var useCaseComponentsEvaluator = require('../evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
-//    var transactionEvaluator = require('../evaluators/TransactionEvaluator/TransactionEvaluator.js');
-//    var modelVersionEvaluator = require('../evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
-//    var cocomoCalculator = require('../evaluators/COCOMOEvaluator/COCOMOCalculator.js');
-//    var useCasePointEvaluator = require('../evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
-//    var extendedUseCasePointEvaluator = require('../evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
-//    var projectTypeEvaluator = require('../evaluators/ProjectTypeEvaluator.js');
-//    var UMLSizeMetricEvaluator = require('../evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
-//    var userStoryEvaluator = require('../evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
+    
+	var uuidV1 = require('uuid/v1');
     
     var UMLEvaluator = require('../UMLEvaluator.js');
     var UMLModelExtractor = require("../UMLModelExtractor.js");
@@ -39,43 +17,27 @@
     
 	var path = require('path');
 
-//    var evaluators = [
-//        useCaseComponentsEvaluator,
-//        transactionEvaluator,
-//        modelVersionEvaluator,
-//        projectTypeEvaluator,
-//        cocomoCalculator,
-//        useCasePointEvaluator,
-//        extendedUseCasePointEvaluator,
-//        UMLSizeMetricEvaluator,
-//        userStoryEvaluator
-//    ];
+    function analyseUML(inputFilePath, outputDir, projectName, callbackfunc) {
 
+//        let date = new Date();
+//        let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
 
-//    var useCaseEvaluationStr = "";
-//    var domainModelEvaluationStr = "";
-//    var modelEvaluationStr = "";
-//
-//    var useCaseNum = 1;
-
-    function analyseUML(inputFilePath, outputDir, callbackfunc) {
-
-        let date = new Date();
-        let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
-
-        outputDir = outputDir+"/"+analysisDate+"@"+Date.now();
+//        outputDir = outputDir+"/"+analysisDate+"@"+Date.now();
 
     	var xmiModel = {
-    		Name: "src-model-"+analysisDate,
+    		Name: projectName,
     		umlFilePath: inputFilePath,
     		OutputDir: outputDir,
-    		AccessDir: outputDir
+    		AccessDir: outputDir,
+    		_id: uuidV1()
     	}
     	
     	UMLModelExtractor.extractModelInfo(xmiModel, function(modelInfo){
     		console.log("model is extracted");
 			if(!modelInfo){
-				res.end("error");
+				if(callbackfunc){
+					callbackfunc(xmiModel);
+				}
 				return;
 			}
 			UMLEvaluator.evaluateModel(modelInfo, function(modelInfo2){
@@ -88,23 +50,28 @@
 //					 return;
 					console.log("error in model evaluation");
 					if(callbackfunc){
-						callbackfunc(modelInfo2);
+						callbackfunc(modelInfo);
 					}
+					return;
 				}
 				
 				EffortPredictor.predictEffort(modelInfo2, function(modelInfo3){
 					if(!modelInfo3){
 						console.log("effort prediction failed");
+						if(callbackfunc){
+							callbackfunc(modelInfo2);
+						}
+						return;
 					}
 				
 				
 				var debug = require("../utils/DebuggerOutput.js");
-				debug.writeJson("evaluated_model_example"+modelInfo3._id, modelInfo3);
+				debug.writeJson("evaluated_model_example_"+modelInfo3.Name, modelInfo3);
 				
-				console.log(modelInfo3);
+//				console.log(modelInfo3);
 				if(callbackfunc){
 					callbackfunc(modelInfo3);
-					console.log("updated analysis 8-6")
+					console.log("updated analysis 8-12")
 				}
 				});
 			});
@@ -129,8 +96,9 @@
 						`;
 
         let count = 0;
-
-        for(usecase of model.UseCases) {
+        //error
+        for(i in model.UseCases) {
+        	var usecase = model.UseCases[i];
             let filePath = usecase.OutputDir + "/element_statistics.json";
             fs.exists(filePath, (exists) => {
                 count ++;
@@ -171,14 +139,14 @@
                             }
                         }
 
-                        if (count === model.UseCases.length && callback) {
-                            html_table += `</table>`;
-                            callback(html_table);
-                        }
-
                     });
                 }
             });
+        }
+
+        html_table += `</table>`;
+        if (callback) {
+            callback(html_table);
         }
     }
 
@@ -272,25 +240,6 @@
     	
         var location_transfer = "public/";
         //var test_loca = "./abc/analysisresults";
-
-//	if (outputDir1) {//
-//	    outputDir = outputDir1+"/"+analysisDate+"@"+Date.now();
-//	var times = 1;
-//	var outputDir = model.OutputDir;
-//
-//	    for (let j of outputDir) {
-//	        if (j === '/') times ++;
-//	    }
-//
-//	    for (let i = 0; i < times; i ++) {
-//	        location_transfer += "../"
-//	    }
-//	    location_transfer += 'public/'
-//	}
-//	else {
-//	    outputDir = "public/analysisResult/"+analysisDate+"@"+Date.now();
-//	    location_transfer = '../../'
-//	}
 
         let model_analysis_button =
             `
@@ -514,10 +463,16 @@
     }
 
     module.exports = {
-        analyseSrc: function(inputFilePath, outputDir, callbackfunc){
+        analyseSrc: function(inputFilePath, outputDir, projectName, callbackfunc){
             console.log("analysi src");
-            analyseUML(inputFilePath, outputDir, function (model) {
+            analyseUML(inputFilePath, outputDir, projectName, function (model) {
                 console.log("analyse UML finishes");
+                if(!model){
+                	if(callbackfunc){
+                        callbackfunc(false);
+                    }
+                	return;
+                }
                 readUsecaseJson(model, function (html_table) {
                     console.log("generate use cases");
                     createStream(model, function (rt_object) {
@@ -535,7 +490,7 @@
                             copyAuxiliaryFiles(model, function(message){
                                 console.log(message);
                                 if(callbackfunc){
-                                    callbackfunc();
+                                    callbackfunc(model);
                                 }
                             });
                         });

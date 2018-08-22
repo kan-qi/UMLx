@@ -8,17 +8,10 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
-function standardizeName(name){
-	if(!name){
-		return null;
-	}
-	return name.replace(/\s/g, '').toUpperCase();
-}
+	var domainModelSearchUtil = require("../../utils/DomainModelSearchUtil.js");
 	
 function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN, CustomProfiles){
 		
-//		var XMIUseCase = UseCase.Attachment;
-//		var XMICombinedFragment = CombinedFragment.Attachment;
 	
 		var activities = [];
 		var precedenceRelations = [];
@@ -122,13 +115,11 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		var endActivity = null;
 
 		console.log("occurence at interaction level");
-		console.log(DomainElementsBySN);
+//		console.log(DomainElementsBySN);
 //		console.log("occurrence");
 //		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\')]');
 		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
-		console.log(XMIOccurrences);
-//		var XMIOccurrencesByID = [];
-		// for each fragment,identify the covered lifeline
+//		console.log(XMIOccurrences);
 		
 		var preActivity = null;
 		
@@ -143,8 +134,9 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //				XMILifeline1 = XMILifeline;
 				
 				//create domain model elements
-				if(XMILifeline1 && !DomainElementsBySN[standardizeName(XMILifeline1['$']['name'])]){
-					DomainElementsBySN[standardizeName(XMILifeline1['$']['name'])] = {
+				if(XMILifeline1 && !domainModelSearchUtil.matchDomainElement(XMILifeline1['$']['name'], DomainElementsBySN)){
+//				if(XMILifeline1 && !DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifeline1['$']['name'])]){
+					DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifeline1['$']['name'])] = {
 						Name: XMILifeline1['$']['name'],
 						_id: XMILifeline1['$']['xmi:id'],
 						Operations: [],
@@ -152,22 +144,14 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					}
 				}
 				
-//				XMIOccurrencesByID[XMIOccurrence1['$']['xmi:id']] = XMIOccurrence1;
-				
-//				var isStimulus = false;
-//				var group = "System";
-//				if(XMILifeline1.isActor){
-////					isStimulus = true;
-//					group = "User";
-//				}
-				
 				var XMIOccurrence2 = XMIOccurrences[i++];
 				var XMILifelineID2 = XMIOccurrence2.$.covered;
 				var XMILifeline2 = XMILifelinesByID[XMILifelineID2];
 //				XMILifeline2 = XMILifeline;
 				
-				if(XMILifeline2 && !DomainElementsBySN[standardizeName(XMILifeline2['$']['name'])]){
-					DomainElementsBySN[standardizeName(XMILifeline2['$']['name'])] = {
+				if(XMILifeline2 && !domainModelSearchUtil.matchDomainElement(XMILifeline2['$']['name'], DomainElementsBySN)){
+//				if(XMILifeline2 && !DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifeline2['$']['name'])]){
+					DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifeline2['$']['name'])] = {
 						Name: XMILifeline2['$']['name'],
 						_id: XMILifeline2['$']['xmi:id'],
 						Operations: [],
@@ -198,13 +182,9 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					}
 				}
 				
-				var component = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
+//				var component = DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
 				
-//				var matchedResult = domainElementSearchUtil.matchComponent(standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name']), DomainElementsBySN);
-//				
-//				if(!matchedResult.component){
-//					matchedResult.component = {};
-//				}
+				var component = domainModelSearchUtil.matchDomainElement(XMILifelinesByID[XMILifelineID2]['$']['name'], DomainElementsBySN);
 				
 				if(!component){
 					component = {
@@ -213,15 +193,10 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 							Operations: [],
 							Attributes: []
 					}
-					DoaminElementBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])] = component;
+					DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])] = component;
 				}
 				
 				component.Type = CustomProfiles[XMILifelineID2];
-//				
-//				var DomainElement = DomainElementsBySN[standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
-//				if(DomainElement){
-//				XMILifeline.Class = XMIClass['$']['xmi:id'];
-//				}
 				
 				var nextActivity = {
 						Type: "message",
@@ -358,7 +333,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 //				var lifelineRepresentType = jp.query(XMIInteraction, '$.packagedElement[?(@[\'$\'][\'xmi:id\']==\''++'\')]');
 				console.log(XMILifeline);
 				XMILifelinesByID[XMILifeline['$']['xmi:id']] = XMILifeline;
-//				var XMIClass = XMIClassesByStandardizedName[standardizeName(XMILifeline.$.name)];
+//				var XMIClass = XMIClassesByStandardizedName[domainModelSearchUtil.standardizeName(XMILifeline.$.name)];
 			}
 			console.log(XMILifelinesByID);
 //			XMIUseCase.XMILifelinesByID = XMILifelinesByID;
@@ -429,7 +404,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		//logic to decide Stimulus
 		for(var i in Activities){
 			var activity = Activities[i];
-			console.log(activity);
+//			console.log(activity);
 			 //create a new edge by triangle rules.
 //			if(edge.start.Group !== "System" && edge.end.Group === "System"){
 //				console.log("Stimulus...");

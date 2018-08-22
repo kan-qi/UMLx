@@ -214,6 +214,7 @@
 			dicClassUnits: dicClassUnits,
 			dicMethodUnits: dicMethodUnits,
 			callGraph: callGraph,
+			dicMethodClass: dicMethodClass,
 			typeDependencyGraph: typeDependencyGraph,
 			accessGraph: accessGraph,
 			referencedClassUnits: referencedClassUnits,

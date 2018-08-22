@@ -91,3 +91,15 @@ node --max_old_space_size=10240 .\data\OpenSource\OpenSourceAnalysis.js --analys
 node --max_old_space_size=10240 .\data\OpenSource\OpenSourceAnalysis.js --recover-kdm
 
 "C:/Program Files/R/R-3.5.1/bin/Rscript" ./Rscript/EffortEstimation.R "eucp_linear_regression_model.rds" "public/output/repo5b6d16f8227e22037cb52da2/ee98ccea371a540a934960c7ca25c2c0/modelEvaluation.csv" "public/output/repo5b6d16f8227e22037cb52da2/ee98ccea371a540a934960c7ca25c2c0" "eucp_effort_prediction"
+
+node --max_old_space_size=10240 ".\data\577 Projects\577ProjectsAnalysis.js" --analyse-xmi-model
+
+node --max_old_space_size=10240 ".\data\577 Projects\577ProjectsAnalysis.js" --generate-model-analysis-report
+
+node --max_old_space_size=10240 ".\data\OpenSource\OpenSourceAnalysis.js" --analyse-xmi-model
+
+node --max_old_space_size=10240 ".\data\RufusLabs\RufusLabsRepoAnalysis.js" --analyse-xmi-model
+
+node --max_old_space_size=10240 ".\data\RufusLabs\RufusLabsRepoAnalysis.js" --generate-model-analysis-report
+
+node --max_old_space_size=10240 ".\data\577 Projects\577ProjectsAnalysis.js" --generate-repo-analysis-report

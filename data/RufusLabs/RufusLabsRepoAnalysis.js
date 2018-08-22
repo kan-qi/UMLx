@@ -9,6 +9,11 @@
  * 4. calculate sloc for each repo
  * 
  */
+
+var path = require('path');
+var mkdirp = require('mkdirp');
+
+
 var testProject33 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\all-apps";
 var testProject34 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\alltheapps";
 var testProject35 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\btchatprotobuf";
@@ -37,7 +42,7 @@ var testProject57 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\R
 
 var config = require("../../config.js");
 
-var targetProjects = [
+var targetProjects1 = [
 	testProject33, //all-apps
 //	testProject34, //alltheapps
 //	testProject35, //btchatprotobuf
@@ -63,6 +68,34 @@ var targetProjects = [
 //	testProject55, //rufusmms // xmi doesn't exist
 //	testProject56, //serviceuser //xmi doesn't exist
 //	testProject57 //weather-widget
+	];
+
+var targetProjects2 = [
+//	testProject33, //all-apps
+//	testProject34, //alltheapps
+//	testProject35, //btchatprotobuf
+//	testProject36, //cuffbackgroundservice
+//	testProject37, //dialer
+//	testProject38, //incallui
+	testProject39, //incomingcallscreen
+//	testProject40, //integrated-nav-bar
+//	testProject43, //musicplayer
+//	testProject44, //musicplayerwithlockscreencom
+//	testProject45, //navigationbar
+//	testProject47, //old_rufusconnect
+//	testProject48, //rufus_connect_ios
+//	testProject49, //rufusconnectandroid
+//	testProject53, //rufuslabsupdateservice
+//	testProject54, //rufuslocation
+//	testProject57 //weather-widget
+	];
+
+var targetProjects3 = [
+//	testProject34, //alltheapps
+//	testProject39, //incomingcallscreen
+//	testProject40, //integrated-nav-bar
+	testProject43, //musicplayer
+	testProject57 //weather-widget
 	];
 
 var fs = require('fs');
@@ -125,16 +158,27 @@ function recoverKDMModel(repoListPath){
 
 }
 
-function analyseXMIModel(xmiModelFileName){
+
+function analyseXMIModel(projectXMIs){
+	
+
+	var reportPath = reportDir+"\\analysis-results-folders.txt";
+//	FileManagerUtil.deleteFileSync(reportPath);
 	
 	  //use promise to construct the repo objects
-    function analyseModel(projectPath){
+    function analyseModel(projectXMI){
         return new Promise((resolve, reject) => {
-        	config.setDebugOutputDir(projectPath+"/debug");
-        	var outputFolder = projectPath;
-//        	var inputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
-        	var inputFile = projectPath + "/"+xmiModelFileName;
+//        	config.setDebugOutputDir(projectPath+"/debug");
+
+        	//specific for the source analysis projects.
+        	var projectName = path.basename(path.dirname(projectXMI)).replace(/\..+$/, '');
+        	var outputDir = path.dirname(projectXMI)+"\\"+projectName;
+        	global.debugOutputDir = outputDir + "/debug";
+        	var inputFile = projectXMI;
         	
+        	console.log(inputFile);
+        	
+        	mkdirp(outputDir, function(err) { 
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
         		console.log(inputFile+" doesn't exist.");
@@ -142,22 +186,30 @@ function analyseXMIModel(xmiModelFileName){
         	}
         	else{
             //to generate svg file.
-        	UMLxAnalyticToolKit.analyseSrc(inputFile, outputFolder, function(){
-        		
-        		console.log('analysis finished!');
-        		
-        		resolve();
+        	UMLxAnalyticToolKit.analyseSrc(inputFile, outputDir, projectName, function(model){
+        		if(!model){
+        			console.log('analysis error!');
+            		resolve();
+            		return;
+        		}
+        		console.log("finished sr analysis");
+        		FileManagerUtil.appendFile(reportPath, model.OutputDir+"\n", function(message){
+            		console.log('analysis finished!');
+            		console.log(message);
+            		resolve();
+        		})
         		  
         	});
         	
         	}
       	  });
+        	});
         	
         });
     }
     
-    return Promise.all(targetProjects.map(projectPath=>{
-        return analyseModel(projectPath);
+    return Promise.all(projectXMIs.map(projectXMI=>{
+        return analyseModel(projectXMI);
     })).then(
         function(){
             return new Promise((resolve, reject) => {
@@ -472,11 +524,15 @@ function generateReport(repoRecordPath){
 	});
 }
 
-var repoListPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\Open Source\\repositories.txt";
+var repoListPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs\\repositories.txt";
 //var repoRecordPath = ".\\data\\RufusLabs\\sloc";
-var repoRecordPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\OpenSource\\sloc";
+var repoRecordPath = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\rufus_labs\\sloc";
 
 var functionSelection = process.argv[2];
+
+var reportDir = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\rufus_labs";
+
+var targetProjects = targetProjects3;
 
 //1. create a list of projects:
  		
@@ -495,7 +551,7 @@ analyseSloc(repoRecordPath);
 
 }
 else if(functionSelection === "--generate-report"){
-	//4. calculate sloc for each repo
+//5. generate the report for code analysis
 generateReport(repoRecordPath);
 
 }
@@ -506,7 +562,13 @@ recoverKDMModel(repoListPath)
 
 }
 else if(functionSelection === "--analyse-xmi-model"){
-analyseXMIModel("eclipse_gen_umlx_kdm.xmi");
+	
+	var projectXMIs = [];
+	for(var i in targetProjects){
+		projectXMIs.push(targetProjects[i]+"\\eclipse_gen_umlx_kdm.xmi");
+	}
+		
+	analyseXMIModel(projectXMIs);
 
 }
 else if(functionSelection === "--request-effort-data"){
@@ -518,6 +580,36 @@ else if(functionSelection === "--estimate-effort"){
 	
 estimateEffort(repoListPath);
 
+}
+else if(functionSelection === "--generate-model-analysis-report"){
+  
+  var modelOutputDirs = FileManagerUtil.readFileSync(reportDir+"\\analysis-results-folders.txt").split(/\r?\n/g);
+  var transactionFiles = [];
+  var modelEvaluationFiles = [];
+  for(var i in modelOutputDirs){
+      //code here using lines[i] which will give you each line
+  	var modelOutputDir = modelOutputDirs[i];
+
+  	if(modelOutputDir === ""){
+  		continue;
+  	}
+  	
+  	transactionFiles.push(modelOutputDir+"\\"+"transactionEvaluation.csv");
+  	modelEvaluationFiles.push(modelOutputDir+"\\"+"modelEvaluation.csv");
+  }
+  
+  var modelEvaluationContents = FileManagerUtil.readFilesSync(modelEvaluationFiles);
+  var modelEvaluationConsolidation = "";
+  for(var i in modelEvaluationContents){
+	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
+	  if(i == 0){
+		  modelEvaluationConsolidation += modelEvaluationLines[0]+","+"transaction_file";
+	  }
+	 
+	  modelEvaluationConsolidation += "\n"+modelEvaluationLines[1]+","+transactionFiles[i];
+  }
+  
+  FileManagerUtil.writeFileSync(reportDir+"\\modelEvaluations.csv", modelEvaluationConsolidation);
 }
 
 

@@ -256,7 +256,7 @@ colnames(foldResults) <- c(
 		'ucp_mmre','ucp_pred15','ucp_pred25','ucp_pred50',
 		'cocomo_mmre','cocomo_pred15','cocomo_pred25','cocomo_pred50',
 		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50'
-		)
+)
 
 foldResults1 <- array(0,dim=c(100,6,nfold))
 

@@ -508,27 +508,27 @@ function deleteRepo(repoId, callbackfunc) {
       	            
     			   db.collection('modelInfo').update( { "_id" : characteristicsInfo.modelID },
        	        		{$set: {  
-       	        			"projectInfo.distributedSystem" : formInfo['distributed_system'],
-       	        			"projectInfo.responseTime" : formInfo['response_time'],
-       	        			"projectInfo.endUserEfficiency" : formInfo['end_user_efficiency'],
-       	        			"projectInfo.complexInternalProcessing" : formInfo['complex_internal_processing'],
-       	        			"projectInfo.codeReusable" : formInfo['code_must_be_reusable'],
-       	        			"projectInfo.easyInstall" : formInfo['easy_to_install'],
-       	        			"projectInfo.easyUse" : formInfo['easy_to_use'],
-       	        			"projectInfo.portable" : formInfo['portable'],
-       	        			"projectInfo.easyToChange" : formInfo['easy_to_change'],
-       	        			"projectInfo.concurrent" : formInfo['concurrent'],
-       	        			"projectInfo.specialSecurityObjectives" : formInfo['includes_special_security_objectives'],
-       	        			"projectInfo.directAccessForThirdParties" : formInfo['provides_direct_access_for_third_parties'],
-       	        			"projectInfo.userTrainingFacilitiesRequired" : formInfo['special_user_training_facilities_are_required'],
-       	        			"projectInfo.familiarWithProjectModel" : formInfo['familiar_with_the_project_model_that_is_used'],
-       	        			"projectInfo.applicationExperience" : formInfo['application_experience'],
-       	        			"projectInfo.objectOrientedExperience" : formInfo['object_oriented_experience'],
-       	        			"projectInfo.leadAnalystCapability" : formInfo['lead_analyst_capability'],
-       	        			"projectInfo.motivation" : formInfo['motivation'],
-       	        			"projectInfo.stableRequirements" : formInfo['stable_requirements'],
-       	        			"projectInfo.partTimeStaff" : formInfo['part_time_staff'],
-       	        			"projectInfo.difficultProgrammingLanguage" : formInfo['difficult_programming_language']     	        	
+       	        			"projectInfo.distributedSystem" : characteristicsInfo['distributed_system'],
+       	        			"projectInfo.responseTime" : characteristicsInfo['response_time'],
+       	        			"projectInfo.endUserEfficiency" : characteristicsInfo['end_user_efficiency'],
+       	        			"projectInfo.complexInternalProcessing" : characteristicsInfo['complex_internal_processing'],
+       	        			"projectInfo.codeReusable" : characteristicsInfo['code_must_be_reusable'],
+       	        			"projectInfo.easyInstall" : characteristicsInfo['easy_to_install'],
+       	        			"projectInfo.easyUse" : characteristicsInfo['easy_to_use'],
+       	        			"projectInfo.portable" : characteristicsInfo['portable'],
+       	        			"projectInfo.easyToChange" : characteristicsInfo['easy_to_change'],
+       	        			"projectInfo.concurrent" : characteristicsInfo['concurrent'],
+       	        			"projectInfo.specialSecurityObjectives" : characteristicsInfo['includes_special_security_objectives'],
+       	        			"projectInfo.directAccessForThirdParties" : characteristicsInfo['provides_direct_access_for_third_parties'],
+       	        			"projectInfo.userTrainingFacilitiesRequired" : characteristicsInfo['special_user_training_facilities_are_required'],
+       	        			"projectInfo.familiarWithProjectModel" : characteristicsInfo['familiar_with_the_project_model_that_is_used'],
+       	        			"projectInfo.applicationExperience" : characteristicsInfo['application_experience'],
+       	        			"projectInfo.objectOrientedExperience" : characteristicsInfo['object_oriented_experience'],
+       	        			"projectInfo.leadAnalystCapability" : characteristicsInfo['lead_analyst_capability'],
+       	        			"projectInfo.motivation" : characteristicsInfo['motivation'],
+       	        			"projectInfo.stableRequirements" : characteristicsInfo['stable_requirements'],
+       	        			"projectInfo.partTimeStaff" : characteristicsInfo['part_time_staff'],
+       	        			"projectInfo.difficultProgrammingLanguage" : characteristicsInfo['difficult_programming_language']     	        	
        	        	   		  }},
        	        		   { upsert: true }, function(err, res){
        	        			if (err) {
@@ -2105,7 +2105,8 @@ function deleteRepo(repoId, callbackfunc) {
 					}
 					
 					resolve();
-				});}, 0);
+				});
+				}, 0);
 				});
 			}
 		

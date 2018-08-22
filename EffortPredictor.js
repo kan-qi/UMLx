@@ -101,6 +101,54 @@
                 }
             });
 		},
+		
+		predictEffortRepo: function(repoInfo, callbackfunc){
+			  //use promise to construct the repo objects
+			
+            function predictEffortWithModel(modelInfo, estimationModel, key){
+                return new Promise((resolve, reject) => {
+
+                		model.predictEffort(modelInfo, key, function(modelInfo){
+                			console.log("finished prediction");
+                            resolve();
+                		});
+                        //console.log(modelInfo);
+                });
+            }
+            
+            console.log("keys");
+            console.log(models);
+            
+            var promiseTasks = [];
+            for(var i in repoInfo.Models){
+				var modelInfo = repoInfo.Models[i];
+				Object.keys(models).map(key=>{
+	                promiseTasks.push(predictEffortWithModel(models[key], modelInfo, key));
+	            })
+			}
+            
+		    return Promise.all(promiseTasks).then(
+                function(){
+                    return new Promise((resolve, reject) => {
+                        setTimeout(function(){
+
+                        	if(callbackfunc){
+                                callbackfunc(repoInfo);
+                            }
+
+                            resolve();
+
+                        }, 0);
+                    });
+                }
+
+            ).catch(function(err){
+                console.log(err);
+                if(callbackfunc){
+                    callbackfunc(false);
+                }
+            });
+		}
 	
 	}
 }())

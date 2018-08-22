@@ -6,7 +6,7 @@ args = commandArgs(trailingOnly=TRUE)
 # arg3: working directory
 # arg4: output name
 
-.libPaths(c("C:/Users/flyqk/Documents/R/win-library/3.5", "C:/Program Files/R/R-3.5.1/library"))
+#.libPaths(c("C:/Users/flyqk/Documents/R/win-library/3.5", "C:/Program Files/R/R-3.5.1/library"))
 
 if (length(args) < 1) {
   stop("At least 1 arguments must be supplied (input file).", call.=FALSE)
@@ -46,6 +46,11 @@ library(ggplot2)
 library(data.table)
 library(e1071)
 library(jsonlite)
+
+if (!file.exists(analyticInfoPath)) {
+	print("file doesn't exist")
+	exit()
+}
 
 analyticalData <- read.csv(analyticInfoPath, header=TRUE)
 var0 <- sapply(analyticalData, function(x) all(is.nan(x)))

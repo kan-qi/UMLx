@@ -13,7 +13,8 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
-	var RScriptExec = require('../utils/RScriptUtil.js');
+//	var RScriptExec = require('../utils/RScriptUtil.js');
+	var UCPEvaluator = require('../evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
 	
 //	var predictionModel = "exucp_linear_regression_model.rds";
 //	var sizeMetric = "EXUCP";
@@ -25,7 +26,7 @@
 	var defaultModelConfig = eucpConfig;
 
 	var eucpConfig = {
-	predictionModel : "eucp_linear_regression_model.rds",
+//	predictionModel : "eucp_linear_regression_model.rds",
 	sizeMetric : "EUCP",
 	transactionMetric : "SWTI",
 	estimationResultsFile : "estimationResultEUCP.json",
@@ -33,7 +34,7 @@
 	}
 	
 	var exucpConfig = {
-	predictionModel : "exucp_linear_regression_model.rds",
+//	predictionModel : "exucp_linear_regression_model.rds",
 	sizeMetric : "EXUCP",
 	transactionMetric : "SWTII",
 	estimationResultsFile : "estimationResultEXUCP.json",
@@ -42,7 +43,7 @@
 	
 	
 	var ducpConfig = {
-	predictionModel : "ducp_linear_regression_model.rds",
+//	predictionModel : "ducp_linear_regression_model.rds",
 	sizeMetric : "DUCP",
 	transactionMetric : "SWTIII",
 	estimationResultsFile : "estimationResultDUCP.json",
@@ -143,7 +144,7 @@
 			}
 
 
-			useCaseEstimates.SizeMeasurement = useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+			useCaseEstimates.SizeMeasurement = Number(useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric]).toFixed(2);
 			
 			var useCaseEffort = (useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
 			
@@ -207,8 +208,8 @@
 		var controlWeight = 0;
 		for(var i in domainModelInfo.Elements){
 			var element = domainModelInfo.Elements[i];
-			console.log("domain elements");
-			console.log(element);
+//			console.log("domain elements");
+//			console.log(element);
 			if(element.Type === "boundary"){
 				viewWeight++;
 //				viewWeight += element.Operations.length;
@@ -226,11 +227,14 @@
 		var totalWeight = viewWeight + controlWeight + entityWeight;
 		
 		mvcEstimates.ViewEffort = totalWeight == 0 ? 0: viewWeight/totalWeight*projectEffort;
+		mvcEstimates.ViewEffort = mvcEstimates.ViewEffort.toFixed(2);
 		mvcEstimates.ModelEffort = totalWeight == 0 ? 0 : entityWeight/totalWeight*projectEffort;
+		mvcEstimates.ModelEffort = mvcEstimates.ModelEffort.toFixed(2);
 		mvcEstimates.ControlEffort = totalWeight == 0 ? 0 : controlWeight/totalWeight*projectEffort;
+		mvcEstimates.ControlEffort = mvcEstimates.ControlEffort.toFixed(2);
 		
-		console.log("mvc estimates");
-		console.log(mvcEstimates);
+//		console.log("mvc estimates");
+//		console.log(mvcEstimates);
 		
 		estimationResults.DomainModel.MVCEstimates = mvcEstimates;
 		
@@ -347,27 +351,30 @@
 		console.log("model info");
 		console.log(modelInfo);
 //	
-		var command = './Rscript/EffortEstimation.R "'+modelConfig.predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+modelConfig.label+'"';
-		
-		console.log("estimation command");
-		console.log(command);
+//		var command = './Rscript/EffortEstimation.R "'+modelConfig.predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+modelConfig.label+'"';
+//		
+//		console.log("estimation command");
+//		console.log(command);
 		
 //		process.exit();
 		
-		RScriptExec.runRScript(command,function(result){
-			if (!result) {
-//				console.log('exec error: ' + error);
-				console.log("project effort estimation error");
-				if(callbackfunc){
-					// error because of the R script
-					callbackfunc(false);
-				}
-			} else {
-				fs.readFile(modelInfo.OutputDir+"/"+modelConfig.label+"_result.json", 'utf-8', (err, str) => {
-					   if (err) throw err;
-					   console.log(str);
+//		RScriptExec.runRScript(command,function(result){
+//			if (!result) {
+////				console.log('exec error: ' + error);
+//				console.log("project effort estimation error");
+//				if(callbackfunc){
+//					// error because of the R script
+//					callbackfunc(false);
+//				}
+//			} else {
+//				fs.readFile(modelInfo.OutputDir+"/"+modelConfig.label+"_result.json", 'utf-8', (err, str) => {
+//					   if (err) throw err;
+//					   console.log(str);
 					   
-					   var projectEffort = Number(JSON.parse(str).result);
+					   var projectEffort = UCPEvaluator.estimateProjectEffort(modelInfo, modelConfig.sizeMetric)
+					   
+					   console.log("test effort repo");
+					   console.log(modelInfo['ExtendedUseCasePointData']);
 					   
 					   var estimationResults = {
 							   	EstimationModel: key,
@@ -377,7 +384,7 @@
 								Effort: projectEffort.toFixed(2),
 								UseCases: [],
 								DomainModel: {},
-								SizeMeasurement: modelInfo['ExtendedUseCasePointData'][modelConfig.sizeMetric].toFixed(2)
+								SizeMeasurement: Number(modelInfo['ExtendedUseCasePointData'][modelConfig.sizeMetric]).toFixed(2)
 						};
 					   
 					   estimateUseCaseEffort(modelInfo, estimationResults, projectEffort, modelConfig);
@@ -404,9 +411,9 @@
 						   }
 						});
 
-				});
-			}
-		});
+//				});
+//			}
+//		});
 	}
 	
 	module.exports = {

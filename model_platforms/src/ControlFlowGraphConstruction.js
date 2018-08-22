@@ -31,31 +31,31 @@
 //		
 //	}
 	
-	function establishControlFlow(components, xmiString, outputDir){
+	function establishControlFlow(dicComponents, dicClassComponent, dicMethodClass, dicResponseMethodUnits, xmiString, outputDir){
 		//the edges are now defined between methods...
 		var edges = [];
 		var nodes = [];
 //		var nodesByName = {};
 		
-		var responseMethods = [];
+//		var responseMethods = [];
 		// find the calls from 
-		for(var i in components){
-//			var classUnit = classUnits[i];
-//			var classUnit = topClassUnits[i];
-//			console.log('test');
-//			console.log(classUnit);
-//			var xmiClassUnit = classUnit.attachment;
-			
-			for(var j in components[i].classUnits){
-			var methods = findSubMethods(components[i].classUnits[j]);
-			for(var k in methods){
-				var method = methods[k];
-				if(method.isResponse){
-					responseMethods.push(method);
-				}
-			}
-			}
-		}
+//		for(var i in components){
+////			var classUnit = classUnits[i];
+////			var classUnit = topClassUnits[i];
+////			console.log('test');
+////			console.log(classUnit);
+////			var xmiClassUnit = classUnit.attachment;
+//			
+//			for(var j in components[i].classUnits){
+//			var methods = findSubMethods(components[i].classUnits[j]);
+//			for(var k in methods){
+//				var method = methods[k];
+//				if(method.isResponse){
+//					responseMethods.push(method);
+//				}
+//			}
+//			}
+//		}
 		
 //		function expandActionElementForCalls(actionElement){
 //			
@@ -64,26 +64,28 @@
 		var methodSequences = [];
 		
 
-		console.log("output response methods");
-		console.log(responseMethods);
+//		console.log("output response methods");
+//		console.log(responseMethods);
+		
+//		process.exit();
 		
 		
 //		var count = 0;
-		for(var i in responseMethods){
+		for(var i in dicResponseMethodUnits){
 //			count++;
-			var responseMethod = responseMethods[i];
+			var responseMethod = dicResponseMethodUnits[i];
 			var methodSequence = [];
 			methodSequence.push({
 				action:"response",
 				methodUnit: responseMethod
 			});
 			var expandedMethods = expandMethod(responseMethod, xmiString);
-			console.log("expanded methods");
-			console.log(expandedMethods);
+//			console.log("expanded methods");
+//			console.log(expandedMethods);
 			methodSequence = methodSequence.concat(expandedMethods);
 
-			console.log("method sequence");
-			console.log(methodSequence);
+//			console.log("method sequence");
+//			console.log(methodSequence);
 			methodSequences.push(methodSequence)
 			
 		}
@@ -94,8 +96,8 @@
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("method_sequences", methodSequences);
 		
-		console.log("method_sequences");
-		console.log(methodSequences);
+//		console.log("method_sequences");
+//		console.log(methodSequences);
 		
 		for(var i in methodSequences){
 			var methodSequence = methodSequences[i];
@@ -103,14 +105,17 @@
 			for(var j in methodSequence){
 				var action = methodSequence[j].action;
 				var targetMethodUnit = methodSequence[j].methodUnit;
-				console.log("target method unit");
-				console.log(targetMethodUnit);
-				var targetComponent = locateComponentForMethod(targetMethodUnit, components);
-				console.log("target component");
-				console.log(targetComponent);
+//				console.log("target method unit");
+//				console.log(targetMethodUnit);
+//				var targetComponent = locateComponentForMethod(targetMethodUnit, components);
+				var targetClassUnitUUID = dicMethodClass[targetMethodUnit.UUID];
+				var targetComponent = dicComponents[dicClassComponent[targetClassUnitUUID]];
+//				console.log("target component");
+//				console.log(targetComponent);
 				if(!targetComponent){
 					continue;
 				}
+				console.log("found target componet");
 				var node = nodesByID[targetMethodUnit.UUID];
 				if(!node){
 					node = {
@@ -139,14 +144,19 @@
 			}
 		}
 		
+		
 //		console.log("edges");
 //		console.log(edges);
 		
-		identifyStimuli(nodes, edges);
+		var cfg = identifyStimuli(nodes, edges);
 		
-		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "kdm_cfg_graph.dotty");
+//		debug.writeJson("constructed_cfg", cfg);
+//		
+//		console.log(cfg);
 		
-		return {nodes: nodes, edges: edges};
+		kdmModelDrawer.drawGraph(cfg.edges, cfg.nodes, outputDir, "kdm_cfg_graph.dotty");
+		
+		return cfg;
 	}
 	
 	/*
@@ -163,7 +173,7 @@
 			var node = nodes[i];
 			node.type = "node";
 			if(node.isResponse){
-							node.tye = "response";
+							node.type = "response";
 							//create a stimulus nodes for the activity.
 							var stimulusNode = {
 									type: "stimulus",
@@ -183,59 +193,61 @@
 		
 		nodes = nodes.concat(stimulusNodes);
 		edges = edges.concat(triggeringEdges);
+		
+		return {nodes: nodes, edges: edges};
 	}
 	
-	function locateComponentForMethod(targetMethodUnit, components){
-		for(var i in components){
-			var component = components[i];
-			for(var j in component.classUnits){
-				var classUnit = component.classUnits[j];
-				
-				var MethodUnits = classUnit.MethodUnits;
-				for(var k in MethodUnits){
-					var methodUnit = MethodUnits[k];
-					if(methodUnit.UUID === targetMethodUnit.UUID){
-						return component;
-					}
-				}
-				
-			}
-		}
-		return null;
-	}
+//	function locateComponentForMethod(targetMethodUnit, components){
+//		for(var i in components){
+//			var component = components[i];
+//			for(var j in component.classUnits){
+//				var classUnit = component.classUnits[j];
+//				
+//				var MethodUnits = classUnit.MethodUnits;
+//				for(var k in MethodUnits){
+//					var methodUnit = MethodUnits[k];
+//					if(methodUnit.UUID === targetMethodUnit.UUID){
+//						return component;
+//					}
+//				}
+//				
+//			}
+//		}
+//		return null;
+//	}
 	
-	function findSubMethods(classUnit){
-		var subMethods = [];
-		
-		function findSubMethodsFromActionElement(actionElement){
-			var subMethods = [];
-			
-			for(var i in actionElement.ClassUnits){
-				var classUnit = actionElement.ClassUnits[i];
-				var result = findSubMethods(classUnit);
-				subMethods = subMethods.concat(result);
-			}
-			for(var i in actionElement.ActionElements){
-				var result = findSubMethodsFromActionElement(actionElement.ActionElements[i]);
-				subMethods = subMethods.concat(result);
-			}
-			
-			return subMethods;
-		}
-		
-		for(var i in classUnit.MethodUnits){
-				var methodUnit = classUnit.MethodUnits[i];
-				subMethods.push(methodUnit);
-				
-				for(var j in methodUnit.BlockUnit.ActionElements){
-					var actionElement = methodUnit.BlockUnit.ActionElements[j];
-					var result = findSubMethodsFromActionElement(actionElement);
-					subMethods = subMethods.concat(result);
-				}
-		}
-		
-		return subMethods;
-	}
+//	function findSubMethods(classUnit){
+//		var subMethods = [];
+//		
+//		function findSubMethodsFromActionElement(actionElement){
+//			var subMethods = [];
+//			
+//			for(var i in actionElement.ClassUnits){
+//				var classUnit = actionElement.ClassUnits[i];
+//				var result = findSubMethods(classUnit);
+//				subMethods = subMethods.concat(result);
+//			}
+//			for(var i in actionElement.ActionElements){
+//				var result = findSubMethodsFromActionElement(actionElement.ActionElements[i]);
+//				subMethods = subMethods.concat(result);
+//			}
+//			
+//			return subMethods;
+//		}
+//		
+//		for(var i in classUnit.MethodUnits){
+//				var methodUnit = classUnit.MethodUnits[i];
+//				subMethods.push(methodUnit);
+//				
+//				for(var j in methodUnit.BlockUnit.ActionElements){
+//					var actionElement = methodUnit.BlockUnit.ActionElements[j];
+//					var result = findSubMethodsFromActionElement(actionElement);
+//					subMethods = subMethods.concat(result);
+//				}
+//		}
+//		
+//		return subMethods;
+//	}
 	
 	
 	function expandMethod(methodUnit, xmiString){

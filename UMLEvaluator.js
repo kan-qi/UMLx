@@ -25,6 +25,7 @@
 	var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
 	
 	// current available evaluators
+	var usimElementEvaluator = require('./evaluators/USIMElementEvaluator/USIMElementEvaluator.js');
 	var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
 //	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 	var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
@@ -39,6 +40,7 @@
 	
 //	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
 	var evaluators = [
+			usimElementEvaluator,
 			useCaseComponentsEvaluator,
 			transactionEvaluator,
 			modelVersionEvaluator,
@@ -457,6 +459,10 @@
 								if(callbackfunc){
 									callbackfunc(model);
 								}
+								
+							var debug = require("./utils/DebuggerOutput.js");
+							debug.writeJson("new_model_8_21"+model._id, model);
+							
 							});
 						});
 					}

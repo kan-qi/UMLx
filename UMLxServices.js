@@ -100,118 +100,7 @@ app.set('view engine', 'jade');
 //		repoId:"598c93a9a9813b12105c953e"
 //}
 
-var modelInfo = {};
 
-
-//GIT API TEST
-app.get('/testgitapirepos', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-
-	// TODO: optional authentication here depending on desired endpoints. See below in README.
-
-	github.repos.getForUser({
-	    // optional
-	    // headers: {
-	    //     "cookie": "blahblah"
-	    // },
-	  username: 'kritikavd'
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-
-	});
-});
-
-
-
-app.get('/testgitapiuser', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-
-	github.search.users({
-	  q: 'kvaid@usc.edu in:email'
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	  //console.log(JSON.stringify(res))
-	});
-});
-
-
-app.get('/testgitapionecommit', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-
-	github.gitdata.getCommit({
-		owner: 'kritikavd',
-		  repo: 'Web-Tech-Assignments',
-		  sha :'c904b7eb886086665382162ad123555efb66be35'
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	});
-
-});
-
-
-app.get('/testgitapiallcommit', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-
-	github.repos.getCommits({
-		owner: 'kritikavd',
-		  repo: 'node-github',
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	});
-	
-});
-
-app.get('/testgitapiallcommitlast', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-	
-	github.repos.getCommits({
-		owner: 'kritikavd',
-		  repo: 'node-github',
-		  page : 36,
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	});
-
-});
-
-
-app.get('/testgitapifollowing', function(req,response){
-	var GitHubApi = require('github')
-
-	var github = new GitHubApi({
-	})
-
-	github.users.getFollowingForUser({
-	    // optional
-	    // headers: {
-	    //     "cookie": "blahblah"
-	    // },
-	  username: 'defunkt'
-	}, function (err, res) {
-	  if (err) throw err
-	  response.json(res);
-	})
-});
 
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
@@ -291,8 +180,7 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 			 // verifies secret and checks exp
 				 jwt.verify(token, config.secretUserInvite, function(err, payload) {
 				   if (err) {
-					   console.log('Failed to authenticate token. Token is not Valid');
-
+					   	 console.log('Failed to authenticate token. Token is not Valid');
 						 var result = {
 		            	          success: false,
 		            	          message: 'Link is no longer valid.',
@@ -373,6 +261,15 @@ app.get('/clearDB', function(req, res){
 
 
 app.get('/setupRepoStorage', function(req, res){
+	var userId = req.query.user_id;
+	if(userId === "flyqk191829189181810282"){
+	umlModelInfoManager.setupRepoStorage(function(){
+		res.end('database is set up');
+	    });
+	}
+})
+
+app.get('/clearRepo', function(req, res){
 	var userId = req.query.user_id;
 	if(userId === "flyqk191829189181810282"){
 	umlModelInfoManager.setupRepoStorage(function(){
@@ -594,27 +491,28 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 	}
 	
 	var projectInfo = {};
-	projectInfo.distributedSystem = req.body['distributed_system'];
-	projectInfo.responseTime = req.body['response_time'];
-	projectInfo.endUserEfficiency = req.body['end_user_efficiency'];
-	projectInfo.complexInternalProcessing = req.body['complex_internal_processing'];
-	projectInfo.codeReusable = req.body['code_must_be_reusable'];
-	projectInfo.easyInstall = req.body['easy_to_install'];
-	projectInfo.easyUse = req.body['easy_to_use'];
+	projectInfo.distributedSystem = req.body['distributed-system'];
+	projectInfo.responseTime = req.body['response-time'];
+	projectInfo.endUserEfficiency = req.body['end-user-efficiency'];
+	projectInfo.complexInternalProcessing = req.body['complex-internal-processing'];
+	projectInfo.codeReusable = req.body['code-must-be-reusable'];
+	projectInfo.easyInstall = req.body['easy-to-install'];
+	projectInfo.easyUse = req.body['easy-to-use'];
 	projectInfo.portable = req.body['portable'];
-	projectInfo.easyToChange = req.body['easy_to_change'];
+	projectInfo.easyToChange = req.body['easy-to-change'];
 	projectInfo.concurrent = req.body['concurrent'];
-	projectInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
-	projectInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
-	projectInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
-	projectInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
-	projectInfo.applicationExperience = req.body['application_experience'];
-	projectInfo.objectOrientedExperience = req.body['object_oriented_experience'];
-	projectInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
+	projectInfo.specialSecurityObjectives = req.body['includes-special-security-objectives'];
+	projectInfo.directAccessForThirdParties = req.body['provides-direct-access-for-third-parties'];
+	projectInfo.userTrainingFacilitiesRequired = req.body['special-user-training-facilities-are-required'];
+	projectInfo.familiarWithProjectModel = req.body['familiar-with-the-project-model-that-is-used'];
+	projectInfo.applicationExperience = req.body['application-experience'];
+	projectInfo.objectOrientedExperience = req.body['object-oriented-experience'];
+	projectInfo.leadAnalystCapability = req.body['lead-analyst-capability'];
 	projectInfo.motivation = req.body['motivation'];
-	projectInfo.stableRequirements = req.body['stable_requirements'];
-	projectInfo.partTimeStaff = req.body['part_time_staff'];
-	projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+	projectInfo.stableRequirements = req.body['stable-requirements'];
+	projectInfo.partTimeStaff = req.body['part-time-staff'];
+	projectInfo.difficultProgrammingLanguage = req.body['difficult-programming-language'];
+	
 	// e.g.
 	//  req.files['avatar'][0] -> File
 	//  req.files['gallery'] -> Array
@@ -1572,12 +1470,40 @@ app.get('/reloadRepo', function(req, res){
 				res.end("error");
 				return;
 			}
-			umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
+			
+			effortPredictor.predictEffortRepo(repoInfo, function(repoInfo2){
+				if(!repoInfo2){
+					console.log("effort prediction failed at repo level");
+				}
+			
+			
+			umlModelInfoManager.updateRepoInfo(repoInfo2, function(repoInfo3){
 				res.redirect('/');
+			});
 			});
 		});
 	});
 })
+
+
+// need to distinguish with re-analyse with model.
+//app.get('/reloadModel', function(req, res){
+//	//temporary analysis
+//	var repoId = req.userInfo.repoId;
+//
+////	console.log(refresh);
+//	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+//		umlModelInfoManager.reloadRepo(repoInfo, function(repoInfo){
+//			if(!repoInfo){
+//				res.end("error");
+//				return;
+//			}
+//			umlModelInfoManager.updateRepoInfo(repoInfo, function(repoInfo){
+//				res.redirect('/');
+//			});
+//		});
+//	});
+//})
 
 //app.get('/loadCOCOMOData', function(req, res){
 //	//temporary analysis
