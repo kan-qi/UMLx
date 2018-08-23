@@ -13,19 +13,11 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
-	var RScriptExec = require('../utils/RScriptUtil.js');
-	
-//	var predictionModel = "exucp_linear_regression_model.rds";
-//	var sizeMetric = "EXUCP";
-//	var transactionMetric = "SWTII";
-//	var estimationResultsFile = "estimationResultEXUCP.json";
-//	var label = "eucp_effort_prediction";
-	
+	var UCPEvaluator = require('../evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
 	
 	var defaultModelConfig = eucpConfig;
 
 	var eucpConfig = {
-	predictionModel : "eucp_linear_regression_model.rds",
 	sizeMetric : "EUCP",
 	transactionMetric : "SWTI",
 	estimationResultsFile : "estimationResultEUCP.json",
@@ -33,7 +25,6 @@
 	}
 	
 	var exucpConfig = {
-	predictionModel : "exucp_linear_regression_model.rds",
 	sizeMetric : "EXUCP",
 	transactionMetric : "SWTII",
 	estimationResultsFile : "estimationResultEXUCP.json",
@@ -42,7 +33,6 @@
 	
 	
 	var ducpConfig = {
-	predictionModel : "ducp_linear_regression_model.rds",
 	sizeMetric : "DUCP",
 	transactionMetric : "SWTIII",
 	estimationResultsFile : "estimationResultDUCP.json",
@@ -91,34 +81,54 @@
 //		modelInfo.predictedDuration = projectDuration;
 //		calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
 		
-		var projectEffortInPM = projectEffort/152;
+		var projectEffortInPMCOCOMO = projectEffort/152;
 		
 		console.log("project effort");
 		console.log(projectEffortInPM);
 		
-		var projectDuration = 3.67*Math.pow(projectEffortInPM, 0.28+0.2*(1.15-0.91));
+		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91));
 		
+		console.log("schedule prediction");
 		console.log(projectDuration);
-		
-		estimationResults.Duration = projectDuration.toFixed(2);
-		
 
-//		var personnel = projectEffort/12;
-		
+		var projectEffortInPM = projectEffort/40;
 		var personnel = projectEffortInPM/projectDuration;
 		
-		estimationResults.Personnel = personnel.toFixed(2);
 		
 		console.log("transaction data");
 		console.log(modelInfo['TransactionAnalytics']);
 		
-		var personnel_UI = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
-		var personnel_DB = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
-		var personnel_FS = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
+		var personnel_UI_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
+		var personnel_DB_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
+		var personnel_FS_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
 		
-		estimationResults.Personnel_UI = personnel_UI.toFixed(2);
-		estimationResults.Personnel_DB = personnel_DB.toFixed(2);
-		estimationResults.Personnel_FS = personnel_FS.toFixed(2);
+		personnel_UI = Math.round(personnel_UI_estimated);
+		personnel_DB = Math.round(personnel_DB_estimated);
+		personnel_FS = Math.round(personnel_FS_estimated);
+		
+		if(personnel_UI == 0 && personnel_UI_estimated != 0){
+			personnel_UI = 1;
+		}
+		
+		if(personnel_DB == 0 && personnel_DB_estimated != 0){
+			personnel_DB = 1;
+		}
+		
+		if(personnel_FS == 0 && personnel_FS_estimated != 0){
+			personnel_FS = 1;
+		}
+		
+		personnel = personnel_UI + personnel_DB + personnel_FS;
+		
+		estimationResults.Personnel_UI = personnel_UI;
+		estimationResults.Personnel_DB = personnel_DB;
+		estimationResults.Personnel_FS = personnel_FS;
+		
+		estimationResults.Personnel = personnel;
+		
+		projectDuration = projectEffortInPM/personnel;
+		
+		estimationResults.Duration = projectDuration.toFixed(2);
 		
 		var useCaseEstimatesById = {};
 		
@@ -143,21 +153,20 @@
 			}
 
 
-			useCaseEstimates.SizeMeasurement = useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+			useCaseEstimates.SizeMeasurement = Number(useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric]).toFixed(2);
 			
 			var useCaseEffort = (useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
 			
-			useCaseEstimates.Effort = useCaseEffort.toFixed(2);
 //			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
 //			useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
 			
-			var useCaseEffortInPM = useCaseEstimates.Effort/152;
+			var useCaseEffortInPMCOCOMO = useCaseEffort/152;
 			
-			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPM, 0.28+0.2*(1.15-0.91));
-			
-			useCaseEstimates.Duration = useCaseDuration.toFixed(2);
+			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91));
 
 //			var personnel = projectEffort/12;
+			
+			var useCaseEffortInPM = useCaseEstimate.Effort/40;
 			
 			var useCasePersonnel = useCaseDuration == 0 ? 0 : useCaseEffortInPM/useCaseDuration;
 			
@@ -170,18 +179,43 @@
 			//distribute project effort
 			
 //				useCaseEstimates.Personnel = personnel/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
-				useCaseEstimates.Personnel = useCasePersonnel.toFixed(2);
+//				useCaseEstimates.Personnel = useCasePersonnel.toFixed(2);
 //				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
 				
-				var personnel_UI = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
-				var personnel_DB = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
-				var personnel_FS = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+				var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
+				var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
+				var personnel_FS_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+
+				personnel_UI = Math.round(personnel_UI_estimated);
+				personnel_DB = Math.round(personnel_DB_estimated);
+				personnel_FS = Math.round(personnel_FS_estimated);
 				
+				if(personnel_UI == 0 && personnel_UI_estimated != 0){
+					personnel_UI = 1;
+				}
 				
-				useCaseEstimates.Personnel_UI = personnel_UI.toFixed(2);
-				useCaseEstimates.Personnel_DB = personnel_DB.toFixed(2);
-				useCaseEstimates.Personnel_FS = personnel_FS.toFixed(2);
+				if(personnel_DB == 0 && personnel_DB_estimated != 0){
+					personnel_DB = 1;
+				}
+				
+				if(personnel_FS == 0 && personnel_FS_estimated != 0){
+					personnel_FS = 1;
+				}
+				
+				personnel = personnel_UI + personnel_DB + personnel_FS;
+				
+				useCaseEstimates.Personnel = personnel;
+				
+				useCaseEstimates.Personnel_UI = personnel_UI;
+				useCaseEstimates.Personnel_DB = personnel_DB;
+				useCaseEstimates.Personnel_FS = personnel_FS;
+
+				
+				useCaseDuration = useCaseEffortInPM / personnel;
+				useCaseEstimates.Duration = useCaseDuration.toFixed(2);
+
+				useCaseEstimates.Effort = useCaseEffort.toFixed(2);
 				
 				estimationResults.UseCases.push(useCaseEstimates);
 		}
@@ -207,8 +241,8 @@
 		var controlWeight = 0;
 		for(var i in domainModelInfo.Elements){
 			var element = domainModelInfo.Elements[i];
-			console.log("domain elements");
-			console.log(element);
+//			console.log("domain elements");
+//			console.log(element);
 			if(element.Type === "boundary"){
 				viewWeight++;
 //				viewWeight += element.Operations.length;
@@ -226,13 +260,17 @@
 		var totalWeight = viewWeight + controlWeight + entityWeight;
 		
 		mvcEstimates.ViewEffort = totalWeight == 0 ? 0: viewWeight/totalWeight*projectEffort;
+		mvcEstimates.ViewEffort = mvcEstimates.ViewEffort.toFixed(2);
 		mvcEstimates.ModelEffort = totalWeight == 0 ? 0 : entityWeight/totalWeight*projectEffort;
+		mvcEstimates.ModelEffort = mvcEstimates.ModelEffort.toFixed(2);
 		mvcEstimates.ControlEffort = totalWeight == 0 ? 0 : controlWeight/totalWeight*projectEffort;
+		mvcEstimates.ControlEffort = mvcEstimates.ControlEffort.toFixed(2);
 		
-		console.log("mvc estimates");
-		console.log(mvcEstimates);
+//		console.log("mvc estimates");
+//		console.log(mvcEstimates);
 		
 		estimationResults.DomainModel.MVCEstimates = mvcEstimates;
+		
 		
 //		return mvcEstimate;
 	}
@@ -334,6 +372,7 @@
 	}
 	
 	function predictEffort(modelInfo, key, callbackfunc){
+		
 		var modelConfig = defaultModelConfig;
 		
 		if(this.modelConfig){
@@ -347,27 +386,30 @@
 		console.log("model info");
 		console.log(modelInfo);
 //	
-		var command = './Rscript/EffortEstimation.R "'+modelConfig.predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+modelConfig.label+'"';
-		
-		console.log("estimation command");
-		console.log(command);
+//		var command = './Rscript/EffortEstimation.R "'+modelConfig.predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+modelConfig.label+'"';
+//		
+//		console.log("estimation command");
+//		console.log(command);
 		
 //		process.exit();
 		
-		RScriptExec.runRScript(command,function(result){
-			if (!result) {
-//				console.log('exec error: ' + error);
-				console.log("project effort estimation error");
-				if(callbackfunc){
-					// error because of the R script
-					callbackfunc(false);
-				}
-			} else {
-				fs.readFile(modelInfo.OutputDir+"/"+modelConfig.label+"_result.json", 'utf-8', (err, str) => {
-					   if (err) throw err;
-					   console.log(str);
+//		RScriptExec.runRScript(command,function(result){
+//			if (!result) {
+////				console.log('exec error: ' + error);
+//				console.log("project effort estimation error");
+//				if(callbackfunc){
+//					// error because of the R script
+//					callbackfunc(false);
+//				}
+//			} else {
+//				fs.readFile(modelInfo.OutputDir+"/"+modelConfig.label+"_result.json", 'utf-8', (err, str) => {
+//					   if (err) throw err;
+//					   console.log(str);
 					   
-					   var projectEffort = Number(JSON.parse(str).result);
+					   var projectEffort = UCPEvaluator.estimateProjectEffort(modelInfo, modelConfig.sizeMetric)
+					   
+					   console.log("test effort repo");
+					   console.log(modelInfo['ExtendedUseCasePointData']);
 					   
 					   var estimationResults = {
 							   	EstimationModel: key,
@@ -377,7 +419,7 @@
 								Effort: projectEffort.toFixed(2),
 								UseCases: [],
 								DomainModel: {},
-								SizeMeasurement: modelInfo['ExtendedUseCasePointData'][modelConfig.sizeMetric].toFixed(2)
+								SizeMeasurement: Number(modelInfo['ExtendedUseCasePointData'][modelConfig.sizeMetric]).toFixed(2)
 						};
 					   
 					   estimateUseCaseEffort(modelInfo, estimationResults, projectEffort, modelConfig);
@@ -404,9 +446,9 @@
 						   }
 						});
 
-				});
-			}
-		});
+//				});
+//			}
+//		});
 	}
 	
 	module.exports = {

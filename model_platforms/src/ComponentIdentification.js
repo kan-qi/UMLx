@@ -227,8 +227,8 @@
 		// console.log(util.inspect(clusters, false, null))
 		// console.log(clusters);
 
-		var components = [];
-		var dicComponents = {};  // {classUnit.uuid: component.uuid}
+		var dicComponents = {};
+		var dicClassComponent = {};  // {classUnit.uuid: component.uuid}
 
 		for(var i in clusters){
 			var classUnits = clusters[i];
@@ -261,19 +261,19 @@
 					classUnits: classUnits
 			}
 
-			components.push(component);
+			dicComponents[component.uuid] = component;
 
 			for (var j in classUnits) {
-				dicComponents[classUnits[j].UUID] = component.uuid;
+				dicClassComponent[classUnits[j].UUID] = component.uuid;
 			}
 		}
 
-		console.log("components");
-		console.log(components);
+//		console.log("components");
+//		console.log(components);
 
 		return {
-			components: components,
-			dicComponents: dicComponents
+			dicComponents: dicComponents,
+			dicClassComponent: dicClassComponent
 		};
 
 	}
@@ -479,7 +479,7 @@
 			}
 			// else if (!(callees[col][row].has(edge.end.UUID))) {
 			else {
-				callees[col][row].add(edge.start.UUID);
+				accessed[col][row].add(edge.start.UUID);
 			}
 		}
 

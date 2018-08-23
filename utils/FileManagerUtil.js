@@ -1,5 +1,7 @@
 (function() {
 	var fs = require('fs');
+	var mkdirp = require('mkdirp');
+	var path = require('path')
 	
 	 function deleteFolderRecursive(dir, rmSelf) {
 		    var files;
@@ -20,8 +22,60 @@
 		        fs.rmdirSync(dir);
 		    }
 		}
+	 
+	 function deleteFileSync(filePath){
+		  if (fs.existsSync(filePath) && fs.statSync(filePath).isFile()) {
+			  fs.unlinkSync(filePath);
+          }
+	 }
+	 
+	 function readFilesSync(filePaths){
+		 var fileContents = [];
+		 for(var i in filePaths){
+		 var path = filePaths[i];
+		 if( fs.existsSync(path) ) {
+			 var fileContent = fs.readFileSync(path, 'utf8');
+			 fileContents.push(fileContent);
+		 }
+		 else{
+			 fileContents.push("");
+		 }
+		 }
+		 
+		 return fileContents;
+	 }
+	 
+	 function readFileSync(filePath){
+		 if( fs.existsSync(filePath) ) {
+			  return fs.readFileSync(filePath, 'utf8');
+		 }
+		 
+		 return "";
+	 }
+	 
+	 function writeFileSync(filePath, fileContent){
+		 fs.writeFileSync(filePath, fileContent);
+	 }
+	 
+	 function appendFile(filePath, message, callbackfunc){
+		 var outputDir = path.dirname(filePath);
+			mkdirp(outputDir, function(err) { 
+				fs.appendFile(filePath, message,function (err) {
+					  if (err) throw err;
+					  console.log('Saved!');
+					  if(callbackfunc){
+						  callbackfunc(filePath+"  message: "+message);
+					  }
+					});
+				});
+		}
 	
 	module.exports = {
-			deleteFolderRecursive : deleteFolderRecursive
+			deleteFolderRecursive : deleteFolderRecursive,
+			readFilesSync : readFilesSync,
+			readFileSync: readFileSync,
+			writeFileSync: writeFileSync,
+			deleteFileSync: deleteFileSync,
+			appendFile: appendFile
 	}
 }())

@@ -93,9 +93,7 @@
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
-//		var useCaseEmpirics = useCase.UseCaseEmpirics;
-//		var domainModelInfo["ComponentAnalytics"] = domainModelInfo.DomainModelAnalytics;
-//		console.log(domainModelInfo);
+
 		return domainModelInfo["ComponentAnalytics"].AttributeNum + ","
 		+ domainModelInfo["ComponentAnalytics"].OperationNum + ","
 		+ domainModelInfo["ComponentAnalytics"].ClassNum + ","
@@ -103,12 +101,7 @@
         + domainModelInfo["ComponentAnalytics"].AverageDepthInheritanceTree + ","
         + domainModelInfo["ComponentAnalytics"].AverageNumberOfChildrenPerBaseClass + ","
         + domainModelInfo["ComponentAnalytics"].NumberOfInheritanceRelationships + ","
-//        + domainModelInfo["ComponentAnalytics"].NumberOfDerivedClasses + ","
-//        + domainModelInfo["ComponentAnalytics"].NumberOfClassesInherited + ","
-//        + domainModelInfo["ComponentAnalytics"].NumberOfClassesInheritedFrom + ","
-//        + domainModelInfo["ComponentAnalytics"].NumberOfChildren + ","
         + domainModelInfo["ComponentAnalytics"].DepthInheritanceTree + ","
-//        + domainModelInfo["ComponentAnalytics"].CouplingBetweenObjects + ","
         + domainModelInfo["ComponentAnalytics"].ParameterNum + ","
 		+ domainModelInfo["ComponentAnalytics"].UsageNum + ","
 		+ domainModelInfo["ComponentAnalytics"].RealNum + ","
@@ -136,15 +129,12 @@
 //		var useCaseEmpirics = useCase.UseCaseEmpirics;
 
 		return useCase["ComponentAnalytics"].TranNum + ","
-//		+ useCase["ComponentAnalytics"].DiagramNum + ","
 		+ useCase["ComponentAnalytics"].ActivityNum + ","
 		+ useCase["ComponentAnalytics"].ActorNum + ","
 		+ useCase["ComponentAnalytics"].ComponentNum + ","
 		+ useCase["ComponentAnalytics"].BoundaryNum + ","
 		+ useCase["ComponentAnalytics"].ControlNum + ","
 		+ useCase["ComponentAnalytics"].EntityNum;
-//		+ useCase["ComponentAnalytics"].AvgDegree + ","
-//		+ useCase["ComponentAnalytics"].AvgTransactionLength;
 	}
 	
 	// callbackfunc is called when the elements are dumped into the files?
@@ -158,23 +148,18 @@
 		BoundaryNum : 0,
 		ControlNum : 0,
 		EntityNum : 0,
-//		AvgDegree : 0,
-//		AvgTransactionLength : 0
 		};
 		
 				// element analytics
 				var totalDegree = 0;
 				var activityNum = 0;
-//				var totalLinks = 0;
 				var actorNum = 0;
-//				var roleNum = 0;
 				var boundaryNum = 0;
 				var controlNum = 0;
 				var entityNum = 0;
 				var componentNum = 0;
 				
-//				var totalTransactionLength = 0;
-				var transactionNum = 0;
+//				var transactionNum = 0;
 
 				for ( var j in useCase.Activities) {
 					var activity = useCase.Activities[j]; // tag: elements
@@ -194,49 +179,30 @@
 						} else if (type === "entity") {
 							entityNum++;
 						}
-//						totalLinks += Activity.InboundNumber;
 						
 						componentNum++;
 					}
 
 					activityNum++;
-//					}
 				}
 				
 				for(var j in useCase.Actors){
 					actorNum++;
 				}
-//				for(var j in useCase.Roles){
-//					roleNum++;
-//				}
-
-
-//				totalLinks += diagram.Edges.length;
-
-//				for ( var j in useCase.Transactions) {
-//					var Transaction = useCase.Transactions[j];
-////					totalTransactionLength += Transaction.Nodes.length;
-//					transactionNum++;
-//				}
 
 				useCase["ComponentAnalytics"].TotalDegree = totalDegree;
-//				useCase["ComponentAnalytics"].TotalLinks = totalLinks;
 				useCase["ComponentAnalytics"].ActorNum = actorNum;
-//				useCase["ComponentAnalytics"].RoleNum = roleNum;
 				useCase["ComponentAnalytics"].BoundaryNum = boundaryNum;
 				useCase["ComponentAnalytics"].ControlNum = controlNum;
 				useCase["ComponentAnalytics"].EntityNum = entityNum;
 				useCase["ComponentAnalytics"].ActivityNum = activityNum;
 				useCase["ComponentAnalytics"].ComponentNum = componentNum;
 				useCase["ComponentAnalytics"].TranNum = useCase.Transactions.length;
-//				useCase["ComponentAnalytics"].AvgDegree = useCase["ComponentAnalytics"].ActivtyNum == 0 ? 0 : useCase["ComponentAnalytics"].TotalDegree / useCase["ComponentAnalytics"].ActivtyNum;
-//				useCase["ComponentAnalytics"].AvgTransactionLength = useCase["ComponentAnalytics"].TranNum == 0 ? 0 : useCase["ComponentAnalytics"].TotalTransactionLength / useCase["ComponentAnalytics"].TranNum;
 
 		if (callbackfunc) {
 
-		useCase["ComponentAnalytics"].TransactionAnalyticsFileName = "tranAnalytics.csv";
+		useCase["ComponentAnalytics"].TransactionAnalyticsFileName = "transactionAnalytics.csv";
 		useCase["ComponentAnalytics"].ElementAnalyticsFileName = "elementAnalytics.csv";
-//		useCase["ComponentAnalytics"].DiagramAnalyticsFileName = "diagramAnalytics.csv";
 
 		console.log("test use case element analytics");
 		console.log(useCase);
@@ -293,12 +259,7 @@
                 AverageDepthInheritanceTree :0,
                 AverageNumberOfChildrenPerBaseClass :0,
                 NumberOfInheritanceRelationships :0,
-//                NumberOfDerivedClasses :0,
-//                NumberOfClassesInherited :0,
-//                NumberOfClassesInheritedFrom :0,
-//                NumberOfChildren :0,
                 DepthInheritanceTree :0,
-//                CouplingBetweenObjects :0,
                 ParameterNum :0,
 				UsageNum: 0,
 				RealNum: 0,
@@ -321,18 +282,6 @@
 				AttributeAnalyticsFileName :  'attributeAnalytics.csv',
 				OperationAnalyticsFileName : 'operationAnalytics.csv'
 	        }
-				// ILF += diagram["ComponentAnalytics"].ILF;
-				// EIF += diagram["ComponentAnalytics"].EIF;
-//				DiagramNum :0,
-				//EntityAnalyticsFileName : 'entityAnalytics.csv',
-				//AttributeAnalyticsFileName :  'attributeAnalytics.csv',
-				//OperationAnalyticsFileName : 'operationAnalytics.csv'
-		//}
-
-// console.log('-----------domain model------------');
-//		for ( var i in domainModelInfo.Diagrams) {
-
-//			var diagram = domainModelInfo.Diagrams[i];
 
 			var attributeNum = 0;
 			var operationNum = 0;
@@ -342,12 +291,7 @@
             var averageDepthInheritanceTree = 0;
             var averageNumberOfChildrenPerBaseClass = 0;
             var numberOfInheritanceRelationships = 0;
-//            var numberOfDerivedClasses = 0;
-//            var numberOfClassesInherited = 0;
-//            var numberOfClassesInheritedFrom = 0;
-//            var numberOfChildren = 0'
             var depthInheritanceTree = 0;
-//            var couplingBetweenObjects = 0;
             var totalNumberOfChildrenOfTopLevelClasses = 0;
 
             var parameterNum = 0;
@@ -390,7 +334,6 @@
 								}
 							
 					               var w = 0.3;
-//									domainModelInfo["SizeMetricAnalytics"].WMC += w*1; //Weighted methods per class
 					               weightedOperNum_cls = w*1;
                             }
                             
@@ -432,12 +375,10 @@
                if(element.numberOfDerivingClasses == 0){
             	   element.isTopLevelClass = true;
             	   topLevelClasses++;
-//            	   totalNumberOfChildrenOfTopLevelClasses +=  element.numberOfChildren;
                }
                else{
             	   element.isTopLevelClass = false;
                }
-//               numberOfDerivedClasses += element.numberOfDerivedClasses;
                
                var ancestors = useCaseComponentsProcessor.identifyAncestors(element, domainModelInfo.Generalizations);
                element.numberOfClassesInheritedFrom = ancestors.elements.length;
@@ -475,44 +416,6 @@
                element.couplingBetweenObjects = element.numberOfInheritanceRelationships+element.numberOfAssociationRelationships+element.numberOfUsageRelationships;
 		 }
 			
-			
-//			domainModelInfo["ComponentAnalytics"].averageNumberOfChildrenPerBaseClass = 0;
-//			var totalNumberOfChildren = 0;
-//			var numberOfBaseClasses = 0;
-//			for ( var i in domainModelInfo.Elements) {
-//                var element = domainModelInfo.Elements[i];
-//                totalNumberOfChildren += element[numberOfDerivedClasses];
-//                if(element.isTopLevelClass){
-//                	numberOfBaseClasses ++;
-//                }
-//			}
-//			domainModelInfo["ComponentAnalytics"].topLevelClasses = topLevelClasses;
-//			domainModelInfo["ComponentAnalytics"].averageNumberOfChildrenPerBaseClass = numberOfBaseClasses == 0? 0 : totalNumberOfChildren/numberOfBaseClasses;
-//		
-//                        if (domainModelInfo.InheritanceStats) {
-//                            inheritanceStats = domainModelInfo.InheritanceStats;
-//                            topLevelClasses = inheritanceStats['topLevelClasses'];
-//                            couplingBetweenObjects = inheritanceStats['coupling'];
-//                            numberOfInheritanceRelationships = Object.keys(inheritanceStats['children']).length;
-//                            numberOfClassesInherited = Object.keys(inheritanceStats['children']).length;
-//                            numberOfClassesInheritedFrom = inheritanceStats['numInheritedFrom'];
-//                            for (var key in inheritanceStats['numOfChildren']) {
-//                                numberOfChildren += inheritanceStats['numOfChildren'][key];
-//                            }
-//                            numberOfDerivedClasses = numberOfChildren;
-//                            averageNumberOfChildrenPerBaseClass = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : numberOfChildren / Object.keys(inheritanceStats['numOfChildren']).length;
-//                            for (var key in inheritanceStats['tree']) {
-//                                depth = 0;
-//                                val = inheritanceStats['tree'][key];
-//                                while (val !== '#') {
-//                                    depth++;
-//                                    val = inheritanceStats['tree'][val];
-//                                }
-//                                depthInheritanceTree += depth;
-//                            }
-//                            averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
-////                        averageDepthInheritanceTree = (Object.keys(inheritanceStats['numOfChildren']).length === 0) ? 0 : depthInheritanceTree / Object.keys(inheritanceStats['tree']).length;
-//			}
 			var usageNum = 0;
 			var realNum = 0;
 			var assocNum = 0;
@@ -545,14 +448,8 @@
             domainModelInfo["ComponentAnalytics"].TopLevelClasses = topLevelClasses;
             domainModelInfo["ComponentAnalytics"].AverageDepthInheritanceTree = averageDepthInheritanceTree;
             domainModelInfo["ComponentAnalytics"].DepthInheritanceTree = depthInheritanceTree;
-//            domainModelInfo["ComponentAnalytics"].averageNumberOfChildrenPerBaseClass = numberOfBaseClasses == 0? 0 : totalNumberOfChildren/numberOfBaseClasses;
             domainModelInfo["ComponentAnalytics"].AverageNumberOfChildrenPerBaseClass = topLevelClasses == 0? 0 : totalNumberOfChildrenOfTopLevelClasses/topLevelClasses;
             domainModelInfo["ComponentAnalytics"].NumberOfInheritanceRelationships = numberOfInheritanceRelationships;
-//            domainModelInfo["ComponentAnalytics"].NumberOfDerivedClasses = numberOfDerivedClasses;
-//            domainModelInfo["ComponentAnalytics"].NumberOfClassesInherited = numberOfClassesInherited;
-//            domainModelInfo["ComponentAnalytics"].NumberOfChildren = numberOfChildren;
-//            domainModelInfo["ComponentAnalytics"].NumberOfClassesInheritedFrom = numberOfClassesInheritedFrom;
-//            domainModelInfo["ComponentAnalytics"].CouplingBetweenObjects = couplingBetweenObjects;
             domainModelInfo["ComponentAnalytics"].WeightedOperNum =  weightedOperNum;
 
             domainModelInfo["ComponentAnalytics"].ObjectDataNum = objectdataNum;
@@ -570,14 +467,6 @@
 			domainModelInfo["ComponentAnalytics"].AvgReal = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].RealNum / domainModelInfo["ComponentAnalytics"].EntityNum;
 			domainModelInfo["ComponentAnalytics"].AvgAssoc = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AssocNum / domainModelInfo["ComponentAnalytics"].EntityNum;
 
-
-//
-//			domainModelInfo["ComponentAnalytics"].AttributeNum += diagram["ComponentAnalytics"].AttributeNum;
-//			domainModelInfo["ComponentAnalytics"].OperationNum += diagram["ComponentAnalytics"].OperationNum;
-//			domainModelInfo["ComponentAnalytics"].EntityNum += diagram["ComponentAnalytics"].EntityNum;
-
-//			domainModelInfo["ComponentAnalytics"].DiagramNum++;
-//		}
 
 		if (callbackfunc) {
 
@@ -672,12 +561,9 @@
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
-//		var modelInfo["ComponentAnalytics"] = modelInfo.ModelAnalytics;
-//		var modelEmpirics = modelInfo.ModelEmpirics;
 
 		return modelInfo["ComponentAnalytics"].TranNum + ","
 				+ modelInfo["ComponentAnalytics"].UseCaseNum + ","
-//				+ modelInfo["ComponentAnalytics"].DiagramNum + ","
 				+ modelInfo["ComponentAnalytics"].ActivityNum + ","
 				+ modelInfo["ComponentAnalytics"].ActorNum + ","
 				+ modelInfo["ComponentAnalytics"].AvgActor + ","
@@ -693,12 +579,7 @@
 		        + modelInfo["ComponentAnalytics"].AverageDepthInheritanceTree + ","
 		        + modelInfo["ComponentAnalytics"].AverageNumberOfChildrenPerBaseClass + ","
 		        + modelInfo["ComponentAnalytics"].NumberOfInheritanceRelationships + ","
-//		        + modelInfo["ComponentAnalytics"].NumberOfDerivedClasses + ","
-//		        + modelInfo["ComponentAnalytics"].NumberOfClassesInherited + ","
-//		        + modelInfo["ComponentAnalytics"].NumberOfClassesInheritedFrom + ","
-//		        + modelInfo["ComponentAnalytics"].NumberOfChildren + ","
 		        + modelInfo["ComponentAnalytics"].DepthInheritanceTree + ","
-//		        + modelInfo["ComponentAnalytics"].CouplingBetweenObjects + ","
 		        + modelInfo["ComponentAnalytics"].ParameterNum + ","
 				+ modelInfo["ComponentAnalytics"].UsageNum + ","
 				+ modelInfo["ComponentAnalytics"].RealNum + ","
@@ -740,12 +621,7 @@
 		        AverageDepthInheritanceTree : 0,
 		        AverageNumberOfChildrenPerBaseClass : 0,
 		        NumberOfInheritanceRelationships : 0,
-//		        NumberOfDerivedClasses : 0,
-//		        NumberOfClassesInherited : 0,
-//		        NumberOfClassesInheritedFrom : 0,
-//		        NumberOfChildren : 0,
 		        DepthInheritanceTree : 0,
-//		        CouplingBetweenObjects : 0,
 		        ParameterNum : 0,
 				UsageNum : 0,
 				RealNum : 0,
@@ -770,43 +646,31 @@
 		
 //		var totalTransactionLength = 0;
 		var totalActorNum = 0;
-//		var totalDegree = 0;
 		
 		for ( var i in modelInfo.UseCases) {
 			var useCase = modelInfo.UseCases[i];
 
 			if(useCase["ComponentAnalytics"]){
-//			modelInfo["ComponentAnalytics"].TotalTransactionLength += useCase["ComponentAnalytics"].TotalTransactionLength;
 			modelInfo["ComponentAnalytics"].TranNum += useCase["ComponentAnalytics"].TranNum;
 			modelInfo["ComponentAnalytics"].UseCaseNum++;
-//			modelInfo["ComponentAnalytics"].DiagramNum += useCase["ComponentAnalytics"].DiagramNum;
 
-//			modelInfo["ComponentAnalytics"].TotalLinks += useCase["ComponentAnalytics"].TotalLinks;
 			modelInfo["ComponentAnalytics"].ActorNum += useCase["ComponentAnalytics"].ActorNum;
 			modelInfo["ComponentAnalytics"].BoundaryNum += useCase["ComponentAnalytics"].BoundaryNum;
 			modelInfo["ComponentAnalytics"].ControlNum += useCase["ComponentAnalytics"].ControlNum;
 			modelInfo["ComponentAnalytics"].EntityNum += useCase["ComponentAnalytics"].EntityNum;
 			modelInfo["ComponentAnalytics"].ControlNum += useCase["ComponentAnalytics"].ControlNum;
 			modelInfo["ComponentAnalytics"].ComponentNum += useCase["ComponentAnalytics"].ComponentNum;
-
-//			modelInfo["ComponentAnalytics"].TotalDegree += useCase["ComponentAnalytics"].TotalDegree;
 			modelInfo["ComponentAnalytics"].ActivityNum += useCase["ComponentAnalytics"].ActivityNum;
 
 			//need to recalculate here.
 			modelInfo["ComponentAnalytics"].RoleNum += useCase["ComponentAnalytics"].RoleNum;
 			
-//			totalTransactionLength += useCase["ComponentAnalytics"].AvgTransactionLength*useCase["ComponentAnalytics"].TranNum;
 			totalActorNum += useCase["ComponentAnalytics"].ActorNum;
-//			totalDegree += useCase["ComponentAnalytics"].AvgDegree*useCase["ComponentAnalytics"].ComponentNum;
-//			modelInfo["ComponentAnalytics"].AvgActor += useCase["ComponentAnalytics"].AvgActor;
-//			modelInfo["ComponentAnalytics"].AvgRole += useCase["ComponentAnalytics"].AvgRole;
 			}
 			
 			modelInfo["ComponentAnalytics"].UseCaseNum++;
 		}
 
-//		modelInfo["ComponentAnalytics"].AvgTransactionLength = modelInfo["ComponentAnalytics"].TransactionNum == 0 ? 0 : totalTransactionLength / modelInfo["ComponentAnalytics"].TransactionNum;
-//		modelInfo["ComponentAnalytics"].AvgDegree = modelInfo["ComponentAnalytics"].ComponentNum == 0 ? 0 : totalDegree / modelInfo["ComponentAnalytics"].ComponentNum;
 		modelInfo["ComponentAnalytics"].AvgActorNum = modelInfo["ComponentAnalytics"].ActivtyNum == 0 ? 0 : totalActorNum / modelInfo["ComponentAnalytics"].UseCaseNum;
 
 		// analyse domain model
@@ -816,7 +680,6 @@
 		if(domainModelInfo && domainModelInfo["ComponentAnalytics"]){
 		modelInfo["ComponentAnalytics"].AttributeNum = domainModelInfo["ComponentAnalytics"].AttributeNum;
 		modelInfo["ComponentAnalytics"].OperationNum = domainModelInfo["ComponentAnalytics"].OperationNum;
-//		modelInfo["ComponentAnalytics"].DiagramNum += domainModelInfo["ComponentAnalytics"].DiagramNum;
 		modelInfo["ComponentAnalytics"].EntityNum = domainModelInfo["ComponentAnalytics"].EntityNum;
 		modelInfo["ComponentAnalytics"].AttributeNum = domainModelInfo["ComponentAnalytics"].AttributeNum;
 		modelInfo["ComponentAnalytics"].OperationNum = domainModelInfo["ComponentAnalytics"].OperationNum
@@ -825,12 +688,7 @@
         modelInfo["ComponentAnalytics"].AverageDepthInheritanceTree = domainModelInfo["ComponentAnalytics"].AverageDepthInheritanceTree;
         modelInfo["ComponentAnalytics"].AverageNumberOfChildrenPerBaseClass = domainModelInfo["ComponentAnalytics"].AverageNumberOfChildrenPerBaseClass;
         modelInfo["ComponentAnalytics"].NumberOfInheritanceRelationships = domainModelInfo["ComponentAnalytics"].NumberOfInheritanceRelationships;
-//        modelInfo["ComponentAnalytics"].NumberOfDerivedClasses = domainModelInfo["ComponentAnalytics"].NumberOfDerivedClasses;
-//        modelInfo["ComponentAnalytics"].NumberOfClassesInherited = domainModelInfo["ComponentAnalytics"].NumberOfClassesInherited;
-//        modelInfo["ComponentAnalytics"].NumberOfClassesInheritedFrom = domainModelInfo["ComponentAnalytics"].NumberOfClassesInheritedFrom;
-//        modelInfo["ComponentAnalytics"].NumberOfChildren = domainModelInfo["ComponentAnalytics"].NumberOfChildren;
         modelInfo["ComponentAnalytics"].DepthInheritanceTree = domainModelInfo["ComponentAnalytics"].DepthInheritanceTree;
-//        modelInfo["ComponentAnalytics"].CouplingBetweenObjects = domainModelInfo["ComponentAnalytics"].CouplingBetweenObjects;
         modelInfo["ComponentAnalytics"].ParameterNum = domainModelInfo["ComponentAnalytics"].ParameterNum;
 		modelInfo["ComponentAnalytics"].UsageNum = domainModelInfo["ComponentAnalytics"].UsageNum;
 		modelInfo["ComponentAnalytics"].RealNum = domainModelInfo["ComponentAnalytics"].RealNum;
@@ -929,26 +787,16 @@
 		ElementAnalyticsFileName : "elementAnalytics.csv",
 		TransactionAnalyticsFileName : "transactionAnalytics.csv"
 		}
-//		repoInfo.RepoAnalytics = repoInfo["ComponentAnalytics"];
-
-
-//		var totalTransactionLength = 0;
 		var totalActorNum = 0;
 
-		// var totalDegree = 0;
 		
 		for ( var i in repoInfo.Models) {
 			var modelInfo = repoInfo.Models[i];
 
 			if(modelInfo["ComponentAnalytics"]){
-//			repoInfo["ComponentAnalytics"].TotalTransactionLength += modelInfo["ComponentAnalytics"].TotalTransactionLength;
 			repoInfo["ComponentAnalytics"].TranNum += modelInfo["ComponentAnalytics"].TranNum;
 			repoInfo["ComponentAnalytics"].UseCaseNum += modelInfo["ComponentAnalytics"].UseCaseNum;
 
-//			repoInfo["ComponentAnalytics"].TotalTransactionLength += modelInfo["ComponentAnalytics"].TotalTransactionLength;
-//			repoInfo["ComponentAnalytics"].TransactionNum += modelInfo["ComponentAnalytics"].TransactionNum;
-//			repoInfo["ComponentAnalytics"].CCSS += modelInfo["ComponentAnalytics"].CCSS;
-//			repoInfo["ComponentAnalytics"].TotalLinks += modelInfo["ComponentAnalytics"].TotalLinks;
 			repoInfo["ComponentAnalytics"].ActorNum += modelInfo["ComponentAnalytics"].ActorNum;
 			repoInfo["ComponentAnalytics"].BoundaryNum += modelInfo["ComponentAnalytics"].BoundaryNum;
 			repoInfo["ComponentAnalytics"].ControlNum += modelInfo["ComponentAnalytics"].ControlNum;
@@ -957,16 +805,11 @@
 //			repoInfo["ComponentAnalytics"].TotalDegree += modelInfo["ComponentAnalytics"].TotalDegree;
 			repoInfo["ComponentAnalytics"].ActivtyNum += modelInfo["ComponentAnalytics"].ActivtyNum;
 			
-//			totalTransactionLength += modelInfo["ComponentAnalytics"].AvgTransactionLength*modelInfo["ComponentAnalytics"].TranNum;
 			totalActorNum += modelInfo["ComponentAnalytics"].ActorNum;
-			// totalDegree += modelInfo["ComponentAnalytics"].AvgDegree*modelInfo["ComponentAnalytics"].ComponentNum;
 			
 			}
 		}
 
-//		repoInfo["ComponentAnalytics"].AvgTransactionLength = repoInfo["ComponentAnalytics"].TransactionNum == 0 ? 0 : totalTransactionLength / repoInfo["ComponentAnalytics"].TransactionNum;
-//		repoInfo["ComponentAnalytics"].AvgDegree = repoInfo["ComponentAnalytics"].ComponentNum == 0 ? 0 : totalDegree / repoInfo["ComponentAnalytics"].ComponentNum;
-		
 		repoInfo["ComponentAnalytics"].AvgActorNum = repoInfo["ComponentAnalytics"].UseCaseNum == 0 ? 0 : repoInfo["ComponentAnalytics"].ActorNum / repoInfo["ComponentAnalytics"].UseCaseNum;
 
 		repoInfo["ComponentAnalytics"].repoModelEvaluationResultsTransaction = repoInfo.OutputDir + "/Model_Evaluation_Results";
@@ -979,7 +822,6 @@
 			}
 			//Needs to be upgraded soon
 			console.log("evaluate uml elements at repo level");
-//			var command = './evaluators/UMLModelElementsEvaluator/ModelElementsAnalyticsScript.R "'+repoInfo.OutputDir+"/"+repoInfo["ComponentAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ComponentAnalytics"].AttributeAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ComponentAnalytics"].OperationAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ComponentAnalytics"].ElementAnalyticsFileName+'" "'+repoInfo.OutputDir+"/"+repoInfo["ComponentAnalytics"].TransactionAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "."';
 
 			var command1 = '"./Rscript/OutputStatistics.R" "'+repoInfo.OutputDir+"/"+repoInfo["ComponentAnalytics"].EntityAnalyticsFileName+'" "'+repoInfo.OutputDir+'" "." "entity_statistics.json"';
 			
@@ -1040,16 +882,9 @@
 
 		elementNum = !elementNum ? 0 : elementNum;
 		transactionNum = !transactionNum ? 0 : transactionNum;
-//		expandedTransactionNum = !expandedTransactionNum ? 0 : expandedTransactionNum;
-//		diagramNum = !diagramNum ? 0 : diagramNum;
 
 		var elementAnalyticsStr = elementNum == 0 ? "id,element,useCase,type,outboundDegree,inboundDegree\n" : "";
 		var transactionAnalyticsStr = transactionNum == 0 ? "id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num\n" : "";
-//		var expandedTransactionAnalyticsStr = expandedTransactionNum == 0 ? "id,transaction,diagram,useCase,transactional,transaction_length\n" : "";
-//		var diagramAnalyticsStr = diagramNum == 0 ? "id,diagram, useCase,transaction_num,element_num,boundry_num,control_num,entity_num,actor_num,total_degree,avg_degree,avg_transaction_length,total_links\n" : "";
-
-//		for ( var i in useCase.Diagrams) {
-//			var diagram = useCase.Diagrams[i];
 
 			for ( var i in useCase.Transactions) {
 				var transaction = useCase.Transactions[i];
@@ -1089,24 +924,6 @@
 
 
 
-//			var diagram["ComponentAnalytics"] = diagram.DiagramAnalytics;
-//			diagramAnalyticsStr += diagramNum + ","
-//					+ diagram.Name+ ","
-//					+ useCase.Name+ ","
-//					+ diagram["ComponentAnalytics"].TransactionNum + ","
-//					+ diagram["ComponentAnalytics"].ActivtyNum + ","
-//					+ diagram["ComponentAnalytics"].BoundaryNum + ","
-//					+ diagram["ComponentAnalytics"].ControlNum + ","
-//					+ diagram["ComponentAnalytics"].EntityNum + ","
-//					+ diagram["ComponentAnalytics"].ActorNum + ","
-//					+ diagram["ComponentAnalytics"].TotalDegree + ","
-//					+ diagram["ComponentAnalytics"].AvgDegree + ","
-//					+ diagram["ComponentAnalytics"].AvgTransactionLength + ","
-//					+ diagram["ComponentAnalytics"].TotalLinks + "\n"
-
-//			diagramNum++;
-//		}
-
 		if(callbackfunc){
 
 			var files = [{fileName : useCase["ComponentAnalytics"].ElementAnalyticsFileName, content : elementAnalyticsStr},
@@ -1121,8 +938,6 @@
 			elementNum: elementNum,
 			transactionAnalyticsStr: transactionAnalyticsStr,
 			transactionNum: transactionNum,
-//			diagramAnalyticsStr: diagramAnalyticsStr,
-//			diagramNum: diagramNum
 		}
 
 	}
@@ -1133,16 +948,9 @@
 		attributeNum = !attributeNum ? 0 : attributeNum;
 		operationNum = !operationNum ? 0 : operationNum;
 
-//		console.log("domain model");
-//		console.log(domainModelInfo);
-
 		var entityAnalyticsStr = entityNum == 0 ? "id,element,attributeNum,operationNum,instanceVarNum,externalOperNum,parameterNum,weightedOperNum,numberOfDerivedClasses,numberOfChildren,numberOfClassesInherited,depthInheritanceTree,numberOfDerivingClasses,isTopLevelClass,numberOfClassesInheritedFrom,numberOfInheritanceRelationships,numberOfAssociatedClasses,numberOfAssociatingClasses,numberOfAssociationRelationships,numberOfUsedClasses,numberOfUsingClasses,numberOfUsageRelationships,couplingBetweenObjects\n" : "";
 		var attributeAnalyticsStr = attributeNum == 0 ? "id,attribute,type,element\n" : "";
 		var operationAnalyticsStr = operationNum == 0 ? "id,operation,element\n" : "";
-
-//		for ( var i in domainModelInfo.Diagrams) {
-
-//			var diagram = domainModelInfo.Diagrams[i];
 
 			for ( var i in domainModelInfo.Elements) {
 
@@ -1191,9 +999,6 @@
 				}
 
 			}
-//		}
-
-		// console.log(domainModelInfo["ComponentAnalytics"]);
 
 		if(callbackfunc){
 
@@ -1226,18 +1031,12 @@
 		attributeNum = !attributeNum ? 0 : attributeNum;
 		operationNum = !operationNum ? 0 : operationNum;
 
-
-//		var modelInfo["ComponentAnalytics"] = modelInfo.ModelAnalytics;
-		// console.log(modelInfo["ComponentAnalytics"]);
-
 		var elementAnalyticsStr = "";
 		var transactionAnalyticsStr = "";
 		var entityAnalyticsStr = "";
 		var attributeAnalyticsStr = "";
 		var operationAnalyticsStr = "";
 
-//		var elementAnalyticsStr = "id,element,type,outbound_degree,inbound_degree,diagram,useCase\n";
-//		var transactionAnalyticsStr = "id,transaction,diagram,useCase, transaction_length, boundary_num, control_num, entity_num, actor_num, utw, \n";
 
 		for ( var i in modelInfo.UseCases) {
 			var useCase = modelInfo.UseCases[i];
@@ -1248,13 +1047,6 @@
 			elementAnalyticsStr += useCaseDump.elementAnalyticsStr;
 		}
 
-
-//		var entityAnalyticsStr = "id,element,attributeNum,operationNum,diagram\n";
-//		var attributeAnalyticsStr = "id,attribute,type,element,diagram\n";
-//		var operationAnalyticsStr = "id,operation,element,diagram\n";
-
-//		console.log("''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''")
-//		console.log(model);
 		
 		if(modelInfo.DomainModel){
 	    domainModelDump = dumpDomainModelElementsInfo(modelInfo.DomainModel);
@@ -1268,7 +1060,6 @@
 		}
 		
 
-		// console.log(domainModelInfo["ComponentAnalytics"]);
 
 		if(callbackfunc){
 
@@ -1308,20 +1099,11 @@
 		var attributeNum = 0;
 		var operationNum = 0;
 
-//		var repoInfo["ComponentAnalytics"] = repoInfo.RepoAnalytics;
-		// console.log(repoInfo.OutputDir);
-
 		var transactionAnalyticsStr = "";
 		var elementAnalyticsStr = "";
 		var entityAnalyticsStr = "";
 		var attributeAnalyticsStr = "";
 		var operationAnalyticsStr = "";
-
-//		var transactionAnalyticsStr = "id,transaction,functional,transactional,transaction_length,avg_degree,arch_diff,diagram,use_case,model\n";
-//		var elementAnalyticsStr = "id,element,type,outboundDegree,inboundDegree,diagram,useCase,model\n";
-//		var entityAnalyticsStr = "id,element,attributeNum,operationNum,diagram\n";
-//		var attributeAnalyticsStr = "id,attribute,type,element,diagram\n";
-//		var operationAnalyticsStr = "id,operation,element,diagram\n";
 
 		for ( var i in repoInfo.Models) {
 
@@ -1349,9 +1131,6 @@
 				{fileName : repoInfo["ComponentAnalytics"].AttributeAnalyticsFileName, content : attributeAnalyticsStr},
 				{fileName : repoInfo["ComponentAnalytics"].EntityAnalyticsFileName, content : entityAnalyticsStr}
 			];
-			
-			
-			console.log(repoInfo[0]);
 
 		umlFileManager.writeFiles(repoInfo.OutputDir, files, callbackfunc);
 

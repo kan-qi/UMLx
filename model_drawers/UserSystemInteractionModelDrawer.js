@@ -92,7 +92,7 @@
 		//temporarily eliminate some unnecessary nodes
 		console.log("domain objects");
 		console.log(component);
-		if(component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
+		if(!component || !component.Name || component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
 			return null;
 		}
 		

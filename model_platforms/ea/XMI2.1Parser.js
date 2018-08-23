@@ -1,5 +1,5 @@
 /**
- * This module is used to parse different elements in XMI files to construct the user-system interaction model.
+ * This module is used to parse different elements and also relationships (e.g. generalizations) in XMI files to construct the user-system interaction model.
  */
 (function() {
 	var fs = require('fs');
@@ -13,19 +13,8 @@
 	var analysisDiagramParser= require("./AnalysisDiagramParser.js");
 	var useCaseDiagramParser = require("./UseCaseDiagramParser.js");
 	var visualSprintDiagramParser = require("./VisualSprintDiagramParser.js");
-
-	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
 	
-//        var inheritanceStats = {
-//                'depth': 0,
-//                'numInheritedFrom': 0,
-//                'numDerivedClass': 0,
-//                'coupling': 0,
-//                'children': {},
-//                'topLevelClasses': 0,
-//                'numOfChildren': {},
-//                'tree':{},
-//        };
+	var domainModelSearchUtil = require("../../utils/DomainModelSearchUtil.js");
 
 	/*
 	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
@@ -33,7 +22,7 @@
 	 * The model has the following structure:
 	 * 
 	 * model = {
-	 * 	domainModel:[]
+	 * 	domainModel:{}
 	 *  useCases: []
 	 * }
 	 * 
@@ -75,11 +64,6 @@
 	    }  
 	    return false;  
 	}  
-	
-	function standardizeName(name){
-		return name.replace(/\s/g, '').toUpperCase();
-	}
-	
 
 	function createDomainElement(XMIClass){
 		var XMIAttributes = jp.query(XMIClass, '$.ownedAttribute[?(@[\'$\'][\'xmi:type\']==\'uml:Property\')]');
@@ -126,11 +110,6 @@
 			operations.push(operation);
 		}
 
-		// console.log(classDiagram);
-//		component.Operations = operations;
-//		component.Attributes = attributes;
-//		component.Type = 'class';
-		
 		return {
 				_id: XMIClass['$']['xmi:id'],
 				Name: XMIClass['$']['name'],
@@ -141,24 +120,17 @@
 	}
 	
 	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
-		
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("XMIString", xmiString);
 			
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
-//		$.store.book[?(@.title =~ /^.*Sword.*$/)]
-//		console.log("hello");
 		
 		//create a catalog for the different types of the elements.
 		var XMICustomProfiles = jp.query(XMIUMLModel, '$..["thecustomprofile:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
+		XMICustomProfiles = jp.query(XMIUMLModel, '$..["VHDL:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
 		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:control"][?(@["$"])]').map((obj) => {obj.type="control"; return obj;}));
 		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:boundary"][?(@["$"])]').map((obj) => {obj.type="boundary"; return obj;}));
 		
 		var CustomProfiles = {};
-//		console.log("custom profiles");
-//		console.log(XMICustomProfiles);
-//		debug.writeJson("XMICustomProfiles", XMICustomProfiles);
 		
 		for(var i in XMICustomProfiles){
 //			var CustomProfile = {};
@@ -171,11 +143,9 @@
 			else if(XMICustomProfile["$"]['base_InstanceSpecification']){
 				CustomProfiles[XMICustomProfile["$"]['base_InstanceSpecification']] = XMICustomProfile.type;
 			}
-//			CustomProfile.type = "entity";
-//			CustomProfiles[id] = "entity";
 		}
 		
-		console.log(CustomProfiles);
+//		console.log(CustomProfiles);
 		
 		//create a catelog for the actors.
 		var XMIActors = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
@@ -203,7 +173,7 @@
 					OutputDir : ModelOutputDir+"/domainModel",
 					AccessDir : ModelAccessDir+"/domainModel",
 					DiagramType : "class_diagram",
-                    InheritanceStats: null
+//                    InheritanceStats: null
 				}
 		};
 	
@@ -237,6 +207,84 @@
 		
 		var DomainElementsBySN = {};
 		
+		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+		
+		//populate domain model with classes
+		for(var i in XMIClasses){
+			var XMIClass = XMIClasses[i];
+			console.log(XMIClass);
+
+			var domainElement = createDomainElement(XMIClass);
+//			XMIClassesBydomainModelSearchUtil.standardizeNameizedName[domainModelSearchUtil.standardizeNameizeName(XMIClass['$']['name'])] = XMIClass;
+			
+//			var matchedDomainElement = domainElementSearchUtil.matchDomainElement(domainElement.Name, DomainElementsBySN);
+			
+//			if(!matchedDomainElement){
+				DomainElementsBySN[domainModelSearchUtil.standardizeName(domainElement.Name)] = domainElement;
+//			}
+//			else{
+				//copy the attributes into the matched domain element
+//				console.log(matchedDomainElement);
+//				for(var i in domainElement.Operations){
+//					matchedDomainElement.Operations.push(domainElement.Operations[i]);
+//				}
+//				
+//				for(var i in domainElement.Attributes){
+//					matchedDomainElement.Attributes.push(domainElement.Attributes[i]);
+//				}
+//			}
+			            
+            var XMIAssociations = jp.query(XMIClass, '$.packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
+//    		var DomainAssociationByID = [];
+    		for(var i in XMIAssociations){
+    			var XMIAssoc = XMIAssociations[i];
+    			//      console.log(XMIAssoc);
+    			var association = {
+    				_id: XMIAssoc['$']['xmi:id'],
+    				type: "association",
+					Supplier: XMIClass['$']['xmi:id'],
+					Client: XMIGeneralization['$']['general']
+    			}
+//    			DomainAssociationByID[domainAssociation._id] = domainAssociation;
+    			Model.DomainModel.Associations.push(association);
+    		}
+		}
+		
+		Model.DomainModel.DiagramType = "class_diagram";
+			
+			var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
+//			var DomainUsagesByID = [];
+			for(var i in XMIUsages){
+				var XMIUsage = XMIUsages[i];
+				//      console.log(XMIUsage);
+				var domainUsage = {
+					_id: XMIUsage['$']['xmi:id'],
+					type: "usage",
+					Supplier: XMIUsage['$']['supplier'],
+					Client: XMIUsage['$']['client']
+				}
+				Model.DomainModel.Usages.push(domainUsage);
+			}
+
+			var XMIReals = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Realization\')]');
+			for(var i in XMIReals){
+				var XMIReal = XMIReals[i];
+				//      console.log(XMIReal);
+				var domainRealization = {
+					_id: XMIReal['$']['xmi:id'],
+					type: "realization",
+					Supplier: XMIReal['$']['supplier'],
+					Client: XMIReal['$']['client']
+				}
+				Model.DomainModel.Realizations.push(domainRealization);
+			}
+			
+
+			   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
+				   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
+			   });
+		
+		//parsing use cases.
 		for(var i in XMIUseCases){
 			var XMIUseCase = XMIUseCases[i];
 			var fileName = XMIUseCase['$']['xmi:id'];
@@ -266,207 +314,23 @@
 		
 
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("use_case_parsing_finished_"+Model._id, Model);
-		
-		
-//		for(var i in DomainElementsBySN){
-//			Model.DomainModel.Elements.push(DomainElementsBySN[i]);
-//		}
-//        Model.DomainModel.InheritanceStats = inheritanceStats;
-		
-		
+		debug.writeJson("use_case_parsing_finished_"+Model._id, Model);		
 		
 //		console.log(XMIUMLModel);
-
-		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
-//		var XMIClassesByStandardizedName = [];
-//		var DomainElementsBySN = {};
-		var DomainElements = [];
 		
-		//populate domain model with classes
-		for(var i in XMIClasses){
-			var XMIClass = XMIClasses[i];
-			console.log(XMIClass);
-//			var domainElement = {
-//				id: XMIClass['$']['xmi:id'],
-//				Name: XMIClass['$']['name'],
-//				Attachment: XMIClass
-//			}
-			var domainElement = createDomainElement(XMIClass);
-//			XMIClassesByStandardizedName[standardizeName(XMIClass['$']['name'])] = XMIClass;
-			
-			var matchedDomainElement = domainElementSearchUtil.matchDomainElement(standardizeName(domainElement.Name), DomainElementsBySN);
-			
-			if(!matchedDomainElement){
-				DomainElementsBySN[standardizeName(domainElement.Name)] = domainElement;
-			}
-			else{
-//				DomainElementsBySN[standardizeName(XMIClass['$']['name'])] = domainElement;
-				//copy the attributes into the matched domain element
-				console.log(matchedDomainElement);
-				for(var i in domainElement.Operations){
-					matchedDomainElement.Operations.push(domainElement.Operations[i]);
-				}
-				
-				for(var i in domainElement.Attributes){
-					matchedDomainElement.Attributes.push(domainElement.Attributes[i]);
-				}
-			}
-			
-//			model.DomainModel.push(domainElement);
-			
-			/*
-			 * the logic has been implemented in another place.
-			 */
-//            var XMIGeneralizations = jp.query(XMIClass, '$.generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Generalization\')]');
-//            
-//            for (i in XMIGeneralizations) {
-//                inheritanceStats['coupling']++;
-//                inheritanceStats['numInheritedFrom']++;
-//                inheritanceStats['tree'][XMIClass['$']['xmi:id']] = XMIGeneralizations[i]['$']['general'];
-//                if (XMIGeneralizations[i]['$']['general'] in inheritanceStats['numOfChildren']) {
-//                    inheritanceStats['numOfChildren'][XMIGeneralizations[i]['$']['general']]++;
-//                } else {
-//                    inheritanceStats['numOfChildren'][XMIGeneralizations[i]['$']['general']] = 1;
-//                }
-//                
-//                var generalization = {
-//						id: XMIGeneralizations[i]['$']['general'],
-//						type: "generalization",
-//						Supplier: XMIClass['$']['xmi:id'],
-//						Client: XMIGeneralizations[i]['$']['general']
-//				}
-//				Model.DomainModel.Generalizations.push(generalization);
-//            }
-            
-//          if (XMIGeneralizations.length == 0) {
-//              inheritanceStats['topLevelClasses']++;
-//              inheritanceStats['numOfChildren'][XMIClass['$']['xmi:id']] = 0;
-//              inheritanceStats['tree'][XMIClass['$']['xmi:id']] = '#';
-//          } else {
-//              inheritanceStats['children'][XMIClass['$']['xmi:id']] = null;
-//              
-//          }
-            
-            var XMIAssociations = jp.query(XMIClass, '$.packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
-//    		var DomainAssociationByID = [];
-    		for(var i in XMIAssociations){
-    			var XMIAssoc = XMIAssociations[i];
-    			//      console.log(XMIAssoc);
-    			var association = {
-    				_id: XMIAssoc['$']['xmi:id'],
-    				type: "association",
-					Supplier: XMIClass['$']['xmi:id'],
-					Client: XMIGeneralization['$']['general']
-    			}
-//    			DomainAssociationByID[domainAssociation._id] = domainAssociation;
-    			Model.DomainModel.Associations.push(association);
-    		}
-            
-			
-//			//search for generalization edges.
-//			var XMIGeneralizations = jp.query(XMIUMLModel, '$..generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Generalization\')]');
-//			for(var j in XMIGeneralizations){
-//				var XMIGeneralization = XMIGeneralizations[j];
-//				var association = {
-//						id: XMIGeneralization['$']['general'],
-//						type: "generalization"
-//				}
-//				domainElement.Associations.push(association);
-//			}
-			
-		}
+		var DomainElements = [];
 		
 		for(var i in DomainElementsBySN){
 		Model.DomainModel.Elements.push(DomainElementsBySN[i]);
 		}
 		
-		console.log(XMIClasses);
+//		console.log(XMIClasses);
 //		var debug = require("../../utils/DebuggerOutput.js");
 //		debug.writeJson("XMIClasses", XMIClasses);
-		
-		Model.DomainModel.DiagramType = "class_diagram";
-	   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
-		   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
-	   });
-//		
-		
-		var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
-//		var DomainUsagesByID = [];
-		for(var i in XMIUsages){
-			var XMIUsage = XMIUsages[i];
-			//      console.log(XMIUsage);
-			var domainUsage = {
-				_id: XMIUsage['$']['xmi:id'],
-				type: "usage",
-				Supplier: XMIUsage['$']['supplier'],
-				Client: XMIUsage['$']['client']
-			}
-			Model.DomainModel.Usages.push(domainUsage);
-		}
-
-//		for(var i in DomainUsagesByID){
-//			Model.DomainModel.Usages.push(DomainUsagesByID[i]);
-//		}
-
-		var XMIReals = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Realization\')]');
-//		var DomainRealizationByID = [];
-		for(var i in XMIReals){
-			var XMIReal = XMIReals[i];
-			//      console.log(XMIReal);
-			var domainRealization = {
-				_id: XMIReal['$']['xmi:id'],
-				type: "realization",
-				Supplier: XMIReal['$']['supplier'],
-				Client: XMIReal['$']['client']
-			}
-			Model.DomainModel.Realizations.push(domainRealization);
-		}
-
-//		for(var i in DomainRealizationByID){
-//			Model.DomainModel.Realization.push(DomainRealizationByID[i]);
-//		}
-
-//		var XMIAssociations = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
-//		var DomainAssociationByID = [];
-//		for(var i in XMIAssociations){
-//			var XMIAssoc = XMIAssociations[i];
-//			//      console.log(XMIAssoc);
-//			var domainAssociation = {
-//				_id: XMIAssoc['$']['xmi:id']
-//			}
-//			DomainAssociationByID[domainAssociation._id] = domainAssociation;
-//		}
-		
-//		var XMIGens = jp.query(XMIUMLModel, '$..generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Generalization\')]');
-//		var DomainGeneralizationByID = [];
-//		for(var i in XMIGens){
-//			var XMIAssoc = XMIGens[i];
-//			//      console.log(XMIAssoc);
-//			var domainGeneralization = {
-//				_id: XMIAssoc['$']['xmi:id']
-//			}
-//			DomainGeneralizationByID[domainGeneralization._id] = domainGeneralization;
-//		}
-		
-//		var XMIGens = jp.query(XMIUMLModel, '$..generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Dependency\')]');
-//		var DomainDependencyByID = [];
-//		for(var i in XMIGens){
-//			var XMIAssoc = XMIGens[i];
-//			//      console.log(XMIAssoc);
-//			var domainDependency = {
-//				_id: XMIAssoc['$']['xmi:id'],
-//				Supplier: XMIUsage['$']['supplier'],
-//				Client: XMIUsage['$']['client']
-//			}
-//			DomainDependencyByID[domainDependency._id] = domainDependency;
-//		}
 		
 		useCaseDiagramParser.parseUseCaseDiagram(XMIUseCases, XMIUMLModel, Model);
 		
 		visualSprintDiagramParser.parseUserStoryDiagram(XMIUseCases, XMIUMLModel, Model);
-		
-//		return Model;
 		
 		if(callbackfunc){
 			callbackfunc(Model);
@@ -480,60 +344,15 @@
 		console.log(Model.DomainModel);
 		
 		debug.writeJson("parsed_model_from_parser_"+Model._id, Model);
-		
-//			});
-//	});
-//		return Mode;
-		
 	}
 	
 	// draw the class diagram of the model
 	function createClassDiagramFunc(classElements, graphFilePath, callbackfunc){
 	
-		      console.log("run the create class dia");
-              console.log("class diagram model is"+classElements);
-              console.log("class diagram model is"+JSON.stringify(classElements));
-		//           var json_obj = {
-//           	   "allClass" :[
-//				   {"className": "bookTicketMangement",
-//			        "attributes": [
-//					   	{"attributeName": "ticketName",
-//				         "attributeType": "String"
-//						},
-//						 {"attributeName": "ticketId",
-//						 "attributeType": "int"
-//                         }
-//                      ],
-//					"operations": [
-//						 {"operationName":"bookTicketsManagement(int)",
-//						  "operationReturn":"void"
-//						 }
-//					   ],
-//					"kids": ["BookTickets","bookTicketInterface"]
-//				   },
-//
-//				   {"className": "BookTickets",
-//					"attributes": [
-//						{"attributeName": "BookTicketName",
-//						 "attributeType": "int"
-//                           }
-//                       ],
-//					 "operations": [],
-//					 "kids": []
-//                   },
-//
-//                   {"className": "bookTicketInterface",
-//                    "attributes": [
-//                       {"attributeName": "BookTicketInput",
-//                        "attributeType": "int"
-//					   }
-//					 ],
-//                     "operations": [],
-//                      "kids": []
-//                   }
-//			   ]
-//		   }
-
+//		    console.log("run the create class dia");
+//            console.log("class diagram model is"+classElements);
+//            console.log("class diagram model is"+JSON.stringify(classElements));
+              
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
              graph += ' edge [arrowhead = "ediamond"]'
@@ -581,23 +400,8 @@
 
 
                  graph += '}"]';
-
-                 
-                 /*
-                  * need someone to fix this part.
-                  */
-//                 var classAss = classElements[i]["Associations"];
-//                 for(j = 0; j < classAss.length;j++) {
-//                     graph += curClass["_id"] ;
-//                     graph += '->';
-//                     graph += classAss[j]["id"] + ' ';
-//
-//                 }
 			 }
-
-
-            
-
+             
             graph += 'imagepath = \"./public\"}';
             
      		console.log("graph is:"+graph);

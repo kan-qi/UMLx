@@ -3,21 +3,16 @@
  */
 (function() {
 	var fs = require('fs');
-//	var xml2js = require('xml2js');
-//	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
 	function parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN){
 
-		// we are categorizing the messages for the in-scope and out-scope messages.
-
 		var Activities = [];
 		var PrecedenceRelations = [];
 		
 		//search for activities that are used to describe use cases
-		console.log("XMIActivities");
-//		console.log(XMIUseCase);
+		console.log("parsing XMIActivities");
 		
 		var XMIActivities = jp.query(XMIUseCase, '$..ownedBehavior[?(@[\'$\'][\'xmi:type\']==\'uml:Activity\')]');
 		XMIActivities = XMIActivities.concat(jp.query(XMIUseCase, '$..node[?(@[\'$\'][\'xmi:id\'])]'));
@@ -26,11 +21,9 @@
 		
 		console.log(XMIActivities);
 		
-//		Activities = [];
 		var ActivitiesByID = [];
 		
 		ActivitiesToEliminate = [];
-//		console.log("xmi interactions");
 		console.log(XMIActivities);
 		for(var j in XMIActivities){
 			var XMIActivity = XMIActivities[j];
@@ -103,11 +96,8 @@
 			Activities.splice(Activities.indexOf(activityToEliminate), 1);
 			PrecedenceRelations = leftEdges;
 		}
-		
-//		console.log(PrecedenceRelations);
-		
-		
-//		console.log("group...");
+				
+		console.log("parsing groups for activity diagrams");
 
 		var XMIGroups = jp.query(XMIUseCase, '$..group[?(@[\'$\'][\'xmi:type\']==\'uml:ActivityPartition\')]');
 		for(var j in XMIGroups){
@@ -122,16 +112,6 @@
 				console.log(XMIActivity['$']['xmi:idref']);
 //				console.log(ActivitiesByID);
 				var activity = ActivitiesByID[XMIActivity['$']['xmi:idref']];
-				
-//				var activity = null;
-//				if(XMIActivity['$']['xmi:idref']){
-//					activity = ActivitiesByID[XMIActivity['$']['xmi:idref']];
-//				}
-//				else{
-//					console.log("containing activity");
-//					activity = ActivitiesByID[XMIActivity['$']['xmi:id']];
-//					console.log(activity);
-//				}
 				
 				if(activity){
 				activity.Group = XMIGroup['$']['name'];
@@ -166,10 +146,7 @@
 		//to  eliminate unnecessary activities
 		for(var i in Activities){
 			var activity = Activities[i];
-
-//			console.log("determine fragement node");
-//			console.log(Activities);
-//			console.log(activity.Name);
+			
 			if(activity.Type === "uml:DecisionNode" || activity.Type === "uml:ActivityFinalNode" || activity.Type === "uml:InitialNode" || activity.Type === "uml:FlowFinalNode"){
 //					var activityToEliminate = activity;
 				ActivitiesToEliminate.push(activity);

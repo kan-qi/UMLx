@@ -44,9 +44,9 @@
 //				return true;
 //			},
 			processTransaction: function(transaction, usecase){
-				var transactionLength = 0;
-				var avgDegree = 0;
-				var archDiff = 0;
+//				var transactionLength = 0;
+//				var avgDegree = 0;
+//				var archDiff = 0;
 				var boundaryNum = 0;
 				var controlNum = 0;
 				var entityNum = 0;
@@ -59,7 +59,7 @@
 					
 					if(node.Component){
 						var component = node.Component;
-						avgDegree += component.InboundNumber;
+//						avgDegree += component.InboundNumber;
 
 						if(component.Type=="actor")actorNum++;
 						if(component.Type=="boundary")boundaryNum++;
@@ -67,7 +67,7 @@
 						if(component.Type=="entity")entityNum++;
 					}
 					
-					transactionLength++;
+//					transactionLength++;
 					TransactionStr += node.Name;
 					if(i != transaction.Nodes.length - 1){
 						TransactionStr += "->";
@@ -75,21 +75,22 @@
 					
 				}
 				transaction.TransactionStr = TransactionStr;
-				if(transactionLength > 0){
-					avgDegree = avgDegree / transactionLength;
-				}
-				else {
-					avgDegree = 0;
-				}
-				archDiff = avgDegree*transactionLength;
+//				if(transactionLength > 0){
+//					avgDegree = avgDegree / transactionLength;
+//				}
+//				else {
+//					avgDegree = 0;
+//				}
+//				archDiff = avgDegree*transactionLength;
 				
-				transaction.transactionLength = transactionLength;
-				transaction.avgDegree = avgDegree;
-				transaction.archDiff = archDiff;
+//				transaction.transactionLength = transactionLength;
+//				transaction.avgDegree = avgDegree;
+//				transaction.archDiff = archDiff;
 				transaction.boundaryNum = boundaryNum;
 				transaction.controlNum = controlNum;
 				transaction.entityNum = entityNum;
 				transaction.actorNum = actorNum;
+				transaction.length = transaction.Nodes.length;
 				return true;
 				
 			},

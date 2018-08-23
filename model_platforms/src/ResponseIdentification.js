@@ -23,7 +23,7 @@
 		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
 		var methodPatterns = ['main'];
 		var parameterTypePatterns = ['event', 'Event'];
-		var parameterPatterns = ['event'];
+		var parameterPatterns = ['event', 'Event'];
 		
 		var scannedMethods = [];
 		
@@ -59,12 +59,14 @@
 		   // Do something
 		}
 		
-		console.log("method patterns");
-		console.log(methodPatterns);
-		console.log("parameter type patterns");
-		console.log(parameterTypePatterns);
-		console.log("parameter patterns");
-		console.log(parameterPatterns);
+//		console.log("method patterns");
+//		console.log(methodPatterns);
+//		console.log("parameter type patterns");
+//		console.log(parameterTypePatterns);
+//		console.log("parameter patterns");
+//		console.log(parameterPatterns);
+		
+		var dicResponseMethodUnits = {};
 		
 		for(var i in dicMethodUnits){
 			var methodUnit = dicMethodUnits[i];
@@ -82,6 +84,7 @@
 			}
 			
 			if(methodUnit.isResponse){
+				dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
 				continue;
 			}
 			
@@ -101,6 +104,7 @@
 				}
 				
 				if(methodUnit.isResponse){
+					dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
 					break;
 				}
 				
@@ -114,20 +118,23 @@
 				
 
 				if(methodUnit.isResponse){
+					dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
 					break;
 				}
 			}
 		}
 		
 		
-		for(var i in dicMethodUnits){
-			var methodUnit = dicMethodUnits[i];
-			scannedMethods.push({method: methodUnit.Signature.name, isResponse: methodUnit.isResponse});
-			
-		}
+//		for(var i in dicMethodUnits){
+//			var methodUnit = dicMethodUnits[i];
+//			scannedMethods.push({method: methodUnit.Signature.name, isResponse: methodUnit.isResponse});
+//			
+//		}
 		
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("identifiedMethods", scannedMethods);
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("identifiedMethods", scannedMethods);
+		
+		return dicResponseMethodUnits;
 	}
 		
 	

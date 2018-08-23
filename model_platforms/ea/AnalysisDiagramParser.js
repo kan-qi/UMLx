@@ -3,11 +3,9 @@
  */
 (function() {
 	var fs = require('fs');
-//	var xml2js = require('xml2js');
-//	var parser = new xml2js.Parser();
-//	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-//	var domainElementSearchUtil = require("../../utils/DomainElementSearchUtil.js");
+	
+	var domainModelSearchUtil = require("../../utils/DomainModelSearchUtil.js");
 	
 	function queryExtensionElements(XMIExtension){
 		var extensionAnalysisElements = jp.query(XMIExtension, '$..element[?(@[\'$\'][\'xmi:type\']==\'uml:Object\' || @[\'$\'][\'xmi:type\']==\'uml:Actor\')]');
@@ -76,55 +74,6 @@
 		return useCaseInExtension;
 	}
 	
-//	function matchComponent(activityName, DomainElementsBySN){
-//		//flatout the domainModel
-//		
-//		var domainElementStrings = [];
-//		var domainElementsByString = {};
-//		for(var i in DomainElementsBySN){
-//			var domainElement = DomainElementsBySN[i];
-//			var stringRepresentation = i;
-//			for(var j in domainElement.Operations){
-//				var operation = domainElement.Operations[j];
-//				stringRepresentation += operation.Name;
-//			}
-//			domainElementStrings.push(stringRepresentation);
-//			domainElementsByString[stringRepresentation] = domainElement;
-//		}
-//		
-//		console.log(activityName);
-//		console.log(DomainElementsBySN);
-//		console.log(domainElementStrings);
-//		
-//		var matchedDomainElement = {};
-//		if(domainElementStrings.length>0){
-//		var matches = stringSimilarity.findBestMatch(activityName, domainElementStrings);
-//		matchedDomainElement = domainElementsByString[matches.bestMatch.target];
-//		}
-//		
-//		console.log(matchedDomainElement);
-//		
-//		var operations = [];
-//		for(var i in matchedDomainElement.Operations){
-//			var operation = matchedDomainElement.Operations[i];
-//			operations.push(operation.Name);
-//		}
-//		
-//		console.log(operations);
-//		
-//		var matchedOperation = ""
-//		if(operations.length > 0){
-//		var operationMatches = stringSimilarity.findBestMatch(activityName, operations);
-//		matchedOperation = operationMatches.bestMatch.target;
-//		}
-//		
-//		return {
-//			component: matchedDomainElement,
-//			method: matchedOperation
-//		}
-//
-//	}
-	
 	function parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel){
 		console.log("parse analysis diagram");
 		// search for the instance specifications that are used to represent the robustness diagrams.
@@ -145,16 +94,15 @@
 		//the nested chacking has not succeeded
 //		console.log('$..element[?(@.model[?(@.$.owner ==\''+UseCase._id+'\')])]');
 //		var extensionElements = jp.query(XMIExtension, '$..element[?(@.model[?(@.$.owner ==\''+UseCase._id+'\')])]');
-
 //		var extensionElements = jp.query(XMIExtension, '$..element[?(@[\'model\'][\'$\'][\'owner\']==\''+UseCase._id+'\')]');
 		
 		var extensionElementsByID = queryExtensionElements(XMIExtension);
 		var extensionUseCase = queryUseCaseInExtension(extensionElementsByID, UseCase._id);
 		
-		console.log("check extension elements");
-		console.log("expanding the elements to the ones that are not in the package");
-		console.log(extensionUseCase);
-//		console.log(XMIExtension[0]['elements']);
+//		console.log("check extension elements");
+//		console.log("expanding the elements to the ones that are not in the package");
+//		console.log(extensionUseCase);
+		
 		for(var i in extensionUseCase.useCaseElementsByID){
 			var extensionElementByUseCase = extensionUseCase.useCaseElementsByID[i];
 			
@@ -165,11 +113,8 @@
 			var XMIInstanceSpecification = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:id\']==\''+extensionElementByUseCase['$']['xmi:idref']+'\')]')[0];
 //			XMIInstanceSpecifications = XMIInstanceSpecifications.concat(jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Actor\')]'));
 			console.log("checking derived instance specification");
-			console.log(XMIInstanceSpecification);
+//			console.log(XMIInstanceSpecification);
 			XMIInstanceSpecificationsByID[XMIInstanceSpecification['$']['xmi:id']] = XMIInstanceSpecification;
-			
-//			var XMISpecificationType = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
-			
 			
 			var type = "Object";
 			if(CustomProfiles[XMIInstanceSpecification['$']['xmi:id']]){
@@ -189,23 +134,22 @@
 			
 			Objects.push(Object);
 			
-			// each object is actually a domain element
-			DomainElementsBySN[standardizeName(Object.name)] = {
-					_id: Object.id,
-					Name: Object.name,
-					Type: Object.type,
-					Operations: [],
-					Attributes: []
-			};
+//			if(!DomainElementsBySN[domainModelSearchUtil.standardizeName(Object.name)]){
+			if(!domainModelSearchUtil.matchDomainElement(Object.name, DomainElementsBySN)){
+				// each object is actually a domain element
+				DomainElementsBySN[domainModelSearchUtil.standardizeName(Object.name)] = {
+						_id: Object.id,
+						Name: Object.name,
+						Type: Object.type,
+						Operations: [],
+						Attributes: []
+				};
+			}
 		}
 		
 		console.log("check instance specifications");
-		console.log(XMIInstanceSpecificationsByID);
-		
-
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("use_case_objects_"+UseCase._id, Objects);
-		
+//		console.log(XMIInstanceSpecificationsByID);
+				
 		console.log("construct the graph based on the associations");
 		for(var i in extensionUseCase.useCaseAssociationsByID){
 			var extensionAssociationByUseCase = extensionUseCase.useCaseAssociationsByID[i];
@@ -214,34 +158,12 @@
 				continue;
 			}
 			
-//			var XMIInstanceSpecification = XMIInstanceSpecificationsByID[i];
-//			console.log(XMIUseCase);
-//			console.log("XMIInstanceSpecifications");
-//			var ConnectedXMIInstanceSpecifications = jp.query(XMIInstanceSpecification, '$..type[?(@[\'$\'][\'xmi:idref\'])]');
-//			XMIAttributesByID = [];
-			
-//			console.log(ConnectedXMIInstanceSpecifications);
-//			var startComponent = ActivitiesByID[XMIInstanceSpecification['$']['xmi:id']];
-			
-//			for(var j in ConnectedXMIInstanceSpecifications){
-//				var ConnectedXMIInstanceSpecificationID = ConnectedXMIInstanceSpecifications[j]['$']['xmi:idref'];
 				var XMIInstanceSpecification = XMIInstanceSpecificationsByID[extensionAssociationByUseCase.start['$']['xmi:idref']];
 				var ConnectedXMIInstanceSpecification = XMIInstanceSpecificationsByID[extensionAssociationByUseCase.end['$']['xmi:idref']];
+			
+//					var component = DomainElementsBySN[domainModelSearchUtil.standardizeName(ConnectedXMIInstanceSpecification['$']['name'])];
+					var component = domainModelSearchUtil.matchDomainElement(ConnectedXMIInstanceSpecification['$']['name'], DomainElementsBySN);
 					
-//					var component = DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])]
-					
-					//matching with components
-					
-//					var matchedResult = domainElementSearchUtil.matchComponent(standardizeName(ConnectedXMIInstanceSpecification['$']['name']), DomainElementsBySN);
-//				
-//					if(!matchedResult.component){
-//						matchedResult.component = {};
-//					}
-				
-					//components are identified from domain elements
-					var component = DomainElementsBySN[standardizeName(ConnectedXMIInstanceSpecification['$']['name'])];
-					
-//					var component = matchedResult.component;
 					if(!component){
 						component = {
 							_id: ConnectedXMIInstanceSpecification['$']['xmi:id'],
@@ -249,6 +171,8 @@
 							Operations: [],
 							Attributes: []
 						};
+						
+						DomainElementsBySN[domainModelSearchUtil.standardizeName(ConnectedXMIInstanceSpecification['$']['name'])] = component;
 					}
 				
 					
@@ -323,138 +247,65 @@
 		
 
 		console.log(PrecedenceRelations);
-		
-//		UseCase.Components = null;
-		
-
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("use_cas_parsed_"+UseCase._id, UseCase);
-		
-		
-//		console.log("checking analysis activities");
-//		console.log(Activities);
-//		console.log(PrecedenceRelations);
-	
-
-//		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
-		
+				
 		//Aishwarya
 
 		if(Activities.length > 0){
 	
 //		const drawer = require('../../model_drawers/UserSystemInteractionModelDrawer.js')
-		drawRobustnessDiagram({Objects:Objects, Dependencies: Dependencies}, UseCase, UseCase.OutputDir+"/robustness_diagram.dotty", () => {
+		drawObjectAnalysisDiagram({Objects:Objects, Dependencies: Dependencies}, UseCase, UseCase.OutputDir+"/robustness_diagram.dotty", () => {
 			console.log('Aishwarya drew the diagram.');
 		});
 		}
 
 		UseCase.Activities = UseCase.Activities.concat(Activities);
 		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(PrecedenceRelations);
-/* 		 drawRobustnessDiagram({
-			Objects:Objects,
-			Dependencies: Dependencies
-		}, UseCase, UseCase.OutputDir+"/uml_diagram.svg", () => {
-			console.log("outputting analysis diagram is finished.");
-		});  */
+
 	}
-	
-
-	function drawBoundaryNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="img/boundary3.png"/></TD></TR>\
-	 <TR><TD>'+label+'</TD></TR>\
-	</TABLE>>];';
-	}
-
-	function drawControlNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="img/control1.png"/></TD></TR>\
-	 <TR><TD>'+label+'</TD></TR>\
-	</TABLE>>];';
-	}
-
-	function drawEntityNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="img/entity1.png"/></TD></TR>\
-	 <TR><TD>'+label+'</TD></TR>\
-	</TABLE>>];';
-	}
-
-		function drawNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
-		<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
-	 <TR><TD><B>'+label+'</B></TD></TR>\
-	</TABLE>>];';
-}
-
-	function drawActorNode(id, label){
-	return id+'[label=<\
-		<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
-		<TR><TD><IMG SRC="img/actor1.png"/></TD></TR>\
-	 <TR><TD>'+label+'</TD></TR>\
-	</TABLE>>];';
-	}
-	//Aishwarya
-
-/*
-		const UseCaseRobust = {
-		Objects: [
-			{
-				id: 1,
-				name: 'Actor1',
-				type: 'Actor'
-			},
-			{
-				id: 2,
-				name: 'Buy tickets interface',
-				type: 'Boundary'
-			},
-			{
-				id: 3,
-				name: 'Payments success message',
-				type: 'Boundary'
-			},
-			{
-				id: 4,
-				name: 'Pay the bill',
-				type: 'Control'
-			},
-			{
-				id: 5,
-				name: 'Save bill records',
-				type: 'Entity'
-			}
-		],
-		Dependencies: [
-			{
-				start: 1,
-				end: 2
-			},
-			{
-				start: 1,
-				end: 3
-			},
-			{
-				start: 2,
-				end: 4
-			},
-			{
-				start: 4,
-				end: 3
-			},
-			{
-				start: 4,
-				end: 5
-			}
-		]
-	};*/
 
 	//update the variables to the correct names.
-		function drawRobustnessDiagram(Components, UseCase, graphFilePath, callbackfunc) {
+	function drawObjectAnalysisDiagram(Components, UseCase, graphFilePath, callbackfunc) {
+		
+		function drawBoundaryNode(id, label){
+			return id+'[label=<\
+				<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+				<TR><TD><IMG SRC="img/boundary3.png"/></TD></TR>\
+			 <TR><TD>'+label+'</TD></TR>\
+			</TABLE>>];';
+			}
+
+			function drawControlNode(id, label){
+			return id+'[label=<\
+				<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+				<TR><TD><IMG SRC="img/control1.png"/></TD></TR>\
+			 <TR><TD>'+label+'</TD></TR>\
+			</TABLE>>];';
+			}
+
+			function drawEntityNode(id, label){
+			return id+'[label=<\
+				<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+				<TR><TD><IMG SRC="img/entity1.png"/></TD></TR>\
+			 <TR><TD>'+label+'</TD></TR>\
+			</TABLE>>];';
+			}
+
+				function drawNode(id, label){
+			return id+'[label=<\
+				<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0" WIDTH="20">\
+				<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
+			 <TR><TD><B>'+label+'</B></TD></TR>\
+			</TABLE>>];';
+		}
+
+			function drawActorNode(id, label){
+			return id+'[label=<\
+				<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
+				<TR><TD><IMG SRC="img/actor1.png"/></TD></TR>\
+			 <TR><TD>'+label+'</TD></TR>\
+			</TABLE>>];';
+			}
+			
   		UseCase.DiagramType = "robustness_diagram";
 		let objects = Components.Objects;
 		let dependencies = Components.Dependencies;
@@ -529,10 +380,6 @@
 					})
 		);
 		return graph;
-	}
- 
-	function standardizeName(name){
-		return name.replace(/\s/g, '').toUpperCase();
 	}
 	
 	module.exports = {

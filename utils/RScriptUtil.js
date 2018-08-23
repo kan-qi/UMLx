@@ -8,6 +8,8 @@
 
 	var debug = require("./DebuggerOutput.js");
 	
+	var libPaths = "C:/Users/flyqk/Documents/R/win-library/3.5;C:/Program Files/R/R-3.5.1/library";
+	
 	//every other functions which call R script should call this function.
 	
 	var commandPool = [];
@@ -33,7 +35,7 @@
 //			console.log("exist program");
 //			process.exit();
 			runningCount++;
-			var child = exec(RExec+" "+commandObject.command, function(error, stdout, stderr) {
+			var child = exec(RExec+" "+commandObject.command, {env: {"R_LIBS_USER": libPaths}}, function(error, stdout, stderr) {
 				if (error) {
 //					console.log('exec error: ' + error);
 					console.log(error);
