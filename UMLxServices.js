@@ -1577,6 +1577,31 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	projectInfo.stableRequirements = req.body['stable_requirements'];
 	projectInfo.partTimeStaff = req.body['part_time_staff'];
 	projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+	
+//	if(isNaN(projectInfo.personnel)){
+//		projectInfo.personnel = null;
+//	}
+//	projectInfo.schedule = Number(req.body['schedule']);
+//	if(isNaN(projectInfo.schedule)){
+//		projectInfo.schedule = null;
+//	}
+//	projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
+//	if(isNaN(projectInfo.hoursPerMonth)){
+//		projectInfo.hoursPerMonth = null;
+//	}
+	
+	if(req.body['personnel']){
+		projectInfo.personnel = Number(req.body['personnel']);
+	}
+	
+	if(req.body['schedule']){
+		projectInfo.schedule = Number(req.body['schedule']);
+	}
+	
+	if(req.body['hours-per-month']){
+		projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
+	}
+
 //	console.log("files");
 //	console.log(req.files);
 	var umlFilePath = req.files['uml_file'][0].path;
