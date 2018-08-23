@@ -81,6 +81,15 @@
 //		modelInfo.predictedDuration = projectDuration;
 //		calculateDistributedDuration(modelInfo, modelInfo.predictedDuration);
 		
+		var availablePersonnel = null;
+		var availableSchedule = null;
+		var hoursPerMonth = null;
+		if(modelInfo.projectInfo){
+			availablePersonnel = modelInfo.projectInfo.personnel;
+			availableSchedule = modelInfo.projectInfo.schedule;
+			hoursPerMonth = modelInfo.projectInfo.hoursPerMonth;
+		}
+		
 		var projectEffortInPMCOCOMO = projectEffort/152;
 		
 		console.log("project effort");
@@ -88,12 +97,38 @@
 		
 		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91));
 		
+		if(availableSchedule && projectDuration > availableSchedule){
+			projectDuration = availableSchedule;
+		}
+		
 		console.log("schedule prediction");
 		console.log(projectDuration);
+		
+		if(!hoursPerMonth){
+			hoursPerMonth = 152;
+		}
 
-		var projectEffortInPM = projectEffort/40;
+		var projectEffortInPM = projectEffort/hoursPerMonth;
+		
 		var personnel = projectEffortInPM/projectDuration;
 		
+		var feasible = true;
+		
+		if(availablePersonnel){
+			if(personnel > availablePersonnel){
+			// try to fit the resource using personnel as invariant.
+			var refitSchedule = projectEffortInPM/personnel;
+			if(refitSchedule > availableSchedule){
+				feasible = false;
+				projectDuration = availableSchedule;
+			} else{
+				projectDuration = refitSchedule;
+			}
+			personnel = availablePersonnel;
+			}
+		}
+		
+		estimationResults.feasible = feasible;
 		
 		console.log("transaction data");
 		console.log(modelInfo['TransactionAnalytics']);
@@ -118,15 +153,15 @@
 			personnel_FS = 1;
 		}
 		
-		personnel = personnel_UI + personnel_DB + personnel_FS;
+//		personnel = personnel_UI + personnel_DB + personnel_FS;
 		
 		estimationResults.Personnel_UI = personnel_UI;
 		estimationResults.Personnel_DB = personnel_DB;
 		estimationResults.Personnel_FS = personnel_FS;
 		
-		estimationResults.Personnel = personnel;
+		estimationResults.Personnel = Math.round(personnel);
 		
-		projectDuration = projectEffortInPM/personnel;
+//		projectDuration = projectEffortInPM/personnel;
 		
 		estimationResults.Duration = projectDuration.toFixed(2);
 		
@@ -152,7 +187,6 @@
 				useCaseEstimates = useCaseEstimatesById[useCase._id];
 			}
 
-
 			useCaseEstimates.SizeMeasurement = Number(useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric]).toFixed(2);
 			
 			var useCaseEffort = (useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
@@ -166,9 +200,37 @@
 
 //			var personnel = projectEffort/12;
 			
-			var useCaseEffortInPM = useCaseEstimate.Effort/40;
+			if(availableSchedule && useCaseDuration > availableSchedule){
+				useCaseDuration = availableSchedule;
+			}
+			
+			var useCaseEffortInPM = useCaseEffort/hoursPerMonth;
 			
 			var useCasePersonnel = useCaseDuration == 0 ? 0 : useCaseEffortInPM/useCaseDuration;
+			
+			useCaseEstimates.feasible = true;
+//			if(availablePersonnel){
+//				if(useCasePersonnel < availablePersonnel){
+//				useCaseEstimates.feasible = false;
+//				}
+//				else{
+//				useCasePersonnel = availablePersonnel;
+//				}
+//			}
+			
+			if(availablePersonnel){
+				if(useCasePersonnel > availablePersonnel){
+				// try to fit the resource using personnel as invariant.
+				var refitSchedule = useCaseEffortInPM/useCasePersonnel;
+				if(refitSchedule > availableSchedule){
+					useCaseEstimates.feasible = false;
+					useCaseDuration = availableSchedule;
+				} else{
+					useCaseDuration = refitSchedule;
+				}
+				useCasePersonnel = availablePersonnel;
+				}
+			}
 			
 //			var useCase = modelInfo.UseCases[i];
 //			useCaseEstimates.Duration = projectDuration/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
@@ -182,10 +244,12 @@
 //				useCaseEstimates.Personnel = useCasePersonnel.toFixed(2);
 //				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
+			
 				
-				var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
-				var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
-				var personnel_FS_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCaseEstimates.Personnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+				
+				var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
+				var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
+				var personnel_FS_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
 
 				personnel_UI = Math.round(personnel_UI_estimated);
 				personnel_DB = Math.round(personnel_DB_estimated);
@@ -203,16 +267,16 @@
 					personnel_FS = 1;
 				}
 				
-				personnel = personnel_UI + personnel_DB + personnel_FS;
+				useCasePersonnel = personnel_UI + personnel_DB + personnel_FS;
 				
-				useCaseEstimates.Personnel = personnel;
+				useCaseEstimates.Personnel = Math.round(useCasePersonnel);
 				
 				useCaseEstimates.Personnel_UI = personnel_UI;
 				useCaseEstimates.Personnel_DB = personnel_DB;
 				useCaseEstimates.Personnel_FS = personnel_FS;
 
 				
-				useCaseDuration = useCaseEffortInPM / personnel;
+//				useCaseDuration = useCaseEffortInPM / personnel;
 				useCaseEstimates.Duration = useCaseDuration.toFixed(2);
 
 				useCaseEstimates.Effort = useCaseEffort.toFixed(2);

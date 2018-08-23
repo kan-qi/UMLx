@@ -210,16 +210,21 @@ html
                 // Page3
                 #page3.hidden
                     .alert.alert-info
-                        | Project model file and documents
+                        | Resource estimation
+                        
                     .form-group
-                        label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
-                        .col-xs-8
-                            input#uml_file.form-control(type='file', name='uml_file', accept='text/xml')
+                       label.control-label(style='text-align:left').col-xs-2(for='personnel') Personnel
+                       .col-xs-10
+                           input#uml-model-name.form-control(type='text', placeholder='Number of team members', name='personnel')
                     .form-group
-                        label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
-                        .col-xs-8
-                            input#uml_other.form-control(type='file', name='uml_other')
-
+                       label.control-label(style='text-align:left').col-xs-2(for='schedule') Schedule (Monthes) 
+                       .col-xs-10
+                           input#uml-model-name.form-control(type='text', placeholder='Required time span of the project in monthes.', name='schedule')
+                    .form-group
+                       label.control-label(style='text-align:left').col-xs-2(for='hours-per-month') Hours/Month
+                       .col-xs-10
+                           input#project-effort.form-control(type='text', placeholder='Average number of working hours per month for team members, for example, 160 horus for full number members, 20 hours for part-time developers, etc.', name='hours-per-month')
+                   
                     input#uuid-page3(type='hidden', name='uuid-page3', value='')
 
                     .form-group
@@ -230,11 +235,21 @@ html
                 //Page 4
                 #page4.hidden
                     .alert.alert-info
-                        | Select Estimator
+                        | Project model file and documents
+                        
+                     .form-group
+                        label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
+                        .col-xs-8
+                            input#uml_file.form-control(type='file', name='uml_file', accept='text/xml')
+                    .form-group
+                        label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
+                        .col-xs-8
+                            input#uml_other.form-control(type='file', name='uml_other')
 
                     .form-group
-                        label.control-label(for='model') Select Estimator
-                        select#model.estimation-form-control(name='model')
+                        label.control-label.col-xs-4(for='model') Select Estimator
+                        .col-xs-8
+                         select#model.estimator-selection-form-control(name='model')
                           option(value="eucp_lm") EUCP
                           option(value="exucp_lm") EXUCP
                           option(value="ducp_lm") DUCP
