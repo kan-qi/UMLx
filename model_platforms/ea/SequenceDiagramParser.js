@@ -18,8 +18,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		var startActivity = null;
 		var endActivity = null;
 		
-		console.log("process combined fragment");
-		console.log(XMICombinedFragment['$']['xmi:id']);
+		// console.log("process combined fragment");
+		// console.log(XMICombinedFragment['$']['xmi:id']);
 		
 		var XMIFragmentOperator = XMICombinedFragment.$.interactionOperator;
 		
@@ -27,9 +27,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				Type: "fragment_start",
 				Name: XMIFragmentOperator+"_start",
 				_id: XMICombinedFragment['$']['xmi:id']+"_start",
-//				Attachment: XMICombinedFragment,
 				Group: "System",
-//				Stimulus: false,
 				OutScope: false
 		};
 
@@ -37,9 +35,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				Type: "fragment_end",
 				Name: XMIFragmentOperator+"_end",
 				_id: XMICombinedFragment['$']['xmi:id']+"_end",
-//				Attachment: XMICombinedFragment,
 				Group: "System",
-//				Stimulus: false,
 				OutScope: false
 		};
 		
@@ -56,8 +52,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			var XMIOccurrences = jp.query(XMIOperand, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
 			var SDCFG = constructSDCFG(XMIOperand,XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN, CustomProfiles);
 			
-			console.log("process fragments");
-			console.log(SDCFG);
+//			console.log("process fragments");
+//			console.log(SDCFG);
 			
 			//deal with the corner cases, if there are some empty fragements.
 			if(SDCFG.Activities.length > 0){
@@ -115,11 +111,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		var endActivity = null;
 
 		console.log("occurence at interaction level");
-//		console.log(DomainElementsBySN);
-//		console.log("occurrence");
-//		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\')]');
 		var XMIOccurrences = jp.query(XMIInteraction, '$.fragment[?(@[\'$\'][\'xmi:type\']==\'uml:OccurrenceSpecification\' || @[\'$\'][\'xmi:type\']==\'uml:CombinedFragment\')]');
-//		console.log(XMIOccurrences);
 		
 		var preActivity = null;
 		
@@ -128,14 +120,13 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 			
 			if(XMIOccurrence['$']['xmi:type'] === "uml:OccurrenceSpecification"){
 				var XMIOccurrence1 = XMIOccurrence;
-				console.log(XMIOccurrence1);
+				// console.log(XMIOccurrence1);
 				var XMILifelineID1 = XMIOccurrence1.$.covered;
 				var XMILifeline1 = XMILifelinesByID[XMILifelineID1];
 //				XMILifeline1 = XMILifeline;
 				
 				//create domain model elements
 				if(XMILifeline1 && !domainModelSearchUtil.matchDomainElement(XMILifeline1['$']['name'], DomainElementsBySN)){
-//				if(XMILifeline1 && !DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifeline1['$']['name'])]){
 					DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifeline1['$']['name'])] = {
 						Name: XMILifeline1['$']['name'],
 						_id: XMILifeline1['$']['xmi:id'],
@@ -147,10 +138,8 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				var XMIOccurrence2 = XMIOccurrences[i++];
 				var XMILifelineID2 = XMIOccurrence2.$.covered;
 				var XMILifeline2 = XMILifelinesByID[XMILifelineID2];
-//				XMILifeline2 = XMILifeline;
 				
 				if(XMILifeline2 && !domainModelSearchUtil.matchDomainElement(XMILifeline2['$']['name'], DomainElementsBySN)){
-//				if(XMILifeline2 && !DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifeline2['$']['name'])]){
 					DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifeline2['$']['name'])] = {
 						Name: XMILifeline2['$']['name'],
 						_id: XMILifeline2['$']['xmi:id'],
@@ -159,12 +148,11 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					}
 				}
 				
-				if(XMILifeline2.isActor){
-					group = XMILifelinesByID[XMILifelineID2]['$']['name'];
-				}
+				// if(XMILifeline2.isActor){
+				// 	group = XMILifelinesByID[XMILifelineID2]['$']['name'];
+				// }
 				
 				var XMIMessage = XMIMessagesByOccurrences[XMIOccurrence1['$']["xmi:id"]+">"+XMIOccurrence2['$']["xmi:id"]];
-//				XMIMessages.push(XMIMessage);
 				
 				if(XMIMessage['$']['messageSort'] !== "synchCall"){
 					continue;
@@ -182,7 +170,6 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					}
 				}
 				
-//				var component = DomainElementsBySN[domainModelSearchUtil.standardizeName(XMILifelinesByID[XMILifelineID2]['$']['name'])];
 				
 				var component = domainModelSearchUtil.matchDomainElement(XMILifelinesByID[XMILifelineID2]['$']['name'], DomainElementsBySN);
 				
@@ -202,16 +189,10 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 						Type: "message",
 						Name: XMIMessage['$']['name'],
 						_id: XMIMessage['$']['xmi:id'],
-//						Stimulus: false,
 						Group: "System",
 						OutScope: outScope,
 						Component: component,
-//						MatchedMethod: matchedResult.method
-//						Attachment: XMIMessage
 				}
-				
-//				nextActivity.sender = XMILifeline1;
-//				nextActivity.receiver = XMILifeline2;
 				
 				nextActivity.sender = XMILifelineID1;
 				nextActivity.receiver = XMILifelineID2;
@@ -226,7 +207,6 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 					nextActivity.Component.Type = "actor";
 				}
 
-//				UseCase.Activities.push(nextActivity);
 				activities.push(nextActivity);
 				
 				if(preActivity){
@@ -234,7 +214,6 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 
 				}
 				else{
-//					UseCase.PrecedenceRelations.push({start: preActivity, end: nextActivity});
 					precedenceRelations.push({start: preActivity, end: nextActivity});
 				}
 				}
@@ -250,14 +229,13 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 				
 				var innerCombinedFragment = processCombinedFragment(XMIOccurrence, XMILifelinesByID, XMIMessagesByOccurrences, containingOperators, DomainElementsBySN, CustomProfiles);
 				
-				console.log("process combined fragment");
-				console.log(innerCombinedFragment);
+				// console.log("process combined fragment");
+				// console.log(innerCombinedFragment);
 				
 				//deal with some corner cases, if there are some empty fragments.
 				
 				if(innerCombinedFragment.Activities.length > 0){
 				if(preActivity){
-//				UseCase.PrecedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
 				precedenceRelations.push({start: preActivity, end: innerCombinedFragment.startActivity});
 				}
 				
@@ -420,7 +398,6 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 						Type: "Stimulus",
 						Name: "stl#"+activity.Name,
 						_id: activity._id+"_STL",
-//						Attachment: XMIActivity,
 						Stimulus: true,
 						OutScope: false,
 						Group:  activity.stimulusGroup

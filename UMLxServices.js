@@ -1991,32 +1991,32 @@ app.get('/', function(req, res){
 
 });
 
-var testingParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
-app.get('/testFunctions', function(req, res){
-	testingParser.extractDiagramModels("./vp_xml_export.xml/project.xml", function(data){
-		console.log ('the output data', JSON.stringify(data));
-		res.json(data);
-	})
-});
+//var testingParser = require('./model_platforms/visual_paradigm/XML2.1Parser.js');
+//app.get('/testFunctions', function(req, res){
+//	testingParser.extractDiagramModels("./vp_xml_export.xml/project.xml", function(data){
+//		console.log ('the output data', JSON.stringify(data));
+//		res.json(data);
+//	})
+//});
 
-var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parser.js")
-app.get('/testSequenceDiagramExtraction', function(req, res){
-	sequenceDiagramParser.extractSequenceDiagrams("./temp/test_example.xml", function(sequenceDiagrams){
-		res.json(sequenceDiagrams);
-	});
-});
-
-app.get('/testRobustnessDiagramExtraction', function(req, res){
-	sequenceDiagramParser.extractRobustnessDiagrams("./temp/test_example.xml", function(robustnessDiagrams){
-		res.json(robustnessDiagrams);
-	});
-});
-
-app.get('/testActivityDiagramExtraction', function(req, res){
-	sequenceDiagramParser.extractActivityDiagrams("./temp/test_example.xml", function(activityDiagrams){
-		res.json(activityDiagrams);
-	});
-});
+//var sequenceDiagramParser = require("./model_platforms/ea/XMI2.1Parser.js")
+//app.get('/testSequenceDiagramExtraction', function(req, res){
+//	sequenceDiagramParser.extractSequenceDiagrams("./temp/test_example.xml", function(sequenceDiagrams){
+//		res.json(sequenceDiagrams);
+//	});
+//});
+//
+//app.get('/testRobustnessDiagramExtraction', function(req, res){
+//	sequenceDiagramParser.extractRobustnessDiagrams("./temp/test_example.xml", function(robustnessDiagrams){
+//		res.json(robustnessDiagrams);
+//	});
+//});
+//
+//app.get('/testActivityDiagramExtraction', function(req, res){
+//	sequenceDiagramParser.extractActivityDiagrams("./temp/test_example.xml", function(activityDiagrams){
+//		res.json(activityDiagrams);
+//	});
+//});
 
 //app.get('/testCOCOMODataLoad', function(req, res){
 //	var cocomoCalculator = require("./evaluators/COCOMOEvaluator/COCOMOCalculator.js")
