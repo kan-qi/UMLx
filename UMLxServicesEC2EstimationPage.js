@@ -276,7 +276,9 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 });
 
 app.get('/signup',function(req,res){
-
+	res.redirect('/estimationPage');
+	return;
+	
 	if(req.query.tk!=null && req.query.tk!=undefined){
 		res.render('signup', {tk:req.query.tk});
 	} else {
@@ -285,8 +287,8 @@ app.get('/signup',function(req,res){
 });
 
 app.get('/login',function(req,res){
-	res.render('login');
-//	res.redirect('/surveyproject');
+//	res.render('login');
+	res.redirect('/estimationPage');
 });
 
 app.get('/logout',function(req,res){
@@ -300,7 +302,7 @@ app.get('/logout',function(req,res){
 app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
 
 //	res.end("error");
-//	return;
+	return;
 
 	var username = req.body['username'];
 	var pwd = req.body['password'];
@@ -319,18 +321,18 @@ app.get('/logout', function (req, res) {
 })
 
 
-app.post('/updateModel', function (req, res){
-
-   // var obj = JSON.parse(JSON.stringify(req.body));
-    var modelInfo = req.body;
-    //JSON.parse(modelInfo);
-    console.log(modelInfo);
-    var repoID = modelInfo.rep_id;
-	umlModelInfoManager.updateModelInfo(modelInfo, repoID, function(result,message){
-        res.json(result);
-        console.log("UpdateModel Finished");
-    });
-})
+//app.post('/updateModel', function (req, res){
+//
+//   // var obj = JSON.parse(JSON.stringify(req.body));
+//    var modelInfo = req.body;
+//    //JSON.parse(modelInfo);
+//    console.log(modelInfo);
+//    var repoID = modelInfo.rep_id;
+//	umlModelInfoManager.updateModelInfo(modelInfo, repoID, function(result,message){
+//        res.json(result);
+//        console.log("UpdateModel Finished");
+//    });
+//})
 
 
 app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'token',maxCount : 1}]),  function (req, res){
@@ -386,102 +388,6 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 
 })
 
-app.get('/surveyProject', function(req, res){
-	res.render('surveyProject');
-});
-
-//app.get("/getModelInfoStatiscs", function(req, res){
-//	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
-////		var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
-////		umlModelExtractor.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
-////		//update model analytics.
-//if(!modelInfoVersion){
-//	res.end("error");
-//	return;
-//}
-//////		console.log(modelInfo);
-////		umlEvaluator.evaluateModel(modelInfoVersion, function(){
-////			console.log("model analysis complete");
-////		});
-////
-////		umlModelInfoManager.pushModelInfoVersion(modelId, repoId, modelInfoVersion, function(modelInfo){
-//////			console.log(modelInfo);
-//			if(!modelInfo){
-//				res.end('model doesn\'t exist!');
-//			}
-//////			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:repoId});
-////		});
-//
-//	});
-//});
-//
-//app.get("getRepoInfoStatistics", function(req, res){
-//	
-//});
-
-app.get('/clearDB', function(req, res){
-	var userId = req.query.user_id;
-	if(userId === "flyqk191829189181810282"){
-	umlModelInfoManager.clearDB(function(result){
-		res.end('database is clear');
-	    });
-	}
-})
-
-
-app.get('/setupRepoStorage', function(req, res){
-	var userId = req.query.user_id;
-	if(userId === "flyqk191829189181810282"){
-	umlModelInfoManager.setupRepoStorage(function(){
-		res.end('database is set up');
-	    });
-	}
-})
-
-app.get('/clearRepo', function(req, res){
-	var userId = req.query.user_id;
-	if(userId === "flyqk191829189181810282"){
-	umlModelInfoManager.setupRepoStorage(function(){
-		res.end('database is set up');
-	    });
-	}
-})
-
-
-app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxCount: 1}, {name: 'requirements', maxCount:1},
-	{name: 'use_cases', maxCount: 1}, {name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
-	console.log(req.body);
-	var formInfo = req.body;
-
-	console.log("==========req.files=============");
-    console.log(req.files);
-
-    // save the file names in DB
-    // formInfo.project_plans = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
-    // formInfo.requirements = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
-    // formInfo.use_cases = (umlSurveyFiles[2]==undefined) ? "" : umlSurveyFiles[2];
-    // formInfo.uml_file = (umlSurveyFiles[3]==undefined) ? "" : umlSurveyFiles[3];
-    // formInfo.uml_other = (umlSurveyFiles[4]==undefined) ? "" : umlSurveyFiles[4];
-
-    formInfo.project_plans = (req.files.project_plans==undefined) ? "" : Date.now()+ "-" + req.files.project_plans[0].originalname;
-    formInfo.requirements = (req.files.requirements==undefined) ? "" : Date.now()+ "-" + req.files.requirements[0].originalname;
-    formInfo.use_cases = (req.files.use_cases==undefined) ? "" : Date.now()+ "-" + req.files.use_cases[0].originalname;
-    formInfo.uml_file = (req.files.uml_file==undefined) ? "" : Date.now()+ "-" + req.files.uml_file[0].originalname;
-    formInfo.uml_other = (req.files.uml_other==undefined) ? "" : Date.now()+ "-" + req.files.uml_other[0].originalname;
-
-    console.log('=================formInfo==================');
-    console.log(formInfo);
-
-	umlModelInfoManager.saveSurveyData(formInfo);
-	res.redirect("thankYou");
-});
-
-
-app.get('/thankYou', function(req, res){
-	res.render('thankYou');
-});
-
-
 
 //route middleware to verify a token
 app.use(function(req, res, next) {
@@ -529,6 +435,107 @@ app.use(function(req, res, next) {
 	}
 
 });
+
+app.get('/surveyProject', function(req, res){
+	
+	res.redirect('/estimationPage');
+	return;
+	
+	res.render('surveyProject');
+});
+
+//app.get("/getModelInfoStatiscs", function(req, res){
+//	umlModelInfoManager.queryModelInfo(modelId, repoId, function(modelInfo){
+////		var modelInfoVersion = umlModelInfoManager.createModelInfoVersion(umlFileInfo, modelInfo);
+////		umlModelExtractor.extractModelInfo(modelInfoVersion, function(modelInfoVersion){
+////		//update model analytics.
+//if(!modelInfoVersion){
+//	res.end("error");
+//	return;
+//}
+//////		console.log(modelInfo);
+////		umlEvaluator.evaluateModel(modelInfoVersion, function(){
+////			console.log("model analysis complete");
+////		});
+////
+////		umlModelInfoManager.pushModelInfoVersion(modelId, repoId, modelInfoVersion, function(modelInfo){
+//////			console.log(modelInfo);
+//			if(!modelInfo){
+//				res.end('model doesn\'t exist!');
+//			}
+//////			res.render('modelAnalytics', {modelAnalytics:modelInfo.ModelAnalytics, repo_id:repoId});
+////		});
+//
+//	});
+//});
+//
+//app.get("getRepoInfoStatistics", function(req, res){
+//	
+//});
+
+
+app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxCount: 1}, {name: 'requirements', maxCount:1},
+	{name: 'use_cases', maxCount: 1}, {name: 'uml_file', maxCount: 1}, {name: 'uml_other', maxCount:1}]), function (req, res){
+	
+	console.log(req.body);
+	var formInfo = req.body;
+
+	console.log("==========req.files=============");
+    console.log(req.files);
+
+    // save the file names in DB
+    // formInfo.project_plans = (umlSurveyFiles[0]==undefined) ? "" : umlSurveyFiles[0];
+    // formInfo.requirements = (umlSurveyFiles[1]==undefined) ? "" : umlSurveyFiles[1];
+    // formInfo.use_cases = (umlSurveyFiles[2]==undefined) ? "" : umlSurveyFiles[2];
+    // formInfo.uml_file = (umlSurveyFiles[3]==undefined) ? "" : umlSurveyFiles[3];
+    // formInfo.uml_other = (umlSurveyFiles[4]==undefined) ? "" : umlSurveyFiles[4];
+
+    formInfo.project_plans = (req.files.project_plans==undefined) ? "" : Date.now()+ "-" + req.files.project_plans[0].originalname;
+    formInfo.requirements = (req.files.requirements==undefined) ? "" : Date.now()+ "-" + req.files.requirements[0].originalname;
+    formInfo.use_cases = (req.files.use_cases==undefined) ? "" : Date.now()+ "-" + req.files.use_cases[0].originalname;
+    formInfo.uml_file = (req.files.uml_file==undefined) ? "" : Date.now()+ "-" + req.files.uml_file[0].originalname;
+    formInfo.uml_other = (req.files.uml_other==undefined) ? "" : Date.now()+ "-" + req.files.uml_other[0].originalname;
+
+    console.log('=================formInfo==================');
+    console.log(formInfo);
+
+	umlModelInfoManager.saveSurveyData(formInfo);
+	res.redirect("thankYou");
+});
+
+
+app.get('/thankYou', function(req, res){
+	res.render('thankYou');
+});
+
+
+app.get('/clearDB', function(req, res){
+	var userId = req.query.user_id;
+	if(userId === "flyqk191829189181810282"){
+	umlModelInfoManager.clearDB(function(result){
+		res.end('database is clear');
+	    });
+	}
+})
+
+
+app.get('/setupRepoStorage', function(req, res){
+	var userId = req.query.user_id;
+	if(userId === "flyqk191829189181810282"){
+	umlModelInfoManager.setupRepoStorage(function(){
+		res.end('database is set up');
+	    });
+	}
+})
+
+app.get('/clearRepo', function(req, res){
+	var userId = req.query.user_id;
+	if(userId === "flyqk191829189181810282"){
+	umlModelInfoManager.setupRepoStorage(function(){
+		res.end('database is set up');
+	    });
+	}
+})
 
 app.get('/savegitinfo', function(req,res){
 	

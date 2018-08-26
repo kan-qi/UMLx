@@ -115,6 +115,62 @@
                     
                     
         }
+        
+        
+function queryTempRepoInfo(callbackfunc){
+	
+	var tempRepoIDStorePath = "./tempRepoIDStore";
+	
+	MongoClient.connect(url, function(err, db) {
+	if (err) throw err;    
+	var createTempRepo = function(callbackfunc){
+		var repoInfo = {};
+	    db.collection("repos").insertOne(repoInfo, function(err, result) {
+	    if (err) throw err;
+	    console.log("1 record inserted");
+//init reqo information
+
+	    var repoId = repoInfo._id;
+
+	    repoInfo  = initRepoEntity(repoId);
+
+	    var o_id = new mongo.ObjectID(repoId);
+
+         db.collection("repos").update({_id:o_id}, repoInfo, function(){
+        	 
+        	 
+        	 umlFileManager.writeFile(tempRepoIDStorePath, repoInfo._id, function(path){
+        		 	if(callbackfunc){
+        		 		callbackfunc(repoInfo._id);
+        		 	}
+        	 })
+
+         });
+
+     });
+	}
+	
+	umlFileManager.readFile(tempRepoIDStorePath, function(tempRepoID){
+		if(!tempRepoID){
+			createTempRepo(function(tempRepoID){
+				queryRepoInfo(tempRepoID, function(repoInfo){
+					if(callbackfunc){
+						callbackfunc(repoInfo);
+					}
+				});
+			})
+		}
+		else{
+			queryRepoInfo(tempRepoID, function(repoInfo){
+			if(callbackfunc){
+				callbackfunc(repoInfo);
+			}
+		});
+		}
+	
+	});
+	});
+}
 	
 function deleteRepo(repoId, callbackfunc) {  
   var modelQuery = {repo_id: mongo.ObjectID(repoId)};        
@@ -422,8 +478,6 @@ function deleteRepo(repoId, callbackfunc) {
     function updateRepoInfoOnly(repo, callbackfunc){
     	
     }
-    
-    
 
 	// function queryModelAnalytics(modelId, repoId, callbackfunc, update){
 			//			/*
@@ -502,6 +556,7 @@ function deleteRepo(repoId, callbackfunc) {
     function saveModelInfoCharacteristics (characteristicsInfo,callbackfunc){
     	MongoClient.connect(url, function(err, db)
    	            {
+    		
     		MongoClient.connect(url, function(err, db)
     				   	            {
     			   if (err) throw err;
@@ -702,11 +757,18 @@ function deleteRepo(repoId, callbackfunc) {
                 }
             ], function(err, result) 
             {
-               if (err) throw err;
-               console.log("*******Shown result for queryRepoInfo*******");
-			   console.log(result[0]);
-               console.log("*******Shown result for ModelInfo*******");               
-               db.close();
+                db.close();
+
+            	if (err){
+            	   console.log(err)
+            	   if(callbackfunc){
+            		   callbackfunc(false);
+            	   }
+            	   return;
+               }
+//               console.log("*******Shown result for queryRepoInfo*******");
+//			   console.log(result[0]);
+//               console.log("*******Shown result for ModelInfo*******");               
 
                // result[0].UnusedModels = [];
 
@@ -1549,13 +1611,7 @@ function deleteRepo(repoId, callbackfunc) {
 
                         db.collection("repos").update({_id:o_id}, repoInfo, function(){
 
-                            var user_o_id = new mongo.ObjectID(userId)
-                            user.repoId = repoId;
-                            // when u create a repo assign it to the specified user
-                            db.collection("users").update({_id: user_o_id}, user , function(){
-                                db.close();
-                                callbackfunc(repoInfo);
-                            })
+                          
 
                         });
 
@@ -2152,7 +2208,8 @@ function deleteRepo(repoId, callbackfunc) {
         queryFullRepoInfo: queryFullRepoInfo,
         requestRepoBrief: requestRepoBrief,
         queryAllModelBrief: queryAllModelBrief,
-        queryAllModelNames: queryAllModelNames
+        queryAllModelNames: queryAllModelNames,
+        queryTempRepoInfo: queryTempRepoInfo
     }
 	
 }());
