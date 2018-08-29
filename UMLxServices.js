@@ -158,7 +158,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
                 effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
                     if(!estimationResults){
                         console.log("error");
-                        res.render('estimationResultPane', {error: "inter process error"});
+                        res.render('estimationResultPaneSimplified', {error: "inter process error"});
                         return;
                     }
 
@@ -171,7 +171,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
                     umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 
 
-                        res.render('estimationResultPane', {estimationResults:estimationResults, modelInfo: modelInfo});
+                        res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
 
                     });
 

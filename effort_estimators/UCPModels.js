@@ -165,6 +165,8 @@
 		
 		estimationResults.Duration = projectDuration.toFixed(2);
 		
+		estimationResults.HoursPerMonth = hoursPerMonth;
+		
 		var useCaseEstimatesById = {};
 		
 		for(var i in estimationResults.UseCases){

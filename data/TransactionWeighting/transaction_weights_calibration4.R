@@ -313,7 +313,7 @@ calcWn <- function(Vn, sigma, means, variance, lmfit) {
 }
 
 
-bayesfit<-function(lmfit, N) {
+bayesfit<-function(lmfit, N, normFactor) {
 	# Function to compute the bayesian analog of the lmfit using Gaussian
 	# priors and Monte Carlo scheme based on N samples. Adapted from:
 	# https://www.r-bloggers.com/bayesian-linear-regression-analysis-without-tears-r/
