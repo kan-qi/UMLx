@@ -89,9 +89,6 @@
 									transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
 								}
 								
-								
-								debug.writeJson("useCase_"+useCase.Name, useCase);
-								
 								modelDrawer.drawPrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase.dotty", function(){
 
 									console.log("use case is drawn");
