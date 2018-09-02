@@ -67,16 +67,32 @@ discretize <- function(data, n) {
 	# Returns:
 	#   A vector of cut points
   
-  #n = 4
-  #data = combinedData[, "TL"]
-  
+  #n = 6
+  #data = combined[, "DETs"]
+  #data  = c(10,20,30,40)
+  #print(data)
 	if (n <= 1) {
 		return(c(-Inf, Inf))
 	}
+  #n = 6
 	quantiles <- seq(1/n, 1 - (1/n), 1/n)
-	cutPoints <- qnorm(quantiles, mean(data), sd(data), lower.tail = TRUE)
-	#cutPoints <- quantile(data, quantiles)
+	#quantiles <- c(0.11, 0.14, 0.32, 0.45, 0.65)
+	#print(quantiles)
+	#cutPoints <- qnorm(quantiles, mean(data), sd(data), lower.tail = TRUE)
+	#cutPoints <- quantile(data, probs = quantiles, type = 1)
+	#cutPoints <- c(-Inf, cutPoints, Inf)
+	#print(cutPoints)
+	
+	fit.gamma <- fitdist(data, distr = "gamma", method = "mle", lower = c(0, 0))
+	# Check result
+	shape = coefficients(fit.gamma)["shape"]
+	rate = coefficients(fit.gamma)["rate"]
+	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
+	#print(cutPoints)
+	
+	#par(mar = rep(2, 4))
+	#plot(fit.gamma)
 }
 
 classify <- function(data, cutPoints) {
@@ -175,7 +191,7 @@ calcPRED <- function(testData, pred, percent) {
   mean(pred_value)
 }
 
-crossValidate <- function(data, k, means, covar, normFactor, var) {
+crossValidate <- function(data, k) {
 	# Performs k-fold cross validation with Bayesian linear regression as training 
   # method.
 	#
@@ -201,7 +217,18 @@ crossValidate <- function(data, k, means, covar, normFactor, var) {
 		trainData <- data[-testIndexes, ]
 		# Normalize effort data
 		#trainData$Effort = trainData$Effort
-		bayesianModel <- bayesfit3(trainData, 10000, means, covar, normFactor, var)
+		levels = length(trainData) - 1
+		normFactor <- calNormFactor(trainData, levels)
+		#print(normFactor)
+		
+		#normalizedData <- regressionData[rownames(regressionData) != "Aggregate", ]
+		#normalizedData$Effort <- normalizedData$Effort/normFactor
+		#bayesianModel <- bayesfit(lm(Effort ~ . - 1, normalizedData), 1000)
+		
+		means <- genMeans(levels)
+		#print(means)
+		covar <- genVariance(means, 1)
+		bayesianModel <- bayesfit3(trainData, 10000, means, covar, normFactor["mean"], normFactor['var'])
 		predicted <- predict.blm(bayesianModel, newdata = testData)
 		foldMSE[i] <- mean((predicted - testData$Effort)^2)
 		foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
@@ -404,7 +431,9 @@ prior <- function(sample, B, varianceMatrix, normFactor, var){
   prior['normFactor'] = dunif(sample["normFactor"], min=0, max=15, log = T)
   prior[names(B)] <- dmvnorm(sample[names(B)], B, varianceMatrix, log=T)
   #prior['sd'] <- dinvgamma(sample["sd"], 0.1, 0.1, log=T)
-  prior['sd'] <- dunif(sample["sd"], min=0, max=30, log = T)
+  #prior['sd'] <- dunif(sample["sd"], min=0, max=30, log = T)
+  #Jeffrey's prior
+  prior['sd'] <- log(1/sample['sd'])
   
   return(prior['normFactor']+sum(prior[names(B)])+prior['sd'])
 }
@@ -421,10 +450,10 @@ proposalfunction <- function(B, normFactor, sd){
   #sd <- 10
   sample <- rep(0, length(B)+2)
   names(sample) <- c(names(B), "normFactor", "sd")
-  sigma <- rep(0.5, length(B))
+  sigma <- rep(0.1, length(B))
   sample[names(B)] <- rnorm(length(B),mean = B, sd = sigma)
-  sample["normFactor"] <- rnorm(1, 5, 0.1)
-  sample['sd'] <- rnorm(1, sd, 0.3)
+  sample["normFactor"] <- rnorm(1, normFactor, 0.1)
+  sample['sd'] <- rnorm(1, sd, 3)
   return(sample)
 }
 
@@ -446,10 +475,10 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
     probab = exp( update - posterior)
     if (runif(1) < probab){
       chain[i+1,] = proposal
-      print("accept")
+      #print("accept")
     }else{
       chain[i+1,] = chain[i,]
-      print("not accept")
+      #print("not accept")
     }
   }
   return(chain)
@@ -481,6 +510,8 @@ bayesfit3<-function(regressionData, N, B, varianceMatrix, normFactor, var){
   #plot(chain[-(1:burnIn),1], type = "l", xlab="True value = red line" , main = "Chain values of a", )
   #plot(chain[-(1:burnIn),2], type = "l", xlab="True value = red line" , main = "Chain values of b", )
   #plot(chain[-(1:burnIn),3], type = "l", xlab="True value = red line" , main = "Chain values of sd", )
+  
+  print(acceptance)
   
   return(ret)
   
@@ -642,7 +673,6 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
   #transactionFiles = transactionFiles
   #parameters = c("TL", "TD")
   #k = 5
-  #i = 3
   
   projects <- rownames(effortData)
   combinedData <- combineData(transactionFiles)
@@ -696,9 +726,10 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
     covar <- genVariance(means, 1)
     bayesianModel <- bayesfit3(regressionData[rownames(regressionData) != "Aggregate", ], 10000, means, covar, normFactor['mean'], normFactor['var'])
     
-    validationResults <- crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k, means, covar, normFactor['mean'], normFactor['var'])
+    validationResults <- crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k)
     #validationResults <- crossValidate(regressionData, k, means, covar, normFactor['mean'], normFactor['var'])
     
+    print(cutPoints)
     #print("cross validation")
     searchResults[[i]] <- list(MSE = validationResults["MSE"], 
                                MMRE = validationResults["MMRE"], 
