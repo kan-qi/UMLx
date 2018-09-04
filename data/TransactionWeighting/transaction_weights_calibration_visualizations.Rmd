@@ -13,6 +13,7 @@ library(tidyverse)
 library(fitdistrplus)
 library(egg)
 library(gridExtra)
+library(plyr)
 
 cutsAsVec <- function(x) {
   ret <- c("Cut Points:")
@@ -68,19 +69,21 @@ ggplot(count.modelData, aes(unique.levels, count)) +
 ggplot(combined, aes(x=TL)) + 
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TL), sd(combined$TL))) + 
-  #stat_function(fun = dgamma, args = list(shape=6.543586, rate=1.160249)) + 
+  stat_function(fun = dgamma, args = list(shape=6.543586, rate=1.160249)) + 
   xlab("TL") + ggtitle("Combined TL Data Summary") + 
   theme_bw()
 
 ggplot(combined, aes(x=TD)) + 
   geom_histogram(aes(y = ..density..), binwidth=0.5, colour="black", fill="white") + 
-  #stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) + 
+  #stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) +
+  stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) + 
   xlab("TD") + ggtitle("Combined TD Data Summary") + 
   theme_bw()
 
 ggplot(combined, aes(x=DETs)) + 
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$DETs), sd(combined$DETs))) + 
+  stat_function(fun = dgamma, args = list(shape=1.6647412, rate=0.1691911)) + 
   xlab("DETs") + ggtitle("Combined DETs Data Summary") + 
   theme_bw()
 
@@ -190,24 +193,27 @@ for (i in 1:length(SWTIresults)) {
 
 categorizedTransactions = matrix(nrow=0, ncol=3)
 colnames(categorizedTransactions) <- c("Counts", "Bins", "Classification")
-k = 1
+
 for (i in 1:length(SWTIresults)) {
   result <- SWTIresults[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
+  rownames(df) <- c(paste("b", seq(1, nrow(df)), sep=""))
   #print(rep(paste(i, "Bins", sep=" "), nrow(df)))
   mergedTransactionCounts = cbind(as.matrix(rowSums(df)), rownames(df), rep(paste(i, "Bins", sep=" "), nrow(df)))
   rownames(mergedTransactionCounts) <- NULL
   categorizedTransactions <- rbind(categorizedTransactions, mergedTransactionCounts)
-
 }
-  print(categorizedTransactions)
+  #print(categorizedTransactions)
+
+categorizedTransactions = as.data.frame(categorizedTransactions)
+categorizedTransactions$Counts <- as.numeric(as.character(categorizedTransactions$Counts))
   
-   g <- ggplot(data = as.data.frame(categorizedTransactions), aes(x = Bins, y = Counts)) + 
+   g <- ggplot(data = categorizedTransactions, aes(x = Bins, y = Counts)) + 
     geom_bar(stat = "identity") +
       facet_wrap(. ~ Classification, scales = "free", nrow=2)+
     xlab("Bins") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))+
+    ggtitle(paste("Discretization Results:", i, "bins"))+
     theme_bw(base_size=12)
   print(g)
   
@@ -276,10 +282,10 @@ for (i in 1:length(SWTIresults)) {
 
 SWTI Search Results II
 ```{r swti part II}
-SWTIresults <- performSearch(6, effort, transactionFiles, c("TD"))
+SWTIresults_II <- performSearch(6, effort, transactionFiles, c("TD"))
 # Plot classification results
-for (i in 1:length(SWTIresults)) {
-  result <- SWTIresults[[i]]
+for (i in 1:length(SWTIresults_II)) {
+  result <- SWTIresults_II[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
@@ -296,36 +302,40 @@ for (i in 1:length(SWTIresults)) {
 
 categorizedTransactions = matrix(nrow=0, ncol=3)
 colnames(categorizedTransactions) <- c("Counts", "Bins", "Classification")
-k = 1
-for (i in 1:length(SWTIresults)) {
-  result <- SWTIresults[[i]]
+
+for (i in 1:length(SWTIresults_II)) {
+  result <- SWTIresults_II[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
+  rownames(df) <- c(paste("b", seq(1, nrow(df)), sep=""))
   #print(rep(paste(i, "Bins", sep=" "), nrow(df)))
   mergedTransactionCounts = cbind(as.matrix(rowSums(df)), rownames(df), rep(paste(i, "Bins", sep=" "), nrow(df)))
   rownames(mergedTransactionCounts) <- NULL
   categorizedTransactions <- rbind(categorizedTransactions, mergedTransactionCounts)
 
 }
-  print(categorizedTransactions)
+
+categorizedTransactions = as.data.frame(categorizedTransactions)
+categorizedTransactions$Counts <- as.numeric(as.character(categorizedTransactions$Counts))
+  #print(categorizedTransactions)
   
-   g <- ggplot(data = as.data.frame(categorizedTransactions), aes(x = Bins, y = Counts)) + 
+   g <- ggplot(data = categorizedTransactions, aes(x = Bins, y = Counts)) + 
     geom_bar(stat = "identity") +
       facet_wrap(. ~ Classification, scales = "free", nrow=2)+
     xlab("Bins") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))+
+    ggtitle(paste("Discretization Results:", i, "bins"))+
     theme_bw(base_size=12)
   print(g)
 
 # Plot predicted vs. actual effort values
-predictedValuesSWTI_II <- sapply(1:length(SWTIresults), function(i) {
-  predicted <- apply(SWTIresults[[i]]$data, 1, function(x) {
-    blmpredicted <- predict.blm(SWTIresults[[i]]$model, newdata = as.data.frame(t(x)))
-    #blmpredicted*SWTIresults[[i]]$normFactor
+predictedValuesSWTI_II <- sapply(1:length(SWTIresults_II), function(i) {
+  predicted <- apply(SWTIresults_II[[i]]$data, 1, function(x) {
+    blmpredicted <- predict.blm(SWTIresults_II[[i]]$model, newdata = as.data.frame(t(x)))
+    #blmpredicted*SWTIresults_II[[i]]$normFactor
   })
 })
 
-colnames(predictedValuesSWTI_II) <- paste(1:length(SWTIresults), "Bins")
+colnames(predictedValuesSWTI_II) <- paste(1:length(SWTIresults_II), "Bins")
 predictedValuesSWTI_II <- subset(predictedValuesSWTI_II, rownames(predictedValuesSWTI_II) != "Aggregate")
 predictedValuesSWTI_II <- merge(as.data.frame(predictedValuesSWTI_II), effort, by='row.names', all=TRUE)
 rownames(predictedValuesSWTI_II) <- predictedValuesSWTI_II$Row.names
@@ -339,7 +349,7 @@ r2Vals <- apply(subset(predictedValuesSWTI_II, select = -Effort), 2, function (x
 r2Vals <- round(r2Vals, digits = 5)
 r2Vals <- paste("r2:", r2Vals, sep = "")
 predictedValues <- gather(predictedValuesSWTI_II, numBins, Predicted, -Effort)
-r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIresults), "Bins"))
+r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIresults_II), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ numBins, scales = "free") + xlab("Predicted Effort") +
@@ -350,9 +360,9 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   theme_bw()
 
 # Plot cross validation results
-MSEdata <- data.frame(NumBins = 1:length(SWTIresults), MSE = sapply(SWTIresults, function(x) { x$MSE }))
-MMREdata <- data.frame(NumBins = 1:length(SWTIresults), MMRE = sapply(SWTIresults, function(x) { x$MMRE }))
-PREDdata <- data.frame(NumBins = 1:length(SWTIresults), PRED = sapply(SWTIresults, function(x) { x$PRED }))
+MSEdata <- data.frame(NumBins = 1:length(SWTIresults_II), MSE = sapply(SWTIresults_II, function(x) { x$MSE }))
+MMREdata <- data.frame(NumBins = 1:length(SWTIresults_II), MMRE = sapply(SWTIresults_II, function(x) { x$MMRE }))
+PREDdata <- data.frame(NumBins = 1:length(SWTIresults_II), PRED = sapply(SWTIresults_II, function(x) { x$PRED }))
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line() + ggtitle("MSE vs Number of Bins") + 
   theme_bw()
 ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line() + ggtitle("MMRE vs Number of Bins") + 
@@ -361,8 +371,8 @@ ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + ge
   theme_bw()
 
 # Plot marginal posteriors for each parameter
-for (i in 1:length(SWTIresults)) {
-  marginalData <- SWTIresults[[i]]$model[, !names(SWTIresults[[i]]$model) %in% c("(Intercept)", "sigma")]
+for (i in 1:length(SWTIresults_II)) {
+  marginalData <- SWTIresults_II[[i]]$model[, !names(SWTIresults_II[[i]]$model) %in% c("(Intercept)", "sigma")]
   if (is.vector(marginalData)) {
     marginalData <- data.frame(l1 = marginalData)
   }
@@ -383,16 +393,16 @@ for (i in 1:length(SWTIresults)) {
 
 SWTI Search Results III
 ```{r swti part III}
-SWTIresults <- performSearch(6, effort, transactionFiles, c("DETs"))
+SWTIresults_III <- performSearch(6, effort, transactionFiles, c("DETs"))
 # Plot classification results
-for (i in 1:length(SWTIresults)) {
-  result <- SWTIresults[[i]]
+for (i in 1:length(SWTIresults_III)) {
+  result <- SWTIresults_III[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
       xlab("Bins") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))
+    ggtitle(paste("Discretization Results:", i, "bins"))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
@@ -403,35 +413,36 @@ for (i in 1:length(SWTIresults)) {
 
 categorizedTransactions = matrix(nrow=0, ncol=3)
 colnames(categorizedTransactions) <- c("Counts", "Bins", "Classification")
-k = 1
-for (i in 1:length(SWTIresults)) {
-  result <- SWTIresults[[i]]
+for (i in 1:length(SWTIresults_III)) {
+  result <- SWTIresults_III[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
+  rownames(df) <- c(paste("b", seq(1, nrow(df)), sep=""))
   #print(rep(paste(i, "Bins", sep=" "), nrow(df)))
-  mergedTransactionCounts = cbind(as.matrix(rowSums(df)), rownames(df), rep(paste(i, "Bins", sep=" "), nrow(df)))
+  mergedTransactionCounts = cbind(df$Aggregate, rownames(df), rep(paste(i, "Bins", sep=" "), nrow(df)))
+  names(mergedTransactionCounts) <- c("Counts", "Bins", "Classification")
   rownames(mergedTransactionCounts) <- NULL
   categorizedTransactions <- rbind(categorizedTransactions, mergedTransactionCounts)
-
-}
-  print(categorizedTransactions)
   
-   g <- ggplot(data = as.data.frame(categorizedTransactions), aes(x = Bins, y = Counts)) + 
+}
+categorizedTransactions = as.data.frame(categorizedTransactions)
+categorizedTransactions$Counts <- as.numeric(as.character(categorizedTransactions$Counts))
+  
+   ggplot(data = categorizedTransactions, aes(x = rownames(categorizedTransactions), y = Counts)) + 
     geom_bar(stat = "identity") +
-      facet_wrap(. ~ Classification, scales = "free", nrow=2)+
+    facet_wrap(. ~ Classification, scales="free", nrow=2)+
     xlab("Bins") +
     ylab("Counts") +
     ggtitle(paste("Classification Results:", i, "bins"))+
     theme_bw(base_size=12)
-  print(g)
 
 # Plot predicted vs. actual effort values
-predictedValuesSWTI_III <- sapply(1:length(SWTIresults), function(i) {
-  predicted <- apply(SWTIresults[[i]]$data, 1, function(x) {
-    blmpredicted <- predict.blm(SWTIresults[[i]]$model, newdata = as.data.frame(t(x)))
-    #blmpredicted*SWTIresults[[i]]$normFactor
+predictedValuesSWTI_III <- sapply(1:length(SWTIresults_III), function(i) {
+  predicted <- apply(SWTIresults_III[[i]]$data, 1, function(x) {
+    blmpredicted <- predict.blm(SWTIresults_III[[i]]$model, newdata = as.data.frame(t(x)))
+    #blmpredicted*SWTIresults_III[[i]]$normFactor
   })
 })
-colnames(predictedValuesSWTI_III) <- paste(1:length(SWTIresults), "Bins")
+colnames(predictedValuesSWTI_III) <- paste(1:length(SWTIresults_III), "Bins")
 predictedValuesSWTI_III <- subset(predictedValuesSWTI_III, rownames(predictedValuesSWTI_III) != "Aggregate")
 predictedValuesSWTI_III <- merge(as.data.frame(predictedValuesSWTI_III), effort, by='row.names', all=TRUE)
 rownames(predictedValuesSWTI_III) <- predictedValuesSWTI_III$Row.names
@@ -445,7 +456,7 @@ r2Vals <- apply(subset(predictedValuesSWTI_III, select = -Effort), 2, function (
 r2Vals <- round(r2Vals, digits = 5)
 r2Vals <- paste("r2:", r2Vals, sep = "")
 predictedValues <- gather(predictedValuesSWTI_III, numBins, Predicted, -Effort)
-r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIresults), "Bins"))
+r2data_txt <- data.frame(label = as.character(r2Vals), numBins = paste(1:length(SWTIresults_III), "Bins"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ numBins, scales = "free") + xlab("Predicted Effort") +
@@ -456,9 +467,9 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   theme_bw()
 
 # Plot cross validation results
-MSEdata <- data.frame(NumBins = 1:length(SWTIresults), MSE = sapply(SWTIresults, function(x) { x$MSE }))
-MMREdata <- data.frame(NumBins = 1:length(SWTIresults), MMRE = sapply(SWTIresults, function(x) { x$MMRE }))
-PREDdata <- data.frame(NumBins = 1:length(SWTIresults), PRED = sapply(SWTIresults, function(x) { x$PRED }))
+MSEdata <- data.frame(NumBins = 1:length(SWTIresults_III), MSE = sapply(SWTIresults_III, function(x) { x$MSE }))
+MMREdata <- data.frame(NumBins = 1:length(SWTIresults_III), MMRE = sapply(SWTIresults_III, function(x) { x$MMRE }))
+PREDdata <- data.frame(NumBins = 1:length(SWTIresults_III), PRED = sapply(SWTIresults_III, function(x) { x$PRED }))
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line() + ggtitle("MSE vs Number of Bins") + 
   theme_bw()
 ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line() + ggtitle("MMRE vs Number of Bins") + 
@@ -467,8 +478,8 @@ ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + ge
   theme_bw()
 
 # Plot marginal posteriors for each parameter
-for (i in 1:length(SWTIresults)) {
-  marginalData <- SWTIresults[[i]]$model[, !names(SWTIresults[[i]]$model) %in% c("(Intercept)", "sigma")]
+for (i in 1:length(SWTIresults_III)) {
+  marginalData <- SWTIresults_III[[i]]$model[, !names(SWTIresults_III[[i]]$model) %in% c("(Intercept)", "sigma")]
   if (is.vector(marginalData)) {
     marginalData <- data.frame(l1 = marginalData)
   }
@@ -506,6 +517,7 @@ for (i in 1:length(SWTIIresults)) {
   theme_bw()
   print(g)
 }
+
 #print(SWTIIresults[[5]][["model"]])
 # Plot predicted vs. actual effort values
 predictedValuesSWTII <- sapply(1:length(SWTIIresults), function(i) {
@@ -651,14 +663,69 @@ for (i in 1:length(SWTIIIresults)) {
     xlab(col) + ggtitle(paste("Posterior Weight", col, i, "bins")) +
     annotate("text", x = mean, y = peakDensity * ((sd/3 *.1) + 1), label = paste("mean:", round(mean,2),",", "sd:", round(sd,2))) + 
     theme_bw()
-    plots[[col]] = g
     print(g)
   }
 
 }
+  
+```
+plot the selected models
+```{r modelPlot, warning = FALSE}
+
+TNModelSelector <- 1;
+TNModelPredictedValues <- as.data.frame(predictedValuesTN[, c(paste(TNModelSelector, "Bins", sep=" "))])
+TNModelData <- TNresults[[TNModelSelector]][["data"]]
+TNModelData <- TNModelData[rownames(TNModelData) != "Aggregate", ]
+colnames(TNModelPredictedValues) <- c("TN")
+rownames(TNModelPredictedValues) <- rownames(predictedValuesTN)
+
+SWTIIModelSelector <- 3;
+SWTIIModelPredictedValues = as.data.frame(predictedValuesSWTII[, c(paste(SWTIIModelSelector, "Bins", sep=" "))])
+SWTIIModelData <- SWTIIresults[[SWTIIModelSelector]][["data"]]
+SWTIIModelData <- SWTIIModelData[rownames(SWTIIModelData) != "Aggregate", ]
+#print(SWTIIModelData)
+colnames(SWTIIModelPredictedValues) <- c("SWTII")
+rownames(SWTIIModelPredictedValues) <- rownames(predictedValuesSWTII)
+
+SWTIIIModelSelector <- 3;
+SWTIIIModelPredictedValues = as.data.frame(predictedValuesSWTIII[, c(paste(SWTIIIModelSelector, "Bins", sep=" "))])
+SWTIIIModelData <- SWTIIIresults[[SWTIIIModelSelector]][["data"]] 
+SWTIIIModelData <- SWTIIIModelData[rownames(SWTIIIModelData) != "Aggregate", ]
+colnames(SWTIIIModelPredictedValues) <- c("SWTIII")
+rownames(SWTIIIModelPredictedValues) <- rownames(predictedValuesSWTIII)
+
+predictedValues <- merge(TNModelPredictedValues, SWTIIModelPredictedValues, by='row.names', all=TRUE)
+rownames(predictedValues) <- predictedValues$Row.names
+predictedValues$Row.names <- NULL
+predictedValues <- merge(predictedValues, SWTIIIModelPredictedValues, by='row.names', all=TRUE)
+rownames(predictedValues) <- predictedValues$Row.names
+predictedValues$Row.names <- NULL
+predictedValues <- merge(predictedValues, effort, by='row.names', all=TRUE)
+rownames(predictedValues) <- predictedValues$Row.names
+predictedValues$Row.names <- NULL
+
+r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
+  dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
+  model <- lm(Effort ~ ., data = dat)
+  summary(model)$r.squared
+  print(summary(model)$coefficients)
+})
+r2Vals <- round(r2Vals, digits = 5)
+r2Vals <- paste("r2:", r2Vals, sep = "")
+predictedValues <- gather(predictedValues, models, Predicted, -Effort)
+r2data_txt <- data.frame(label = as.character(r2Vals), models = c("TN", "SWTII", "SWTIII"))
+ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
+  facet_grid(. ~ models, scales = "free") + xlab("Predicted Effort") +
+  ylab("Actual Effort") + ggtitle("Goodness of Fit") +
+  theme(panel.spacing = unit(1, "lines")) +
+  geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
+            hjust = -0.1, vjust = -1)+
+  theme_bw()
+
 
 #draw example of posterior estimates
-  marginalData <- SWTIIIresults[[4]]$model[, !names(SWTIIIresults[[4]]$model) %in% c("(Intercept)", "sigma")]
+  marginalData <- SWTIIIresults[[SWTIIIModelSelector]]$model[, !names(SWTIIIresults[[SWTIIIModelSelector]]$model) %in% c("(Intercept)", "sigma", "normFactor", "sd")]
   
     #for (col in names(marginalData)) {
     means <- apply(marginalData, 2, mean)
@@ -689,60 +756,6 @@ for (i in 1:length(SWTIIIresults)) {
   #hjust   = -0.1,
   #vjust   = -1
   #)
-  
-```
-plot the selected models
-```{r modelPlot, warning = FALSE}
-
-TNModelSelector <- 1;
-TNModelPredictedValues <- as.data.frame(predictedValuesTN[, c(paste(TNModelSelector, "Bins", sep=" "))])
-TNModelData <- TNresults[[TNModelSelector]][["data"]]
-TNModelData <- TNModelData[rownames(TNModelData) != "Aggregate", ]
-colnames(TNModelPredictedValues) <- c("TN")
-rownames(TNModelPredictedValues) <- rownames(predictedValuesTN)
-
-SWTIIModelSelector <- 5;
-SWTIIModelPredictedValues = as.data.frame(predictedValuesSWTII[, c(paste(SWTIIModelSelector, "Bins", sep=" "))])
-SWTIIModelData <- SWTIIresults[[SWTIIModelSelector]][["data"]]
-SWTIIModelData <- SWTIIModelData[rownames(SWTIIModelData) != "Aggregate", ]
-#print(SWTIIModelData)
-colnames(SWTIIModelPredictedValues) <- c("SWTII")
-rownames(SWTIIModelPredictedValues) <- rownames(predictedValuesSWTII)
-
-SWTIIIModelSelector <- 5;
-SWTIIIModelPredictedValues = as.data.frame(predictedValuesSWTIII[, c("5 Bins")])
-SWTIIIModelData <- SWTIIIresults[[SWTIIIModelSelector]][["data"]] 
-SWTIIIModelData <- SWTIIIModelData[rownames(SWTIIIModelData) != "Aggregate", ]
-colnames(SWTIIIModelPredictedValues) <- c("SWTIII")
-rownames(SWTIIIModelPredictedValues) <- rownames(predictedValuesSWTIII)
-
-predictedValues <- merge(TNModelPredictedValues, SWTIIModelPredictedValues, by='row.names', all=TRUE)
-rownames(predictedValues) <- predictedValues$Row.names
-predictedValues$Row.names <- NULL
-predictedValues <- merge(predictedValues, SWTIIIModelPredictedValues, by='row.names', all=TRUE)
-rownames(predictedValues) <- predictedValues$Row.names
-predictedValues$Row.names <- NULL
-predictedValues <- merge(predictedValues, effort, by='row.names', all=TRUE)
-rownames(predictedValues) <- predictedValues$Row.names
-predictedValues$Row.names <- NULL
-
-r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
-  dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
-  model <- lm(Effort ~ ., data = dat)
-  summary(model)$r.squared
-})
-r2Vals <- round(r2Vals, digits = 5)
-r2Vals <- paste("r2:", r2Vals, sep = "")
-predictedValues <- gather(predictedValues, models, Predicted, -Effort)
-r2data_txt <- data.frame(label = as.character(r2Vals), models = c("TN", "SWTII", "SWTIII"))
-ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
-  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
-  facet_grid(. ~ models, scales = "free") + xlab("Predicted Effort") +
-  ylab("Actual Effort") + ggtitle("Goodness of Fit") +
-  theme(panel.spacing = unit(1, "lines")) +
-  geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
-            hjust = -0.1, vjust = -1)+
-  theme_bw()
 ```
 
 
@@ -753,6 +766,10 @@ comparison between UCP, COCOMO, a-priori COCOMO
 otherSizeMetricsData=modelData[c("Effort", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP")]
 
 ret <- compareBetweenSizeMetrics(TNModelData, SWTIIModelData, SWTIIIModelData, otherSizeMetricsData)
+#model1 <- TNresults[[TNModelSelector]][["model"]]
+#model2 <- SWTIIresults[[SWTIIModelSelector]][["model"]]
+#model3 <- SWTIIIresults[[SWTIIIModelSelector]][["model"]]
+#ret <- compareBetweenSizeMetrics(TNModelData, SWTIIModelData, SWTIIIModelData, otherSizeMetricsData, model1, model2, model3)
 
 cvResults <-ret[["cvResults"]]
 print(cvResults)
@@ -808,58 +825,58 @@ save the parameters to file
 
 #source("transaction_weights_calibration3.R")
 trainedModels = list()
-trainedModels[["TNModel"]] = TNresults[[1]]
-trainedModels[["SWTIIModel"]] = SWTIIresults[[4]]
-trainedModels[["SWTIIIModel"]] = SWTIIIresults[[4]]
+trainedModels[["TNModel"]] = TNresults[[TNModelSelector]]
+trainedModels[["SWTIIModel"]] = SWTIIresults[[SWTIIModelSelector]]
+trainedModels[["SWTIIIModel"]] = SWTIIIresults[[SWTIIIModelSelector]]
 
 saveRDS(trainedModels, file="train_models.rds")
 
 #extract parameters for NT
 trainedModelParameters = list()
 TNModelParameters = list()
-TNModelParameters[["normFactor"]] = TNresults[[1]][["normFactor"]]
+TNModelParameters[["normFactor"]] = TNresults[[TNModelSelector]][["normFactor"]]
 TNModelParameters[["cuts"]] = list()
-for(i in rownames(TNresults[[1]][["cuts"]])){
-  TNModelParameters[["cuts"]][[i]] = TNresults[[1]][["cuts"]][i,]
+for(i in rownames(TNresults[[TNModelSelector]][["cuts"]])){
+  TNModelParameters[["cuts"]][[i]] = TNresults[[TNModelSelector]][["cuts"]][i,]
 }
-levels <- names(TNresults[[1]][["model"]])
+levels <- names(TNresults[[TNModelSelector]][["model"]])
 levels <- levels[levels != "sigma"]
 TNModelParameters[["levels"]] = list()
 for(i in levels){
-  TNModelParameters[["levels"]][[i]] = c(mean(TNresults[[1]][["model"]][[i]]), var(TNresults[[1]][["model"]][[i]]))
+  TNModelParameters[["levels"]][[i]] = c(mean(TNresults[[TNModelSelector]][["model"]][[i]]), var(TNresults[[TNModelSelector]][["model"]][[i]]))
 }
 
 trainedModelParameters[["EUCP"]] = TNModelParameters
 
 #extract parameters for SWTII
 SWTIIModelParameters = list()
-SWTIIModelParameters[["normFactor"]] = SWTIIresults[[4]][["normFactor"]]
+SWTIIModelParameters[["normFactor"]] = SWTIIresults[[SWTIIModelSelector]][["normFactor"]]
 SWTIIModelParameters[["cuts"]] = list()
-for(i in rownames(SWTIIresults[[4]][["cuts"]])){
-  SWTIIModelParameters[["cuts"]][[i]] = SWTIIresults[[4]][["cuts"]][i,]
+for(i in rownames(SWTIIresults[[SWTIIModelSelector]][["cuts"]])){
+  SWTIIModelParameters[["cuts"]][[i]] = SWTIIresults[[SWTIIModelSelector]][["cuts"]][i,]
 }
 print(SWTIIModelParameters[["cuts"]])
-levels <- names(SWTIIresults[[4]][["model"]])
+levels <- names(SWTIIresults[[SWTIIModelSelector]][["model"]])
 levels <- levels[levels != "sigma"]
 SWTIIModelParameters[["levels"]] = list()
 for(i in levels){
-  SWTIIModelParameters[["levels"]][[i]] = c(mean(SWTIIresults[[4]][["model"]][[i]]), var(SWTIIresults[[4]][["model"]][[i]]))
+  SWTIIModelParameters[["levels"]][[i]] = c(mean(SWTIIresults[[SWTIIModelSelector]][["model"]][[i]]), var(SWTIIresults[[SWTIIModelSelector]][["model"]][[i]]))
 }
 
 trainedModelParameters[["EXUCP"]] = SWTIIModelParameters
 
 #extract parameters for SWTIII
 SWTIIIModelParameters = list()
-SWTIIIModelParameters[["normFactor"]] = SWTIIIresults[[3]][["normFactor"]]
+SWTIIIModelParameters[["normFactor"]] = SWTIIIresults[[SWTIIIModelSelector]][["normFactor"]]
 SWTIIIModelParameters[["cuts"]] = list()
-for(i in rownames(SWTIIIresults[[3]][["cuts"]])){
-  SWTIIIModelParameters[["cuts"]][[i]] = SWTIIIresults[[3]][["cuts"]][i,]
+for(i in rownames(SWTIIIresults[[SWTIIIModelSelector]][["cuts"]])){
+  SWTIIIModelParameters[["cuts"]][[i]] = SWTIIIresults[[SWTIIIModelSelector]][["cuts"]][i,]
 }
-levels <- names(SWTIIIresults[[3]][["model"]])
+levels <- names(SWTIIIresults[[SWTIIIModelSelector]][["model"]])
 levels <- levels[levels != "sigma"]
 SWTIIIModelParameters[["levels"]] = list()
 for(i in levels){
-  SWTIIIModelParameters[["levels"]][[i]] = c(mean(SWTIIIresults[[3]][["model"]][[i]]), var(SWTIIIresults[[3]][["model"]][[i]]))
+  SWTIIIModelParameters[["levels"]][[i]] = c(mean(SWTIIIresults[[SWTIIIModelSelector]][["model"]][[i]]), var(SWTIIIresults[[SWTIIIModelSelector]][["model"]][[i]]))
 }
 
 trainedModelParameters[["DUCP"]] = SWTIIIModelParameters

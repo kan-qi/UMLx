@@ -2,6 +2,7 @@ source("transaction_weights_calibration4.R")
 
 
 compareBetweenSizeMetrics <- function(TNModelData, SWTIIModelData, SWTIIIModelData, otherSizeMetricsData){
+  #compareBetweenSizeMetrics <- function(TNModelData, SWTIIModelData, SWTIIIModelData, otherSizeMetricsData, model1, model2, model3){
   
   #useCaseData <- data[c("Effort", "EUCP", "EXUCP", "DUCP")]
   
@@ -74,6 +75,7 @@ for(i in 1:nfold){
 	#print(means)
 	covar1 <- genVariance(means1, 1)
 	bayesianModel1 <- bayesfit3(trainTNModelData, 100000, means1, covar1, normFactor1['mean'], normFactor1['var'])
+	#bayesianModel1 <- model1
 	
 	#eucp.mre = apply(testData, 1, function(x))
 	eucp.predict = cbind(predicted=predict.blm(bayesianModel1, newdata = testTNModelData), actual=testTNModelData$Effort)
@@ -87,7 +89,7 @@ for(i in 1:nfold){
 	eucp.pred50 = length(eucp.mre[eucp.mre<=0.50])/length(eucp.mre)
 	#print(c(eucp.pred15, eucp.pred25, eucp.pred50))
 	
-	eucp.pred <- 0
+	eucp.pred <- c()
 	for(j in 1:50){
 		eucp.pred <- c(eucp.pred, length(eucp.mre[eucp.mre<=0.01*j])/length(eucp.mre))
 	}
@@ -106,6 +108,8 @@ for(i in 1:nfold){
 	covar2 <- genVariance(means2, 1)
 	bayesianModel2 <- bayesfit3(trainSWTIIModelData, 100000, means2, covar2, normFactor2['mean'], normFactor2['var'])
 	
+	#bayesianModel2 <- model2
+	
 	exucp.predict = cbind(predicted=predict.blm(bayesianModel2, newdata = testSWTIIModelData), actual=testSWTIIModelData$Effort)
 	print(exucp.predict)
 	exucp.mre = apply(exucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -117,7 +121,7 @@ for(i in 1:nfold){
 	exucp.pred50 = length(exucp.mre[exucp.mre<=0.50])/length(exucp.mre)
 	print(c(exucp.pred15, exucp.pred25, exucp.pred50))
 	
-	exucp.pred <- 0
+	exucp.pred <- c()
 	for(j in 1:50){
 		exucp.pred <- c(exucp.pred, length(exucp.mre[exucp.mre<=0.01*j])/length(exucp.mre))
 	}
@@ -136,6 +140,9 @@ for(i in 1:nfold){
 	covar3 <- genVariance(means3, 1)
 	bayesianModel3 <- bayesfit3(trainSWTIIIModelData, 100000, means3, covar3, normFactor3['mean'], normFactor3['var'])
 	
+	#bayesianModel3 <- model3
+
+	
 	#ducp.m = lm(Effort~DUCP, data=trainSWTIIIModelData)
 	ducp.predict = cbind(predicted=predict.blm(bayesianModel3, newdata = testSWTIIIModelData), actual=testSWTIIIModelData$Effort)
 	#print(ducp.predict)
@@ -148,7 +155,7 @@ for(i in 1:nfold){
 	ducp.pred50 = length(ducp.mre[ducp.mre<=0.50])/length(ducp.mre)
 	#print(c(ducp.pred15, ducp.pred25, ducp.pred50))
 	
-	ducp.pred <- 0
+	ducp.pred <- c()
 	for(j in 1:50){
 		ducp.pred <- c(ducp.pred, length(ducp.mre[ducp.mre<=0.01*j])/length(ducp.mre))
 	}
@@ -166,7 +173,7 @@ for(i in 1:nfold){
 	ucp.pred50 = length(ucp.mre[ucp.mre<=0.50])/length(ucp.mre)
 	print(c(ucp.pred15, ucp.pred25, ucp.pred50))
 	
-	ucp.pred <- 0
+	ucp.pred <- c()
 	for(j in 1:50){
 		ucp.pred <- c(ucp.pred, length(ucp.mre[ucp.mre<=0.01*j])/length(ucp.mre))
 	}
@@ -184,7 +191,7 @@ for(i in 1:nfold){
 	cocomo.pred50 = length(cocomo.mre[cocomo.mre<=0.50])/length(cocomo.mre)
 	#print(c(cocomo.pred15, cocomo.pred25, cocomo.pred50))
 	
-	cocomo.pred <- 0
+	cocomo.pred <- c()
 	for(j in 1:50){
 		cocomo.pred <- c(cocomo.pred, length(cocomo.mre[cocomo.mre<=0.01*j])/length(cocomo.mre))
 	}
@@ -205,7 +212,7 @@ for(i in 1:nfold){
 	cocomo_apriori.pred50 = length(cocomo_apriori.mre[cocomo_apriori.mre<=0.50])/length(cocomo_apriori.mre)
 	#print(c(cocomo_apriori.pred15, cocomo_apriori.pred25, cocomo_apriori.pred50))
 	
-	cocomo_apriori.pred <- 0
+	cocomo_apriori.pred <- c()
 	for(j in 1:50){
 		cocomo_apriori.pred <- c(cocomo_apriori.pred, length(cocomo_apriori.mre[cocomo_apriori.mre<=0.01*j])/length(cocomo_apriori.mre))
 	}

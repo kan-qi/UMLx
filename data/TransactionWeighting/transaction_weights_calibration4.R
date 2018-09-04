@@ -68,25 +68,26 @@ discretize <- function(data, n) {
 	#   A vector of cut points
   
   #n = 6
-  #data = combined[, "DETs"]
-  #data  = c(10,20,30,40)
+  #data = combined[, "TD"]
+  
   #print(data)
+  
 	if (n <= 1) {
 		return(c(-Inf, Inf))
 	}
-  #n = 6
-	quantiles <- seq(1/n, 1 - (1/n), 1/n)
-	#quantiles <- c(0.11, 0.14, 0.32, 0.45, 0.65)
-	#print(quantiles)
-	#cutPoints <- qnorm(quantiles, mean(data), sd(data), lower.tail = TRUE)
-	#cutPoints <- quantile(data, probs = quantiles, type = 1)
-	#cutPoints <- c(-Inf, cutPoints, Inf)
-	#print(cutPoints)
+  
+  quantiles <- seq(1/n, 1 - (1/n), 1/n)
+	tableValues <- table(data)
 	
-	fit.gamma <- fitdist(data, distr = "gamma", method = "mle", lower = c(0, 0))
+	#reduce sizes for fitting with gamma curve
+	#print(as.integer(tableValues/10))
+  vec <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
+	
+	fit.gamma <- fitdist(vec, distr = "gamma", method = "mle", lower = c(0, 0))
 	# Check result
 	shape = coefficients(fit.gamma)["shape"]
 	rate = coefficients(fit.gamma)["rate"]
+	print(coefficients(fit.gamma))
 	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
 	#print(cutPoints)
@@ -204,8 +205,6 @@ crossValidate <- function(data, k) {
   
   #data <- regressionData
   #k <- 5
-  #normFactor1 <- normFactor['mean']
-  #var <- normFactor['var']
   
 	folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
 	foldMSE <- vector(length = k)
@@ -273,7 +272,7 @@ genMeans <- function(n) {
   # Returns:
   #   A vector of the first n Fibonnaci numbers
   if (n <= 2) {
-    return(c(l1 = 1, l2 = 1)[1:n])
+    return(c(l1 = 1, l2 = 2)[1:n])
   }
   else {
     ret <- c(1, 1)
@@ -309,7 +308,7 @@ genVariance <- function(mu, varFactor) {
     return(ret)
   }
   for (i in 3:length(mu)) {
-    ret[i, i] <- varFactor * (mu[i] - mu[i - 1])
+    ret[i, i] <- (varFactor * (mu[i] - mu[i - 1]))^2
   }
   ret
 }
@@ -412,30 +411,44 @@ likelihood <- function(B, normFactor, sd, x, y){
   
   singlelikelihoods = dnorm(y, pred, sd, log = T)
   sumll = sum(singlelikelihoods)
+  #print("sumll")
   #print(sumll)
   return(sumll)   
 }
 
 ######## prior function ################
 prior <- function(sample, B, varianceMatrix, normFactor, var){
-  #a = param[1]
-  #b = param[2]
-  #sd = param[3]
-  #aprior = dunif(a, min=0, max=10, log = T)
-  #bprior = dnorm(b, sd = 5, log = T)
-  #sdprior = dunif(sd, min=0, max=30, log = T)
   
-  prior <- rep(0, length(B)+2)
-  names(prior) <- c("normFactor", names(B), "sd")
+  prior <- rep(0, 3)
+  names(prior) <- c("normFactor", "priorB", "sd")
   #prior['normFactor'] = dnorm(sample["normFactor"], normFactor, sd=sqrt(var), log=T)
   prior['normFactor'] = dunif(sample["normFactor"], min=0, max=15, log = T)
-  prior[names(B)] <- dmvnorm(sample[names(B)], B, varianceMatrix, log=T)
+  #print("norm factor prior prob")
+  #print(prior['normFactor'])
+  
+  #B = c(1, 3)
+  #names(B) = c("l1", "l2")
+  #sample = c(5, 6)
+  #names(sample) = names(B)
+  #varianceMatrix <- matrix(rep(0, length(B)^2), nrow = length(B), ncol = length(B))
+  #varianceMatrix[1, 1] = 0.5
+  #varianceMatrix[2, 2] = 0.8
+  prior["priorB"] <- dmvnorm(sample[names(B)], B, varianceMatrix, log=T)
+  #print("b prior prob")
+  #print(prior[names(B)])
   #prior['sd'] <- dinvgamma(sample["sd"], 0.1, 0.1, log=T)
   #prior['sd'] <- dunif(sample["sd"], min=0, max=30, log = T)
   #Jeffrey's prior
   prior['sd'] <- log(1/sample['sd'])
   
-  return(prior['normFactor']+sum(prior[names(B)])+prior['sd'])
+  jointPrior <- (prior['normFactor']+prior['priorB']+prior['sd'])
+  names(jointPrior) <- NULL
+  
+  #print("join prior")
+  #print(sample)
+  #print(prior)
+  
+  return(jointPrior)
 }
 
 ######## posterior function ################
@@ -450,7 +463,15 @@ proposalfunction <- function(B, normFactor, sd){
   #sd <- 10
   sample <- rep(0, length(B)+2)
   names(sample) <- c(names(B), "normFactor", "sd")
-  sigma <- rep(0.1, length(B))
+  
+  sigma <- c(0.1)
+  if(length(B)>1){
+  for (i in 1:length(B)) {
+    sigma <- c(sigma, 1/5* (abs(B[i] - B[i - 1]))+0.1)
+  }
+  }
+  #print(sigma)
+  #sigma <- rep(0.1, length(B))
   sample[names(B)] <- rnorm(length(B),mean = B, sd = sigma)
   sample["normFactor"] <- rnorm(1, normFactor, 0.1)
   sample['sd'] <- rnorm(1, sd, 3)
@@ -460,27 +481,36 @@ proposalfunction <- function(B, normFactor, sd){
 run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normFactor, var){
   #priorB <- B
   #normFactor <- normFactor1
-  
+  #if(normFactor < 1){
+  #  normFactor = 1
+  #}
   chain = matrix(nrow=N+1, ncol=length(priorB)+2)
   colnames(chain) <- c(names(priorB), "normFactor", "sd")
   chain[1, "normFactor"] <- normFactor
   chain[1, names(priorB)] <- priorB
   chain[1, "sd"] <- 10
+  #probabs <- c()
+  #acceptance <- c()
   for (i in 1:N){
     proposal = proposalfunction(chain[i,names(priorB)], chain[i,"normFactor"], chain[i, "sd"])
     #proposal = sample
     `%ni%` <- Negate(`%in%`)
-    update <- posterior(proposal, priorB, varianceMatrix, normFactor, var, regressionData[ , !(names(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
-    posterior <- posterior(chain[i,], priorB, varianceMatrix, normFactor, var, regressionData[ , !(names(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
-    probab = exp( update - posterior)
+    update <- posterior(proposal, priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
+    posterior <- posterior(chain[i,], priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
+    probab = exp(update - posterior)
+    #probabs = c(probabs, probab)
+    #print(probab)
     if (runif(1) < probab){
       chain[i+1,] = proposal
       #print("accept")
+      #acceptance = c(acceptance, "accept")
     }else{
       chain[i+1,] = chain[i,]
       #print("not accept")
+      #acceptance = c(acceptance, "not accept")
     }
   }
+  
   return(chain)
 }
 
@@ -624,12 +654,11 @@ predict.blm <- function(model, newdata) {
 				}
 				effort
 			})
-	ret
+	ret*mean(model[,"normFactor"])
 }
 
 calNormFactor <- function(regressionData, n){
-  #regressionData <- SWTIIIresults[[4]][["data"]]
-  #n <- 10
+  #n <- length(levels)
   #if(n == 1){
   #  return(1)
   #}
@@ -673,6 +702,7 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
   #transactionFiles = transactionFiles
   #parameters = c("TL", "TD")
   #k = 5
+  #i = 6
   
   projects <- rownames(effortData)
   combinedData <- combineData(transactionFiles)
@@ -709,11 +739,12 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
         classifiedData <- classify(fileData, cutPoints)
         regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
     }
-    
+  
     regressionData <- na.omit(regressionData)
     regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
     regressionData <- as.data.frame(regressionData)
     
+    # the variance is actually not used.
     normFactor <- calNormFactor(regressionData, length(levels))
     print(normFactor)
   
@@ -723,19 +754,22 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
     
     means <- genMeans(length(levels))
     #print(means)
-    covar <- genVariance(means, 1)
+    covar <- genVariance(means, 1/3)
+    
     bayesianModel <- bayesfit3(regressionData[rownames(regressionData) != "Aggregate", ], 10000, means, covar, normFactor['mean'], normFactor['var'])
     
     validationResults <- crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k)
+    
     #validationResults <- crossValidate(regressionData, k, means, covar, normFactor['mean'], normFactor['var'])
     
     print(cutPoints)
     #print("cross validation")
-    searchResults[[i]] <- list(MSE = validationResults["MSE"], 
+    searchResults[[i]] <- list(
+                               MSE = validationResults["MSE"], 
                                MMRE = validationResults["MMRE"], 
                                PRED = validationResults["PRED"],
-                               normFactor = normFactor,
                                model = bayesianModel,
+                               modelAvg = lapply(bayesianModel, mean),
                                data = regressionData,
                                cuts = cutPoints)
   }
