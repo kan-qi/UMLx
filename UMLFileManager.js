@@ -17,79 +17,107 @@
 			  }
 	}
 	
-	function parseCSVData(csvData, header){
-			 var data = [];
-			    var lines = csvData.split(/\r?\n/g);
-//			    console.log(lines);
-			    var cols = [];
-			    for(var i = 0;i < lines.length;i++){
-			        //code here using lines[i] which will give you each line
-			    	var line = lines[i];
-
-			    	if(line === ""){
-			    		continue;
-			    	}
-			    	
-			    	
-			    	var segs = line.split(/,/g);
-//			    	console.log(segs);
-//			    	console.log("iteration: "+i);
-			    	
-			    	if(header && i==0){
-			    		for(var j in segs){
-			    			cols.push(segs[j].replace(/[^A-Za-z0-9_]/gi, ""));
-			    		}
-			    		continue;
-			    	}
-			    	
-			    	
-			    	
-			    	var dataElement = {};
-			    	for(var j in segs){
-			    		var col = cols[j];
-			    		if(!col){
-			    			col = j;
-			    		}
-			    		dataElement[col] = segs[j];
-			    	}
-			    	
-			    	data.push(dataElement);
-			    }
-			    
-			    return data;
-	}
+//	function parseCSVData(csvData, header){
+//			 var data = [];
+//			    var lines = csvData.split(/\r?\n/g);
+////			    console.log(lines);
+//			    var cols = [];
+//			    for(var i = 0;i < lines.length;i++){
+//			        //code here using lines[i] which will give you each line
+//			    	var line = lines[i];
+//
+//			    	if(line === ""){
+//			    		continue;
+//			    	}
+//			    	
+//			    	
+//			    	var segs = line.split(/,/g);
+////			    	console.log(segs);
+////			    	console.log("iteration: "+i);
+//			    	
+//			    	if(header && i==0){
+//			    		for(var j in segs){
+//			    			cols.push(segs[j].replace(/[^A-Za-z0-9_]/gi, ""));
+//			    		}
+//			    		continue;
+//			    	}
+//			    	
+//			    	
+//			    	
+//			    	var dataElement = {};
+//			    	for(var j in segs){
+//			    		var col = cols[j];
+//			    		if(!col){
+//			    			col = j;
+//			    		}
+//			    		dataElement[col] = segs[j];
+//			    	}
+//			    	
+//			    	data.push(dataElement);
+//			    }
+//			    
+//			    return data;
+//	}
 	
 	module.exports = {
-		loadCSVFileAsString: function(csvFilePath, callbackfunc){
-			fs.readFile(csvFilePath, 'utf-8', (err, str) => {
-				   if (err) throw err;
+//		loadCSVFileAsString: function(csvFilePath, callbackfunc){
+//			fs.readFile(csvFilePath, 'utf-8', (err, str) => {
+//				   if (err) throw err;
+////				    console.log(data);
+//				   if(callbackfunc){
+//					   callbackfunc(str);
+//				   }
+//			});
+//		},
+//		loadCSVFile:function(csvFilePath, header, callbackfunc){
+//			fs.readFile(csvFilePath, 'utf-8', (err, str) => {
+//				   if (err) throw err;
+////				    console.log(str);
+//				  
+//				    data = parseCSVData(str, header);
+//				    
+////				    console.log("csv data is loaded");
+////				    console.log(data);
+//				    
+//				    if(callbackfunc){
+//				    	callbackfunc(data);
+//				    }
+//			});
+//		},
+//		parseCSVData: parseCSVData,
+		readFile: function(filePath, callbackfunc){
+			fs.readFile(filePath, 'utf-8', (err, str) => {
+				   if (err) {
+					if(callbackfunc){
+						callbackfunc(false);
+					}
+					return;
+				   }
 //				    console.log(data);
 				   if(callbackfunc){
 					   callbackfunc(str);
 				   }
 			});
 		},
-		loadCSVFile:function(csvFilePath, header, callbackfunc){
-			fs.readFile(csvFilePath, 'utf-8', (err, str) => {
-				   if (err) throw err;
-//				    console.log(str);
-				  
-				    data = parseCSVData(str, header);
-				    
-//				    console.log("csv data is loaded");
-//				    console.log(data);
-				    
-				    if(callbackfunc){
-				    	callbackfunc(data);
-				    }
-			});
-		},
-		parseCSVData: parseCSVData,
 		deleteFolder: function(url, callbackfunc){
 			//fill out the function.
 			if(callbackfunc){
 			callbackfunc(url);
 			}
+		},
+		writeFile: function(filePath, content, callbackfunc){
+			fs.writeFile(filePath, content, function(err){
+				if(err){
+					console.log(err);
+					if(callbackfunc){
+						callbackfunc(false);
+					}
+				}
+				
+				if(callbackfunc){
+					callbackfunc(path);
+				}
+			});
 		},
 		writeFiles: function(dir, files, callbackfunc){
 			function writeFile(path, content){
@@ -145,7 +173,9 @@
 			 umlFileInfo.fileId = path.parse(umlFilePath).base;
 			 umlFileInfo.fileSize = fileSizeInMegabytes;
 			 umlFileInfo.creationTime = new Date().toISOString().replace(/T/, ' ').replace(/\..+/, '');      // replace T with a space
-			 umlFileInfo.fileUrl = umlFilePath.replace(/\\/g, '/').match(/public\/(.*)/)[1];
+			 if (umlFilePath.replace(/\\/g, '/').match(/public\/(.*)/) !== null) {
+			 	umlFileInfo.fileUrl = umlFilePath.replace(/\\/g, '/').match(/public\/(.*)/)[1];
+			 }			 
 			 umlFileInfo.umlFilePath = umlFilePath.replace(/\\/g, '/');
 			 umlFileInfo.umlModelType = umlModelType;
 			 // should put in the repo dir.
@@ -163,6 +193,54 @@
 				 // should put in the repo dir.
 				 formInfo: umlFileInfo.formInfo
 			}
+		},
+		makeDir: function(dir, callbackfunc){
+			mkdirp(dir, function(err) { 
+				if(err) {
+					console.log(err);
+					if(callbackfunc){
+						callbackfunc(false);
+					}
+					return;
+				}
+				
+				if(callbackfunc){
+					callbackfunc(true);
+				}
+		
+			});
+		},
+		makeDirs: function(dirs, callbackfunc){
+			function mkdir(dir){
+				return new Promise((resolve, reject) => {
+					mkdirp(dir, function(err){
+						if(err){
+							reject(err);
+							return;
+						}
+						resolve();
+					});
+				  });
+			}
+			
+			let chain = Promise.resolve();
+			
+			for(var i in dirs){
+				var dir = dirs[i];
+				chain = chain.then(mkdir(dir));
+			}
+			
+			chain.then(function(){
+				if(callbackfunc){
+					callbackfunc(true);
+				}
+			}).catch(function(err){
+				console.log(err);
+				if(callbackfunc){
+					callbackfunc(err);
+				}
+			});
+			
 		}
 	}
 }())

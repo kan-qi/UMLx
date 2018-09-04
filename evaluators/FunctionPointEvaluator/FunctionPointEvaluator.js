@@ -93,7 +93,7 @@
 	
 	
 	function toModelEvaluationHeader() {
-		return "DET,RET,ILF,EIF,EO,EQ,FN,FUNC_NA";
+		return "DET,RET,ILF,EIF,EI,EO,EQ,FN,FUNC_NA";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -159,13 +159,13 @@
 			var EO = 0;
 			var EQ = 0;
 			
-			for ( var j in useCaseInfo.Paths) {
-				var path = useCaseInfo.Paths[j];
-				// console.log('--------Process Path-------');
+			for ( var j in useCaseInfo.Transactions) {
+				var transaction = useCaseInfo.Transactions[j];
+				// console.log('--------Process Transaction-------');
 				
-				functionPointProcessor.processPath(path, useCaseInfo);
+				functionPointProcessor.processTransaction(transaction, useCaseInfo);
 				
-				var functionalOperations = path["FPAnalytics"].Functional;
+				var functionalOperations = transaction["FPAnalytics"].Functional;
 				
 				if (functionalOperations.indexOf("EI") > -1) {
 					EI++;

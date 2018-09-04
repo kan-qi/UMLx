@@ -1,0 +1,56 @@
+---
+title: "Transaction Weight Calibration Visualized"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+source("transaction_weights_calibration3.R")
+
+```
+testing transaction based effort estimation model
+```{r testing}
+
+trainedModels <- readRDS(file="train_models.rds")
+testdf <- read.csv("modelEvaluations_testing_rufus.csv")
+testdf$transaction_file <- as.character(testdf$transaction_file)
+testdf$Project <- as.character(testdf$Project)
+rownames(testdf) <- testdf$Project
+testdf$Project <- NULL
+
+modelPredicts <- matrix(nrow = nrow(testdf), ncol = length(trainedModels)+1)
+colnames(modelPredicts) <- c(names(trainedModels),"Effort");
+rownames(modelPredicts) <- rownames(testdf)
+modelPredicts[, "Effort"] <- testdf[, "Effort"]
+
+
+for (project in rownames(testdf)) {
+        filePath <- testdf[project, "transaction_file"]
+        if (!file.exists(filePath)) {
+          print("file doesn't exist")
+          next
+        }
+        fileData <- read.csv(filePath)
+        fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+        fileData <- na.omit(fileData)
+        
+        if(nrow(fileData) < 1){
+          next
+        }
+        
+       for(i in names(trainedModels)){
+         modelPredicts[project, i] = estimateEffortWithTrainedModel(fileData, trainedModels[[i]])
+      }
+}
+
+modelPredicts <- as.data.frame(modelPredicts)
+accuracyMeasurements <- matrix(nrow = 1, ncol = length(trainedModels)*3)
+colnames(accuracyMeasurements) <- c(paste(names(trainedModels), "PRED25", sep="_"), paste(names(trainedModels), "PRED50", sep="_"), paste(names(trainedModels), "MMRE", sep="_"))
+accuracyMeasurements <- as.data.frame(accuracyMeasurements)
+for(i in names(trainedModels)){
+accuracyMeasurements[, paste(i, "MMRE",sep="_")] <- calcMMRE(modelPredicts$Effort, modelPredicts[,i])
+accuracyMeasurements[, paste(i, "PRED25",sep="_")] <- calcPRED(modelPredicts$Effort, modelPredicts[,i], 25)
+accuracyMeasurements[, paste(i, "PRED50",sep="_")] <- calcPRED(modelPredicts$Effort, modelPredicts[,i], 80)
+}
+
+```

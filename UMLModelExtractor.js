@@ -5,188 +5,234 @@
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
-	var parser = new xml2js.Parser();
-	var xmiParser = require('./model_platforms/ea/XMI2.1Parser.js');
+    var parser = new xml2js.Parser();
+	var eaParser = require('./model_platforms/ea/XMI2.1Parser.js');
+	var srcParser = require('./model_platforms/src/SrcParser.js');
+	var vpParser = require('./model_platforms/visual_paradigm/XMI2.1Parser.js');
+	var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
+	var modelDrawer = require("./model_drawers/UserSystemInteractionModelDrawer.js");
+	var domainModelDrawer = require("./model_drawers/DomainModelDrawer.js");
 	var mkdirp = require('mkdirp');
+	var jsonQuery = require('json-query');
+	var jp = require('jsonpath');
+	
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
+		console.log(umlModelInfo);
 		mkdirp(umlModelInfo.OutputDir, function(err) {
-			// path exists unless there was an error
+			console.log("create dir");
 			if(err) {
 				callbackfunc(false);
 				console.log(err);
 				return;
 			}
 
-			xmiParser.extractUserSystermInteractionModel(umlModelInfo.umlFilePath, function(model){
+			fs.readFile(umlModelInfo.umlFilePath, "utf8", function(err, data) {
+			
+			parser.parseString(data, function(err, xmiString) {
+			// determine what type xmi file it is.
+			var xmiParser = null;
+			if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
+				xmiParser = eaParser;
+			}
+			else if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0]) {
+				xmiParser = vpParser;
+			}
+			else if(jp.query(xmiString, '$..["kdm:Segment"]')[0]){
+				xmiParser = srcParser;
+			}
+			
+			if(xmiParser == null){
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+				console.log("parser not found");
+				return;
+			}
+
+			var path = require('path');
+			console.log(umlModelInfo.umlFilePath);
+			var workDir = path.dirname(umlModelInfo.umlFilePath);
+			xmiParser.extractUserSystermInteractionModel(xmiString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
 				console.log("extract model");
 				
-				var debug = require("./utils/DebuggerOutput.js");
-				debug.writeJson("extratedModel", model);
+//				var debug = require("./utils/DebuggerOutput.js");
+//				debug.writeJson("extratedModel_"+model._id, model);
 				
 				if(!model){
 					return;
 				}
 				
-				// set up the model info properties
-				for(var i in umlModelInfo){
-					model[i] = umlModelInfo[i];
-				}
 				
+				// set up the model info properties
+				for(var i in model){
+					umlModelInfo[i] = model[i];
+				}
 				
 				// set up the domain model
-				var domainModel = model.DomainModel;
-//				var domainModel = model.DomainModel;
-				domainModel.OutputDir = model.OutputDir+"/domainModel";
-				domainModel.AccessDir = model.AccessDir+"/domainModel";
-//				domainModel.DotGraphFile = '';
-//				domainModel.SvgGraphFile = 'domainModel.svg';
-//				console.log("domainModel");
-//				console.log(domainModel);
-				 for(var i in domainModel.Diagrams){
-						var diagram = domainModel.Diagrams[i];
-						diagram.OutputDir = domainModel.OutputDir;
-						diagram.AccessDir = domainModel.AccessDir;
-				}
-				 
-				// make extra processing for the domain model diagrams. To reference their elements 
-					domainModel.findElement = function(elementName){
-						if(!elementName){
-							return null;
-						}
-						console.log("checking class elments");
-						console.log(elementName);
-						for(var i in this.Diagrams){
-							var diagram = this.Diagrams[i];
-							for(var j in diagram.Elements){
-								var element = diagram.Elements[j];
-								console.log("iterating class element");
-								console.log(element.Name);
-								//apply the rules to convert to standard names, and use the standard ones to compare with each other.
-								if(standardiseName(elementName) === standardiseName(element.Name)){
-									return element;
-								}
-							}
-						}
-					}
-
-				debug.writeJson("modelModel", domainModel);
-
-//				domainModelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
-//					console.log("domain model drawn");
-//				});
-					
-				//set up the use cases.
-//				console.log("use cases");
-//				console.log(useCases);
-				for(var i in model.UseCases) {
-								var useCase = model.UseCases[i];
-//								console.log(useCase);
+				var domainModel = umlModelInfo.DomainModel;
+				
+				for(var i in umlModelInfo.UseCases) {
+								var useCase = umlModelInfo.UseCases[i];
 //								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
-								var fileName = useCase._id;
-								useCase.OutputDir = model.OutputDir+"/"+fileName;
-								useCase.AccessDir = model.AccessDir+"/"+fileName;
 								
-								var useCasePaths = [];
+								useCase.Transactions = traverseUseCaseForTransactions(useCase);
 								
-								for(var k in useCase.Diagrams){
-									var diagram = useCase.Diagrams[k];
-									diagram.OutputDir = useCase.OutputDir;
-									diagram.AccessDir = useCase.AccessDir;
-									
-									for(var j in diagram.Nodes){
-										var node = diagram.Nodes[j];
-										var source = node.source;
-										if(source){
-										var sourceComponent = model.DomainModel.findElement(source.Name);
-										source.component = sourceComponent;
-										}
-//										console.log("source component");
-//										console.log(source);
-										var target = node.target;
-										if(target){
-										var targetComponent = model.DomainModel.findElement(target.Name);
-										target.component = targetComponent;
-										}
+								for(var j in useCase.Transactions){
+									var transaction = useCase.Transactions[j];
+									var TransactionStrByIDs = "";
+									for(var k in transaction.Elements){
+										var node = transaction.Elements[k];
+										TransactionStrByIDs += node._id+"->";
 									}
-									
-									console.log(diagram);
-									diagram.Paths = traverseBehavioralDiagram(diagram);
-									
-								// associate information for the paths.
-									
-								for(var j in diagram.Paths){
-									var path = diagram.Paths[j];
-									var pathStr = "";
-									var components = [];
-									for(var k in path.Nodes)
-									{	
-										var node = path.Nodes[k];
-										
-										if(i == 0){
-											if(node.source){
-											components.push(node.source);
-											}
-										}
-						
-										if(node.target){
-											components.push(node.target);
-										}
-										
-//										var node = path[i];
-//										var elementID = path['Elements'][i];
-//										var components = diagram.allocate(node);
-//										if(!element){
-//											break;
-//										}
-//										for(var j in components){
-//											totalDegree += components[j].InboundNumber;
-//											tranLength++;	
-//										}
-										
-										pathStr += node.Name;
-										if( i != path.Nodes.length - 1){
-											pathStr += "->";
-										}
-									}
-									
-									path.PathStr = pathStr;
-									path.Components = components;
-									
-									useCasePaths.push(path);
+									transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
 								}
 								
-//								useCasePaths = useCasePaths.concat(diagram.Paths);
-								}
-								
+								modelDrawer.drawPrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase.dotty", function(){
 
-								debug.writeJson("useCase_"+useCase.Name, useCase);
+									console.log("use case is drawn");
+								});
+								modelDrawer.drawSimplePrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase_simple.dotty", function(){
+
+									console.log("simple use case is drawn");
+								});
+								
+								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
+									console.log("paths are drawn");
+								});
+								
 //								useCaseDrawer.drawUseCase(useCase, useCase.OutputDir+"/useCase.dotty", function(){
 //									console.log("use case is drawn");
 //								});
 								
-								console.log("use case paths");
-								console.log(useCasePaths);
 //								pathsDrawer.drawPaths(useCasePaths, useCase.OutputDir+"/paths.dotty", function(){
 //									console.log("use case is drawn");
 //								});
-						}
+				}
 			
-				debug.writeJson("mode", model);
-//				modelDrawer.drawModel(model, model.OutputDir+"/model.dotty", function(){
-//					console.log("model is drawn");
-//				});
+//				debug.writeJson("model_"+model._id, umlModelInfo);
+				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
+					console.log("domain model is drawn");
+				});
 
 				if(callbackfunc){
-					callbackfunc(model);
+					callbackfunc(umlModelInfo);
 				}
 
 			});
-
-
+			});
+			});
 		});
 	}
+	
+	function traverseUseCaseForTransactions(useCase){
+		
+		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+		
+
+		function isCycled(path){
+			var lastNode = path[path.length-1];
+				for(var i=0; i < path.length-1; i++){
+					if(path[i] == lastNode){
+						return true;
+					}
+				}
+			return false;
+		}
+
+			var toExpandCollection = new Array();
+			
+			for (var j in useCase.Activities){
+				var activity = useCase.Activities[j];
+				//define the node structure to keep the infor while traversing the graph
+				if(activity.Stimulus){
+				var node = {
+					//id: startElement, //ElementGUID
+					Node: activity,
+					PathToNode: [activity],
+					OutScope: activity.OutScope
+				};
+				toExpandCollection.push(node);
+				}
+			}
+			
+			var Paths = new Array();
+			var toExpand;
+			
+			var debug = require("./utils/DebuggerOutput.js");
+			debug.writeJson("use_cas_toExpand_"+useCase._id, toExpandCollection);
+			
+			while((toExpand = toExpandCollection.pop()) != null){
+				var node = toExpand.Node;
+				var pathToNode = toExpand.PathToNode;
+
+					var childNodes = [];
+					for(var j in useCase.PrecedenceRelations){
+						var edge = useCase.PrecedenceRelations[j];
+						if(edge.start == node){
+							childNodes.push(edge.end);
+						}
+					}
+				
+				if(childNodes.length == 0){
+					Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
+				}
+				else{
+					for(var j in childNodes){
+						var childNode = childNodes[j];
+						if(!childNode){
+							continue;
+						}
+						
+						//if childNode is an outside activity
+						
+						var OutScope = false;
+						if(toExpand.OutScope||childNode.OutScope){
+							OutScope = true;
+						}
+						
+						var toExpandNode = {
+							Node: childNode,
+							PathToNode: pathToNode.concat(childNode),
+							OutScope: OutScope
+						}
+
+						if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
+						toExpandCollection.push(toExpandNode);
+						}
+						else{
+						Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
+						}
+					}		
+				}
+				
+				
+			}
+			
+			//eliminate the duplicates
+			var pathsByString = {};
+			var uniquePaths = [];
+			for(var i in Paths){
+				path = Paths[i];
+				var pathString = "";
+				for(var j in path.Nodes){
+					var node = path.Nodes[j];
+					pathString += node._id;
+				}
+//				var key = pathString.replace(/[^\w\s]/gi, '');
+				if(!pathsByString[pathString]){
+					pathsByString[pathString] = 1;
+					uniquePaths.push(path);
+				}
+				else{
+				console.log("duplicate");
+				}
+			}
+
+			return uniquePaths;
+	}
+
 	
 	module.exports = {
 		extractModelInfo : extractModelInfo,
@@ -196,7 +242,6 @@
 				if(err) {
 					return console.log(err);
 				}
-//				modelExtractor.extractModels(umlModelInfo.umlFilePath, func);			
 			});
 		},
 	}

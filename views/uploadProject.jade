@@ -2,11 +2,12 @@ html
   head
     title UMLx
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
-    script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
-    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-    script(type='text/javascript', src='js/scripts.js')
-    script(type='text/javascript', src='http://wzrd.in/standalone/uuid%2Fv1@latest')
     link(href='css/style.css', rel='stylesheet')
+    script(type='text/javascript').
+        document.getElementById("uuid-page1").value = uuidv1();
+        document.getElementById("uuid-page2").value = uuidv1();
+        document.getElementById("uuid-page3").value = uuidv1();
+        document.getElementById("uuid-page4").value = uuidv1();
     script.
         function showPage(pageNumer) {
             for (var i = 1; i <= 4; i++) {
@@ -18,34 +19,35 @@ html
                 }
             }
         }
+
   body#upload-body
     include banner
     .container
       h2  Project Details 
-      form#model-file-submit-form.form-horizontal(novalidate='', onsubmit='model_file_upload_fnc()', method='post', action='/')
+      form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadUMLFile', enctype='multipart/form-data')
         // Page1
         #page1
           .alert.alert-info
             | Project Information
           .form-group
-            label.control-label.col-xs-4(for='uml-model-name') Project Name
-            .col-xs-8
+            label.control-label(style='text-align:left').col-xs-2(for='uml-model-name') Project Name
+            .col-xs-10
               input#uml-model-name.form-control(type='text', placeholder='Project Name', name='uml-model-name')
-          input#uml-model-type(type='hidden', name='uml-model-type', value='uml')
-          input#repo-id(type='hidden', name='repo-id', value='598c93a9a9813b12105c953e')
+            input#uml-model-type(type='hidden', name='uml-model-type', value='uml')
+            input#repo-id(type='hidden', name='repo-id', value='598c93a9a9813b12105c953e')
           .form-group
-            label.control-label.col-xs-4(for='project-desc') Project Description
-            .col-xs-8
-              textarea#project-desc.form-control(rows='5', name='project-desc', placeholder='Project description')
+              label.control-label(style='text-align:left').col-xs-2(for='project-desc') Project Description
+              .col-xs-10
+                textarea#project-desc.form-control(rows='5', name='project-desc', placeholder='Project description')
           .form-group
-            label.control-label.col-xs-4(for='project-effort') Effort
-            .col-xs-8
-              input#project-effort.form-control(type='text', placeholder='Effort', name='project-effort')
+              label.control-label(style='text-align:left').col-xs-2(for='project-effort') Effort
+              .col-xs-10
+                input#project-effort.form-control(type='text', placeholder='Effort', name='project-effort')
           .form-group
-            label.control-label.col-xs-4(for='project-duration') Duration
-            .col-xs-8
-              input#project-duration.form-control(type='text', placeholder='Duration', name='project-duration')
-          input#uuid-page1(type='hidden', name='uuid-page1', value='')
+              label.control-label(style='text-align:left').col-xs-2(for='project-duration') Duration
+              .col-xs-10
+                input#project-duration.form-control(type='text', placeholder='Duration', name='project-duration')
+            input#uuid-page1(type='hidden', name='uuid-page1', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.disabled.pull-left(type='button') < Previous
@@ -79,16 +81,16 @@ html
               option 4
               option 5
           .form-group
-            label.control-label(for='alert alert-infoternal-processing') Complex internal processing
-            select.form-control(id='alert alert-infoternal-processing', name='alert alert-infoternal-processing')
+            label.control-label(for='complex-internal-processing') Complex internal processing
+            select#complex-internal-processing.form-control(name='complex-internal-processing')
               option 1
               option 2
               option 3
               option 4
               option 5
           .form-group
-            label.control-label(for='code-must-be-resuable') Code must be reusable
-            select#code-must-be-resuable.form-control(name='code-must-be-resuable')
+            label.control-label(for='code-must-be-reusable') Code must be reusable
+            select#code-must-be-reusable.form-control(name='code-must-be-reusable')
               option 1
               option 2
               option 3
@@ -241,20 +243,19 @@ html
           .alert.alert-info
             | Project model file and documents
           .form-group
-            label.control-label.col-xs-4(for='uml-file') Model File (file types: xml are supported)
-            .col-xs-8
-              input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
+              label.control-label(style='text-align:left').col-xs-4(for='uml-file') Model File (file types: xml are supported)
+              .col-xs-8
+                input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
           .form-group
-            label.control-label.col-xs-4(for='uml-other') Other Documents (file types: zip, rar, tar are supported)
-            .col-xs-8
-              input#uml-other.form-control(type='file', name='uml-other')
+              label.control-label(style='text-align:left').col-xs-4(for='uml-other') Other Documents (file types: zip, rar, tar are supported)
+              .col-xs-8
+                input#uml-other.form-control(type='file', name='uml-other', accept='application/x-zip-compressed')
           input#uuid-page4(type='hidden', name='uuid-page4', value='')
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
               button.btn.btn-success.pull-right(type='submit') Submit
-    script(type='text/javascript').
-        document.getElementById("uuid-page1").value = uuidv1();
-        document.getElementById("uuid-page2").value = uuidv1();
-        document.getElementById("uuid-page3").value = uuidv1();
-        document.getElementById("uuid-page4").value = uuidv1();
+
+    script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+    script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+    script(type='text/javascript', src='js/scripts.js')
