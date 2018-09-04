@@ -1235,10 +1235,10 @@ function deleteRepo(repoId, callbackfunc) {
 
   				    var o_id = new mongo.ObjectID(repoId);
 
-                        db.collection("repos").update({_id:o_id}, repoInfo, function(){
-
-                          
-
+                        db.collection("repos").update({_id:o_id}, repoInfo, function(err, result){
+                            if (err) throw err;
+                            db.close();
+                            callbackfunc(repoInfo);
                         });
 
                     });
@@ -1285,10 +1285,10 @@ function deleteRepo(repoId, callbackfunc) {
                     var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise , "isActive" : true}
                     if(enterpriseUserId!=''){
                         userInfo.enterpriseUserId=  new mongo.ObjectID(enterpriseUserId);
-                    }db.collection("users").insertOne(userInfo, function(err, result) {
+                    }
+                    db.collection("users").insertOne(userInfo, function(err, result) {
                         if (err) throw err;
-                        db.close();
-
+                        
                         // since the user successfully signed up create a repo for this user
 
                         createRepo(username,pwd,function(repo){
@@ -1311,7 +1311,19 @@ function deleteRepo(repoId, callbackfunc) {
                                 message: 'Successfully signed up',
                                 token: token
                             };
-                            callback(result);});
+
+                            var userInfoWithRepoID = {
+                                ...userInfo,
+                                repoId: repo._id,
+                            };
+
+                            db.collection("users").update({_id:userInfo._id}, userInfoWithRepoID, function(err, result){
+                                if (err) throw err;
+                                db.close();
+                                callback(result);
+                            });
+
+                        });
                     });
 
                 }
