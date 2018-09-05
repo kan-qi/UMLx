@@ -30,21 +30,21 @@ html
           .alert.alert-info
             | Project Information
           .form-group
-            label.control-label(style='text-align:left').col-xs-2(for='uml-model-name') Project Name
+            label.control-label(style='text-align:left', for='uml-model-name').col-xs-2 Project Name
             .col-xs-10
               input#uml-model-name.form-control(type='text', placeholder='Project Name', name='uml-model-name')
             input#uml-model-type(type='hidden', name='uml-model-type', value='uml')
             input#repo-id(type='hidden', name='repo-id', value='598c93a9a9813b12105c953e')
           .form-group
-              label.control-label(style='text-align:left').col-xs-2(for='project-desc') Project Description
+              label.control-label(style='text-align:left', for='project-desc').col-xs-2 Project Description
               .col-xs-10
                 textarea#project-desc.form-control(rows='5', name='project-desc', placeholder='Project description')
           .form-group
-              label.control-label(style='text-align:left').col-xs-2(for='project-effort') Effort
+              label.control-label(style='text-align:left', for='project-effort').col-xs-2 Effort
               .col-xs-10
                 input#project-effort.form-control(type='text', placeholder='Effort', name='project-effort')
           .form-group
-              label.control-label(style='text-align:left').col-xs-2(for='project-duration') Duration
+              label.control-label(style='text-align:left', for='project-duration').col-xs-2 Duration
               .col-xs-10
                 input#project-duration.form-control(type='text', placeholder='Duration', name='project-duration')
             input#uuid-page1(type='hidden', name='uuid-page1', value='')
@@ -243,11 +243,11 @@ html
           .alert.alert-info
             | Project model file and documents
           .form-group
-              label.control-label(style='text-align:left').col-xs-4(for='uml-file') Model File (file types: xml are supported)
+              label.control-label(style='text-align:left', for='uml-file').col-xs-4 Model File (file types: xml are supported)
               .col-xs-8
                 input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
           .form-group
-              label.control-label(style='text-align:left').col-xs-4(for='uml-other') Other Documents (file types: zip, rar, tar are supported)
+              label.control-label(style='text-align:left', for='uml-other').col-xs-4 Other Documents (file types: zip, rar, tar are supported)
               .col-xs-8
                 input#uml-other.form-control(type='file', name='uml-other', accept='application/x-zip-compressed')
           input#uuid-page4(type='hidden', name='uuid-page4', value='')
