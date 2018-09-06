@@ -142,42 +142,42 @@ var targetProjects2012_2013 = [
 var reportDir2013_2014 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\577 Projects\\2013-2014"
 
 	var targetProjects2013_2014 = [
-//		testProject131, //error
-//		testProject132,//error with empty set of transactions
-//		testProject133,
+		testProject131, //error
+		testProject132,//error with empty set of transactions
+		testProject133,
 		testProject134,
-//		testProject135,
-//		testProject136,
-//		testProject137,
-//		testProject138,
-//		testProject139,
-//		testProject140,
-//		testProject141,
-//		testProject142,
-//		testProject143,
-//		testProject144,
-//		testProject145,
-//		testProject146,
-//		testProject147,
-//		testProject148,
+		testProject135,
+		testProject136,
+		testProject137,
+		testProject138,
+		testProject139,
+		testProject140,
+		testProject141,
+		testProject142,
+		testProject143,
+		testProject144,
+		testProject145,
+		testProject146,
+		testProject147,
+		testProject148,
 //		testProject149 //error
 		];
 
 var reportDir2014_2015 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\data\\577 Projects\\2014-2015"
 
 	var targetProjects2014_2015 = [
-//		testProject231,
-//		testProject232,
-//		testProject233,
-//		testProject234,
-//		testProject235,
-//		testProject236,
-//		testProject237,
-//		testProject238,
-//		testProject239,
-//		testProject240,
-//		testProject241,
-//		testProject242,
+		testProject231,
+		testProject232,
+		testProject233,
+		testProject234,
+		testProject235,
+		testProject236,
+		testProject237,
+		testProject238,
+		testProject239,
+		testProject240,
+		testProject241,
+		testProject242,
 		testProject243,
 		testProject244,
 		testProject245,
@@ -204,8 +204,8 @@ var reportDir2016_2017 = "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpa
 
 var targetProjects2016_2017 = [
 	testProject51,
-//	testProject52,
-//	testProject53,//error
+	testProject52,
+	testProject53,//error
 	];
 
 var fs = require('fs');
@@ -643,5 +643,57 @@ for(var i in transactionEvaluationContents){
 
 FileManagerUtil.writeFileSync(repoDir+"\\transactionEvaluations-8-16.csv", transactionEvaluationConsolidation);
 
+}
+else if(functionSelection === "--generate-repo-config"){
+	var repoconfig = {
+			reportDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2016-2017",
+			repoDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2016-2017",
+//			reportDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2015-2016",
+//			repoDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2015-2016",
+//			reportDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2014-2015",
+//			repoDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2014-2015",
+//			reportDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2013-2014",
+//			repoDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2013-2014",
+//			reportDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2012-2013",
+//			repoDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2012-2013",
+//			reportDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2011-2012",
+//			repoDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2011-2012",
+//			reportDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2010-2011",
+//			repoDir: "C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Repositories\\577 projects\\2010-2011",
+			projectList: []
+	}
+	
+	targetProjects = [];
+//	targetProjects = targetProjects.concat(targetProjects2010_2011);
+//	targetProjects = targetProjects.concat(targetProjects2011_2012);
+//	targetProjects = targetProjects.concat(targetProjects2012_2013);
+//	targetProjects = targetProjects.concat(targetProjects2013_2014);
+//	targetProjects = targetProjects.concat(targetProjects2014_2015);
+//	targetProjects = targetProjects.concat(targetProjects2015_2016);
+	targetProjects = targetProjects.concat(targetProjects2016_2017);
+	
+	for(var i in targetProjects){
+		targetProject = targetProjects[i];
+		var dir = path.dirname(targetProject);
+		dir = dir.replace(/\\Google Drive\\ResearchSpace/g, "")
+		var fileName = path.basename(targetProject);
+		var tag = fileName.replace(".xml", "");
+		
+		repoconfig.projectList.push({
+			path: dir,
+			modelFile: fileName,
+			tag: tag
+		});
+	}
+	
+	var debug = require("../../utils/DebuggerOutput.js");
+//	debug.writeJson("repo_2010_2011", repoconfig);
+//	debug.writeJson("repo_2011_2012", repoconfig);
+//	debug.writeJson("repo_2012_2013", repoconfig);
+//	debug.writeJson("repo_2013_2014", repoconfig);
+//	debug.writeJson("repo_2014_2015", repoconfig);
+//	debug.writeJson("repo_2015_2016", repoconfig);
+	debug.writeJson("repo_2016_2017", repoconfig);
+	
 }
 

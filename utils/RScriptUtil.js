@@ -3,12 +3,16 @@
 
 	var exec = require('child_process').exec;
 	
-	var RExec = '\"C:/Program Files/R/R-3.5.1/bin/Rscript\"';
+	//if you haven't add Rscript into path variable of OS. You can use the absolute path.
+	//var RExec = '\"C:/Program Files/R/R-3.5.1/bin/Rscript\"';
+	
+	//if you have added Rscript into path variable of OS.
+	var RExec = '\"Rscript\"';
 	
 
 	var debug = require("./DebuggerOutput.js");
 	
-	var libPaths = "C:/Users/flyqk/Documents/R/win-library/3.5;C:/Program Files/R/R-3.5.1/library";
+	//var libPaths = "C:/Users/flyqk/Documents/R/win-library/3.5;C:/Program Files/R/R-3.5.1/library";
 	
 	//every other functions which call R script should call this function.
 	

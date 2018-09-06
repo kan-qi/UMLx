@@ -177,12 +177,6 @@
 				}
 		};
 	
-		
-		//search for the use cases
-		var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
-//		console.log(XMIUseCases);
-//		debug.writeJson("XMIUseCases", XMIUseCases);
-		
 		//establish the dictionary that include pm_estimate, dev_estimate, and business_value data
 
 		var XMIPMEstimates = jp.query(XMIUMLModel, '$..["thecustomprofile:pm_effort"][?(@["$"])]');
@@ -284,6 +278,11 @@
 				   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
 			   });
 		
+			 //search for the use cases
+				var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
+//				console.log(XMIUseCases);
+//				debug.writeJson("XMIUseCases", XMIUseCases);
+				
 		//parsing use cases.
 		for(var i in XMIUseCases){
 			var XMIUseCase = XMIUseCases[i];

@@ -21,7 +21,6 @@
 		console.log(umlModelInfo);
 		mkdirp(umlModelInfo.OutputDir, function(err) {
 			console.log("create dir");
-			// path exists unless there was an error
 			if(err) {
 				callbackfunc(false);
 				console.log(err);
@@ -72,32 +71,13 @@
 				
 				// set up the domain model
 				var domainModel = umlModelInfo.DomainModel;
-//				var domainModel = model.DomainModel;
-//				domainModel.DotGraphFile = '';
-//				domainModel.SvgGraphFile = 'domainModel.svg';
-//				console.log("domainModel");
-//				console.log(domainModel);
 				
-//				debug.writeJson("domainModel", domainModel);
-
-//				domainModelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
-//					console.log("domain model drawn");
-//				});
-					
-				//set up the use cases.
-//				console.log("use cases");
-//				console.log(model);
 				for(var i in umlModelInfo.UseCases) {
 								var useCase = umlModelInfo.UseCases[i];
-//								console.log(umlModelInfo.UseCases[i]);
-//								console.log(useCase);
 //								useCase._id = id;
 //								var fileName = useCase.Name.replace(/[^A-Za-z0-9_]/gi, "_") + "_"+useCase._id;
 								
 								useCase.Transactions = traverseUseCaseForTransactions(useCase);
-								
-								var debug = require("./utils/DebuggerOutput.js");
-//								debug.writeJson("use_case_to_expand_"+useCase._id, useCase);
 								
 								for(var j in useCase.Transactions){
 									var transaction = useCase.Transactions[j];
@@ -108,9 +88,6 @@
 									}
 									transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
 								}
-								
-								
-								debug.writeJson("useCase_"+useCase.Name, useCase);
 								
 								modelDrawer.drawPrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase.dotty", function(){
 
@@ -220,15 +197,6 @@
 							PathToNode: pathToNode.concat(childNode),
 							OutScope: OutScope
 						}
-						
-//						console.log("toExpandNode");
-//						console.log(toExpandNode);
-//						
-//						console.log("child node");
-//						console.log(childNodes);
-//						console.log(childNode);
-//						console.log(childNode.Name);
-//						console.log(childNode.Group);
 
 						if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
 						toExpandCollection.push(toExpandNode);
@@ -261,12 +229,7 @@
 				console.log("duplicate");
 				}
 			}
-			
-//			console.log(Paths);
-//			useCase.Paths = Paths;
-			
-//			return Object.keys(pathsByString).map(k => pathsByString[k]);
-			
+
 			return uniquePaths;
 	}
 
@@ -279,7 +242,6 @@
 				if(err) {
 					return console.log(err);
 				}
-//				modelExtractor.extractModels(umlModelInfo.umlFilePath, func);			
 			});
 		},
 	}

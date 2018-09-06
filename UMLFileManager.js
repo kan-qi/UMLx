@@ -85,11 +85,39 @@
 //			});
 //		},
 //		parseCSVData: parseCSVData,
+		readFile: function(filePath, callbackfunc){
+			fs.readFile(filePath, 'utf-8', (err, str) => {
+				   if (err) {
+					if(callbackfunc){
+						callbackfunc(false);
+					}
+					return;
+				   }
+//				    console.log(data);
+				   if(callbackfunc){
+					   callbackfunc(str);
+				   }
+			});
+		},
 		deleteFolder: function(url, callbackfunc){
 			//fill out the function.
 			if(callbackfunc){
 			callbackfunc(url);
 			}
+		},
+		writeFile: function(filePath, content, callbackfunc){
+			fs.writeFile(filePath, content, function(err){
+				if(err){
+					console.log(err);
+					if(callbackfunc){
+						callbackfunc(false);
+					}
+				}
+				
+				if(callbackfunc){
+					callbackfunc(path);
+				}
+			});
 		},
 		writeFiles: function(dir, files, callbackfunc){
 			function writeFile(path, content){

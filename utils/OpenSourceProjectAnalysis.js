@@ -80,17 +80,22 @@ function analyseXMIModel(projectList, reportDir){
 //	FileManagerUtil.deleteFileSync(reportPath);
 	
 	  //use promise to construct the repo objects
-    function analyseModel(projectXMI, projectName){
+    function analyseModel(projectXMI, projectName, reportDir){
         return new Promise((resolve, reject) => {
 //        	config.setDebugOutputDir(projectPath+"/debug");
         	
-        	if(!projectName){
-        		 let date = new Date();
-        	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
 
-        	    projectName = analysisDate+"@"+Date.now();
-        	}
-        	var outputDir = path.dirname(projectXMI)+"\\"+projectName+"_analysis";
+        if(!projectName){
+        		projectName = ""
+        }
+        	
+   		 let date = new Date();
+   	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+   	     analysisDate = analysisDate+"@"+Date.now();
+   	   
+   	     projectName = projectName + "_"+analysisDate;
+        	
+        	var outputDir = reportDir +"\\"+projectName+"_analysis";
         	global.debugOutputDir = outputDir + "/debug";
         	var inputFile = projectXMI;
         	
@@ -127,7 +132,7 @@ function analyseXMIModel(projectList, reportDir){
     }
     
     return Promise.all(projectList.map(project=>{
-        return analyseModel(project.path+"\\"+project.modelFile, project.tag);
+        return analyseModel(project.path+"\\"+project.modelFile, project.tag, reportDir);
     })).then(
         function(){
             return new Promise((resolve, reject) => {
@@ -147,7 +152,7 @@ function analyseXMIModel(projectList, reportDir){
 
 function scanRepo(repoListPath, repoRecordPath){
 		  //to generate svg file.
-			var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+			var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
 		    var command = 'java -classpath '+classPath+' repo.AnalysisKit "scan-repo" "'+repoListPath+'" "'+repoRecordPath+'"';
 		  	console.log(command);
 		  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -166,7 +171,7 @@ function scanRepo(repoListPath, repoRecordPath){
 
 function selectFiles(repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
     var command = 'java -classpath '+classPath+' repo.AnalysisKit "select-files" "'+repoRecordPath+'"';
   	console.log(command);
   	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -184,7 +189,7 @@ function selectFiles(repoRecordPath){
 
 function analyseSloc(repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
    var command = 'java -classpath '+classPath+' repo.AnalysisKit "analyse-sloc" "'+repoRecordPath+'"';
  	console.log(command);
  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -202,7 +207,7 @@ function analyseSloc(repoRecordPath){
 
 function generateSlocReport(repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Google Drive\\ResearchSpace\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
   var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoRecordPath+'"';
 	console.log(command);
 	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {

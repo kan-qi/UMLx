@@ -210,21 +210,23 @@ html
                 // Page3
                 #page3.hidden
                     .alert.alert-info
-                        | Resource estimation
+                        | Resource Estimation
                         
                     .form-group
                        label.control-label(style='text-align:left').col-xs-2(for='personnel') Personnel
                        .col-xs-10
                            input#uml-model-name.form-control(type='text', placeholder='Number of team members', name='personnel')
+                           p Estimate the available personnel. If it is unlimited, leave it blank.
                     .form-group
                        label.control-label(style='text-align:left').col-xs-2(for='schedule') Schedule (Monthes) 
                        .col-xs-10
-                           input#uml-model-name.form-control(type='text', placeholder='Required time span of the project in monthes.', name='schedule')
+                           input#uml-model-name.form-control(type='text', placeholder='Months', name='schedule')
+                           p Estimate the available schedule in months. If it is unlimited, leave it blank.
                     .form-group
                        label.control-label(style='text-align:left').col-xs-2(for='hours-per-month') Hours/Month
                        .col-xs-10
-                           input#project-effort.form-control(type='text', placeholder='Average number of working hours per month for team members, for example, 160 horus for full number members, 20 hours for part-time developers, etc.', name='hours-per-month')
-                   
+                           input#project-effort.form-control(type='text', placeholder='Hours/Month', name='hours-per-month')
+                           p Estimate the evarage number of working hours per month for team members, for example, 160 horus for full number members, 20 hours for part-time developers, etc.
                     input#uuid-page3(type='hidden', name='uuid-page3', value='')
 
                     .form-group
