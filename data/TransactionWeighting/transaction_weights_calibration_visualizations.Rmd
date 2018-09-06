@@ -548,7 +548,7 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   ylab("Actual Effort") + ggtitle("Goodness of Fit") +
   theme(panel.spacing = unit(1, "lines")) +
   geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
-            hjust = -0.1, vjust = -1) + 
+            hjust = -1, vjust = -1) + 
   theme_bw()
 
 # Plots cross validation results  
@@ -632,7 +632,7 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   ylab("Actual Effort") + ggtitle("Goodness of Fit") +
   theme(panel.spacing = unit(1, "lines")) +
   geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
-            hjust = -0.1, vjust = -1) + 
+            hjust = -1, vjust = -1) + 
   theme_bw()
 
 # Plots cross validation results
@@ -676,22 +676,22 @@ TNModelSelector <- 1;
 TNModelPredictedValues <- as.data.frame(predictedValuesTN[, c(paste(TNModelSelector, "Bins", sep=" "))])
 TNModelData <- TNresults[[TNModelSelector]][["data"]]
 TNModelData <- TNModelData[rownames(TNModelData) != "Aggregate", ]
-colnames(TNModelPredictedValues) <- c("TN")
+colnames(TNModelPredictedValues) <- c("EUCP")
 rownames(TNModelPredictedValues) <- rownames(predictedValuesTN)
 
-SWTIIModelSelector <- 3;
+SWTIIModelSelector <- 4;
 SWTIIModelPredictedValues = as.data.frame(predictedValuesSWTII[, c(paste(SWTIIModelSelector, "Bins", sep=" "))])
 SWTIIModelData <- SWTIIresults[[SWTIIModelSelector]][["data"]]
 SWTIIModelData <- SWTIIModelData[rownames(SWTIIModelData) != "Aggregate", ]
 #print(SWTIIModelData)
-colnames(SWTIIModelPredictedValues) <- c("SWTII")
+colnames(SWTIIModelPredictedValues) <- c("EXUCP")
 rownames(SWTIIModelPredictedValues) <- rownames(predictedValuesSWTII)
 
 SWTIIIModelSelector <- 3;
 SWTIIIModelPredictedValues = as.data.frame(predictedValuesSWTIII[, c(paste(SWTIIIModelSelector, "Bins", sep=" "))])
 SWTIIIModelData <- SWTIIIresults[[SWTIIIModelSelector]][["data"]] 
 SWTIIIModelData <- SWTIIIModelData[rownames(SWTIIIModelData) != "Aggregate", ]
-colnames(SWTIIIModelPredictedValues) <- c("SWTIII")
+colnames(SWTIIIModelPredictedValues) <- c("DUCP")
 rownames(SWTIIIModelPredictedValues) <- rownames(predictedValuesSWTIII)
 
 predictedValues <- merge(TNModelPredictedValues, SWTIIModelPredictedValues, by='row.names', all=TRUE)
@@ -707,20 +707,21 @@ predictedValues$Row.names <- NULL
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
   model <- lm(Effort ~ ., data = dat)
-  summary(model)$r.squared
   print(summary(model)$coefficients)
+  summary(model)$r.squared
 })
+
 r2Vals <- round(r2Vals, digits = 5)
 r2Vals <- paste("r2:", r2Vals, sep = "")
 predictedValues <- gather(predictedValues, models, Predicted, -Effort)
-r2data_txt <- data.frame(label = as.character(r2Vals), models = c("TN", "SWTII", "SWTIII"))
+r2data_txt <- data.frame(label = as.character(r2Vals), models = c("EUCP", "EXUCP", "DUCP"))
 ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) +
   facet_grid(. ~ models, scales = "free") + xlab("Predicted Effort") +
   ylab("Actual Effort") + ggtitle("Goodness of Fit") +
   theme(panel.spacing = unit(1, "lines")) +
   geom_text(data = r2data_txt, size = 3, mapping = aes(x = -Inf, y = -Inf, label = label),
-            hjust = -0.1, vjust = -1)+
+            hjust = -1, vjust = -1)+
   theme_bw()
 
 
@@ -855,7 +856,7 @@ SWTIIModelParameters[["cuts"]] = list()
 for(i in rownames(SWTIIresults[[SWTIIModelSelector]][["cuts"]])){
   SWTIIModelParameters[["cuts"]][[i]] = SWTIIresults[[SWTIIModelSelector]][["cuts"]][i,]
 }
-print(SWTIIModelParameters[["cuts"]])
+#print(SWTIIModelParameters[["cuts"]])
 levels <- names(SWTIIresults[[SWTIIModelSelector]][["model"]])
 levels <- levels[levels != "sigma"]
 SWTIIModelParameters[["levels"]] = list()
