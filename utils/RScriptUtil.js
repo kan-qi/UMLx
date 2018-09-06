@@ -9,10 +9,11 @@
 	//if you have added Rscript into path variable of OS.
 	var RExec = '\"Rscript\"';
 	
-
 	var debug = require("./DebuggerOutput.js");
+	var config = require("../config.js")
 	
 	//var libPaths = "C:/Users/flyqk/Documents/R/win-library/3.5;C:/Program Files/R/R-3.5.1/library";
+	var libPaths = config.r_libraries;
 	
 	//every other functions which call R script should call this function.
 	
@@ -39,7 +40,10 @@
 //			console.log("exist program");
 //			process.exit();
 			runningCount++;
+			//var child = exec(RExec+" "+commandObject.command, function(error, stdout, stderr) {
+			//console.log(libPaths);
 			var child = exec(RExec+" "+commandObject.command, {env: {"R_LIBS_USER": libPaths}}, function(error, stdout, stderr) {
+					
 				if (error) {
 //					console.log('exec error: ' + error);
 					console.log(error);
