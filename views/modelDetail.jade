@@ -114,20 +114,52 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="usecase-analysis")
       div(id="model-usecase-analysis")
        h3 loading...
+     //origin
+     //div.tab-pane.fade(id="model-evaluation")
+     // div.model-evaluation
+     //  div.eucp-evaluation
+     //   h4 EUCP
+     //   -var estimationResults = modelInfo['eucp_lm']
+     //   include estimationResultPane
+     //  div.excup-evaluation
+     //   h4 EXUCP
+     //   -var estimationResults = modelInfo['exucp_lm']
+     //   include estimationResultPane
+     //  div.ducp-evaluation
+     //   h4 DUCP
+     //   -var estimationResults = modelInfo['ducp_lm']
+     //   include estimationResultPane
+     //end of origin
+     // modified version issue #397, separate the model info page into three tabs
      div.tab-pane.fade(id="model-evaluation")
-      div.model-evaluation
-       div.eucp-evaluation
-        h4 EUCP
-        -var estimationResults = modelInfo['eucp_lm']
-        include estimationResultPane
-       div.excup-evaluation
-        h4 EXUCP
-        -var estimationResults = modelInfo['exucp_lm']
-        include estimationResultPane
-       div.ducp-evaluation
-        h4 DUCP
-        -var estimationResults = modelInfo['ducp_lm']
-        include estimationResultPane
+        div.model-evaluation
+         ul.nav.nav-pills
+             li.nav-item.active
+                a.nav-link(data-toggle="pill", href="#pills-EUCP")
+                 | EUCP
+             li.nav-item
+                a.nav-link(data-toggle="pill", href="#pills-EXUCP")
+                 | EXUCP
+             li.nav-link
+                a.nav-link(data-toggle="pill", href="#pills-DUCP")
+                 | DUCP
+         div.tab-content
+             div.tab-pane.fade.in.active(id="pills-EUCP")
+                 div.eucp-evaluation
+                     h4 EUCP
+                     -var estimationResults = modelInfo['eucp_lm']
+                     include estimationResultPane
+             div.tab-pane.fade(id="pills-EXUCP")
+                 div.excup-evaluation
+                     h4 EXUCP
+                     -var estimationResults = modelInfo['exucp_lm']
+                     include estimationResultPane
+             div.tab-pane.fade(id="pills-DUCP")
+                 div.ducp-evaluation
+                     h4 DUCP
+                     -var estimationResults = modelInfo['ducp_lm']
+                     include estimationResultPane
+        // end of modified version
      div.tab-pane.fade(id="project-properties")
        div.project-properties
         div
