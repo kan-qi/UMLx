@@ -183,7 +183,7 @@ public class RepositoryTree extends JPanel {
 	
 
 	public void saveRepo(CheckBoxNode repo) {
-		this.saveRepoTo(repo, RepoBrowser.projectPath+"\\"+this.getNodeFileName(repo)+"\\filelist.txt", RepoBrowser.projectPath+"\\"+this.getNodeFileName(repo)+"\\selectedfilelist.txt");
+		this.saveRepoTo(repo, RepoBrowser.projectPath+"\\"+this.getNodeFileName(repo)+"\\filelist.txt", RepoBrowser.projectPath+"\\"+this.getNodeFileName(repo)+"\\selectedfilelist.txt", RepoBrowser.projectPath+"\\"+this.getNodeFileName(repo)+"\\selectedfiles.txt");
 	}
 	
 	public DefaultMutableTreeNode getContainingRepoNode(DefaultMutableTreeNode node){
@@ -197,7 +197,7 @@ public class RepositoryTree extends JPanel {
 		return parent;
 	}
 
-	private void saveRepoTo(CheckBoxNode project, String fileListPath, String selectedFileListPath) {
+	private void saveRepoTo(CheckBoxNode project, String fileListPath, String selectedFileListPath, String selectedFilesPath) {
 
 		try {
 //			List<Path> projectList = new ArrayList<Path>();
@@ -219,17 +219,34 @@ public class RepositoryTree extends JPanel {
 			}
 			writer.close();
 			
-			File selectedFile = new File(selectedFileListPath);
-			if(!selectedFile.exists()) {
-				selectedFile.createNewFile();
+			File selectedFiles = new File(selectedFileListPath);
+			if(!selectedFiles.exists()) {
+				selectedFiles.createNewFile();
 			}
 
-			PrintWriter writer2 = new PrintWriter(selectedFile);
+			PrintWriter writer2 = new PrintWriter(selectedFiles);
 			for (Path selectedPath : selectedPaths) {
 				writer2.println((selectedPath.include ? "" : "-") + selectedPath.path);
 				System.out.println("saving path: " + (selectedPath.include ? "" : "-") + selectedPath.path);
 			}
 			writer2.close();
+			
+			File selectedFiles2 = new File(selectedFilesPath);
+			if(!selectedFiles2.exists()) {
+				selectedFiles2.createNewFile();
+			}
+
+			PrintWriter writer3 = new PrintWriter(selectedFiles2);
+			for (Path selectedPath : selectedPaths) {
+				File selectedFile = new File(selectedPath.path);
+				if(selectedFile.isFile()) {
+				writer3.println((selectedPath.include ? "" : "-") + selectedPath.path);
+				System.out.println("saving path: " + (selectedPath.include ? "" : "-") + selectedPath.path);
+				}
+			}
+			System.out.println("file list saved!");
+			
+			writer3.close();
 
 		} catch (IOException e) {
 			// do something
@@ -261,7 +278,7 @@ public class RepositoryTree extends JPanel {
 			if (!folder.exists() || !folder.isDirectory()) {
 				folder.mkdir();
 			}
-			saveRepoTo(repo, folder + "\\filelist.txt", folder+"\\selectedfilelist.txt");
+			saveRepoTo(repo, folder + "\\filelist.txt", folder+"\\selectedfilelist.txt", folder+"\\selectedFiles.txt");
 			projects.add(repo.toString());
 		}
 		

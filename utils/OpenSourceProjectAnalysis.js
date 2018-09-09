@@ -247,27 +247,37 @@ if(functionSelection === "--scan-repo"){
 }
 else if(functionSelection === "--select-files"){
 //3. open repo browser to select the files that should be include in the list
-var repoListDir= repo.reportDir+"\\temp";
-var repoRecordPath = repoListDir+"\\sloc";
+//var repoListDir= repo.reportDir+"\\temp";
+var repoRecordPath = repo.reportDir+"\\sloc";
 selectFiles(repoRecordPath);
 }
 else if(functionSelection === "--analyse-sloc"){
 //4. calculate sloc for each repo
-var repoListDir= repo.reportDir+"\\temp";
-var repoRecordPath = repoListDir+"\\sloc";
+//var repoListDir= repo.reportDir+"\\temp";
+var repoRecordPath = repo.reportDir+"\\sloc";
 analyseSloc(repoRecordPath);
 }
 else if(functionSelection === "--generate-sloc-report"){
 	//4. calculate sloc for each repo
-var repoListDir= repo.repoDir+"\\temp";
-var repoRecordPath = repoListDir+"\\sloc";
+//var repoListDir= repo.reportDir+"\\temp";
+var repoRecordPath = repo.reportDir+"\\sloc";
 generateSlocReport(repoRecordPath);
 }
-
 else if(functionSelection === "--recover-kdm"){
 	
 recoverKDMModel(repo.projectList)
 
+}
+else if(functionSelection === "--calculate-cocomo-estimation-result"){
+	var cocomoDataPath = repo.repoDir+"\\COCOMORatings1.csv";
+	var cocomoCalculator = require("../effort_estimators/COCOMOCalculator.js");
+	cocomoCalculator.loadCOCOMOData(cocomoDataPath, function(cocomoDataList){
+		for(var i in cocomoDataList){
+		var cocomoData = cocomoCalculator.estimateProjectEffort(cocomoDataList[i]);
+		console.log(cocomoData);
+		}
+	});
+	
 }
 else if(functionSelection === "--analyse-xmi-model"){
 analyseXMIModel(repo.projectList, repo.reportDir);

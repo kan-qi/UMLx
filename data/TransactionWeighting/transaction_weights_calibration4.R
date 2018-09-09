@@ -88,6 +88,14 @@ discretize <- function(data, n) {
 	shape = coefficients(fit.gamma)["shape"]
 	rate = coefficients(fit.gamma)["rate"]
 	print(coefficients(fit.gamma))
+	
+	# testing the goodness of fit.
+	num_of_samples = length(vec)
+	y <- rgamma(num_of_samples, shape = shape, scale = rate)
+	result = ks.test(vec, y)
+	print("gamma goodness of fit")
+	print(result)
+	
 	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
 	#print(cutPoints)
