@@ -2129,7 +2129,7 @@ function submitEdit() {
     form_data.append('includes_special_security_objectives', $("#editNumber11").val());
     form_data.append('provides_direct_access_for_third_parties', $("#editNumber12").val());
     form_data.append('special_user_training_facilities_are_required', $("#editNumber13").val());
-    form_data.append('familiar_with_the_project_model_that_is_used', $("#editNumber14").val());
+    form_data.append('familiar_with_the_form_model_that_is_used', $("#editNumber14").val());
     form_data.append('application_experience', $("#editNumber15").val());
     form_data.append('object_oriented_experience', $("#editNumber16").val());
     form_data.append('lead_analyst_capability', $("#editNumber17").val());
@@ -2152,7 +2152,7 @@ function submitEdit() {
             $("#estimation-results-tables").html(response);
         },
         error: function (err) {
-            console.log("fail");
+            console.log("saveModelInfoCharacteristics fail");
             console.log(err);
         }
     });

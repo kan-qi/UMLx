@@ -227,7 +227,7 @@ div.block.panel.panel-default
                     td Complex internal processing
                     td
                         select(disabled='true').form-control#editNumber4
-                          - var temp = modelInfo.formInfo["alert alert-infoternal-processing"];                            
+                          - var temp = modelInfo.formInfo["complex-internal-processing"];
                             option(value =temp, selected='') #{temp}                                                  
                             if temp!=1 
                               option 1
@@ -243,7 +243,7 @@ div.block.panel.panel-default
                     td Code must be reusable
                     td
                         select(disabled='true').form-control#editNumber5
-                          - var temp = modelInfo.formInfo["code-must-be-resuable"];                            
+                          - var temp = modelInfo.formInfo["code-must-be-reusable"];
                             option(value =temp, selected='') #{temp}                                                  
                             if temp!=1 
                               option 1
@@ -371,18 +371,18 @@ div.block.panel.panel-default
                     td Special user training facilities are required
                     td
                         select(disabled='true').form-control#editNumber13
-                          - var temp = modelInfo.formInfo["special-user-training-facilities-are-required"];                            
-                            option(value =temp, selected='') #{temp}                                                  
-                            if temp!=1 
-                              option 1
-                            if temp!=2
-                              option 2
-                            if temp!=3 
-                              option 3
-                            if temp!=4
-                              option 4
-                            if temp!=5
-                              option 5
+                            - var temp = modelInfo.formInfo["provides-direct-access-for-third-parties"];
+                                option(value =temp, selected='') #{temp}
+                                if temp != 1
+                                    option 1
+                                if temp != 2
+                                    option 2
+                                if temp != 3
+                                    option 3
+                                if temp != 4
+                                    option 4
+                                if temp != 5
+                                    option 5
                 tr
                     td
                      h4 Environmental Complexity Factors
@@ -391,18 +391,18 @@ div.block.panel.panel-default
                     td Familiar with the project model that is used
                     td
                         select(disabled='true').form-control#editNumber14
-                          - var temp = modelInfo.formInfo["familiar-with-the-project-model-that-is-used"];                            
-                            option(value =temp, selected='') #{temp}                                                  
-                            if temp!=1 
-                              option 1
-                            if temp!=2
-                              option 2
-                            if temp!=3 
-                              option 3
-                            if temp!=4
-                              option 4
-                            if temp!=5
-                              option 5
+                            - var temp = modelInfo.formInfo["familiar-with-the-project-model-that-is-used"];
+                                option(value =temp, selected='') #{temp}
+                                if temp != 1
+                                    option 1
+                                if temp != 2
+                                    option 2
+                                if temp != 3
+                                    option 3
+                                if temp != 4
+                                    option 4
+                                if temp != 5
+                                    option 5
                 tr
                     td Application experience
                     td

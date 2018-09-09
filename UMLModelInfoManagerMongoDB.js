@@ -449,8 +449,7 @@ function deleteRepo(repoId, callbackfunc) {
     		MongoClient.connect(url, function(err, db)
     				   	            {
     			   if (err) throw err;
-      	            
-    			   db.collection('modelInfo').update( { "_id" : characteristicsInfo.modelID },
+    			   db.collection('modelInfo').updateOne( { "_id" : characteristicsInfo.modelID },
        	        		{$set: {  
        	        			"projectInfo.distributedSystem" : characteristicsInfo['distributed_system'],
        	        			"projectInfo.responseTime" : characteristicsInfo['response_time'],
@@ -472,11 +471,33 @@ function deleteRepo(repoId, callbackfunc) {
        	        			"projectInfo.motivation" : characteristicsInfo['motivation'],
        	        			"projectInfo.stableRequirements" : characteristicsInfo['stable_requirements'],
        	        			"projectInfo.partTimeStaff" : characteristicsInfo['part_time_staff'],
-       	        			"projectInfo.difficultProgrammingLanguage" : characteristicsInfo['difficult_programming_language']     	        	
-       	        	   		  }},
+       	        			"projectInfo.difficultProgrammingLanguage" : characteristicsInfo['difficult_programming_language'],
+                            "formInfo.distributed-system" : characteristicsInfo['distributed_system'],
+                            "formInfo.response-time" : characteristicsInfo['response_time'],
+                            "formInfo.end-user-efficiency" : characteristicsInfo['end_user_efficiency'],
+                            "formInfo.complex-internal-processing" : characteristicsInfo['complex_internal_processing'],
+                            "formInfo.code-must-be-reusable" : characteristicsInfo['code_must_be_reusable'],
+                            "formInfo.easy-to-install" : characteristicsInfo['easy_to_install'],
+                            "formInfo.easy-to-use" : characteristicsInfo['easy_to_use'],
+                            "formInfo.portable" : characteristicsInfo['portable'],
+                            "formInfo.easy-to-change" : characteristicsInfo['easy_to_change'],
+                            "formInfo.concurrent" : characteristicsInfo['concurrent'],
+                            "formInfo.includes-special-security-objectives" : characteristicsInfo['includes_special_security_objectives'],
+                            "formInfo.provides-direct-access-for-third-parties" : characteristicsInfo['provides_direct_access_for_third_parties'],
+                            "formInfo.special-user-training-facilities-are-required" : characteristicsInfo['special_user_training_facilities_are_required'],
+                            "formInfo.familiar-with-the-project-model-that-is-used" : characteristicsInfo['familiar_with_the_form_model_that_is_used'],
+                            "formInfo.application-experience" : characteristicsInfo['application_experience'],
+                            "formInfo.object-oriented-experience" : characteristicsInfo['object_oriented_experience'],
+                            "formInfo.lead-analyst-capability" : characteristicsInfo['lead_analyst_capability'],
+                            "formInfo.motivation" : characteristicsInfo['motivation'],
+                            "formInfo.stable-requirements" : characteristicsInfo['stable_requirements'],
+                            "formInfo.part-time-staff" : characteristicsInfo['part_time_staff'],
+                            "formInfo.difficult-programming-language" : characteristicsInfo['difficult_programming_language']
+                            }},
        	        		   { upsert: true }, function(err, res){
        	        			if (err) {
-       	    	                console.log(err);   	                   	                
+       	        			    console.log("update info error");
+       	    	                console.log(err);
        	    	              }
        	        				db.close();
     	                      if(callbackfunc !== null)
