@@ -71,14 +71,14 @@ ggplot(combined, aes(x=TL)) +
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TL), sd(combined$TL))) + 
   stat_function(fun = dgamma, args = list(shape=6.543586, rate=1.160249)) + 
   xlab("TL") + ggtitle("Combined TL Data Summary") + 
-  annotate("text", x=14, y=0.25, label= "Gamma: shape=6.54, rate=1.16, p-value < 0.01")+
+  annotate("text", x=14, y=0.25, label= "Gamma: shape=6.54, rate=1.16; KS: p-value < 0.01")+
   theme_bw()
 
 ggplot(combined, aes(x=TD)) + 
   geom_histogram(aes(y = ..density..), binwidth=0.5, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) +
   stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
-  annotate("text", x=17, y=0.18, label= "Gamma: shape=3.65, rate=0.70, p-value < 0.01")+
+  annotate("text", x=16, y=0.18, label= "Gamma: shape=3.65, rate=0.70; KS: p-value < 0.01")+
   xlab("TD") + ggtitle("Combined TD Data Summary") + 
   theme_bw()
 
@@ -86,7 +86,7 @@ ggplot(combined, aes(x=DETs)) +
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$DETs), sd(combined$DETs))) + 
   stat_function(fun = dgamma, args = list(shape=1.6647412, rate=0.1691911)) + 
-  annotate("text", x=60, y=0.15, label= "Gamma: shape=1.66, rate=0.17, p-value < 0.01")+
+  annotate("text", x=57, y=0.15, label= "Gamma: shape=1.66, rate=0.17; KS: p-value < 0.01")+
   xlab("DETs") + ggtitle("Combined DETs Data Summary") + 
   theme_bw()
 
@@ -101,9 +101,9 @@ for (i in 1:length(TNresults)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-     xlab("Bins") +
+     xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))
+    ggtitle(paste("Classification Results:", i, "levels"))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
@@ -183,9 +183,9 @@ for (i in 1:length(SWTIresults)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-    xlab("Bins") +
+    xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))+
+    ggtitle(paste("Classification Results:", i, "levels"))+
     theme_bw()
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
@@ -292,9 +292,9 @@ for (i in 1:length(SWTIresults_II)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-     xlab("Bins") +
+     xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))
+    ggtitle(paste("Classification Results:", i, "levels"))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
@@ -403,9 +403,9 @@ for (i in 1:length(SWTIresults_III)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-      xlab("Bins") +
+      xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Discretization Results:", i, "bins"))
+    ggtitle(paste("Discretization Results:", i, "levels"))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
@@ -435,7 +435,7 @@ categorizedTransactions$Counts <- as.numeric(as.character(categorizedTransaction
     facet_wrap(. ~ Classification, scales="free", nrow=2)+
     xlab("Bins") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))+
+    ggtitle(paste("Identification Results:", i, "bins"))+
     theme_bw(base_size=12)
 
 # Plot predicted vs. actual effort values
@@ -509,9 +509,9 @@ for (i in 1:length(SWTIIresults)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-     xlab("Bins") +
+     xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins")) +
+    ggtitle(paste("Classification Results:", i*2-2+1, "levels")) +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
@@ -594,9 +594,9 @@ for (i in 1:length(SWTIIIresults)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-      xlab("Bins") +
+      xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins")) +
+    ggtitle(paste("Classification Results:", i*3-3+1, "levels")) +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
@@ -806,13 +806,13 @@ colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
 print("melt avg preds info")
 print(meltAvgPreds)
 ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
-				ylab("Percentage")+ theme(legend.position="bottom")
+				ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 print("melt avg preds info as lines and smooth function")
 ggplot(meltAvgPreds) + theme_bw() + 
 		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
 		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
-		ylab("Percentage")+ theme(legend.position="bottom")
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 
 print("melt avg preds info as dots and smooth function")
@@ -820,7 +820,7 @@ ggplot(meltAvgPreds) + theme_bw() +
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
 		scale_shape_manual(values=c(0,1,2,3,4,5,6))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
-		ylab("Percentage")+ theme(legend.position="bottom")
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 ```
 
