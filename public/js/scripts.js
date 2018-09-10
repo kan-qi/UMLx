@@ -297,6 +297,9 @@ function predict_project_effort_func() {
     console.log("starting the ajax call to some where");
     console.log(formData);
 
+    // show loading
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
@@ -306,8 +309,11 @@ function predict_project_effort_func() {
         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
         data: formData,
         enctype: 'multipart/form-data',
-        async: false,
+        //async: false,
         success: function (response) {
+            // hide loading
+            document.getElementById("loadingScreen").classList.add("hidden");
+
             console.log(response);
             $("#estimation-result-panel-body").html(response);
             var estimationModel = $(response).data("estimation-model");
@@ -316,6 +322,9 @@ function predict_project_effort_func() {
             showEstimationChart('#'+estimationModel+'-estimation-results-charts');
         },
         error: function () {
+            // hide loading
+            document.getElementById("loadingScreen").classList.add("hidden");
+
             console.log("fail");
             console.log(err);
             alert("There was an error");
