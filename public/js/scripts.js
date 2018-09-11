@@ -868,7 +868,8 @@ function display_csv_data(url) {
 
 function request_display_data() {
     var url = $(this).attr("href");
-
+    url = "public/" + url.substring(1)
+    
     display_csv_data(url);
 
     return false;
