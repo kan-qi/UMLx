@@ -435,7 +435,7 @@ categorizedTransactions$Counts <- as.numeric(as.character(categorizedTransaction
     facet_wrap(. ~ Classification, scales="free", nrow=2)+
     xlab("Bins") +
     ylab("Counts") +
-    ggtitle(paste("Identification Results:", i, "bins"))+
+    ggtitle(paste("Discretization Results:", i, "bins"))+
     theme_bw(base_size=12)
 
 # Plot predicted vs. actual effort values
@@ -728,6 +728,31 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   theme_bw()
 
 
+#plot only DUCP
+predictedValuesDUCP <- merge(SWTIIIModelPredictedValues, effort, by='row.names', all=TRUE)
+rownames(predictedValuesDUCP) <- predictedValuesDUCP$Row.names
+predictedValuesDUCP$Row.names <- NULL
+
+r2Vals <- apply(subset(predictedValuesDUCP, select = -Effort), 2, function (x) {
+  dat <- data.frame(Predicted = x, Effort = predictedValuesDUCP$Effort)
+  model <- lm(Effort ~ ., data = dat)
+  print(summary(model))
+  summary(model)$r.squared
+})
+
+r2Vals <- round(r2Vals, digits = 5)
+r2Vals <- paste("r2:", r2Vals, sep = "")
+r2data_txt <- data.frame(label = as.character(r2Vals))
+
+ggplot(predictedValuesDUCP, aes(x = DUCP, y = Effort)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) + xlab("Predicted Effort") +
+  ylab("Actual Effort") + ggtitle("Goodness of Fit") +
+  theme(panel.spacing = unit(1, "lines")) +
+  geom_text(data = r2data_txt, size = 5, mapping = aes(x = -Inf, y = -Inf, label = label),
+            hjust = -5, vjust = -1)+
+  theme_bw(base_size=20)
+
+
 #draw example of posterior estimates
   marginalData <- SWTIIIresults[[SWTIIIModelSelector]]$model[, !names(SWTIIIresults[[SWTIIIModelSelector]]$model) %in% c("(Intercept)", "sigma", "normFactor", "sd")]
   
@@ -822,6 +847,18 @@ ggplot(meltAvgPreds) + theme_bw() +
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
+#compare DUCP and UCP
+avgPreds_DUCP_UCP <- avgPreds[, c("DUCP", "UCP", "Pred")]
+#print(avgPreds)
+meltAvgPreds_DUCP_UCP = melt(avgPreds_DUCP_UCP, id.vars="Pred")
+colnames(meltAvgPreds_DUCP_UCP) <- c("Pred", "Method", "Value")
+
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds_DUCP_UCP) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 ```
 
 save the parameters to file
