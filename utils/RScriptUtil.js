@@ -10,7 +10,7 @@
 	var RExec = '\"Rscript\"';
 	
 	var debug = require("./DebuggerOutput.js");
-	var config = require("../config.js")
+	var config = require("../config.js");
 	
 	//var libPaths = "C:/Users/flyqk/Documents/R/win-library/3.5;C:/Program Files/R/R-3.5.1/library";
 	var libPaths = config.r_libraries;

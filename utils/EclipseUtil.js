@@ -1,9 +1,8 @@
 (function(){
 	var fs = require('fs');
 	var exec = require('child_process').exec;
-	var eclipseInstall = "\"C:\\Users\\flyqk\\Documents\\Research Projects\\tools\\eclipse-java-luna-SR2-win32-x86_64\\eclipse\\eclipse\"";
+	var config = require("../config.js");
 	
-
 	function generateKDMModel(projectPath, callbackfunc){
 			var outputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
 		    //to generate svg file.
@@ -43,7 +42,10 @@
 	}
 	
 	function generateKDMModel2(projectPath, callbackfunc){
-		var eclipseInstall = "\"C:\\Users\\flyqk\\Documents\\Research Projects\\tools\\eclipse-java-luna-SR2-win32-x86_64\\eclipse\\eclipse\"";
+//		var eclipseInstall = "\"C:\\Users\\flyqk\\Documents\\Research Projects\\tools\\eclipse-java-luna-SR2-win32-x86_64\\eclipse\\eclipse\"";
+//		var eclipseInstall = "\"C:\\Users\\flyqk\\Documents\\Research Projects\\tools\\eclipse-java-luna-SR2-win32-x86_64\\eclipse\\eclipse\"";
+		
+		var eclipseInstall = config.eclipseInstall;
 		var outputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
 	    //to generate svg file.
 	    var command = eclipseInstall+' -consoleLog -console -noExit -application testMonitor3.id5 "' + projectPath + '" "'+outputFile+'" -vmargs -Xmx10240M';
