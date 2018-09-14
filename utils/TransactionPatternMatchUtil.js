@@ -133,7 +133,7 @@
 			var searchIndex = 0;
 			
 			console.log('===========Search Pattern============');
-			console.log(path);
+//			console.log(path);
 			while(searchIndex < path.Nodes.length){
 				var node = path.Nodes[searchIndex];
 				var matchingTarget = "control";

@@ -26,7 +26,7 @@ cutsAsVec <- function(x) {
 ```
 Combined Data Effort Values
 ```{r combined}
-modelData <- read.csv("modelEvaluations-8-30-2.csv")
+modelData <- read.csv("modelEvaluations-9-13-1.csv")
 modelData$Project <- as.character(modelData$Project)
 modelData$transaction_file <- as.character(modelData$transaction_file)
 effort <- subset(modelData, select=c("Effort"))
@@ -792,7 +792,7 @@ ggplot(predictedValuesDUCP, aes(x = DUCP, y = Effort)) +
 comparison between UCP, COCOMO, a-priori COCOMO
 ```{r modelPlot, warning = FALSE}
 #df <- read.csv("modelEvaluations-8-16-3.csv")
-otherSizeMetricsData=modelData[c("Effort", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP")]
+otherSizeMetricsData=modelData[c("Effort", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP", "FP")]
 
 ret <- compareBetweenSizeMetrics(TNModelData, SWTIIModelData, SWTIIIModelData, otherSizeMetricsData)
 #model1 <- TNresults[[TNModelSelector]][["model"]]
@@ -816,6 +816,8 @@ print('average improvement by cocomo')
 print(colMeans(avgPreds[, "COCOMO"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
 print('average improvement by cocomo.apriori')
 print(colMeans(avgPreds[, "COCOMO Apriori"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by FP')
+print(colMeans(avgPreds[, "FP"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
 
 #print(mean(avgPreds[, "EXUCP"] - avgPreds[,"UCP"]))
 #print(mean(avgPreds[, "EXUCP"] - avgPreds[,"COCOMO"]))
@@ -847,14 +849,15 @@ ggplot(meltAvgPreds) + theme_bw() +
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
-#compare DUCP and UCP
-avgPreds_DUCP_UCP <- avgPreds[, c("DUCP", "UCP", "Pred")]
+#compare DUCP , UCP, and FP
+avgPreds_DUCP_UCP_FP <- avgPreds[, c("DUCP", "UCP", "FP", "Pred")]
+colnames(avgPreds_DUCP_UCP_FP) <- c("SWT-3D", "UCP", "FP", "Pred")
 #print(avgPreds)
-meltAvgPreds_DUCP_UCP = melt(avgPreds_DUCP_UCP, id.vars="Pred")
-colnames(meltAvgPreds_DUCP_UCP) <- c("Pred", "Method", "Value")
+meltAvgPreds_DUCP_UCP_FP = melt(avgPreds_DUCP_UCP_FP, id.vars="Pred")
+colnames(meltAvgPreds_DUCP_UCP_FP) <- c("Pred", "Method", "Value")
 
 print("melt avg preds info as dots and smooth function")
-ggplot(meltAvgPreds_DUCP_UCP) + theme_bw() + 
+ggplot(meltAvgPreds_DUCP_UCP_FP) + theme_bw() + 
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
 		scale_shape_manual(values=c(0,1,2,3,4,5,6))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +

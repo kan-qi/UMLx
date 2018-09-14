@@ -336,15 +336,15 @@
 		for ( var i in modelInfo.UseCases) {
 			var useCaseInfo = modelInfo.UseCases[i];
 			if(useCaseInfo["FPAnalytics"]){
-			modelInfo["FPAnalytics"].EI = useCaseInfo["FPAnalytics"].EI;
-			modelInfo["FPAnalytics"].EO = useCaseInfo["FPAnalytics"].EO;
-			modelInfo["FPAnalytics"].EQ = useCaseInfo["FPAnalytics"].EQ;
-//			modelInfo["FPAnalytics"].FUNC_NA = useCaseInfo["FPAnalytics"].FUNC_NA;
-			modelInfo["FPAnalytics"].FN = useCaseInfo["FPAnalytics"].FN;
+			modelInfo["FPAnalytics"].EI += useCaseInfo["FPAnalytics"].EI;
+			modelInfo["FPAnalytics"].EO += useCaseInfo["FPAnalytics"].EO;
+			modelInfo["FPAnalytics"].EQ += useCaseInfo["FPAnalytics"].EQ;
+//			modelInfo["FPAnalytics"].FUNC_NA += useCaseInfo["FPAnalytics"].FUNC_NA;
+			modelInfo["FPAnalytics"].FN += useCaseInfo["FPAnalytics"].FN;
 			}
 		}
 		
-		modelInfo["FPAnalytics"].FP = domainModelInfo["FPAnalytics"].ILF + domainModelInfo["FPAnalytics"].EIF + useCaseInfo["FPAnalytics"].EI + useCaseInfo["FPAnalytics"].EO + useCaseInfo["FPAnalytics"].EQ; 
+		modelInfo["FPAnalytics"].FP = modelInfo["FPAnalytics"].ILF + modelInfo["FPAnalytics"].EIF + modelInfo["FPAnalytics"].EI + modelInfo["FPAnalytics"].EO + modelInfo["FPAnalytics"].EQ; 
 		
 		return modelInfo["FPAnalytics"];
 
