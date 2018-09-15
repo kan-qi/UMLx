@@ -297,6 +297,9 @@ function predict_project_effort_func() {
     console.log("starting the ajax call to some where");
     console.log(formData);
 
+    // show loading
+    document.getElementById("loadingScreen").classList.remove("hidden");
+
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
@@ -306,8 +309,11 @@ function predict_project_effort_func() {
         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
         data: formData,
         enctype: 'multipart/form-data',
-        async: false,
+        //async: false,
         success: function (response) {
+            // hide loading
+            document.getElementById("loadingScreen").classList.add("hidden");
+
             console.log(response);
             $("#estimation-result-panel-body").html(response);
             var estimationModel = $(response).data("estimation-model");
@@ -316,6 +322,9 @@ function predict_project_effort_func() {
             showEstimationChart('#'+estimationModel+'-estimation-results-charts');
         },
         error: function () {
+            // hide loading
+            document.getElementById("loadingScreen").classList.add("hidden");
+
             console.log("fail");
             console.log(err);
             alert("There was an error");
@@ -859,7 +868,8 @@ function display_csv_data(url) {
 
 function request_display_data() {
     var url = $(this).attr("href");
-
+    url = "public/" + url.substring(1)
+    
     display_csv_data(url);
 
     return false;
@@ -2129,7 +2139,7 @@ function submitEdit() {
     form_data.append('includes_special_security_objectives', $("#editNumber11").val());
     form_data.append('provides_direct_access_for_third_parties', $("#editNumber12").val());
     form_data.append('special_user_training_facilities_are_required', $("#editNumber13").val());
-    form_data.append('familiar_with_the_project_model_that_is_used', $("#editNumber14").val());
+    form_data.append('familiar_with_the_form_model_that_is_used', $("#editNumber14").val());
     form_data.append('application_experience', $("#editNumber15").val());
     form_data.append('object_oriented_experience', $("#editNumber16").val());
     form_data.append('lead_analyst_capability', $("#editNumber17").val());
@@ -2152,7 +2162,7 @@ function submitEdit() {
             $("#estimation-results-tables").html(response);
         },
         error: function (err) {
-            console.log("fail");
+            console.log("saveModelInfoCharacteristics fail");
             console.log(err);
         }
     });
@@ -2392,17 +2402,22 @@ function buildTable(data) {
                 }
             }
         }
-        if (level >= 2) {
-            //backLink = dirLink.split("/")[level+1];
+        // if (level >= 2) {
+        //     //backLink = dirLink.split("/")[level+1];
 
-            out += "<button id='backButton' class='btn btn-default col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
-            out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
-        } else {
-            out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
-        }
+        //     out += "<button id='backButton' class='btn btn-default col-sm-1' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button>";
+        //     out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
+        // } else {
+        //     out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
+        // }
 
+        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
         out += "<table class='row table-striped'>";
         out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+        if (level >= 2) {
+            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button><td><tr>";
+        }
 
         //console.log("Data");
         // console.log(data);
@@ -2573,16 +2588,22 @@ function buildTable2(data) {
         }
     }
 
-    if (levels >= 2) {
-        backUrl = repoLink.split("/")[levels];
-        out += "<button id='backButton' class='btn btn-default col-sm-1' data-url=" + backUrl + " onclick='walkRepoDir(this)'>Back</button>";
-        out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
-    } else {
-        out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
-    }
+    // if (levels >= 2) {
+    //     backUrl = repoLink.split("/")[levels];
+    //     out += "<button id='backButton' class='btn btn-default col-sm-1' data-url=" + backUrl + " onclick='walkRepoDir(this)'>Back</button>";
+    //     out += "<p id='dirAddress' class='col-sm-10'>" + displayUrl + "</p></div>";
+    // } else {
+    //     out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
+    // }
 
+    out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
     out += "<table class='row table-striped'>";
     out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+
+    if (levels >= 2) {
+        backUrl = repoLink.split("/")[levels];
+        out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + backUrl + " onclick='walkRepoDir(this)'>Back</button></td></tr>";
+    }
 
     for (var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "Folder") {
