@@ -26,8 +26,8 @@
 	// current available evaluators
 	var usimElementEvaluator = require('./evaluators/USIMElementEvaluator/USIMElementEvaluator.js');
 	var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
-//	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 	var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
+	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
 	var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
 	var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
 	var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
@@ -41,6 +41,7 @@
 			usimElementEvaluator,
 			useCaseComponentsEvaluator,
 			transactionEvaluator,
+			functionPointEvaluator,
 			modelVersionEvaluator,
 			projectTypeEvaluator,
 			cocomoCalculator,

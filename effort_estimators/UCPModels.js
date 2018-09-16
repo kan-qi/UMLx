@@ -448,9 +448,9 @@
 //		var model = umlEstimationInfo.model;
 		
 //		var predictionModel = model.replace(" ", "_")+"_"+estimator.replace(" ", "_")+"_model.rds";
-		
-		console.log("model info");
-		console.log(modelInfo);
+//		
+//		console.log("model info");
+//		console.log(modelInfo);
 //	
 //		var command = './Rscript/EffortEstimation.R "'+modelConfig.predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+modelConfig.label+'"';
 //		

@@ -12,6 +12,8 @@
 
 "C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/LinearRegressionForEUCPAndEXUCP.R "./data/Resilient Agile/eucp_exucp_effort.csv"
 
+"Rscript" ./Rscript/LinearRegressionForUseCasePoints.R "public/output/repo598c93a9a9813b12105c953e/modelsEvaluation.csv"
+
 "C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/LinearRegressionForUseCasePoints.R "public/output/repo598c93a9a9813b12105c953e/modelsEvaluation.csv"
 
 "C:/Program Files/R/R-3.2.5/bin/Rscript" ./Rscript/LinearRegressionForUseCasePoints.R "temp/modelsEvaluation.csv"
@@ -105,3 +107,7 @@ node --max_old_space_size=10240 ".\data\RufusLabs\RufusLabsRepoAnalysis.js" --ge
 node --max_old_space_size=10240 ".\data\577 Projects\577ProjectsAnalysis.js" --generate-repo-analysis-report
 
 node --max_old_space_size=10240 .\data\VisualParadigmAnalysis\StandAloneToolTest.js
+
+node ./UMLxAnalyticToolKit.js "./data/577 Projects/2013-2014/model_example.xml" "./data/577 Projects/2013-2014/output" "project_file_name"
+
+"C:\Users\flyqk\Documents\Research Projects\tools\eclipse-java-luna-SR2-win32-x86_64\eclipse\eclipse" -consoleLog -console -noExit -application testMonitor3.id5 "C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Repositories\rufus_labs\rufusmms" "C:\Users\flyqk\Documents\Google Drive\ResearchSpace\Repositories\rufus_labs\rufusmms\kdm.xml" -vmargs -Xmx10240M';

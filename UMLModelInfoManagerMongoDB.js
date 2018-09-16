@@ -1334,7 +1334,7 @@ function deleteRepo(repoId, callbackfunc) {
                             };
 
                             var userInfoWithRepoID = {
-                                ...userInfo,
+                                //...userInfo,
                                 repoId: repo._id,
                             };
 
