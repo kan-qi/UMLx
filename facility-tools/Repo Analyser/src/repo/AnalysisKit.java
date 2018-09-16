@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -32,10 +34,36 @@ public class AnalysisKit {
 	System.out.println(commandString);
 	System.out.println("start calculate cloc: "+fileListPath);
 	try {
-		Runtime.getRuntime().exec(commandString);
+		Process proc = Runtime.getRuntime().exec(commandString);
+		InputStream in = proc.getInputStream();
+		byte buff[] = new byte[1024];
+		int cbRead;
+
+		    while ((cbRead = in.read(buff)) != -1) {
+		        // Use the output of the process...
+		    	String v = new String(buff, Charset.forName("UTF-8") );
+		    	System.out.print(v);
+		    }
+		
+		// No more output was available from the process, so...
+
+		// Ensure that the process completes
+		    proc.waitFor();
+
+		// Then examine the process exit code
+		if (proc.exitValue() == 1) {
+		    // Use the exit value...
+		}
+		
+		
 	} catch (IOException e) {
 		e.printStackTrace();
 	}
+	catch (InterruptedException e) {
+	    // Handle exception that could occur when waiting
+	    // for a spawned process to terminate
+	}
+	
 	System.out.println("end of command: "+commandString);
 	
 	}
@@ -64,15 +92,16 @@ public class AnalysisKit {
 		br.close();
 		
 		for(String projectRecordPath : projectRecordPaths) {
-				addTask(new Runnable() {
-
-					@Override
-					public void run() {
-						System.out.println(projectRecordPath+"\\selectedfilelist.txt");
-						calCloc(projectRecordPath+"\\selectedfilelist.txt", projectRecordPath);
-					}
-					
-				});
+//				addTask(new Runnable() {
+//
+//					@Override
+//					public void run() {
+						
+						System.out.println(projectRecordPath+"\\selectedfiles.txt");
+						calCloc(projectRecordPath+"\\selectedfiles.txt", projectRecordPath);
+//					}
+//					
+//				});
 		}
 	}
 	
@@ -227,6 +256,7 @@ public class AnalysisKit {
 //			final String fileListPath = "./tools/temp/repositories.txt";
 			
 			String repoRecordPath = args[1];
+			System.out.println(repoRecordPath);
 			
 	        javax.swing.SwingUtilities.invokeLater(new Runnable() {
 	            public void run() {

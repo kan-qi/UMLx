@@ -71,12 +71,14 @@ ggplot(combined, aes(x=TL)) +
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TL), sd(combined$TL))) + 
   stat_function(fun = dgamma, args = list(shape=6.543586, rate=1.160249)) + 
   xlab("TL") + ggtitle("Combined TL Data Summary") + 
+  annotate("text", x=14, y=0.25, label= "Gamma: shape=6.54, rate=1.16; KS: p-value < 0.01")+
   theme_bw()
 
 ggplot(combined, aes(x=TD)) + 
   geom_histogram(aes(y = ..density..), binwidth=0.5, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) +
-  stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) + 
+  stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
+  annotate("text", x=16, y=0.18, label= "Gamma: shape=3.65, rate=0.70; KS: p-value < 0.01")+
   xlab("TD") + ggtitle("Combined TD Data Summary") + 
   theme_bw()
 
@@ -84,6 +86,7 @@ ggplot(combined, aes(x=DETs)) +
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$DETs), sd(combined$DETs))) + 
   stat_function(fun = dgamma, args = list(shape=1.6647412, rate=0.1691911)) + 
+  annotate("text", x=57, y=0.15, label= "Gamma: shape=1.66, rate=0.17; KS: p-value < 0.01")+
   xlab("DETs") + ggtitle("Combined DETs Data Summary") + 
   theme_bw()
 
@@ -98,9 +101,9 @@ for (i in 1:length(TNresults)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-     xlab("Bins") +
+     xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))
+    ggtitle(paste("Classification Results:", i, "levels"))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
@@ -180,9 +183,9 @@ for (i in 1:length(SWTIresults)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-    xlab("Bins") +
+    xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))+
+    ggtitle(paste("Classification Results:", i, "levels"))+
     theme_bw()
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
@@ -289,9 +292,9 @@ for (i in 1:length(SWTIresults_II)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-     xlab("Bins") +
+     xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))
+    ggtitle(paste("Classification Results:", i, "levels"))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
@@ -394,15 +397,15 @@ for (i in 1:length(SWTIresults_II)) {
 SWTI Search Results III
 ```{r swti part III}
 SWTIresults_III <- performSearch(6, effort, transactionFiles, c("DETs"))
-# Plot classification results
+  # Plot classification results
 for (i in 1:length(SWTIresults_III)) {
   result <- SWTIresults_III[[i]]
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-      xlab("Bins") +
+      xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Discretization Results:", i, "bins"))
+    ggtitle(paste("Discretization Results:", i, "levels"))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
@@ -432,7 +435,7 @@ categorizedTransactions$Counts <- as.numeric(as.character(categorizedTransaction
     facet_wrap(. ~ Classification, scales="free", nrow=2)+
     xlab("Bins") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins"))+
+    ggtitle(paste("Identification Results:", i, "bins"))+
     theme_bw(base_size=12)
 
 # Plot predicted vs. actual effort values
@@ -506,9 +509,9 @@ for (i in 1:length(SWTIIresults)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-     xlab("Bins") +
+     xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins")) +
+    ggtitle(paste("Classification Results:", i*2-2+1, "levels")) +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
@@ -591,9 +594,9 @@ for (i in 1:length(SWTIIIresults)) {
   df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
-      xlab("Bins") +
+      xlab("Levels") +
     ylab("Counts") +
-    ggtitle(paste("Classification Results:", i, "bins")) +
+    ggtitle(paste("Classification Results:", i*3-3+1, "levels")) +
     theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
@@ -707,7 +710,7 @@ predictedValues$Row.names <- NULL
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
   model <- lm(Effort ~ ., data = dat)
-  print(summary(model)$coefficients)
+  print(summary(model))
   summary(model)$r.squared
 })
 
@@ -803,13 +806,13 @@ colnames(meltAvgPreds) <- c("Pred", "Method", "Value")
 print("melt avg preds info")
 print(meltAvgPreds)
 ggplot(meltAvgPreds) + theme_bw() + geom_point(aes(x=Pred, y=Value, group=Method,color=Method),size=3)+ xlab("Relative Deviation (%)") +
-				ylab("Percentage")+ theme(legend.position="bottom")
+				ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 print("melt avg preds info as lines and smooth function")
 ggplot(meltAvgPreds) + theme_bw() + 
 		geom_line(aes(y=Value, x=Pred, group=Method,color=Method)) +
 		stat_smooth(aes(y=Value, x=Pred, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
-		ylab("Percentage")+ theme(legend.position="bottom")
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 
 print("melt avg preds info as dots and smooth function")
@@ -817,7 +820,7 @@ ggplot(meltAvgPreds) + theme_bw() +
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
 		scale_shape_manual(values=c(0,1,2,3,4,5,6))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
-		ylab("Percentage")+ theme(legend.position="bottom")
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
 ```
 
@@ -835,13 +838,14 @@ saveRDS(trainedModels, file="train_models.rds")
 #extract parameters for NT
 trainedModelParameters = list()
 TNModelParameters = list()
-TNModelParameters[["normFactor"]] = TNresults[[TNModelSelector]][["normFactor"]]
+TNModelParameters[["effortAdj"]] = c(mean(TNresults[[TNModelSelector]][["model"]][["normFactor"]]), var(TNresults[[TNModelSelector]][["model"]][["normFactor"]]))
+TNModelParameters[["sigma"]] = c(mean(TNresults[[TNModelSelector]][["model"]][["sd"]]), var(TNresults[[TNModelSelector]][["model"]][["sd"]]))
 TNModelParameters[["cuts"]] = list()
 for(i in rownames(TNresults[[TNModelSelector]][["cuts"]])){
   TNModelParameters[["cuts"]][[i]] = TNresults[[TNModelSelector]][["cuts"]][i,]
 }
 levels <- names(TNresults[[TNModelSelector]][["model"]])
-levels <- levels[levels != "sigma"]
+levels <- levels[!levels %in% c("sigma", "sd", "normFactor")]
 TNModelParameters[["levels"]] = list()
 for(i in levels){
   TNModelParameters[["levels"]][[i]] = c(mean(TNresults[[TNModelSelector]][["model"]][[i]]), var(TNresults[[TNModelSelector]][["model"]][[i]]))
@@ -851,14 +855,15 @@ trainedModelParameters[["EUCP"]] = TNModelParameters
 
 #extract parameters for SWTII
 SWTIIModelParameters = list()
-SWTIIModelParameters[["normFactor"]] = SWTIIresults[[SWTIIModelSelector]][["normFactor"]]
+SWTIIModelParameters[["effortAdj"]] = c(mean(SWTIIresults[[SWTIIModelSelector]][["model"]][["normFactor"]]), var(SWTIIresults[[SWTIIModelSelector]][["model"]][["normFactor"]]))
+SWTIIModelParameters[["sigma"]] = c(mean(SWTIIresults[[SWTIIModelSelector]][["model"]][["sd"]]), var(SWTIIresults[[SWTIIModelSelector]][["model"]][["sd"]]))
 SWTIIModelParameters[["cuts"]] = list()
 for(i in rownames(SWTIIresults[[SWTIIModelSelector]][["cuts"]])){
   SWTIIModelParameters[["cuts"]][[i]] = SWTIIresults[[SWTIIModelSelector]][["cuts"]][i,]
 }
 #print(SWTIIModelParameters[["cuts"]])
 levels <- names(SWTIIresults[[SWTIIModelSelector]][["model"]])
-levels <- levels[levels != "sigma"]
+levels <- levels[!levels %in% c("sigma", "sd", "normFactor")]
 SWTIIModelParameters[["levels"]] = list()
 for(i in levels){
   SWTIIModelParameters[["levels"]][[i]] = c(mean(SWTIIresults[[SWTIIModelSelector]][["model"]][[i]]), var(SWTIIresults[[SWTIIModelSelector]][["model"]][[i]]))
@@ -868,13 +873,14 @@ trainedModelParameters[["EXUCP"]] = SWTIIModelParameters
 
 #extract parameters for SWTIII
 SWTIIIModelParameters = list()
-SWTIIIModelParameters[["normFactor"]] = SWTIIIresults[[SWTIIIModelSelector]][["normFactor"]]
+SWTIIIModelParameters[["effortAdj"]] = c(mean(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["normFactor"]]), var(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["normFactor"]]))
+SWTIIIModelParameters[["sigma"]] = c(mean(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["sd"]]), var(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["sd"]]))
 SWTIIIModelParameters[["cuts"]] = list()
 for(i in rownames(SWTIIIresults[[SWTIIIModelSelector]][["cuts"]])){
   SWTIIIModelParameters[["cuts"]][[i]] = SWTIIIresults[[SWTIIIModelSelector]][["cuts"]][i,]
 }
 levels <- names(SWTIIIresults[[SWTIIIModelSelector]][["model"]])
-levels <- levels[levels != "sigma"]
+levels <- levels[!levels %in% c("sigma", "sd", "normFactor")]
 SWTIIIModelParameters[["levels"]] = list()
 for(i in levels){
   SWTIIIModelParameters[["levels"]][[i]] = c(mean(SWTIIIresults[[SWTIIIModelSelector]][["model"]][[i]]), var(SWTIIIresults[[SWTIIIModelSelector]][["model"]][[i]]))
