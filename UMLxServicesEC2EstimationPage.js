@@ -104,7 +104,7 @@ app.set('view engine', 'jade');
 
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
-	res.render('estimationPage');
+	res.render('estimationPageSimplified');
 });
 
 app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
@@ -147,6 +147,8 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //		projectInfo.hoursPerMonth = null;
 //	}
 	
+	console.log("test");
+	
 	if(req.body['personnel']){
 		projectInfo.personnel = Number(req.body['personnel']);
 	}
@@ -158,14 +160,16 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	if(req.body['hours-per-month']){
 		projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
 	}
-
+	
 //	console.log("files");
 //	console.log(req.files);
 	var umlFilePath = req.files['uml_file'][0].path;
 //	umlEstimationInfo.estimator = req.body['estimator'];
 //	umlEstimationInfo.model = req.body['model'];
 	
-	var estimationModel = req.body['model'];
+//	var estimationModel = req.body['model'];
+	var estimationModel = eucp_lm;
+	
 //	umlEstimationInfo.otherFilePath = req.files['uml_other'][0].path;
 //	umlEstimationInfo.simulation = req.body['simulation'];
 	

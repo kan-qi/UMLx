@@ -13,35 +13,20 @@ compareBetweenSizeMetrics <- function(TNModelData, SWTIIModelData, SWTIIIModelDa
   #Create 10 equally size folds
   nfold = 5
   folds <- cut(seq(1,nrow(TNModelData)),breaks=nfold,labels=FALSE)
-  
-#add cocomo and original use case points into the comparison
-
-#otherSizeMetricsData=data[c("Effort", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP")];
-#DataFrame=data.frame(Effort,UCP)
-#Effort
-#UCP
-#OriginalUseCaseModel=lm(Effort~UCP,data=otherSizeMetricsData)
-
-#summary(OriginalUseCaseModel)
-
-#w=coef(OriginalUseCaseModel)["UCP"]
-
-#otherSizeMetricsData$UCPEffort=w*otherSizeMetricsData$UCP
-
-#otherSizeMetricsData<-otherSizeMetricsData[sample(nrow(otherSizeMetricsData)),]
 
 #data structure to hold the data for 10 fold cross validation
-foldResults <- matrix(nrow=nfold,ncol=24)
+foldResults <- matrix(nrow=nfold,ncol=28)
 colnames(foldResults) <- c(
 		'eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50', 
 		'exucp_mmre','exucp_pred15','exucp_pred25','exucp_pred50',
 		'ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50',
 		'ucp_mmre','ucp_pred15','ucp_pred25','ucp_pred50',
 		'cocomo_mmre','cocomo_pred15','cocomo_pred25','cocomo_pred50',
-		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50'
+		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50',
+		'fp_mmre','fp_pred15','fp_pred25','fp_pred50'
 		)
 
-foldResults1 <- array(0,dim=c(50,6,nfold))
+foldResults1 <- array(0,dim=c(50,7,nfold))
 
 #Perform 10 fold cross validation
 for(i in 1:nfold){
@@ -196,6 +181,24 @@ for(i in 1:nfold){
 		cocomo.pred <- c(cocomo.pred, length(cocomo.mre[cocomo.mre<=0.01*j])/length(cocomo.mre))
 	}
 	
+	print('fp testing set predication')
+	fp.m = lm(Effort~FP, data=otherTrainData)
+	fp.predict = cbind(predicted=predict(fp.m, otherTestData), actual=otherTestData$Effort)
+	print(fp.predict)
+	fp.mre = apply(fp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	fp.mmre = mean(fp.mre)
+	print(fp.mmre)
+	#fp.preds = sapply(fp.mre, function(x) calculatePreds(x))
+	fp.pred15 = length(fp.mre[fp.mre<=0.15])/length(fp.mre)
+	fp.pred25 = length(fp.mre[fp.mre<=0.25])/length(fp.mre)
+	fp.pred50 = length(fp.mre[fp.mre<=0.50])/length(fp.mre)
+	print(c(fp.pred15, fp.pred25, fp.pred50))
+	
+	fp.pred <- c()
+	for(j in 1:50){
+	  fp.pred <- c(fp.pred, length(fp.mre[fp.mre<=0.01*j])/length(fp.mre))
+	}
+	
 	#print("other test data");
 	#print(otherTestData);
 	print('cocomo apriori testing set predication')
@@ -217,17 +220,21 @@ for(i in 1:nfold){
 		cocomo_apriori.pred <- c(cocomo_apriori.pred, length(cocomo_apriori.mre[cocomo_apriori.mre<=0.01*j])/length(cocomo_apriori.mre))
 	}
 	
+	
 	foldResults[i,] = c(
 			eucp.mmre,eucp.pred15,eucp.pred25,eucp.pred50,
 			exucp.mmre,exucp.pred15,exucp.pred25,exucp.pred50,
 			ducp.mmre,ducp.pred15,ducp.pred25,ducp.pred50,
 			ucp.mmre,ucp.pred15,ucp.pred25,ucp.pred50,
 			cocomo.mmre,cocomo.pred15,cocomo.pred25,cocomo.pred50,
-			cocomo_apriori.mmre,cocomo_apriori.pred15,cocomo_apriori.pred25,cocomo_apriori.pred50
+			cocomo_apriori.mmre,cocomo_apriori.pred15,cocomo_apriori.pred25,cocomo_apriori.pred50,
+			fp.mmre,fp.pred15,fp.pred25,fp.pred50
 			)
 	
-	foldResults1[,,i] = array(c(eucp.pred,exucp.pred,ducp.pred,ucp.pred,cocomo.pred,cocomo_apriori.pred),c(50,6))
+	foldResults1[,,i] = array(c(eucp.pred,exucp.pred,ducp.pred,ucp.pred,cocomo.pred,cocomo_apriori.pred,fp.pred),c(50,7))
 }
+
+#print(foldResults)
 
 #average out the folds.
 cvResults <- c(
@@ -254,8 +261,14 @@ cvResults <- c(
 		mean(foldResults[, 'cocomo_apriori_mmre']),
 		mean(foldResults[, 'cocomo_apriori_pred15']),
 		mean(foldResults[, 'cocomo_apriori_pred25']),
-		mean(foldResults[, 'cocomo_apriori_pred50'])
+		mean(foldResults[, 'cocomo_apriori_pred50']),
+		mean(foldResults[, 'fp_mmre']),
+		mean(foldResults[, 'fp_pred15']),
+		mean(foldResults[, 'fp_pred25']),
+		mean(foldResults[, 'fp_pred50'])
 		);
+
+
 
 names(cvResults) <- c(
 		'eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50',
@@ -263,11 +276,12 @@ names(cvResults) <- c(
 		'ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50',
 		'ucp_mmre','ucp_pred15','ucp_pred25','ucp_pred50',
 		'cocomo_mmre','cocomo_pred15','cocomo_pred25','cocomo_pred50',
-		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50'
+		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50',
+		'fp_mmre','fp_pred15','fp_pred25','fp_pred50'
 		)
 
-avgPreds <- matrix(nrow=50,ncol=7)
-colnames(avgPreds) <- c("Pred","EUCP","EXUCP","DUCP", "UCP", "COCOMO", "COCOMO Apriori")
+avgPreds <- matrix(nrow=50,ncol=8)
+colnames(avgPreds) <- c("Pred","EUCP","EXUCP","DUCP", "UCP", "COCOMO", "COCOMO Apriori", "FP")
 for(i in 1:50){
 	eucp_fold_mean = mean(foldResults1[i,1,]);
 	exucp_fold_mean = mean(foldResults1[i,2,]);
@@ -275,7 +289,8 @@ for(i in 1:50){
 	ucp_fold_mean = mean(foldResults1[i,4,]);
 	cocomo_fold_mean = mean(foldResults1[i,5,]);
 	cocomo_apriori_fold_mean = mean(foldResults1[i,6,]);
-	avgPreds[i,] <- c(i,eucp_fold_mean,exucp_fold_mean,ducp_fold_mean,ucp_fold_mean,cocomo_fold_mean,cocomo_apriori_fold_mean)
+	fp_fold_mean = mean(foldResults1[i,7,]);
+	avgPreds[i,] <- c(i,eucp_fold_mean,exucp_fold_mean,ducp_fold_mean,ucp_fold_mean,cocomo_fold_mean,cocomo_apriori_fold_mean,fp_fold_mean)
 	#print(i)
 	#print(avgPreds[i,])
 }

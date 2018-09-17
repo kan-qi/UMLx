@@ -84,7 +84,7 @@
 	}
 	
 	function toUseCaseEvaluationHeader() {
-		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Avg_TL,Avg_TD, Avg_TC, Arch_Diff";
+		return "EI,EQ,INT,DM,CTRL,EXTIVK,EXTCLL,TRAN_NA,NT,Avg_TL,Avg_TD, Avg_TC, Avg_DETs, Arch_Diff";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {

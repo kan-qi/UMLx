@@ -18,13 +18,16 @@ var exec = require('child_process').exec;
 var EclipseUtil = require("./EclipseUtil.js");
 var FileManagerUtil = require("./FileManagerUtil.js");
 var RScriptExec = require('./RScriptUtil.js');
+var config = require("../config.js");
 
 var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 
 function recoverKDMModel(projectList){
 	
-	var currentWorkSpace = "C:\\Users\\flyqk\\workspace\\.metadata"
+	if(config.defaultEclipseWorkSpace){
+	var currentWorkSpace = config.defaultEclipseWorkSpace;
 	FileManagerUtil.deleteFolderRecursive(currentWorkSpace);
+	}
 
 	  //use promise to construct the repo objects
     function recoverModel(projectPath, modelFile, override){

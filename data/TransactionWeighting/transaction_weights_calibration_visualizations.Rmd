@@ -26,7 +26,7 @@ cutsAsVec <- function(x) {
 ```
 Combined Data Effort Values
 ```{r combined}
-modelData <- read.csv("modelEvaluations-8-30-2.csv")
+modelData <- read.csv("modelEvaluations-9-13-1.csv")
 modelData$Project <- as.character(modelData$Project)
 modelData$transaction_file <- as.character(modelData$transaction_file)
 effort <- subset(modelData, select=c("Effort"))
@@ -70,16 +70,16 @@ ggplot(combined, aes(x=TL)) +
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TL), sd(combined$TL))) + 
   stat_function(fun = dgamma, args = list(shape=6.543586, rate=1.160249)) + 
-  xlab("TL") + ggtitle("Combined TL Data Summary") + 
+  xlab("TL") + ylab("Density")+ ggtitle("Combined TL Data Summary") + 
   annotate("text", x=14, y=0.25, label= "Gamma: shape=6.54, rate=1.16; KS: p-value < 0.01")+
-  theme_bw()
+  theme_bw(base_size=15)
 
 ggplot(combined, aes(x=TD)) + 
   geom_histogram(aes(y = ..density..), binwidth=0.5, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) +
   stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
   annotate("text", x=16, y=0.18, label= "Gamma: shape=3.65, rate=0.70; KS: p-value < 0.01")+
-  xlab("TD") + ggtitle("Combined TD Data Summary") + 
+  xlab("TD") + ylab("Density") +ggtitle("Combined TD Data Summary") + 
   theme_bw()
 
 ggplot(combined, aes(x=DETs)) + 
@@ -87,7 +87,7 @@ ggplot(combined, aes(x=DETs)) +
   #stat_function(fun = dnorm, args = list(mean = mean(combined$DETs), sd(combined$DETs))) + 
   stat_function(fun = dgamma, args = list(shape=1.6647412, rate=0.1691911)) + 
   annotate("text", x=57, y=0.15, label= "Gamma: shape=1.66, rate=0.17; KS: p-value < 0.01")+
-  xlab("DETs") + ggtitle("Combined DETs Data Summary") + 
+  xlab("DETs") + ylab("Density") + ggtitle("Combined DETs Data Summary") + 
   theme_bw()
 
 selectedModels = list()
@@ -435,7 +435,7 @@ categorizedTransactions$Counts <- as.numeric(as.character(categorizedTransaction
     facet_wrap(. ~ Classification, scales="free", nrow=2)+
     xlab("Bins") +
     ylab("Counts") +
-    ggtitle(paste("Identification Results:", i, "bins"))+
+    ggtitle(paste("Discretization Results:", i, "bins"))+
     theme_bw(base_size=12)
 
 # Plot predicted vs. actual effort values
@@ -591,18 +591,20 @@ SWTIIIresults <- performSearch(6, effort, transactionFiles, c("TL", "TD", "DETs"
 # Plot classification results
 for (i in 1:length(SWTIIIresults)) {
   result <- SWTIIIresults[[i]]
-  df <- as.data.frame(t(subset(result$data, select = -c(Effort))))
+  data <- subset(result$data, select = -c(Effort))
+  df <- as.data.frame(t(data))
   g <- ggplot(data = df, aes(x = rownames(df), y = Aggregate)) + 
     geom_bar(stat = "identity") +
+    scale_x_discrete(limits = paste("l", 1:length(data), sep=""))+
       xlab("Levels") +
     ylab("Counts") +
     ggtitle(paste("Classification Results:", i*3-3+1, "levels")) +
-    theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))
+    theme(axis.text.x=element_text(angle=90,hjust=1,vjust=0.5))+
+    theme_bw(base_size=15)
   cutsVec <- cutsAsVec(result$cuts)
   g <- g + geom_text(data = data.frame(cutsVec), aes(label=cutsVec, col=cutsVec), alpha=0, x=1, y=1) +
   theme(legend.key=element_blank(), legend.title = element_blank()) +
-  guides(colour=guide_legend(override.aes=list(size=0)), reverse = TRUE) + 
-  theme_bw()
+  guides(colour=guide_legend(override.aes=list(size=0)), reverse = TRUE)
   print(g)
 }
 
@@ -643,11 +645,11 @@ MSEdata <- data.frame(NumBins = 1:length(SWTIIIresults), MSE = sapply(SWTIIIresu
 MMREdata <- data.frame(NumBins = 1:length(SWTIIIresults), MMRE = sapply(SWTIIIresults, function(x) { x$MMRE }))
 PREDdata <- data.frame(NumBins = 1:length(SWTIIIresults), PRED = sapply(SWTIIIresults, function(x) { x$PRED }))
 ggplot(data = MSEdata, aes(x = NumBins, y = log(MSE))) + geom_point(shape = 1) + geom_line() + ggtitle("MSE vs Number of Bins") + 
-  theme_bw()
+  theme_bw(base_size=20)
 ggplot(data = MMREdata, aes(x = NumBins, y = MMRE)) + geom_point(shape = 1) + geom_line() + ggtitle("MMRE vs Number of Bins") + 
-  theme_bw()
+  theme_bw(base_size=20)
 ggplot(data = PREDdata, aes(x = NumBins, y = PRED)) + geom_point(shape = 1) + geom_line() + ylab("PRED(0.25)") + ggtitle("PRED vs Number of Bins") + 
-  theme_bw()
+  theme_bw(base_size=20)
 
 # Plot marginal posteriors for each parameter
 for (i in 1:length(SWTIIIresults)) {
@@ -728,9 +730,34 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
   theme_bw()
 
 
+#plot only DUCP
+predictedValuesDUCP <- merge(SWTIIIModelPredictedValues, effort, by='row.names', all=TRUE)
+rownames(predictedValuesDUCP) <- predictedValuesDUCP$Row.names
+predictedValuesDUCP$Row.names <- NULL
+
+r2Vals <- apply(subset(predictedValuesDUCP, select = -Effort), 2, function (x) {
+  dat <- data.frame(Predicted = x, Effort = predictedValuesDUCP$Effort)
+  model <- lm(Effort ~ ., data = dat)
+  print(summary(model))
+  summary(model)$r.squared
+})
+
+r2Vals <- round(r2Vals, digits = 5)
+r2Vals <- paste("r2:", r2Vals, sep = "")
+r2data_txt <- data.frame(label = as.character(r2Vals))
+
+ggplot(predictedValuesDUCP, aes(x = DUCP, y = Effort)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE) + xlab("Predicted Effort") +
+  ylab("Actual Effort") + ggtitle("Goodness of Fit") +
+  theme(panel.spacing = unit(1, "lines")) +
+  geom_text(data = r2data_txt, size = 5, mapping = aes(x = -Inf, y = -Inf, label = label),
+            hjust = -5, vjust = -1)+
+  theme_bw(base_size=20)
+
+
 #draw example of posterior estimates
-  marginalData <- SWTIIIresults[[SWTIIIModelSelector]]$model[, !names(SWTIIIresults[[SWTIIIModelSelector]]$model) %in% c("(Intercept)", "sigma", "normFactor", "sd")]
-  
+  marginalData <- SWTIIIresults[[SWTIIIModelSelector]]$model[, !names(SWTIIIresults[[SWTIIIModelSelector]]$model) %in% c("(Intercept)", "sigma", "sd")]
+  colnames(marginalData) <- c(paste("l", 1:7, sep=""), "Effort Adj.")
     #for (col in names(marginalData)) {
     means <- apply(marginalData, 2, mean)
     sd <- apply(marginalData, 2, sd)
@@ -751,15 +778,16 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
     })
     
     ggplot(gatheredData, aes(value))  + 
-  geom_histogram(aes(y = ..density..), binwidth = 1, colour="black", fill="white") +
+  geom_histogram(aes(y = ..density..), colour="black", fill="white") +
   geom_line(aes(y = density), data = normaldens, colour = "red") +
-  facet_wrap(~ level, scales = "free", nrow=2) + xlab("Posterior Estimates") +ylab("Density")
+  facet_wrap(~ level, scales = "free", nrow=3) + xlab("Posterior Estimates") +ylab("Density")
   #geom_text(
   #data    = dat_text,
   #mapping = aes(x = 0, y = 0, label = label),
   #hjust   = -0.1,
   #vjust   = -1
   #)
+    
 ```
 
 
@@ -767,7 +795,7 @@ ggplot(predictedValues, aes(x = Predicted, y = Effort)) +
 comparison between UCP, COCOMO, a-priori COCOMO
 ```{r modelPlot, warning = FALSE}
 #df <- read.csv("modelEvaluations-8-16-3.csv")
-otherSizeMetricsData=modelData[c("Effort", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP")]
+otherSizeMetricsData=modelData[c("Effort", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP", "FP")]
 
 ret <- compareBetweenSizeMetrics(TNModelData, SWTIIModelData, SWTIIIModelData, otherSizeMetricsData)
 #model1 <- TNresults[[TNModelSelector]][["model"]]
@@ -791,6 +819,8 @@ print('average improvement by cocomo')
 print(colMeans(avgPreds[, "COCOMO"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
 print('average improvement by cocomo.apriori')
 print(colMeans(avgPreds[, "COCOMO Apriori"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by FP')
+print(colMeans(avgPreds[, "FP"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
 
 #print(mean(avgPreds[, "EXUCP"] - avgPreds[,"UCP"]))
 #print(mean(avgPreds[, "EXUCP"] - avgPreds[,"COCOMO"]))
@@ -822,6 +852,19 @@ ggplot(meltAvgPreds) + theme_bw() +
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
+#compare DUCP , UCP, and FP
+avgPreds_DUCP_UCP_FP <- avgPreds[, c("DUCP", "UCP", "FP", "Pred")]
+colnames(avgPreds_DUCP_UCP_FP) <- c("SWT-3D", "UCP", "FP", "Pred")
+#print(avgPreds)
+meltAvgPreds_DUCP_UCP_FP = melt(avgPreds_DUCP_UCP_FP, id.vars="Pred")
+colnames(meltAvgPreds_DUCP_UCP_FP) <- c("Pred", "Method", "Value")
+
+print("melt avg preds info as dots and smooth function")
+ggplot(meltAvgPreds_DUCP_UCP_FP) + theme_bw() + 
+		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
+		scale_shape_manual(values=c(0,1,2,3,4,5,6))+
+		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
+		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 ```
 
 save the parameters to file
