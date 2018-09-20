@@ -1,0 +1,7 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:List of pictures->User:List of pictures,Search Pictures,CTRL,2,0,2,1,4
+2,stl#User:List of pictures->User:List of pictures,Search Pictures,EXTCLL,2,0,2,1,4
+3,stl#User:List of pictures->User:List of pictures,Search Pictures,INT,2,0,2,1,4
+4,stl#User:Query Picture List->User:Query Picture List->Query Picture List:retrive the list of picture->retrive the list of picture:Picture,Search Pictures,TRAN_NA,4,0,1,3,4
+5,stl#User:Query Picture List->User:Query Picture List->Query Picture List:retrive the list of picture->retrive the list of picture:Image Filter Box->Image Filter Box:Filter Pictures->Filter Pictures:List of pictures,Search Pictures,TRAN_NA,6,0,1.6,5,9.600000000000001
+6,stl#User:Image Filter Box->User:Image Filter Box->Image Filter Box:Filter Pictures->Filter Pictures:List of pictures,Search Pictures,TRAN_NA,4,0,2,3,8

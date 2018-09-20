@@ -1,0 +1,9 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:view photo->User:view photo->view photo:upload->upload:upload choice,View photos on device,undefined,2,1,0,0
+2,stl#User:upload choice->User:upload choice,View photos on device,undefined,1,0,0,0
+3,stl#User:camera roll->User:camera roll->camera roll:choose a photo->choose a photo:view photo->view photo:upload->upload:upload choice,View photos on device,undefined,3,2,0,0
+4,stl#Actor:view photo->Actor:view photo->view photo:upload->upload:upload choice,View photos on device,undefined,2,1,0,0
+5,stl#Actor:upload choice->Actor:upload choice,View photos on device,undefined,1,0,0,0
+6,stl#Actor:camera roll->Actor:camera roll->camera roll:choose a photo->choose a photo:view photo->view photo:upload->upload:upload choice,View photos on device,undefined,3,2,0,0
+7,stl#Actor:my photos screen->Actor:my photos screen->my photos screen:process request->process request:local photos->local photos:get photos successfully->get photos successfully:camera roll->camera roll:choose a photo->choose a photo:view photo->view photo:upload->upload:upload choice,View photos on device,undefined,4,4,1,0
+8,stl#Actor:my photos screen->Actor:my photos screen->my photos screen:process request->process request:local photos->local photos:Can't access local photos->Can't access local photos:my photos screen->my photos screen:process request,View photos on device,undefined,2,3,1,0

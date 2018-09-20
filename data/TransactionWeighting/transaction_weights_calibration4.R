@@ -731,8 +731,10 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
     regressionData <- matrix(nrow = length(projects), ncol = length(levels) + 1)
     rownames(regressionData) <- projects
     colnames(regressionData) <- c(levels, "Effort")
+    numOfTrans <- 0
     for (project in projects) {
         filePath <- transactionFiles[project, "transaction_file"]
+        print(filePath)
         if (!file.exists(filePath)) {
           print("file doesn't exist")
           next
@@ -744,9 +746,12 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
         if(nrow(fileData) < 1){
           next
         }
+        numOfTrans = numOfTrans + nrow(fileData)
         classifiedData <- classify(fileData, cutPoints)
         regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
     }
+    
+    print(numOfTrans)
   
     regressionData <- na.omit(regressionData)
     regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
@@ -773,6 +778,7 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
     print(cutPoints)
     #print("cross validation")
     searchResults[[i]] <- list(
+                               numOfTrans = numOfTrans,
                                MSE = validationResults["MSE"], 
                                MMRE = validationResults["MMRE"], 
                                PRED = validationResults["PRED"],

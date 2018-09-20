@@ -1,0 +1,210 @@
+
+		<!DOCTYPE html>
+		<html>
+			<head>
+				<title>UMLx</title>
+				<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet'>
+				<link href='public/css/style.css', rel='stylesheet'>
+				<link href="public/css/lightgallery.css" rel="stylesheet">
+			</head>
+			
+			<body>
+				<div class="banner">
+					<div class="content-flex">
+						<div class="col-md-10 banner-title">
+							<h2>UMLx</h2>
+						</div>
+					</div>
+				</div>
+	
+				<div id='main-panel'>
+					<div id='display-panel'>
+						<div class='block panel panel-default'>
+							<div id='panel-heading'>
+								
+		<div class='model-analytics-ops pull-right'>
+			<div class="dropdown">
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Dump Repo<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a href="./modelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Models</a></li>
+					<li><a href="./modelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Models (simulation)</a></li>
+					<li><a href="./useCaseEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Use Cases</a></li>
+					<li><a href="./domainModelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Domain Models</a></li>
+					<li><a href="./transactionAnalytics.csv" class="dumpEvaluationData dropdown-item">Evaluation For Transactions</a></li>
+					<li><a href="./entityAnalytics.csv.csv" class="dumpEvaluationData dropdown-item">Evaluation For Classes</a></li>
+					<li><a href="./elementAnalytics.csv" class="dumpEvaluationData dropdown-item">Evaluation For Elements</a></li>
+				</ul>
+			</div>
+			
+			<div class='dropdown'>
+				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Load<span class="caret"></span></button>
+				<ul class="dropdown-menu">
+					<li><a id="update-model" onclick="" href="javaScript:void(0);" class="dropdown-item">Model Version</a></li>
+				</ul>
+			</div>
+		</div>
+		
+							</div>
+	
+							<div id="model-stats-chart" class="panel-body">
+								
+		<div class="model-info-content">
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a data-toggle="tab" href="#model-analytics">Overview</a>
+				</li>
+				<li>
+					<a data-toggle="tab" href="#usecase-analysis" onclick="">Model Elements</a>
+				</li>
+			</ul>
+			<div class="tab-content">
+				<div id="model-analytics" class="tab-pane fade in active">
+					
+		<div class="col-sm-12 status-row">
+			<div class="col-sm-3">
+				<div class="blue-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="public/img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Use Cases</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="red-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="public/img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Transactions</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="green-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="public/img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Classes</span>
+					</div>
+				</div>
+			</div>
+			<div class="col-sm-3">
+				<div class="purple-card analytics-card">
+					<div class="col-sm-4 image-box">
+						<img src="public/img/project.png" alt="">
+					</div>
+					<div class="col-sm-8 text-box">
+						<h2>0</h2>
+						<span>Actors</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	
+		<div id="result_chart">here should be distributions</div>
+		
+				</div>
+				<div id="usecase-analysis" class="tab-pane fade">
+					<div id="model-usecase-analysis">
+						<h3>loading...</h3>
+					</div>
+				</div>
+				<div id="repo-analysis-detail" class="panel-body">
+					<div class="repo-metrics table-responsive">
+						<div style='height:6%'>&nbsp;</div>
+						<table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'>
+							<tr>
+								<th>Usecase ID</th>
+								<th>Column Name</th>
+								<th>Mean</th>
+								<th>Variance</th>
+								<th>First Quartile</th>
+								<th>Median</th>
+								<th>Third Quartile</th>
+								<th>Kurtosis</th>
+							</tr>
+						</table>
+					</div>
+				</div> 
+			</div>
+		</div>	  
+		
+							</div>
+						</div>
+					</div>
+				</div>
+				
+	
+				<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+				<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+				<script type="text/javascript" src="https://code.highcharts.com/highcharts.src.js"></script>
+				<script type="text/javascript" src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+				<script type="text/javascript" src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+				<script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
+				<script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+				<script type="text/javascript" src="public//js/scripts.js"></script>
+				<script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>
+				<script> 
+					function display(){
+						$('#result_chart').highcharts({
+							chart: {
+								type: 'column',
+								spacingLeft: 0
+							},
+	
+							title: {
+								text: 'Evaluation of Use Case Complexity'
+							},
+			
+							xAxis: {
+								categories: ['UC1','UC2','UC3','UC4','UC5','UC6','UC7','UC8','UC9','UC10','UC11','UC12','UC13','UC14','UC15','UC16','UC17','UC18','UC19','UC20','UC21','UC22','UC23','UC24'],
+								crosshair: true
+							},
+							yAxis: {
+								min: 0,
+								title: {
+									text: 'Frequency'
+								}
+							},
+							tooltip: {
+								headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+								pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+									'<td style="padding:0"><b>{point.y:.1f} mm</b></td></tr>',
+								footerFormat: '</table>',
+								shared: true,
+								useHTML: true
+							},
+							plotOptions: {
+								column: {
+									pointPadding: 0.2,
+									borderWidth: 0
+								}
+							},
+							series: [ 
+								{
+									name: 'SWTI',
+									data: [6,8,8,6,10,6,8,8,22,44,6,10,18,57,22,12,20,14,2,16,12,14,50,8]
+								}, 
+								{
+									name: 'SWTII',
+									data: [6,10,10,6,14,10,8,8,31,79,6,12,30,61,31,12,36,22,2,28,18,24,81,10]
+								}, 
+								{
+									name: 'SWTIII',
+									data: [7,11,11,7,15,10,9,9,32,90,7,13,31,66,32,14,36,27,2,28,19,24,82,11]
+								}
+							]
+						});
+					}
+	
+					window.onload = display;
+				</script>
+			</body>
+		</html>
+		

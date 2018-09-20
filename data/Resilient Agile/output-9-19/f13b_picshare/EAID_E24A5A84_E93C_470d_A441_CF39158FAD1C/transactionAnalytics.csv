@@ -1,0 +1,17 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:upload choice->User:upload choice,Take photo for location,CTRL,2,0,7,1,14
+2,stl#User:upload choice->User:upload choice,Take photo for location,EXTCLL,2,0,7,1,14
+3,stl#User:upload choice->User:upload choice,Take photo for location,INT,2,0,7,1,14
+4,stl#User:upload choice->User:upload choice->upload choice:upload to current location->upload to current location:camera->camera:get location successfully->get location successfully:current location->current location:upload->upload:my upload->my upload:failed to upload->failed to upload:upload choice,Take photo for location,TRAN_NA,10,0,3,9,30
+5,stl#User:upload choice->User:upload choice->upload choice:upload to current location->upload to current location:camera->camera:get location successfully->get location successfully:current location->current location:upload->upload:my upload->my upload:Upload finished->Upload finished:upload choice,Take photo for location,TRAN_NA,10,0,3,9,30
+6,stl#User:upload choice->User:upload choice->upload choice:upload to current location->upload to current location:camera->camera:failed to get current location->failed to get current location:upload choice->upload choice:upload to current location,Take photo for location,TRAN_NA,7,0,3.6666666666666665,6,25.666666666666664
+7,stl#User:current location->User:current location->current location:upload->upload:my upload->my upload:failed to upload->failed to upload:upload choice,Take photo for location,TRAN_NA,6,0,3,5,18
+8,stl#User:current location->User:current location->current location:upload->upload:my upload->my upload:Upload finished->Upload finished:upload choice,Take photo for location,TRAN_NA,6,0,3,5,18
+9,stl#Actor:upload choice->Actor:upload choice->upload choice:upload to current location->upload to current location:camera->camera:get location successfully->get location successfully:current location->current location:upload->upload:my upload->my upload:failed to upload->failed to upload:upload choice,Take photo for location,TRAN_NA,10,0,3,9,30
+10,stl#Actor:upload choice->Actor:upload choice->upload choice:upload to current location->upload to current location:camera->camera:get location successfully->get location successfully:current location->current location:upload->upload:my upload->my upload:Upload finished->Upload finished:upload choice,Take photo for location,TRAN_NA,10,0,3,9,30
+11,stl#Actor:upload choice->Actor:upload choice->upload choice:upload to current location->upload to current location:camera->camera:failed to get current location->failed to get current location:upload choice->upload choice:upload to current location,Take photo for location,TRAN_NA,7,0,3.6666666666666665,6,25.666666666666664
+12,stl#Actor:upload choice->Actor:upload choice,Take photo for location,CTRL,2,0,7,1,14
+13,stl#Actor:upload choice->Actor:upload choice,Take photo for location,EXTCLL,2,0,7,1,14
+14,stl#Actor:upload choice->Actor:upload choice,Take photo for location,INT,2,0,7,1,14
+15,stl#Actor:current location->Actor:current location->current location:upload->upload:my upload->my upload:failed to upload->failed to upload:upload choice,Take photo for location,TRAN_NA,6,0,3,5,18
+16,stl#Actor:current location->Actor:current location->current location:upload->upload:my upload->my upload:Upload finished->Upload finished:upload choice,Take photo for location,TRAN_NA,6,0,3,5,18
