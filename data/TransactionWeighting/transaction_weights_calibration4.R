@@ -483,7 +483,20 @@ proposalfunction <- function(B, normFactor, sd){
   sample[names(B)] <- rnorm(length(B),mean = B, sd = sigma)
   sample["normFactor"] <- rnorm(1, normFactor, 0.1)
   sample['sd'] <- rnorm(1, sd, 3)
+  sample['sigma'] <- sigma
   return(sample)
+}
+
+proposalProbability <- function(x1, x2){
+  #
+  # return the proposal probability g(x1|x2)
+  #
+  
+  probB <- sum(dnorm(x1["B"],mean = x2["B"], sd = x2["sigma"], log = T))
+  probNormFactor <- dnorm(x1["normFactor"], x2["normFactor"], 0.1, log=T)
+  probSD <- dnorm(x1["sd"], x2["sd"], log=T)
+  return(probB+probNormFactor+probSD)
+  
 }
 
 run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normFactor, var){
@@ -493,10 +506,18 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
   #  normFactor = 1
   #}
   chain = matrix(nrow=N+1, ncol=length(priorB)+2)
-  colnames(chain) <- c(names(priorB), "normFactor", "sd")
+  colnames(chain) <- c(names(priorB), "normFactor", "sd", "sigma")
   chain[1, "normFactor"] <- normFactor
   chain[1, names(priorB)] <- priorB
   chain[1, "sd"] <- 10
+  
+  sigma <- c(0.1)
+  if(length(priorB)>1){
+    for (i in 1:length(priorB)) {
+      sigma <- c(sigma, 1/5* (abs(priorB[i] - priorB[i - 1]))+0.1)
+    }
+  }
+  chain[1, "signma"] = sigma
   #probabs <- c()
   #acceptance <- c()
   for (i in 1:N){
@@ -505,9 +526,12 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
     `%ni%` <- Negate(`%in%`)
     update <- posterior(proposal, priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
     posterior <- posterior(chain[i,], priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
-    probab = exp(update - posterior)
+    probab = min(c(1, exp(update + proposalProbability(chain[i,], proposal) - posterior - proposalProbability(proposal, chaine[i, ]))))
     #probabs = c(probabs, probab)
     #print(probab)
+    #the better way of calculating the acceptance rate
+    
+    
     if (runif(1) < probab){
       chain[i+1,] = proposal
       #print("accept")
