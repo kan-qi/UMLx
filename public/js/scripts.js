@@ -1663,17 +1663,15 @@ function createTrendingLines() {
                 }
                 ]
             });
-            // On click of the projects tab - update the y axis.
-
+            
+            // On click of the projects tab - update the data and y axis.
             $('.blue-card').click(function () {
                 console.log("blue clicked");
-
                 chart.update({
                     yAxis: {
                         title: {
                             text: 'Project'
                         }
-
                     },
                     series: [{
                         name: 'project_num',
@@ -1682,24 +1680,24 @@ function createTrendingLines() {
                 });
             });
 
-            // On click of the use cases tab - update the y axis.
+            // On click of the use cases tab - update the data and y axis.
             $('.red-card').click(function () {
                 console.log("red clicked");
                 chart.update({
+                    series: [{
+                        name: 'usecase_num',
+                        data: case_num
+                    }],
                     yAxis: {
                         title: {
                             text: 'Number of use cases'
                         }
 
-                    },
-                    series: [{
-                        name: 'usecase_num',
-                        data: case_num
-                    }]
+                    }
                 });
             });
 
-            // On click of the transaction tab - update the y axis.
+            // On click of the transaction tab - update the data and y axis.
             $('.green-card').click(function () {
                 console.log("green clicked");
                 var transaction_num_new = [];
@@ -1710,33 +1708,31 @@ function createTrendingLines() {
                 console.log('===========');
                 console.log(transaction_num_new);
                 chart.update({
+                    series: [{
+                        name: 'transaction_num',
+                        data: transaction_num_new
+                    }],
                     yAxis: {
                         title: {
                             text: 'Number of transactions'
                         }
-
-                    },
-                    series: [{
-                        name: 'transaction_num',
-                        data: transaction_num_new
-                    }]
+                    }
                 });
             });
 
-            // On click of the classes tab - update the y axis.
+            // On click of the classes tab - update the data and y axis.
             $('.purple-card').click(function () {
                 console.log("purple clicked");
                 chart.update({
+                    series: [{
+                        name: 'class_num',
+                        data: class_num
+                    }],
                     yAxis: {
                         title: {
                             text: 'Number of classes'
                         }
-
-                    },
-                    series: [{
-                        name: 'class_num',
-                        data: class_num
-                    }]
+                    }
                 });
             });
 
