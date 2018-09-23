@@ -314,6 +314,13 @@ html
                     //input#uuid-page5(type='hidden', name='uuid-page5', value='')
                 // end of #sec-5
 
+                #loadingScreen.hidden
+                    div.full-page-model
+                    div.full-page-model-content
+                        div(style='padding: 30px')
+                            img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                            p Processing...                
+
         script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
         script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
         script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")

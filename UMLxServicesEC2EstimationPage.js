@@ -168,7 +168,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //	umlEstimationInfo.model = req.body['model'];
 	
 //	var estimationModel = req.body['model'];
-	var estimationModel = eucp_lm;
+	var estimationModel = "eucp_lm";
 	
 //	umlEstimationInfo.otherFilePath = req.files['uml_other'][0].path;
 //	umlEstimationInfo.simulation = req.body['simulation'];
