@@ -18,11 +18,15 @@ html
             classList.remove("hidden");
           }
         }
+
       }
       function showLoading() {
         var classList = document.getElementById("loadingScreen").classList;
         classList.remove("hidden");
       }
+
+        $('#model-file-submit-form').submit(startEvalPush);
+
 
 
   body#upload-body
@@ -259,13 +263,15 @@ html
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
-              button.btn.btn-success.pull-right(type='submit', onclick='showLoading()') Submit
+
+              button.btn.btn-success.pull-right(type='submit', onclick='showLoading();startEvalPush();') Submit
         #loadingScreen.hidden
           div.full-page-model
           div.full-page-model-content
             div(style='padding: 30px')
               img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
               p Processing...
+
 
 
     script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
