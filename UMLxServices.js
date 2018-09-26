@@ -501,10 +501,11 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     console.log("DEBUGGGG: inside uploadUMLFile");
     res.redirect('/');
     console.log("DEBUGGGG: before evaluate project");
-    evaluateUploadedProject(req);
+    setTimeout(() => evaluateUploadedProject(req), 2000);
 });
 
-function evaluateUploadedProject(req) {
+async function evaluateUploadedProject(req) {
+
     console.log("DEBUGGGG: start evaluating project");
     var umlFilePath = null;
     var umlOtherPath = null;
@@ -641,6 +642,7 @@ function evaluateUploadedProject(req) {
             });
         });
     }
+
 }
 
 app.get('/uploadUMLFileCompany', function(req, res){
