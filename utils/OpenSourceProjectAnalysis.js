@@ -77,9 +77,8 @@ function recoverKDMModel(projectList){
 }
 
 function analyseXMIModel(projectList, reportDir){
-	
-
 	var reportPath = reportDir+"\\analysis-results-folders.txt";
+	global.debugCache = new Object();
 //	FileManagerUtil.deleteFileSync(reportPath);
 	
 	  //use promise to construct the repo objects
@@ -138,11 +137,22 @@ function analyseXMIModel(projectList, reportDir){
         return analyseModel(project.path+"\\"+project.modelFile, project.tag, reportDir);
     })).then(
         function(){
+			console.log("=============Cache==============");
+			var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
+			for (var key in global.debugCache) {
+				mkdirp(OutputDir, function(err) { 
+					fs.writeFile(key, global.debugCache[key], function(err){
+						if(err){
+							console.log(err);
+						}
+					});
+					});
+				}
+			console.log("Finish write debug cache in files");
             return new Promise((resolve, reject) => {
                 setTimeout(function(){
                 	console.log("analysis finished");
                     resolve();
-
                 }, 0);
             });
         }
