@@ -56,7 +56,6 @@
 	var dicMethodClass = {};	 // {method.uuid, class.uuid}
 	var dicActionElementMethod = {};
 	
-
 	function analyseCode(xmiString, outputDir){
 		assignUUID(xmiString);
 
@@ -316,8 +315,8 @@
 
 		for (var i in dicClassUnits) {
 			var classUnit = dicClassUnits[i];
-			console.log('test');
-			console.log(classUnit);
+//			console.log('test');
+//			console.log(classUnit);
 			// var xmiClassUnit = classUnit.attachment;
 			var XMIClassStorableUnits = classUnit.StorableUnits
 			for (var q in XMIClassStorableUnits) {

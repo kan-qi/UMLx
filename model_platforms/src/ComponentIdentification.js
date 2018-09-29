@@ -352,7 +352,7 @@
 	}
 
 	function calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods) {
-		console.log("type dependency metric");
+		  console.log("type dependency metric");
 
 		  console.log("typeDependencyGraph");
 		  console.log(typeDependencyGraph);
@@ -382,7 +382,7 @@
 
 		if (typeDependencyGraph) {
 			for (var i in typeDependencyGraph.edgesAttrComposite) {
-	      var edge = typeDependencyGraph.edgesAttrComposite[i];
+				var edge = typeDependencyGraph.edgesAttrComposite[i];
 				var col = classDic[edge.start.component.classUnit];
 				var row = classDic[edge.end.component.classUnit];
 				attrs[col][row]++;
@@ -393,7 +393,7 @@
 				var edge = typeDependencyGraph.edgesPComposite[i];
 				var col = classDic[edge.start.component.classUnit];
 				var row = classDic[edge.end.component.classUnit];
-	      paras[col][row]++;
+				paras[col][row]++;
 				// classArray[col] = false;
 				// classArray[row] = false;
 			}
