@@ -56,6 +56,31 @@ combineData <- function(transactionFiles) {
 	data
 }
 
+parametricKStest <- function(dist, shape, rate, ks){
+  
+  # iterate 10000 samples for ks-statistics
+  num_of_samples = length(dist)
+  sample-ks = c()
+  for(i in 1: 10000){
+    y <- rgamma(num_of_samples, shape = shape, scale = rate)
+    result = ks.test(dist, y)
+    #print("gamma goodness of fit")
+    #print(result)
+    sample-ks = c(sample-ks, result[['statistic']])
+  }
+  
+  sapply(sample-ks, mean)
+  tests<-sapply(sample-ks, function(x) {
+    if(x > ks ){
+      1
+    }
+    else {
+      0
+    }
+  })
+  sum(tests)
+}
+
 discretize <- function(data, n) {
 	# Discretizes continuous data into different levels of complexity based on
 	# quantiles of normal distribution defined by the data.
@@ -91,10 +116,14 @@ discretize <- function(data, n) {
 	
 	# testing the goodness of fit.
 	num_of_samples = length(vec)
-	y <- rgamma(num_of_samples, shape = shape, scale = rate)
+	y <- rgamma(num_of_samples, shape = shape, rate = rate)
 	result = ks.test(vec, y)
 	print("gamma goodness of fit")
 	print(result)
+	
+	parametric-test <- parametricKStest(vec, shape, rate, result[["statistic"]])
+	print("parametric test")
+	print(parametric-test)
 	
 	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)

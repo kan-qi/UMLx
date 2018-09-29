@@ -95,7 +95,7 @@
 		console.log("project effort");
 		console.log(projectEffortInPM);
 		
-		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91));
+		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
 		
 		if(availableSchedule && projectDuration > availableSchedule){
 			projectDuration = availableSchedule;
@@ -159,7 +159,7 @@
 		estimationResults.Personnel_DB = personnel_DB;
 		estimationResults.Personnel_FS = personnel_FS;
 		
-		estimationResults.Personnel = Math.round(personnel);
+		estimationResults.Personnel = Math.ceil(personnel);
 		
 //		projectDuration = projectEffortInPM/personnel;
 		
@@ -191,14 +191,16 @@
 
 			useCaseEstimates.SizeMeasurement = Number(useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric]).toFixed(2);
 			
-			var useCaseEffort = (useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+			var useCaseMetric = useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+			var modelMetric = modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+			var useCaseEffort = (modelMetric == 0) ? 0 : projectEffort/modelMetric*useCaseMetric;
 			
 //			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
 //			useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
 			
 			var useCaseEffortInPMCOCOMO = useCaseEffort/152;
 			
-			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91));
+			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
 
 //			var personnel = projectEffort/12;
 			
@@ -269,9 +271,9 @@
 					personnel_FS = 1;
 				}
 				
-				useCasePersonnel = personnel_UI + personnel_DB + personnel_FS;
+//				useCasePersonnel = personnel_UI + personnel_DB + personnel_FS;
 				
-				useCaseEstimates.Personnel = Math.round(useCasePersonnel);
+				useCaseEstimates.Personnel = Math.ceil(useCasePersonnel);
 				
 				useCaseEstimates.Personnel_UI = personnel_UI;
 				useCaseEstimates.Personnel_DB = personnel_DB;
