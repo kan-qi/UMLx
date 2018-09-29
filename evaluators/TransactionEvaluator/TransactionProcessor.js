@@ -53,8 +53,6 @@
 									}
 								}
 								
-							
-							
 									var matchedOperation = domainModelSerchUtil.matchOperation(node.Name, node.Component);
 									
 //									console.log("matched oepration");
@@ -62,7 +60,6 @@
 									if(matchedOperation){
 //										var debug = require("../../utils/DebuggerOutput.js");
 //										debug.appendFile("matchedOperation", matchedOperation.Name);
-										
 										for(var j in matchedOperation.Parameters){
 											dataElementTypes++;
 										}
@@ -78,7 +75,7 @@
 				}
 				
 
-				totalComponents = components.length;
+				totalComponents = Object.keys(components).length;
 				
 				transaction['TransactionAnalytics'] = {};
 				

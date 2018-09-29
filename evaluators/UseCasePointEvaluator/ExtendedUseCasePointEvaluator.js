@@ -221,7 +221,7 @@
 		useCaseInfo['ExtendedUseCasePointData'].SWTII += swtii.weight;
 		useCaseInfo['ExtendedUseCasePointData'].SWTIII += swtiii.weight;
 		
-		debug.appendFile("use_cas_rated_transactions_"+useCaseInfo._id, transaction.TransactionStr+",EUCP,"+swti.level+","+swti.weight+",EXUCP,"+swtii.level+","+swtii.weight+",DUCP,"+swtiii.level+","+swtiii.weight+"\n");
+		debug.appendFile("use_case_rated_transactions_"+useCaseInfo._id, transaction.TransactionStr+",EUCP,"+swti.level+","+swti.weight+",EXUCP,"+swtii.level+","+swtii.weight+",DUCP,"+swtiii.level+","+swtiii.weight+"\n");
 		}
 		
 				
