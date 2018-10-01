@@ -56,6 +56,57 @@ combineData <- function(transactionFiles) {
 	data
 }
 
+prodByLinearRegression <- function(effortData, transactionFiles, cutpoints, weights){
+  #classifiedData <- classify(fileData, cutPoints)
+  #regressionData <- matrix(effort=fileData['effort'], sizeMeasures = sizeMeasures)
+  
+  #for (i in seq(1,n)) {
+    #cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
+    #rownames(cutPoints) <- parameters
+    #for (p in parameters) {
+    #  cutPoints[p, ] <- discretize(combinedData[, p], i)
+    #}
+    #numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
+    #levels <- genColNames(parameters, i)
+  
+    projects <- rownames(effortData)
+  
+    regressionData <- matrix(nrow = length(projects), ncol = 2)
+    rownames(regressionData) <- projects
+    colnames(regressionData) <- c("size", "Effort")
+    numOfTrans <- 0
+    for (project in projects) {
+      filePath <- transactionFiles[project, "transaction_file"]
+      print(filePath)
+      if (!file.exists(filePath)) {
+        print("file doesn't exist")
+        next
+      }
+      fileData <- read.csv(filePath)
+      fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+      fileData <- na.omit(fileData)
+      
+      if(nrow(fileData) < 1){
+        next
+      }
+      numOfTrans = numOfTrans + nrow(fileData)
+      classifiedData <- classify(fileData, cutPoints)
+      size <- classification %*% weights 
+      regressionData[project, ] <- c(size, effortData[project, "Effort"])
+    }
+    
+    print(numOfTrans)
+    
+    regressionData <- na.omit(regressionData)
+    #regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
+    regressionData <- as.data.frame(regressionData)
+  #}
+    
+    lm.fit <- lm(Effort ~ . - 1, regressionData)
+    coefficients <- summar(lm.fit)$coefficients
+    print(coefficients)
+}
+
 parametricKStest <- function(dist, shape, rate, ks){
   
   # iterate 10000 samples for ks-statistics

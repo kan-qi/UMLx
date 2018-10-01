@@ -361,7 +361,7 @@
 		// var classDic = {};
 		// var classArray = [];
 		// var methods = [];
-    //
+		//
 		// for(var i in classes) {
 		// 	var classUnit = classes[i];
 		// 	classDic[classUnit.UUID] = i;
@@ -453,7 +453,7 @@
 		var accessMetrics = zeroArray(classes.length, classes.length);
 
 		for (var i in accessGraph.edgesComposite) {
-      var edge = accessGraph.edgesComposite[i];
+			var edge = accessGraph.edgesComposite[i];
 			var col = classDic[edge.start.component.classUnit];
 			var row = classDic[edge.end.component.classUnit];
 			access[col][row]++;
