@@ -56,6 +56,67 @@ combineData <- function(transactionFiles) {
 	data
 }
 
+
+prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weights){
+    #effortData <- effort
+    #transactionFiles <- transactionsFiles
+    #cutPoints <- cutpoints
+    #weights <- weights
+    
+    projects <- rownames(effortData)
+  
+    regressionData <- matrix(nrow = length(projects), ncol = 2)
+    rownames(regressionData) <- projects
+    colnames(regressionData) <- c("size", "Effort")
+    numOfTrans <- 0
+    for (project in projects) {
+      #project <- projects[1]
+      filePath <- transactionFiles[project, "transaction_file"]
+      print(filePath)
+      if (!file.exists(filePath)) {
+        print("file doesn't exist")
+        next
+      }
+      fileData <- read.csv(filePath)
+      fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+      fileData <- na.omit(fileData)
+      
+      if(nrow(fileData) < 1){
+        next
+      }
+      numOfTrans = numOfTrans + nrow(fileData)
+      
+      if(is.null(cutPoints)){
+      size = nrow(fileData)
+      }
+      else{
+      classifiedData <- classify(fileData, cutPoints)
+      size <- classifiedData %*% weights 
+      }
+      
+      regressionData[project, ] <- c(size, effortData[project, "Effort"])
+    }
+    
+    print(numOfTrans)
+    
+    regressionData <- na.omit(regressionData)
+    #regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
+    regressionData <- as.data.frame(regressionData)
+    
+    print("regressionData")
+    print(regressionData)
+  #}
+    
+    lm.fit <- lm(Effort ~ .-1, regressionData)
+    coefficients <- summary(lm.fit)$coefficients
+    predicts <- as.data.frame(predict(lm.fit, newData = regressionData))
+    rownames(predicts) <- projects
+    results = list()
+    results[["predicts"]] <- predicts
+    results[["coefficients"]] <- coefficients
+    results
+}
+
 parametricKStest <- function(dist){
   #dist <- combined[, "TD"]
   

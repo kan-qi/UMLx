@@ -1,0 +1,17 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:view photo->User:view photo->view photo:prepare resullt->prepare resullt:camera->camera:can't access camera->can't access camera:my photo screen->my photo screen:prepare resullt->prepare resullt:camera,Take a photo,TRAN_NA,8,7,7,4,56
+2,stl#User:view photo->User:view photo->view photo:prepare resullt->prepare resullt:camera->camera:take the photo successfully->take the photo successfully:view photo->view photo:prepare resullt,Take a photo,TRAN_NA,7,6,9,3,63
+3,stl#User:view photo->User:view photo->view photo:prepare resullt->prepare resullt:camera->camera:take the photo successfully->take the photo successfully:view photo->view photo:Upload->Upload:upload choice,Take a photo,TRAN_NA,8,7,8.25,4,66
+4,stl#User:view photo->User:view photo->view photo:Upload->Upload:upload choice,Take a photo,TRAN_NA,4,3,8,2,32
+5,stl#User:upload choice->User:upload choice,Take a photo,CTRL;EXTCLL;INT,2,1,6,1,12
+6,stl#User:my photo screen->User:my photo screen->my photo screen:prepare resullt->prepare resullt:camera->camera:can't access camera->can't access camera:my photo screen->my photo screen:prepare resullt,Take a photo,TRAN_NA,7,6,8,3,56
+7,stl#User:my photo screen->User:my photo screen->my photo screen:prepare resullt->prepare resullt:camera->camera:take the photo successfully->take the photo successfully:view photo->view photo:prepare resullt->prepare resullt:camera,Take a photo,TRAN_NA,8,7,7.25,4,58
+8,stl#User:my photo screen->User:my photo screen->my photo screen:prepare resullt->prepare resullt:camera->camera:take the photo successfully->take the photo successfully:view photo->view photo:Upload->Upload:upload choice,Take a photo,TRAN_NA,8,7,6.4,5,51.2
+9,stl#Actor:view photo->Actor:view photo->view photo:prepare resullt->prepare resullt:camera->camera:can't access camera->can't access camera:my photo screen->my photo screen:prepare resullt->prepare resullt:camera,Take a photo,TRAN_NA,8,7,7,4,56
+10,stl#Actor:view photo->Actor:view photo->view photo:prepare resullt->prepare resullt:camera->camera:take the photo successfully->take the photo successfully:view photo->view photo:prepare resullt,Take a photo,TRAN_NA,7,6,9,3,63
+11,stl#Actor:view photo->Actor:view photo->view photo:prepare resullt->prepare resullt:camera->camera:take the photo successfully->take the photo successfully:view photo->view photo:Upload->Upload:upload choice,Take a photo,TRAN_NA,8,7,8.25,4,66
+12,stl#Actor:view photo->Actor:view photo->view photo:Upload->Upload:upload choice,Take a photo,TRAN_NA,4,3,8,2,32
+13,stl#Actor:upload choice->Actor:upload choice,Take a photo,CTRL;EXTCLL;INT,2,1,6,1,12
+14,stl#Actor:my photo screen->Actor:my photo screen->my photo screen:prepare resullt->prepare resullt:camera->camera:can't access camera->can't access camera:my photo screen->my photo screen:prepare resullt,Take a photo,TRAN_NA,7,6,8,3,56
+15,stl#Actor:my photo screen->Actor:my photo screen->my photo screen:prepare resullt->prepare resullt:camera->camera:take the photo successfully->take the photo successfully:view photo->view photo:prepare resullt->prepare resullt:camera,Take a photo,TRAN_NA,8,7,7.25,4,58
+16,stl#Actor:my photo screen->Actor:my photo screen->my photo screen:prepare resullt->prepare resullt:camera->camera:take the photo successfully->take the photo successfully:view photo->view photo:Upload->Upload:upload choice,Take a photo,TRAN_NA,8,7,6.4,5,51.2

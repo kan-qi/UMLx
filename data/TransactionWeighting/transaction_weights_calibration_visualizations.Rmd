@@ -64,7 +64,6 @@ ggplot(count.modelData, aes(unique.levels, count)) +
   xlab("Project Type") + ylab("Number of Projects") + ggtitle("Project Distribution - Type") + 
    theme_bw(base_size=20)
 
-
 #effort$Project <- NULL
 ggplot(combined, aes(x=TL)) + 
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
@@ -102,6 +101,46 @@ ggplot(combined, aes(x=DETs)) +
 parametricKStest(combined[, "DETs"])
 
 selectedModels = list()
+```
+productivity calibration
+```{r combined}
+
+modelData1 <- read.csv("../Resilient Agile/modelEvaluations.csv")
+modelData1$Project <- as.character(modelData1$Project)
+modelData1$transaction_file <- as.character(modelData1$transaction_file)
+effort1 <- subset(modelData1, select=c("Effort"))
+rownames(effort1) <- modelData1$Project
+transactionFiles1 <- subset(modelData1, select=c("transaction_file"))
+rownames(transactionFiles1) <- modelData1$Project
+
+#EUCP
+weights <- c(1)
+names(weights) <- c("L1")
+cutpoints <- NULL
+results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
+print(results)
+
+#EXUCP
+weights <- c(1, 2, 3, 5, 8)
+names(weights) <- c("L1", "L2", "L3", "L4", "L5")
+cutpoints <- matrix(NA, nrow = 2, ncol = 4)
+rownames(cutpoints) <- c("TL", "TD")
+cutpoints["TL",] = c(-Inf, 4.1, 6.1, Inf)
+cutpoints["TD",] = c(-Inf, 3.1, 6.1, Inf)
+results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
+print(results)
+
+#DUCP
+weights <- c(1, 1, 2, 3, 5, 8, 8)
+names(weights) <- c("L1", "L2", "L3", "L4", "L5", "L6", "L7")
+cutpoints <- matrix(NA, nrow = 3, ncol = 4)
+rownames(cutpoints) <- c("TL", "TD", "DETs")
+cutpoints["TL",] = c(-Inf, 4.1, 6.1, Inf)
+cutpoints["TD",] = c(-Inf, 3.1, 6.1, Inf)
+cutpoints["DETs",] = c(-Inf, 5.1, 11.1, Inf)
+results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
+print(results)
+
 ```
 TN Search Results
 ```{r swti part I} 
