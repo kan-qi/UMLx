@@ -24,7 +24,8 @@ var unzip = require('unzip');
 var rimraf = require('rimraf');
 var download = require('download');
 //var Worker = require('webworker-threads').Worker;
-
+// global variable to map appToken -> endpoint location
+var endpoints = {};
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
 	var date = new Date();
@@ -346,6 +347,8 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxC
 });
 
 
+
+
 app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
@@ -357,7 +360,6 @@ app.use(function(req, res, next) {
 	if(req.cookies){
 		token = req.cookies.appToken;
 	}
-
 	if (token) {
 	 // verifies secret and checks exp
 		 jwt.verify(token, config.secret, function(err, user) {
@@ -487,137 +489,161 @@ app.get('/surveyAnalytics', function (req, res){
 
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
     { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
-	
-	var umlFilePath = null;
-	var umlOtherPath = null;
-	//need to implement unzipped xml file data-analysis, for now only process single xml file!!
-	if(req.files['uml-file'] != null && req.files['uml-other'] != null){
-		// console.log("================================path===================");
+    // var fas = require('fs');
+    // var util = require("util");
+    // fas.writeFile("./logreq", util.inspect(req,{depth:null}), function(err) {
+    //     if(err) {
+    //         return console.log(err);
+    //     }
+    //
+    //     console.log("The file was saved!");
+    // });
+    console.log("DEBUGGGG: inside uploadUMLFile");
+    res.redirect('/');
+    console.log("DEBUGGGG: before evaluate project");
+    setTimeout(() => evaluateUploadedProject(req), 2000);
+});
 
-		umlFilePath = req.files['uml-file'][0].path;
-		umlOtherPath = req.files['uml-other'][0].path;
+async function evaluateUploadedProject(req) {
+
+    console.log("DEBUGGGG: start evaluating project");
+    var umlFilePath = null;
+    var umlOtherPath = null;
+    //need to implement unzipped xml file data-analysis, for now only process single xml file!!
+    if(req.files['uml-file'] != null && req.files['uml-other'] != null){
+        // console.log("================================path===================");
+
+        umlFilePath = req.files['uml-file'][0].path;
+        umlOtherPath = req.files['uml-other'][0].path;
 
         // console.log(umlFilePath);
         // console.log(umlOtherPath);
 
-		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
-		//remove directory of zip file and the contents in the directory 
-		rimraf(umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")),function(err) {
-			if (err) {
-				console.log(err);
-			}
-		});
-	}
-	else if (req.files['uml-file'] != null) {
-		umlFilePath = req.files['uml-file'][0].path;
-	}
-	//same problem as above comment
-	else if (req.files['uml-other'] != null) {
-		umlOtherPath = req.files['uml-other'][0].path;
+        fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
+        //remove directory of zip file and the contents in the directory
+        rimraf(umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")),function(err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+    else if (req.files['uml-file'] != null) {
+        umlFilePath = req.files['uml-file'][0].path;
+    }
+    //same problem as above comment
+    else if (req.files['uml-other'] != null) {
+        umlOtherPath = req.files['uml-other'][0].path;
 
         console.log("================================path===================");
         console.log(umlOtherPath);
 
-		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({path: umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")) }));
+        fs.createReadStream(umlOtherPath).pipe(unzip.Extract({path: umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")) }));
 
-        res.redirect('/');
+        // res.redirect('/');
 
-	} else {
-		return false;
-	}
-	
-	var projectInfo = {};
-	projectInfo.distributedSystem = req.body['distributed-system'];
-	projectInfo.responseTime = req.body['response-time'];
-	projectInfo.endUserEfficiency = req.body['end-user-efficiency'];
-	projectInfo.complexInternalProcessing = req.body['complex-internal-processing'];
-	projectInfo.codeReusable = req.body['code-must-be-reusable'];
-	projectInfo.easyInstall = req.body['easy-to-install'];
-	projectInfo.easyUse = req.body['easy-to-use'];
-	projectInfo.portable = req.body['portable'];
-	projectInfo.easyToChange = req.body['easy-to-change'];
-	projectInfo.concurrent = req.body['concurrent'];
-	projectInfo.specialSecurityObjectives = req.body['includes-special-security-objectives'];
-	projectInfo.directAccessForThirdParties = req.body['provides-direct-access-for-third-parties'];
-	projectInfo.userTrainingFacilitiesRequired = req.body['special-user-training-facilities-are-required'];
-	projectInfo.familiarWithProjectModel = req.body['familiar-with-the-project-model-that-is-used'];
-	projectInfo.applicationExperience = req.body['application-experience'];
-	projectInfo.objectOrientedExperience = req.body['object-oriented-experience'];
-	projectInfo.leadAnalystCapability = req.body['lead-analyst-capability'];
-	projectInfo.motivation = req.body['motivation'];
-	projectInfo.stableRequirements = req.body['stable-requirements'];
-	projectInfo.partTimeStaff = req.body['part-time-staff'];
-	projectInfo.difficultProgrammingLanguage = req.body['difficult-programming-language'];
-	
-	// e.g.
-	//  req.files['avatar'][0] -> File
-	//  req.files['gallery'] -> Array
-	//
-	// req.body will contain the text fields, if there were any
-	var umlModelName = req.body['uml-model-name'];
-	var umlModelType = req.body['uml-model-type'];
-	var repoId = req.userInfo.repoId;
-	var uuidVal = req.body['uuid'];
-	var formInfo = req.body;
+    } else {
+        return false;
+    }
 
-	if(umlFilePath != null){
-		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-			var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-			console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
-			var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
-			modelInfo.projectInfo = projectInfo;
-			console.log('updated model info');
-			console.log(modelInfo);
-			umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
-				//update model analytics.
-				console.log("model is extracted");
-				if(!modelInfo){
-					res.end("error");
-					return;
-				}
-				umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
-					console.log("model analysis complete");
-					
-					console.log(modelInfo2);
-					
-					if(!modelInfo2){
-						 res.redirect('/');
-						 return;
-					}
-					
-					effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
-						if(!modelInfo3){
-							console.log("effort prediction failed");
-						}
-					
-					
-					var debug = require("./utils/DebuggerOutput.js");
-					debug.writeJson("evaluated_model_example"+modelInfo2._id, modelInfo2);
+    var projectInfo = {};
+    projectInfo.distributedSystem = req.body['distributed-system'];
+    projectInfo.responseTime = req.body['response-time'];
+    projectInfo.endUserEfficiency = req.body['end-user-efficiency'];
+    projectInfo.complexInternalProcessing = req.body['complex-internal-processing'];
+    projectInfo.codeReusable = req.body['code-must-be-reusable'];
+    projectInfo.easyInstall = req.body['easy-to-install'];
+    projectInfo.easyUse = req.body['easy-to-use'];
+    projectInfo.portable = req.body['portable'];
+    projectInfo.easyToChange = req.body['easy-to-change'];
+    projectInfo.concurrent = req.body['concurrent'];
+    projectInfo.specialSecurityObjectives = req.body['includes-special-security-objectives'];
+    projectInfo.directAccessForThirdParties = req.body['provides-direct-access-for-third-parties'];
+    projectInfo.userTrainingFacilitiesRequired = req.body['special-user-training-facilities-are-required'];
+    projectInfo.familiarWithProjectModel = req.body['familiar-with-the-project-model-that-is-used'];
+    projectInfo.applicationExperience = req.body['application-experience'];
+    projectInfo.objectOrientedExperience = req.body['object-oriented-experience'];
+    projectInfo.leadAnalystCapability = req.body['lead-analyst-capability'];
+    projectInfo.motivation = req.body['motivation'];
+    projectInfo.stableRequirements = req.body['stable-requirements'];
+    projectInfo.partTimeStaff = req.body['part-time-staff'];
+    projectInfo.difficultProgrammingLanguage = req.body['difficult-programming-language'];
 
-                    umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
-                        //				console.log(modelInfo);
-                        umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo2){
-                            console.log("=============repoInfo==========");
-                            console.log(repoInfo2);
-                            console.log("=============repoInfoNumber==========");
-                            //var totalRec = repoInfo2.Models.length;
-                            //console.log(totalRec);
-                            console.log("=============render==========");
-                            //res.render('mainPanel', {repoInfo:repoInfo2, totalRec: totalRec});
-                            // setTimeout(function(){
-                            // 	console.log("=============refresh=============");
-							 res.redirect('/');
-                            // }, 1000);
-                            //window.location.reload(true);
+    // e.g.
+    //  req.files['avatar'][0] -> File
+    //  req.files['gallery'] -> Array
+    //
+    // req.body will contain the text fields, if there were any
+    var umlModelName = req.body['uml-model-name'];
+    var umlModelType = req.body['uml-model-type'];
+    var repoId = req.userInfo.repoId;
+    var uuidVal = req.body['uuid'];
+    var formInfo = req.body;
+
+    if(umlFilePath != null){
+        umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+            var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
+            console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+            var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
+            modelInfo.projectInfo = projectInfo;
+            console.log('updated model info');
+            console.log(modelInfo);
+            umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+                //update model analytics.
+                console.log("model is extracted");
+                if(!modelInfo){
+                    // res.end("error");
+                    return;
+                }
+                umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
+                    console.log("model analysis complete");
+
+                    console.log(modelInfo2);
+
+                    if(!modelInfo2){
+                        // res.redirect('/');
+                        return;
+                    }
+
+                    effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
+                        if(!modelInfo3){
+                            console.log("effort prediction failed");
+                        }
+
+
+                        var debug = require("./utils/DebuggerOutput.js");
+                        debug.writeJson("evaluated_model_example"+modelInfo2._id, modelInfo2);
+
+                        umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
+                            //				console.log(modelInfo);
+                            umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo2){
+                                console.log("=============repoInfo==========");
+                                console.log(repoInfo2);
+                                console.log("=============repoInfoNumber==========");
+                                //var totalRec = repoInfo2.Models.length;
+                                //console.log(totalRec);
+                                console.log("=============render==========");
+                                //res.render('mainPanel', {repoInfo:repoInfo2, totalRec: totalRec});
+                                // setTimeout(function(){
+                                // 	console.log("=============refresh=============");
+
+                                var token = req.cookies.appToken;
+                                var subscription = endpoints[token];
+                                const payload = JSON.stringify({title: 'test'});
+                                console.log("DEBUGGGG: ready to send notification");
+                                webpush.sendNotification(subscription, payload).catch(error => {
+                                    console.error(error.stack);
+                                });
+                                // }, 1000);
+                                //window.location.reload(true);
+                            });
                         });
                     });
-				});
-				});
-			});
-		});
-	}
+                });
+            });
+        });
+    }
 
-});
+}
 
 app.get('/uploadUMLFileCompany', function(req, res){
 	console.log('============gettoweb============');
@@ -1652,8 +1678,37 @@ app.get('/deactivateUser', function(req,res){
 //  console.log('Express started on port 8081');
 //}
 
-//==================== local machine code for development ==========================
 
+// =====================push notification module=======================
+// push notification module
+const webpush = require('web-push');
+
+const publicVapidKey = "BM2EKwsY9E_5r5ewHVlZ1hSwpSfRpvqQm0DPT3C60WQ3md98O0_Tb7c56yFfzFlFyaKqNVfYe1Vv2sul6m4Myt0";
+const privateVapidKey = "zi84jsmnux1jffj4Kt0XnSNWeKVYmQpmRd-lMZkqU-k";
+
+// Replace with your email
+webpush.setVapidDetails('mailto:val@karpov.io', publicVapidKey, privateVapidKey);
+
+
+app.use(require('body-parser').json());
+
+
+
+app.post('/subscribe', (req, res) => {
+    const token = req.cookies.appToken;
+    const subscription = req.body;
+    endpoints[token] = subscription;
+    res.status(201).json({});
+    const payload = JSON.stringify({title: 'test'});
+    console.log('inside /subscribe function');
+    console.log(subscription);
+    // webpush.sendNotification(subscription, payload).catch(error => {
+    //     console.error(error.stack);
+    // });
+});
+
+//
+//==================== local machine code for development ==========================
 var server = app.listen(8081,'0.0.0.0', function () {
   var host = server.address().address
   var port = server.address().port

@@ -56,21 +56,54 @@ combineData <- function(transactionFiles) {
 	data
 }
 
-parametricKStest <- function(dist, shape, rate, ks){
+parametricKStest <- function(dist){
+  #dist <- combined[, "TD"]
+  
+  tableValues <- table(dist)
+  
+  #reduce sizes for fitting with gamma curve
+  #print(as.integer(tableValues/10))
+  dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
+  
+  fit.gamma <- fitdist(dist, distr = "gamma", method = "mle", lower = c(0, 0))
+  # Check result
+  shape = coefficients(fit.gamma)["shape"]
+  rate = coefficients(fit.gamma)["rate"]
+  
+  print(coefficients(fit.gamma))
+  
+  # testing the goodness of fit.
+  #num_of_samples = length(dist)
+  #y <- rgamma(num_of_samples, shape = shape, rate = rate)
+  #result = ks.test(dist, y)
+  
+  ksResult <- ks.test(dist, "pgamma", shape, rate)
+  
+  print("gamma goodness of fit")
+  print(ksResult)
+  ks = ksResult[['statistic']]
   
   # iterate 10000 samples for ks-statistics
   num_of_samples = length(dist)
-  sample-ks = c()
-  for(i in 1: 10000){
-    y <- rgamma(num_of_samples, shape = shape, scale = rate)
-    result = ks.test(dist, y)
+  sample_ks <- c()
+  runs = 10000
+  for(i in 1: runs){
+    run.Sample <- rgamma(num_of_samples, shape = shape, rate = rate)
+    
+    run.fit.gamma <- fitdist(run.Sample, distr = "gamma", method = "mle", lower = c(0, 0))
+    # Check result
+    run.shape = coefficients(run.fit.gamma)["shape"]
+    run.rate = coefficients(run.fit.gamma)["rate"]
+    
+    result = ks.test(run.Sample, "pgamma", run.shape, run.rate) 
+    
+    #result = ks.test(dist, y)
     #print("gamma goodness of fit")
     #print(result)
-    sample-ks = c(sample-ks, result[['statistic']])
+    sample_ks = c(sample_ks, result[['statistic']])
   }
   
-  sapply(sample-ks, mean)
-  tests<-sapply(sample-ks, function(x) {
+  tests<-sapply(sample_ks, function(x) {
     if(x > ks ){
       1
     }
@@ -78,7 +111,18 @@ parametricKStest <- function(dist, shape, rate, ks){
       0
     }
   })
-  sum(tests)
+  
+  print(sample_ks)
+  #print(tests)
+  
+  parametric_test = sum(tests)/runs
+  
+  print("parametric test")
+  print(parametric_test)
+  
+  parametric_test
+
+  
 }
 
 discretize <- function(data, n) {
@@ -102,28 +146,12 @@ discretize <- function(data, n) {
 	}
   
   quantiles <- seq(1/n, 1 - (1/n), 1/n)
-	tableValues <- table(data)
-	
-	#reduce sizes for fitting with gamma curve
-	#print(as.integer(tableValues/10))
-  vec <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
 	
 	fit.gamma <- fitdist(vec, distr = "gamma", method = "mle", lower = c(0, 0))
 	# Check result
 	shape = coefficients(fit.gamma)["shape"]
 	rate = coefficients(fit.gamma)["rate"]
 	print(coefficients(fit.gamma))
-	
-	# testing the goodness of fit.
-	num_of_samples = length(vec)
-	y <- rgamma(num_of_samples, shape = shape, rate = rate)
-	result = ks.test(vec, y)
-	print("gamma goodness of fit")
-	print(result)
-	
-	parametric-test <- parametricKStest(vec, shape, rate, result[["statistic"]])
-	print("parametric test")
-	print(parametric-test)
 	
 	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
@@ -761,7 +789,7 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
   #n = 6
   #effortData = effort
   #transactionFiles = transactionFiles
-  #parameters = c("TL", "TD")
+  #parameters = c("TL")
   #k = 5
   #i = 6
   

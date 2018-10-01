@@ -108,7 +108,7 @@
                         count ++;
                         if (err) throw err;
                         let obj = JSON.parse(data);
-                        console.log(obj);
+                        //console.log(obj);
 
                         for(let i = 0;i < obj.length;i++){
                             let element = obj[i];
@@ -480,15 +480,15 @@
                         const yswtii = rt_object.swtII;
                         const yswtiii = rt_object.swtIII;
                         const xcategories = rt_object.category;
-                        console.log("xcategories"+xcategories);
-                        console.log("yswi"+yswi);
-                        console.log("yswii"+yswtii);
-                        console.log("yswiii"+yswtiii);
+                        //console.log("xcategories"+xcategories);
+                        //console.log("yswi"+yswi);
+                        //console.log("yswii"+yswtii);
+                        //console.log("yswiii"+yswtiii);
                         getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
                             writeHTML(model, data);
-                            console.log(`result : [${xcategories}]`);
+                            //console.log(`result : [${xcategories}]`);
                             copyAuxiliaryFiles(model, function(message){
-                                console.log(message);
+                                //console.log(message);
                                 if(callbackfunc){
                                     callbackfunc(model);
                                 }
