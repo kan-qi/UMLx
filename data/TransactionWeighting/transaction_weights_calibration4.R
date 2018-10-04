@@ -56,19 +56,13 @@ combineData <- function(transactionFiles) {
 	data
 }
 
-prodByLinearRegression <- function(effortData, transactionFiles, cutpoints, weights){
-  #classifiedData <- classify(fileData, cutPoints)
-  #regressionData <- matrix(effort=fileData['effort'], sizeMeasures = sizeMeasures)
-  
-  #for (i in seq(1,n)) {
-    #cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
-    #rownames(cutPoints) <- parameters
-    #for (p in parameters) {
-    #  cutPoints[p, ] <- discretize(combinedData[, p], i)
-    #}
-    #numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
-    #levels <- genColNames(parameters, i)
-  
+
+prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weights){
+    #effortData <- effort
+    #transactionFiles <- transactionsFiles
+    #cutPoints <- cutpoints
+    #weights <- weights
+    
     projects <- rownames(effortData)
   
     regressionData <- matrix(nrow = length(projects), ncol = 2)
@@ -76,6 +70,7 @@ prodByLinearRegression <- function(effortData, transactionFiles, cutpoints, weig
     colnames(regressionData) <- c("size", "Effort")
     numOfTrans <- 0
     for (project in projects) {
+      #project <- projects[1]
       filePath <- transactionFiles[project, "transaction_file"]
       print(filePath)
       if (!file.exists(filePath)) {
@@ -90,8 +85,15 @@ prodByLinearRegression <- function(effortData, transactionFiles, cutpoints, weig
         next
       }
       numOfTrans = numOfTrans + nrow(fileData)
+      
+      if(is.null(cutPoints)){
+      size = nrow(fileData)
+      }
+      else{
       classifiedData <- classify(fileData, cutPoints)
-      size <- classification %*% weights 
+      size <- classifiedData %*% weights 
+      }
+      
       regressionData[project, ] <- c(size, effortData[project, "Effort"])
     }
     
@@ -100,28 +102,69 @@ prodByLinearRegression <- function(effortData, transactionFiles, cutpoints, weig
     regressionData <- na.omit(regressionData)
     #regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
     regressionData <- as.data.frame(regressionData)
+    
+    print("regressionData")
+    print(regressionData)
   #}
     
-    lm.fit <- lm(Effort ~ . - 1, regressionData)
-    coefficients <- summar(lm.fit)$coefficients
-    print(coefficients)
+    lm.fit <- lm(Effort ~ .-1, regressionData)
+    coefficients <- summary(lm.fit)$coefficients
+    predicts <- as.data.frame(predict(lm.fit, newData = regressionData))
+    rownames(predicts) <- projects
+    results = list()
+    results[["predicts"]] <- predicts
+    results[["coefficients"]] <- coefficients
+    results
 }
 
-parametricKStest <- function(dist, shape, rate, ks){
+parametricKStest <- function(dist){
+  dist <- combined[, "TL"]
+  
+  tableValues <- table(dist)
+  
+  #reduce sizes for fitting with gamma curve
+  #print(as.integer(tableValues/10))
+  dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
+  
+  fit.gamma <- fitdist(dist, distr = "gamma", method = "mle", lower = c(0, 0))
+  # Check result
+  shape = coefficients(fit.gamma)["shape"]
+  rate = coefficients(fit.gamma)["rate"]
+  
+  print(coefficients(fit.gamma))
+  
+  # testing the goodness of fit.
+  #num_of_samples = length(dist)
+  #y <- rgamma(num_of_samples, shape = shape, rate = rate)
+  #result = ks.test(dist, y)
+  
+  ksResult <- ks.test(dist, "pgamma", shape, rate)
+  
+  print("gamma goodness of fit")
+  print(ksResult)
+  ks = ksResult[['statistic']]
   
   # iterate 10000 samples for ks-statistics
   num_of_samples = length(dist)
-  sample-ks = c()
-  for(i in 1: 10000){
-    y <- rgamma(num_of_samples, shape = shape, scale = rate)
-    result = ks.test(dist, y)
+  sample_ks <- c()
+  runs = 10000
+  for(i in 1: runs){
+    run.Sample <- rgamma(num_of_samples, shape = shape, rate = rate)
+    
+    run.fit.gamma <- fitdist(run.Sample, distr = "gamma", method = "mle", lower = c(0, 0))
+    # Check result
+    run.shape = coefficients(run.fit.gamma)["shape"]
+    run.rate = coefficients(run.fit.gamma)["rate"]
+    
+    result = ks.test(run.Sample, "pgamma", run.shape, run.rate) 
+    
+    #result = ks.test(dist, y)
     #print("gamma goodness of fit")
     #print(result)
-    sample-ks = c(sample-ks, result[['statistic']])
+    sample_ks = c(sample_ks, result[['statistic']])
   }
   
-  sapply(sample-ks, mean)
-  tests<-sapply(sample-ks, function(x) {
+  tests<-sapply(sample_ks, function(x) {
     if(x > ks ){
       1
     }
@@ -129,11 +172,25 @@ parametricKStest <- function(dist, shape, rate, ks){
       0
     }
   })
-  sum(tests)
+  
+  print(sample_ks)
+  #print(tests)
+  
+  parametric_test = sum(tests)/runs
+  
+  print("parametric test")
+  print(parametric_test)
+  
+  parametric_test
+
+  
 }
 
 chisqTest <- function(dist){
   dist <- combined[, "TD"]
+  
+  dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
+  
   x.gam.cut<-cut(dist,breaks=c(0,3,6,9,12,Inf)) ##binning data
   table(x.gam.cut) ## binned data table
   
@@ -180,28 +237,12 @@ discretize <- function(data, n) {
 	}
   
   quantiles <- seq(1/n, 1 - (1/n), 1/n)
-	tableValues <- table(data)
-	
-	#reduce sizes for fitting with gamma curve
-	#print(as.integer(tableValues/10))
-  vec <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
 	
 	fit.gamma <- fitdist(vec, distr = "gamma", method = "mle", lower = c(0, 0))
 	# Check result
 	shape = coefficients(fit.gamma)["shape"]
 	rate = coefficients(fit.gamma)["rate"]
 	print(coefficients(fit.gamma))
-	
-	# testing the goodness of fit.
-	num_of_samples = length(vec)
-	y <- rgamma(num_of_samples, shape = shape, rate = rate)
-	result = ks.test(vec, y)
-	print("gamma goodness of fit")
-	print(result)
-	
-	parametric-test <- pparametricKStest(vec, shape, rate, result[["statistic"]])
-	print("parametric test")
-	print(parametric-test)
 	
 	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
@@ -839,7 +880,7 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
   #n = 6
   #effortData = effort
   #transactionFiles = transactionFiles
-  #parameters = c("TL", "TD")
+  #parameters = c("TL")
   #k = 5
   #i = 6
   

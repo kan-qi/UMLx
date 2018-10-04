@@ -26,7 +26,7 @@ cutsAsVec <- function(x) {
 ```
 Combined Data Effort Values
 ```{r combined}
-modelData <- read.csv("modelEvaluations-9-13-1.csv")
+modelData <- read.csv("modelEvaluations-9-29.csv")
 modelData$Project <- as.character(modelData$Project)
 modelData$transaction_file <- as.character(modelData$transaction_file)
 effort <- subset(modelData, select=c("Effort"))
@@ -70,54 +70,75 @@ ggplot(combined, aes(x=TL)) +
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TL), sd(combined$TL))) + 
   stat_function(fun = dgamma, args = list(shape=6.543586, rate=1.160249)) + 
   xlab("TL") + ylab("Density")+ ggtitle("Combined TL Data Summary") + 
-  annotate("text", x=14, y=0.25, label= "Gamma: shape=6.54, rate=1.16; KS: p-value < 0.01")+
+  annotate("text", x=13.5, y=0.25, label= "Gamma: shape=6.54, rate=1.16; p (KS-param) = 0.20")+
   theme_bw(base_size=15)
+
+#Ks parameteric test
+parametricKStest(combined[, "TL"])
 
 ggplot(combined, aes(x=TD)) + 
   geom_histogram(aes(y = ..density..), binwidth=0.5, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) +
+  #stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
   stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
-  annotate("text", x=16, y=0.18, label= "Gamma: shape=3.65, rate=0.70; KS: p-value < 0.01")+
+  annotate("text", x=16, y=0.18, label= "Gamma: shape=3.65, rate=0.70; p (KS-param) = 0.84")+
   xlab("TD") + ylab("Density") +ggtitle("Combined TD Data Summary") + 
   theme_bw()
 
+#Ks parameteric test
+parametricKStest(combined[, "TD"])
+
 ggplot(combined, aes(x=DETs)) + 
-  geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
+  geom_histogram(aes(y = ..density..), binwidth=2, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$DETs), sd(combined$DETs))) + 
   stat_function(fun = dgamma, args = list(shape=1.6647412, rate=0.1691911)) + 
-  annotate("text", x=57, y=0.15, label= "Gamma: shape=1.66, rate=0.17; KS: p-value < 0.01")+
+  #stat_function(fun = dgamma, args = list(shape=1.6902002, rate=0.1692468)) + 
+  annotate("text", x=55, y=0.10, label= "Gamma: shape=1.66, rate=0.17; p (KS-param) = 0.39")+
   xlab("DETs") + ylab("Density") + ggtitle("Combined DETs Data Summary") + 
   theme_bw()
+
+#Ks parameteric test
+parametricKStest(combined[, "DETs"])
 
 selectedModels = list()
 ```
 productivity calibration
 ```{r combined}
 
+modelData1 <- read.csv("../Resilient Agile/modelEvaluations.csv")
+modelData1$Project <- as.character(modelData1$Project)
+modelData1$transaction_file <- as.character(modelData1$transaction_file)
+effort1 <- subset(modelData1, select=c("Effort"))
+rownames(effort1) <- modelData1$Project
+transactionFiles1 <- subset(modelData1, select=c("transaction_file"))
+rownames(transactionFiles1) <- modelData1$Project
+
 #EUCP
 weights <- c(1)
 names(weights) <- c("L1")
-cutpoints <- list()
-results <- prodByLinearRegression(effort, transactionFiles, c())
+cutpoints <- NULL
+results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
 print(results)
 
 #EXUCP
 weights <- c(1, 2, 3, 5, 8)
 names(weights) <- c("L1", "L2", "L3", "L4", "L5")
-cutpoints <- list()
-cutpoints[["TL"]] = c(-Inf, 4.1, 6.1, Inf)
-cutpoints[["TD"]] = c(-Inf, 3.1, 6.1, Inf)
-results <- prodByLinearRegression(effort, transactionFiles, c())
+cutpoints <- matrix(NA, nrow = 2, ncol = 4)
+rownames(cutpoints) <- c("TL", "TD")
+cutpoints["TL",] = c(-Inf, 4.1, 6.1, Inf)
+cutpoints["TD",] = c(-Inf, 3.1, 6.1, Inf)
+results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
 print(results)
 
 #DUCP
 weights <- c(1, 1, 2, 3, 5, 8, 8)
 names(weights) <- c("L1", "L2", "L3", "L4", "L5", "L6", "L7")
-cutpoints <- list()
-cutpoints[["TL"]] = c(-Inf, 4.1, 6.1, Inf)
-cutpoints[["TD"]] = c(-Inf, 3.1, 6.1, Inf)
-cutpoints[["DETs"]] = c(-Inf, 5.1, 11.1, Inf)
-results <- prodByLinearRegression(effort, transactionFiles, c())
+cutpoints <- matrix(NA, nrow = 3, ncol = 4)
+rownames(cutpoints) <- c("TL", "TD", "DETs")
+cutpoints["TL",] = c(-Inf, 4.1, 6.1, Inf)
+cutpoints["TD",] = c(-Inf, 3.1, 6.1, Inf)
+cutpoints["DETs",] = c(-Inf, 5.1, 11.1, Inf)
+results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
 print(results)
 
 ```

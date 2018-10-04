@@ -3,6 +3,7 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var config = require("../config.js");
+	
 //	var OutputDir = './debug';
 
 	function writeJson(token, message, callbackfunc){
@@ -20,16 +21,22 @@
 	
 	function appendFile(token, message, callbackfunc){
 		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-		
-		mkdirp(OutputDir, function(err) { 
-			fs.appendFile(OutputDir+'/'+token+'.txt', message,function (err) {
-				  if (err) throw err;
-				  console.log('Saved!');
-				  if(callbackfunc){
-					  callbackfunc(OutputDir+'/'+token+'.txt');
-				  }
-				});
-			});
+		var filename = OutputDir+'/'+token+'.txt';
+		if (!global.debugCache[filename]){
+			global.debugCache[filename] = message;
+		}
+		else{
+			global.debugCache[filename] += message;
+		}
+		// mkdirp(OutputDir, function(err) { 
+		// 	fs.appendFile(OutputDir+'/'+token+'.txt', message,function (err) {
+		// 		  if (err) throw err;
+		// 		  console.log('Saved!');
+		// 		  if(callbackfunc){
+		// 			  callbackfunc(OutputDir+'/'+token+'.txt');
+		// 		  }
+		// 		});
+		// 	});
 	}
 	
 	module.exports = {
