@@ -63,7 +63,6 @@
 						AccessDir: ModelAccessDir
 				};
 
-
 				var debug = require("../../utils/DebuggerOutput.js");
 
 //				xmiString = result;
