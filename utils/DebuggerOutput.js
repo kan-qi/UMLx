@@ -20,6 +20,7 @@
 	}
 	
 	function appendFile(token, message, callbackfunc){
+		return;
 		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 		var filename = OutputDir+'/'+token+'.txt';
 		if (!global.debugCache[filename]){
