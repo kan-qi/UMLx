@@ -1333,10 +1333,12 @@ function deleteRepo(repoId, callbackfunc) {
                                 token: token
                             };
 
-                            var userInfoWithRepoID = {
-                                ...userInfo,
-                                repoId: repo._id,
-                            };
+                            // var userInfoWithRepoID = {
+                            //     ...userInfo,
+                            //     repoId: repo._id,
+                            // };
+                            var userInfoWithRepoID = userInfo;
+                            userInfoWithRepoID.repoId = repo._id;
 
                             db.collection("users").update({_id:userInfo._id}, userInfoWithRepoID, function(err, res){
                                 if (err) throw err;
