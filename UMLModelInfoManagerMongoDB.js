@@ -1338,7 +1338,7 @@ function deleteRepo(repoId, callbackfunc) {
                                 repoId: repo._id,
                             };
 
-                            db.collection("users").update({_id:userInfo._id}, userInfoWithRepoID, function(err, result){
+                            db.collection("users").update({_id:userInfo._id}, userInfoWithRepoID, function(err, res){
                                 if (err) throw err;
                                 db.close();
                                 callback(result);

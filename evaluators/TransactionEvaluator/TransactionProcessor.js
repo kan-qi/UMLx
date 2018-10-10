@@ -21,35 +21,6 @@
 		 ['control[+]', 'boundary','pattern#8', 'EXTCLL,INT', 'transactional', 'Invocation of services provided by external system'],
 		 ['control[+]', 'pattern#9', 'CTRL', 'transactional','Control flow without operating on any entities or interfaces'],
 	];
-	 
-	function matchCategories(categories, characteristic){
-			var categoriesToReturn = [];
-			for(var category in categories){
-				var results = ((function(category, categories){
-				if(category === characteristic){
-						return [category];
-				}
-				else if(categories[category] === "#"){
-						return [];
-				}
-				else {
-					var matchedCategories = matchCategories(categories[category], characteristic);
-					if(matchedCategories.length > 0){
-						matchedCategories.unshift(category);
-					}
-					return matchedCategories;
-				}
-			})(category, categories));
-			
-			for(var i in results){
-				if(categoriesToReturn.indexOf(results[i]) == -1){
-					categoriesToReturn.push(results[i]);
-				}
-			}
-			}
-			
-			return categoriesToReturn;
-	}
 
 	var transactionalPatternTreeRoot = transactionPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
 	
@@ -61,16 +32,17 @@
 				var totalComponents = 0;
 				var dataElementTypes = 0;
 				
+				var components = {};
+				
 				for(var i in transaction.Nodes)
 				{	
 					var node = transaction.Nodes[i];
 
 						if(node.Component){
 							
-							console.log("associating component");
-							console.log(node.Component);
+//							console.log("associating component");
+//							console.log(node.Component);
 						
-							totalComponents ++;
 								var edges = usecase.PrecedenceRelations;
 								for(var j in edges){
 									var edge = edges[j];
@@ -85,11 +57,11 @@
 							
 									var matchedOperation = domainModelSerchUtil.matchOperation(node.Name, node.Component);
 									
-									console.log("matched oepration");
+//									console.log("matched oepration");
 									
 									if(matchedOperation){
-										var debug = require("../../utils/DebuggerOutput.js");
-										debug.appendFile("matchedOperation", matchedOperation.Name);
+//										var debug = require("../../utils/DebuggerOutput.js");
+//										debug.appendFile("matchedOperation", matchedOperation.Name);
 										
 										for(var j in matchedOperation.Parameters){
 											dataElementTypes++;
@@ -98,9 +70,15 @@
 									else{
 										dataElementTypes++;
 									}
+									
+									components[node.Component["_id"]] = node.Component;
+									
 						}
 						
 				}
+				
+
+				totalComponents = components.length;
 				
 				transaction['TransactionAnalytics'] = {};
 				
@@ -127,6 +105,35 @@
 								},
 								
 						}
+						
+						function matchCategories(categories, characteristic){
+							var categoriesToReturn = [];
+							for(var category in categories){
+								var results = ((function(category, categories){
+								if(category === characteristic){
+										return [category];
+								}
+								else if(categories[category] === "#"){
+										return [];
+								}
+								else {
+									var matchedCategories = matchCategories(categories[category], characteristic);
+									if(matchedCategories.length > 0){
+										matchedCategories.unshift(category);
+									}
+									return matchedCategories;
+								}
+							})(category, categories));
+							
+							for(var i in results){
+								if(categoriesToReturn.indexOf(results[i]) == -1){
+									categoriesToReturn.push(results[i]);
+								}
+							}
+							}
+							
+							return categoriesToReturn;
+					}
 						
 						var matchedCategories = [];
 						for(var j in operationalCharacteristics){

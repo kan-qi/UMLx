@@ -27,8 +27,8 @@ html
                                     div.panel_words Technical Complexity Factor
                                     div.panel_triangle_toggle
                                         a(data-toggle='collapse', href='#collapse1')
-                                            span.glyphicon.glyphicon-triangle-left.collapseButtom1
-                            #collapse1.panel-collapse.collapse
+                                            span.glyphicon.glyphicon-triangle-bottom.collapseButtom1
+                            #collapse1.panel-collapse.in
                                 .panel-body
                                     .form-group
                                         label.control-label(for='distributed_system') Distributed System
@@ -152,8 +152,8 @@ html
                                     div.panel_triangle_toggle
                                         a(data-toggle='collapse', href='#collapse2')
                                             //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
-                                            span.glyphicon.glyphicon-triangle-left.collapseButtom2
-                            #collapse2.panel-collapse.collapse
+                                            span.glyphicon.glyphicon-triangle-bottom.collapseButtom2
+                            #collapse2.panel-collapse.in
                                 .panel-body
                                     .form-group
                                         label.control-label(for='familiar_with_the_project_model_that_is_used') Familiar with the project model that is used
@@ -234,10 +234,10 @@ html
                                 h4.panel-title
                                     div.panel_words
                                         | Resource Estimation
-                                    div.panel_triangle_toggle
-                                        a(data-toggle='collapse', href='#collapse3')
-                                            span.glyphicon.glyphicon-triangle-left.collapseButtom3
-                            #collapse3.panel-collapse.collapse
+                                    //div.panel_triangle_toggle
+                                    //    a(data-toggle='collapse', href='#collapse3')
+                                    //        span.glyphicon.glyphicon-triangle-bottom.collapseButtom3
+                            #collapse3.panel-collapse.in
                                 .panel-body
                                     .form-group
                                        label.control-label(style='text-align:left').col-xs-2(for='personnel') Personnel
@@ -269,10 +269,10 @@ html
                                 h4.panel-title
                                     div.panel_words
                                         | Project model file and documents
-                                    div.panel_triangle_toggle
-                                        a(data-toggle='collapse', href='#collapse4')
-                                            span.glyphicon.glyphicon-triangle-left.collapseButtom4
-                            #collapse4.panel-collapse.collapse
+                                    //div.panel_triangle_toggle
+                                    //    a(data-toggle='collapse', href='#collapse4')
+                                    //        span.glyphicon.glyphicon-triangle-left.collapseButtom4
+                            #collapse4.panel-collapse
                                 .panel-body
                                     .form-group
                                         label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
@@ -313,6 +313,13 @@ html
                                 div(id="estimation-result-panel-body")
                     //input#uuid-page5(type='hidden', name='uuid-page5', value='')
                 // end of #sec-5
+
+                #loadingScreen.hidden
+                    div.full-page-model
+                    div.full-page-model-content
+                        div(style='padding: 30px')
+                            img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                            p Processing...                
 
         script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
         script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')

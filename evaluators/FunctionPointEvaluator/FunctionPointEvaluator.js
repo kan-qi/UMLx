@@ -93,7 +93,8 @@
 	
 	
 	function toModelEvaluationHeader() {
-		return "DET,RET,ILF,EIF,EI,EO,EQ,FN,FUNC_NA";
+//		return "DET,RET,ILF,EIF,EI,EO,EQ,FN,FUNC_NA";
+		return "DET,RET,ILF,EIF,EI,EO,EQ,FN,FP";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -106,11 +107,13 @@
 		+ modelInfo["FPAnalytics"].EO + ","
 		+ modelInfo["FPAnalytics"].EQ + ","
 		+ modelInfo["FPAnalytics"].FN + ","
-		+ modelInfo["FPAnalytics"].FUNC_NA;
+		+ modelInfo["FPAnalytics"].FP;
+//		+ modelInfo["FPAnalytics"].FUNC_NA;
 	}
 	
 	function toUseCaseEvaluationHeader() {
-		return "EI,EO,EQ,FN,FUNC_NA";
+//		return "EI,EO,EQ,FN,FUNC_NA";
+		return "EI,EO,EQ,FN";
 	}
 
 	function toUseCaseEvaluationRow(useCaseInfo, index) {
@@ -118,8 +121,8 @@
 		return useCaseInfo["FPAnalytics"].EI + ","
 				+ useCaseInfo["FPAnalytics"].EO + ","
 				+ useCaseInfo["FPAnalytics"].EQ + ","
-				+ useCaseInfo["FPAnalytics"].FN + ","
-				+ useCaseInfo["FPAnalytics"].FUNC_NA;
+				+ useCaseInfo["FPAnalytics"].FN;
+//				+ useCaseInfo["FPAnalytics"].FUNC_NA;
 	}
 	
 	function toDomainModelEvaluationHeader() {
@@ -142,7 +145,7 @@
 		EI : 0,
 		EO : 0,
 		EQ : 0,
-		FUNC_NA : 0,
+//		FUNC_NA : 0,
 		FN : 0
 		}
 		
@@ -153,36 +156,53 @@
 //				useCaseInfo.DiagramAnalytics = {};
 //			}
 			
-			var FUNC_NA = 0;
+//			var FUNC_NA = 0;
 			var FN = 0;
 			var EI = 0;
 			var EO = 0;
 			var EQ = 0;
 			
-			for ( var j in useCaseInfo.Transactions) {
-				var transaction = useCaseInfo.Transactions[j];
+			var EIEvaluation = [ [ '', 'x>=1&&x<=4', 'x>=5&&x<=15', 'x>16' ],
+				[ 'y==1', '3', '3', '4' ], [ 'y==2', '3', '4', '6' ],
+				[ 'y>=3', '4', '6', '6' ], ];
+			var EOEvaluation = [ [ '', 'x>=1&&x<=4', 'x>=5&&x<=15', 'x>16' ],
+				[ 'y==1', '4', '4', '5' ], [ 'y==2', '4', '5', '6' ],
+				[ 'y>=3', '5', '6', '6' ], ];
+			var EQEvaluation = [ [ '', 'x>=1&&x<=4', 'x>=5&&x<=15', 'x>16' ],
+				[ 'y==1', '3', '3', '4' ], [ 'y==2', '3', '4', '6' ],
+				[ 'y>=3', '4', '6', '6' ], ];
+			
+			for ( var i in useCaseInfo.Transactions) {
+				var transaction = useCaseInfo.Transactions[i];
 				// console.log('--------Process Transaction-------');
 				
 				functionPointProcessor.processTransaction(transaction, useCaseInfo);
 				
 				var functionalOperations = transaction["FPAnalytics"].Functional;
 				
+				var DET = transaction["FPAnalytics"].DET;
+				var FTR = transaction["FPAnalytics"].FTR;
+				
 				if (functionalOperations.indexOf("EI") > -1) {
-					EI++;
-				}
-				if (functionalOperations.indexOf("EQ") > -1) {
-					EQ++;
+					EI += assessComplexity(DET, FTR, EIEvaluation);
+//					EI++;
+					
 				}
 				if (functionalOperations.indexOf("DM") > -1) {
-					DM++;
-				}
-				
-				if(functionalOperations.indexOf("FUNC_NA") > -1){
-					FUNC_NA++;
+					DM += assessComplexity(DET, FTR, EOEvaluation);
+//					DM++;
 				}
 				else {
-					FN ++;
+					EQ += assessComplexity(DET, FTR, EQEvaluation);
+//					EQ++;
 				}
+				
+//				if(functionalOperations.indexOf("FUNC_NA") > -1){
+//					FUNC_NA++;
+//				}
+//				else {
+					FN ++;
+//				}
 				
 			}
 
@@ -192,7 +212,7 @@
 			useCaseInfo["FPAnalytics"].EI = EI;
 			useCaseInfo["FPAnalytics"].EO = EO;
 			useCaseInfo["FPAnalytics"].EQ = EQ;
-			useCaseInfo["FPAnalytics"].FUNC_NA = FUNC_NA;
+//			useCaseInfo["FPAnalytics"].FUNC_NA = FUNC_NA;
 			useCaseInfo["FPAnalytics"].FN = FN;
 			
 //			useCaseInfo["FPAnalytics"].EI += diagram["FPEmpirics"].EI;
@@ -219,50 +239,74 @@
 				[ 'y==1', '5', '5', '7' ], [ 'y>=2&&y<=5', '5', '7', '10' ],
 				[ 'y>5', '7', '10', '10' ], ];
 		
-		
-//		for ( var i in domainModelInfo["FPAnalytics"].Diagrams) {
-//			var diagram = domainModelInfo["FPAnalytics"].Diagrams[i];
-			var DET = domainModelInfo["FPAnalytics"].AttributeNum;
+		for(var i in domainModelInfo.Elements){
+			var element = domainModelInfo.Elements[i];
+			
+			functionPointProcessor.	processElement(element, domainModelInfo);
+			
+			var DET = element.attributeNum;
 			var RET = 1;
 			var ILF = 0;
 			var EIF = 0;
-			if (DET > 0 && RET > 0) {
-				for (var j = 1; j < ILFEvaluation[0].length; j++) {
-					var ILFCondition = ILFEvaluation[0][j];
-					var detEvaluationStr = "var x="
-							+ DET
-							+ ";if("
-							+ ILFCondition
-							+ "){module.exports = true;}else{module.exports = false;}";
-					var detResult = eval(detEvaluationStr);
-					if (detResult) {
-						for (var k = 1; k < ILFEvaluation.length; k++) {
-							var EIFCondition = ILFEvaluation[k][j];
-							var retEvaluationStr = "var y="
-									+ RET
-									+ ";if("
-									+ EIFCondition
-									+ "){module.exports = true;}else{module.exports = false;}";
-							var retResult = eval(retEvaluationStr);
-							// console.log(retResult);
-							if (retResult) {
-								ILF = ILFEvaluation[j][k];
-								break;
-							}
-						}
-						break;
-					}
-				}
+			
+			//counting for ILF
+			if(element['FPAnalytics'].ILF){
+				
+				ILF = assessComplexity(DET, RET, ILFEvaluation);
+
+			}
+			// counting for EIF
+			else{
+
+				EIF = assessComplexity(DET, RET, EIFEvaluation);
+
 			}
 
 			domainModelInfo["FPAnalytics"].DET += DET;
 			domainModelInfo["FPAnalytics"].RET += RET;
 			domainModelInfo["FPAnalytics"].ILF += ILF;
 			domainModelInfo["FPAnalytics"].EIF += EIF;
-//		}
-		
+			
+		}
+			
 		return domainModelInfo["FPAnalytics"];
 
+	}
+	
+	function assessComplexity(x, y, weightingSchema){
+		var weight = 0;
+		for (var j = 1; j < weightingSchema[0].length; j++) {
+			var xCondition = weightingSchema[0][j];
+			var xEvaluationStr = "var x="
+					+ x
+					+ ";if("
+					+ xCondition
+					+ "){module.exports = true;}else{module.exports = false;}";
+			var xResult = eval(xEvaluationStr);
+			if (xResult) {
+				for (var k = 1; k < weightingSchema.length; k++) {
+					var yCondition = weightingSchema[k][0];
+					var yEvaluationStr = "var y="
+							+ y
+							+ ";if("
+							+ yCondition
+							+ "){module.exports = true;}else{module.exports = false;}";
+					var yResult = eval(yEvaluationStr);
+					// console.log(yResult);
+					if (yResult) {
+						weight = Number(weightingSchema[k][j]);
+						break;
+					}
+				}
+				break;
+			}
+		}
+		
+		if(weight == 0){
+			weight = Number(weightingSchema[2][2]);
+		}
+		
+		return weight;
 	}
 	
 	function evaluateModel(modelInfo) {
@@ -271,7 +315,7 @@
 				EI : 0,
 				EO : 0,
 				EQ : 0,
-				FUNC_NA : 0,
+//				FUNC_NA : 0,+
 				FN : 0,
 				DET :0,
 				RET :0,
@@ -292,13 +336,15 @@
 		for ( var i in modelInfo.UseCases) {
 			var useCaseInfo = modelInfo.UseCases[i];
 			if(useCaseInfo["FPAnalytics"]){
-			modelInfo["FPAnalytics"].EI = useCaseInfo["FPAnalytics"].EI;
-			modelInfo["FPAnalytics"].EO = useCaseInfo["FPAnalytics"].EO;
-			modelInfo["FPAnalytics"].EQ = useCaseInfo["FPAnalytics"].EQ;
-			modelInfo["FPAnalytics"].FUNC_NA = useCaseInfo["FPAnalytics"].FUNC_NA;
-			modelInfo["FPAnalytics"].FN = useCaseInfo["FPAnalytics"].FN;
+			modelInfo["FPAnalytics"].EI += useCaseInfo["FPAnalytics"].EI;
+			modelInfo["FPAnalytics"].EO += useCaseInfo["FPAnalytics"].EO;
+			modelInfo["FPAnalytics"].EQ += useCaseInfo["FPAnalytics"].EQ;
+//			modelInfo["FPAnalytics"].FUNC_NA += useCaseInfo["FPAnalytics"].FUNC_NA;
+			modelInfo["FPAnalytics"].FN += useCaseInfo["FPAnalytics"].FN;
 			}
 		}
+		
+		modelInfo["FPAnalytics"].FP = modelInfo["FPAnalytics"].ILF + modelInfo["FPAnalytics"].EIF + modelInfo["FPAnalytics"].EI + modelInfo["FPAnalytics"].EO + modelInfo["FPAnalytics"].EQ; 
 		
 		return modelInfo["FPAnalytics"];
 
@@ -309,12 +355,13 @@
 				EI : 0,
 				EO : 0,
 				EQ : 0,
-				FUNC_NA : 0,
+//				FUNC_NA : 0,
 				FN : 0,
 				DET :0,
 				RET :0,
 				ILF :0,
 				EIF :0,
+				FP : 0
 		}
 		// initiate the fields in repo analytics;
 
@@ -329,8 +376,9 @@
 			repoInfo["FPAnalytics"].EI += modelInfo["FPAnalytics"].EI;
 			repoInfo["FPAnalytics"].EO += modelInfo["FPAnalytics"].EO;
 			repoInfo["FPAnalytics"].EQ += modelInfo["FPAnalytics"].EQ;
-			repoInfo["FPAnalytics"].FUNC_NA += modelInfo["FPAnalytics"].FUNC_NA;
+//			repoInfo["FPAnalytics"].FUNC_NA += modelInfo["FPAnalytics"].FUNC_NA;
 			repoInfo["FPAnalytics"].FN += modelInfo["FPAnalytics"].FN;
+			repoInfo["FPAnalytics"].FP += modelInfo["FPAnalytics"].FP;
 			}
 		}
 		
