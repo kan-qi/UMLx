@@ -761,7 +761,7 @@ predictedValues$Row.names <- NULL
 
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
-  model <- lm(Effort ~ ., data = dat)
+  model <- lm(Effort ~ .-1, data = dat)
   print(summary(model))
   summary(model)$r.squared
 })

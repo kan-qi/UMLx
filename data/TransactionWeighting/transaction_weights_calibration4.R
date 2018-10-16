@@ -119,6 +119,7 @@ prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weig
 
 parametricKStest <- function(dist){
   dist <- combined[, "TD"]
+  #dist <- combined[, "TL"]
   
   #tableValues <- table(dist)
   
@@ -126,6 +127,7 @@ parametricKStest <- function(dist){
   #print(as.integer(tableValues/10))
   
   #dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
+  dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
   
   fit.gamma <- fitdist(dist, distr = "gamma", method = "mle", lower = c(0, 0))
   # Check result
@@ -188,6 +190,36 @@ parametricKStest <- function(dist){
 
 chisqTest <- function(dist){
   dist <- combined[, "TD"]
+  x.gam.cut<-cut(dist,breaks=c(0,3,6,9,12,Inf)) ##binning data
+  table(x.gam.cut) ## binned data table
+  
+  fit.gamma <- fitdist(dist, distr = "gamma", method = "qme", lower = c(0, 0))
+  # Check result
+  a.est = coefficients(fit.gamma)["shape"]
+  l.est = coefficients(fit.gamma)["rate"]
+  
+  num_of_samples = length(dist)
+  
+  #x.gam.cut
+  ## computing expected frequencies
+  p1 = (pgamma(3,shape=a.est,rate=l.est)-pgamma(0,shape=a.est,rate=l.est))*num_of_samples
+  p2 = (pgamma(6,shape=a.est,rate=l.est)-pgamma(3,shape=a.est,rate=l.est))*num_of_samples
+  p3 = (pgamma(9,shape=a.est,rate=l.est)-pgamma(6,shape=a.est,rate=l.est))*num_of_samples
+  p4 = (pgamma(12,shape=a.est,rate=l.est)-pgamma(9,shape=a.est,rate=l.est))*num_of_samples
+  p5 = (pgamma(Inf,shape=a.est,rate=l.est)-pgamma(12,shape=a.est,rate=l.est))*num_of_samples
+  f.ex<-c(p1, p2, p3, p4, p5) ## expected frequencies vector
+  f.os<-vector()
+  for(i in 1:5) f.os[i]<- table(x.gam.cut)[[i]] ## empirical frequencies
+  X2<-sum(((f.os-f.ex)^2)/f.ex) ## chi-square statistic
+  gdl<-5-2-1 ## degrees of freedom
+  1-pchisq(X2,gdl) ## p-value
+}
+
+chisqTest <- function(dist){
+  dist <- combined[, "TD"]
+  
+  dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
+  
   x.gam.cut<-cut(dist,breaks=c(0,3,6,9,12,Inf)) ##binning data
   table(x.gam.cut) ## binned data table
   
