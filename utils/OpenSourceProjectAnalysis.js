@@ -33,7 +33,7 @@ function recoverKDMModel(projectList){
     function recoverModel(projectPath, modelFile, override){
         return new Promise((resolve, reject) => {
         		
-        	var modelFile = projectPath + "\\"+modelFile;
+        	modelFile = projectPath + "\\"+modelFile;
         	
         	console.log(modelFile);
         	

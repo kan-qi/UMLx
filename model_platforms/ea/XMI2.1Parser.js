@@ -202,6 +202,7 @@
 		var DomainElementsBySN = {};
 		
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+		XMIClasses = XMIClasses.concat(jp.query(XMIUMLModel, '$..nestedClassifier[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]'));
 		
 		//populate domain model with classes
 		for(var i in XMIClasses){
@@ -227,51 +228,71 @@
 //					matchedDomainElement.Attributes.push(domainElement.Attributes[i]);
 //				}
 //			}
-			            
-            var XMIAssociations = jp.query(XMIClass, '$.packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
-//    		var DomainAssociationByID = [];
-    		for(var i in XMIAssociations){
-    			var XMIAssoc = XMIAssociations[i];
-    			//      console.log(XMIAssoc);
-    			var association = {
-    				_id: XMIAssoc['$']['xmi:id'],
-    				type: "association",
-					Supplier: XMIClass['$']['xmi:id'],
-					Client: XMIGeneralization['$']['general']
-    			}
-//    			DomainAssociationByID[domainAssociation._id] = domainAssociation;
-    			Model.DomainModel.Associations.push(association);
-    		}
+    		
+    		var XMIGeneralizations = jp.query(XMIClass, '$.generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Generalization\')]');
+//      		var DomainGeneralizationByID = [];
+      		for(var i in XMIGeneralizations){
+      			var XMIGeneralization = XMIGeneralizations[i];
+      			//      console.log(XMIAssoc);
+      			var generalization = {
+      				_id: XMIGeneralization['$']['xmi:id'],
+      				type: "generalization",
+  					Supplier: XMIClass['$']['xmi:id'],
+  					Client: XMIGeneralization['$']['general']
+      			}
+//      			DomainAssociationByID[domainAssociation._id] = domainAssociation;
+      			Model.DomainModel.Generalizations.push(generalization);
+      		}
+		}
+		
+        var XMIAssociations = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
+//		var DomainAssociationByID = [];
+		for(var i in XMIAssociations){
+			var XMIAssoc = XMIAssociations[i];
+			//      console.log(XMIAssoc);
+			var XMIType = jp.query(XMIAssoc, '$..type[?(@[\'$\'][\'xmi:idref\'])]')[0];
+			if(!XMIType){
+				continue;
+			}
+			var association = {
+				_id: XMIAssoc['$']['xmi:id'],
+				type: "association",
+				Supplier: XMIClass['$']['xmi:id'],
+				Client: XMIType['$']['xmi:idref']
+			}
+//			DomainAssociationByID[domainAssociation._id] = domainAssociation;
+			Model.DomainModel.Associations.push(association);
+		}
+		
+		
+		var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
+//		var DomainUsagesByID = [];
+		for(var i in XMIUsages){
+			var XMIUsage = XMIUsages[i];
+			//      console.log(XMIUsage);
+			var domainUsage = {
+				_id: XMIUsage['$']['xmi:id'],
+				type: "usage",
+				Supplier: XMIUsage['$']['supplier'],
+				Client: XMIUsage['$']['client']
+			}
+			Model.DomainModel.Usages.push(domainUsage);
+		}
+
+		var XMIReals = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Realization\')]');
+		for(var i in XMIReals){
+			var XMIReal = XMIReals[i];
+			//      console.log(XMIReal);
+			var domainRealization = {
+				_id: XMIReal['$']['xmi:id'],
+				type: "realization",
+				Supplier: XMIReal['$']['supplier'],
+				Client: XMIReal['$']['client']
+			}
+			Model.DomainModel.Realizations.push(domainRealization);
 		}
 		
 		Model.DomainModel.DiagramType = "class_diagram";
-			
-			var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
-//			var DomainUsagesByID = [];
-			for(var i in XMIUsages){
-				var XMIUsage = XMIUsages[i];
-				//      console.log(XMIUsage);
-				var domainUsage = {
-					_id: XMIUsage['$']['xmi:id'],
-					type: "usage",
-					Supplier: XMIUsage['$']['supplier'],
-					Client: XMIUsage['$']['client']
-				}
-				Model.DomainModel.Usages.push(domainUsage);
-			}
-
-			var XMIReals = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Realization\')]');
-			for(var i in XMIReals){
-				var XMIReal = XMIReals[i];
-				//      console.log(XMIReal);
-				var domainRealization = {
-					_id: XMIReal['$']['xmi:id'],
-					type: "realization",
-					Supplier: XMIReal['$']['supplier'],
-					Client: XMIReal['$']['client']
-				}
-				Model.DomainModel.Realizations.push(domainRealization);
-			}
 			
 
 			   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){

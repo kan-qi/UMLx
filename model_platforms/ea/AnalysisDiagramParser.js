@@ -45,7 +45,13 @@
 //					
 //				}
 				var XMIAssociations = jp.query(analysisElement, '$..Association[?(@[\'$\'][\'xmi:id\'])]');
+				var XMIDependencies = jp.query(analysisElement, '$..Dependency[?(@[\'$\'][\'xmi:id\'])]');
+				var XMIObjectFlows = jp.query(analysisElement, '$..ObjectFlow[?(@[\'$\'][\'xmi:id\'])]');
+				
 				XMIAssociations = XMIAssociations.concat(XMIInformationFlows);
+				XMIAssociations = XMIAssociations.concat(XMIDependencies);
+				XMIAssociations = XMIAssociations.concat(XMIObjectFlows);
+				
 				for(var j in XMIAssociations){
 					var XMIAssociation = XMIAssociations[j];
 					

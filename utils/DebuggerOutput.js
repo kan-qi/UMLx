@@ -20,23 +20,28 @@
 	}
 	
 	function appendFile(token, message, callbackfunc){
+		return;
 		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 		var filename = OutputDir+'/'+token+'.txt';
-		if (!global.debugCache[filename]){
-			global.debugCache[filename] = message;
+		if (global.debugCache) {
+			if (!global.debugCache[filename]){
+				global.debugCache[filename] = message;
+			}
+			else{
+				global.debugCache[filename] += message;
+			}
 		}
-		else{
-			global.debugCache[filename] += message;
+		else {
+			mkdirp(OutputDir, function(err) { 
+				fs.appendFile(OutputDir+'/'+token+'.txt', message,function (err) {
+					  if (err) throw err;
+					  console.log('Saved!');
+					  if(callbackfunc){
+						  callbackfunc(OutputDir+'/'+token+'.txt');
+					  }
+					});
+				});
 		}
-		// mkdirp(OutputDir, function(err) { 
-		// 	fs.appendFile(OutputDir+'/'+token+'.txt', message,function (err) {
-		// 		  if (err) throw err;
-		// 		  console.log('Saved!');
-		// 		  if(callbackfunc){
-		// 			  callbackfunc(OutputDir+'/'+token+'.txt');
-		// 		  }
-		// 		});
-		// 	});
 	}
 	
 	module.exports = {
