@@ -6,7 +6,7 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	
-	function parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN){
+	function parseUseCaseNarratives(UseCase, XMIUseCase, DomainElementsBySN){
 
 		var Activities = [];
 		var PrecedenceRelations = [];
@@ -302,20 +302,11 @@
 		dottyUtil.drawDottyGraph(graphOutput, filePath, function(){
 			console.log("ACTIVITY DIAGRAM SAVED!");
 		});
-
-		// var fs = require('fs');
-		// fs.writeFile(filePath, graphOutput, function(err) {
-		// 	if(err) {
-		// 		console.log(err);
-		// 		return;
-		// 	}
-		// 	console.log("ACTIVITY DIAGRAM SAVED!");
-		// });
 		
 	}
 
 
 	module.exports = {
-			parseActivityDiagram : parseActivityDiagram
+			parseUseCaseNarratives : parseUseCaseNarratives
 	}
 }());

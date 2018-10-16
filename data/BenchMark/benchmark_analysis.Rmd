@@ -23,8 +23,26 @@ You can also embed plots, for example:
 
 ```{r pressure, echo=FALSE}
 plot(pressure)
+
+library(ggplot2)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#ucp_data <- UCP_Dataset
+ucp_data <- UCP_Dataset_OnlineV1.1
+
+uc_num <- ucp_data[,"Simple.UC"] + ucp_data[,"Average.UC"]+ucp_data[,"Complex.UC"]
+cor(uc_num, ucp_data$Real_Effort_Person_Hours)
+ucp_data$uc_num <- uc_num
+print(uc_num)
+lm(Real_Effort_Person_Hours~uc_num, data=ucp_data)
+
+ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"ECF"]*ucp_data[,"TCF"]
+ucp_data$UCP <- ucp
+
+ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+  
 
 
