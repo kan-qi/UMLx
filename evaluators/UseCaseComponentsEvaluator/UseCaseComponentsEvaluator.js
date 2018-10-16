@@ -277,7 +277,6 @@
 				WeightedOperNum: 0,
 				MethodSize: 0,
 				InstanceVarNum: 0,
-				
 				EntityAnalyticsFileName : 'entityAnalytics.csv',
 				AttributeAnalyticsFileName :  'attributeAnalytics.csv',
 				OperationAnalyticsFileName : 'operationAnalytics.csv'
@@ -352,38 +351,41 @@
                             
                // determine the inheritance relationships
                             
-               var derivedClasses = useCaseComponentsProcessor.identifyChildren(element, domainModelInfo.Generalizations);
+               var derivedClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);
                element.numberOfDerivedClasses = derivedClasses.length;
                element.numberOfChildren = element.numberOfDerivedClasses;
                
                console.log("derivedClasses");
                console.log(derivedClasses);
                
-               var inheritedClasses = useCaseComponentsProcessor.identifyOffSprings(element, domainModelInfo.Generalizations);
+               var inheritedClasses = useCaseComponentsProcessor.identifyAncestors(element, domainModelInfo.Generalizations);
                element.numberOfClassesInherited = inheritedClasses.elements.length;
                element.depthInheritanceTree = inheritedClasses.depth;
                
                console.log("inheritedClasses");
                console.log(inheritedClasses);
                
+               averageDepthInheritanceTree += element.depthInheritanceTree;
                if(depthInheritanceTree < element.depthInheritanceTree){
             	   depthInheritanceTree = element.depthInheritanceTree;
                }
                
-               var derivingClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);
+               var derivingClasses = useCaseComponentsProcessor.identifyChildren(element, domainModelInfo.Generalizations);
                element.numberOfDerivingClasses = derivingClasses.length;
                if(element.numberOfDerivingClasses == 0){
             	   element.isTopLevelClass = true;
+            	   totalNumberOfChildrenOfTopLevelClasses += element.numberOfDerivedClasses;
             	   topLevelClasses++;
                }
                else{
             	   element.isTopLevelClass = false;
                }
                
-               var ancestors = useCaseComponentsProcessor.identifyAncestors(element, domainModelInfo.Generalizations);
+               var ancestors = useCaseComponentsProcessor.identifyOffSprings(element, domainModelInfo.Generalizations);
                element.numberOfClassesInheritedFrom = ancestors.elements.length;
                
                element.numberOfInheritanceRelationships = element.numberOfDerivedClasses+element.numberOfClassesInherited;
+               numberOfInheritanceRelationships += element.numberOfInheritanceRelationships;
                
             // determine the associations relationships
                
@@ -401,7 +403,7 @@
                var usedClasses = useCaseComponentsProcessor.identifyChildren(element, domainModelInfo.Usages);
                element.numberOfUsedClasses = usedClasses.length;
                
-               var usingClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);
+               var usingClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Usages);
                element.numberOfUsingClasses = usingClasses.length;
                
                element.numberOfUsageRelationships = element.numberOfUsedClasses+element.numberOfUsingClasses;
@@ -415,6 +417,9 @@
                
                element.couplingBetweenObjects = element.numberOfInheritanceRelationships+element.numberOfAssociationRelationships+element.numberOfUsageRelationships;
 		 }
+			
+			averageDepthInheritanceTree = entityNum === 0? 0: averageDepthInheritanceTree/entityNum;
+			 numberOfInheritanceRelationships =  numberOfInheritanceRelationships/2;
 			
 			var usageNum = 0;
 			var realNum = 0;

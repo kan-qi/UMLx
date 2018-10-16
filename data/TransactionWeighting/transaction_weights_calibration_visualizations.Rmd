@@ -70,7 +70,7 @@ ggplot(combined, aes(x=TL)) +
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TL), sd(combined$TL))) + 
   stat_function(fun = dgamma, args = list(shape=6.543586, rate=1.160249)) + 
   xlab("TL") + ylab("Density")+ ggtitle("Combined TL Data Summary") + 
-  annotate("text", x=13.5, y=0.25, label= "Gamma: shape=6.54, rate=1.16; p (KS-param) = 0.20")+
+  annotate("text", x=14, y=0.25, label= "Gamma: shape=6.54, rate=1.16; KS: p-value < 0.01")+
   theme_bw(base_size=15)
 
 #Ks parameteric test
@@ -81,7 +81,7 @@ ggplot(combined, aes(x=TD)) +
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) +
   #stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
   stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
-  annotate("text", x=16, y=0.18, label= "Gamma: shape=3.65, rate=0.70; p (KS-param) = 0.84")+
+  annotate("text", x=16, y=0.18, label= "Gamma: shape=3.65, rate=0.70; KS: p-value < 0.01")+
   xlab("TD") + ylab("Density") +ggtitle("Combined TD Data Summary") + 
   theme_bw()
 
@@ -89,11 +89,11 @@ ggplot(combined, aes(x=TD)) +
 parametricKStest(combined[, "TD"])
 
 ggplot(combined, aes(x=DETs)) + 
-  geom_histogram(aes(y = ..density..), binwidth=2, colour="black", fill="white") + 
+  geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$DETs), sd(combined$DETs))) + 
   stat_function(fun = dgamma, args = list(shape=1.6647412, rate=0.1691911)) + 
   #stat_function(fun = dgamma, args = list(shape=1.6902002, rate=0.1692468)) + 
-  annotate("text", x=55, y=0.10, label= "Gamma: shape=1.66, rate=0.17; p (KS-param) = 0.39")+
+  annotate("text", x=57, y=0.15, label= "Gamma: shape=1.66, rate=0.17; KS: p-value < 0.01")+
   xlab("DETs") + ylab("Density") + ggtitle("Combined DETs Data Summary") + 
   theme_bw()
 
@@ -761,6 +761,9 @@ predictedValues$Row.names <- NULL
 
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
+<<<<<<< HEAD
+  model <- lm(Effort ~ .-1, data = dat)
+=======
   dat <- na.omit(dat)
   model <- lm(Effort ~ ., data = dat)
   totVar <- sum((dat$Predicted-mean(dat$Predicted))^2)
@@ -770,6 +773,7 @@ r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   ftest <- var.test(dat$Predicted-mean(dat$Effort), dat$Predicted-dat$Effort, alternative = "two.sided")
   print(ftest)
   print(R2)
+>>>>>>> 1fe44868607a8dc76e3327a35b3a002751dfc82b
   print(summary(model))
   summary(model)$r.squared
 })
