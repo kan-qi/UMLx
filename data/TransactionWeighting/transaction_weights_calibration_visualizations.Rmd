@@ -761,9 +761,6 @@ predictedValues$Row.names <- NULL
 
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
-<<<<<<< HEAD
-  model <- lm(Effort ~ .-1, data = dat)
-=======
   dat <- na.omit(dat)
   model <- lm(Effort ~ ., data = dat)
   totVar <- sum((dat$Predicted-mean(dat$Predicted))^2)
@@ -773,7 +770,6 @@ r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   ftest <- var.test(dat$Predicted-mean(dat$Effort), dat$Predicted-dat$Effort, alternative = "two.sided")
   print(ftest)
   print(R2)
->>>>>>> 1fe44868607a8dc76e3327a35b3a002751dfc82b
   print(summary(model))
   summary(model)$r.squared
 })
