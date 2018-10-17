@@ -100,13 +100,14 @@ function display()
        success: function(response)
        {
     
-             document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal1' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div<h3>Use case evaluation statistics</h3><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+             document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal1' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body' id='model1-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div<h3>Use case evaluation statistics</h3><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
                for (var i=0;i<response.length;i++)
                {
                      var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                      $('.modal-body').html('<img src="' + img_link + '">');
-                     document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light'onclick = 'showModalDetails(\"" + img_link +  "\")'> Display Chart</button></td></tr>" ;
-    
+                     document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis 
+                     + "</td><td><button type='button' class='btn btn-light'onclick = 'showModalDetails(\"" + img_link +  "\")'> Display Chart</button>"
+                     + "<button type='button' class='btn btn-light'onclick = 'showDistributionChart(\"" + repoID +  "\",\"" + modelID +  "\",\"" + response[i]["column name"] +  "\")'> Dist Chart</button></td></tr>" ;
                }
     
        },
@@ -317,6 +318,88 @@ function showModalDetails(domainurl)
 {
     $('.modal-body').html('<img class="img-responsive" src="' + domainurl + '">');
     $('#myModal1').modal('toggle');
+}
+function showDistributionChart(repoID, modelID, header)
+{
+    console.log(repoID+modelID);
+    console.log(header);
+    // fso=new ActiveXObject(Scripting.FileSystemObject);
+    // f=fso.createtextfile("public/output/repo" + repoId + "/" + modelID.substring(0,modelID.length-13) + "/useCaseEvaluation.csv",1,true); 
+    // while (!f.AtEndOfStream) 
+    // { 
+    //     f.Readline();
+    // }
+    // console.log(f);
+    // f.close();
+    $.ajax({
+        url: "output/repo" + repoID + "/" + modelID.substring(0,modelID.length-13) + "/useCaseEvaluation.csv",
+        type:"GET",
+        dataType: "text",
+        success: function(response){
+            data = response.split('\n');
+            categories = [];
+            seriesData = [];
+            colIndex = 0;
+            for (let i = 0, row = data.length - 1;i < row; ++i){
+                data[i] = data[i].split(",");
+                if (i == 0){
+                    for (let j = 0, col = data[i].length; j < col; ++j){
+                        console.log(data[i][j]);
+                        if (data[i][j] === header){
+                            colIndex = j;
+                            break;
+                        }
+                    }
+                }else{
+                    categories.push("UC"+i.toString());
+                    seriesData.push(parseFloat(data[i][colIndex]));
+                }
+            }
+            console.log(categories);
+            console.log(seriesData);
+            console.log(data);
+            $('#myModal1').modal('toggle');
+            $('#model1-body').highcharts({
+                chart: {
+                type: 'column'
+                },
+                title: {
+                text: header + " Distribution Chart"
+                },
+                xAxis: {
+                categories: categories,
+                crosshair: true
+                },
+                yAxis: {
+                min: 0,
+                title: {
+                    text: 'value'
+                }
+                },
+                tooltip: {
+                headerFormat: '<span style="font-size:10px">{point.key}</span><table>',
+                pointFormat: '<tr><td style="color:{series.color};padding:0">{series.name}: </td>' +
+                    '<td style="padding:0"><b>{point.y:.1f} </b></td></tr>',
+                footerFormat: '</table>',
+                shared: true,
+                useHTML: true
+                },
+                plotOptions: {
+                column: {
+                    pointPadding: 0.2,
+                    borderWidth: 0
+                }
+                },
+                series: [{
+                name: header.toString(),
+                data: seriesData,
+                }]
+            });
+        },
+        error:function(error){
+            console.log(error);
+        }
+    });
 }
 // This function displays the chart for the estimation result (estimation tab)
 function showEstimationChart(chartsTag)
