@@ -130,7 +130,6 @@
 		
 		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
 		
-
 		function isCycled(path){
 			var lastNode = path[path.length-1];
 				for(var i=0; i < path.length-1; i++){

@@ -648,6 +648,7 @@ function query_sub_model_detail_func() {
             } else {
                 breadCrumb.innerHTML += "<li class='breadcrumb-item active'>" + $(response).data('use-case-title') + "</li>"
             }
+            populate_usecase_data();
         },
         error: function () {
             console.log("fail");
@@ -2711,4 +2712,39 @@ async function sendPushNotification() {
 
 function moveToHome() {
     window.location.href = '/'
+}
+
+function open_new_page_for_diagram_display(type) {
+    console.log("test", type);
+    newWindow = window.open("", "_blank");
+    var content;
+    if (type == 'useCase') {
+        content = $("#use-case-info-pane").html();
+    } else if (type == 'domain') {
+        content = $("#domain-model-info-pane").html();
+    }
+    var html_content = "<html>";
+    html_content += `
+        <head>
+            <title>UseCase Info</title>
+            <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+            <link href="css/style.css" rel="stylesheet"><link href="css/lightgallery.css" rel="stylesheet">
+        </head>
+    `
+    html_content += "<body>";
+    html_content += content;
+    html_content += `
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="https://code.highcharts.com/highcharts.src.js"></script>
+        <script type="text/javascript" src="https://code.highcharts.com/modules/histogram-bellcurve.js"></script>
+        <script type="text/javascript" src="http://ariutta.github.io/svg-pan-zoom/dist/svg-pan-zoom.min.js"></script>
+        <script type="text/javascript" src="http://d3js.org/d3.v4.min.js"></script>
+        <script type="text/javascript" src="http://d3js.org/d3.v3.min.js"></script>
+        <script type="text/javascript" src="js/charts.js"></script>
+        <script type="text/javascript" src="js/scripts.js"></script>
+        <script type="text/javascript" src="http://requirejs.org/docs/release/2.2.0/minified/require.js"></script>        
+    `;
+    html_content += "</body></html>"
+    newWindow.document.write(html_content);
 }
