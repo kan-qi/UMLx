@@ -46,7 +46,7 @@ var storage = multer.diskStorage({
 })
 
 console.l = console.log;
-console.log = function() {};
+// console.log = function() {};
 
 var fileDestination = null;
 umlSurveyFiles = [];
@@ -508,7 +508,7 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     let subscription = endpoints[token];
     worker.on('message', (text) => {
         console.l("killing child process");
-        sendPush(subscription);
+        sendPush(subscription, 'Evaluation finished');
         worker.kill();
     });
     let obj = encapsulateReq(req);
@@ -517,6 +517,7 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
     console.log("DEBUGGGG: inside uploadUMLFile");
+    sendPush(subscription, 'Project Analyzing');
     res.redirect('/');
     console.log("DEBUGGGG: before evaluate project");
     // setTimeout(() => evaluateUploadedProject(req), 2000);
@@ -530,8 +531,8 @@ function encapsulateReq(req) {
     obj.sub = endpoints[req.cookies.appToken];
     return obj;
 }
-function sendPush(subscription) {
-    const payload = JSON.stringify({title: 'test'});
+function sendPush(subscription, push_title) {
+    const payload = JSON.stringify({title: push_title});
     console.log("DEBUGGGG: ready to send notification");
     webpush.sendNotification(subscription, payload).catch(error => {
         console.error(error.stack);
