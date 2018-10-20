@@ -23,26 +23,30 @@ var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
 var download = require('download');
+const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
 // global variable to map appToken -> endpoint location
 var endpoints = {};
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-	var date = new Date();
-    var uploadDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
-    var fileDestination = 'public/uploads/'+uploadDate+"@"+Date.now()+"/";
-    var stat = null;
-    try {
-	        stat = fs.statSync(fileDestination);
-	    } catch (err) {
-	        fs.mkdirSync(fileDestination);
-	    }
-	    if (stat && !stat.isDirectory()) {
-	        throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
-	    }
+        var date = new Date();
+        var uploadDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+        var fileDestination = 'public/uploads/'+uploadDate+"@"+Date.now()+"/";
+        var stat = null;
+        try {
+            stat = fs.statSync(fileDestination);
+        } catch (err) {
+            fs.mkdirSync(fileDestination);
+        }
+        if (stat && !stat.isDirectory()) {
+            throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
+        }
         cb(null, fileDestination);
     }
 })
+
+console.l = console.log;
+console.log = function() {};
 
 var fileDestination = null;
 umlSurveyFiles = [];
@@ -498,11 +502,41 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     //
     //     console.log("The file was saved!");
     // });
+
+    const worker = fork('./UMLxAnalyzeWorker.js');
+    let token = req.cookies.appToken;
+    let subscription = endpoints[token];
+    worker.on('message', (text) => {
+        console.l("killing child process");
+        sendPush(subscription);
+        worker.kill();
+    });
+    let obj = encapsulateReq(req);
+    // worker.json(obj);
+    // worker.send(JSON.stringify(obj, null, 2));
+    let objJson = JSON.stringify(obj);
+    worker.send(objJson);
     console.log("DEBUGGGG: inside uploadUMLFile");
     res.redirect('/');
     console.log("DEBUGGGG: before evaluate project");
-    setTimeout(() => evaluateUploadedProject(req), 2000);
+    // setTimeout(() => evaluateUploadedProject(req), 2000);
 });
+
+function encapsulateReq(req) {
+    let obj = {};
+    obj.files = req.files;
+    obj.body = req.body;
+    obj.userInfo = req.userInfo;
+    obj.sub = endpoints[req.cookies.appToken];
+    return obj;
+}
+function sendPush(subscription) {
+    const payload = JSON.stringify({title: 'test'});
+    console.log("DEBUGGGG: ready to send notification");
+    webpush.sendNotification(subscription, payload).catch(error => {
+        console.error(error.stack);
+    });
+}
 
 async function evaluateUploadedProject(req) {
 

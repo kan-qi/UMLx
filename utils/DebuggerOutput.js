@@ -19,6 +19,19 @@
 		});
 	}
 	
+	function writeTxt(token, message, callbackfunc){
+		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
+//		console.log(token);
+//		console.log(OutputDir);
+		mkdirp(OutputDir, function(err) { 
+		fs.writeFile(OutputDir+'/'+token+'.txt', message, function(err){
+			if(err){
+				console.log(err);
+			}
+		});
+		});
+	}
+	
 	function appendFile(token, message, callbackfunc){
 		return;
 		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
@@ -46,6 +59,7 @@
 	
 	module.exports = {
 			writeJson: writeJson,
+			writeTxt: writeTxt,
 			appendFile:appendFile
 	}
 	

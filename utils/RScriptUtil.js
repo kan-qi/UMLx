@@ -14,7 +14,7 @@
 	
 	//var libPaths = "C:/Users/flyqk/Documents/R/win-library/3.5;C:/Program Files/R/R-3.5.1/library";
 	var libPaths = config.r_libraries;
-	
+
 	//every other functions which call R script should call this function.
 	
 	var commandPool = [];
