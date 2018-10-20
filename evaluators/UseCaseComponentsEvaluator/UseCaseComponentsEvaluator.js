@@ -9,7 +9,7 @@
  * Number of Attributes (NOA)
  * Number of external methods (NEM)
  * Number of actors (NOA)
- * Number of use cases.(NUC)
+ * Number of use cases (NUC)
  * Number of roles (NOR)
  * Average number of actors per use case (ANA_UC)
  * Average number of roles per use case (ANR_UC)
@@ -35,7 +35,7 @@
  * FTRs
  * Number of use cases/scenario scripts
  * Weighted methods per class (WMC)
- * Methods per class
+ * Methods per class (MPC)
  * Number of children (NOC)
  * Depth in Inheritance tree (DIT)
  * Method size (LOC)
@@ -44,7 +44,7 @@
  * Number of unique messages sent (NUM)
  * Number of classes inherited (derived classes)
  * Number of classes inherited from (base classes)
- * reuse ration. (RR)
+ * reuse ration (RR)
  * Number of Top Level Classes (TLC)
  * Average number of weighted methods per classes(WMC)
  * Average Depth of Inheritance Tree (DIT)
