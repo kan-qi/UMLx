@@ -1543,10 +1543,10 @@ function get_diagram_name() {
 
 
 function openList() {
-    document.getElementById("mySidenav").style.height = "30%";
+    document.getElementById("mySidenav").style.transform = "translate(0, -50%)";
 }
 function closeList() {
-    document.getElementById("mySidenav").style.height = "0";
+    document.getElementById("mySidenav").style.transform = "translate(100%, -50%)";
 }
 
 
