@@ -530,6 +530,7 @@ function encapsulateReq(req) {
     obj.sub = endpoints[req.cookies.appToken];
     return obj;
 }
+
 function sendPush(subscription) {
     const payload = JSON.stringify({title: 'test'});
     console.log("DEBUGGGG: ready to send notification");
