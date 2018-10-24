@@ -539,7 +539,7 @@ function sendPush(subscription) {
     });
 }
 
-async function evaluateUploadedProject(req) {
+function evaluateUploadedProject(req) {
 
     console.log("DEBUGGGG: start evaluating project");
     var umlFilePath = null;

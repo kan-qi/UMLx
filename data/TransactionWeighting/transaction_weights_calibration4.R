@@ -118,7 +118,7 @@ prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weig
 }
 
 parametricKStest <- function(dist){
-  dist <- combined[, "TD"]
+  dist <- combined[, "DETs"]
   #dist <- combined[, "TL"]
   
   #tableValues <- table(dist)
@@ -130,6 +130,11 @@ parametricKStest <- function(dist){
   dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
   
   fit.gamma <- fitdist(dist, distr = "gamma", method = "mle", lower = c(0, 0))
+  fit.weibull <- fitdist(dist, "weibull")
+  
+  plot(fit.weibull)
+  plot(fit.gamma)
+  
   # Check result
   shape = coefficients(fit.gamma)["shape"]
   rate = coefficients(fit.gamma)["rate"]
