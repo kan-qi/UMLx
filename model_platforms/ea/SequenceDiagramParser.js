@@ -422,8 +422,107 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		
 	}
 	
-	function drawSequenceDiagram(UseCase, graphFilePath, callbackfunc) {
+	/*
+	 * 
+	 * The structure of the plantUML tools
+	 * 
+	 * @startuml
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+actor User
+participant "First Class" as A
+participant "Second Class" as B
+participant "Last Class" as C
+
+User -> A: DoWork
+activate A
+
+A -> B: Create Request
+activate B
+
+B -> C: DoWork
+activate C
+C --> B: WorkDone
+destroy C
+
+B --> A: Request Created
+deactivate B
+
+A --> User: Done
+deactivate A
+
+@enduml
+	 * 
+	 * 
+	 */
+	
+	function drawSequenceDiagram(UseCase, DomainModel, graphFilePath, callbackfunc) {
 		UseCase.DiagramType = "sequence_diagram";
+		
+		var plantUMLString = "@startuml \
+							skinparam sequenceArrowThickness 2 \
+							skinparam roundcorner 20 \
+							skinparam maxmessagesize 60 \
+							skinparam sequenceParticipant underline"
+		
+		//logic to create actors
+		var actorActivityDic = {};
+		for(var i in UseCase.Activities){
+			var activity = UseCase.Activities[i];
+			if(activity.Stimulus){
+				var actorActivities = actorActivityDic[activity.Group];
+				if(!actorActivities){
+					actorActivityDic[activity.Group] = actorActivities;
+					actorActivities = actorActivityDic[activity.Group];
+				}
+				actorActivities.push(activity);
+			}
+		}
+		
+		for(var i in actorActivityDic){
+			plantUMLString += "actor "+i;
+			
+		}
+
+		var componentDic = {};
+		for(var i in DomainModel.Elements){
+			var element = DomainModel.Elements[i];
+			var index = (i + 9).toString(36).toUpperCase();
+			plantUMLString += "participant \""+element.Name+"\" as "+index;
+			componentDic[elementName] = index;
+		}
+		
+		for(var i in UseCase.PrecedenceRelations){
+			var precedenceRelation = UseCase.PrecedenceRelations[i];
+			var start = precedenceRelation.start;
+			var end = precedenceRelation.end;
+			
+			if(start.Type === "Stimulus"){
+				plantUMLString += start.Group;
+			}
+			else{
+				plantUMLString += componentDic[start.Component.Name]; 
+			}
+			
+			plantUMLString += " -> ";
+			
+			if(end.Type === "Stimulus"){
+				plantUMLString += end.Group;
+			}
+			else{
+				plantUMLString += componentDic[end.Component.Name]; 
+			}
+			
+			plantUMLString += ": "
+			
+		}
+		
+		
+		
+		
 	}
 	
 	module.exports = {
