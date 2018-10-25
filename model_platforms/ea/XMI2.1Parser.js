@@ -15,6 +15,9 @@
 	var visualSprintDiagramParser = require("./VisualSprintDiagramParser.js");
 	
 	var domainModelSearchUtil = require("../../utils/DomainModelSearchUtil.js");
+	var plantUMLUtil = require("../../utils/PlantUMLUtil.js");
+	
+	var umlFileManager = require('../../UMLFileManager');
 
 	/*
 	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
@@ -330,6 +333,7 @@
 			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
 			
 			Model.UseCases.push(UseCase);
+			
 		}
 		
 
@@ -338,7 +342,7 @@
 		
 //		console.log(XMIUMLModel);
 		
-		var DomainElements = [];
+        var DomainElements = [];
 		
 		for(var i in DomainElementsBySN){
 		Model.DomainModel.Elements.push(DomainElementsBySN[i]);
@@ -352,6 +356,11 @@
 		
 		visualSprintDiagramParser.parseUserStoryDiagram(XMIUseCases, XMIUMLModel, Model);
 		
+		for(var i in Model.UseCases){
+			var UseCase = Model.UseCases[i];
+			drawSequenceDiagram(UseCase, Model.DomainModel, UseCase.OutputDir);
+		}
+		
 		if(callbackfunc){
 			callbackfunc(Model);
 		}
@@ -364,6 +373,207 @@
 		console.log(Model.DomainModel);
 		
 		debug.writeJson("parsed_model_from_parser_"+Model._id, Model);
+	}
+	
+	/*
+	 * 
+	 * The structure of the plantUML tools
+	 * 
+	 * @startuml
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+actor User
+participant "First Class" as A
+participant "Second Class" as B
+participant "Last Class" as C
+
+User -> A: DoWork
+activate A
+
+A -> B: Create Request
+activate B
+
+B -> C: DoWork
+activate C
+C --> B: WorkDone
+destroy C
+
+B --> A: Request Created
+deactivate B
+
+A --> User: Done
+deactivate A
+
+@enduml
+	 * 
+	 * 
+	 */
+	
+	
+	function drawSequenceDiagram(UseCase, DomainModel, outputDir){
+//		UseCase.DiagramType = "sequence_diagram";
+		
+		var plantUMLString = "@startuml \nskinparam sequenceArrowThickness 2 \nskinparam roundcorner 20 \nskinparam maxmessagesize 60 \nskinparam sequenceParticipant underline\n\n"
+		
+		//logic to create actors
+		var actorActivityDic = {};
+		var componentDic = {};
+		for(var i in UseCase.Activities){
+			var activity = UseCase.Activities[i];
+			if(activity.Stimulus){
+				if(!actorActivityDic[activity.Group]){
+					actorActivityDic[activity.Group] = [];
+				}
+				var actorActivities = actorActivityDic[activity.Group];
+				actorActivities.push(activity);
+			}
+			
+			if(activity.Component){
+				var index = (i + 9).toString(36).toUpperCase();
+				if(!componentDic[activity.Component.Name]){
+				componentDic[activity.Component.Name] = index;
+				}
+			}
+		}
+		
+
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("actor_activity_dic"+UseCase._id, actorActivityDic);	
+		
+		for(var i in actorActivityDic){
+			console.log("actor: "+i);
+			plantUMLString += "actor "+i;
+			
+		}
+
+		plantUMLString += "\n";
+		
+//		for(var i in DomainModel.Elements){
+//			var element = DomainModel.Elements[i];
+//			var index = (i + 9).toString(36).toUpperCase();
+//			plantUMLString += "participant \""+element.Name+"\" as "+index+"\n";
+//			componentDic[element.Name] = index;
+//		}
+		
+		for(var i in componentDic){
+			console.log("actor: "+i);
+			plantUMLString += "participant \""+i+"\" as "+componentDic[i]+"\n";
+			
+		}
+
+		plantUMLString += "\n";
+		
+		var precedenceRelationDic = {};
+		for(var i in UseCase.PrecedenceRelations){
+			var precedenceRelation = UseCase.PrecedenceRelations[i];
+			
+			var start = precedenceRelation.start;
+			if(!start){
+				continue;
+			}
+			
+			if(!precedenceRelationDic[start._id]){
+				precedenceRelationDic[start._id] = [];
+			}
+			precedenceRelationDic[start._id].push(precedenceRelation);
+		}
+		
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("precedence_relation_dic"+UseCase._id, precedenceRelationDic);
+		
+		var visitedPrecedenceRelations = {};
+		var activatedComponents = {};
+		
+		function traverseActivitySequence(start){
+//			var precedenceRelation = UseCase.PrecedenceRelations[i];
+			
+//			var start = precedenceRelation.start;
+			
+			var precedenceRelations = precedenceRelationDic[start._id];
+			
+			for(var i in precedenceRelations){
+			
+			var precedenceRelation = precedenceRelations[i];
+			
+			var end = precedenceRelation.end;
+			
+			if(visitedPrecedenceRelations[start._id+"__"+end._id]){
+				continue;
+			}
+			
+			visitedPrecedenceRelations[start._id+"__"+end._id] = "1";
+			
+			console.log(end);
+			
+			if(start.Stimulus){
+				plantUMLString += start.Group;
+			}
+			else{
+				if(start.Component){
+				plantUMLString += componentDic[start.Component.Name];
+				}
+			}
+			
+			plantUMLString += " -> ";
+			
+			if(end.Stimulus){
+				plantUMLString += end.Group;
+			}
+			else{
+				if(end.Component){
+				plantUMLString += componentDic[end.Component.Name];
+				}
+			}
+			
+			if(end.Component){
+				plantUMLString += ": "+end.Name+"\n";
+				if(activatedComponents[componentDic[end.Component.Name]] == 0 || !activatedComponents[componentDic[end.Component.Name]]){
+				plantUMLString += "activate "+componentDic[end.Component.Name]+"\n\n";
+				activatedComponents[componentDic[end.Component.Name]] = 1;
+				}
+			}
+			
+			traverseActivitySequence(end)
+			
+			if(end.Component){
+				if(activatedComponents[componentDic[end.Component.Name]] == 1){
+					plantUMLString += "deactivate "+componentDic[end.Component.Name]+"\n\n";
+//					activatedComponents[componentDic[end.Component.Name]]=1;
+					activatedComponents[componentDic[end.Component.Name]] = 0;
+				}
+			}
+			
+			}
+		}
+	
+		
+		for(var i in actorActivityDic){
+			var actorActivities = actorActivityDic[i];
+			for(var j in actorActivities){
+				//plantUMLString += "actor "+actorActivities[j].Name;
+				var actorActivity = actorActivities[j];
+				traverseActivitySequence(actorActivity);
+			}
+		}
+		
+		plantUMLString += "@enduml";
+		
+		var files = [{fileName : "sequence_diagram.txt", content : plantUMLString}];
+		umlFileManager.writeFiles(outputDir, files, function(err){
+		 if(err){
+			 console.log(err);
+			 return;
+		 }
+		 
+		 plantUMLUtil.generateSequenceDiagram(outputDir+"/sequence_diagram.txt", function(sequenceDiagramPath){
+			 console.log(sequenceDiagramPath);
+		 });
+		});
+		
+		return plantUMLString;
 	}
 	
 	// draw the class diagram of the model
