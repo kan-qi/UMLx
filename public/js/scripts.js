@@ -1601,7 +1601,6 @@ function createCharts() {
 }
 
 function createTrendingLines() {
-
     $.ajax({
         url: "http://127.0.0.1:8081/requestRepoBrief",
         type: "GET",
@@ -1615,6 +1614,7 @@ function createTrendingLines() {
             var project_num = [];
             var case_num = [];
             var class_num = [];
+            var series_data = {"SLOC":[], "schedule":[],"personnel":[], "EUCP":[], "EXUCP":[], "DUCP":[], "effort":[], "estimatedEffort":[]}
             console.log(response);
             for (var i = 0; i < response.NT.length; i++) {
                 date.push(response.timestamp[i]);
@@ -1622,11 +1622,11 @@ function createTrendingLines() {
                 project_num.push(response.projectNum[i]);
                 case_num.push(response.UseCaseNum[i]);
                 class_num.push(response.EntityNum[i]);
-
+                for (var key in series_data){
+                    series_data[key].push(response[key][i]);
+                }
             }
-
-
-
+            console.log(series_data);
             // date.push(response.timestamp);
             // transaction_num.push(response.NT);
             // project_num.push(response.projectNum);
@@ -1666,8 +1666,8 @@ function createTrendingLines() {
             });
             
             // On click of the projects tab - update the data and y axis.
-            $('.blue-card').click(function () {
-                console.log("blue clicked");
+            $('#project-card').click(function () {
+                console.log("project clicked");
                 chart.update({
                     yAxis: {
                         title: {
@@ -1681,9 +1681,40 @@ function createTrendingLines() {
                 });
             });
 
+            $('#sloc-card').click(function () {
+                console.log("solc clicked");
+                chart.update({
+                    yAxis: {
+                        title: {
+                            text: 'SOLC'
+                        }
+                    },
+                    series: [{
+                        name: 'SOLC',
+                        data: series_data.SLOC,
+                    }]
+                });
+            });
+
+            
+            $('#exucp-card').click(function () {
+                console.log("exucp clicked");
+                chart.update({
+                    yAxis: {
+                        title: {
+                            text: 'EXUCP'
+                        }
+                    },
+                    series: [{
+                        name: 'EXUCP',
+                        data: series_data.EXUCP,
+                    }]
+                });
+            });
+
             // On click of the use cases tab - update the data and y axis.
-            $('.red-card').click(function () {
-                console.log("red clicked");
+            $('#usecase-card').click(function () {
+                console.log("usecase clicked");
                 chart.update({
                     series: [{
                         name: 'usecase_num',
@@ -1698,8 +1729,37 @@ function createTrendingLines() {
                 });
             });
 
+            $('#schedule-card').click(function () {
+                chart.update({
+                    series: [{
+                        name: 'schedule',
+                        data: series_data.schedule,
+                    }],
+                    yAxis: {
+                        title: {
+                            text: 'Number of Schedule'
+                        }
+
+                    }
+                });
+            });
+
+            $('#ducp-card').click(function () {
+                chart.update({
+                    series: [{
+                        name: 'DUCP',
+                        data: series_data.DUCP,
+                    }],
+                    yAxis: {
+                        title: {
+                            text: 'DUCP'
+                        }
+
+                    }
+                });
+            });
             // On click of the transaction tab - update the data and y axis.
-            $('.green-card').click(function () {
+            $('#transaction-card').click(function () {
                 console.log("green clicked");
                 var transaction_num_new = [];
                 for (var i = 0; i < response.NT.length; i++) {
@@ -1721,8 +1781,38 @@ function createTrendingLines() {
                 });
             });
 
+            $('#personnel-card').click(function () {
+                chart.update({
+                    series: [{
+                        name: 'Personnel',
+                        data: series_data.personnel,
+                    }],
+                    yAxis: {
+                        title: {
+                            text: 'Personnel'
+                        }
+
+                    }
+                });
+            });
+
+            $('#effort-card').click(function () {
+                chart.update({
+                    series: [{
+                        name: 'Effort',
+                        data: series_data.effort,
+                    }],
+                    yAxis: {
+                        title: {
+                            text: 'Effort'
+                        }
+
+                    }
+                });
+            });
+
             // On click of the classes tab - update the data and y axis.
-            $('.purple-card').click(function () {
+            $('#class-card').click(function () {
                 console.log("purple clicked");
                 chart.update({
                     series: [{
@@ -1737,6 +1827,35 @@ function createTrendingLines() {
                 });
             });
 
+            $('#eucp-card').click(function () {
+                chart.update({
+                    series: [{
+                        name: 'EUCP',
+                        data: series_data.eucp,
+                    }],
+                    yAxis: {
+                        title: {
+                            text: 'EUCP'
+                        }
+
+                    }
+                });
+            });
+
+            $('#estimate-card').click(function () {
+                chart.update({
+                    series: [{
+                        name: 'Estimated Effort',
+                        data: series_data.estimatedEffort,
+                    }],
+                    yAxis: {
+                        title: {
+                            text: 'Estimated Effort'
+                        }
+
+                    }
+                });
+            });
         },
         error: function (error) {
             console.log("failed");
