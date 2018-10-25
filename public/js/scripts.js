@@ -2655,13 +2655,16 @@ function buildTable2(data) {
 // module push notification
 const publicVapidKey = 'BM2EKwsY9E_5r5ewHVlZ1hSwpSfRpvqQm0DPT3C60WQ3md98O0_Tb7c56yFfzFlFyaKqNVfYe1Vv2sul6m4Myt0';
 
-function startEvalPush() {
+async function startEvalPush() {
     console.log("startEvalPush");
-    moveToHome();
+    // alert("startEvalPush");
+    // moveToHome();
     if ('serviceWorker' in navigator) {
         console.log('Registering service worker');
-
-        sendPushNotification().catch(error => console.error(error));
+        await sendPushNotification().catch(error => console.error(error));
+    } else {
+        // alert("no service worker");
+        console.log("No service Worker found");
     }
     return true;
 }
@@ -2684,9 +2687,11 @@ function urlBase64ToUint8Array(base64String) {
 
 async function sendPushNotification() {
     console.log('Registering service worker');
-    const registration = await navigator.serviceWorker
-        .register('/public/js/worker.js', {scope: '/public/js/'});
-    console.log('Registered service worker');
+    const registration = await navigator.serviceWorker.
+    register('/public/js/worker.js', {scope: '/public/js/'});
+    if(registration) {
+        console.log('Registered service worker');
+    }
 
     console.log('Registering push');
     const subscription = await registration.pushManager.
@@ -2697,7 +2702,6 @@ async function sendPushNotification() {
         applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
     });
     console.log('Registered push');
-    console.log(subscription);
 
     console.log('Sending push');
     await fetch('/subscribe', {
@@ -2707,6 +2711,7 @@ async function sendPushNotification() {
             'content-type': 'application/json'
         }
     });
+
     console.log('Sent push');
 }
 

@@ -505,7 +505,9 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 
     const worker = fork('./UMLxAnalyzeWorker.js');
     let token = req.cookies.appToken;
+    console.l("token: " + token);
     let subscription = endpoints[token];
+    console.l("subscription: " + subscription);
     worker.on('message', (text) => {
         console.l("killing child process");
         sendPush(subscription, 'Evaluation finished');
@@ -516,10 +518,10 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     // worker.send(JSON.stringify(obj, null, 2));
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
-    console.log("DEBUGGGG: inside uploadUMLFile");
+    console.l("DEBUGGGG: inside uploadUMLFile");
     sendPush(subscription, 'Project Analyzing');
     res.redirect('/');
-    console.log("DEBUGGGG: before evaluate project");
+    console.l("DEBUGGGG: before evaluate project");
     // setTimeout(() => evaluateUploadedProject(req), 2000);
 });
 
@@ -534,9 +536,15 @@ function encapsulateReq(req) {
 function sendPush(subscription, push_title) {
     const payload = JSON.stringify({title: push_title});
     console.log("DEBUGGGG: ready to send notification");
-    webpush.sendNotification(subscription, payload).catch(error => {
-        console.error(error.stack);
-    });
+    if(subscription) {
+        webpush.sendNotification(subscription, payload).catch(error => {
+            console.error(error.stack);
+        });
+    } else {
+        console.l("sendPush(): subscription endpoint not find, printing endpoints");
+        console.l(endpoints);
+    }
+
 }
 
 async function evaluateUploadedProject(req) {
@@ -1732,11 +1740,15 @@ app.use(require('body-parser').json());
 app.post('/subscribe', (req, res) => {
     const token = req.cookies.appToken;
     const subscription = req.body;
-    endpoints[token] = subscription;
+    if(subscription) {
+        endpoints[token] = subscription;
+        console.l('server received subsription endpoint');
+    } else {
+        console.l("server didn't receive corrent endpoint");
+    }
     res.status(201).json({});
-    const payload = JSON.stringify({title: 'test'});
-    console.log('inside /subscribe function');
-    console.log(subscription);
+    // const payload = JSON.stringify({title: 'test'});
+    console.l(subscription);
     // webpush.sendNotification(subscription, payload).catch(error => {
     //     console.error(error.stack);
     // });
