@@ -298,9 +298,9 @@
 		Model.DomainModel.DiagramType = "class_diagram";
 			
 
-			   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
-				   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
-			   });
+//			   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
+//				   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
+//			   });
 		
 			 //search for the use cases
 				var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
@@ -360,6 +360,8 @@
 			var UseCase = Model.UseCases[i];
 			drawSequenceDiagram(UseCase, Model.DomainModel, UseCase.OutputDir);
 		}
+		
+		drawClassDiagram(Model.DomainModel, Model.DomainModel.OutputDir)
 		
 		if(callbackfunc){
 			callbackfunc(Model);
@@ -568,12 +570,156 @@ deactivate A
 			 return;
 		 }
 		 
-		 plantUMLUtil.generateSequenceDiagram(outputDir+"/sequence_diagram.txt", function(sequenceDiagramPath){
-			 console.log(sequenceDiagramPath);
+		 plantUMLUtil.generateUMLDiagram(outputDir+"/sequence_diagram.txt", function(outputDir){
+			 console.log(outputDir);
 		 });
 		});
 		
 		return plantUMLString;
+	}
+	
+	
+	/*
+	 * 
+	 * The structure of the plantUML tools
+	 * 
+@startuml
+skinparam classAttributeIconSize 0
+class Dummy {
+ -field1
+ #field2
+ ~method1()
+ +method2()
+}
+
+@enduml
+	 * 
+	 * 
+	 */
+	
+	function drawClassDiagram(DomainModel, outputDir){
+		
+		var classElements = DomainModel.Elements;
+		var classElementDic = {};
+		
+		var plantUMLString = '@startuml\nskinparam classAttributeIconSize 0\n\n';
+		
+        for(i = 0;  i < classElements.length; i++){
+            var curClass = classElements[i];
+            if(!curClass["Name"]){
+            	continue;
+            }
+            
+            classElementDic[curClass._id] = curClass;
+            
+
+            plantUMLString += "class ";
+            
+            plantUMLString += curClass["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+            
+            if (classElements[i]["Attributes"].length == 0 && classElements[i]["Operations"].length == 0){
+            	 plantUMLString += " \n\n";
+            	 continue;
+            }
+
+            plantUMLString += " {\n";
+
+            var classAttributes = classElements[i]["Attributes"];
+                for(j = 0; j < classAttributes.length; j++) {
+                    plantUMLString += '- ' ;
+                    plantUMLString += classAttributes[j]["Name"];
+                    plantUMLString += ':'+classAttributes[j]["Type"];
+                    plantUMLString += '\n';
+                }
+
+            var classOperations = classElements[i]["Operations"];
+                for(j = 0; j < classOperations.length;j++) {
+                    
+               	 plantUMLString += '~ ' ;
+                    plantUMLString += classOperations[j]["Name"] + '(';
+                    var para_len = classOperations[j]["Parameters"].length;
+                    for (k = 0; k < para_len - 1; k++) {
+                   	 plantUMLString += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
+                    }
+                    plantUMLString += ')';
+
+                    if(para_len > 0){
+                    plantUMLString += ':'+classOperations[j]["Parameters"][para_len - 1]["Type"];
+                    }
+                    plantUMLString += "\n";
+                }
+
+            plantUMLString += '}\n\n';
+		 }
+        
+       //create the links between the classes
+//        Realizations:[],
+//		Associations: [],
+////		Inheritances: [],
+//		Generalizations: [],
+        
+        for(var i in DomainModel.Realizations){
+        	var realization = DomainModel.Realizations[i];
+        	var supplier = classElementDic[realization.Supplier];
+        	var client = classElementDic[realization.Client];
+        	if(!supplier || !client){
+        		continue;
+        	}
+        	
+        	var supplierName = supplier["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	
+        	plantUMLString += clientName + " <|-- " + supplierName+"\n\n";
+        	
+        }
+        
+        for(var i in DomainModel.Associations){
+        	var association = DomainModel.Associations[i];
+        	
+        	var supplier = classElementDic[association.Supplier];
+        	var client = classElementDic[association.Client];
+        	if(!supplier || !client){
+        		continue;
+        	}
+        	
+        	var supplierName = supplier["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	
+        	plantUMLString += supplierName + " .. " + clientName+"\n\n";
+        }
+        
+        for(var i in DomainModel.Generalizations){
+        	var generalization = DomainModel.Generalizations[i];
+        	
+        	var supplier = classElementDic[generalization.Supplier];
+        	var client = classElementDic[generalization.Client];
+        	if(!supplier || !client){
+        		continue;
+        	}
+        	
+        	var supplierName = supplier["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	
+        	plantUMLString += supplierName + " <|-- " + clientName+"\n\n";
+        }
+       
+        
+       plantUMLString += '@enduml';
+       
+       var files = [{fileName : "class_diagram.txt", content : plantUMLString}];
+		umlFileManager.writeFiles(outputDir, files, function(err){
+		 if(err){
+			 console.log(err);
+			 return;
+		 }
+		 
+		 plantUMLUtil.generateUMLDiagram(outputDir+"/class_diagram.txt", function(outputDir){
+			 console.log(outputDir);
+		 });
+		});
+
+        
+        return plantUMLString;
 	}
 	
 	// draw the class diagram of the model

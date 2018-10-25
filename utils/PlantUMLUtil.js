@@ -3,10 +3,10 @@
 	var exec = require('child_process').exec;
 	var config = require("../config.js");
 	
-	function generateSequenceDiagram(sequenceDiagramInputPath, callbackfunc){
+	function generateUMLDiagram(UMLDiagramInputPath, callbackfunc){
 		
 	    //to generate svg file.
-	    var command = 'java -jar ./tools/plantuml.jar "'+sequenceDiagramInputPath+'"';
+	    var command = 'java -jar ./tools/plantuml.jar "'+UMLDiagramInputPath+'"';
 		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
 			if (error !== null) {
@@ -15,13 +15,13 @@
 			console.log('The file was saved!');
 			
 			 if(callbackfunc){
-			  callbackfunc(sequenceDiagramInputPath);
+			  callbackfunc(UMLDiagramInputPath);
 			 }
 		});
 	    
 }
 	
 	module.exports = {
-			generateSequenceDiagram:generateSequenceDiagram
+			generateUMLDiagram:generateUMLDiagram
 	}
 })();
