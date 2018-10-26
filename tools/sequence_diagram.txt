@@ -4,30 +4,37 @@ skinparam roundcorner 20
 skinparam maxmessagesize 60 
 skinparam sequenceParticipant underline
 
-actor Actor1
-participant "bookTicketInterface" as 09
-participant "bookTicketsManagement" as 19
-participant "pay the bill" as 29
+actor User
+participant "Message Context" as 09
+participant "Search Component" as 19
+participant "Collaboration Graph" as 49
+participant "Inputaword" as 59
 
-Actor1 -> 09: Actor1:Buy tickets interface
+User -> 09: Homepage()
 activate 09
-
-09 -> 29: Buy tickets interface:pay the bill
-activate 29
-
-29 -> 19: pay the bill:payment success message
-activate 19
-
-deactivate 19
-
-29 -> 29: pay the bill:save bill records
-deactivate 29
 
 deactivate 09
 
-Actor1 -> 19: Actor1:payment success message
+User -> 19: Searchpage()
 activate 19
 
+19 -> 59: Inputaword()
+activate 59
+
+59 -> 49: Confirmationpage()
+activate 49
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+49 -> 19: Searchpage()
+19 -> 59: Inputaword()
+deactivate 59
+
 deactivate 19
+
+deactivate 49
 
 @enduml
