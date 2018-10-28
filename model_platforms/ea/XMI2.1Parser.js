@@ -112,6 +112,18 @@
 			}
 			operations.push(operation);
 		}
+		
+		if(operations.length === 0 && XMIClass['$']['name']){
+
+			var operation = {
+					Name: XMIClass['$']['name'].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, ''),
+					Visibility: "public",
+					Parameters: []
+			}
+			
+			operations.push(operation);
+
+		}
 
 		return {
 				_id: XMIClass['$']['xmi:id'],
@@ -251,6 +263,9 @@
         var XMIAssociations = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
 //		var DomainAssociationByID = [];
 		for(var i in XMIAssociations){
+			// having problem with association parsing.
+			continue;
+			
 			var XMIAssoc = XMIAssociations[i];
 			//      console.log(XMIAssoc);
 			var XMIType = jp.query(XMIAssoc, '$..type[?(@[\'$\'][\'xmi:idref\'])]')[0];
@@ -530,8 +545,9 @@ deactivate A
 				}
 			}
 			
-			if(end.Component){
-				plantUMLString += ": "+end.Name+"\n";
+			if(end.Component && end.Name){
+				var labelComponents = end.Name.split(":");
+				plantUMLString += ": "+labelComponents[labelComponents.length - 1].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '')+"()\n";
 				if(activatedComponents[componentDic[end.Component.Name]] == 0 || !activatedComponents[componentDic[end.Component.Name]]){
 				plantUMLString += "activate "+componentDic[end.Component.Name]+"\n\n";
 				activatedComponents[componentDic[end.Component.Name]] = 1;
@@ -701,6 +717,21 @@ class Dummy {
         	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
         	
         	plantUMLString += supplierName + " <|-- " + clientName+"\n\n";
+        }
+        
+        for(var i in DomainModel.Usages){
+        	var usage = DomainModel.Usages[i];
+        	
+        	var supplier = classElementDic[usage.Supplier];
+        	var client = classElementDic[usage.Client];
+        	if(!supplier || !client){
+        		continue;
+        	}
+        	
+        	var supplierName = supplier["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	
+        	plantUMLString += supplierName + " --> " + clientName+"\n\n";
         }
        
         

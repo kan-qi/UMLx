@@ -1,33 +1,69 @@
 @startuml
 skinparam classAttributeIconSize 0
 
-class helpusecasemodelpatternhtm 
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+~ ClicktheBrowsebuttonlocatetheCV()
+}
 
-class helpusecasediagramhtm 
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
 
-class helpactorhtm 
+class helpactorhtm {
+~ helpactorhtm()
+}
 
-class DiscussionboardCOTS 
+class Inputaword {
+~ Inputaword()
+~ Inputaname()
+}
 
-class Existingsystem 
+class DiscussionboardCOTS {
+~ DiscussionboardCOTS()
+}
 
-class Messagingsystem 
+class Existingsystem {
+~ Existingsystem()
+}
 
-class PediatricTraumaSocietyResearchInvestigator 
+class Messagingsystem {
+~ Messagingsystem()
+~ Loginpage()
+}
 
-class Pubmed 
+class PediatricTraumaSocietyResearchInvestigator {
+~ PediatricTraumaSocietyResearchInvestigator()
+}
 
-class SystemBoundary 
+class Pubmed {
+~ Pubmed()
+}
 
-class helpclassdiagramhtm 
+class SystemBoundary {
+~ SystemBoundary()
+~ SelectCountryandStateitemandclickSearchButton()
+}
 
-class helpclassmodelpatternhtm 
+class helpclassdiagramhtm {
+~ helpclassdiagramhtm()
+}
 
-class Class1 
+class helpclassmodelpatternhtm {
+~ helpclassmodelpatternhtm()
+}
 
-class Class2 
+class Class1 {
+~ Class1()
+}
 
-class Class3 
+class Class2 {
+~ Class2()
+}
+
+class Class3 {
+~ Class3()
+}
 
 class Article {
 - abstract:EAJava_Text
@@ -38,11 +74,14 @@ class Article {
 - publishedData:EAJava_Date
 - publishedJournal:EAJava_String
 - title:EAJava_String
+~ Article()
 }
 
 class CollaborationGraph {
 - co_authorList:EAJava_ArrayList_String_
 - name:EAJava_String
+~ CollaborationGraph()
+~ Confirmationpage()
 }
 
 class Comment {
@@ -50,6 +89,7 @@ class Comment {
 - commentator:EAJava_String
 - date:EAJava_Date
 - undefined:EAID_A4B1B1D7_EE88_4c26_8BDF_7D8D447E44BF
+~ Comment()
 }
 
 class MessageContext {
@@ -58,11 +98,14 @@ class MessageContext {
 - receiver:EAJava_String
 - sender:EAJava_String
 - title:EAJava_String
+~ MessageContext()
+~ Homepage()
 }
 
 class MessageHistoryA {
 - messageList:EAJava_ArrayList_MessageContext_
 - owner:EAJava_String
+~ MessageHistoryA()
 }
 
 class Post {
@@ -71,6 +114,7 @@ class Post {
 - post:EAJava_String
 - poster:EAJava_String
 - undefined:EAID_8DF68978_C18A_4f7e_BE0E_3EA801178B34
+~ Post()
 }
 
 class SubforumGroup {
@@ -79,6 +123,7 @@ class SubforumGroup {
 - owner:EAJava_String
 - postList:EAJava_ArrayList_Post_
 - topic:EAJava_String
+~ SubforumGroup()
 }
 
 class UserMember {
@@ -92,96 +137,99 @@ class UserMember {
 - nationality:EAJava_String
 - researchInterestList:EAJava_ArrayList_String_
 - Resume:EAJava_File
+~ UserMember()
 }
 
-class GoDaddyWebHosting 
+class GoDaddyWebHosting {
+~ GoDaddyWebHosting()
+}
 
-class PubMedDatabaseServerExternalHardwareComponent 
+class PubMedDatabaseServerExternalHardwareComponent {
+~ PubMedDatabaseServerExternalHardwareComponent()
+}
 
-class TerminalPCLaptop 
+class TerminalPCLaptop {
+~ TerminalPCLaptop()
+}
 
-class AdvancedSearchSubComponent 
+class AdvancedSearchSubComponent {
+~ AdvancedSearchSubComponent()
+}
 
-class CreateSubforumComponent 
+class CreateSubforumComponent {
+~ CreateSubforumComponent()
+}
 
-class DBMSComponentMySQL 
+class DBMSComponentMySQL {
+~ DBMSComponentMySQL()
+}
 
 class DiscussionBoardComponentPhpBB {
 - subComponentInstance1:EAJava_Send___Receive_Message_SubComponent
 - subComponentInstance2:EAJava_View_Message_History_SubComponent
 - subComponentInstance3:EAJava_Post___Comment_SubComponent
 - subComponentInstance4:EAJava_Create_SubForum_Component
+~ DiscussionBoardComponentPhpBB()
 }
 
-class FetchAddUpdateDataComponent 
+class FetchAddUpdateDataComponent {
+~ FetchAddUpdateDataComponent()
+}
 
-class PostCommentSubComponent 
+class PostCommentSubComponent {
+~ PostCommentSubComponent()
+}
 
-class PubMedDatabaseExternalComponent 
+class PubMedDatabaseExternalComponent {
+~ PubMedDatabaseExternalComponent()
+~ Validateusernameandpassword()
+}
 
-class SearchByKeywordSubComponent 
+class SearchByKeywordSubComponent {
+~ SearchByKeywordSubComponent()
+}
 
-class SearchByNameSubComponent 
+class SearchByNameSubComponent {
+~ SearchByNameSubComponent()
+~ Searchnamepage()
+}
 
 class SearchComponent {
 - subComponentInstance1:EAJava_Search_By_Keyword_SubComponent
 - subComponentInstance2:EAJava_Search_By_Name_SubComponent
 - subComponentInstance3:EAJava_Advance_Search_SubComponent
+~ SearchComponent()
+~ Searchpage()
 }
 
-class SendReceiveMessageSubComponent 
+class SendReceiveMessageSubComponent {
+~ SendReceiveMessageSubComponent()
+~ Receivrprivatemessagepage()
+~ Sendprivatepage()
+}
 
-class UploadCVComponent 
+class UploadCVComponent {
+~ UploadCVComponent()
+~ Uploadcvpage()
+}
 
-class ViewArticlesComponent 
+class ViewArticlesComponent {
+~ ViewArticlesComponent()
+~ ChooseoneofarticlesandClicktheViewbutton()
+}
 
-class ViewCollaborationGraphComponent 
+class ViewCollaborationGraphComponent {
+~ ViewCollaborationGraphComponent()
+~ ChooseoneofgraphandClicktheViewbutton()
+}
 
-class ViewMessageHistorySubComponent 
-
-class Logoutpage 
-
-class Inputaword 
+class ViewMessageHistorySubComponent {
+~ ViewMessageHistorySubComponent()
+~ Composethemessagetheuserwantstopost()
+~ ChooseoneofmessageandClicktheViewbutton()
+}
 
 class Object1 
-
-ViewMessageHistorySubComponent .. PediatricTraumaSocietyResearchInvestigator
-
-ViewMessageHistorySubComponent .. Logoutpage
-
-ViewMessageHistorySubComponent .. Inputaword
-
-ViewMessageHistorySubComponent .. PediatricTraumaSocietyResearchInvestigator
-
-ViewMessageHistorySubComponent .. PediatricTraumaSocietyResearchInvestigator
-
-ViewMessageHistorySubComponent .. PediatricTraumaSocietyResearchInvestigator
-
-ViewMessageHistorySubComponent .. Pubmed
-
-ViewMessageHistorySubComponent .. Class3
-
-ViewMessageHistorySubComponent .. Comment
-
-ViewMessageHistorySubComponent .. Post
-
-ViewMessageHistorySubComponent .. PubMedDatabaseServerExternalHardwareComponent
-
-ViewMessageHistorySubComponent .. TerminalPCLaptop
-
-ViewMessageHistorySubComponent .. SearchComponent
-
-ViewMessageHistorySubComponent .. DiscussionBoardComponentPhpBB
-
-ViewMessageHistorySubComponent .. PostCommentSubComponent
-
-ViewMessageHistorySubComponent .. ViewMessageHistorySubComponent
-
-ViewMessageHistorySubComponent .. SendReceiveMessageSubComponent
-
-ViewMessageHistorySubComponent .. SearchComponent
-
-ViewMessageHistorySubComponent .. SearchComponent
 
 Class1 <|-- Class2
 

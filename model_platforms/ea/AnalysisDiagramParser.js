@@ -143,13 +143,32 @@
 //			if(!DomainElementsBySN[domainModelSearchUtil.standardizeName(Object.name)]){
 			if(!domainModelSearchUtil.matchDomainElement(Object.name, DomainElementsBySN)){
 				// each object is actually a domain element
-				DomainElementsBySN[domainModelSearchUtil.standardizeName(Object.name)] = {
+				var component = {
 						_id: Object.id,
-						Name: Object.name,
+						Name: Object.name.replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, ''),
 						Type: Object.type,
 						Operations: [],
 						Attributes: []
 				};
+				
+				var operation = {
+						Name: component.Name,
+						Visibility: "public",
+						Parameters: []
+				}
+				
+//				for(var i in domainElement.Attributes){
+//					var attribute = domainElement.Attributes[i];
+//					var parameter = {
+//							Name: attribute.Name,
+//							Type: attribute.Type
+//					}
+//					operation.Parameters.push(parameter);
+//				}
+				
+				component.Operations.push(operation);
+				
+				DomainElementsBySN[domainModelSearchUtil.standardizeName(Object.Name)] = component;
 			}
 		}
 		
@@ -173,14 +192,51 @@
 					if(!component){
 						component = {
 							_id: ConnectedXMIInstanceSpecification['$']['xmi:id'],
-							Name: ConnectedXMIInstanceSpecification['$']['name'],
+							Name: ConnectedXMIInstanceSpecification['$']['name'].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, ''),
 							Operations: [],
 							Attributes: []
 						};
 						
+						// create the interface method of the component
+						
+						var operation = {
+								Name: component.Name,
+								Visibility: "public",
+								Parameters: []
+						}
+						
+//						for(var i in domainElement.Attributes){
+//							var attribute = domainElement.Attributes[i];
+//							var parameter = {
+//									Name: attribute.Name,
+//									Type: attribute.Type
+//							}
+//							operation.Parameters.push(parameter);
+//						}
+						
+						component.Operations.push(operation);
+
+						
 						DomainElementsBySN[domainModelSearchUtil.standardizeName(ConnectedXMIInstanceSpecification['$']['name'])] = component;
 					}
-				
+					
+					var matchedOperation = domainModelSearchUtil.matchOperation(ConnectedXMIInstanceSpecification['$']['name'], component);
+					
+					if(!matchedOperation){
+						
+						var parameters = [];
+						
+						var operation = {
+								Name: ConnectedXMIInstanceSpecification['$']['name'].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, ''),
+								Visibility: true,
+								Parameters: parameters
+						}
+						
+						component.Operations.push(operation);
+						console.log("discovered operation");
+//						process.exit();
+					}
+					
 					
 					component.Type = CustomProfiles[ConnectedXMIInstanceSpecification['$']['xmi:id']];
 					

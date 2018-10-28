@@ -18,6 +18,11 @@
 			  callbackfunc(UMLDiagramInputPath);
 			 }
 		});
+		
+
+
+        var debug = require("./DebuggerOutput.js");
+        debug.appendFile1("plant_uml_commands", command+"\n");
 	    
 }
 	
