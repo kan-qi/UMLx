@@ -199,23 +199,29 @@
 						
 						// create the interface method of the component
 						
+						var senderComponent = DomainElementsBySN[domainModelSearchUtil.standardizeName(XMIInstanceSpecification['$']['name'])];
+						if(!senderComponent){
+							senderComponent = domainModelSearchUtil.matchDomainElement(XMIInstanceSpecification['$']['name'], DomainElementsBySN);
+						}
+						
 						var operation = {
 								Name: component.Name,
 								Visibility: "public",
 								Parameters: []
 						}
 						
-//						for(var i in domainElement.Attributes){
-//							var attribute = domainElement.Attributes[i];
-//							var parameter = {
-//									Name: attribute.Name,
-//									Type: attribute.Type
-//							}
-//							operation.Parameters.push(parameter);
-//						}
-						
-						component.Operations.push(operation);
+						if(senderComponent){
+							for(var i in senderComponent.Attributes){
+								var attribute = senderComponent.Attributes[i];
+								var parameter = {
+										Name: attribute.Name,
+										Type: attribute.Type
+								}
+								operation.Parameters.push(parameter);
+							}
+						}
 
+						component.Operations.push(operation);
 						
 						DomainElementsBySN[domainModelSearchUtil.standardizeName(ConnectedXMIInstanceSpecification['$']['name'])] = component;
 					}

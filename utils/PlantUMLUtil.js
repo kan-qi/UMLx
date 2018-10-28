@@ -3,10 +3,13 @@
 	var exec = require('child_process').exec;
 	var config = require("../config.js");
 	
-	function generateUMLDiagram(UMLDiagramInputPath, callbackfunc){
+	function generateUMLDiagram(UMLDiagramInputPath, callbackfunc, type){
 		
 	    //to generate svg file.
 	    var command = 'java -jar ./tools/plantuml.jar "'+UMLDiagramInputPath+'"';
+	    if(type === "class_diagram"){
+	    	command += ' -xmi';
+	    }
 		console.log(command);
 		var child = exec(command, function(error, stdout, stderr) {
 			if (error !== null) {
