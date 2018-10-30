@@ -61,9 +61,9 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
     div.tab-content
-      div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
      div.tab-pane.fade.in.active(id="repo_analytics")
       if repoInfo
+        div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
         div.col-sm-12.status-row
           div.col-sm-3
             div#project-card.blue-card.analytics-card
@@ -151,6 +151,7 @@ div.block.panel.panel-default
               .col-sm-8.text-box
                 h2 #{repoInfo.estimatedEffort}
                 span Estimated Effort
+        
         //div.col-sm-12.chart-row  
           //.col-sm-6
             //img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
