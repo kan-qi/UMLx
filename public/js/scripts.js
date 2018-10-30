@@ -1607,25 +1607,52 @@ function createTrendingLines() {
         dataType: "json",
 
         success: function (response) {
+
+            function updateChart() {
+                var selected_series = [];
+                for (var key in series_data) {
+                    if (series_data[key].selected == true) {
+                        selected_series.push(series_data[key].data);
+                    }
+                }
+                console.log(chart);
+                var chart = Highcharts.chart('trending-line', {
+                    xAxis: {
+                        title: {
+                            text: 'Time stamp'
+                        },
+                        categories: date
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Value'
+                        },
+                        min: 0
+                    },
+        
+                    series: selected_series
+                });              
+            }
+
+            var series_data = {"SLOC":{}, "schedule":{}, "personnel":{}, "EUCP":{}, "EXUCP":{}, "DUCP":{}, "effort":{}, "estimatedEffort":{}, "NT":{}, "projectNum":{}, "UseCaseNum":{}, "EntityNum":{}}
+
             console.log('----------');
             console.log(response);
             var date = [];
-            var transaction_num = [];
-            var project_num = [];
-            var case_num = [];
-            var class_num = [];
-            var series_data = {"SLOC":[], "schedule":[],"personnel":[], "EUCP":[], "EXUCP":[], "DUCP":[], "effort":[], "estimatedEffort":[]}
+
             console.log(response);
             for (var i = 0; i < response.NT.length; i++) {
                 date.push(response.timestamp[i]);
-                transaction_num.push(response.NT[i]);
-                project_num.push(response.projectNum[i]);
-                case_num.push(response.UseCaseNum[i]);
-                class_num.push(response.EntityNum[i]);
                 for (var key in series_data){
-                    series_data[key].push(response[key][i]);
+                    if (series_data[key]["selected"] == undefined){
+                        series_data[key]["selected"] = false;
+                        series_data[key]["data"] = {"type": "line", "name": key, "data": [], "marker":{"enabled": false}, "states":{"hover":{"lineWidth": 0}},"enableMouseTracking":true};
+                    }
+                    series_data[key].data.data.push(response[key][i]);
                 }
             }
+            series_data.NT.selected = true;
+            updateChart();
             console.log(series_data);
             // date.push(response.timestamp);
             // transaction_num.push(response.NT);
@@ -1634,227 +1661,160 @@ function createTrendingLines() {
             // class_num.push(response.EntityNum);
 
             // Default chart at the repo level - Number of transactions
-            var chart = Highcharts.chart('trending-line', {
-                xAxis: {
-                    title: {
-                        text: 'Time stamp'
-                    },
-                    categories: date
-                },
-                yAxis: {
-                    title: {
-                        text: 'Number of Transactions'
-                    },
-                    min: 0
-                },
+            // var chart = Highcharts.chart('trending-line', {
+            //     xAxis: {
+            //         title: {
+            //             text: 'Time stamp'
+            //         },
+            //         categories: date
+            //     },
+            //     yAxis: {
+            //         title: {
+            //             text: 'Value'
+            //         },
+            //         min: 0
+            //     },
 
-                series: [{
-                    type: 'line',
-                    name: 'transaction_num',
-                    data: transaction_num,
-                    marker: {
-                        enabled: false
-                    },
-                    states: {
-                        hover: {
-                            lineWidth: 0
-                        }
-                    },
-                    enableMouseTracking: true
-                }
-                ]
-            });
+            //     series: [{
+            //         type: 'line',
+            //         name: 'transaction_num',
+            //         data: series_data.NT.data.data,
+            //         marker: {
+            //             enabled: false  
+            //         },
+            //         states: {
+            //             hover: {
+            //                 lineWidth: 0
+            //             }
+            //         },
+            //         enableMouseTracking: true
+            //     }
+            //     ]
+            // });
+
+            
             
             // On click of the projects tab - update the data and y axis.
             $('#project-card').click(function () {
                 console.log("project clicked");
-                chart.update({
-                    yAxis: {
-                        title: {
-                            text: 'Project'
-                        }
-                    },
-                    series: [{
-                        name: 'project_num',
-                        data: project_num
-                    }]
+                $('#project-card input:checkbox').each(function(){
+                    series_data.projectNum.selected = !series_data.projectNum.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             $('#sloc-card').click(function () {
                 console.log("solc clicked");
-                chart.update({
-                    yAxis: {
-                        title: {
-                            text: 'SOLC'
-                        }
-                    },
-                    series: [{
-                        name: 'SOLC',
-                        data: series_data.SLOC,
-                    }]
+                $('#sloc-card input:checkbox').each(function(){
+                    series_data.SLOC.selected = !series_data.SLOC.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             
             $('#exucp-card').click(function () {
                 console.log("exucp clicked");
-                chart.update({
-                    yAxis: {
-                        title: {
-                            text: 'EXUCP'
-                        }
-                    },
-                    series: [{
-                        name: 'EXUCP',
-                        data: series_data.EXUCP,
-                    }]
+                $('#exucp-card input:checkbox').each(function(){
+                    series_data.EXUCP.selected = !series_data.EXUCP.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             // On click of the use cases tab - update the data and y axis.
             $('#usecase-card').click(function () {
                 console.log("usecase clicked");
-                chart.update({
-                    series: [{
-                        name: 'usecase_num',
-                        data: case_num
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Number of use cases'
-                        }
-
-                    }
+                $('#usecase-card input:checkbox').each(function(){
+                    series_data.UseCaseNum.selected = !series_data.UseCaseNum.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             $('#schedule-card').click(function () {
-                chart.update({
-                    series: [{
-                        name: 'schedule',
-                        data: series_data.schedule,
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Number of Schedule'
-                        }
-
-                    }
+                $('#schedule-card input:checkbox').each(function(){
+                    series_data.schedule.selected = !series_data.schedule.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             $('#ducp-card').click(function () {
-                chart.update({
-                    series: [{
-                        name: 'DUCP',
-                        data: series_data.DUCP,
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'DUCP'
-                        }
-
-                    }
+                $('#ducp-card input:checkbox').each(function(){
+                    series_data.DUCP.selected = !series_data.DUCP.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
             // On click of the transaction tab - update the data and y axis.
             $('#transaction-card').click(function () {
                 console.log("green clicked");
-                var transaction_num_new = [];
-                for (var i = 0; i < response.NT.length; i++) {
-                    transaction_num_new.push(response.NT[i]);
-                }
+                // var transaction_num_new = [];
+                // for (var i = 0; i < response.NT.length; i++) {
+                //     transaction_num_new.push(response.NT[i]);
+                // }
                 //console.log(transaction_num_new);
-                console.log('===========');
-                console.log(transaction_num_new);
-                chart.update({
-                    series: [{
-                        name: 'transaction_num',
-                        data: transaction_num_new
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Number of transactions'
-                        }
-                    }
+                // console.log('===========');
+                // console.log(transaction_num_new);
+                $('#transaction-card input:checkbox').each(function(){
+                    series_data.NT.selected = !series_data.NT.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
+                // chart.update({
+                //     series: [{
+                //         name: 'transaction_num',
+                //         data: transaction_num_new
+                //     }],
+                //     yAxis: {
+                //         title: {
+                //             text: 'Number of transactions'
+                //         }
+                //     }
+                // });
             });
 
             $('#personnel-card').click(function () {
-                chart.update({
-                    series: [{
-                        name: 'Personnel',
-                        data: series_data.personnel,
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Personnel'
-                        }
-
-                    }
+                $('#personnel-card input:checkbox').each(function(){
+                    series_data.personnel.selected = !series_data.personnel.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             $('#effort-card').click(function () {
-                chart.update({
-                    series: [{
-                        name: 'Effort',
-                        data: series_data.effort,
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Effort'
-                        }
-
-                    }
+                $('#effort-card input:checkbox').each(function(){
+                    series_data.effort.selected = !series_data.effort.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             // On click of the classes tab - update the data and y axis.
             $('#class-card').click(function () {
-                console.log("purple clicked");
-                chart.update({
-                    series: [{
-                        name: 'class_num',
-                        data: class_num
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Number of classes'
-                        }
-                    }
+                $('#class-card input:checkbox').each(function(){
+                    series_data.EntityNum.selected = !series_data.EntityNum.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             $('#eucp-card').click(function () {
-                chart.update({
-                    series: [{
-                        name: 'EUCP',
-                        data: series_data.eucp,
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'EUCP'
-                        }
-
-                    }
+                $('#eucp-card input:checkbox').each(function(){
+                    series_data.EUCP.selected = !series_data.EUCP.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
             $('#estimate-card').click(function () {
-                chart.update({
-                    series: [{
-                        name: 'Estimated Effort',
-                        data: series_data.estimatedEffort,
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Estimated Effort'
-                        }
-
-                    }
+                $('#estimate-card input:checkbox').each(function(){
+                    series_data.estimatedEffort.selected = !series_data.estimatedEffort.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
         },
         error: function (error) {
