@@ -89,7 +89,7 @@ function display()
     var url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/use_case_evaluation_statistics/statistics.json";
     var domain_model_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) +
         "/domain_model_evaluation_statistics/statistics.json";
-
+    var url1 = "output/repo" + repoID + "/" + modelID.substring(0,modelID.length-13) + "/useCaseEvaluation.csv";
     console.log(url);
     //do not know the function of the two ajaxes below!!!
      $.ajax({
@@ -99,22 +99,19 @@ function display()
     
        success: function(response)
        {
-    
-             document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal1' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body' id='model1-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><form><h3>Use case evaluation statistics</h3><input type='button' onclick='showMultipleDistributionChart(\"" + repoID +  "\",\"" + modelID +  "\")' value='Dist Chart'><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+             document.getElementById("details").innerHTML ="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal1' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body' id='model1-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><form><h3>Use case evaluation statistics</h3><input type='button' onclick='showMultipleDistributionChart(\"" + url1 + "\",0,\"" + '#myModal1' + "\",\"" + '#model1-body' +"\")' value='Dist Chart'><table class='table table-hover table-bordered'; id='mytable'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
             for (var i=0;i<response.length;i++)
             {
                     var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                     $('.modal-body').html('<img src="' + img_link + '">');
                     document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis 
-                    + "</td><td><button type='button' class='btn btn-light'onclick = 'showModalDetails(\"" + img_link +  "\")'> Display Chart</button> <button type='button' class='btn btn-light'onclick = 'showDistributionChart(\"" + repoID +  "\",\"" + modelID +  "\",\"" + response[i]["column name"] +  "\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] +  "\"></td></tr>" ;
+                    + "</td><td><button type='button' class='btn btn-light'onclick = 'showModalDetails(\"" + img_link + "\")'> Display Chart</button> <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal1' + "\",\"" + '#model1-body' +"\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>";
             }
             document.getElementById("details").innerHTML += "</form>";
        },
        error:function(error){
          console.log("failed");
        }
-    
-    
      });
      //The below code is to populate the json data for domain model evaluation statistics (model level)
      $.ajax({
@@ -168,10 +165,10 @@ $.ajax({
             //console.log(img_link3);
             $('#r').html('<img src="' + img_link3 + '">');
             //console.log($('#r').html());
-            $('#repo_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class=' btn btn-light' onclick = 'showRepoModal(\"" + img_link3 +  "\")'>Display Chart</button></td></tr>");
+            $('#repo_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class=' btn btn-light' onclick = 'showRepoModal(\"" + img_link3 +  "\")'>Display Chart</button> </td></tr>");
 
         }
-        $('.repo-metrics').append( "</table>");
+        $('.repo-metrics').append( "</table></form>");
     },
     error:function(error){
         console.log("failed");
@@ -192,7 +189,8 @@ function populate_usecase_data()
     var modelID = $("#mymodelId").val();
 
     var usecase_url = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/element_statistics.json" ;
-    var usecase_url2 = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/path_statistics.json" ;
+    var usecase_url2 = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/path_statistics.json";
+    var usecase_url3 = "output/repo"+ repoID + "/" + modelID.substring(0,modelID.length-13) + "/" + use_case_id + "/elementAnalytics.csv";
     //console.log(usecase_url);
     // $('.use-case-analytics').html("hi");
     //console.log($('.use-case-analytics').html());
@@ -206,14 +204,13 @@ function populate_usecase_data()
         {
             //console.log(response)
             $('#analysis-data').css("display","block");
-            $('#analysis-data').html("<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal3' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><h3>Use case statistics</h3><table class='table table-hover table-bordered'; id='usecase_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
+            $('#analysis-data').html("<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal3' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body' id='model3-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><form><h3>Use case statistics</h3><input type='button' onclick='showMultipleDistributionChart(\"" + usecase_url3 + "\",1,\"" + '#myModal3' + "\",\"" + '#model3-body' + "\")' value='Dist Chart'><table class='table table-hover table-bordered'; id='usecase_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>");
             for (var i=0;i<response.length;i++)
             {
                 var img_link4 =  response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
 
                 $('.modal-body').html('<img src="' + img_link4 + '">');
-                $('#usecase_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light'onclick = 'showUseCaseUrlModal(\"" + img_link4 +  "\")'>Display Chart</button></td></tr>");
-
+                $('#usecase_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light'onclick = 'showUseCaseUrlModal(\"" + img_link4 +  "\")'>Display Chart1</button>  <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + usecase_url3 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal3' + "\",\"" + '#model3-body' + "\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>");
             }
             //  $('.repo-metrics').append( "</table>");
         },
@@ -318,8 +315,8 @@ function showModalDetails(domainurl)
     $('.modal-body').html('<img class="img-responsive" src="' + domainurl + '">');
     $('#myModal1').modal('toggle');
 }
-function showMultipleDistributionChart(repoID, modelID) {
-    checkBoxes=document.forms[0].checkbox;
+function showMultipleDistributionChart(url, formId, modalId, chartId) {
+    checkBoxes=document.forms[formId].checkbox;
     selectedRow = [];
     seriesData = [];
     for (let i = 0, len = checkBoxes.length; i < len; ++i) {
@@ -336,7 +333,7 @@ function showMultipleDistributionChart(repoID, modelID) {
     }
     console.log(selectedRow);
     $.ajax({
-        url: "output/repo" + repoID + "/" + modelID.substring(0,modelID.length-13) + "/useCaseEvaluation.csv",
+        url: url,
         type:"GET",
         dataType: "text",
         success: function(response){
@@ -361,18 +358,17 @@ function showMultipleDistributionChart(repoID, modelID) {
             console.log(categories);
             console.log(seriesData);
             console.log(data);
-            showPopupDistChart('', categories, seriesData);
+            showPopupDistChart('', categories, seriesData, modalId, chartId);
         },
         error:function(error){
             console.log(error);
         }
     });
 }
-function showDistributionChart(repoID, modelID, header) {
-    console.log(repoID+modelID);
-    console.log(header);
+function showDistributionChart(url, header, modalId, chartId) {
+    console.log(url);
     $.ajax({
-        url: "output/repo" + repoID + "/" + modelID.substring(0,modelID.length-13) + "/useCaseEvaluation.csv",
+        url: url,
         type:"GET",
         dataType: "text",
         success: function(response){
@@ -399,16 +395,16 @@ function showDistributionChart(repoID, modelID, header) {
             console.log(categories);
             console.log(seriesData);
             console.log(data);
-            showPopupDistChart(header, categories, [{name: header.toString(),data: seriesData}]);
+            showPopupDistChart(header, categories, [{name: header.toString(),data: seriesData}], modalId, chartId);
         },
         error:function(error){
             console.log(error);
         }
     });
 }
-function showPopupDistChart(header, categories, seriesData){
-    $('#myModal1').modal('toggle');
-    $('#model1-body').highcharts({
+function showPopupDistChart(header, categories, seriesData, modalId, chartId){
+    $(modalId).modal('toggle');
+    $(chartId).highcharts({
         chart: {
             type: 'column'
         },
