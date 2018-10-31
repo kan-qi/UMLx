@@ -46,7 +46,7 @@ var storage = multer.diskStorage({
 })
 
 console.l = console.log;
-console.log = function() {};
+// console.log = function() {};
 
 var fileDestination = null;
 umlSurveyFiles = [];
@@ -505,10 +505,12 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
 
     const worker = fork('./UMLxAnalyzeWorker.js');
     let token = req.cookies.appToken;
+    console.l("token: " + token);
     let subscription = endpoints[token];
+    console.l("subscription: " + subscription);
     worker.on('message', (text) => {
         console.l("killing child process");
-        sendPush(subscription);
+        sendPush(subscription, 'Evaluation finished');
         worker.kill();
     });
     let obj = encapsulateReq(req);
@@ -516,9 +518,10 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     // worker.send(JSON.stringify(obj, null, 2));
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
-    console.log("DEBUGGGG: inside uploadUMLFile");
+    console.l("DEBUGGGG: inside uploadUMLFile");
+    sendPush(subscription, 'Project Analyzing');
     res.redirect('/');
-    console.log("DEBUGGGG: before evaluate project");
+    console.l("DEBUGGGG: before evaluate project");
     // setTimeout(() => evaluateUploadedProject(req), 2000);
 });
 
@@ -531,12 +534,18 @@ function encapsulateReq(req) {
     return obj;
 }
 
-function sendPush(subscription) {
-    const payload = JSON.stringify({title: 'test'});
+function sendPush(subscription, push_title) {
+    const payload = JSON.stringify({title: push_title});
     console.log("DEBUGGGG: ready to send notification");
-    webpush.sendNotification(subscription, payload).catch(error => {
-        console.error(error.stack);
-    });
+    if(subscription) {
+        webpush.sendNotification(subscription, payload).catch(error => {
+            console.error(error.stack);
+        });
+    } else {
+        console.l("sendPush(): subscription endpoint not find, printing endpoints");
+        console.l(endpoints);
+    }
+
 }
 
 function evaluateUploadedProject(req) {
@@ -804,10 +813,13 @@ app.get('/requestRepoBrief', function (req, res){
             repoInfoBrief.projectNum[repoInfoBrief.projectNum.length] = totalRec;
             repoInfoBrief.NT[repoInfoBrief.NT.length] = totalNT;
             repoInfoBrief.UseCaseNum[repoInfoBrief.UseCaseNum.length] = totalUseCaseNum;
-            repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length] = totalEntityNum;
-
-				res.end(JSON.stringify(repoInfoBrief));
-			});
+			repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length] = totalEntityNum;
+			var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+			for (var i=0, len=newKeys.length; i<len; ++i){
+				repoInfoBrief[newKeys[i]][repoInfoBrief[newKeys[i]].length] = totalVal[newKeys[i]];
+			}
+			res.end(JSON.stringify(repoInfoBrief));
+		});
 })
 
 app.get('/queryAllModelNames', function (req, res){
@@ -1112,7 +1124,7 @@ var pageSize = 10;
 var pageCount = 0;
 var start = 0;
 var currentPage = 1;
-
+var totalVal = {"SLOC": 0, "schedule": 0,"personnel": 0, "EUCP": 0, "EXUCP": 0, "DUCP": 0, "effort": 0, "estimatedEffort": 0};
 app.get('/pager',function(req,res){
    
     //var index = req.param('index');
@@ -1189,18 +1201,22 @@ app.get('/', function(req, res){
   umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
 
   	console.log("==========================sfsdfsdfs==============");
-  	console.log(repoInfo);
+  	//console.log(repoInfo);
 
   	umlModelInfoManager.queryAllModelBrief(repoId, function(resultForRepoInfo){
-
   	    repoInfo.UseCaseNum = resultForRepoInfo.UseCaseNum;
         repoInfo.NT = resultForRepoInfo.NT;
         repoInfo.EntityNum = resultForRepoInfo.EntityNum;
+		var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+		for (let i = 0, len = newKeys.length; i < len; ++i) {
+			repoInfo[newKeys[i]] = resultForRepoInfo[newKeys[i]];
+			totalVal[newKeys[i]] = resultForRepoInfo[newKeys[i]];
+		}
 
         totalUseCaseNum = resultForRepoInfo.UseCaseNum;
         totalNT = resultForRepoInfo.NT;
         totalEntityNum =  resultForRepoInfo.EntityNum;
-	  
+		
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
       
         totalRec = modelNum;
@@ -1226,16 +1242,14 @@ app.get('/', function(req, res){
 							for(var j in model ){
 							repoInfo.Models.push(model[j]);
 							}
-
 						}
-				        
+						
 						repoInfo.requestUUID = requestUUID;
 						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
 							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
 							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
-                	});
+					});
 				});
-
 			} else {
                 repoInfo.requestUUID = requestUUID;
 				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
@@ -1434,11 +1448,15 @@ app.use(require('body-parser').json());
 app.post('/subscribe', (req, res) => {
     const token = req.cookies.appToken;
     const subscription = req.body;
-    endpoints[token] = subscription;
+    if(subscription) {
+        endpoints[token] = subscription;
+        console.l('server received subsription endpoint');
+    } else {
+        console.l("server didn't receive corrent endpoint");
+    }
     res.status(201).json({});
-    const payload = JSON.stringify({title: 'test'});
-    console.log('inside /subscribe function');
-    console.log(subscription);
+    // const payload = JSON.stringify({title: 'test'});
+    console.l(subscription);
     // webpush.sendNotification(subscription, payload).catch(error => {
     //     console.error(error.stack);
     // });
