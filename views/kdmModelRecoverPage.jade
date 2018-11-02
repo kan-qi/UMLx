@@ -1,0 +1,47 @@
+html
+    head
+        title UMLx
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+        link(href='css/style.css', rel='stylesheet')
+
+    body#upload-body
+        .container.analysis_page_container
+            form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+                #sec-4
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    div.panel_words
+                                        | Project source code package
+                            #collapse4.panel-collapse
+                                .panel-body
+                                    .form-group
+                                        label.control-label.col-xs-4(for='src_package') Model File (file types: xml are supported)
+                                        .col-xs-8
+                                            input#src_package.form-control(type='file', name='src_package', accept='text/xml')
+
+                                    button.btn.btn-success.pull-right(type='submit') Submit 
+
+                #sec-5
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    | Analysis Results
+                            #collapse5.panel-collapse
+                                div(id="analysis-result-panel-body")
+
+                #loadingScreen.hidden
+                    div.full-page-model
+                    div.full-page-model-content
+                        div(style='padding: 30px')
+                            img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                            p Processing...                
+
+        script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
+        script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
+        script(type='text/javascript', src='js/scripts.js')
+        script(type='text/javascript', src="js/charts.js")

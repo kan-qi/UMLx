@@ -87,6 +87,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', './views');
 app.set('view engine', 'jade');
 
+app.get('/kdmModelRecoverPage',function(req,res){
+	res.render('kdmModelRecoverPage');
+});
+
+app.post('/genkdmModel',function(req,res){
+});
+
 
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){

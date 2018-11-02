@@ -35,9 +35,8 @@
 	 *           
 	 * The function is recursively designed to take care of the structure.
 	 *           
-	 */
- *
  */
+
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
