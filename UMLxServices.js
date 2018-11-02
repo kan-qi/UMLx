@@ -1102,10 +1102,13 @@ app.get('/requestRepoBrief', function (req, res){
             repoInfoBrief.projectNum[repoInfoBrief.projectNum.length] = totalRec;
             repoInfoBrief.NT[repoInfoBrief.NT.length] = totalNT;
             repoInfoBrief.UseCaseNum[repoInfoBrief.UseCaseNum.length] = totalUseCaseNum;
-            repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length] = totalEntityNum;
-
-				res.end(JSON.stringify(repoInfoBrief));
-			});
+			repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length] = totalEntityNum;
+			var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+			for (var i=0, len=newKeys.length; i<len; ++i){
+				repoInfoBrief[newKeys[i]][repoInfoBrief[newKeys[i]].length] = totalVal[newKeys[i]];
+			}
+			res.end(JSON.stringify(repoInfoBrief));
+		});
 })
 
 app.get('/queryAllModelNames', function (req, res){
@@ -1429,7 +1432,7 @@ var pageSize = 10;
 var pageCount = 0;
 var start = 0;
 var currentPage = 1;
-
+var totalVal = {"SLOC": 0, "schedule": 0,"personnel": 0, "EUCP": 0, "EXUCP": 0, "DUCP": 0, "effort": 0, "estimatedEffort": 0};
 app.get('/pager',function(req,res){
    
     //var index = req.param('index');
@@ -1506,18 +1509,22 @@ app.get('/', function(req, res){
   umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
 
   	console.log("==========================sfsdfsdfs==============");
-  	console.log(repoInfo);
+  	//console.log(repoInfo);
 
   	umlModelInfoManager.queryAllModelBrief(repoId, function(resultForRepoInfo){
-
   	    repoInfo.UseCaseNum = resultForRepoInfo.UseCaseNum;
         repoInfo.NT = resultForRepoInfo.NT;
         repoInfo.EntityNum = resultForRepoInfo.EntityNum;
+		var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+		for (let i = 0, len = newKeys.length; i < len; ++i) {
+			repoInfo[newKeys[i]] = resultForRepoInfo[newKeys[i]];
+			totalVal[newKeys[i]] = resultForRepoInfo[newKeys[i]];
+		}
 
         totalUseCaseNum = resultForRepoInfo.UseCaseNum;
         totalNT = resultForRepoInfo.NT;
         totalEntityNum =  resultForRepoInfo.EntityNum;
-	  
+		
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
       
         totalRec = modelNum;
@@ -1543,16 +1550,14 @@ app.get('/', function(req, res){
 							for(var j in model ){
 							repoInfo.Models.push(model[j]);
 							}
-
 						}
-				        
+						
 						repoInfo.requestUUID = requestUUID;
 						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
 							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
 							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
-                	});
+					});
 				});
-
 			} else {
                 repoInfo.requestUUID = requestUUID;
 				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,

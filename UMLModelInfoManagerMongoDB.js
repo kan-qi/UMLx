@@ -853,6 +853,10 @@ function deleteRepo(repoId, callbackfunc) {
                     resultForRepoInfo.UseCaseNum += element['ComponentAnalytics']['UseCaseNum'];
                     resultForRepoInfo.EntityNum += element['ComponentAnalytics']['EntityNum'];
                 }
+                var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+                for (let i = 0, len = newKeys.length; i < len; ++i) {
+                    resultForRepoInfo[newKeys[i]] = 0;
+                }
                 callbackfunc(resultForRepoInfo);
 	            db.close();
             });
@@ -914,7 +918,7 @@ function deleteRepo(repoId, callbackfunc) {
 			function(err, result)
 			{
 			    console.log('=================result=========');
-			    console.log(result);
+			    //console.log(result);
                 console.log('=================result=========');
 			   if (err)
 				   {
@@ -928,15 +932,24 @@ function deleteRepo(repoId, callbackfunc) {
 					   UseCaseNum: 0,
 					   EntityNum: 0,
 					   timestamp: "0000/00/00",
-                       projectNum: 0
+                       projectNum: 0,
+                       slocNum: 0,
+                       scheduleNum: 0,
+                       personnelNum: 0,
+                       eucpNum: 0,
+                       exucpNum: 0,
+                       ducpNum: 0,
+                       effortNum: 0,
+                       estimatedEffortNum: 0,
 				   });
 			   }
 			   else
 			   {
+                    var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+
+                    console.log(result);
 				    var dt = new Date();
 					var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
-				   
-				   
 				   
 				   db.collection('noOfTransactions').findOne({'timestamp':today})
 					.then(function(doc) 
@@ -948,7 +961,7 @@ function deleteRepo(repoId, callbackfunc) {
                                     repo_id:repoid
                                 },
                                 {
-                                    NT:1,UseCaseNum:1,EntityNum:1,timestamp:1,projectNum:1,_id:0
+                                    NT:1,UseCaseNum:1,EntityNum:1,timestamp:1,projectNum:1,_id:1
                                 }
                             ).toArray(function (err, result) {
                                 if (err) throw err;
@@ -964,6 +977,25 @@ function deleteRepo(repoId, callbackfunc) {
                                     }
                                     else {
                                         response.projectNum.push(element.projectNum);
+                                    }
+                                    for (var i = 0, len = newKeys.length; i < len; ++i) {
+                                        if (!response[newKeys[i]]) {
+                                            response[newKeys[i]] = [];
+                                        }
+                                        if (!element[newKeys[i]]) {
+                                            var whereStr = {'_id': mongo.ObjectID(`${element._id}`)};
+                                            var updateStr = {"$set":{[`${newKeys[i]}`]:0}};
+                                            //console.log(updateStr);
+
+                                            db.collection('noOfTransactions').updateOne(whereStr, updateStr, function(err, res) {
+                                                if (err) throw err;
+                                            });
+
+                                            response[newKeys[i]].push(0);
+                                        }
+                                        else{
+                                            response[newKeys[i]].push(element[newKeys[i]]);
+                                        }
                                     }
                                 });
 
@@ -1019,8 +1051,6 @@ function deleteRepo(repoId, callbackfunc) {
 	
 	
     function getGitData(userId, callbackfunc){      
-                    
-                    
              MongoClient.connect(url, function(err, db) {       
                  if (err) throw err;        
                         
