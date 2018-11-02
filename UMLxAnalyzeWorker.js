@@ -164,7 +164,7 @@ function evaluateUploadedProject(req) {
 
                                 // }, 1000);
                                 //window.location.reload(true);
-                                sendPush(req.sub);
+                                // sendPush(req.sub);
                                 console.l("finished evaluation");
                                 process.send('ok');
                                 return 'ok';

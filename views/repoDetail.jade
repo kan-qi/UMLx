@@ -61,64 +61,60 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
     div.tab-content
-     div.tab-pane.fade.in.active(id="repo_analytics")
-        //div.col-sm-12.chart-row  
-          //.col-sm-6
-            //img(src="#{repoInfo.AccessDir}/merged_distributions_for_transactions.svg" style="width:100%;")
-          //.col-sm-6(id="transaction-pie" data="./#{repoInfo.AccessDir}/transactionAnalytics.csv")
-       div.repo-analysis-detail
+      div.tab-pane.fade.in.active(id="repo_analytics")
+        div.repo-analysis-detail
           div.repo-metrics
-     div.tab-pane.fade(id="repo_estimation")
-      include estimationPanel
-     div.tab-pane.fade(id="repo_trending")
-      if repoInfo
-        div.col-sm-12.status-row
-          div.col-sm-3
-            div.blue-card.analytics-card
-              .col-sm-4.image-box
-                img(src="img/project.png", alt="")
-              .col-sm-8.text-box
-                h2 #{totalRec}
-                span Projects
-          div.col-sm-3
-            div.red-card.analytics-card
-              .col-sm-4.image-box
-                img(src="img/project.png", alt="")
-              .col-sm-8.text-box
-                h2 #{repoInfo.UseCaseNum}
-                span Use Cases
-          div.col-sm-3
-            div.green-card.analytics-card
-              .col-sm-4.image-box
-                img(src="img/project.png", alt="")
-              .col-sm-8.text-box
-                h2 #{repoInfo.NT}
-                span Transactions
-          div.col-sm-3 
-            div.purple-card.analytics-card
-              .col-sm-4.image-box
-                img(src="img/project.png", alt="")
-              .col-sm-8.text-box
-                h2 #{repoInfo.EntityNum}
-                span Classes
-       div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
-     div.tab-pane.fade(id="project_list")
-         .container
-             h3.row
-                .col-sm-2 Index
-                .col-sm-8 Project Name
-                .col-sm-2 Date
-             .list-group
-                 - var pageIndex = (currentPage - 1)*(pageSize) + 1
-                 div(id='page-panel')
-                     each item in repoInfo.Models
-                         a.list-group-item.row.model-title(href="queryModelInfo?model_id=" + item._id)
-                             .col-sm-2 #{pageIndex++}
-                             .col-sm-8 #{item.Name}
-                             .col-sm-2 #{item.creationTime}
-                     include pagination.jade
-     div.tab-pane.fade(id="repo_archive")
-         div
-           p #{repoInfo.OutputDir}
-         div#displayRepoArchive
+      div.tab-pane.fade(id="repo_estimation")
+        include estimationPanel
+      div.tab-pane.fade(id="repo_trending")
+        if repoInfo
+          div.col-sm-12.status-row
+            div.col-sm-3
+              div.blue-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                .col-sm-8.text-box
+                  h2 #{totalRec}
+                  span Projects
+            div.col-sm-3
+              div.red-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.UseCaseNum}
+                  span Use Cases
+            div.col-sm-3
+              div.green-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.NT}
+                  span Transactions
+            div.col-sm-3 
+              div.purple-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.EntityNum}
+                  span Classes
+          div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
+      div.tab-pane.fade(id="project_list")
+        .container
+          h3.row
+            .col-sm-2 Index
+            .col-sm-8 Project Name
+            .col-sm-2 Date
+          .list-group
+            - var pageIndex = (currentPage - 1)*(pageSize) + 1
+            div(id='page-panel')
+              each item in repoInfo.Models
+                a.list-group-item.row.model-title(href="queryModelInfo?model_id=" + item._id)
+                  .col-sm-2 #{pageIndex++}
+                  .col-sm-8 #{item.Name}
+                  .col-sm-2 #{item.creationTime}
+              include pagination.jade
+      div.tab-pane.fade(id="repo_archive")
+        div
+          p #{repoInfo.OutputDir}
+        div#displayRepoArchive
 

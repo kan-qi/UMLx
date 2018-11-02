@@ -134,10 +134,34 @@
 			}
 	}
 	
+	function queryExtensionConnectors(XMIExtension){
+		var extensionConnectors = jp.query(XMIExtension, '$..connector[?(@[\'$\'][\'xmi:idref\'])]');
+		console.log("extension connectors");
+		console.log(extensionConnectors);
+		var extensionConnectorsByID = {};
+		for(var i in extensionConnectors){
+			var extensionConnector = extensionConnectors[i];
+			var source = jp.query(XMIExtension, '$..source[?(@[\'$\'][\'xmi:idref\'])]')[0];
+			var target = jp.query(XMIExtension, '$..target[?(@[\'$\'][\'xmi:idref\'])]')[0];
+			if(!source || !target){
+				continue;
+			}
+			extensionConnectorsByID[extensionConnector['$']['xmi:idref']] = {
+				_id: extensionConnector['$']['xmi:idref'],
+				sourceID: source['$']['xmi:idref'],
+				targetID: target['$']['xmi:idref']
+			}
+		}
+		return extensionConnectorsByID;
+	}
+	
+	
 	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
 			
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
+		
+		var extensionConnectorsByID = queryExtensionConnectors(XMIExtension);
 		
 		//create a catalog for the different types of the elements.
 		var XMICustomProfiles = jp.query(XMIUMLModel, '$..["thecustomprofile:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
@@ -264,19 +288,26 @@
 //		var DomainAssociationByID = [];
 		for(var i in XMIAssociations){
 			// having problem with association parsing.
-			continue;
 			
 			var XMIAssoc = XMIAssociations[i];
 			//      console.log(XMIAssoc);
+			
 			var XMIType = jp.query(XMIAssoc, '$..type[?(@[\'$\'][\'xmi:idref\'])]')[0];
 			if(!XMIType){
 				continue;
 			}
+			
+			extensionConnector = extensionConnectorsByID[XMIAssoc['$']['xmi:id']];
+			
+			if(!extensionConnector){
+				continue;
+			}
+			
 			var association = {
 				_id: XMIAssoc['$']['xmi:id'],
 				type: "association",
-				Supplier: XMIClass['$']['xmi:id'],
-				Client: XMIType['$']['xmi:idref']
+				Supplier: extensionConnector.sourceID,
+				Client: extensionConnector.targetID
 			}
 //			DomainAssociationByID[domainAssociation._id] = domainAssociation;
 			Model.DomainModel.Associations.push(association);
@@ -746,7 +777,7 @@ class Dummy {
 		 
 		 plantUMLUtil.generateUMLDiagram(outputDir+"/class_diagram.txt", function(outputDir){
 			 console.log(outputDir);
-		 });
+		 }, 'class_diagram');
 		});
 
         

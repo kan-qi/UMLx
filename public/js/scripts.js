@@ -1543,10 +1543,10 @@ function get_diagram_name() {
 
 
 function openList() {
-    document.getElementById("mySidenav").style.height = "30%";
+    document.getElementById("mySidenav").style.transform = "translate(0, -50%)";
 }
 function closeList() {
-    document.getElementById("mySidenav").style.height = "0";
+    document.getElementById("mySidenav").style.transform = "translate(100%, -50%)";
 }
 
 
@@ -1601,32 +1601,59 @@ function createCharts() {
 }
 
 function createTrendingLines() {
-
     $.ajax({
         url: "http://127.0.0.1:8081/requestRepoBrief",
         type: "GET",
         dataType: "json",
 
         success: function (response) {
+
+            function updateChart() {
+                var selected_series = [];
+                for (var key in series_data) {
+                    if (series_data[key].selected == true) {
+                        selected_series.push(series_data[key].data);
+                    }
+                }
+                console.log(chart);
+                var chart = Highcharts.chart('trending-line', {
+                    xAxis: {
+                        title: {
+                            text: 'Time stamp'
+                        },
+                        categories: date
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Value'
+                        },
+                        min: 0
+                    },
+        
+                    series: selected_series
+                });              
+            }
+
+            var series_data = {"SLOC":{}, "schedule":{}, "personnel":{}, "EUCP":{}, "EXUCP":{}, "DUCP":{}, "effort":{}, "estimatedEffort":{}, "NT":{}, "projectNum":{}, "UseCaseNum":{}, "EntityNum":{}}
+
             console.log('----------');
             console.log(response);
             var date = [];
-            var transaction_num = [];
-            var project_num = [];
-            var case_num = [];
-            var class_num = [];
+
             console.log(response);
             for (var i = 0; i < response.NT.length; i++) {
                 date.push(response.timestamp[i]);
-                transaction_num.push(response.NT[i]);
-                project_num.push(response.projectNum[i]);
-                case_num.push(response.UseCaseNum[i]);
-                class_num.push(response.EntityNum[i]);
-
+                for (var key in series_data){
+                    if (series_data[key]["selected"] == undefined){
+                        series_data[key]["selected"] = false;
+                        series_data[key]["data"] = {"type": "line", "name": key, "data": [], "marker":{"enabled": false}, "states":{"hover":{"lineWidth": 0}},"enableMouseTracking":true};
+                    }
+                    series_data[key].data.data.push(response[key][i]);
+                }
             }
-
-
-
+            series_data.NT.selected = true;
+            updateChart();
+            console.log(series_data);
             // date.push(response.timestamp);
             // transaction_num.push(response.NT);
             // project_num.push(response.projectNum);
@@ -1634,109 +1661,161 @@ function createTrendingLines() {
             // class_num.push(response.EntityNum);
 
             // Default chart at the repo level - Number of transactions
-            var chart = Highcharts.chart('trending-line', {
-                xAxis: {
-                    title: {
-                        text: 'Time stamp'
-                    },
-                    categories: date
-                },
-                yAxis: {
-                    title: {
-                        text: 'Number of Transactions'
-                    },
-                    min: 0
-                },
+            // var chart = Highcharts.chart('trending-line', {
+            //     xAxis: {
+            //         title: {
+            //             text: 'Time stamp'
+            //         },
+            //         categories: date
+            //     },
+            //     yAxis: {
+            //         title: {
+            //             text: 'Value'
+            //         },
+            //         min: 0
+            //     },
 
-                series: [{
-                    type: 'line',
-                    name: 'transaction_num',
-                    data: transaction_num,
-                    marker: {
-                        enabled: false
-                    },
-                    states: {
-                        hover: {
-                            lineWidth: 0
-                        }
-                    },
-                    enableMouseTracking: true
-                }
-                ]
-            });
+            //     series: [{
+            //         type: 'line',
+            //         name: 'transaction_num',
+            //         data: series_data.NT.data.data,
+            //         marker: {
+            //             enabled: false  
+            //         },
+            //         states: {
+            //             hover: {
+            //                 lineWidth: 0
+            //             }
+            //         },
+            //         enableMouseTracking: true
+            //     }
+            //     ]
+            // });
+
+            
             
             // On click of the projects tab - update the data and y axis.
-            $('.blue-card').click(function () {
-                console.log("blue clicked");
-                chart.update({
-                    yAxis: {
-                        title: {
-                            text: 'Project'
-                        }
-                    },
-                    series: [{
-                        name: 'project_num',
-                        data: project_num
-                    }]
+            $('#project-card').click(function () {
+                console.log("project clicked");
+                $('#project-card input:checkbox').each(function(){
+                    series_data.projectNum.selected = !series_data.projectNum.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
+            });
+
+            $('#sloc-card').click(function () {
+                console.log("solc clicked");
+                $('#sloc-card input:checkbox').each(function(){
+                    series_data.SLOC.selected = !series_data.SLOC.selected;
+                    this.checked=!this.checked;
+                });
+                updateChart();
+            });
+
+            
+            $('#exucp-card').click(function () {
+                console.log("exucp clicked");
+                $('#exucp-card input:checkbox').each(function(){
+                    series_data.EXUCP.selected = !series_data.EXUCP.selected;
+                    this.checked=!this.checked;
+                });
+                updateChart();
             });
 
             // On click of the use cases tab - update the data and y axis.
-            $('.red-card').click(function () {
-                console.log("red clicked");
-                chart.update({
-                    series: [{
-                        name: 'usecase_num',
-                        data: case_num
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Number of use cases'
-                        }
-
-                    }
+            $('#usecase-card').click(function () {
+                console.log("usecase clicked");
+                $('#usecase-card input:checkbox').each(function(){
+                    series_data.UseCaseNum.selected = !series_data.UseCaseNum.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
-            // On click of the transaction tab - update the data and y axis.
-            $('.green-card').click(function () {
-                console.log("green clicked");
-                var transaction_num_new = [];
-                for (var i = 0; i < response.NT.length; i++) {
-                    transaction_num_new.push(response.NT[i]);
-                }
-                //console.log(transaction_num_new);
-                console.log('===========');
-                console.log(transaction_num_new);
-                chart.update({
-                    series: [{
-                        name: 'transaction_num',
-                        data: transaction_num_new
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Number of transactions'
-                        }
-                    }
+            $('#schedule-card').click(function () {
+                $('#schedule-card input:checkbox').each(function(){
+                    series_data.schedule.selected = !series_data.schedule.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
+            });
+
+            $('#ducp-card').click(function () {
+                $('#ducp-card input:checkbox').each(function(){
+                    series_data.DUCP.selected = !series_data.DUCP.selected;
+                    this.checked=!this.checked;
+                });
+                updateChart();
+            });
+            // On click of the transaction tab - update the data and y axis.
+            $('#transaction-card').click(function () {
+                console.log("green clicked");
+                // var transaction_num_new = [];
+                // for (var i = 0; i < response.NT.length; i++) {
+                //     transaction_num_new.push(response.NT[i]);
+                // }
+                //console.log(transaction_num_new);
+                // console.log('===========');
+                // console.log(transaction_num_new);
+                $('#transaction-card input:checkbox').each(function(){
+                    series_data.NT.selected = !series_data.NT.selected;
+                    this.checked=!this.checked;
+                });
+                updateChart();
+                // chart.update({
+                //     series: [{
+                //         name: 'transaction_num',
+                //         data: transaction_num_new
+                //     }],
+                //     yAxis: {
+                //         title: {
+                //             text: 'Number of transactions'
+                //         }
+                //     }
+                // });
+            });
+
+            $('#personnel-card').click(function () {
+                $('#personnel-card input:checkbox').each(function(){
+                    series_data.personnel.selected = !series_data.personnel.selected;
+                    this.checked=!this.checked;
+                });
+                updateChart();
+            });
+
+            $('#effort-card').click(function () {
+                $('#effort-card input:checkbox').each(function(){
+                    series_data.effort.selected = !series_data.effort.selected;
+                    this.checked=!this.checked;
+                });
+                updateChart();
             });
 
             // On click of the classes tab - update the data and y axis.
-            $('.purple-card').click(function () {
-                console.log("purple clicked");
-                chart.update({
-                    series: [{
-                        name: 'class_num',
-                        data: class_num
-                    }],
-                    yAxis: {
-                        title: {
-                            text: 'Number of classes'
-                        }
-                    }
+            $('#class-card').click(function () {
+                $('#class-card input:checkbox').each(function(){
+                    series_data.EntityNum.selected = !series_data.EntityNum.selected;
+                    this.checked=!this.checked;
                 });
+                updateChart();
             });
 
+            $('#eucp-card').click(function () {
+                $('#eucp-card input:checkbox').each(function(){
+                    series_data.EUCP.selected = !series_data.EUCP.selected;
+                    this.checked=!this.checked;
+                });
+                updateChart();
+            });
+
+            $('#estimate-card').click(function () {
+                $('#estimate-card input:checkbox').each(function(){
+                    series_data.estimatedEffort.selected = !series_data.estimatedEffort.selected;
+                    this.checked=!this.checked;
+                });
+                updateChart();
+            });
         },
         error: function (error) {
             console.log("failed");
@@ -2655,13 +2734,16 @@ function buildTable2(data) {
 // module push notification
 const publicVapidKey = 'BM2EKwsY9E_5r5ewHVlZ1hSwpSfRpvqQm0DPT3C60WQ3md98O0_Tb7c56yFfzFlFyaKqNVfYe1Vv2sul6m4Myt0';
 
-function startEvalPush() {
+async function startEvalPush() {
     console.log("startEvalPush");
-    moveToHome();
+    // alert("startEvalPush");
+    // moveToHome();
     if ('serviceWorker' in navigator) {
         console.log('Registering service worker');
-
-        sendPushNotification().catch(error => console.error(error));
+        await sendPushNotification().catch(error => console.error(error));
+    } else {
+        // alert("no service worker");
+        console.log("No service Worker found");
     }
     return true;
 }
@@ -2684,9 +2766,11 @@ function urlBase64ToUint8Array(base64String) {
 
 async function sendPushNotification() {
     console.log('Registering service worker');
-    const registration = await navigator.serviceWorker
-        .register('/public/js/worker.js', {scope: '/public/js/'});
-    console.log('Registered service worker');
+    const registration = await navigator.serviceWorker.
+    register('/public/js/worker.js', {scope: '/public/js/'});
+    if(registration) {
+        console.log('Registered service worker');
+    }
 
     console.log('Registering push');
     const subscription = await registration.pushManager.
@@ -2697,7 +2781,6 @@ async function sendPushNotification() {
         applicationServerKey: urlBase64ToUint8Array(publicVapidKey)
     });
     console.log('Registered push');
-    console.log(subscription);
 
     console.log('Sending push');
     await fetch('/subscribe', {
@@ -2707,6 +2790,7 @@ async function sendPushNotification() {
             'content-type': 'application/json'
         }
     });
+
     console.log('Sent push');
 }
 
