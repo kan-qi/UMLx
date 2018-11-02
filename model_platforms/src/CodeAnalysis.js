@@ -8,6 +8,34 @@
  * Identify the system components.
  * Establish the control flow between the components
  * Identify the stimuli.
+ * 
+ * /*
+	 * There are three layers:
+	 * codeElement-code:ClassUnit
+	 * 		-source
+	 * 			- region
+	 * 		-codeRelation-code:Imports
+	 *		-codeElement-code:StorableUnit
+	 *      -codeElement-code:MethodUnit
+	 *        -source
+	 *        -codeElement-code:signature
+	 *        	-parameterUnit
+	 *        -codeElement-action:BlockUnit
+	 *          -codeElement-action:ActionElement
+	 *            -codeElement-action:ActionElement
+	 *            -actionRelation-action:Address
+	 *            -actionRelation-action:Reads
+	 *            -actionRelation-action:Calls
+	 *            -actionRelation-action:Creates
+	 *            -codeElement-code:ClassUnit
+	 *      -codeElement-code:InterfaceUnit
+	 *           -codeRelation-code:Imports
+	 *           -codeRelation-code:MethodUnit
+	 *      -codeElement-code:ClassUnit
+	 *           
+	 * The function is recursively designed to take care of the structure.
+	 *           
+	 */
  *
  */
 (function() {

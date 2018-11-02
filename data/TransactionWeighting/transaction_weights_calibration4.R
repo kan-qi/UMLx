@@ -118,8 +118,10 @@ prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weig
 }
 
 parametricKStest <- function(dist){
-  dist <- combined[, "DETs"]
+  
+  dist <- combined[, "TD"]
   #dist <- combined[, "TL"]
+  #dist <- combined[, "DETs"]
   
   #tableValues <- table(dist)
   
@@ -129,11 +131,15 @@ parametricKStest <- function(dist){
   #dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
   dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
   
-  fit.gamma <- fitdist(dist, distr = "gamma", method = "mle", lower = c(0, 0))
-  fit.weibull <- fitdist(dist, "weibull")
-  
-  plot(fit.weibull)
+  #fit.gamma <- fitdist(dist, distr = "gamma", method = "mle", lower = c(0, 0))
+  fit.gamma <- fitdist(dist, distr = "gamma")
   plot(fit.gamma)
+  
+  fit.weibull <- fitdist(dist, "weibull")
+  plot(fit.weibull)
+  
+  fit.lognormal <- fitdist(dist, "lnorm")
+  plot(fit.lognormal)
   
   # Check result
   shape = coefficients(fit.gamma)["shape"]
@@ -424,6 +430,50 @@ crossValidate <- function(data, k) {
 		foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
 	}
 	results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+}
+
+crossValidate1 <- function(regressionData, k){
+  folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
+  foldMSE <- vector(length = k)
+  foldMMRE <- vector(length = k)
+  foldPRED <- vector(length = k)
+  for (i in 1:k) {
+    testIndexes <- which(folds == i, arr.ind = TRUE)
+    testData <- data[testIndexes, ]
+    trainData <- data[-testIndexes, ]
+    
+    lm.fit <- lm(Effort ~ . - 1, as.data.frame(trainData));
+  
+    predicted <- as.data.frame(predict(lm.fit, newData = testData))
+    
+    foldMSE[i] <- mean((predicted - testData$Effort)^2)
+    foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
+    foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+  }
+  results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+}
+
+crossValidate2 <- function(transactionData, k){
+
+  folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
+  foldMSE <- vector(length = k)
+  foldMMRE <- vector(length = k)
+  foldPRED <- vector(length = k)
+  for (i in 1:k) {
+    testIndexes <- which(folds == i, arr.ind = TRUE)
+    testData <- data[testIndexes, ]
+    trainData <- data[-testIndexes, ]
+    
+    lm.fit <- lm(Effort ~ . - 1, as.data.frame(transactionData))
+    
+    predicted <- as.data.frame(predict(lm.fit, newData = testData))
+    
+    foldMSE[i] <- mean((predicted - testData$Effort)^2)
+    foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
+    foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+  }
+  results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+  
 }
 
 genColNames <- function(parameters, nBins) {
@@ -912,7 +962,7 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
   #   A list in which the ith index gives the results of the search for i bins.
   
   #n = 6
-  #effortData = effort
+  effortData = effort
   #transactionFiles = transactionFiles
   #parameters = c("TL")
   #k = 5
@@ -920,6 +970,7 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
   
   projects <- rownames(effortData)
   combinedData <- combineData(transactionFiles)
+  combinedData <- combined
   paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
   if(length(parameters) == 0){
@@ -975,9 +1026,31 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
     #print(means)
     covar <- genVariance(means, 1/3)
     
-    bayesianModel <- bayesfit3(regressionData[rownames(regressionData) != "Aggregate", ], 10000, means, covar, normFactor['mean'], normFactor['var'])
+    regressionData1 <- regressionData[rownames(regressionData) != "Aggregate", ]
     
-    validationResults <- crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k)
+    #the bayesian model fit
+    bayesianModel <- bayesfit3(regressionData1, 10000, means, covar, normFactor['mean'], normFactor['var'])
+    
+    validationResults <- crossValidate(regressionData1, k)
+    
+    #the regression model fit
+    regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData1));
+    validationResults1 <- crossValidate1(regressionData1, k)
+    
+    #calculate the bayesian regression data
+    nominalWeights <- as.matrix(means)
+    #print(nominalWeights)
+    transactionData1 <- as.matrix(regressionData1[, !(colnames(regressionData) %in% c("Effort"))])
+    transactionSum1 <-  transactionData1 %*% nominalWeights 
+    transactionRegressionData1 <- matrix(nrow = nrow(regressionData1), ncol=2)
+    colnames(transactionRegressionData1) <- c("transactionSum", "Effort")
+    rownames(transactionRegressionData1) <- rownames(regressionData1)
+    transactionRegressionData1[, "transactionSum"] = transactionSum1
+    transactionRegressionData1[, "Effort"] = regressionData1[, "Effort"]
+    
+    #the prior model fit
+    priorModel <- lm(Effort ~ . - 1, as.data.frame(transactionRegressionData1))
+    validationResults2 <- crossValidate2(transactionRegressionData1, k)
     
     #validationResults <- crossValidate(regressionData, k, means, covar, normFactor['mean'], normFactor['var'])
     
