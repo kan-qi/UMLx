@@ -631,11 +631,12 @@ function deleteRepo(repoId, callbackfunc) {
 	
     function queryRepoInfo(repoId, callbackfunc)
     {
+        console.log("inside queryRepoInfo");
         MongoClient.connect(url, function(err, db)
         {
 			
             if (err) throw err;
-           
+            console.log("queryRepoInfo: start collect");
             db.collection("repos").aggregate([{
 				"$match":
 				{
@@ -656,7 +657,8 @@ function deleteRepo(repoId, callbackfunc) {
                 db.close();
 
             	if (err){
-            	   console.log(err)
+            	    console.log("spot error in queryRepoInfo");
+            	   console.log(err);
             	   if(callbackfunc){
             		   callbackfunc(false);
             	   }
@@ -1129,12 +1131,13 @@ function deleteRepo(repoId, callbackfunc) {
                         db.collection("domainModelInfo").save(domainModelInfo, function(err, res) 
                         {
                             if (err) throw err;
+                            db.close();
+                            console.log("saveModelInfo");
+                            callbackfunc(modelInfo);
                         });
                         }
                         
-                        db.close();
-						console.log("saveModelInfo");
-                        callbackfunc(modelInfo);
+
 						
                 });
                 
