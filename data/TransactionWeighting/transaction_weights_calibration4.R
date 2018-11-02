@@ -37,16 +37,27 @@ combineData <- function(transactionFiles) {
 	# Returns:
 	#   A data frame containing all the data in all the files.
 	data <- NULL
-	for(i in 1: nrow(transactionFiles)) {
-	  filepath <- transactionFiles[i,]
-		  if (is.null(data)) {
-			  data <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
-		  }
-		  else {
-			  new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
-			  data <- rbind(data, new)
-		  }
-	}
+#	for(i in 1: nrow(transactionFiles)) {
+#	  filepath <- transactionFiles[i,]
+#		  if (is.null(data)) {
+#			  data <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
+#		  }
+#		  else {
+#			  new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
+#			  data <- rbind(data, new)
+#		  }
+#	}
+	
+  	for(i in 1:length(transactionFiles)) {
+  	  transactionFile <- transactionFiles[[i]]
+  	  if (is.null(data)) {
+  	    data <- transactionFile
+  	  }
+  	  else {
+  	    #new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
+  	    data <- rbind(data, transactionFile)
+  	  }
+  	}
 	
 	data <- data.frame(apply(data, 2, function(x) as.numeric(x)))
 	data <- na.omit(data)
@@ -69,17 +80,20 @@ prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weig
     rownames(regressionData) <- projects
     colnames(regressionData) <- c("size", "Effort")
     numOfTrans <- 0
+    
     for (project in projects) {
       #project <- projects[1]
-      filePath <- transactionFiles[project, "transaction_file"]
-      print(filePath)
-      if (!file.exists(filePath)) {
-        print("file doesn't exist")
-        next
-      }
-      fileData <- read.csv(filePath)
-      fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
-      fileData <- na.omit(fileData)
+      #filePath <- transactionFiles[project, "transaction_file"]
+      #print(filePath)
+      #if (!file.exists(filePath)) {
+      #  print("file doesn't exist")
+      #  next
+      #}
+      #fileData <- read.csv(filePath)
+      #fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+      #fileData <- na.omit(fileData)
+      
+      fileData = transactionFiles[[project]]
       
       if(nrow(fileData) < 1){
         next
@@ -945,7 +959,7 @@ calNormFactor <- function(regressionData, n){
   #regressionData[, "Effort"]/normFactor
 }
 
-performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", "TD", "DETs"), k = 5) {
+performSearch <- function(n, effortData, combinedData, transactionFiles, parameters = c("TL", "TD", "DETs"), k = 5) {
   # Performs search for the optimal number of bins and weights to apply to each
   # bin through linear regression.
   #
@@ -962,15 +976,15 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
   #   A list in which the ith index gives the results of the search for i bins.
   
   #n = 6
-  effortData = effort
+  #effortData = effort
   #transactionFiles = transactionFiles
   #parameters = c("TL")
   #k = 5
   #i = 6
   
   projects <- rownames(effortData)
-  combinedData <- combineData(transactionFiles)
-  combinedData <- combined
+  #combinedData <- combineData(transactionFiles)
+  #combinedData <- combined
   paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
   if(length(parameters) == 0){
@@ -988,27 +1002,12 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
     regressionData <- matrix(nrow = length(projects), ncol = length(levels) + 1)
     rownames(regressionData) <- projects
     colnames(regressionData) <- c(levels, "Effort")
-    numOfTrans <- 0
-    for (project in projects) {
-        filePath <- transactionFiles[project, "transaction_file"]
-        print(filePath)
-        if (!file.exists(filePath)) {
-          print("file doesn't exist")
-          next
-        }
-        fileData <- read.csv(filePath)
-        fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
-        fileData <- na.omit(fileData)
-        
-        if(nrow(fileData) < 1){
-          next
-        }
-        numOfTrans = numOfTrans + nrow(fileData)
-        classifiedData <- classify(fileData, cutPoints)
-        regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
-    }
     
-    print(numOfTrans)
+    for (project in projects) {
+    fileData <- transactionFiles[[project]]
+    classifiedData <- classify(fileData, cutPoints)
+    regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
+    }
   
     regressionData <- na.omit(regressionData)
     regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))

@@ -31,10 +31,35 @@ modelData <- read.csv("modelEvaluations-9-29.csv")
 modelData$Project <- as.character(modelData$Project)
 modelData$transaction_file <- as.character(modelData$transaction_file)
 effort <- subset(modelData, select=c("Effort"))
-transactionFiles <- subset(modelData, select=c("transaction_file"))
+transactionFileList <- subset(modelData, select=c("transaction_file"))
 rownames(effort) <- modelData$Project
-rownames(transactionFiles) <- modelData$Project
-combined <- combineData(transactionFiles)
+rownames(transactionFileList) <- modelData$Project
+combined <- combineData(transactionFileList)
+
+projects <- rownames(effort)
+numOfTrans <- 0
+transactionFiles <- list()
+    for (project in projects) {
+        filePath <- transactionFileList[project, "transaction_file"]
+        print(filePath)
+        if (!file.exists(filePath)) {
+          print("file doesn't exist")
+          next
+        }
+        fileData <- read.csv(filePath)
+        fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+        fileData <- na.omit(fileData)
+        
+#        if(nrow(fileData) < 1){
+#          next
+#        }
+        
+        transactionFiles[[project]] <- fileData
+        numOfTrans = numOfTrans + nrow(fileData)
+    }
+
+
+    print(numOfTrans)
 
 ggplot(modelData[!(modelData$UseCase_Num==0),], aes(x=UseCase_Num)) + 
   geom_histogram(binwidth=5, colour="black", fill="gray") + 
@@ -111,14 +136,14 @@ modelData1$Project <- as.character(modelData1$Project)
 modelData1$transaction_file <- as.character(modelData1$transaction_file)
 effort1 <- subset(modelData1, select=c("Effort"))
 rownames(effort1) <- modelData1$Project
-transactionFiles1 <- subset(modelData1, select=c("transaction_file"))
-rownames(transactionFiles1) <- modelData1$Project
+transactionFileList1 <- subset(modelData1, select=c("transaction_file"))
+rownames(transactionFileList1) <- modelData1$Project
 
 #EUCP
 weights <- c(1)
 names(weights) <- c("L1")
 cutpoints <- NULL
-results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
+results <- prodByLinearRegression(effort1, transactionFileList1, cutpoints, weights)
 print(results)
 
 #EXUCP
@@ -128,7 +153,7 @@ cutpoints <- matrix(NA, nrow = 2, ncol = 4)
 rownames(cutpoints) <- c("TL", "TD")
 cutpoints["TL",] = c(-Inf, 4.1, 6.1, Inf)
 cutpoints["TD",] = c(-Inf, 3.1, 6.1, Inf)
-results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
+results <- prodByLinearRegression(effort1, transactionFileList1, cutpoints, weights)
 print(results)
 
 #DUCP
@@ -139,13 +164,13 @@ rownames(cutpoints) <- c("TL", "TD", "DETs")
 cutpoints["TL",] = c(-Inf, 4.1, 6.1, Inf)
 cutpoints["TD",] = c(-Inf, 3.1, 6.1, Inf)
 cutpoints["DETs",] = c(-Inf, 5.1, 11.1, Inf)
-results <- prodByLinearRegression(effort1, transactionFiles1, cutpoints, weights)
+results <- prodByLinearRegression(effort1, transactionFileList1, cutpoints, weights)
 print(results)
 
 ```
 TN Search Results
 ```{r swti part I} 
-TNresults <- performSearch(6, effort, transactionFiles, c())
+TNresults <- performSearch(6, effort, combined, transactionFileList, c())
 # Plot classification results
 for (i in 1:length(TNresults)) {
   result <- TNresults[[i]]
@@ -227,7 +252,7 @@ for (i in 1:length(TNresults)) {
 
 SWTI Search Results I
 ```{r swti part I} 
-SWTIresults <- performSearch(6, effort, transactionFiles, c("TL"))
+SWTIresults <- performSearch(6, effort, combined, transactionFileList, c("TL"))
 # Plot classification results
 for (i in 1:length(SWTIresults)) {
   result <- SWTIresults[[i]]
@@ -336,7 +361,7 @@ for (i in 1:length(SWTIresults)) {
 
 SWTI Search Results II
 ```{r swti part II}
-SWTIresults_II <- performSearch(6, effort, transactionFiles, c("TD"))
+SWTIresults_II <- performSearch(6, effort, combined, transactionFileList, c("TD"))
 # Plot classification results
 for (i in 1:length(SWTIresults_II)) {
   result <- SWTIresults_II[[i]]
@@ -447,7 +472,7 @@ for (i in 1:length(SWTIresults_II)) {
 
 SWTI Search Results III
 ```{r swti part III}
-SWTIresults_III <- performSearch(6, effort, transactionFiles, c("DETs"))
+SWTIresults_III <- performSearch(6, effort, combined, transactionFileList, c("DETs"))
   # Plot classification results
 for (i in 1:length(SWTIresults_III)) {
   result <- SWTIresults_III[[i]]
@@ -553,7 +578,7 @@ for (i in 1:length(SWTIresults_III)) {
 ```
 SWTII Search Results
 ```{r swtii, warning = FALSE}
-SWTIIresults <- performSearch(6, effort, transactionFiles, c("TL", "TD"))
+SWTIIresults <- performSearch(6, effort, combined, transactionFileList, c("TL", "TD"))
 # Plot classification results
 for (i in 1:length(SWTIIresults)) {
   result <- SWTIIresults[[i]]
@@ -638,7 +663,7 @@ for (i in 1:length(SWTIIresults)) {
 ```
 SWTIII Search Results
 ```{r swtiii, warning = FALSE}
-SWTIIIresults <- performSearch(6, effort, transactionFiles, c("TL", "TD", "DETs"))
+SWTIIIresults <- performSearch(6, effort, combined, transactionFileList, c("TL", "TD", "DETs"))
 # Plot classification results
 for (i in 1:length(SWTIIIresults)) {
   result <- SWTIIIresults[[i]]
