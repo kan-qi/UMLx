@@ -975,12 +975,12 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
   # Returns:
   #   A list in which the ith index gives the results of the search for i bins.
   
-  #n = 6
-  #effortData = effort
-  #transactionFiles = transactionFiles
-  #parameters = c("TL")
-  #k = 5
-  #i = 6
+  n = 6
+  effortData = effort
+  transactionFiles = transactionFiles
+  parameters = c("TL")
+  k = 5
+  i = 6
   
   projects <- rownames(effortData)
   #combinedData <- combineData(transactionFiles)
