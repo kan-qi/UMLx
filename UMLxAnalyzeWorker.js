@@ -53,7 +53,7 @@ function evaluateUploadedProject(req) {
         //remove directory of zip file and the contents in the directory
         rimraf(umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")),function(err) {
             if (err) {
-                console.l(err);
+                console.l("Error at checkpoint 0" + err);
             }
         });
     }
@@ -73,6 +73,7 @@ function evaluateUploadedProject(req) {
         // res.redirect('/');
 
     } else {
+        console.l("ERROR: null object found checkpoint 1");
         return false;
     }
     console.l("evaluate project info");
@@ -130,7 +131,7 @@ function evaluateUploadedProject(req) {
                 console.l("model is extracted");
                 if(!modelInfo){
                     // res.end("error");
-                    console.l('model info null');
+                    console.l('Error: model info null');
                     return;
                 }
                 umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
@@ -138,18 +139,19 @@ function evaluateUploadedProject(req) {
                     console.log(modelInfo2);
                     if(!modelInfo2){
                         // res.redirect('/');
-                        console.l('modelinfo2 null');
+                        console.l('Error: modelinfo2 null');
                         return;
                     }
                     effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
                         if(!modelInfo3){
-                            console.l("effort prediction failed");
+                            console.l("Error: effort prediction failed");
                         }
                         console.l("model effort predicted");
                         var debug = require("./utils/DebuggerOutput.js");
                         debug.writeJson("evaluated_model_example"+modelInfo2._id, modelInfo2);
                         umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
                             //				console.log(modelInfo);
+                            console.log("inside saveModelInfo");
                             umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo2){
                                 console.log("=============repoInfo==========");
                                 console.log(repoInfo2);
@@ -166,8 +168,9 @@ function evaluateUploadedProject(req) {
                                 //window.location.reload(true);
                                 // sendPush(req.sub);
                                 console.l("finished evaluation");
+                                // setTimeout(() => process.send('ok'), 2000);
                                 process.send('ok');
-                                return 'ok';
+                                // return 'ok';
                             });
                         });
                     });
