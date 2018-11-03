@@ -10,8 +10,9 @@ if estimationResults
             th Model
             th Effort (PH)
             th Schedule (Months)
+            th PH/Month
             th #{estimationResults.SizeMetric}
-            th Personnel (FT Developers)
+            th Personnel (FT)
             th UI Developer
             th Full Stack
             th Database Developer
@@ -23,6 +24,7 @@ if estimationResults
             td #{estimationResults.EstimationModel}
             td #{estimationResults.Effort}
             td #{estimationResults.Duration}
+            td #{estimationResults.HoursPerMonth}
             td #{estimationResults.SizeMeasurement}
             td #{estimationResults.Personnel}
             td #{estimationResults.Personnel_UI}
@@ -47,7 +49,7 @@ if estimationResults
           th#EffortBV Effort/BV
           th#SizeMeasurement #{estimationResults.SizeMetric}
           th#Duration Schedule (Months)
-          th#Personnel Personnel (FT Developers)
+          th#Personnel Personnel (FT)
           th#Personnel_UI UI Developer
           th#Personnel_FS Full Stack
           th#Personnel_DB Database Developer

@@ -99,6 +99,10 @@ app.get('/estimationPage',function(req,res){
 	res.render('estimationPageSimplified');
 });
 
+app.get('/estimationPageDemo',function(req,res){
+	res.render('estimationPage');
+});
+
 app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
 ,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
@@ -126,20 +130,12 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	projectInfo.stableRequirements = req.body['stable_requirements'];
 	projectInfo.partTimeStaff = req.body['part_time_staff'];
 	projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
-	
-//	if(isNaN(projectInfo.personnel)){
-//		projectInfo.personnel = null;
-//	}
-//	projectInfo.schedule = Number(req.body['schedule']);
-//	if(isNaN(projectInfo.schedule)){
-//		projectInfo.schedule = null;
-//	}
-//	projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
-//	if(isNaN(projectInfo.hoursPerMonth)){
-//		projectInfo.hoursPerMonth = null;
-//	}
-	
-	console.log("test");
+
+	if(!req.files['uml_file']){
+	console.log("empty uml file");
+	res.end("No file uploaded!");
+	return;
+	}
 	
 	if(req.body['personnel']){
 		projectInfo.personnel = Number(req.body['personnel']);
@@ -155,32 +151,31 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	
 	projectInfo.hoursPerMonth = 40;
 	
-//	console.log("files");
-//	console.log(req.files);
 	var umlFilePath = req.files['uml_file'][0].path;
-//	umlEstimationInfo.estimator = req.body['estimator'];
-//	umlEstimationInfo.model = req.body['model'];
-	
-//	var estimationModel = req.body['model'];
+
 	var estimationModel = "eucp_lm";
+	
+	if(req.body['model']){
+	estimationModel = req.body['model'];
+	}
+	
 	
 //	umlEstimationInfo.otherFilePath = req.files['uml_other'][0].path;
 //	umlEstimationInfo.simulation = req.body['simulation'];
 	
-
-//app.post('/predictProjectEffort', upload.fields([{name:'uml_file',maxCount:1},{name:'uml_other', maxCount:1}, {name:'repo-id', maxCount:1},{name:'estimator', maxCount:1},{name:'model', maxCount:1}]), function (req, res){
-//	console.log(req.body);
 	console.log("estimate project effort");
-//	if(!req.files['uml_file']){
-//		console.log("empty uml file");
-//		res.end("error");
-//		return;
-//	}
+
 //	var otherFilePath = req.files['other_file'][0].path;
+	
 //	var umlModelName = req.body['uml-model-name'];
 //	var umlModelType = req.body['uml-model-type'];
+	
 	var umlModelType = "uml";
-	var umlModelName = "query1";
+	
+    var date = new Date();
+    var uploadDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+    
+	var umlModelName = "query"+uploadDate+"@"+Date.now();
 	
 	var formInfo = req.body;
 	umlModelInfoManager.queryTempRepoInfo(function(repoInfo){
@@ -229,24 +224,22 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
                     umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 //					console.log(modelInfo);
 
-
+                    	if(req.body['result_page'] && req.body['result_page'] === 'simplified'){
                         res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
-
-////
+                    	}
+                    	else{
+                    		 res.render('estimationResultPane', {estimationResults:estimationResults, modelInfo: modelInfo});
+                    	}
                     });
 
                 });
 			});
-//			console.log(modelInfo);
 		});
 	});
 });
 
 
-app.get('/surveyProject', function(req, res){
-	
-	res.redirect('/estimationPage');
-	return;
+app.get('/surveyPage', function(req, res){
 	
 	res.render('surveyProject');
 });
