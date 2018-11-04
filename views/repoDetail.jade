@@ -68,36 +68,106 @@ div.block.panel.panel-default
         include estimationPanel
       div.tab-pane.fade(id="repo_trending")
         if repoInfo
+          div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
           div.col-sm-12.status-row
             div.col-sm-3
-              div.blue-card.analytics-card
+              div#project-card.blue-card.analytics-card
                 .col-sm-4.image-box
                   img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='projectNum', disabled='disabled')
                 .col-sm-8.text-box
                   h2 #{totalRec}
                   span Projects
             div.col-sm-3
-              div.red-card.analytics-card
+              div#usecase-card.red-card.analytics-card
                 .col-sm-4.image-box
                   img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='UseCaseNum', disabled='disabled')
                 .col-sm-8.text-box
                   h2 #{repoInfo.UseCaseNum}
                   span Use Cases
             div.col-sm-3
-              div.green-card.analytics-card
+              div#transaction-card.green-card.analytics-card
                 .col-sm-4.image-box
                   img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='NT', checked, disabled='disabled')
                 .col-sm-8.text-box
                   h2 #{repoInfo.NT}
                   span Transactions
             div.col-sm-3 
-              div.purple-card.analytics-card
+              div#class-card.purple-card.analytics-card
                 .col-sm-4.image-box
                   img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='EntityNum', disabled='disabled')
                 .col-sm-8.text-box
                   h2 #{repoInfo.EntityNum}
                   span Classes
-          div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")  
+          div.col-sm-12.status-row
+            div.col-sm-3
+              div#sloc-card.blue-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='SLOC', disabled='disabled')
+                .col-sm-8.text-box
+                  h2 #{repoInfo.SLOC}
+                  span SLOC
+            div.col-sm-3
+              div#schedule-card.red-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='schedule', disabled='disabled')
+                .col-sm-8.text-box
+                  h2 #{repoInfo.schedule}
+                  span Schedule
+            div.col-sm-3
+              div#personnel-card.green-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='personnel', disabled='disabled')
+                .col-sm-8.text-box
+                  h2 #{repoInfo.personnel}
+                  span Personnel
+            div.col-sm-3 
+              div#eucp-card.purple-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='EUCP', disabled='disabled')
+                .col-sm-8.text-box
+                  h2 #{repoInfo.EUCP}
+                  span Eucp
+          div.col-sm-12.status-row
+            div.col-sm-3
+              div#exucp-card.blue-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='EXUCP', disabled='disabled')
+                .col-sm-8.text-box
+                  h2 #{repoInfo.EXUCP}
+                  span EXUCP
+            div.col-sm-3
+              div#ducp-card.red-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='DUCP', disabled='disabled')
+                .col-sm-8.text-box
+                  h2 #{repoInfo.DUCP}
+                  span DUCP
+            div.col-sm-3
+              div#effort-card.green-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='effort', disabled='disabled')
+                .col-sm-8.text-box
+                  h2 #{repoInfo.effort}
+                  span Effort
+            div.col-sm-3
+              div#estimate-card.purple-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  input(type='checkbox', name='checkbox', value='estimatedEffort', disabled='disabled')
+                .col-sm-8.text-box
+                  h2 #{repoInfo.estimatedEffort}
+                  span Estimated Effort 
       div.tab-pane.fade(id="project_list")
         .container
           h3.row

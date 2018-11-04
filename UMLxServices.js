@@ -46,7 +46,7 @@ var storage = multer.diskStorage({
 })
 
 console.l = console.log;
-// console.log = function() {};
+console.log = function() {};
 
 var fileDestination = null;
 umlSurveyFiles = [];
@@ -500,17 +500,11 @@ app.get('/surveyAnalytics', function (req, res){
 
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
     { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
-    // var fas = require('fs');
-    // var util = require("util");
-    // fas.writeFile("./logreq", util.inspect(req,{depth:null}), function(err) {
-    //     if(err) {
-    //         return console.log(err);
-    //     }
-    //
-    //     console.log("The file was saved!");
-    // });
-
-    const worker = fork('./UMLxAnalyzeWorker.js');
+    const worker = fork('./UMLxAnalyzeWorker.js',
+		[],
+        {
+            execArgv: []
+        });
     let token = req.cookies.appToken;
     console.l("token: " + token);
     let subscription = endpoints[token];
@@ -521,8 +515,6 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
         worker.kill();
     });
     let obj = encapsulateReq(req);
-    // worker.json(obj);
-    // worker.send(JSON.stringify(obj, null, 2));
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
     console.l("DEBUGGGG: inside uploadUMLFile");
@@ -1072,29 +1064,48 @@ app.get('/queryRepoInfo', function(req, res){
 
 app.get('/reloadRepo', function(req, res){
 	//temporary analysis
-	var repoId = req.userInfo.repoId;
+	let repoId = req.userInfo.repoId;
+    // const worker = fork('./UMLxReloadWorker.js');
+    // let token = req.cookies.appToken;
+    // console.l("token: " + token);
+    // let subscription = endpoints[token];
+    // console.l("subscription: " + subscription);
+    // worker.on('message', (text) => {
+    //     if(text.isEqual('ok')) {
+    //         sendPush(subscription, 'Reload finished');
+    //     } else {
+    //         sendPush(subscription, 'Reload Failed');
+    //         console.l(text);
+    //     }
+    //     console.l("killing child process");
+    //     worker.kill();
+    // });
+    // worker.send(repoId);
+    // console.l("DEBUGGGG: reload task sent to worker");
+    // sendPush(subscription, 'Project Reloading');
+    // res.redirect('/');
 
-//	console.log(refresh);
+
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlModelInfoManager.reloadRepo(repoInfo, function(repoInfo){
 			if(!repoInfo){
 				res.end("error");
 				return;
 			}
-			
+
 			effortPredictor.predictEffortRepo(repoInfo, function(repoInfo2){
 				if(!repoInfo2){
 					console.log("effort prediction failed at repo level");
 				}
-			
-			
+
+
 			umlModelInfoManager.updateRepoInfo(repoInfo2, function(repoInfo3){
 				res.redirect('/');
 			});
 			});
 		});
 	});
-})
+});
 
 
 app.get('/uploadProject', function(req, res){

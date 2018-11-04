@@ -1599,7 +1599,7 @@ function createCharts() {
     creatAvgHistograms();
     createHistogramForPathNumber();
 }
-
+var chart;
 function createTrendingLines() {
     $.ajax({
         url: "http://127.0.0.1:8081/requestRepoBrief",
@@ -1616,7 +1616,7 @@ function createTrendingLines() {
                     }
                 }
                 console.log(chart);
-                var chart = Highcharts.chart('trending-line', {
+                chart = Highcharts.chart('trending-line', {
                     xAxis: {
                         title: {
                             text: 'Time stamp'
@@ -1633,7 +1633,6 @@ function createTrendingLines() {
                     series: selected_series
                 });              
             }
-
             var series_data = {"SLOC":{}, "schedule":{}, "personnel":{}, "EUCP":{}, "EXUCP":{}, "DUCP":{}, "effort":{}, "estimatedEffort":{}, "NT":{}, "projectNum":{}, "UseCaseNum":{}, "EntityNum":{}}
 
             console.log('----------');
