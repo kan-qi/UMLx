@@ -279,6 +279,33 @@ app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
 
+app.get('/getZipPackage', function (req, res){
+	var repoId = '/repo' + req.query.repo_id;
+	var modelId = '/' + req.query.model_id;
+
+	var zipFolder = require('zip-folder');
+	var folderPath = __dirname + '/public/output' + repoId + modelId;
+	var zipPath = __dirname + '/public/output/package.zip';
+	 
+	zipFolder(folderPath, zipPath, function(err) {
+	    if(err) {
+	        console.log(err);
+	    } else {
+ 			res.download(zipPath, function(err) {
+ 				if (err) {
+ 					console.log(err);
+ 				} else {
+ 					fs.unlink(zipPath, function(err) {
+ 						if (err) {
+ 							console.log(err);
+ 						}
+ 					});
+ 				}
+ 			});
+	    }
+	});		
+});
+
 
 
 ////==================== local machine code for development ==========================
