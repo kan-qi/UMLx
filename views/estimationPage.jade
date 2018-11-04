@@ -1,3 +1,4 @@
+
 html
     head
         title UMLx
@@ -14,8 +15,8 @@ html
         //            }
         //        }
         //    }
-
     body#upload-body
+        include heading
         .container.estimation_page_container
             form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
 
@@ -142,7 +143,6 @@ html
                                     //        button.btn.btn-default.disabled.pull-left(type='button') < Previous
                                     //        button.btn.btn-success.pull-right(type='button', onclick='showPage(2)') Next >
                 // end of #sec-1
-
                 #sec-2
                     .panel-group
                         .panel.panel-default
@@ -226,7 +226,6 @@ html
                                     //        button.btn.btn-default.pull-left(type='button', onclick='showPage(1)') < Previous
                                     //        button.btn.btn-success.pull-right(type='button', onclick='showPage(3)') Next >
                 // end of #sec-2
-
                 #sec-3
                     .panel-group
                         .panel.panel-default
@@ -261,7 +260,6 @@ html
                                     //        button.btn.btn-default.pull-left(type='button', onclick='showPage(2)') < Previous
                                     //        button.btn.btn-success.pull-right(type='button', onclick='showPage(4)') Next >
                 // end of #sec-3
-
                 #sec-4
                     .panel-group
                         .panel.panel-default
@@ -283,7 +281,6 @@ html
                                       //  label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
                                       //  .col-xs-8
                                       //      input#uml_other.form-control(type='file', name='uml_other')
-
                                     .form-group
                                         label.control-label.col-xs-4(for='model') Select Estimator
                                         .col-xs-8
@@ -300,9 +297,7 @@ html
                                 //    .col-sm-offset-2.col-xs-8
                                 //        button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
                                 //        button.btn.btn-success.pull-right(type='submit', onclick='showPage(5)') Submit
-
                 // end of #sec-4
-
                 #sec-5
                     .panel-group
                         .panel.panel-default
@@ -313,7 +308,6 @@ html
                                 div(id="estimation-result-panel-body")
                     //input#uuid-page5(type='hidden', name='uuid-page5', value='')
                 // end of #sec-5
-
                 #loadingScreen.hidden
                     div.full-page-model
                     div.full-page-model-content
