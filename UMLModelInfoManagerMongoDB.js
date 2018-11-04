@@ -589,8 +589,13 @@ function deleteRepo(repoId, callbackfunc) {
                     if (modelInfo.DomainModels) {
                         var domainModel = modelInfo.DomainModels[0];
                         delete modelInfo.DomainModels;
+                        if(domainModel){
                         delete domainModel._id;
                         modelInfo.DomainModel = domainModel;
+                        }
+                        else{
+                        modelInfo.DomainModel = {};
+                        }
                     }
                     console.log("---------------modelInfo----------------");
                     //console.log(modelInfo);
@@ -740,10 +745,13 @@ function deleteRepo(repoId, callbackfunc) {
 
                             if (modelInfo.DomainModels) {
                                 var domainModel = modelInfo.DomainModels[0];
-                                if(domainModel){
                                 delete modelInfo.DomainModels;
+                                if(domainModel){
                                 delete domainModel._id;
                                 modelInfo.DomainModel = domainModel;
+                                }
+                                else{
+                                modelInfo.DomainModel = {};
                                 }
                             }
 

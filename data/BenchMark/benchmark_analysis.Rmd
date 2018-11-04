@@ -1,0 +1,48 @@
+---
+title: "BenchMark_Analysis"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+
+library(ggplot2)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+#ucp_data <- UCP_Dataset
+ucp_data <- UCP_Dataset_OnlineV1.1
+
+uc_num <- ucp_data[,"Simple.UC"] + ucp_data[,"Average.UC"]+ucp_data[,"Complex.UC"]
+cor(uc_num, ucp_data$Real_Effort_Person_Hours)
+ucp_data$uc_num <- uc_num
+print(uc_num)
+lm(Real_Effort_Person_Hours~uc_num, data=ucp_data)
+
+ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"ECF"]*ucp_data[,"TCF"]
+ucp_data$UCP <- ucp
+
+ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
+  geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
+  
+
+

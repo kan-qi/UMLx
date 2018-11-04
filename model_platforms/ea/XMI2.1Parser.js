@@ -15,6 +15,9 @@
 	var visualSprintDiagramParser = require("./VisualSprintDiagramParser.js");
 	
 	var domainModelSearchUtil = require("../../utils/DomainModelSearchUtil.js");
+	var plantUMLUtil = require("../../utils/PlantUMLUtil.js");
+	
+	var umlFileManager = require('../../UMLFileManager');
 
 	/*
 	 * The actual parsing method, which take xmi file as the input and construct a user-system interaction model with an array of use cases and a domain model.
@@ -109,6 +112,18 @@
 			}
 			operations.push(operation);
 		}
+		
+		if(operations.length === 0 && XMIClass['$']['name']){
+
+			var operation = {
+					Name: XMIClass['$']['name'].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, ''),
+					Visibility: "public",
+					Parameters: []
+			}
+			
+			operations.push(operation);
+
+		}
 
 		return {
 				_id: XMIClass['$']['xmi:id'],
@@ -119,10 +134,34 @@
 			}
 	}
 	
+	function queryExtensionConnectors(XMIExtension){
+		var extensionConnectors = jp.query(XMIExtension, '$..connector[?(@[\'$\'][\'xmi:idref\'])]');
+		console.log("extension connectors");
+		console.log(extensionConnectors);
+		var extensionConnectorsByID = {};
+		for(var i in extensionConnectors){
+			var extensionConnector = extensionConnectors[i];
+			var source = jp.query(XMIExtension, '$..source[?(@[\'$\'][\'xmi:idref\'])]')[0];
+			var target = jp.query(XMIExtension, '$..target[?(@[\'$\'][\'xmi:idref\'])]')[0];
+			if(!source || !target){
+				continue;
+			}
+			extensionConnectorsByID[extensionConnector['$']['xmi:idref']] = {
+				_id: extensionConnector['$']['xmi:idref'],
+				sourceID: source['$']['xmi:idref'],
+				targetID: target['$']['xmi:idref']
+			}
+		}
+		return extensionConnectorsByID;
+	}
+	
+	
 	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
 			
 		var	XMIUMLModel = xmiString['xmi:XMI']['uml:Model'];
 		var XMIExtension = xmiString['xmi:XMI']['xmi:Extension'];
+		
+		var extensionConnectorsByID = queryExtensionConnectors(XMIExtension);
 		
 		//create a catalog for the different types of the elements.
 		var XMICustomProfiles = jp.query(XMIUMLModel, '$..["thecustomprofile:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
@@ -202,6 +241,7 @@
 		var DomainElementsBySN = {};
 		
 		var XMIClasses = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]');
+		XMIClasses = XMIClasses.concat(jp.query(XMIUMLModel, '$..nestedClassifier[?(@[\'$\'][\'xmi:type\']==\'uml:Class\')]'));
 		
 		//populate domain model with classes
 		for(var i in XMIClasses){
@@ -227,56 +267,86 @@
 //					matchedDomainElement.Attributes.push(domainElement.Attributes[i]);
 //				}
 //			}
-			            
-            var XMIAssociations = jp.query(XMIClass, '$.packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
-//    		var DomainAssociationByID = [];
-    		for(var i in XMIAssociations){
-    			var XMIAssoc = XMIAssociations[i];
-    			//      console.log(XMIAssoc);
-    			var association = {
-    				_id: XMIAssoc['$']['xmi:id'],
-    				type: "association",
-					Supplier: XMIClass['$']['xmi:id'],
-					Client: XMIGeneralization['$']['general']
-    			}
-//    			DomainAssociationByID[domainAssociation._id] = domainAssociation;
-    			Model.DomainModel.Associations.push(association);
-    		}
+    		
+    		var XMIGeneralizations = jp.query(XMIClass, '$.generalization[?(@[\'$\'][\'xmi:type\']==\'uml:Generalization\')]');
+//      		var DomainGeneralizationByID = [];
+      		for(var i in XMIGeneralizations){
+      			var XMIGeneralization = XMIGeneralizations[i];
+      			//      console.log(XMIAssoc);
+      			var generalization = {
+      				_id: XMIGeneralization['$']['xmi:id'],
+      				type: "generalization",
+  					Supplier: XMIClass['$']['xmi:id'],
+  					Client: XMIGeneralization['$']['general']
+      			}
+//      			DomainAssociationByID[domainAssociation._id] = domainAssociation;
+      			Model.DomainModel.Generalizations.push(generalization);
+      		}
+		}
+		
+        var XMIAssociations = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Association\')]');
+//		var DomainAssociationByID = [];
+		for(var i in XMIAssociations){
+			// having problem with association parsing.
+			
+			var XMIAssoc = XMIAssociations[i];
+			//      console.log(XMIAssoc);
+			
+			var XMIType = jp.query(XMIAssoc, '$..type[?(@[\'$\'][\'xmi:idref\'])]')[0];
+			if(!XMIType){
+				continue;
+			}
+			
+			extensionConnector = extensionConnectorsByID[XMIAssoc['$']['xmi:id']];
+			
+			if(!extensionConnector){
+				continue;
+			}
+			
+			var association = {
+				_id: XMIAssoc['$']['xmi:id'],
+				type: "association",
+				Supplier: extensionConnector.sourceID,
+				Client: extensionConnector.targetID
+			}
+//			DomainAssociationByID[domainAssociation._id] = domainAssociation;
+			Model.DomainModel.Associations.push(association);
+		}
+		
+		
+		var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
+//		var DomainUsagesByID = [];
+		for(var i in XMIUsages){
+			var XMIUsage = XMIUsages[i];
+			//      console.log(XMIUsage);
+			var domainUsage = {
+				_id: XMIUsage['$']['xmi:id'],
+				type: "usage",
+				Supplier: XMIUsage['$']['supplier'],
+				Client: XMIUsage['$']['client']
+			}
+			Model.DomainModel.Usages.push(domainUsage);
+		}
+
+		var XMIReals = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Realization\')]');
+		for(var i in XMIReals){
+			var XMIReal = XMIReals[i];
+			//      console.log(XMIReal);
+			var domainRealization = {
+				_id: XMIReal['$']['xmi:id'],
+				type: "realization",
+				Supplier: XMIReal['$']['supplier'],
+				Client: XMIReal['$']['client']
+			}
+			Model.DomainModel.Realizations.push(domainRealization);
 		}
 		
 		Model.DomainModel.DiagramType = "class_diagram";
 			
-			var XMIUsages = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Usage\')]');
-//			var DomainUsagesByID = [];
-			for(var i in XMIUsages){
-				var XMIUsage = XMIUsages[i];
-				//      console.log(XMIUsage);
-				var domainUsage = {
-					_id: XMIUsage['$']['xmi:id'],
-					type: "usage",
-					Supplier: XMIUsage['$']['supplier'],
-					Client: XMIUsage['$']['client']
-				}
-				Model.DomainModel.Usages.push(domainUsage);
-			}
 
-			var XMIReals = jp.query(XMIUMLModel, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:Realization\')]');
-			for(var i in XMIReals){
-				var XMIReal = XMIReals[i];
-				//      console.log(XMIReal);
-				var domainRealization = {
-					_id: XMIReal['$']['xmi:id'],
-					type: "realization",
-					Supplier: XMIReal['$']['supplier'],
-					Client: XMIReal['$']['client']
-				}
-				Model.DomainModel.Realizations.push(domainRealization);
-			}
-			
-
-			   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
-				   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
-			   });
+//			   createClassDiagramFunc(Model.DomainModel.Elements, Model.DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
+//				   console.log("class diagram is output: "+Model.DomainModel.OutputDir+"/"+"class_diagram.dotty");
+//			   });
 		
 			 //search for the use cases
 				var XMIUseCases = jp.query(xmiString, '$..packagedElement[?(@[\'$\'][\'xmi:type\']==\'uml:UseCase\')]');
@@ -309,6 +379,7 @@
 			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
 			
 			Model.UseCases.push(UseCase);
+			
 		}
 		
 
@@ -317,7 +388,7 @@
 		
 //		console.log(XMIUMLModel);
 		
-		var DomainElements = [];
+        var DomainElements = [];
 		
 		for(var i in DomainElementsBySN){
 		Model.DomainModel.Elements.push(DomainElementsBySN[i]);
@@ -331,6 +402,13 @@
 		
 		visualSprintDiagramParser.parseUserStoryDiagram(XMIUseCases, XMIUMLModel, Model);
 		
+		for(var i in Model.UseCases){
+			var UseCase = Model.UseCases[i];
+			drawSequenceDiagram(UseCase, Model.DomainModel, UseCase.OutputDir);
+		}
+		
+		drawClassDiagram(Model.DomainModel, Model.DomainModel.OutputDir)
+		
 		if(callbackfunc){
 			callbackfunc(Model);
 		}
@@ -343,6 +421,367 @@
 		console.log(Model.DomainModel);
 		
 		debug.writeJson("parsed_model_from_parser_"+Model._id, Model);
+	}
+	
+	/*
+	 * 
+	 * The structure of the plantUML tools
+	 * 
+	 * @startuml
+skinparam sequenceArrowThickness 2
+skinparam roundcorner 20
+skinparam maxmessagesize 60
+skinparam sequenceParticipant underline
+
+actor User
+participant "First Class" as A
+participant "Second Class" as B
+participant "Last Class" as C
+
+User -> A: DoWork
+activate A
+
+A -> B: Create Request
+activate B
+
+B -> C: DoWork
+activate C
+C --> B: WorkDone
+destroy C
+
+B --> A: Request Created
+deactivate B
+
+A --> User: Done
+deactivate A
+
+@enduml
+	 * 
+	 * 
+	 */
+	
+	
+	function drawSequenceDiagram(UseCase, DomainModel, outputDir){
+//		UseCase.DiagramType = "sequence_diagram";
+		
+		var plantUMLString = "@startuml \nskinparam sequenceArrowThickness 2 \nskinparam roundcorner 20 \nskinparam maxmessagesize 60 \nskinparam sequenceParticipant underline\n\n"
+		
+		//logic to create actors
+		var actorActivityDic = {};
+		var componentDic = {};
+		for(var i in UseCase.Activities){
+			var activity = UseCase.Activities[i];
+			if(activity.Stimulus){
+				if(!actorActivityDic[activity.Group]){
+					actorActivityDic[activity.Group] = [];
+				}
+				var actorActivities = actorActivityDic[activity.Group];
+				actorActivities.push(activity);
+			}
+			
+			if(activity.Component){
+				var index = (i + 9).toString(36).toUpperCase();
+				if(!componentDic[activity.Component.Name]){
+				componentDic[activity.Component.Name] = index;
+				}
+			}
+		}
+		
+
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("actor_activity_dic"+UseCase._id, actorActivityDic);	
+		
+		for(var i in actorActivityDic){
+			console.log("actor: "+i);
+			plantUMLString += "actor "+i;
+			
+		}
+
+		plantUMLString += "\n";
+		
+//		for(var i in DomainModel.Elements){
+//			var element = DomainModel.Elements[i];
+//			var index = (i + 9).toString(36).toUpperCase();
+//			plantUMLString += "participant \""+element.Name+"\" as "+index+"\n";
+//			componentDic[element.Name] = index;
+//		}
+		
+		for(var i in componentDic){
+			console.log("actor: "+i);
+			plantUMLString += "participant \""+i+"\" as "+componentDic[i]+"\n";
+			
+		}
+
+		plantUMLString += "\n";
+		
+		var precedenceRelationDic = {};
+		for(var i in UseCase.PrecedenceRelations){
+			var precedenceRelation = UseCase.PrecedenceRelations[i];
+			
+			var start = precedenceRelation.start;
+			if(!start){
+				continue;
+			}
+			
+			if(!precedenceRelationDic[start._id]){
+				precedenceRelationDic[start._id] = [];
+			}
+			precedenceRelationDic[start._id].push(precedenceRelation);
+		}
+		
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson("precedence_relation_dic"+UseCase._id, precedenceRelationDic);
+		
+		var visitedPrecedenceRelations = {};
+		var activatedComponents = {};
+		
+		function traverseActivitySequence(start){
+//			var precedenceRelation = UseCase.PrecedenceRelations[i];
+			
+//			var start = precedenceRelation.start;
+			
+			var precedenceRelations = precedenceRelationDic[start._id];
+			
+			for(var i in precedenceRelations){
+			
+			var precedenceRelation = precedenceRelations[i];
+			
+			var end = precedenceRelation.end;
+			
+			if(visitedPrecedenceRelations[start._id+"__"+end._id]){
+				continue;
+			}
+			
+			visitedPrecedenceRelations[start._id+"__"+end._id] = "1";
+			
+			console.log(end);
+			
+			if(start.Stimulus){
+				plantUMLString += start.Group;
+			}
+			else{
+				if(start.Component){
+				plantUMLString += componentDic[start.Component.Name];
+				}
+			}
+			
+			plantUMLString += " -> ";
+			
+			if(end.Stimulus){
+				plantUMLString += end.Group;
+			}
+			else{
+				if(end.Component){
+				plantUMLString += componentDic[end.Component.Name];
+				}
+			}
+			
+			if(end.Component && end.Name){
+				var labelComponents = end.Name.split(":");
+				plantUMLString += ": "+labelComponents[labelComponents.length - 1].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '')+"()\n";
+				if(activatedComponents[componentDic[end.Component.Name]] == 0 || !activatedComponents[componentDic[end.Component.Name]]){
+				plantUMLString += "activate "+componentDic[end.Component.Name]+"\n\n";
+				activatedComponents[componentDic[end.Component.Name]] = 1;
+				}
+			}
+			
+			traverseActivitySequence(end)
+			
+			if(end.Component){
+				if(activatedComponents[componentDic[end.Component.Name]] == 1){
+					plantUMLString += "deactivate "+componentDic[end.Component.Name]+"\n\n";
+//					activatedComponents[componentDic[end.Component.Name]]=1;
+					activatedComponents[componentDic[end.Component.Name]] = 0;
+				}
+			}
+			
+			}
+		}
+	
+		
+		for(var i in actorActivityDic){
+			var actorActivities = actorActivityDic[i];
+			for(var j in actorActivities){
+				//plantUMLString += "actor "+actorActivities[j].Name;
+				var actorActivity = actorActivities[j];
+				traverseActivitySequence(actorActivity);
+			}
+		}
+		
+		plantUMLString += "@enduml";
+		
+		var files = [{fileName : "sequence_diagram.txt", content : plantUMLString}];
+		umlFileManager.writeFiles(outputDir, files, function(err){
+		 if(err){
+			 console.log(err);
+			 return;
+		 }
+		 
+		 plantUMLUtil.generateUMLDiagram(outputDir+"/sequence_diagram.txt", function(outputDir){
+			 console.log(outputDir);
+		 });
+		});
+		
+		return plantUMLString;
+	}
+	
+	
+	/*
+	 * 
+	 * The structure of the plantUML tools
+	 * 
+@startuml
+skinparam classAttributeIconSize 0
+class Dummy {
+ -field1
+ #field2
+ ~method1()
+ +method2()
+}
+
+@enduml
+	 * 
+	 * 
+	 */
+	
+	function drawClassDiagram(DomainModel, outputDir){
+		
+		var classElements = DomainModel.Elements;
+		var classElementDic = {};
+		
+		var plantUMLString = '@startuml\nskinparam classAttributeIconSize 0\n\n';
+		
+        for(i = 0;  i < classElements.length; i++){
+            var curClass = classElements[i];
+            if(!curClass["Name"]){
+            	continue;
+            }
+            
+            classElementDic[curClass._id] = curClass;
+            
+
+            plantUMLString += "class ";
+            
+            plantUMLString += curClass["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+            
+            if (classElements[i]["Attributes"].length == 0 && classElements[i]["Operations"].length == 0){
+            	 plantUMLString += " \n\n";
+            	 continue;
+            }
+
+            plantUMLString += " {\n";
+
+            var classAttributes = classElements[i]["Attributes"];
+                for(j = 0; j < classAttributes.length; j++) {
+                    plantUMLString += '- ' ;
+                    plantUMLString += classAttributes[j]["Name"];
+                    plantUMLString += ':'+classAttributes[j]["Type"];
+                    plantUMLString += '\n';
+                }
+
+            var classOperations = classElements[i]["Operations"];
+                for(j = 0; j < classOperations.length;j++) {
+                    
+               	 plantUMLString += '~ ' ;
+                    plantUMLString += classOperations[j]["Name"] + '(';
+                    var para_len = classOperations[j]["Parameters"].length;
+                    for (k = 0; k < para_len - 1; k++) {
+                   	 plantUMLString += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
+                    }
+                    plantUMLString += ')';
+
+                    if(para_len > 0){
+                    plantUMLString += ':'+classOperations[j]["Parameters"][para_len - 1]["Type"];
+                    }
+                    plantUMLString += "\n";
+                }
+
+            plantUMLString += '}\n\n';
+		 }
+        
+       //create the links between the classes
+//        Realizations:[],
+//		Associations: [],
+////		Inheritances: [],
+//		Generalizations: [],
+        
+        for(var i in DomainModel.Realizations){
+        	var realization = DomainModel.Realizations[i];
+        	var supplier = classElementDic[realization.Supplier];
+        	var client = classElementDic[realization.Client];
+        	if(!supplier || !client){
+        		continue;
+        	}
+        	
+        	var supplierName = supplier["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	
+        	plantUMLString += clientName + " <|-- " + supplierName+"\n\n";
+        	
+        }
+        
+        for(var i in DomainModel.Associations){
+        	var association = DomainModel.Associations[i];
+        	
+        	var supplier = classElementDic[association.Supplier];
+        	var client = classElementDic[association.Client];
+        	if(!supplier || !client){
+        		continue;
+        	}
+        	
+        	var supplierName = supplier["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	
+        	plantUMLString += supplierName + " .. " + clientName+"\n\n";
+        }
+        
+        for(var i in DomainModel.Generalizations){
+        	var generalization = DomainModel.Generalizations[i];
+        	
+        	var supplier = classElementDic[generalization.Supplier];
+        	var client = classElementDic[generalization.Client];
+        	if(!supplier || !client){
+        		continue;
+        	}
+        	
+        	var supplierName = supplier["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	
+        	plantUMLString += supplierName + " <|-- " + clientName+"\n\n";
+        }
+        
+        for(var i in DomainModel.Usages){
+        	var usage = DomainModel.Usages[i];
+        	
+        	var supplier = classElementDic[usage.Supplier];
+        	var client = classElementDic[usage.Client];
+        	if(!supplier || !client){
+        		continue;
+        	}
+        	
+        	var supplierName = supplier["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	var clientName = client["Name"].replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/\s]/gi, '');
+        	
+        	plantUMLString += supplierName + " --> " + clientName+"\n\n";
+        }
+       
+        
+       plantUMLString += '@enduml';
+       
+       var files = [{fileName : "class_diagram.txt", content : plantUMLString}];
+		umlFileManager.writeFiles(outputDir, files, function(err){
+		 if(err){
+			 console.log(err);
+			 return;
+		 }
+		 
+		 plantUMLUtil.generateUMLDiagram(outputDir+"/class_diagram.txt", function(outputDir){
+			 console.log(outputDir);
+		 }, 'class_diagram');
+		});
+
+        
+        return plantUMLString;
 	}
 	
 	// draw the class diagram of the model

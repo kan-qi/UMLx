@@ -86,36 +86,36 @@
 			operationsByString[operation.Name] = operation;
 		}
 		
-		// create the interface method of the component
+//		// create the interface method of the component
+//		
+//		var operation = {
+//				Name: domainElement.Name,
+//				Visibility: "public",
+//				Parameters: []
+//		}
+//		
+//		for(var i in domainElement.Attributes){
+//			var attribute = domainElement.Attributes[i];
+//			var parameter = {
+//					Name: attribute.Name,
+//					Type: attribute.Type
+//			}
+//			operation.Parameters.push(parameter);
+//		}
 		
-		var operation = {
-				Name: domainElement.Name,
-				Visibility: "public",
-				Parameters: []
-		}
+//		operation.Parameters.push(parameter);
 		
-		for(var i in domainElement.Attributes){
-			var attribute = domainElement.Attributes[i];
-			var parameter = {
-					Name: attribute.Name,
-					Type: attribute.Type
-			}
-			operation.Parameters.push(parameter);
-		}
-		
-		operation.Parameters.push(parameter);
-		
-		if(operation.Name){
-		operationStrings.push(operation.Name);
-		operationsByString[operation.Name] = operation;
-		}
+//		if(operation.Name){
+//		operationStrings.push(operation.Name);
+//		operationsByString[operation.Name] = operation;
+//		}
 		
 		console.log(operationStrings);
 		
 		var matchedOperation = null;
 		if(operationStrings.length>0){
 		var matches = stringSimilarity.findBestMatch(operationName, operationStrings);
-		if(matches.bestMatch.rating > 0.2){
+		if(matches.bestMatch.rating > 0.5){
 			matchedOperation = operationsByString[matches.bestMatch.target];
 		}
 		}

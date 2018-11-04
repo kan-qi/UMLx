@@ -37,16 +37,27 @@ combineData <- function(transactionFiles) {
 	# Returns:
 	#   A data frame containing all the data in all the files.
 	data <- NULL
-	for(i in 1: nrow(transactionFiles)) {
-	  filepath <- transactionFiles[i,]
-		  if (is.null(data)) {
-			  data <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
-		  }
-		  else {
-			  new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
-			  data <- rbind(data, new)
-		  }
-	}
+#	for(i in 1: nrow(transactionFiles)) {
+#	  filepath <- transactionFiles[i,]
+#		  if (is.null(data)) {
+#			  data <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
+#		  }
+#		  else {
+#			  new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
+#			  data <- rbind(data, new)
+#		  }
+#	}
+	
+  	for(i in 1:length(transactionFiles)) {
+  	  transactionFile <- transactionFiles[[i]]
+  	  if (is.null(data)) {
+  	    data <- transactionFile
+  	  }
+  	  else {
+  	    #new <- subset(read.csv(filepath), select = c("TL", "TD", "DETs"))
+  	    data <- rbind(data, transactionFile)
+  	  }
+  	}
 	
 	data <- data.frame(apply(data, 2, function(x) as.numeric(x)))
 	data <- na.omit(data)
@@ -54,6 +65,209 @@ combineData <- function(transactionFiles) {
 	#data <- data[!is.na(data$TD), ]
 	#data <- data[!is.na(data$DETs), ]
 	data
+}
+
+
+prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weights){
+    #effortData <- effort
+    #transactionFiles <- transactionsFiles
+    #cutPoints <- cutpoints
+    #weights <- weights
+    
+    projects <- rownames(effortData)
+  
+    regressionData <- matrix(nrow = length(projects), ncol = 2)
+    rownames(regressionData) <- projects
+    colnames(regressionData) <- c("size", "Effort")
+    numOfTrans <- 0
+    
+    for (project in projects) {
+      #project <- projects[1]
+      #filePath <- transactionFiles[project, "transaction_file"]
+      #print(filePath)
+      #if (!file.exists(filePath)) {
+      #  print("file doesn't exist")
+      #  next
+      #}
+      #fileData <- read.csv(filePath)
+      #fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+      #fileData <- na.omit(fileData)
+      
+      fileData = transactionFiles[[project]]
+      
+      if(nrow(fileData) < 1){
+        next
+      }
+      numOfTrans = numOfTrans + nrow(fileData)
+      
+      if(is.null(cutPoints)){
+      size = nrow(fileData)
+      }
+      else{
+      classifiedData <- classify(fileData, cutPoints)
+      size <- classifiedData %*% weights 
+      }
+      
+      regressionData[project, ] <- c(size, effortData[project, "Effort"])
+    }
+    
+    print(numOfTrans)
+    
+    regressionData <- na.omit(regressionData)
+    #regressionData <- rbind(regressionData, "Aggregate" = colSums(regressionData))
+    regressionData <- as.data.frame(regressionData)
+    
+    print("regressionData")
+    print(regressionData)
+  #}
+    
+    lm.fit <- lm(Effort ~ .-1, regressionData)
+    coefficients <- summary(lm.fit)$coefficients
+    predicts <- as.data.frame(predict(lm.fit, newData = regressionData))
+    rownames(predicts) <- projects
+    results = list()
+    results[["predicts"]] <- predicts
+    results[["coefficients"]] <- coefficients
+    results
+}
+
+parametricKStest <- function(dist){
+  
+  #dist <- combined[, "TD"]
+  #dist <- combined[, "TL"]
+  #dist <- combined[, "DETs"]
+  
+  tableValues <- table(dist)
+  
+  #reduce sizes for fitting with gamma curve
+  #print(as.integer(tableValues/10))
+  
+  #dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
+  dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
+  
+  #fit.gamma <- fitdist(dist, distr = "gamma", method = "mle", lower = c(0, 0))
+  fit.gamma <- fitdist(dist, distr = "gamma")
+  plot(fit.gamma)
+  
+  fit.weibull <- fitdist(dist, "weibull")
+  plot(fit.weibull)
+  
+  fit.lognormal <- fitdist(dist, "lnorm")
+  plot(fit.lognormal)
+  
+  # Check result
+  shape = coefficients(fit.gamma)["shape"]
+  rate = coefficients(fit.gamma)["rate"]
+  
+  print(coefficients(fit.gamma))
+  
+  # testing the goodness of fit.
+  #num_of_samples = length(dist)
+  #y <- rgamma(num_of_samples, shape = shape, rate = rate)
+  #result = ks.test(dist, y)
+  
+  ksResult <- ks.test(dist, "pgamma", shape, rate)
+  
+  print("gamma goodness of fit")
+  print(ksResult)
+  ks = ksResult[['statistic']]
+  
+  # iterate 10000 samples for ks-statistics
+  num_of_samples = length(dist)
+  sample_ks <- c()
+  runs = 10000
+  for(i in 1: runs){
+    run.Sample <- rgamma(num_of_samples, shape = shape, rate = rate)
+    
+    run.fit.gamma <- fitdist(run.Sample, distr = "gamma", method = "mle", lower = c(0, 0))
+    # Check result
+    run.shape = coefficients(run.fit.gamma)["shape"]
+    run.rate = coefficients(run.fit.gamma)["rate"]
+    
+    result = ks.test(run.Sample, "pgamma", run.shape, run.rate) 
+    
+    #result = ks.test(dist, y)
+    #print("gamma goodness of fit")
+    #print(result)
+    sample_ks = c(sample_ks, result[['statistic']])
+  }
+  
+  tests<-sapply(sample_ks, function(x) {
+    if(x > ks ){
+      1
+    }
+    else {
+      0
+    }
+  })
+  
+  print(sample_ks)
+  #print(tests)
+  
+  parametric_test = sum(tests)/runs
+  
+  print("parametric test")
+  print(parametric_test)
+  
+  parametric_test
+
+}
+
+chisqTest <- function(dist){
+  dist <- combined[, "TD"]
+  x.gam.cut<-cut(dist,breaks=c(0,3,6,9,12,Inf)) ##binning data
+  table(x.gam.cut) ## binned data table
+  
+  fit.gamma <- fitdist(dist, distr = "gamma", method = "qme", lower = c(0, 0))
+  # Check result
+  a.est = coefficients(fit.gamma)["shape"]
+  l.est = coefficients(fit.gamma)["rate"]
+  
+  num_of_samples = length(dist)
+  
+  #x.gam.cut
+  ## computing expected frequencies
+  p1 = (pgamma(3,shape=a.est,rate=l.est)-pgamma(0,shape=a.est,rate=l.est))*num_of_samples
+  p2 = (pgamma(6,shape=a.est,rate=l.est)-pgamma(3,shape=a.est,rate=l.est))*num_of_samples
+  p3 = (pgamma(9,shape=a.est,rate=l.est)-pgamma(6,shape=a.est,rate=l.est))*num_of_samples
+  p4 = (pgamma(12,shape=a.est,rate=l.est)-pgamma(9,shape=a.est,rate=l.est))*num_of_samples
+  p5 = (pgamma(Inf,shape=a.est,rate=l.est)-pgamma(12,shape=a.est,rate=l.est))*num_of_samples
+  f.ex<-c(p1, p2, p3, p4, p5) ## expected frequencies vector
+  f.os<-vector()
+  for(i in 1:5) f.os[i]<- table(x.gam.cut)[[i]] ## empirical frequencies
+  X2<-sum(((f.os-f.ex)^2)/f.ex) ## chi-square statistic
+  gdl<-5-2-1 ## degrees of freedom
+  1-pchisq(X2,gdl) ## p-value
+}
+
+chisqTest <- function(dist){
+  dist <- combined[, "TD"]
+  
+  dist <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
+  
+  x.gam.cut<-cut(dist,breaks=c(0,3,6,9,12,Inf)) ##binning data
+  table(x.gam.cut) ## binned data table
+  
+  fit.gamma <- fitdist(dist, distr = "gamma", method = "qme", lower = c(0, 0))
+  # Check result
+  a.est = coefficients(fit.gamma)["shape"]
+  l.est = coefficients(fit.gamma)["rate"]
+  
+  num_of_samples = length(dist)
+  
+  #x.gam.cut
+  ## computing expected frequencies
+  p1 = (pgamma(3,shape=a.est,rate=l.est)-pgamma(0,shape=a.est,rate=l.est))*num_of_samples
+  p2 = (pgamma(6,shape=a.est,rate=l.est)-pgamma(3,shape=a.est,rate=l.est))*num_of_samples
+  p3 = (pgamma(9,shape=a.est,rate=l.est)-pgamma(6,shape=a.est,rate=l.est))*num_of_samples
+  p4 = (pgamma(12,shape=a.est,rate=l.est)-pgamma(9,shape=a.est,rate=l.est))*num_of_samples
+  p5 = (pgamma(Inf,shape=a.est,rate=l.est)-pgamma(12,shape=a.est,rate=l.est))*num_of_samples
+  f.ex<-c(p1, p2, p3, p4, p5) ## expected frequencies vector
+  f.os<-vector()
+  for(i in 1:5) f.os[i]<- table(x.gam.cut)[[i]] ## empirical frequencies
+  X2<-sum(((f.os-f.ex)^2)/f.ex) ## chi-square statistic
+  gdl<-5-2-1 ## degrees of freedom
+  1-pchisq(X2,gdl) ## p-value
 }
 
 discretize <- function(data, n) {
@@ -68,7 +282,7 @@ discretize <- function(data, n) {
 	#   A vector of cut points
   
   #n = 6
-  #data = combined[, "TD"]
+  #data = combined[, "DETs"]
   
   #print(data)
   
@@ -77,24 +291,16 @@ discretize <- function(data, n) {
 	}
   
   quantiles <- seq(1/n, 1 - (1/n), 1/n)
-	tableValues <- table(data)
+  
+  tableValues <- table(data)
+  
+  data <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
 	
-	#reduce sizes for fitting with gamma curve
-	#print(as.integer(tableValues/10))
-  vec <- rep(as.numeric(names(tableValues)), as.integer(tableValues/10))
-	
-	fit.gamma <- fitdist(vec, distr = "gamma", method = "mle", lower = c(0, 0))
+	fit.gamma <- fitdist(data, distr = "gamma", method = "mle", lower = c(0, 0))
 	# Check result
 	shape = coefficients(fit.gamma)["shape"]
 	rate = coefficients(fit.gamma)["rate"]
 	print(coefficients(fit.gamma))
-	
-	# testing the goodness of fit.
-	num_of_samples = length(vec)
-	y <- rgamma(num_of_samples, shape = shape, scale = rate)
-	result = ks.test(vec, y)
-	print("gamma goodness of fit")
-	print(result)
 	
 	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
@@ -242,6 +448,54 @@ crossValidate <- function(data, k) {
 		foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
 	}
 	results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+}
+
+crossValidate1 <- function(data, k){
+  #data = regressionData1;
+  #k = 5;
+  folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
+  foldMSE <- vector(length = k)
+  foldMMRE <- vector(length = k)
+  foldPRED <- vector(length = k)
+  for (i in 1:k) {
+    testIndexes <- which(folds == i, arr.ind = TRUE)
+    testData <- data[testIndexes, ]
+    trainData <- data[-testIndexes, ]
+    
+    lm.fit <- lm(Effort ~ . - 1, as.data.frame(trainData));
+  
+    predicted <- predict(lm.fit, newData = testData)
+    
+    foldMSE[i] <- mean((predicted - testData$Effort)^2)
+    foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
+    foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+  }
+  results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+}
+
+crossValidate2 <- function(data, k){
+  #data <- as.data.frame(transactionRegressionData1)
+  #k <- 5
+  folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
+  foldMSE <- vector(length = k)
+  foldMMRE <- vector(length = k)
+  foldPRED <- vector(length = k)
+  for (i in 1:k) {
+    testIndexes <- which(folds == i, arr.ind = TRUE)
+    testData <- data[testIndexes, ]
+    trainData <- data[-testIndexes, ]
+    
+    lm.fit <- lm(Effort ~ . - 1, as.data.frame(trainData))
+    
+    predicted <- predict(lm.fit, newData = testData)
+    print(testData$Effort)
+    print(length(predicted))
+    foldMSE[i] <- mean((predicted - testData$Effort)^2)
+    foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
+    foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
+  }
+  results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
+  
 }
 
 genColNames <- function(parameters, nBins) {
@@ -483,7 +737,20 @@ proposalfunction <- function(B, normFactor, sd){
   sample[names(B)] <- rnorm(length(B),mean = B, sd = sigma)
   sample["normFactor"] <- rnorm(1, normFactor, 0.1)
   sample['sd'] <- rnorm(1, sd, 3)
+  sample['sigma'] <- sigma
   return(sample)
+}
+
+proposalProbability <- function(x1, x2){
+  #
+  # return the proposal probability g(x1|x2)
+  #
+  
+  probB <- sum(dnorm(x1["B"],mean = x2["B"], sd = x2["sigma"], log = T))
+  probNormFactor <- dnorm(x1["normFactor"], x2["normFactor"], 0.1, log=T)
+  probSD <- dnorm(x1["sd"], x2["sd"], log=T)
+  return(probB+probNormFactor+probSD)
+  
 }
 
 run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normFactor, var){
@@ -492,11 +759,26 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
   #if(normFactor < 1){
   #  normFactor = 1
   #}
-  chain = matrix(nrow=N+1, ncol=length(priorB)+2)
-  colnames(chain) <- c(names(priorB), "normFactor", "sd")
+  
+  #N <-1000
+  #B <- means
+  #varianceMatrix <- covar
+  #normFactor1 <- normFactor['mean']
+  #var <- normFactor['var']
+  
+  chain = matrix(nrow=N+1, ncol=length(priorB)+3)
+  colnames(chain) <- c(names(priorB), "normFactor", "sd", "sigma")
   chain[1, "normFactor"] <- normFactor
   chain[1, names(priorB)] <- priorB
   chain[1, "sd"] <- 10
+  
+  sigma <- c(0.1)
+  if(length(priorB)>1){
+    for (i in 1:length(priorB)) {
+      sigma <- c(sigma, 1/5* (abs(priorB[i] - priorB[i - 1]))+0.1)
+    }
+  }
+  chain[1, "signma"] = sigma
   #probabs <- c()
   #acceptance <- c()
   for (i in 1:N){
@@ -505,9 +787,12 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
     `%ni%` <- Negate(`%in%`)
     update <- posterior(proposal, priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
     posterior <- posterior(chain[i,], priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
-    probab = exp(update - posterior)
+    probab = min(c(1, exp(update + proposalProbability(chain[i,], proposal) - posterior - proposalProbability(proposal, chain[i, ]))))
     #probabs = c(probabs, probab)
     #print(probab)
+    #the better way of calculating the acceptance rate
+    
+    
     if (runif(1) < probab){
       chain[i+1,] = proposal
       #print("accept")
@@ -523,12 +808,7 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
 }
 
 bayesfit3<-function(regressionData, N, B, varianceMatrix, normFactor, var){
-  #N <-1000
-  #B <- means
-  #varianceMatrix <- covar
-  #normFactor1 <- normFactor['mean']
-  #var <- normFactor['se']^2
- 
+
   #startvalue = c(4,0,10)
   chain = run_metropolis_MCMC(regressionData, N, B, varianceMatrix, normFactor, var)
   
@@ -689,7 +969,7 @@ calNormFactor <- function(regressionData, n){
   #regressionData[, "Effort"]/normFactor
 }
 
-performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", "TD", "DETs"), k = 5) {
+performSearch <- function(n, effortData, combinedData, transactionFiles, parameters = c("TL", "TD", "DETs"), k = 5) {
   # Performs search for the optimal number of bins and weights to apply to each
   # bin through linear regression.
   #
@@ -708,12 +988,14 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
   #n = 6
   #effortData = effort
   #transactionFiles = transactionFiles
-  #parameters = c("TL", "TD")
+  #parameters = c("TL", "TD", "DETs")
+  #combinedData <- combined
   #k = 5
   #i = 6
   
   projects <- rownames(effortData)
-  combinedData <- combineData(transactionFiles)
+  #combinedData <- combineData(transactionFiles)
+
   paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
   if(length(parameters) == 0){
@@ -731,21 +1013,14 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
     regressionData <- matrix(nrow = length(projects), ncol = length(levels) + 1)
     rownames(regressionData) <- projects
     colnames(regressionData) <- c(levels, "Effort")
+    
     for (project in projects) {
-        filePath <- transactionFiles[project, "transaction_file"]
-        if (!file.exists(filePath)) {
-          print("file doesn't exist")
-          next
-        }
-        fileData <- read.csv(filePath)
-        fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
-        fileData <- na.omit(fileData)
-        
-        if(nrow(fileData) < 1){
-          next
-        }
-        classifiedData <- classify(fileData, cutPoints)
-        regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
+    fileData <- transactionFiles[[project]]
+    if(length(fileData) < 1){
+      next
+    }
+    classifiedData <- classify(fileData, cutPoints)
+    regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
     }
   
     regressionData <- na.omit(regressionData)
@@ -764,20 +1039,51 @@ performSearch <- function(n, effortData, transactionFiles, parameters = c("TL", 
     #print(means)
     covar <- genVariance(means, 1/3)
     
-    bayesianModel <- bayesfit3(regressionData[rownames(regressionData) != "Aggregate", ], 10000, means, covar, normFactor['mean'], normFactor['var'])
+    regressionData1 <- regressionData[rownames(regressionData) != "Aggregate", ]
     
-    validationResults <- crossValidate(regressionData[rownames(regressionData) != "Aggregate", ], k)
+    #the bayesian model fit
+    
+    #bayesianModel <- bayesfit3(regressionData1, 10000, means, covar, normFactor['mean'], normFactor['var'])
+    
+    #validationResults <- crossValidate(regressionData1, k)
+    
+    #the regression model fit
+    regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData1));
+    print(regressionModel)
+    validationResults1 <- crossValidate1(regressionData1, k)
+    
+    #calculate the bayesian regression data
+    nominalWeights <- as.matrix(means)
+    #print(nominalWeights)
+    transactionData1 <- as.matrix(regressionData1[, !(colnames(regressionData) %in% c("Effort"))])
+    transactionSum1 <-  transactionData1 %*% nominalWeights 
+    transactionRegressionData1 <- matrix(nrow = nrow(regressionData1), ncol=2)
+    colnames(transactionRegressionData1) <- c("transactionSum", "Effort")
+    rownames(transactionRegressionData1) <- rownames(regressionData1)
+    transactionRegressionData1[, "transactionSum"] = transactionSum1
+    transactionRegressionData1[, "Effort"] = regressionData1[, "Effort"]
+    transactionRegressionData1 <- as.data.frame(transactionRegressionData1)
+    
+    #the prior model fit
+    priorModel <- lm(Effort ~ . - 1, transactionRegressionData1)
+    print(priorModel)
+    validationResults2 <- crossValidate2(transactionRegressionData1, k)
     
     #validationResults <- crossValidate(regressionData, k, means, covar, normFactor['mean'], normFactor['var'])
     
     print(cutPoints)
     #print("cross validation")
     searchResults[[i]] <- list(
-                               MSE = validationResults["MSE"], 
-                               MMRE = validationResults["MMRE"], 
-                               PRED = validationResults["PRED"],
-                               model = bayesianModel,
-                               modelAvg = lapply(bayesianModel, mean),
+                               numOfTrans = numOfTrans,
+                               #MSE = validationResults["MSE"], 
+                               #MMRE = validationResults["MMRE"], 
+                               #PRED = validationResults["PRED"],
+                               #model = bayesianModel,
+                               priorModel = priorModel,
+                               regressionModel = regressionModel,
+                               priorModelAccuracyMeasure = validationResults2,
+                               regressionModelAccuracyMeasure = validationResults1,
+                               #modelAvg = lapply(bayesianModel, mean),
                                data = regressionData,
                                cuts = cutPoints)
   }

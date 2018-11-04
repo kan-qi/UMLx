@@ -14,6 +14,7 @@ library(fitdistrplus)
 library(egg)
 library(gridExtra)
 library(plyr)
+require(MASS)
 
 cutsAsVec <- function(x) {
   ret <- c("Cut Points:")
@@ -26,16 +27,43 @@ cutsAsVec <- function(x) {
 ```
 Combined Data Effort Values
 ```{r combined}
-modelData <- read.csv("modelEvaluations-9-13-1.csv")
+modelData <- read.csv("modelEvaluations-9-29.csv")
 modelData$Project <- as.character(modelData$Project)
 modelData$transaction_file <- as.character(modelData$transaction_file)
 effort <- subset(modelData, select=c("Effort"))
-transactionFiles <- subset(modelData, select=c("transaction_file"))
+transactionFileList <- subset(modelData, select=c("transaction_file"))
 rownames(effort) <- modelData$Project
-rownames(transactionFiles) <- modelData$Project
+rownames(transactionFileList) <- modelData$Project
+
+projects <- rownames(effort)
+numOfTrans <- 0
+transactionFiles <- list()
+    for (project in projects) {
+        filePath <- transactionFileList[project, "transaction_file"]
+        print(filePath)
+        if (!file.exists(filePath)) {
+          print("file doesn't exist")
+          next
+        }
+        fileData <- read.csv(filePath)
+        fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
+        fileData <- na.omit(fileData)
+        
+        if(nrow(fileData) < 1){
+          transactionFiles[[project]] <-list()
+          next
+        }
+        
+        transactionFiles[[project]] <- fileData
+        numOfTrans = numOfTrans + nrow(fileData)
+    }
+
+
+    print(numOfTrans)
+    
 combined <- combineData(transactionFiles)
 
-ggplot(modelData, aes(x=UseCase_Num)) + 
+ggplot(modelData[!(modelData$UseCase_Num==0),], aes(x=UseCase_Num)) + 
   geom_histogram(binwidth=5, colour="black", fill="gray") + 
   xlab("Number of Use Case") + ylab("Number of Projects") + ggtitle("Project Distribution - Use Case")+
   theme_bw(base_size=20)
@@ -50,8 +78,8 @@ ggplot(modelData, aes(x=Personnel)) +
   xlab("Personnel") + ylab("Number of Projects") + ggtitle("Project Distribution - Personnel") + 
    theme_bw(base_size=20)
 
-ggplot(modelData, aes(x=Effort)) + 
-  geom_histogram(binwidth=300, colour="black", fill="gray") + 
+ggplot(modelData[!(modelData$Effort==0),], aes(x=Effort)) + 
+  geom_histogram(binwidth=200, colour="black", fill="gray") + 
   xlab("Effort") + ylab("Number of Projects") + ggtitle("Project Distribution - Effort") + 
    theme_bw(base_size=20)
 
@@ -64,7 +92,6 @@ ggplot(count.modelData, aes(unique.levels, count)) +
   xlab("Project Type") + ylab("Number of Projects") + ggtitle("Project Distribution - Type") + 
    theme_bw(base_size=20)
 
-
 #effort$Project <- NULL
 ggplot(combined, aes(x=TL)) + 
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
@@ -74,27 +101,78 @@ ggplot(combined, aes(x=TL)) +
   annotate("text", x=14, y=0.25, label= "Gamma: shape=6.54, rate=1.16; KS: p-value < 0.01")+
   theme_bw(base_size=15)
 
+#Ks parameteric test
+parametricKStest(combined[, "TL"])
+
 ggplot(combined, aes(x=TD)) + 
   geom_histogram(aes(y = ..density..), binwidth=0.5, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$TD), sd(combined$TD))) +
+  #stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
   stat_function(fun = dgamma, args = list(shape=3.6492150, rate=0.6985361 )) +
   annotate("text", x=16, y=0.18, label= "Gamma: shape=3.65, rate=0.70; KS: p-value < 0.01")+
   xlab("TD") + ylab("Density") +ggtitle("Combined TD Data Summary") + 
   theme_bw()
 
+#Ks parameteric test
+parametricKStest(combined[, "TD"])
+
 ggplot(combined, aes(x=DETs)) + 
   geom_histogram(aes(y = ..density..), binwidth=1, colour="black", fill="white") + 
   #stat_function(fun = dnorm, args = list(mean = mean(combined$DETs), sd(combined$DETs))) + 
   stat_function(fun = dgamma, args = list(shape=1.6647412, rate=0.1691911)) + 
+  #stat_function(fun = dgamma, args = list(shape=1.6902002, rate=0.1692468)) + 
   annotate("text", x=57, y=0.15, label= "Gamma: shape=1.66, rate=0.17; KS: p-value < 0.01")+
   xlab("DETs") + ylab("Density") + ggtitle("Combined DETs Data Summary") + 
   theme_bw()
 
+#Ks parameteric test
+parametricKStest(combined[, "DETs"])
+
 selectedModels = list()
+```
+productivity calibration
+```{r combined}
+
+modelData1 <- read.csv("../Resilient Agile/modelEvaluations.csv")
+modelData1$Project <- as.character(modelData1$Project)
+modelData1$transaction_file <- as.character(modelData1$transaction_file)
+effort1 <- subset(modelData1, select=c("Effort"))
+rownames(effort1) <- modelData1$Project
+transactionFileList1 <- subset(modelData1, select=c("transaction_file"))
+rownames(transactionFileList1) <- modelData1$Project
+
+#EUCP
+weights <- c(1)
+names(weights) <- c("L1")
+cutpoints <- NULL
+results <- prodByLinearRegression(effort1, transactionFileList1, cutpoints, weights)
+print(results)
+
+#EXUCP
+weights <- c(1, 2, 3, 5, 8)
+names(weights) <- c("L1", "L2", "L3", "L4", "L5")
+cutpoints <- matrix(NA, nrow = 2, ncol = 4)
+rownames(cutpoints) <- c("TL", "TD")
+cutpoints["TL",] = c(-Inf, 4.1, 6.1, Inf)
+cutpoints["TD",] = c(-Inf, 3.1, 6.1, Inf)
+results <- prodByLinearRegression(effort1, transactionFileList1, cutpoints, weights)
+print(results)
+
+#DUCP
+weights <- c(1, 1, 2, 3, 5, 8, 8)
+names(weights) <- c("L1", "L2", "L3", "L4", "L5", "L6", "L7")
+cutpoints <- matrix(NA, nrow = 3, ncol = 4)
+rownames(cutpoints) <- c("TL", "TD", "DETs")
+cutpoints["TL",] = c(-Inf, 4.1, 6.1, Inf)
+cutpoints["TD",] = c(-Inf, 3.1, 6.1, Inf)
+cutpoints["DETs",] = c(-Inf, 5.1, 11.1, Inf)
+results <- prodByLinearRegression(effort1, transactionFileList1, cutpoints, weights)
+print(results)
+
 ```
 TN Search Results
 ```{r swti part I} 
-TNresults <- performSearch(6, effort, transactionFiles, c())
+TNresults <- performSearch(6, effort, combined, transactionFiles, c())
 # Plot classification results
 for (i in 1:length(TNresults)) {
   result <- TNresults[[i]]
@@ -176,7 +254,7 @@ for (i in 1:length(TNresults)) {
 
 SWTI Search Results I
 ```{r swti part I} 
-SWTIresults <- performSearch(6, effort, transactionFiles, c("TL"))
+SWTIresults <- performSearch(6, effort, combined, transactionFiles, c("TL"))
 # Plot classification results
 for (i in 1:length(SWTIresults)) {
   result <- SWTIresults[[i]]
@@ -285,7 +363,7 @@ for (i in 1:length(SWTIresults)) {
 
 SWTI Search Results II
 ```{r swti part II}
-SWTIresults_II <- performSearch(6, effort, transactionFiles, c("TD"))
+SWTIresults_II <- performSearch(6, effort, combined, transactionFiles, c("TD"))
 # Plot classification results
 for (i in 1:length(SWTIresults_II)) {
   result <- SWTIresults_II[[i]]
@@ -396,7 +474,7 @@ for (i in 1:length(SWTIresults_II)) {
 
 SWTI Search Results III
 ```{r swti part III}
-SWTIresults_III <- performSearch(6, effort, transactionFiles, c("DETs"))
+SWTIresults_III <- performSearch(6, effort, combined, transactionFiles, c("DETs"))
   # Plot classification results
 for (i in 1:length(SWTIresults_III)) {
   result <- SWTIresults_III[[i]]
@@ -502,7 +580,7 @@ for (i in 1:length(SWTIresults_III)) {
 ```
 SWTII Search Results
 ```{r swtii, warning = FALSE}
-SWTIIresults <- performSearch(6, effort, transactionFiles, c("TL", "TD"))
+SWTIIresults <- performSearch(6, effort, combined, transactionFiles, c("TL", "TD"))
 # Plot classification results
 for (i in 1:length(SWTIIresults)) {
   result <- SWTIIresults[[i]]
@@ -587,7 +665,7 @@ for (i in 1:length(SWTIIresults)) {
 ```
 SWTIII Search Results
 ```{r swtiii, warning = FALSE}
-SWTIIIresults <- performSearch(6, effort, transactionFiles, c("TL", "TD", "DETs"))
+SWTIIIresults <- performSearch(6, effort, combined, transactionFiles, c("TL", "TD", "DETs"))
 # Plot classification results
 for (i in 1:length(SWTIIIresults)) {
   result <- SWTIIIresults[[i]]
@@ -711,7 +789,15 @@ predictedValues$Row.names <- NULL
 
 r2Vals <- apply(subset(predictedValues, select = -Effort), 2, function (x) {
   dat <- data.frame(Predicted = x, Effort = predictedValues$Effort)
+  dat <- na.omit(dat)
   model <- lm(Effort ~ ., data = dat)
+  totVar <- sum((dat$Predicted-mean(dat$Predicted))^2)
+  print(totVar)
+  resVar <- sum((dat$Effort-dat$Predicted)^2)
+  R2 <- 1-(resVar/totVar)
+  ftest <- var.test(dat$Predicted-mean(dat$Effort), dat$Predicted-dat$Effort, alternative = "two.sided")
+  print(ftest)
+  print(R2)
   print(summary(model))
   summary(model)$r.squared
 })

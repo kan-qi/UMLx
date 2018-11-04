@@ -20,7 +20,7 @@
 				MPC:0, //Methods per class
 				NOCH:0, //Number of children
 				DIT:0, //Depth in inheritance tree
-				CBO:0, //Coupling between objects
+//				CBO:0, //Coupling between objects
 				NIVPC:0, //Number of instance variables per class
 				NUMS:0, //Number of unique messages sent
 				NCI:0, //Number of classes inherited
@@ -81,7 +81,7 @@
 	var umlModelProcessor = require('./UMLModelProcessor.js');
 
 	function toModelEvaluationHeader() {
-		return "NOET,NOAAE,NORT,NEM,NSR,NOA,NOS,WMC,MPC,NOCH,DIT,CBO,NIVPC,NUMS,NCI,NCIF,RR,NTLC,ANWMC,ADIT,NOCPBC,EIF,ILF,DET,FTR,NT,NOC,NOA,NOA,NOUC,NOR,ANAPUC,ANRPUC,UCP,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCAL,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOA,NOMPC,NPPM,NMT";
+		return "NOET,NOAAE,NORT,NEM,NSR,NOA,NOS,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,EIF,ILF,DET,FTR,NT,NOC,NOA,NOA,NOUC,NOR,ANAPUC,ANRPUC,UCP,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCAL,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOA,NOMPC,NPPM,NMT";
 	}
 
 	function toModelEvaluationRow(modelInfo, index) {
@@ -98,13 +98,13 @@
 				+ modelInfo["SizeMetricAnalytics"].NOS + "," //Number of use cases/scenario scripts 
 				+ modelInfo["SizeMetricAnalytics"].WMC + "," //Weighted methods per class
 				+ modelInfo["SizeMetricAnalytics"].MPC + "," //Methods per class
-				+ modelInfo["SizeMetricAnalytics"].NOCH + "," //Number of children
+//				+ modelInfo["SizeMetricAnalytics"].NOCH + "," //Number of children
 				+ modelInfo["SizeMetricAnalytics"].DIT + "," //Depth in inheritance tree
-				+ modelInfo["SizeMetricAnalytics"].CBO + "," //Coupling between objects
+//				+ modelInfo["SizeMetricAnalytics"].CBO + "," //Coupling between objects
 				+ modelInfo["SizeMetricAnalytics"].NIVPC + "," //Number of instance variables per class
 				+ modelInfo["SizeMetricAnalytics"].NUMS + "," //Number of unique messages sent
-				+ modelInfo["SizeMetricAnalytics"].NCI + "," //Number of classes inherited
-				+ modelInfo["SizeMetricAnalytics"].NCIF  + "," //Number of classes inherited from
+//				+ modelInfo["SizeMetricAnalytics"].NCI + "," //Number of classes inherited
+//				+ modelInfo["SizeMetricAnalytics"].NCIF  + "," //Number of classes inherited from
 		        + modelInfo["SizeMetricAnalytics"].RR + "," //Reuse ration
 		        + modelInfo["SizeMetricAnalytics"].NTLC + "," //Number of top level classes
 		        + modelInfo["SizeMetricAnalytics"].ANWMC + "," //Average number of weighted methods per classes
@@ -156,7 +156,7 @@
 	}
 
 	function toDomainModelEvaluationHeader() {
-		return "NOET,NOAAE,NORT,NEM,NSR, NOA,WMC,MPC,NOCH,DIT,CBO,NIVPC,NUMS,NCI,NCIF,RR,NTLC,ANWMC,ADIT,NOCPBC,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCA,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOA,NOMPC,NPPM,NMT";
+		return "NOET,NOAAE,NORT,NEM,NSR, NOA,WMC,MPC,DIT,NIVPC,NUMS,RR,NTLC,ANWMC,ADIT,NOCPBC,NOC,NOIR,NOUR,NORR,NOM,NOP,NOCA,NOASSOC,ANMC,ANPC,ANCAC,ANASSOCC,ANRELC,NOC,NOAPC,NODET,NORET,NOA,NOMPC,NPPM,NMT";
 	}
 
 	function toDomainModelEvaluationRow(domainModelInfo, index) {
@@ -176,15 +176,15 @@
 		+ domainModelInfo["SizeMetricAnalytics"].WMC + "," //Weighted methods per class
 		+ domainModelInfo["SizeMetricAnalytics"].MPC + "," //Methods per class
 		
-		+ domainModelInfo["SizeMetricAnalytics"].NOCH + "," //Number of children
+//		+ domainModelInfo["SizeMetricAnalytics"].NOCH + "," //Number of children
 		+ domainModelInfo["SizeMetricAnalytics"].DIT + "," //Depth in inheritance tree
-		+ domainModelInfo["SizeMetricAnalytics"].CBO + "," //Coupling between objects
+//		+ domainModelInfo["SizeMetricAnalytics"].CBO + "," //Coupling between objects
 		
 		+ domainModelInfo["SizeMetricAnalytics"].NIVPC + "," //Number of instance variables per class
 		
 		+ domainModelInfo["SizeMetricAnalytics"].NUMS + "," //Number of unique messages sent
-		+ domainModelInfo["SizeMetricAnalytics"].NCI + "," //Number of classes inherited
-		+ domainModelInfo["SizeMetricAnalytics"].NCIF  + "," //Number of classes inherited from
+//		+ domainModelInfo["SizeMetricAnalytics"].NCI + "," //Number of classes inherited
+//		+ domainModelInfo["SizeMetricAnalytics"].NCIF  + "," //Number of classes inherited from
 		// should be applied to individual classes
 		
 		+ domainModelInfo["SizeMetricAnalytics"].RR + "," //Reuse ration
@@ -238,15 +238,15 @@
 				WMC :0, //Weighted methods per class
 				MPC :0, //Methods per class
 				
-				NOCH :0, //Number of children
+//				NOCH :0, //Number of children
 				DIT :0, //Depth in inheritance tree
-				CBO :0, //Coupling between objects
+//				CBO :0, //Coupling between objects
 				
 				NIVPC :0, //Number of instance variables per class
 				
 				NUMS :0, //Number of unique messages sent
-				NCI :0, //Number of classes inherited
-				NCIF  :0, //Number of classes inherited from
+//				NCI :0, //Number of classes inherited
+//				NCIF  :0, //Number of classes inherited from
 				// should be applied to individual classes
 				
 		        RR :0, //Reuse ration
@@ -290,12 +290,13 @@
 			domainModelInfo["SizeMetricAnalytics"].WMC =  domainModelInfo["ComponentAnalytics"].WeightedOperNum; //Weighted methods per class
 			domainModelInfo["SizeMetricAnalytics"].ANWMC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].WeightedOperNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of weighted methods per classes
 			domainModelInfo["SizeMetricAnalytics"].NIVPC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].InstanceVarNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Number of instance variables per class
-			
 
 			domainModelInfo["SizeMetricAnalytics"].ANMC = domainModelInfo["ComponentAnalytics"].AvgOperation;  //Average number of methods per class
 			domainModelInfo["SizeMetricAnalytics"].ANPC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].ParameterNum/domainModelInfo["ComponentAnalytics"].ClassNum;  //Average Number of parameters per class
 			domainModelInfo["SizeMetricAnalytics"].ANCAC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].AttributeNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Average number of class attributes per class
 			
+			var DIT = 0;
+			var totalDIT = 0;
 			for(var i in domainModelInfo.Elements){
 				var element = domainModelInfo.Elements[i];
 				
@@ -307,13 +308,23 @@
 				element.NCI = element.numberOfClassesInherited; //Number of classes inherited
 				element.NCIF = element.numberOfClassesInheritedFrom; //Number of classes inherited from
 				// should be applied to individual classes
+				
+				if(DIT < element.DIT){
+					DIT = element.DIT;
+				}
+				
+				totalDIT += DIT;
 			}
 			
-			domainModelInfo["SizeMetricAnalytics"].EIF = 0; //External interface files
-	        domainModelInfo["SizeMetricAnalytics"].ILF = 0; //Internal logic files
-	        domainModelInfo["SizeMetricAnalytics"].DET = 0; //Data element types 
-	        domainModelInfo["SizeMetricAnalytics"].FTR = 0; //File type referenced
+//			domainModelInfo["SizeMetricAnalytics"].EIF = 0; //External interface files
+//	        domainModelInfo["SizeMetricAnalytics"].ILF = 0; //Internal logic files
+//	        domainModelInfo["SizeMetricAnalytics"].DET = 0; //Data element types 
+//	        domainModelInfo["SizeMetricAnalytics"].FTR = 0; //File type referenced
+			
+			domainModelInfo["SizeMetricAnalytics"].NOCPBC = domainModelInfo["ComponentAnalytics"].AverageNumberOfChildrenPerBaseClass;
 	        
+			domainModelInfo["SizeMetricAnalytics"].DIT = DIT;
+			domainModelInfo["SizeMetricAnalytics"].ADIT = totalDIT/domainModelInfo.Elements.length == 0? 0: totalDIT/domainModelInfo.Elements.length;
 	        domainModelInfo["SizeMetricAnalytics"].NOC = domainModelInfo["ComponentAnalytics"].ClassNum; //Number of classes
 	        
 	        domainModelInfo["SizeMetricAnalytics"].NOM = domainModelInfo["ComponentAnalytics"].OperationNum;  //Number of methods
@@ -322,8 +333,9 @@
 	        
 	        domainModelInfo["SizeMetricAnalytics"].NOC = domainModelInfo["ComponentAnalytics"].ClassNum; //Number of classes
 			domainModelInfo["SizeMetricAnalytics"].NOAPC = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].AttributeNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Number of attributes per class 
-			domainModelInfo["SizeMetricAnalytics"].NODET = 0; //Number of data element types
-			domainModelInfo["SizeMetricAnalytics"].NORET = 0; //Number of records
+			domainModelInfo["SizeMetricAnalytics"].NODET = domainModelInfo["ComponentAnalytics"].ClassNum; //Number of data element types
+			domainModelInfo["SizeMetricAnalytics"].NOET = domainModelInfo["ComponentAnalytics"].ClassNum; //Number of data element types
+			domainModelInfo["SizeMetricAnalytics"].NORET = domainModelInfo["ComponentAnalytics"].ClassNum; //Number of records
 			domainModelInfo["SizeMetricAnalytics"].NOMPC = domainModelInfo["ComponentAnalytics"].AvgOperation; //Number of methods per class
 			domainModelInfo["SizeMetricAnalytics"].NPPM = domainModelInfo["ComponentAnalytics"].ClassNum == 0? 0: domainModelInfo["ComponentAnalytics"].ParameterNum/domainModelInfo["ComponentAnalytics"].ClassNum; //Number of parameters per method
 			domainModelInfo["SizeMetricAnalytics"].NMT = domainModelInfo["ComponentAnalytics"].OperationNum; //Number of method types
@@ -383,13 +395,13 @@
 				NOS:0, //Number of use cases/scenario scripts 
 				WMC:0, //Weighted methods per class
 				MPC:0, //Methods per class
-				NOCH:0, //Number of children
+//				NOCH:0, //Number of children
 				DIT:0, //Depth in inheritance tree
-				CBO:0, //Coupling between objects
+//				CBO:0, //Coupling between objects
 				NIVPC:0, //Number of instance variables per class
 				NUMS:0, //Number of unique messages sent
-				NCI:0, //Number of classes inherited
-				NCIF :0, //Number of classes inherited from
+//				NCI:0, //Number of classes inherited
+//				NCIF :0, //Number of classes inherited from
 		        RR:0, //Reuse ration
 		        NTLC:0, //Number of top level classes
 		        ANWMC:0, //Average number of weighted methods per classes
@@ -470,18 +482,18 @@
 			modelInfo["SizeMetricAnalytics"].WMC = domainModelInfo["SizeMetricAnalytics"].WMC; //Weighted methods per class
 			modelInfo["SizeMetricAnalytics"].MPC = domainModelInfo["SizeMetricAnalytics"].MPC; //Methods per class
 			
-			modelInfo["SizeMetricAnalytics"].NOCH = domainModelInfo["SizeMetricAnalytics"].NOCH; //Number of children
+//			modelInfo["SizeMetricAnalytics"].NOCH = domainModelInfo["SizeMetricAnalytics"].NOCH; //Number of children
 			modelInfo["SizeMetricAnalytics"].DIT = domainModelInfo["SizeMetricAnalytics"].DIT; //Depth in inheritance tree
-			modelInfo["SizeMetricAnalytics"].CBO = domainModelInfo["SizeMetricAnalytics"].CBO; //Coupling between objects
+//			modelInfo["SizeMetricAnalytics"].CBO = domainModelInfo["SizeMetricAnalytics"].CBO; //Coupling between objects
 			
 			modelInfo["SizeMetricAnalytics"].NIVPC = domainModelInfo["SizeMetricAnalytics"].NIVPC; //Number of instance variables per class
 			
 			modelInfo["SizeMetricAnalytics"].NUMS = domainModelInfo["SizeMetricAnalytics"].NUMS; //Number of unique messages sent
-			modelInfo["SizeMetricAnalytics"].NCI = domainModelInfo["SizeMetricAnalytics"].NCI; //Number of classes inherited
-			modelInfo["SizeMetricAnalytics"].NCIF  = domainModelInfo["SizeMetricAnalytics"].NCIF; //Number of classes inherited from
+//			modelInfo["SizeMetricAnalytics"].NCI = domainModelInfo["SizeMetricAnalytics"].NCI; //Number of classes inherited
+//			modelInfo["SizeMetricAnalytics"].NCIF  = domainModelInfo["SizeMetricAnalytics"].NCIF; //Number of classes inherited from
 			// should be applied to individual classes
 			
-			modelInfo["SizeMetricAnalytics"]. RR = domainModelInfo["SizeMetricAnalytics"]. RR; //Reuse ration
+			modelInfo["SizeMetricAnalytics"].RR = domainModelInfo["SizeMetricAnalytics"].RR; //Reuse ration
 			modelInfo["SizeMetricAnalytics"].NTLC = domainModelInfo["SizeMetricAnalytics"].NTLC; //Number of top level classes
 			modelInfo["SizeMetricAnalytics"].ANWMC = domainModelInfo["SizeMetricAnalytics"].ANWMC; //Average number of weighted methods per classes
 			modelInfo["SizeMetricAnalytics"].ADIT = domainModelInfo["SizeMetricAnalytics"].ADIT; //Average depth of inheritance tree 
@@ -551,6 +563,7 @@
 		entityNum = !entityNum ? 0 : entityNum;
 
 		var entityAnalyticsStr = entityNum == 0 ? "id,element,NOCH,DIT,CBO,NUMS,NCI,NCIF\n" : "";
+		
 
 //		for ( var i in domainModelInfo.Diagrams) {
 

@@ -8,8 +8,35 @@
  * Identify the system components.
  * Establish the control flow between the components
  * Identify the stimuli.
- *
+ * 
+ * /*
+	 * There are three layers:
+	 * codeElement-code:ClassUnit
+	 * 		-source
+	 * 			- region
+	 * 		-codeRelation-code:Imports
+	 *		-codeElement-code:StorableUnit
+	 *      -codeElement-code:MethodUnit
+	 *        -source
+	 *        -codeElement-code:signature
+	 *        	-parameterUnit
+	 *        -codeElement-action:BlockUnit
+	 *          -codeElement-action:ActionElement
+	 *            -codeElement-action:ActionElement
+	 *            -actionRelation-action:Address
+	 *            -actionRelation-action:Reads
+	 *            -actionRelation-action:Calls
+	 *            -actionRelation-action:Creates
+	 *            -codeElement-code:ClassUnit
+	 *      -codeElement-code:InterfaceUnit
+	 *           -codeRelation-code:Imports
+	 *           -codeRelation-code:MethodUnit
+	 *      -codeElement-code:ClassUnit
+	 *           
+	 * The function is recursively designed to take care of the structure.
+	 *           
  */
+
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
@@ -56,7 +83,6 @@
 	var dicMethodClass = {};	 // {method.uuid, class.uuid}
 	var dicActionElementMethod = {};
 	
-
 	function analyseCode(xmiString, outputDir){
 		assignUUID(xmiString);
 
@@ -316,8 +342,8 @@
 
 		for (var i in dicClassUnits) {
 			var classUnit = dicClassUnits[i];
-			console.log('test');
-			console.log(classUnit);
+//			console.log('test');
+//			console.log(classUnit);
 			// var xmiClassUnit = classUnit.attachment;
 			var XMIClassStorableUnits = classUnit.StorableUnits
 			for (var q in XMIClassStorableUnits) {
