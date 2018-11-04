@@ -34,7 +34,6 @@ effort <- subset(modelData, select=c("Effort"))
 transactionFileList <- subset(modelData, select=c("transaction_file"))
 rownames(effort) <- modelData$Project
 rownames(transactionFileList) <- modelData$Project
-combined <- combineData(transactionFileList)
 
 projects <- rownames(effort)
 numOfTrans <- 0
@@ -50,9 +49,10 @@ transactionFiles <- list()
         fileData <- data.frame(apply(subset(fileData, select = c("TL", "TD", "DETs")), 2, function(x) as.numeric(x)))
         fileData <- na.omit(fileData)
         
-#        if(nrow(fileData) < 1){
-#          next
-#        }
+        if(nrow(fileData) < 1){
+          transactionFiles[[project]] <-list()
+          next
+        }
         
         transactionFiles[[project]] <- fileData
         numOfTrans = numOfTrans + nrow(fileData)
@@ -60,6 +60,8 @@ transactionFiles <- list()
 
 
     print(numOfTrans)
+    
+combined <- combineData(transactionFiles)
 
 ggplot(modelData[!(modelData$UseCase_Num==0),], aes(x=UseCase_Num)) + 
   geom_histogram(binwidth=5, colour="black", fill="gray") + 
@@ -170,7 +172,7 @@ print(results)
 ```
 TN Search Results
 ```{r swti part I} 
-TNresults <- performSearch(6, effort, combined, transactionFileList, c())
+TNresults <- performSearch(6, effort, combined, transactionFiles, c())
 # Plot classification results
 for (i in 1:length(TNresults)) {
   result <- TNresults[[i]]
@@ -252,7 +254,7 @@ for (i in 1:length(TNresults)) {
 
 SWTI Search Results I
 ```{r swti part I} 
-SWTIresults <- performSearch(6, effort, combined, transactionFileList, c("TL"))
+SWTIresults <- performSearch(6, effort, combined, transactionFiles, c("TL"))
 # Plot classification results
 for (i in 1:length(SWTIresults)) {
   result <- SWTIresults[[i]]
@@ -361,7 +363,7 @@ for (i in 1:length(SWTIresults)) {
 
 SWTI Search Results II
 ```{r swti part II}
-SWTIresults_II <- performSearch(6, effort, combined, transactionFileList, c("TD"))
+SWTIresults_II <- performSearch(6, effort, combined, transactionFiles, c("TD"))
 # Plot classification results
 for (i in 1:length(SWTIresults_II)) {
   result <- SWTIresults_II[[i]]
@@ -472,7 +474,7 @@ for (i in 1:length(SWTIresults_II)) {
 
 SWTI Search Results III
 ```{r swti part III}
-SWTIresults_III <- performSearch(6, effort, combined, transactionFileList, c("DETs"))
+SWTIresults_III <- performSearch(6, effort, combined, transactionFiles, c("DETs"))
   # Plot classification results
 for (i in 1:length(SWTIresults_III)) {
   result <- SWTIresults_III[[i]]
@@ -578,7 +580,7 @@ for (i in 1:length(SWTIresults_III)) {
 ```
 SWTII Search Results
 ```{r swtii, warning = FALSE}
-SWTIIresults <- performSearch(6, effort, combined, transactionFileList, c("TL", "TD"))
+SWTIIresults <- performSearch(6, effort, combined, transactionFiles, c("TL", "TD"))
 # Plot classification results
 for (i in 1:length(SWTIIresults)) {
   result <- SWTIIresults[[i]]
@@ -663,7 +665,7 @@ for (i in 1:length(SWTIIresults)) {
 ```
 SWTIII Search Results
 ```{r swtiii, warning = FALSE}
-SWTIIIresults <- performSearch(6, effort, combined, transactionFileList, c("TL", "TD", "DETs"))
+SWTIIIresults <- performSearch(6, effort, combined, transactionFiles, c("TL", "TD", "DETs"))
 # Plot classification results
 for (i in 1:length(SWTIIIresults)) {
   result <- SWTIIIresults[[i]]

@@ -133,11 +133,11 @@ prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weig
 
 parametricKStest <- function(dist){
   
-  dist <- combined[, "TD"]
+  #dist <- combined[, "TD"]
   #dist <- combined[, "TL"]
   #dist <- combined[, "DETs"]
   
-  #tableValues <- table(dist)
+  tableValues <- table(dist)
   
   #reduce sizes for fitting with gamma curve
   #print(as.integer(tableValues/10))
@@ -282,7 +282,7 @@ discretize <- function(data, n) {
 	#   A vector of cut points
   
   #n = 6
-  #data = combined[, "TD"]
+  #data = combined[, "DETs"]
   
   #print(data)
   
@@ -291,8 +291,12 @@ discretize <- function(data, n) {
 	}
   
   quantiles <- seq(1/n, 1 - (1/n), 1/n)
+  
+  tableValues <- table(data)
+  
+  data <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
 	
-	fit.gamma <- fitdist(vec, distr = "gamma", method = "mle", lower = c(0, 0))
+	fit.gamma <- fitdist(data, distr = "gamma", method = "mle", lower = c(0, 0))
 	# Check result
 	shape = coefficients(fit.gamma)["shape"]
 	rate = coefficients(fit.gamma)["rate"]
@@ -446,7 +450,9 @@ crossValidate <- function(data, k) {
 	results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
 }
 
-crossValidate1 <- function(regressionData, k){
+crossValidate1 <- function(data, k){
+  #data = regressionData1;
+  #k = 5;
   folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
   foldMSE <- vector(length = k)
   foldMMRE <- vector(length = k)
@@ -458,7 +464,7 @@ crossValidate1 <- function(regressionData, k){
     
     lm.fit <- lm(Effort ~ . - 1, as.data.frame(trainData));
   
-    predicted <- as.data.frame(predict(lm.fit, newData = testData))
+    predicted <- predict(lm.fit, newData = testData)
     
     foldMSE[i] <- mean((predicted - testData$Effort)^2)
     foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
@@ -467,8 +473,9 @@ crossValidate1 <- function(regressionData, k){
   results <- c("MSE" = mean(foldMSE), "MMRE" = mean(foldMMRE), "PRED" = mean(foldPRED))
 }
 
-crossValidate2 <- function(transactionData, k){
-
+crossValidate2 <- function(data, k){
+  #data <- as.data.frame(transactionRegressionData1)
+  #k <- 5
   folds <- cut(seq(1, nrow(data)), breaks = k, labels = FALSE)
   foldMSE <- vector(length = k)
   foldMMRE <- vector(length = k)
@@ -478,10 +485,11 @@ crossValidate2 <- function(transactionData, k){
     testData <- data[testIndexes, ]
     trainData <- data[-testIndexes, ]
     
-    lm.fit <- lm(Effort ~ . - 1, as.data.frame(transactionData))
+    lm.fit <- lm(Effort ~ . - 1, as.data.frame(trainData))
     
-    predicted <- as.data.frame(predict(lm.fit, newData = testData))
-    
+    predicted <- predict(lm.fit, newData = testData)
+    print(testData$Effort)
+    print(length(predicted))
     foldMSE[i] <- mean((predicted - testData$Effort)^2)
     foldMMRE[i] <- calcMMRE(testData$Effort, predicted)
     foldPRED[i] <- calcPRED(testData$Effort, predicted, 25)
@@ -751,7 +759,14 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
   #if(normFactor < 1){
   #  normFactor = 1
   #}
-  chain = matrix(nrow=N+1, ncol=length(priorB)+2)
+  
+  #N <-1000
+  #B <- means
+  #varianceMatrix <- covar
+  #normFactor1 <- normFactor['mean']
+  #var <- normFactor['var']
+  
+  chain = matrix(nrow=N+1, ncol=length(priorB)+3)
   colnames(chain) <- c(names(priorB), "normFactor", "sd", "sigma")
   chain[1, "normFactor"] <- normFactor
   chain[1, names(priorB)] <- priorB
@@ -772,7 +787,7 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
     `%ni%` <- Negate(`%in%`)
     update <- posterior(proposal, priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
     posterior <- posterior(chain[i,], priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
-    probab = min(c(1, exp(update + proposalProbability(chain[i,], proposal) - posterior - proposalProbability(proposal, chaine[i, ]))))
+    probab = min(c(1, exp(update + proposalProbability(chain[i,], proposal) - posterior - proposalProbability(proposal, chain[i, ]))))
     #probabs = c(probabs, probab)
     #print(probab)
     #the better way of calculating the acceptance rate
@@ -793,12 +808,7 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
 }
 
 bayesfit3<-function(regressionData, N, B, varianceMatrix, normFactor, var){
-  #N <-1000
-  #B <- means
-  #varianceMatrix <- covar
-  #normFactor1 <- normFactor['mean']
-  #var <- normFactor['se']^2
- 
+
   #startvalue = c(4,0,10)
   chain = run_metropolis_MCMC(regressionData, N, B, varianceMatrix, normFactor, var)
   
@@ -978,13 +988,14 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
   #n = 6
   #effortData = effort
   #transactionFiles = transactionFiles
-  #parameters = c("TL")
+  #parameters = c("TL", "TD", "DETs")
+  #combinedData <- combined
   #k = 5
   #i = 6
   
   projects <- rownames(effortData)
   #combinedData <- combineData(transactionFiles)
-  #combinedData <- combined
+
   paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
   if(length(parameters) == 0){
@@ -1005,6 +1016,9 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
     
     for (project in projects) {
     fileData <- transactionFiles[[project]]
+    if(length(fileData) < 1){
+      next
+    }
     classifiedData <- classify(fileData, cutPoints)
     regressionData[project, ] <- c(classifiedData, effortData[project, "Effort"])
     }
@@ -1028,12 +1042,14 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
     regressionData1 <- regressionData[rownames(regressionData) != "Aggregate", ]
     
     #the bayesian model fit
-    bayesianModel <- bayesfit3(regressionData1, 10000, means, covar, normFactor['mean'], normFactor['var'])
     
-    validationResults <- crossValidate(regressionData1, k)
+    #bayesianModel <- bayesfit3(regressionData1, 10000, means, covar, normFactor['mean'], normFactor['var'])
+    
+    #validationResults <- crossValidate(regressionData1, k)
     
     #the regression model fit
     regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData1));
+    print(regressionModel)
     validationResults1 <- crossValidate1(regressionData1, k)
     
     #calculate the bayesian regression data
@@ -1046,9 +1062,11 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
     rownames(transactionRegressionData1) <- rownames(regressionData1)
     transactionRegressionData1[, "transactionSum"] = transactionSum1
     transactionRegressionData1[, "Effort"] = regressionData1[, "Effort"]
+    transactionRegressionData1 <- as.data.frame(transactionRegressionData1)
     
     #the prior model fit
-    priorModel <- lm(Effort ~ . - 1, as.data.frame(transactionRegressionData1))
+    priorModel <- lm(Effort ~ . - 1, transactionRegressionData1)
+    print(priorModel)
     validationResults2 <- crossValidate2(transactionRegressionData1, k)
     
     #validationResults <- crossValidate(regressionData, k, means, covar, normFactor['mean'], normFactor['var'])
@@ -1057,11 +1075,15 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
     #print("cross validation")
     searchResults[[i]] <- list(
                                numOfTrans = numOfTrans,
-                               MSE = validationResults["MSE"], 
-                               MMRE = validationResults["MMRE"], 
-                               PRED = validationResults["PRED"],
-                               model = bayesianModel,
-                               modelAvg = lapply(bayesianModel, mean),
+                               #MSE = validationResults["MSE"], 
+                               #MMRE = validationResults["MMRE"], 
+                               #PRED = validationResults["PRED"],
+                               #model = bayesianModel,
+                               priorModel = priorModel,
+                               regressionModel = regressionModel,
+                               priorModelAccuracyMeasure = validationResults2,
+                               regressionModelAccuracyMeasure = validationResults1,
+                               #modelAvg = lapply(bayesianModel, mean),
                                data = regressionData,
                                cuts = cutPoints)
   }
