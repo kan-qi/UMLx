@@ -46,7 +46,7 @@ var storage = multer.diskStorage({
 })
 
 console.l = console.log;
-console.log = function() {};
+//console.log = function() {};
 
 var fileDestination = null;
 umlSurveyFiles = [];

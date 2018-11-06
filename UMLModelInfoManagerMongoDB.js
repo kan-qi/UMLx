@@ -926,7 +926,7 @@ function deleteRepo(repoId, callbackfunc) {
 			function(err, result)
 			{
 			    console.log('=================result=========');
-			    //console.log(result);
+			    console.log(result);
                 console.log('=================result=========');
 			   if (err)
 				   {
@@ -941,14 +941,14 @@ function deleteRepo(repoId, callbackfunc) {
 					   EntityNum: 0,
 					   timestamp: "0000/00/00",
                        projectNum: 0,
-                       slocNum: 0,
-                       scheduleNum: 0,
-                       personnelNum: 0,
-                       eucpNum: 0,
-                       exucpNum: 0,
-                       ducpNum: 0,
-                       effortNum: 0,
-                       estimatedEffortNum: 0,
+                       SLOC: 0,
+                       schedule: 0,
+                       personnel: 0,
+                       EUCP: 0,
+                       EXUCP: 0,
+                       DUCP: 0,
+                       effort: 0,
+                       estimatedEffort: 0,
 				   });
 			   }
 			   else
@@ -958,10 +958,12 @@ function deleteRepo(repoId, callbackfunc) {
                     console.log(result);
 				    var dt = new Date();
 					var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
-				   
+                   
 				   db.collection('noOfTransactions').findOne({'timestamp':today})
 					.then(function(doc) 
 					{
+                        console.log(repoid);
+                        console.log(doc);
 						if(doc)
 						{
 						    db.collection('noOfTransactions').find(
@@ -972,6 +974,7 @@ function deleteRepo(repoId, callbackfunc) {
                                     NT:1,UseCaseNum:1,EntityNum:1,timestamp:1,projectNum:1,_id:1
                                 }
                             ).toArray(function (err, result) {
+                                console.log(result);
                                 if (err) throw err;
                                 var response = {NT:[], UseCaseNum:[], EntityNum:[], timestamp:[],projectNum:[]};
 
@@ -998,7 +1001,6 @@ function deleteRepo(repoId, callbackfunc) {
                                             db.collection('noOfTransactions').updateOne(whereStr, updateStr, function(err, res) {
                                                 if (err) throw err;
                                             });
-
                                             response[newKeys[i]].push(0);
                                         }
                                         else{
@@ -1006,7 +1008,6 @@ function deleteRepo(repoId, callbackfunc) {
                                         }
                                     }
                                 });
-
                                 console.log("Record exists");
                                 console.log(response);
                                 console.log('=============');
@@ -1019,7 +1020,6 @@ function deleteRepo(repoId, callbackfunc) {
 							console.log("Record does not exist");
 							for(i=0;i<result.length;i++)
 						   {
-							   
 							   var sum_nt=0;
 							   var sum_useCase=0;
 							   var sum_entityNum=0;
@@ -1033,20 +1033,24 @@ function deleteRepo(repoId, callbackfunc) {
 						  
 							  var dt = new Date();
 							  var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
-							  
-							  
+							  	  
 							  //record={repo_id:repoid,NT:sum_nt,timestamp:today.getDate()}
 							  
-							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum,
-                                  timestamp:today,projectNum:result.length};
-							  db.collection("noOfTransactions").insertOne(record, function(err, res) 
+							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum, timestamp:today,projectNum:result.length,      SLOC: 0,
+                                schedule: 0,
+                                personnel: 0,
+                                EUCP: 0,
+                                EXUCP: 0,
+                                DUCP: 0,
+                                effort: 0,
+                                estimatedEffort: 0};
+							  db.collection("noOfTransactions").insertOne(record, function(err, res)
 							  {
 									if (err) throw err;
 									//console.log("*******Shown result for ModelInfo*******");
 									db.close();
 									callbackfunc(record);
-									console.log("1 document inserted");
-									
+									console.log("1 document inserted");								
 							  });
 							}	
 						}
