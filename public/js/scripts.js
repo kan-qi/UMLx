@@ -1339,7 +1339,7 @@ $(document).ready(function () {
     
     $(document).on('click', '#Business', function(){drawNewHighCharts("BusinessValue",$('#Business').text())});
     
-    $(document).on('click', '#EffortBV', function(){drawNewHighCharts("EffortBVRatio",$('#EffortBV').text())}); 
+    $(document).on('click', '#BVEffort', function(){drawNewHighCharts("BVEffortRatio",$('#BVEffort').text())}); 
 
     $(document).on('click', '#SizeMeasurement', function(){drawNewHighCharts("SizeMeasurement",$('#SizeMeasurement').text())});
 
