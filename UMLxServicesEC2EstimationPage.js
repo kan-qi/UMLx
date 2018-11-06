@@ -145,11 +145,12 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 		projectInfo.schedule = Number(req.body['schedule']);
 	}
 	
+
+	projectInfo.hoursPerMonth = 40;
+	
 	if(req.body['hours-per-month']){
 		projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
 	}
-	
-	projectInfo.hoursPerMonth = 40;
 	
 	var umlFilePath = req.files['uml_file'][0].path;
 
