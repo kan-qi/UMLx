@@ -959,8 +959,8 @@ function deleteRepo(repoId, callbackfunc) {
 				    var dt = new Date();
 					var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
                    
-				   db.collection('noOfTransactions').findOne({'timestamp':today})
-					.then(function(doc) 
+				   db.collection('noOfTransactions').findOne({'repo_id':repoid,'timestamp':today})
+					.then(function(doc)
 					{
                         console.log(repoid);
                         console.log(doc);
