@@ -509,12 +509,27 @@
 			calls.push({
 				to: XMICall['$']['to'],
 				from:XMICall['$']['from']
-			})
+			});
 		}
 
 		return calls;
 	}
 	
+	// returns an array of extend relations in xmiString
+	// like { to, from }
+	function identifyExtends(xmiString) {
+		var extendInstances = [];
+		var XMIExtends = jp.query(xmiString, '$..codeRelation[?(@[\'$\'][\'xsi:type\']==\'code:Extends\')]');
+		for (var i in XMIExtends) {
+			var XMIExtend = XMIExtends[i];
+			extendInstances.push({
+				to: XMIExtend['$']['to'],
+				from: XMIExtend['$']['from']
+			});
+		}
+
+		return extendInstances;
+	}
 	
 	function identifyContainingMethodUnitByAction(){
 		
@@ -645,6 +660,7 @@
 			identifyActionElement: identifyActionElement,
 			identifyMethodUnit: identifyMethodUnit,
 			identifyClassUnit: identifyClassUnit,
-			identifyCalls: identifyCalls
+			identifyCalls: identifyCalls,
+			identifyExtends: identifyExtends
 	}
 }());
