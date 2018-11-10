@@ -16,6 +16,7 @@ html
         //    }
 
     body#upload-body
+        include heading
         .container.estimation_page_container
             form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
 
@@ -35,7 +36,7 @@ html
                                         select#distributed_system.form-control(name='distributed_system')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -43,7 +44,7 @@ html
                                         select#response_time.form-control(name='response_time')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -51,7 +52,7 @@ html
                                         select#end_user_efficiency.form-control(name='end_user_efficiency')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -59,7 +60,7 @@ html
                                         select#complex_internal_processing.form-control(name='complex_internal_processing')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -67,7 +68,7 @@ html
                                         select#code_must_be_reusable.form-control(name='code_must_be_reusable')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -75,7 +76,7 @@ html
                                         select#easy_to_install.form-control(name='easy_to_install')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -83,7 +84,7 @@ html
                                         select#easy_to_use.form-control(name='easy_to_use')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -91,7 +92,7 @@ html
                                         select#portable.form-control(name='portable')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -99,7 +100,7 @@ html
                                         select#easy_to_change.form-control(name='easy_to_change')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -107,7 +108,7 @@ html
                                         select#concurrent.form-control(name='concurrent')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -115,7 +116,7 @@ html
                                         select#includes_special_security_objectives.form-control(name='includes_special_security_objectives')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -123,7 +124,7 @@ html
                                         select#provides_direct_access_for_third_parties.form-control(name='provides_direct_access_for_third_parties')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -131,7 +132,7 @@ html
                                         select#special_user_training_facilities_are_required.form-control(name='special_user_training_facilities_are_required')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
 
@@ -160,7 +161,7 @@ html
                                         select#familiar_with_the_project_model_that_is_used.form-control(name='familiar_with_the_project_model_that_is_used')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -168,7 +169,7 @@ html
                                         select#application_experience.form-control(name='application_experience')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -176,7 +177,7 @@ html
                                         select#object_oriented_experience.form-control(name='object_oriented_experience')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -184,7 +185,7 @@ html
                                         select#lead_analyst_capability.form-control(name='lead_analyst_capability')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -192,7 +193,7 @@ html
                                         select#motivation.form-control(name='motivation')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -200,7 +201,7 @@ html
                                         select#stable_requirements.form-control(name='stable_requirements')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -208,7 +209,7 @@ html
                                         select#part_time_staff.form-control(name='part_time_staff')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
                                     .form-group
@@ -216,7 +217,7 @@ html
                                         select#difficult_programming_language.form-control(name='difficult_programming_language')
                                             option 1
                                             option 2
-                                            option 3
+                                            option(selected="selected") 3
                                             option 4
                                             option 5
 
@@ -278,7 +279,7 @@ html
                                         label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
                                         .col-xs-8
                                             input#uml_file.form-control(type='file', name='uml_file', accept='text/xml')
-
+                                            a(href='./F14a_women_at_work_website_redesign.zip') Download Example XML File
                                     //.form-group
                                     //    label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
                                     //    .col-xs-8

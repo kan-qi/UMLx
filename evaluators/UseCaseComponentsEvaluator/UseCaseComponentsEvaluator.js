@@ -888,7 +888,7 @@
 		elementNum = !elementNum ? 0 : elementNum;
 		transactionNum = !transactionNum ? 0 : transactionNum;
 
-		var elementAnalyticsStr = elementNum == 0 ? "id,element,useCase,type,outboundDegree,inboundDegree\n" : "";
+		var elementAnalyticsStr = elementNum == 0 ? "id,element,useCase,type,component\n" : "";
 		var transactionAnalyticsStr = transactionNum == 0 ? "id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num\n" : "";
 
 			for ( var i in useCase.Transactions) {
@@ -910,21 +910,13 @@
 
 			for ( var i in useCase.Activities) {
 				var element = useCase.Activities[i];
-				var elementName = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
-				var elementType = "";
-//				var components = diagram.allocate(Element);
-				if(element.target){
-					var component = element.target;
-					elementType = component.Type;
-				}
+				useCaseComponentsProcessor.processElement(element, useCase);
 				elementNum++;
 				elementAnalyticsStr += elementNum + ","
-						+ elementName + ","
-//						+ diagram.Name + ","
-						+ useCase.Name + "," +
-						+ elementType+ ","
-						+ element.OutboundNumber + ","
-						+ element.InboundNumber+"\n";
+						+ element.Name + ","
+						+ useCase.Name + ","
+						+ element.Type + ","
+						+ element.ComponentName +"\n";
 			}
 
 

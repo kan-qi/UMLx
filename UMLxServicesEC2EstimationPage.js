@@ -103,6 +103,14 @@ app.get('/estimationPageDemo',function(req,res){
 	res.render('estimationPage');
 });
 
+app.get('/docmagic-audit', function(req, res){
+	fs.readFile('./docmagic-prototype/Audit_Prototype.html',function (err, data){
+        res.writeHead(200, {'Content-Type': 'text/html','Content-Length':data.length});
+        res.write(data);
+        res.end();
+    });
+});
+
 app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
 ,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
@@ -145,11 +153,12 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 		projectInfo.schedule = Number(req.body['schedule']);
 	}
 	
+
+	projectInfo.hoursPerMonth = 40;
+	
 	if(req.body['hours-per-month']){
 		projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
 	}
-	
-	projectInfo.hoursPerMonth = 40;
 	
 	var umlFilePath = req.files['uml_file'][0].path;
 
@@ -277,6 +286,33 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxC
 
 app.get('/thankYou', function(req, res){
 	res.render('thankYou');
+});
+
+app.get('/getZipPackage', function (req, res){
+	var repoId = '/repo' + req.query.repo_id;
+	var modelId = '/' + req.query.model_id;
+
+	var zipFolder = require('zip-folder');
+	var folderPath = __dirname + '/public/output' + repoId + modelId;
+	var zipPath = __dirname + '/public/output/package.zip';
+	 
+	zipFolder(folderPath, zipPath, function(err) {
+	    if(err) {
+	        console.log(err);
+	    } else {
+ 			res.download(zipPath, function(err) {
+ 				if (err) {
+ 					console.log(err);
+ 				} else {
+ 					fs.unlink(zipPath, function(err) {
+ 						if (err) {
+ 							console.log(err);
+ 						}
+ 					});
+ 				}
+ 			});
+	    }
+	});		
 });
 
 

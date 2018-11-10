@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Audit Input</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.css" rel="stylesheet" type="text/css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script type="text/javascript" src="./JavaScript/Adapter.js"></script>
+	<script type="text/javascript" src="./JavaScript/AUDIT.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.4.1/semantic.min.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+		function success(msg) { 
+			//console.log(data1[0]);
+          //var jsonString = data1[0];
+          var jsonPretty = JSON.stringify(msg, null, 2);
+          console.log(jsonPretty);
+
+          $('#results').text(jsonPretty);
+          console.log(msg);
+      }
+		function error(msg) { 
+		  //alert(msg)
+		  //var jsonString = data1[0];
+          var jsonPretty = JSON.stringify(msg, null, 2);
+          //console.log(jsonPretty)
+          //document.body.innerHTML += JSON.stringify(xhr,null,10)
+          //document.body.innerHTML = jsonPretty
+          //console.log(xhr);
+			console.log(msg); 
+			$('#results').text(jsonPretty);
+		}
+
+		// READ ================================================================
+		// ReadMany
+		// Return: Array
+		function readAudit(){
+		audit.read({}, success, error)
+		return false;
+		}
+
+		function displayAudits(){
+		audit.read({}, function(audits){
+				//console.log(data1[0]);
+          //var jsonString = data1[0];
+          var jsonPretty = JSON.stringify(audits, null, 2);
+          console.log(jsonPretty)
+          //document.body.innerHTML += JSON.stringify(xhr,null,10)
+          //document.body.innerHTML = jsonPretty
+          //console.log(xhr);
+
+
+			var tableStr = "<table style=\"width:90%;\">";
+			for(var i in audits){
+				var audit = audits[i];
+				tableStr += "<tr>";
+				tableStr += "<td style=\"text-align:center;\">";
+				tableStr += '<button onclick="displayUpdateAuditForm(\''+audits[i]._id+'\');">';
+				tableStr += "Edit";
+				tableStr += "</button>";
+				tableStr += "</td>";
+					tableStr += "<td style=\"text-align:center;\">";
+				tableStr += audits[i].Description;
+				tableStr += "</td>";
+					tableStr += "<td style=\"text-align:center;\">";
+					tableStr += '<button onclick="deleteAuditByID(\''+audits[i]._id+'\');">';
+				tableStr += "Delete";
+				tableStr += "</button>";
+				tableStr += "</td>";
+				tableStr += "</tr>";
+			}
+			tableStr += "</table>";
+ 		  
+ 		  $('#results').html(tableStr);	
+
+		}, error)
+
+		}
+
+		//setup
+		audit = AUDIT;
+		displayAudits();
+
+		// Read one via id
+		// Return: Object
+		// audit.get("5bb5e8b8467ec74b5ec111f7", success, error);
+
+		// CREATE ==============================================================
+		// Ceate one
+		function createAudit(){
+
+		var websheet_model_id = $('#auditForm input[name=websheet_model_id]').val();
+		var Description = $('#auditForm input[name=Description]').val();
+		var AuditType = $('#auditForm input[name=AuditType]').val();
+		var LoanTypes = $('#auditForm input[name=LoanTypes]').val();
+		var ApplicableLogic = $('#auditForm input[name=ApplicableLogic]').val();
+		var ApplicableScript = $('#auditForm input[name=ApplicableScript]').val();
+		var DetailsURL = $('#auditForm input[name=DetailsURL]').val();
+		var Disposition = $('#auditForm input[name=Disposition]').val();
+		
+		audit.create(
+							{
+							    "Description": Description,
+						        "AuditType": AuditType,
+						        "LoanTypes": LoanTypes,
+						        "ApplicableLogic": ApplicableLogic,
+						        "ApplicableScript": ApplicableScript,
+						        "DetailsURL": DetailsURL,
+						        "Disposition": Disposition
+							}, 
+							function (msg) { 
+			//console.log(data1[0]);
+          //var jsonString = data1[0];
+          var jsonPretty = JSON.stringify(msg, null, 2);
+          console.log(jsonPretty);
+          //console.log(xhr);
+
+          if(msg.result.ok){
+          	alert("a audit is created")
+          }
+          else{
+          	alert("error")
+          }
+
+          //$('#results').text(jsonPretty);
+		displayAudits();
+
+          console.log(msg);
+      }, error); 
+
+		return false;
+		}
+
+		// Delete by id
+		function deleteAuditByID(_id){
+
+		//var _id = $('#auditForm input[name=_id]').val();
+
+		console.log(_id)
+
+		if(!_id){
+			alert("error")
+			return;
+		}
+
+		audit.delete(	
+						{ 
+							"_id": _id
+
+						}, 
+							function(msg){
+								console.log(msg)
+								if(msg.result && msg.result.ok){
+							displayAudits();
+							alert("delete succeeded");
+						}
+						else{
+							alert("delete failed");
+						}
+							}, error);
+		return false;
+		}
+
+		// set =================================================================
+		// Replace the a single document
+		function replaceAudit(){
+		var _id = $('#replaceAuditForm input[name=_id]').val();
+
+		//var websheet_model_id = $('#replaceAuditForm input[name=websheet_model_id]').val();
+		var Description = $('#replaceAuditForm input[name=Description]').val();
+		var AuditType = $('#replaceAuditForm input[name=AuditType]').val();
+		var LoanTypes = $('#replaceAuditForm input[name=LoanTypes]').val();
+		var ApplicableLogic = $('#replaceAuditForm input[name=ApplicableLogic]').val();
+		var ApplicableScript = $('#replaceAuditForm input[name=ApplicableScript]').val();
+		var DetailsURL = $('#replaceAuditForm input[name=DetailsURL]').val();
+		var Disposition = $('#replaceAuditForm input[name=Disposition]').val();
+
+		audit.set(_id, 
+					{
+						//"websheet_model_id": websheet_model_id,
+						        "Description": Description,
+						        "AuditType": AuditType,
+						        "LoanTypes": LoanTypes,
+						        "ApplicableLogic": ApplicableLogic,
+						        "ApplicableScript": ApplicableScript,
+						        "DetailsURL": DetailsURL,
+						        "Disposition": Disposition
+					}, 
+					success, error);
+		return false;
+		}
+
+		function displayUpdateAuditForm(_id){
+		audit.read(
+							{
+								_id:_id,
+							}, 
+							loadUpdateAudit, error);
+		}
+
+		// update ==============================================================
+		// modify the specific fileds
+		function updateAudit(){
+
+
+		var _id = $('#auditForm input[name=_id]').val();
+
+		if(!_id){
+			console.log("please create/select audit first!")
+			alert("please select audit by clicking edit button for updating!")
+			return;
+		}
+
+		console.log(_id)
+
+		//var websheet_model_id = $('#auditForm input[name=websheet_model_id]').val();
+		var Description = $('#auditForm input[name=Description]').val();
+		var AuditType = $('#auditForm input[name=AuditType]').val();
+		var LoanTypes = $('#auditForm input[name=LoanTypes]').val();
+		var ApplicableLogic = $('#auditForm input[name=ApplicableLogic]').val();
+		var ApplicableScript = $('#auditForm input[name=ApplicableScript]').val();
+		var DetailsURL = $('#auditForm input[name=DetailsURL]').val();
+		var Disposition = $('#auditForm input[name=Disposition]').val();
+
+		audit.update(_id, 
+					{
+						//"websheet_model_id": websheet_model_id,
+						        "Description": Description,
+						        "AuditType": AuditType,
+						        "LoanTypes": LoanTypes,
+						        "ApplicableLogic": ApplicableLogic,
+						        "ApplicableScript": ApplicableScript,
+						        "DetailsURL": DetailsURL,
+						        "Disposition": Disposition
+					}, 
+					function (msg){
+						if(msg.result && msg.result.ok){
+							displayAudits();
+							alert("update succeeded");
+						}
+						else{
+							alert("update failed");
+						}
+					}, error);
+		return false;
+		}
+
+		function loadUpdateAudit(msg){
+	console.log(msg[0])
+	var audit = msg[0];
+	if(!audit){
+		alert("error");
+		return false;
+	}
+	var inputForm = '<form style="margin: auto; width: 80%; margin-top: 10px" id="auditForm" onSubmit="return false"><input type="hidden" name="_id"  placeholder="'+audit._id+'" value="'+audit._id+'">\
+		Description:<br><input type="text" name="Description"  placeholder="'+audit.Description+'" value="'+audit.Description+'"><br> \
+		AuditType:<br><input type="text" name="AuditType"  placeholder="'+audit.AuditType+'" value="'+audit.AuditType+'"><br> \
+		Loan Type(s):<br><input type="text" name="LoanTypes"  placeholder="'+audit.LoanTypes+'" value="'+audit.LoanTypes+'"><br> \
+		ApplicableLogic:<br><input type="text" name="ApplicableLogic"  placeholder="'+audit.ApplicableLogic+'" value="'+audit.ApplicableLogic+'"><br> \
+		ApplicableScript:<br><input type="text" name="ApplicableScript"  placeholder="'+audit.ApplicableScript+'" value="'+audit.ApplicableScript+'"><br> \
+		Details URL<br><input type="text" name="DetailsURL"  placeholder="'+audit.DetailsURL+'" value="'+audit.DetailsURL+'"><br> \
+		Disposition:<br><input type="text" name="Disposition"  placeholder="'+audit.Disposition+'" value="'+audit.Disposition+'"><br> \
+		<br><br><button type="submit" onclick="javascript:createAudit()">Create</button> \
+		<button type="submit" onclick="javascript:updateAudit()">Update</button> \
+       </form>'
+		;
+		$('#container').html(inputForm);
+        //console.log(msg);
+
+		}
+
+
+	</script>
+
+  <div style="width:95%;border-style: solid; border-width: 1px; height: 98%; margin: 15px auto">
+  
+  <div style="width:25%;float:left; border-style: solid; border-width: 1px;height: 100%; padding: 15px; overflow:scroll;">
+  	<!-- <div style="margin: 3px">Request:</div> -->
+  	<div style="margin: 3px" id="container">
+  		<form style="margin: auto; width: 80%; margin-top: 10px" id="auditForm" onSubmit="return false;">
+		Description:<br><input type="text" name="Description"  placeholder="" value="""><br>
+		AuditType:<br><input type="text" name="AuditType"  placeholder="" value="""><br>
+		Loan Type(s):<br><input type="text" name="LoanTypes"  placeholder="" value="""><br>
+		ApplicableLogic:<br><input type="text" name="ApplicableLogic"  placeholder="" value="""><br>
+		ApplicableScript:<br><input type="text" name="ApplicableScript"  placeholder="" value="""><br>
+		Details URL<br><input type="text" name="DetailsURL"  placeholder="" value="""><br>
+		Disposition:<br><input type="text" name="Disposition"  placeholder="" value="""><br>
+		<br><br><button type="submit" onclick="javascript:createAudit()">Create</button>
+		<button type="submit" onclick="javascript:updateAudit()">Update</button> </form>
+  	</div>
+  </div>
+  <div style="width:75%;float:left; border-style: solid; border-width: 1px;height: 100%; padding: 15px; overflow:scroll;">
+<!--   	<div style="margin: 3px">Results:</div> -->
+  	<div style="margin: auto; width: 95%; margin-top: 10px" id="results"></div>
+  </div>
+  
+  </div>
+
+</body>
+</html>

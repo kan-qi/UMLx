@@ -95,6 +95,16 @@
 				
 			},
 			processElement: function(element, usecase){
+				element.Name = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
+//				var elementType = "";
+//				var components = diagram.allocate(Element);
+				if(element.Component){
+					var component = element.Component;
+					element.Type = component.Type;
+					element.ComponentName = component.Name;
+				}
+				
+				
 				return true;
 			},
 			processLink: function(link){

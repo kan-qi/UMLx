@@ -65,7 +65,7 @@ combined <- combineData(transactionFiles)
 
 ggplot(modelData[!(modelData$UseCase_Num==0),], aes(x=UseCase_Num)) + 
   geom_histogram(binwidth=5, colour="black", fill="gray") + 
-  xlab("Number of Use Case") + ylab("Number of Projects") + ggtitle("Project Distribution - Use Case")+
+  xlab("Number of Use Cases") + ylab("Number of Projects") + ggtitle("Project Distribution - Use Case")+
   theme_bw(base_size=20)
 
 ggplot(modelData, aes(x=KSLOC)) + 

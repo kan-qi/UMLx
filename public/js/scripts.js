@@ -1339,7 +1339,7 @@ $(document).ready(function () {
     
     $(document).on('click', '#Business', function(){drawNewHighCharts("BusinessValue",$('#Business').text())});
     
-    $(document).on('click', '#EffortBV', function(){drawNewHighCharts("EffortBVRatio",$('#EffortBV').text())}); 
+    $(document).on('click', '#BVEffort', function(){drawNewHighCharts("BVEffortRatio",$('#BVEffort').text())}); 
 
     $(document).on('click', '#SizeMeasurement', function(){drawNewHighCharts("SizeMeasurement",$('#SizeMeasurement').text())});
 
@@ -2739,7 +2739,7 @@ async function startEvalPush() {
     // moveToHome();
     if ('serviceWorker' in navigator) {
         console.log('Registering service worker');
-        await sendPushNotification().catch(error => console.error(error));
+        await sendPushNotification().then().catch(error => console.error(error));
     } else {
         // alert("no service worker");
         console.log("No service Worker found");
@@ -2765,8 +2765,8 @@ function urlBase64ToUint8Array(base64String) {
 
 async function sendPushNotification() {
     console.log('Registering service worker');
-    const registration = await navigator.serviceWorker.
-    register('/public/js/worker.js', {scope: '/public/js/'});
+    const registration = await navigator.serviceWorker.register('./js/worker.js');
+    // register('/public/js/worker.js', {scope: '/public/js/'});
     if(registration) {
         console.log('Registered service worker');
     }
