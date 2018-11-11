@@ -17,6 +17,8 @@
     
 	var path = require('path');
 
+	var isForPackage = false;
+
     function analyseUML(inputFilePath, outputDir, projectName, callbackfunc) {
 
 //        let date = new Date();
@@ -309,8 +311,13 @@
 				`
 
 				let model_elements_table_content = '';
-				const model_elements_folder = './data/StandAloneToolKit/output/' + model.UseCases[key]._id;
-				console.log("test1104", model_elements_folder);
+
+				let model_elements_folder = '';
+				if (isForPackage) {
+					model_elements_folder = './public/output/repo' + model.repo_id + '/' + model.fileId + '/' + model.UseCases[key]._id;
+				} else {
+					model_elements_folder = './data/StandAloneToolKit/output/' + model.UseCases[key]._id;
+				}				
 
 				fs.readdirSync(model_elements_folder).forEach(file => {
 				  	model_elements_table_content += 
@@ -358,7 +365,14 @@
 		let DUCP_content = generateEstimationReshltPane(model.ducp_lm, model);
 
 		let model_analytics_table_content = '';
-		const testFolder = './data/StandAloneToolKit/output';
+
+		let testFolder = '';
+		if (isForPackage) {
+			testFolder = './public/output/repo' + model.repo_id + '/' + model.fileId;
+		} else {
+			testFolder = './data/StandAloneToolKit/output';
+		}		
+
 		fs.readdirSync(testFolder).forEach(file => {
 		  	model_analytics_table_content += 
 		  		`
@@ -680,6 +694,7 @@
     }
 
 	function generateReport(model, callbackfunc) {
+		isForPackage = true;
 	    readUsecaseJson(model, function (html_table) {
 	        console.log("generate use cases");
 	        createStream(model, function (rt_object) {
