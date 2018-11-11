@@ -25,6 +25,8 @@ var rimraf = require('rimraf');
 var download = require('download');
 const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
+
+var currentModel = null;
 // global variable to map appToken -> endpoint location
 var endpoints = {};
 var storage = multer.diskStorage({
@@ -185,7 +187,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
                     umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 
-
+                    	currentModel = modelInfo;
                         res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
 
                     });
@@ -1478,6 +1480,39 @@ app.post('/subscribe', (req, res) => {
     // webpush.sendNotification(subscription, payload).catch(error => {
     //     console.error(error.stack);
     // });
+});
+
+app.get('/getZipPackage', function (req, res){
+	var UMLxAnalyticToolKitCore = require("./utils/UMLxAnalyticToolKitCore.js");
+	var zipFolder = require('zip-folder');
+
+	var repoId = '/repo' + currentModel.repo_id;
+	var modelId = '/' + currentModel.fileId;
+	currentModel.OutputDir = __dirname + '/public/output' + repoId + modelId;
+	
+	var folderPath = __dirname + '/public/output' + repoId + modelId;
+	var zipPath = __dirname + '/public/output/package.zip';
+
+	UMLxAnalyticToolKitCore.generateReport(currentModel, function () {
+		console.log("generateReport success");
+		zipFolder(folderPath, zipPath, function(err) {
+		    if(err) {
+		        console.log(err);
+		    } else {
+	 			res.download(zipPath, function(err) {
+	 				if (err) {
+	 					console.log(err);
+	 				} else {
+	 					fs.unlink(zipPath, function(err) {
+	 						if (err) {
+	 							console.log(err);
+	 						}
+	 					});
+	 				}
+	 			});
+		    }
+		});			
+	});	
 });
 
 //

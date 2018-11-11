@@ -679,7 +679,34 @@
         });
     }
 
+	function generateReport(model, callbackfunc) {
+	    readUsecaseJson(model, function (html_table) {
+	        console.log("generate use cases");
+	        createStream(model, function (rt_object) {
+	            const yswi = rt_object.swtI;
+	            const yswtii = rt_object.swtII;
+	            const yswtiii = rt_object.swtIII;
+	            const xcategories = rt_object.category;
+	            console.log("xcategories"+xcategories);
+	            console.log("yswi"+yswi);
+	            console.log("yswii"+yswtii);
+	            console.log("yswiii"+yswtiii);
+	            getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
+	                writeHTML(model, data);
+	                console.log(`result : [${xcategories}]`);
+	                copyAuxiliaryFiles(model, function(message){
+	                    console.log(message);
+	                    if(callbackfunc){
+	                        callbackfunc(model);
+	                    }
+	                });
+	            });
+	        });
+	    });    	
+	}    
+
     module.exports = {
+    	generateReport: generateReport,
         analyseSrc: function(inputFilePath, outputDir, projectName, callbackfunc){
             console.log("analysi src");
             analyseUML(inputFilePath, outputDir, projectName, function (model) {
