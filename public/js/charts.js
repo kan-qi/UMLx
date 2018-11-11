@@ -105,7 +105,7 @@ function display()
                     var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                     $('.modal-body').html('<img src="' + img_link + '">');
                     document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis 
-                    + "</td><td><button type='button' class='btn btn-light'onclick = 'showModalDetails(\"" + img_link + "\")'> Display Chart</button> <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal1' + "\",\"" + '#model1-body' +"\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>";
+                    + "</td><td><input type='button' onclick = 'showModalDetails(\"" + img_link + "\")' value='Display Chart'> <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal1' + "\",\"" + '#model1-body' +"\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>";
             }
             document.getElementById("details").innerHTML += "</form>";
        },
@@ -121,15 +121,15 @@ function display()
     
        success: function(response)
        {
-            document.getElementById("details").innerHTML +="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal2' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><h3>Domain Model evaluation statistics</h3><table class='table table-hover table-bordered'; id='domain_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
+            var domain_model_url1 = "output/repo" + repoID + "/" + modelID.substring(0,modelID.length-13) + "/domainModelEvaluation.csv";
+            document.getElementById("details").innerHTML +="<div style='height:6%'>&nbsp;</div><div class='modal fade' id='myModal2' role='dialog'><div class='modal-dialog'>'<div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Chart</h4></div><div class='modal-body' id='model2-body'></div><div class='modal-footer'><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></div><form name='form2'><h3>Domain Model evaluation statistics</h3><input type='button' onclick='showMultipleDistributionChart(\"" + domain_model_url1 + "\",\"" +'form2'+"\",\""  + '#myModal2' + "\",\"" + '#model2-body' +"\")' value='Dist Chart'><table class='table table-hover table-bordered'; id='domain_table'; style='width:100%'><tr><th>Column Name</th><th>Mean</th><th>Variance</th><th>First Quartile</th><th>Median</th><th>Third Quartile</th><th>Kurtosis</th><th>Distribution chart</th></tr>";
                 for (var i=0;i<response.length;i++)
                 {
                 var img_link2 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                 $('.modal-body').html('<img src="' + img_link2 + '">');
-                    document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' onclick = 'showModal(\"" + img_link2 +  "\")'>Display Chart</button></td></tr>" ;
-
+                    document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' onclick = 'showModal(\"" + img_link2 +  "\")'>Display Chart</button> <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + domain_model_url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal2' + "\",\"" + '#model2-body' +"\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>" ;
                 }
-    
+                document.getElementById("domain_table").innerHTML += "</form>";    
        },
        error:function(error){
          console.log("failed");
@@ -163,7 +163,7 @@ $.ajax({
             //console.log(img_link3);
             $('#r').html('<img src="' + img_link3 + '">');
             //console.log($('#r').html());
-            $('#repo_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class=' btn btn-light' onclick = 'showRepoModal(\"" + img_link3 +  "\")'>Display Chart</button> <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + repo_url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal' + "\",\"" + '#model-body' +"\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>");
+            $('#repo_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><input type='button' onclick = 'showRepoModal(\"" + img_link3 +  "\")' value='Display Chart'> <input type='button' onclick='showDistributionChart(\"" + repo_url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal' + "\",\"" + '#model-body' +"\")' value='Dist Chart'> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>");
 
         }
         $('.repo-metrics').append( "</table></form>");
@@ -335,19 +335,27 @@ function showMultipleDistributionChart(url, formId, modalId, chartId) {
         type:"GET",
         dataType: "text",
         success: function(response){
-            var data = response.split('\n');
-            var categories = [];
-            var colIndex = [];
+            let data = response.split('\n');
+            let categories = [];
+            let countKey = {};
+            let colIndex = [];
             for (let i = 0, row = data.length - 1;i < row; ++i){
                 data[i] = data[i].split(",");
                 if (i == 0){
                     for (let j = 0, col = data[i].length; j < col; ++j){
-                        if (selectedRow.indexOf(data[i][j]) >= 0){
+                        let realHeader = data[i][j];
+                        if (countKey[data[i][j]] == undefined){
+                            countKey[data[i][j]] = 0;
+                        }
+                        else {
+                            ++ countKey[data[i][j]];
+                            realHeader = data[i][j] + "." + countKey[data[i][j]].toString();
+                        }
+                        if (selectedRow.indexOf(realHeader) >= 0){
                             colIndex.push(j);
                         }
                     }
                 }else{
-                    console.log(colIndex);
                     categories.push("UC"+i.toString());
                     for (let j = 0, len = colIndex.length; j < len; ++j){
                         seriesData[j].data.push(parseFloat(data[i][colIndex[j]]));
@@ -371,16 +379,25 @@ function showDistributionChart(url, header, modalId, chartId) {
         type:"GET",
         dataType: "text",
         success: function(response){
-            var data = response.split('\n');
-            var categories = [];
-            var seriesData = [];
-            colIndex = 0;
+            let data = response.split('\n');
+            let categories = [];
+            let seriesData = [];
+            let countKey = {};
+            let colIndex = 0;
             for (let i = 0, row = data.length - 1;i < row; ++i){
                 data[i] = data[i].split(",");
                 if (i == 0){
                     for (let j = 0, col = data[i].length; j < col; ++j){
                         console.log(data[i][j]);
-                        if (data[i][j] === header){
+                        let realHeader = data[i][j];
+                        if (countKey[data[i][j]] == undefined){
+                            countKey[data[i][j]] = 0;
+                        }
+                        else {
+                            ++ countKey[data[i][j]];
+                            realHeader = data[i][j] + "." + countKey[data[i][j]].toString();
+                        }
+                        if (realHeader === header){
                             colIndex = j;
                             break;
                         }
