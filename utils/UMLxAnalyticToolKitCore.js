@@ -340,7 +340,7 @@
 							</div>
 							<div class="tab-pane fade" id="${model.UseCases[key]._id}_use-case-analytics">
 								<a href="./${model.UseCases[key]._id}/elementAnalytics.csv" target="_blank">Analytics CVS</a>
-								<table class="table-bordered">
+								<table class="table-bordered" style="margin: 10px auto; width: 50%">
 									<tr class="estimation-table">
 										<th>File Name</th>
 									</tr>
@@ -457,7 +457,7 @@
 					</div>
 				</div> 
 				<div id="model-analytics" class="tab-pane fade">
-					<table class="table-bordered">
+					<table class="table-bordered" style="margin: 10px auto; width: 50%">
 						<tr class="estimation-table">
 							<th>File Name</th>
 						</tr>
