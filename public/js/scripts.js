@@ -2491,7 +2491,7 @@ function buildTable(data) {
         out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
 
         if (level >= 2) {
-            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button><td><tr>";
+            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button><td></tr>";
         }
 
         //console.log("Data");
