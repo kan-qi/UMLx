@@ -26,116 +26,130 @@ html
                             .panel-heading
                                 h4.panel-title
                                     div.panel_words Technical Complexity Factor
+                                    p Please provide the ratings for the 13 technical technical factors, which are the techical rerquirements for system being developed.
                                     div.panel_triangle_toggle
                                         a(data-toggle='collapse', href='#collapse1')
                                             span.glyphicon.glyphicon-triangle-bottom.collapseButtom1
                             #collapse1.panel-collapse.in
                                 .panel-body
-                                    .form-group
+                                    .form-group  
                                         .form-group
+                                        p Is the system a distributed system which was developed on multiple platforms and required communication between the subsystems/components be based on network protocals, events, or remote procedural calls?
                                         label.control-label(for='distributed_system') Distributed System
                                         select#distributed_system.form-control(name='distributed_system')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, does the target system have to meet the required response time and throughput performance objectives?
                                         label.control-label(for='response_time') Response time or throughput performance objectives
                                         select#response_time.form-control(name='response_time')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, does the target system have to meet the required response time and throughput performance objectives?
                                         label.control-label(for='end_user_efficiency') End user efficiency
                                         select#end_user_efficiency.form-control(name='end_user_efficiency')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, does the target system have to meet the required end user efficiency?
                                         label.control-label(for='complex_internal_processing') Complex internal processing
                                         select#complex_internal_processing.form-control(name='complex_internal_processing')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree of difficulty, the internal processing should be rated?
                                         label.control-label(for='code_must_be_reusable') Code must be reusable
                                         select#code_must_be_reusable.form-control(name='code_must_be_reusable')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the code should be reusable?
                                         label.control-label(for='easy_to_install') Easy to install
                                         select#easy_to_install.form-control(name='easy_to_install')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the system has to be easy to be installed?
                                         label.control-label(for='easy_to_use') Easy to use
                                         select#easy_to_use.form-control(name='easy_to_use')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the system has to be easy to use?
                                         label.control-label(for='portable') Portable
                                         select#portable.form-control(name='portable')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the system has to be able to handle concurrent requests or processes?
                                         label.control-label(for='easy_to_change') Easy to change
                                         select#easy_to_change.form-control(name='easy_to_change')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the system has to be able to handle concurrent requests or processes?
                                         label.control-label(for='concurrent') Concurrent
                                         select#concurrent.form-control(name='concurrent')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the system has to achieve special security objectives?
                                         label.control-label(for='includes_special_security_objectives') Includes special security objectives
                                         select#includes_special_security_objectives.form-control(name='includes_special_security_objectives')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the system has to provide access for third parties?
                                         label.control-label(for='provides_direct_access_for_third_parties') Provides direct access for third parties
                                         select#provides_direct_access_for_third_parties.form-control(name='provides_direct_access_for_third_parties')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, special user training facilities have to provided for the end users?
                                         label.control-label(for='special_user_training_facilities_are_required') Special user training facilities are required
                                         select#special_user_training_facilities_are_required.form-control(name='special_user_training_facilities_are_required')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                             
                                     //input#uuid-page1(type='hidden', name='uuid-page1', value='')
                                     //
@@ -151,6 +165,7 @@ html
                             .panel-heading
                                 h4.panel-title
                                     div.panel_words Environmental Factors
+                                    p Please provide the ratings for the 8 environmental factors, which are the general descriptions about the environments where system was developed.
                                     div.panel_triangle_toggle
                                         a(data-toggle='collapse', href='#collapse2')
                                             //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
@@ -158,69 +173,77 @@ html
                             #collapse2.panel-collapse.in
                                 .panel-body
                                     .form-group
+                                        p Are the personnel familar with the development process?
                                         label.control-label(for='familiar_with_the_project_model_that_is_used') Familiar with the project model that is used
                                         select#familiar_with_the_project_model_that_is_used.form-control(name='familiar_with_the_project_model_that_is_used')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p Did the developers have related experience of developing this type of applications?
                                         label.control-label(for='application_experience') Application experience
                                         select#application_experience.form-control(name='application_experience')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p Did the developers have related experience of developing object-oriented applications?
                                         label.control-label(for='object_oriented_experience') Object-oriented experience
                                         select#object_oriented_experience.form-control(name='object_oriented_experience')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the lead analyst of the team should be rated?
                                         label.control-label(for='lead_analyst_capability') Lead analyst capability
                                         select#lead_analyst_capability.form-control(name='lead_analyst_capability')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the whole team is motived for the project?
                                         label.control-label(for='motivation') Motivation
                                         select#motivation.form-control(name='motivation')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p Are the requiremenst stable over time?
                                         label.control-label(for='stable_requirements') Stable requirements
                                         select#stable_requirements.form-control(name='stable_requirements')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what percentage, the team has part-time stafff?
                                         label.control-label(for='part_time_staff') Part-time staff
                                         select#part_time_staff.form-control(name='part_time_staff')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
                                     .form-group
+                                        p To what degree, the chosen programming language are diffficulty to the development team?
                                         label.control-label(for='difficult_programming_language') Difficult programming language
                                         select#difficult_programming_language.form-control(name='difficult_programming_language')
-                                            option 1
-                                            option 2
-                                            option(selected="selected") 3
-                                            option 4
-                                            option 5
+                                            option very low
+                                            option low
+                                            option(selected="selected") normal
+                                            option high
+                                            option very high
 
                                     //input#uuid-page2(type='hidden', name='uuid-page2', value='')
                                     //.form-group

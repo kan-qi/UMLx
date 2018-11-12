@@ -105,7 +105,7 @@ function display()
                     var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                     $('.modal-body').html('<img src="' + img_link + '">');
                     document.getElementById("mytable").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis 
-                    + "</td><td><input type='button' onclick = 'showModalDetails(\"" + img_link + "\")' value='Display Chart'> <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal1' + "\",\"" + '#model1-body' +"\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>";
+                    + "</td><td><input type='button' onclick = 'showModalDetails(\"" + img_link + "\")' value='Display Chart'> <input type='button' class='table-button' onclick='showDistributionChart(\"" + url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal1' + "\",\"" + '#model1-body' +"\")' value='Dist Chart'> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>";
             }
             document.getElementById("details").innerHTML += "</form>";
        },
@@ -127,7 +127,7 @@ function display()
                 {
                 var img_link2 = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                 $('.modal-body').html('<img src="' + img_link2 + '">');
-                    document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light' onclick = 'showModal(\"" + img_link2 +  "\")'>Display Chart</button> <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + domain_model_url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal2' + "\",\"" + '#model2-body' +"\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>" ;
+                    document.getElementById("domain_table").innerHTML +=  "<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><input type='button' class='table-button' onclick = 'showModal(\"" + img_link2 +  "\")' value='Display Chart'> <input type='button' class='table-button' onclick='showDistributionChart(\"" + domain_model_url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal2' + "\",\"" + '#model2-body' +"\")' value='Dist Chart'> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>" ;
                 }
                 document.getElementById("domain_table").innerHTML += "</form>";    
        },
@@ -163,7 +163,7 @@ $.ajax({
             //console.log(img_link3);
             $('#r').html('<img src="' + img_link3 + '">');
             //console.log($('#r').html());
-            $('#repo_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><input type='button' onclick = 'showRepoModal(\"" + img_link3 +  "\")' value='Display Chart'> <input type='button' onclick='showDistributionChart(\"" + repo_url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal' + "\",\"" + '#model-body' +"\")' value='Dist Chart'> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>");
+            $('#repo_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><input class='table-button' type='button' onclick = 'showRepoModal(\"" + img_link3 +  "\")' value='Display Chart'> <input class='table-button' type='button' onclick='showDistributionChart(\"" + repo_url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal' + "\",\"" + '#model-body' +"\")' value='Dist Chart'> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>");
 
         }
         $('.repo-metrics').append( "</table></form>");
@@ -208,15 +208,13 @@ function populate_usecase_data()
                 var img_link4 =  response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
 
                 $('.modal-body').html('<img src="' + img_link4 + '">');
-                $('#usecase_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><button type='button' class='btn btn-light'onclick = 'showUseCaseUrlModal(\"" + img_link4 +  "\")'>Display Chart1</button>  <button type='button' class='btn btn-light' onclick='showDistributionChart(\"" + usecase_url3 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal3' + "\",\"" + '#model3-body' + "\")'> Dist Chart</button> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>");
+                $('#usecase_table').append("<tr><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis + "</td><td><input type='button' class='table-button'onclick = 'showUseCaseUrlModal(\"" + img_link4 +  "\")' value='Display Chart'> <input type='button' class='table-button' onclick='showDistributionChart(\"" + usecase_url3 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal3' + "\",\"" + '#model3-body' + "\")' value='Dist Chart'> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>");
             }
             $('.repo-metrics').append( "</table></form>");
         },
         error:function(error){
             console.log("failed");
         }
-
-
     });
     $.ajax({
         url: usecase_url2,
@@ -240,13 +238,10 @@ function populate_usecase_data()
         error:function(error){
             console.log("failed");
         }
-
-
     });
 }
 function populate_domainAnalysis_data()
 {
-
     var repoID = $("#myrepoId").val();
 
     var modelID = $("#mymodelId").val();
@@ -274,8 +269,6 @@ function populate_domainAnalysis_data()
         error:function(error){
             console.log("failed");
         }
-
-
     });
 }
 
