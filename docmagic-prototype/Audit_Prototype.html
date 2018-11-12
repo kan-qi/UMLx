@@ -91,22 +91,27 @@
 
 		var websheet_model_id = $('#auditForm input[name=websheet_model_id]').val();
 		var Description = $('#auditForm input[name=Description]').val();
-		var AuditType = $('#auditForm input[name=AuditType]').val();
+		var AuditLogic = $('#auditForm input[name=AuditLogic]').val();
 		var LoanTypes = $('#auditForm input[name=LoanTypes]').val();
 		var ApplicableLogic = $('#auditForm input[name=ApplicableLogic]').val();
-		var ApplicableScript = $('#auditForm input[name=ApplicableScript]').val();
+		var Category = $('#auditForm input[name=Category]').val();
 		var DetailsURL = $('#auditForm input[name=DetailsURL]').val();
-		var Disposition = $('#auditForm input[name=Disposition]').val();
+		var LockAudit = $('#auditForm input[name=LockAudit]').val();
+		var MessageCmd = $('#auditForm input[name=MessageCmd]').val();
+		var States = $('#auditForm input[name=States]').val();
+
 		
 		audit.create(
 							{
 							    "Description": Description,
-						        "AuditType": AuditType,
+						        "AuditLogic": AuditLogic,
 						        "LoanTypes": LoanTypes,
 						        "ApplicableLogic": ApplicableLogic,
-						        "ApplicableScript": ApplicableScript,
+						        "Category": Category,
 						        "DetailsURL": DetailsURL,
-						        "Disposition": Disposition
+						        "LockAudit": LockAudit,
+						        "MessageCmd": MessageCmd,
+						        "States": States
 							}, 
 							function (msg) { 
 			//console.log(data1[0]);
@@ -168,23 +173,28 @@
 
 		//var websheet_model_id = $('#replaceAuditForm input[name=websheet_model_id]').val();
 		var Description = $('#replaceAuditForm input[name=Description]').val();
-		var AuditType = $('#replaceAuditForm input[name=AuditType]').val();
+		var AuditLogic = $('#replaceAuditForm input[name=AuditLogic]').val();
 		var LoanTypes = $('#replaceAuditForm input[name=LoanTypes]').val();
 		var ApplicableLogic = $('#replaceAuditForm input[name=ApplicableLogic]').val();
-		var ApplicableScript = $('#replaceAuditForm input[name=ApplicableScript]').val();
+		var Category = $('#replaceAuditForm input[name=Category]').val();
 		var DetailsURL = $('#replaceAuditForm input[name=DetailsURL]').val();
-		var Disposition = $('#replaceAuditForm input[name=Disposition]').val();
+		var LockAudit = $('#replaceAuditForm input[name=LockAudit]').val();
+		var MessageCmd = $('#replaceAuditForm input[name=MessageCmd]').val();
+		var States = $('#replaceAuditForm input[name=States]').val();
+
 
 		audit.set(_id, 
 					{
 						//"websheet_model_id": websheet_model_id,
 						        "Description": Description,
-						        "AuditType": AuditType,
+						        "AuditLogic": AuditLogic,
 						        "LoanTypes": LoanTypes,
 						        "ApplicableLogic": ApplicableLogic,
-						        "ApplicableScript": ApplicableScript,
+						        "Category": Category,
 						        "DetailsURL": DetailsURL,
-						        "Disposition": Disposition
+						        "LockAudit": LockAudit,
+						          "MessageCmd": MessageCmd,
+						          "States": States
 					}, 
 					success, error);
 		return false;
@@ -215,23 +225,28 @@
 
 		//var websheet_model_id = $('#auditForm input[name=websheet_model_id]').val();
 		var Description = $('#auditForm input[name=Description]').val();
-		var AuditType = $('#auditForm input[name=AuditType]').val();
+		var AuditLogic = $('#auditForm input[name=AuditLogic]').val();
 		var LoanTypes = $('#auditForm input[name=LoanTypes]').val();
 		var ApplicableLogic = $('#auditForm input[name=ApplicableLogic]').val();
-		var ApplicableScript = $('#auditForm input[name=ApplicableScript]').val();
+		var Category = $('#auditForm input[name=Category]').val();
 		var DetailsURL = $('#auditForm input[name=DetailsURL]').val();
-		var Disposition = $('#auditForm input[name=Disposition]').val();
+		var LockAudit = $('#auditForm input[name=LockAudit]').val();
+		var MessageCmd = $('#auditForm input[name=MessageCmd]').val();
+		var States = $('#auditForm input[name=States]').val();
+
 
 		audit.update(_id, 
 					{
 						//"websheet_model_id": websheet_model_id,
 						        "Description": Description,
-						        "AuditType": AuditType,
+						        "AuditLogic": AuditLogic,
 						        "LoanTypes": LoanTypes,
 						        "ApplicableLogic": ApplicableLogic,
-						        "ApplicableScript": ApplicableScript,
+						        "Category": Category,
 						        "DetailsURL": DetailsURL,
-						        "Disposition": Disposition
+						        "LockAudit": LockAudit,
+						          "MessageCmd": MessageCmd,
+ 							       "States": States
 					}, 
 					function (msg){
 						if(msg.result && msg.result.ok){
@@ -254,12 +269,14 @@
 	}
 	var inputForm = '<form style="margin: auto; width: 80%; margin-top: 10px" id="auditForm" onSubmit="return false"><input type="hidden" name="_id"  placeholder="'+audit._id+'" value="'+audit._id+'">\
 		Description:<br><input type="text" name="Description"  placeholder="'+audit.Description+'" value="'+audit.Description+'"><br> \
-		AuditType:<br><input type="text" name="AuditType"  placeholder="'+audit.AuditType+'" value="'+audit.AuditType+'"><br> \
+		AuditLogic:<br><input type="text" name="AuditLogic"  placeholder="'+audit.AuditLogic+'" value="'+audit.AuditLogic+'"><br> \
 		Loan Type(s):<br><input type="text" name="LoanTypes"  placeholder="'+audit.LoanTypes+'" value="'+audit.LoanTypes+'"><br> \
 		ApplicableLogic:<br><input type="text" name="ApplicableLogic"  placeholder="'+audit.ApplicableLogic+'" value="'+audit.ApplicableLogic+'"><br> \
-		ApplicableScript:<br><input type="text" name="ApplicableScript"  placeholder="'+audit.ApplicableScript+'" value="'+audit.ApplicableScript+'"><br> \
+		Category:<br><input type="text" name="Category"  placeholder="'+audit.Category+'" value="'+audit.Category+'"><br> \
 		Details URL<br><input type="text" name="DetailsURL"  placeholder="'+audit.DetailsURL+'" value="'+audit.DetailsURL+'"><br> \
-		Disposition:<br><input type="text" name="Disposition"  placeholder="'+audit.Disposition+'" value="'+audit.Disposition+'"><br> \
+		LockAudit:<br><input type="text" name="LockAudit"  placeholder="'+audit.LockAudit+'" value="'+audit.LockAudit+'"><br> \
+		MessageCmd:<br><input type="text" name="MessageCmd"  placeholder="'+audit.MessageCmd+'" value="'+audit.MessageCmd+'"><br> \
+		States<br><input type="text" name="States"  placeholder="'+audit.States+'" value="'+audit.States+'"><br> \
 		<br><br><button type="submit" onclick="javascript:createAudit()">Create</button> \
 		<button type="submit" onclick="javascript:updateAudit()">Update</button> \
        </form>'
@@ -279,12 +296,14 @@
   	<div style="margin: 3px" id="container">
   		<form style="margin: auto; width: 80%; margin-top: 10px" id="auditForm" onSubmit="return false;">
 		Description:<br><input type="text" name="Description"  placeholder="" value="""><br>
-		AuditType:<br><input type="text" name="AuditType"  placeholder="" value="""><br>
+		AuditLogic:<br><input type="text" name="AuditLogic"  placeholder="" value="""><br>
 		Loan Type(s):<br><input type="text" name="LoanTypes"  placeholder="" value="""><br>
 		ApplicableLogic:<br><input type="text" name="ApplicableLogic"  placeholder="" value="""><br>
-		ApplicableScript:<br><input type="text" name="ApplicableScript"  placeholder="" value="""><br>
+		Category:<br><input type="text" name="Category"  placeholder="" value="""><br>
 		Details URL<br><input type="text" name="DetailsURL"  placeholder="" value="""><br>
-		Disposition:<br><input type="text" name="Disposition"  placeholder="" value="""><br>
+		LockAudit:<br><input type="text" name="LockAudit"  placeholder="" value="""><br>
+		MessageCmd<br><input type="text" name="MessageCmd"  placeholder="" value="""><br>
+		States:<br><input type="text" name="States"  placeholder="" value="""><br>
 		<br><br><button type="submit" onclick="javascript:createAudit()">Create</button>
 		<button type="submit" onclick="javascript:updateAudit()">Update</button> </form>
   	</div>

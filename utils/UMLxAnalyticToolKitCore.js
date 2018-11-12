@@ -307,6 +307,22 @@
 						</a>
 					</li>
 				`
+
+				let model_elements_table_content = '';
+				const model_elements_folder = './data/StandAloneToolKit/output/' + model.UseCases[key]._id;
+				console.log("test1104", model_elements_folder);
+
+				fs.readdirSync(model_elements_folder).forEach(file => {
+				  	model_elements_table_content += 
+				  		`
+				  			<tr class="estimation-table">
+					  			<td>
+									<a href="./${model.UseCases[key]._id}/${file}" target="_blank">${file}</a>
+								</td>
+							</tr>
+				  		`
+				})				
+
 				detail_list +=
 				`
 					<div class="tab-pane fade" id="${model.UseCases[key]._id}">
@@ -322,8 +338,14 @@
 							<div class="tab-pane fade in active" id="${model.UseCases[key]._id}_use-case-info-pane">
 								<a href="./${model.UseCases[key]._id}/robustness_diagram.svg" target="_blank">SVG Diagram</a>
 							</div>
-							<div class="tab-pane fade" id="${model.UseCases[key]._id}_use-case-analytics" target="_blank">
-								<a href="./${model.UseCases[key]._id}/elementAnalytics.csv">Analytics CVS</a>
+							<div class="tab-pane fade" id="${model.UseCases[key]._id}_use-case-analytics">
+								<a href="./${model.UseCases[key]._id}/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto; width: 50%">
+									<tr class="estimation-table">
+										<th>File Name</th>
+									</tr>
+									${model_elements_table_content}
+								</table>
 							</div>
 						</div>
 					</div>
@@ -335,13 +357,25 @@
 		let EXUCP_content = generateEstimationReshltPane(model.exucp_lm, model);
 		let DUCP_content = generateEstimationReshltPane(model.ducp_lm, model);
 
+		let model_analytics_table_content = '';
+		const testFolder = './data/StandAloneToolKit/output';
+		fs.readdirSync(testFolder).forEach(file => {
+		  	model_analytics_table_content += 
+		  		`
+		  			<tr class="estimation-table">
+			  			<td>
+							<a href="./${file}" target="_blank">${file}</a>
+						</td>
+					</tr>
+		  		`
+		})			
 
         let model_analysis_chart =
             `
 		<div class="model-info-content">
 			<ul class="nav nav-tabs">
 				<li class="active">
-					<a data-toggle="tab" href="#model-analytics">Overview</a>
+					<a data-toggle="tab" href="#overview">Overview</a>
 				</li>
 				<li>
 					<a data-toggle="tab" href="#usecase-analysis" onclick="">Model Elements</a>
@@ -349,9 +383,12 @@
 				<li>
 					<a data-toggle="tab" href="#model-evaluation" id="model-evaluation-tab">Model Info</a>
 				</li>
+				<li>
+					<a data-toggle="tab" href="#model-analytics">Model Analytics</a>
+				</li>
 			</ul>
 			<div class="tab-content">
-				<div id="model-analytics" class="tab-pane fade in active">
+				<div id="overview" class="tab-pane fade in active">
 					${cards_selection}
 				</div>
 				<div id="usecase-analysis" class="tab-pane fade">
@@ -419,6 +456,14 @@
 						</div>												
 					</div>
 				</div> 
+				<div id="model-analytics" class="tab-pane fade">
+					<table class="table-bordered" style="margin: 10px auto; width: 50%">
+						<tr class="estimation-table">
+							<th>File Name</th>
+						</tr>
+						${model_analytics_table_content}						
+					</table>
+				</div>
 				<div id="repo-analysis-detail" class="panel-body">
 					<div class="repo-metrics table-responsive">
 						${html_table}
@@ -452,7 +497,7 @@
 				<div id='main-panel'>
 					<div id='display-panel'>
 						<div class='block panel panel-default'>
-							<div id="model-stats-chart" class="panel-body">
+							<div id="model-stats-chart" class="panel-body" style="min-height: 90vh">
 								${model_analysis_chart}
 							</div>
 						</div>
@@ -634,7 +679,34 @@
         });
     }
 
+	function generateReport(model, callbackfunc) {
+	    readUsecaseJson(model, function (html_table) {
+	        console.log("generate use cases");
+	        createStream(model, function (rt_object) {
+	            const yswi = rt_object.swtI;
+	            const yswtii = rt_object.swtII;
+	            const yswtiii = rt_object.swtIII;
+	            const xcategories = rt_object.category;
+	            console.log("xcategories"+xcategories);
+	            console.log("yswi"+yswi);
+	            console.log("yswii"+yswtii);
+	            console.log("yswiii"+yswtiii);
+	            getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
+	                writeHTML(model, data);
+	                console.log(`result : [${xcategories}]`);
+	                copyAuxiliaryFiles(model, function(message){
+	                    console.log(message);
+	                    if(callbackfunc){
+	                        callbackfunc(model);
+	                    }
+	                });
+	            });
+	        });
+	    });    	
+	}    
+
     module.exports = {
+    	generateReport: generateReport,
         analyseSrc: function(inputFilePath, outputDir, projectName, callbackfunc){
             console.log("analysi src");
             analyseUML(inputFilePath, outputDir, projectName, function (model) {
