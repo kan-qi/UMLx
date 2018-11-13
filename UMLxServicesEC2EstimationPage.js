@@ -235,7 +235,10 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
                     	if(req.body['result_page'] && req.body['result_page'] === 'simplified'){
                         res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
-                    	}
+						}
+						else if(req.body['result_page'] && req.body['result_page'] === 'analysis'){
+                         res.render('estimationResultPaneAnalysis', {estimationResults:estimationResults, modelInfo: modelInfo});
+						}
                     	else{
                     		 res.render('estimationResultPane', {estimationResults:estimationResults, modelInfo: modelInfo});
                     	}
@@ -316,6 +319,149 @@ app.get('/getZipPackage', function (req, res){
 });
 
 
+app.get('/signup',function(req,res){
+
+	if(req.query.tk!=null && req.query.tk!=undefined){
+		res.render('signup', {tk:req.query.tk});
+	} else {
+	res.render('signup');
+	}
+});
+
+app.get('/login',function(req,res){
+	res.render('login');
+});
+
+app.get('/logout',function(req,res){
+	if(req.cookies){
+		req.cookies.appToken = null;
+	}
+	
+	res.redirect('/login');
+});
+
+app.post('/login', upload.fields([{name:'username', maxCount:1},{name:'password', maxCount:1}]),  function (req, res){
+
+	var username = req.body['username'];
+	var pwd = req.body['password'];
+	umlModelInfoManager.validateUserLogin(username,pwd,function(result,message){
+        res.json(result);
+    });
+
+})
+
+app.get('/logout', function (req, res) {
+	if (req.cookies){
+		req.cookies.appTooken = null;
+	}
+
+	res.redirect('/login')
+})
+
+app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', maxCount:1},{name:'password', maxCount:1},{name:'enterpriseUser',maxCount :1},{name:'token',maxCount : 1}]),  function (req, res){
+
+	var email = req.body['email'];
+	var username = req.body['username'];
+	var pwd = req.body['password'];
+	var isEnterpriseUser= false;
+	if(req.body['enterpriseUser']){
+		isEnterpriseUser= req.body['enterpriseUser']=="on"? true : false;
+	}
+	var token = '';
+	var enterpriseUserId ='';
+	if(req.body['token']){
+		 token = req.body['token'];
+			 // verifies secret and checks exp
+				 jwt.verify(token, config.secretUserInvite, function(err, payload) {
+				   if (err) {
+					   	 console.log('Failed to authenticate token. Token is not Valid');
+						 var result = {
+		            	          success: false,
+		            	          message: 'Link is no longer valid.',
+		                 };
+						 res.json(result);
+					   //return res.json({ success: false, message: 'Failed to authenticate token.' });
+				   } else {
+				     // if everything is good, save to request for use in other routes
+					   umlModelInfoManager.queryUserInfo(payload.enterpriseUserId, function(user){
+
+							 if(!user || !user.isEnterprise){
+								 console.log('Not a valid enterprise userId');
+								 var result = {
+				            	          success: false,
+				            	          message: 'Invalid Enterprise User Id',
+				                 };
+								 res.json(result);
+							 }  else {
+								 enterpriseUserId = payload.enterpriseUserId;
+								 umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
+								        res.json(result)
+								    });
+							 }
+						 });
+				   }
+				 });
+
+
+	} else {
+    umlModelInfoManager.newUserSignUp(email,username,pwd,isEnterpriseUser,enterpriseUserId,function(result,message){
+        res.json(result)
+    });
+	}
+
+})
+
+
+//route middleware to verify a token
+app.use(function(req, res, next) {
+
+	var token =undefined ;
+	if(req.cookies){
+		token = req.cookies.appToken;
+	}
+	if (token) {
+	 // verifies secret and checks exp
+		 jwt.verify(token, config.secret, function(err, user) {
+		   if (err) {
+			   console.log('Failed to authenticate token.');
+			   res.redirect('/login');
+			   //return res.json({ success: false, message: 'Failed to authenticate token.' });
+		   } else {
+		     // if everything is good, save to request for use in other routes
+		     umlModelInfoManager.queryUserInfo(user.userId,function(user){
+		    	if(!user){
+		    		res.redirect('/login');
+		    		return;
+		    	}
+
+		    	req.userInfo ={};
+		    	req.userInfo.userName = user.username;
+		    	req.userInfo.repoId = user.repoId;
+		    	req.userInfo._id = user._id;
+		    	req.userInfo.isEnterprise = (user.isEnterprise?true:false);
+		    	if(req.userInfo.isEnterprise){
+		    		req.userInfo.enterpriseUserId = user.enterpriseUserId;
+		    	}
+		    	req.userInfo.email = user.email;
+
+		     next();
+
+		 	  });
+		   }
+		 });
+
+	} else {
+
+	 // if there is no token
+		res.redirect('/login');
+	}
+
+});
+
+
+app.get('/estimationPageAnalysis',function(req,res){
+	res.render('estimationPageAnalysis');
+});
 
 ////==================== local machine code for development ==========================
 //
