@@ -340,7 +340,7 @@
 							</div>
 							<div class="tab-pane fade" id="${model.UseCases[key]._id}_use-case-analytics">
 								<a href="./${model.UseCases[key]._id}/elementAnalytics.csv" target="_blank">Analytics CVS</a>
-								<table class="table-bordered">
+								<table class="table-bordered" style="margin: 10px auto; width: 50%">
 									<tr class="estimation-table">
 										<th>File Name</th>
 									</tr>
@@ -457,7 +457,7 @@
 					</div>
 				</div> 
 				<div id="model-analytics" class="tab-pane fade">
-					<table class="table-bordered">
+					<table class="table-bordered" style="margin: 10px auto; width: 50%">
 						<tr class="estimation-table">
 							<th>File Name</th>
 						</tr>
@@ -679,7 +679,34 @@
         });
     }
 
+	function generateReport(model, callbackfunc) {
+	    readUsecaseJson(model, function (html_table) {
+	        console.log("generate use cases");
+	        createStream(model, function (rt_object) {
+	            const yswi = rt_object.swtI;
+	            const yswtii = rt_object.swtII;
+	            const yswtiii = rt_object.swtIII;
+	            const xcategories = rt_object.category;
+	            console.log("xcategories"+xcategories);
+	            console.log("yswi"+yswi);
+	            console.log("yswii"+yswtii);
+	            console.log("yswiii"+yswtiii);
+	            getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
+	                writeHTML(model, data);
+	                console.log(`result : [${xcategories}]`);
+	                copyAuxiliaryFiles(model, function(message){
+	                    console.log(message);
+	                    if(callbackfunc){
+	                        callbackfunc(model);
+	                    }
+	                });
+	            });
+	        });
+	    });    	
+	}    
+
     module.exports = {
+    	generateReport: generateReport,
         analyseSrc: function(inputFilePath, outputDir, projectName, callbackfunc){
             console.log("analysi src");
             analyseUML(inputFilePath, outputDir, projectName, function (model) {

@@ -27,22 +27,48 @@ plot(pressure)
 library(ggplot2)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+#Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
 
 #ucp_data <- UCP_Dataset
-ucp_data <- UCP_Dataset_OnlineV1.1
+#ucp_data <- UCP_Dataset_OnlineV1.1
 
-uc_num <- ucp_data[,"Simple.UC"] + ucp_data[,"Average.UC"]+ucp_data[,"Complex.UC"]
+ucp_data <- read.csv("UCP_Dataset_OnlineV1.1.csv")
+
+uc_num <- ucp_data[,"Simple_UC"] + ucp_data[,"Average_UC"]+ucp_data[,"Complex_UC"]
 cor(uc_num, ucp_data$Real_Effort_Person_Hours)
 ucp_data$uc_num <- uc_num
-print(uc_num)
+print(cor(ucp_data$uc_num, ucp_data$Real_Effort_Person_Hours))
 lm(Real_Effort_Person_Hours~uc_num, data=ucp_data)
 
-ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"ECF"]*ucp_data[,"TCF"]
+ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"EF"]*ucp_data[,"TCF"]
 ucp_data$UCP <- ucp
+print(cor(ucp_data$UCP, ucp_data$Real_Effort_Person_Hours))
 
 ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
-  
 
+
+fp_data <- read.csv("china.csv")
+fp_num <- fp_data[,"Input"]+fp_data[,"Output"]+fp_data[,"Enquiry"];
+fp_data$fp_num <- fp_num
+cor(fp_data$fp_num, fp_data$Effort)
+  
+```
+
+```{r}
+transaction_data <- read.csv('correlation-benchmark-11-11.csv')
+rownames(transaction_data) <- transaction_data$Project
+transaction_data$Project <- NULL
+tran_cor <- cor(transaction_data)
+tran_cor['KSLOC', 'Effort'] = 0.647
+tran_cor['Effort', 'KSLOC'] = 0.647
+tran_cor['Component', 'Effort'] = 0.626
+tran_cor['Effort', 'Component'] = 0.626
+print(tran_cor)
+
+library(corrplot)
+corrplot(tran_cor, type = "upper", order = "hclust", 
+         tl.col = "black", tl.srt = 45)
+```
 

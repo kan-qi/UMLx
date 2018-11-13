@@ -1295,6 +1295,7 @@ function requestUseCaseDistributionCharts(){
 }
 
 $(document).ready(function () {
+    console.log("lhhtest==========================");
     $(document).on('click', 'a.sub-model-title', query_sub_model_detail_func);
     //  $(document).on('click','a.model-list-title.domain-model-title', query_domain_model_detail_func);
     $(document).on('click', '.model-title', query_model_detail_func);
