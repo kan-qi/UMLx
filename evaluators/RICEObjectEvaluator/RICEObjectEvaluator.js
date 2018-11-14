@@ -27,14 +27,11 @@
 	function loadUseCaseEmpirics(useCaseInfo, useCaseIndex, modelInfo, modelIndex) {
 		
 		useCaseInfo['TransactionEmpirics'] = {
-				EI : 0,
-				EQ : 0,
-				DM : 0,
-				INT : 0,
-				CTRL : 0,
-				EXTIVK : 0,
-				EXTCLL : 0,
-				NT : 0
+				NORPT : 0,	//number of reports
+				NOINT : 0, //number of interfaces
+				NOCON : 0, //number of conversions
+				NOE: 0, //number of enhancements
+				RO
 				};
 		
 		useCaseInfo['TransactionEmpirics'].EI = Number(useCaseInfo['TransactionEmpirics'].EI);
