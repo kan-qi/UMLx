@@ -108,7 +108,7 @@
             function predictEffortWithModel(modelInfo, estimationModel, key){
                 return new Promise((resolve, reject) => {
 
-                		model.predictEffort(modelInfo, key, function(modelInfo){
+                		estimationModel.predictEffort(modelInfo, key, function(modelInfo){
                 			console.log("finished prediction");
                             resolve();
                 		});
@@ -123,7 +123,7 @@
             for(var i in repoInfo.Models){
 				var modelInfo = repoInfo.Models[i];
 				Object.keys(models).map(key=>{
-	                promiseTasks.push(predictEffortWithModel(models[key], modelInfo, key));
+	                promiseTasks.push(predictEffortWithModel(modelInfo, models[key], key));
 	            })
 			}
             

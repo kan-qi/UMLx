@@ -772,7 +772,7 @@ app.get('/deleteModel', function (req, res){
 				});
 		      umlModelInfoManager.updateRepoInfo(repoInfo, function(){
 
-					res.redirect('/');
+					c
 
 				});
 			});
@@ -797,7 +797,7 @@ app.get('/reanalyseRepo', function (req, res){
         umlModelInfoManager.updateRepoInfo(repoInfo, function(){
             // counter = true;
 			console.log("Finish All Calculation!");
-            res.end("true");
+			res.redirect('/');
         });
     });
 });
