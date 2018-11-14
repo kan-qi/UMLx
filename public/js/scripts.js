@@ -1608,6 +1608,7 @@ function createTrendingLines() {
         dataType: "json",
 
         success: function (response) {
+            var series_data = {"SLOC":{}, "schedule":{}, "personnel":{}, "EUCP":{}, "EXUCP":{}, "DUCP":{}, "effort":{}, "estimatedEffort":{}, "NT":{}, "projectNum":{}, "UseCaseNum":{}, "EntityNum":{}}
 
             function updateChart() {
                 var selected_series = [];
@@ -1634,7 +1635,6 @@ function createTrendingLines() {
                     series: selected_series
                 });              
             }
-            var series_data = {"SLOC":{}, "schedule":{}, "personnel":{}, "EUCP":{}, "EXUCP":{}, "DUCP":{}, "effort":{}, "estimatedEffort":{}, "NT":{}, "projectNum":{}, "UseCaseNum":{}, "EntityNum":{}}
 
             console.log('----------');
             console.log(response);
@@ -1697,28 +1697,48 @@ function createTrendingLines() {
             // On click of the projects tab - update the data and y axis.
             $('#project-card').click(function () {
                 console.log("project clicked");
-                $('#project-card input:checkbox').each(function(){
-                    series_data.projectNum.selected = !series_data.projectNum.selected;
-                    this.checked=!this.checked;
+                $('#project-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.projectNum.selected = !series_data.projectNum.selected;
+                        if (!series_data.projectNum.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
 
             $('#sloc-card').click(function () {
                 console.log("solc clicked");
-                $('#sloc-card input:checkbox').each(function(){
-                    series_data.SLOC.selected = !series_data.SLOC.selected;
-                    this.checked=!this.checked;
+                $('#sloc-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.SLOC.selected = !series_data.SLOC.selected;
+                        if (!series_data.SLOC.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
 
-            
             $('#exucp-card').click(function () {
                 console.log("exucp clicked");
-                $('#exucp-card input:checkbox').each(function(){
-                    series_data.EXUCP.selected = !series_data.EXUCP.selected;
-                    this.checked=!this.checked;
+                $('#exucp-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.EXUCP.selected = !series_data.EXUCP.selected;
+                        if (!series_data.EXUCP.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
@@ -1726,25 +1746,46 @@ function createTrendingLines() {
             // On click of the use cases tab - update the data and y axis.
             $('#usecase-card').click(function () {
                 console.log("usecase clicked");
-                $('#usecase-card input:checkbox').each(function(){
-                    series_data.UseCaseNum.selected = !series_data.UseCaseNum.selected;
-                    this.checked=!this.checked;
+                $('#usecase-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.UseCaseNum.selected = !series_data.UseCaseNum.selected;
+                        if (!series_data.UseCaseNum.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
 
             $('#schedule-card').click(function () {
-                $('#schedule-card input:checkbox').each(function(){
-                    series_data.schedule.selected = !series_data.schedule.selected;
-                    this.checked=!this.checked;
+                $('#schedule-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.schedule.selected = !series_data.schedule.selected;
+                        if (!series_data.schedule.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
 
             $('#ducp-card').click(function () {
-                $('#ducp-card input:checkbox').each(function(){
-                    series_data.DUCP.selected = !series_data.DUCP.selected;
-                    this.checked=!this.checked;
+                $('#ducp-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.DUCP.selected = !series_data.DUCP.selected;
+                        if (!series_data.DUCP.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
@@ -1758,9 +1799,16 @@ function createTrendingLines() {
                 //console.log(transaction_num_new);
                 // console.log('===========');
                 // console.log(transaction_num_new);
-                $('#transaction-card input:checkbox').each(function(){
-                    series_data.NT.selected = !series_data.NT.selected;
-                    this.checked=!this.checked;
+                $('#transaction-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.NT.selected = !series_data.NT.selected;
+                        if (!series_data.NT.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
                 // chart.update({
@@ -1777,42 +1825,77 @@ function createTrendingLines() {
             });
 
             $('#personnel-card').click(function () {
-                $('#personnel-card input:checkbox').each(function(){
-                    series_data.personnel.selected = !series_data.personnel.selected;
-                    this.checked=!this.checked;
+                $('#personnel-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.personnel.selected = !series_data.personnel.selected;
+                        if (!series_data.personnel.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
 
             $('#effort-card').click(function () {
-                $('#effort-card input:checkbox').each(function(){
-                    series_data.effort.selected = !series_data.effort.selected;
-                    this.checked=!this.checked;
+                $('#effort-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.effort.selected = !series_data.effort.selected;
+                        if (!series_data.effort.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
 
             // On click of the classes tab - update the data and y axis.
             $('#class-card').click(function () {
-                $('#class-card input:checkbox').each(function(){
-                    series_data.EntityNum.selected = !series_data.EntityNum.selected;
-                    this.checked=!this.checked;
+                $('#class-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.EntityNum.selected = !series_data.EntityNum.selected;
+                        if (!series_data.EntityNum.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
 
             $('#eucp-card').click(function () {
-                $('#eucp-card input:checkbox').each(function(){
-                    series_data.EUCP.selected = !series_data.EUCP.selected;
-                    this.checked=!this.checked;
+                $('#eucp-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.EUCP.selected = !series_data.EUCP.selected;
+                        if (!series_data.EUCP.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
 
             $('#estimate-card').click(function () {
-                $('#estimate-card input:checkbox').each(function(){
-                    series_data.estimatedEffort.selected = !series_data.estimatedEffort.selected;
-                    this.checked=!this.checked;
+                $('#estimate-card img').each(function(){
+                    if (this.name == "checkImg"){
+                        series_data.estimatedEffort.selected = !series_data.estimatedEffort.selected;
+                        if (!series_data.estimatedEffort.selected){
+                            this.style.display = "none";
+                        }
+                        else{
+                            this.style.display = "";
+                        }
+                    }
                 });
                 updateChart();
             });
@@ -1820,8 +1903,6 @@ function createTrendingLines() {
         error: function (error) {
             console.log("failed");
         }
-
-
     });
     //  console.log(data);
 
