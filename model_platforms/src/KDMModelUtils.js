@@ -530,6 +530,20 @@
 
 		return extendInstances;
 	}
+
+	function identifyComposition(xmiString) {
+		var compositionInstances = [];
+		var XMICompositions = jp.query(xmiString, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
+		for (var i in XMICompositions) {
+			var XMIComposition = XMICompositions[i];
+			compositionInstances.push({
+				name: XMIComposition['$']['name'],
+				type: XMIComposition['$']['type'] // this is a path to the class
+			});
+		}
+
+		return compositionInstances;
+	}
 	
 	function identifyContainingMethodUnitByAction(){
 		
@@ -661,6 +675,7 @@
 			identifyMethodUnit: identifyMethodUnit,
 			identifyClassUnit: identifyClassUnit,
 			identifyCalls: identifyCalls,
-			identifyExtends: identifyExtends
+			identifyExtends: identifyExtends,
+			identifyComposition: identifyComposition
 	}
 }());
