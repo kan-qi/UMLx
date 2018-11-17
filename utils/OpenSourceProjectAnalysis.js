@@ -277,9 +277,7 @@ var repoRecordPath = repo.reportDir+"\\sloc";
 generateSlocReport(repoRecordPath);
 }
 else if(functionSelection === "--recover-kdm"){
-	
 recoverKDMModel(repo.projectList)
-
 }
 else if(functionSelection === "--calculate-cocomo-estimation-result"){
 	var cocomoDataPath = repo.repoDir+"\\COCOMORatings1.csv";

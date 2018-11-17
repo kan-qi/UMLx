@@ -1,0 +1,84 @@
+
+html
+    head
+        title UMLx
+        link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
+        link(href='css/style.css', rel='stylesheet')
+        //script.
+        //    function showPage(pageNumer) {
+        //        for (var i = 1; i <= 5; i++) {
+        //            var classList = document.getElementById("page" + i).classList;
+        //            if (i != pageNumer) {
+        //                classList.add("hidden");
+        //            } else {
+        //                classList.remove("hidden");
+        //            }
+        //        }
+        //    }
+    body#upload-body
+        include heading
+        .container.estimation_page_container
+            form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+                #sec-4
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    div.panel_words
+                                        | Project model file and documents
+                                    //div.panel_triangle_toggle
+                                    //    a(data-toggle='collapse', href='#collapse4')
+                                    //        span.glyphicon.glyphicon-triangle-left.collapseButtom4
+                            #collapse4.panel-collapse
+                                .panel-body
+                                    .form-group
+                                        label.control-label.col-xs-4(for='uml_file') Model File (file types: xml are supported)
+                                        .col-xs-8
+                                            input#uml_file.form-control(type='file', name='uml_file', accept='text/xml')
+                                            a(href='./F14a_women_at_work_website_redesign.zip') Download Example XML File
+                                    //.form-group
+                                      //  label.control-label.col-xs-4(for='uml_other') Other Documents (file types: zip, rar, tar are supported)
+                                      //  .col-xs-8
+                                      //      input#uml_other.form-control(type='file', name='uml_other')
+                                    .form-group
+                                        label.control-label.col-xs-4(for='model') Select Estimator
+                                        .col-xs-8
+                                            select#model.estimator-selection-form-control(name='model')
+                                                option(value="eucp_lm") EUCP
+                                                option(value="exucp_lm") EXUCP
+                                                option(value="ducp_lm") DUCP
+                                                
+                                    input#result_page(type='hidden', name='result_page', value='analysisPackage')
+
+                                    button.btn.btn-success.pull-right(type='submit') Submit
+
+                                //input#uuid-page4(type='hidden', name='uuid-page4', value='')
+                                //
+                                //.form-group
+                                //    .col-sm-offset-2.col-xs-8
+                                //        button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
+                                //        button.btn.btn-success.pull-right(type='submit', onclick='showPage(5)') Submit
+                // end of #sec-4
+                #sec-5
+                    .panel-group
+                        .panel.panel-default
+                            .panel-heading
+                                h4.panel-title
+                                    | Estimation Results
+                            #collapse5.panel-collapse
+                                div(id="estimation-result-panel-body")
+                    //input#uuid-page5(type='hidden', name='uuid-page5', value='')
+                // end of #sec-5
+                #loadingScreen.hidden
+                    div.full-page-model
+                    div.full-page-model-content
+                        div(style='padding: 30px')
+                            img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                            p Processing...                
+
+        script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
+        script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
+        script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
+        script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
+        script(type='text/javascript', src='js/scripts.js')
+        script(type='text/javascript', src="js/charts.js")

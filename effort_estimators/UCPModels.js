@@ -521,7 +521,7 @@
 					   
 					   var estimationResults = {
 							   	EstimationModel: key,
-							    PredictionModel : modelConfig.predictionModel,
+							    //PredictionModel : modelConfig.predictionModel,
 								SizeMetric : modelConfig.sizeMetric,
 								TransactionMetric : modelConfig.transactionMetric,
 								Effort: projectEffort.toFixed(2),

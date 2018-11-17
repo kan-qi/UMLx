@@ -158,11 +158,11 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 			return;
 		}
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
 		modelInfo.projectInfo = projectInfo;
-		console.log('updated model info');
-		console.log(modelInfo);
+//		console.log('updated model info');
+//		console.log(modelInfo);
 		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 			if(!modelInfo){
@@ -197,6 +197,9 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 		});
 	});
 });
+
+console.l = console.log;
+console.log = function() {};
 
 app.get('/signup',function(req,res){
 

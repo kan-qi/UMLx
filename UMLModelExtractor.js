@@ -18,7 +18,7 @@
 	
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
-		console.log(umlModelInfo);
+//		console.log(umlModelInfo);
 		mkdirp(umlModelInfo.OutputDir, function(err) {
 			console.log("create dir");
 			if(err) {

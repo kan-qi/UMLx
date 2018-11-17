@@ -237,6 +237,11 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 //				modelInfo.EstimationModel = model;
                     	
 //                modelInfo.umlEstimationInfo = umlEstimationInfo;
+                    
+                    if(req.body['result_page'] && req.body['result_page'] === 'analysisPackage'){
+                        res.render('estimationAnalysisPackageResult', {modelInfo: modelInfo});
+                        return;
+					}
 
                     umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 //					console.log(modelInfo);
@@ -470,6 +475,11 @@ app.use(function(req, res, next) {
 app.get('/estimationPageAnalysis',function(req,res){
 	res.render('estimationPageAnalysis');
 });
+
+app.get('/estimationAnalysisPackage',function(req,res){
+	res.render('estimationAnalysisPackage');
+});
+
 
 ////==================== local machine code for development ==========================
 //
