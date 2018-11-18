@@ -681,8 +681,6 @@ function evaluateUploadedProject(req) {
                                 webpush.sendNotification(subscription, payload).catch(error => {
                                     console.error(error.stack);
                                 });
-                                // }, 1000);
-                                //window.location.reload(true);
                             });
                         });
                     });
