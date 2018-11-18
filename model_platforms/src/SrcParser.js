@@ -69,7 +69,12 @@
 				var codeAnalysisResults = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
 //				debug.writeJson("constructed_model_by_kdm_result_7_5", codeAnalysisResults);
 				
-				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, workDir +"/"+responsePatternsFile);
+				 var responseFilePath = workDir +"/"+responsePatternsFile;
+				 if( !fs.existsSync(responseFilePath) ) {
+					  responseFilePath = "./model_platforms/src/"+responsePatternsFile;
+				 }
+				
+				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
 
 				var componentInfo = componentIdentifier.identifyComponents(codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.referencedClassUnitsComposite, codeAnalysisResults.dicClassUnits, codeAnalysisResults.dicCompositeSubclasses, Model.OutputDir);
 				
