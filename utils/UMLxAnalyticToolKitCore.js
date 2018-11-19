@@ -320,12 +320,17 @@
 				}				
 
 				fs.readdirSync(model_elements_folder).forEach(file => {
+					let stats = fs.statSync(model_elements_folder + '/' + file);
+					let fileSizeInBytes = stats["size"];
 				  	model_elements_table_content += 
 				  		`
 				  			<tr class="estimation-table">
 					  			<td>
 									<a href="./${model.UseCases[key]._id}/${file}" target="_blank">${file}</a>
 								</td>
+								<td>
+									${fileSizeInBytes} B
+								</td>								
 							</tr>
 				  		`
 				})				
@@ -350,6 +355,7 @@
 								<table class="table-bordered" style="margin: 10px auto; width: 50%">
 									<tr class="estimation-table">
 										<th>File Name</th>
+										<th>Size</th>
 									</tr>
 									${model_elements_table_content}
 								</table>
@@ -374,15 +380,20 @@
 		}		
 
 		fs.readdirSync(testFolder).forEach(file => {
+			let stats = fs.statSync(testFolder + '/' + file);
+			let fileSizeInBytes = stats["size"];
 		  	model_analytics_table_content += 
 		  		`
 		  			<tr class="estimation-table">
 			  			<td>
 							<a href="./${file}" target="_blank">${file}</a>
 						</td>
+						<td>
+							${fileSizeInBytes} B
+						</td>
 					</tr>
 		  		`
-		})			
+		});		
 
         let model_analysis_chart =
             `
@@ -474,6 +485,7 @@
 					<table class="table-bordered" style="margin: 10px auto; width: 50%">
 						<tr class="estimation-table">
 							<th>File Name</th>
+							<th>Size</th>
 						</tr>
 						${model_analytics_table_content}						
 					</table>
@@ -761,6 +773,4 @@
             });
         }
     }
-
-
 }())
