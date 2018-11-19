@@ -2673,7 +2673,7 @@ function buildTable2(data) {
 
     out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
     out += "<table class='row table-striped'>";
-    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th><th>Submit</th></tr>";
 
     if (levels >= 2) {
         backUrl = repoLink.split("/")[levels];
@@ -2686,7 +2686,8 @@ function buildTable2(data) {
             out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
                 newKeys[i] +
                 "</a></td><td>folder</td>";
-            out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+            out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
+            out += "<td>" + "<input type='checkbox' name='" + newKeys[i] + "'>" + "</td></tr>";
         }
         else {
             continue;
@@ -2720,14 +2721,35 @@ function buildTable2(data) {
                     newKeys[i] +
                     "</td><td>file</td>";
             }
-            out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+            out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>";
+            out += "<td>" + "<input type='checkbox' name='" + newKeys[i] + "'>" + "</td></tr>";
         }
         else {
             continue;
         }
     }
     out += "</table>";
+    out += "<div id='submitArchivesButton'><button class='btn btn-success' type='button' onclick='" + "submitSelectedArchives()" + "'>" + "Submit" + "</button></div>";
     document.getElementById("displayRepoArchive").innerHTML = out;
+}
+
+function submitSelectedArchives() {
+    var cbs = $("#displayRepoArchive input:checkbox:checked");
+    var archives = [];
+    for (var i = 0; i < cbs.length; i++) {
+        archives.push(cbs[i].name);
+    }
+    $.ajax({
+        type: 'POST',
+        url: "submitSelectedArchives",
+        data: {archives: JSON.stringify(archives)},
+        success: function (response) {
+            console.log(response);
+        },
+        error: function () {
+            console.log("fail");
+        }
+    });
 }
 
 // module push notification

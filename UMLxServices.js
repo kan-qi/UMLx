@@ -1536,6 +1536,15 @@ app.get('/getZipPackage', function (req, res){
 	});	
 });
 
+app.post('/submitSelectedArchives', function (req, res) {
+	var archives = req.body.archives;
+	archives = JSON.parse(archives);
+	console.log("Submitted archives: ");
+	for (var i = 0; i < archives.length; i++) {
+		console.log(archives[i]);
+	}
+});
+
 //
 //==================== local machine code for development ==========================
 var server = app.listen(8081,'0.0.0.0', function () {
