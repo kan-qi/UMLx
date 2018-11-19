@@ -2682,12 +2682,13 @@ function buildTable2(data) {
 
     for (var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "Folder") {
+            var path = data[0].parent + "/" + newKeys[i];
             documentUrl = newKeys[i];
             out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
                 newKeys[i] +
                 "</a></td><td>folder</td>";
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
-            out += "<td>" + "<input type='checkbox' name='" + newKeys[i] + "'>" + "</td></tr>";
+            out += "<td>" + "<input type='checkbox' name='" + path + "'>" + "</td></tr>";
         }
         else {
             continue;
@@ -2722,7 +2723,7 @@ function buildTable2(data) {
                     "</td><td>file</td>";
             }
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>";
-            out += "<td>" + "<input type='checkbox' name='" + newKeys[i] + "'>" + "</td></tr>";
+            out += "<td>" + "<input type='checkbox' name='" + path + "'>" + "</td></tr>";
         }
         else {
             continue;
