@@ -93,7 +93,21 @@ app.get('/kdmModelRecoverPage',function(req,res){
 	res.render('kdmModelRecoverPage');
 });
 
-app.post('/genkdmModel',function(req,res){
+app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 }]), function(req,res){
+	console.log(req);
+	
+	var projectZipFilePath = req.files['project-zip-file'][0].path;
+
+	// extract zip file, put at the same directory
+	fs.createReadStream(projectZipFilePath)
+		.pipe(unzip.Extract({ 
+			path: projectZipFilePath.substring(0, projectZipFilePath.lastIndexOf("\\")) 
+		}))
+		.on('close', function () {
+			console.log(projectZipFilePath);
+			// TODO: start the execution.
+		});
+ 
 });
 
 
