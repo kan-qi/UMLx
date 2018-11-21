@@ -68,6 +68,14 @@ combineData <- function(transactionFiles) {
 }
 
 
+empiricalStats <- function(data){
+  c(m = mean(data),
+  s = sd(data),
+  v = var(data),
+  l = quantile(data, 0.025),
+  u = quantile(data, 0.975))
+}
+
 prodByLinearRegression <- function(effortData, transactionFiles, cutPoints, weights){
     #effortData <- effort
     #transactionFiles <- transactionsFiles
