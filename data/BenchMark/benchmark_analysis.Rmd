@@ -39,6 +39,7 @@ uc_num <- ucp_data[,"Simple_UC"] + ucp_data[,"Average_UC"]+ucp_data[,"Complex_UC
 cor(uc_num, ucp_data$Real_Effort_Person_Hours)
 ucp_data$uc_num <- uc_num
 print(cor(ucp_data$uc_num, ucp_data$Real_Effort_Person_Hours))
+print(cor.test(ucp_data$uc_num,ucp_data$Real_Effort_Person_Hours))
 lm(Real_Effort_Person_Hours~uc_num, data=ucp_data)
 
 ucp <- (ucp_data[,"UAW"] + ucp_data[,"UUCW"])*ucp_data[,"EF"]*ucp_data[,"TCF"]
@@ -48,11 +49,12 @@ print(cor(ucp_data$UCP, ucp_data$Real_Effort_Person_Hours))
 ggplot(ucp_data, aes(x = UCP, y = Real_P20)) +
   geom_point(shape = 1) + stat_smooth(method = "lm",  se = FALSE, fullrange = TRUE)
 
-
 fp_data <- read.csv("china.csv")
 fp_num <- fp_data[,"Input"]+fp_data[,"Output"]+fp_data[,"Enquiry"];
 fp_data$fp_num <- fp_num
 cor(fp_data$fp_num, fp_data$Effort)
+
+print(cor.test(fp_data$fp_num,fp_data$Effort))
   
 ```
 

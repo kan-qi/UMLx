@@ -14,6 +14,7 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
+	var RScriptExec = require('../../utils/RScriptUtil.js');
 	var cocomoCalculator = require('../COCOMOEvaluator/COCOMOCalculator.js');
 	
 	// this json object should be copied from the trained model from transaction analysis
@@ -282,14 +283,17 @@
 					console.log(err);
 			        return;
 			    }
-						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/LinearRegressionForUseCasePoints.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['ExtendedUseCasePointData'].repoUseCasePointEvaluationResultsPath+'"';
-							console.log(command);
-							var child = exec(command, function(error, stdout, stderr) {
+						 var command1 = './Rscript/LinearRegressionForUseCasePoints.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['ExtendedUseCasePointData'].repoUseCasePointEvaluationResultsPath+'"';
+						 RScriptExec.runRScript(command1,function(result){
+								if (!result) {
+									return;
+								
 
-								if (error !== null) {
 //									console.log('exec error: ' + error);
 									console.log('exec error: repo id=' + repoInfo._id);
-								} 
+								}
+								
+							
 								console.log("Repo Evaluation were saved!");
 							});
 			});

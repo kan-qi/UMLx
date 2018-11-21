@@ -35,7 +35,7 @@
 	var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
 	var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
 
-	var userStoryEvaluator = require('./evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
+	var userStoryEvaluator = require('./evaluators/StoryPointEvaluator/UserStoryEvaluator.js');
 	
 	var evaluators = [
 			usimElementEvaluator,
