@@ -59,7 +59,7 @@ div.block.panel.panel-default
       a(data-toggle='tab', href='#project_list') Projects 
         span(class="badge") #{modelAllNum}
      li
-      a(data-toggle='tab', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
+      a(data-toggle='tab', id='modelArchive', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
     div.tab-content
       div.tab-pane.fade.in.active(id="repo_analytics")
         div.repo-analysis-detail
