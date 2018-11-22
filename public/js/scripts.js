@@ -2688,7 +2688,8 @@ function buildTable2(data) {
                 newKeys[i] +
                 "</a></td><td>folder</td>";
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
-            out += "<td>" + "<input type='checkbox' name='" + path + "'>" + "</td></tr>";
+            var isChecked = selectedArchives.indexOf(path) != -1 ? "checked" : "";
+            out += "<td>" + "<input type='checkbox' name='" + path + "'" + isChecked + " onchange='onCheckboxChange(this)'>" + "</td></tr>";
         }
         else {
             continue;
@@ -2723,7 +2724,8 @@ function buildTable2(data) {
                     "</td><td>file</td>";
             }
             out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>";
-            out += "<td>" + "<input type='checkbox' name='" + path + "'>" + "</td></tr>";
+            var isChecked = selectedArchives.indexOf(path) != -1 ? "checked" : "";
+            out += "<td>" + "<input type='checkbox' name='" + path + "'" + isChecked + " onchange='onCheckboxChange(this)'>" + "</td></tr>";
         }
         else {
             continue;
@@ -2734,16 +2736,28 @@ function buildTable2(data) {
     document.getElementById("displayRepoArchive").innerHTML = out;
 }
 
-function submitSelectedArchives() {
-    var cbs = $("#displayRepoArchive input:checkbox:checked");
-    var archives = [];
-    for (var i = 0; i < cbs.length; i++) {
-        archives.push(cbs[i].name);
+const selectedArchives = [];
+function onCheckboxChange(checkboxElem) {
+    const path = checkboxElem.name;
+    if (checkboxElem.checked) {
+        selectedArchives.push(path);
+    } else {
+        const index = selectedArchives.indexOf(path);
+        selectedArchives.splice(index, 1);
     }
+    // console.log(selectedArchives);
+}
+
+function submitSelectedArchives() {
+    // var cbs = $("#displayRepoArchive input:checkbox:checked");
+    // var archives = [];
+    // for (var i = 0; i < cbs.length; i++) {
+    //     archives.push(cbs[i].name);
+    // }
     $.ajax({
         type: 'POST',
         url: "submitSelectedArchives",
-        data: {archives: JSON.stringify(archives)},
+        data: {archives: JSON.stringify(selectedArchives)},
         success: function (response) {
             console.log(response);
         },
