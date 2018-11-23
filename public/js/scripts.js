@@ -2914,3 +2914,47 @@ function open_new_page_for_diagram_display(type) {
     html_content += "</body></html>"
     newWindow.document.write(html_content);
 }
+
+//Estimation Page
+var EstimationCookieName="EstimationPageOptions";
+var EstimationSelectorId=[];
+var EstimationCookieObject={};
+function estimationOptionChange(selectorId){
+    console.log(selectorId);
+    console.log($('#'+selectorId).val());
+    EstimationCookieObject[selectorId] = $('#'+selectorId).val();
+    setEstimationCookie(EstimationCookieName, JSON.stringify(EstimationCookieObject), 30);
+}
+
+function getEstimationCookie(cname){
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf(name)==0) { return c.substring(name.length,c.length); }
+    }
+    return "";
+}
+
+function estimationCheckCookie(){
+    var options=getEstimationCookie(EstimationCookieName);
+    if (options == "") {
+        var data = {"distributed_system": 3, "response_time": 3};
+        EstimationCookieObject = data;
+        setEstimationCookie(EstimationCookieName, JSON.stringify(data), 30);
+    }else{
+        console.log(JSON.parse(options));
+        EstimationCookieObject = JSON.parse(options);
+        for (let key in EstimationCookieObject) {
+            console.log(key);
+            $('#' + key).val(EstimationCookieObject[key]);
+        }
+    }
+}
+
+function setEstimationCookie(cname,cvalue,exdays){
+    var d = new Date();
+    d.setTime(d.getTime()+(exdays*24*60*60*1000));
+    var expires = "expires="+d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}

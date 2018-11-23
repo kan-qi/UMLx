@@ -84,7 +84,7 @@
 					var component = componentInfo.dicComponents[i];
 					for(var j in component.classUnits){
 					var classUnit = component.classUnits[j];
-					componentMappingString += "contain "+component.name+" "+classUnit.name+"\n";
+					componentMappingString += "contain "+component.name+".ss "+classUnit.name.replace(/\s/g, "")+"\n";
 					}
 				}
 				
