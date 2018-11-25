@@ -17,6 +17,8 @@
     
 	var path = require('path');
 
+	var isForPackage = false;
+
     function analyseUML(inputFilePath, outputDir, projectName, callbackfunc) {
 
 //        let date = new Date();
@@ -309,16 +311,35 @@
 				`
 
 				let model_elements_table_content = '';
-				const model_elements_folder = './data/StandAloneToolKit/output/' + model.UseCases[key]._id;
-				console.log("test1104", model_elements_folder);
 
-				fs.readdirSync(model_elements_folder).forEach(file => {
+				let model_elements_folder = '';
+				if (isForPackage) {
+					model_elements_folder = './public/output/repo' + model.repo_id + '/' + model.fileId + '/' + model.UseCases[key]._id;
+				} else {
+					model_elements_folder = './data/StandAloneToolKit/output/' + model.UseCases[key]._id;
+				}				
+
+				fs.readdirSync(model_elements_folder).forEach((file, index) => {
+					let stats = fs.statSync(model_elements_folder + '/' + file);
+					let fileSizeInBytes = stats["size"];
+					let fileTime = stats["birthtime"].toISOString();
+					fileTime = fileTime.slice(0, -5);
+					fileTime = fileTime.replace('T', ' ');
 				  	model_elements_table_content += 
 				  		`
 				  			<tr class="estimation-table">
+				  				<td>
+				  					${index + 1}
+				  				</td>
 					  			<td>
 									<a href="./${model.UseCases[key]._id}/${file}" target="_blank">${file}</a>
 								</td>
+								<td>
+									${fileSizeInBytes} B
+								</td>
+								<td>
+									${fileTime}
+								</td>								
 							</tr>
 				  		`
 				})				
@@ -340,9 +361,12 @@
 							</div>
 							<div class="tab-pane fade" id="${model.UseCases[key]._id}_use-case-analytics">
 								<a href="./${model.UseCases[key]._id}/elementAnalytics.csv" target="_blank">Analytics CVS</a>
-								<table class="table-bordered" style="margin: 10px auto; width: 50%">
+								<table class="table-bordered" style="margin: 10px auto">
 									<tr class="estimation-table">
+										<th>ID</th>
 										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
 									</tr>
 									${model_elements_table_content}
 								</table>
@@ -358,17 +382,38 @@
 		let DUCP_content = generateEstimationReshltPane(model.ducp_lm, model);
 
 		let model_analytics_table_content = '';
-		const testFolder = './data/StandAloneToolKit/output';
-		fs.readdirSync(testFolder).forEach(file => {
+
+		let testFolder = '';
+		if (isForPackage) {
+			testFolder = './public/output/repo' + model.repo_id + '/' + model.fileId;
+		} else {
+			testFolder = './data/StandAloneToolKit/output';
+		}		
+
+		fs.readdirSync(testFolder).forEach((file, index) => {
+			let stats = fs.statSync(testFolder + '/' + file);
+			let fileSizeInBytes = stats["size"];
+			let fileTime = stats["birthtime"].toISOString();
+			fileTime = fileTime.slice(0, -5);
+			fileTime = fileTime.replace('T', ' ');
 		  	model_analytics_table_content += 
 		  		`
 		  			<tr class="estimation-table">
+		  				<td>
+		  					${index + 1}
+		  				</td>
 			  			<td>
 							<a href="./${file}" target="_blank">${file}</a>
 						</td>
+						<td>
+							${fileSizeInBytes} B
+						</td>
+						<td>
+							${fileTime}
+						</td>
 					</tr>
 		  		`
-		})			
+		});		
 
         let model_analysis_chart =
             `
@@ -457,9 +502,12 @@
 					</div>
 				</div> 
 				<div id="model-analytics" class="tab-pane fade">
-					<table class="table-bordered" style="margin: 10px auto; width: 50%">
+					<table class="table-bordered" style="margin: 10px auto">
 						<tr class="estimation-table">
+							<th>ID</th>
 							<th>File Name</th>
+							<th>Size</th>
+							<th>Creation Time</th>
 						</tr>
 						${model_analytics_table_content}						
 					</table>
@@ -483,6 +531,11 @@
 				<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet'>
 				<link href='${location_transfer}css/style.css', rel='stylesheet'>
 				<link href="${location_transfer}css/lightgallery.css" rel="stylesheet">
+				<style>
+					table td {
+						padding: 5px;
+					}
+				</style>
 			</head>
 			
 			<body>
@@ -680,6 +733,7 @@
     }
 
 	function generateReport(model, callbackfunc) {
+		isForPackage = true;
 	    readUsecaseJson(model, function (html_table) {
 	        console.log("generate use cases");
 	        createStream(model, function (rt_object) {
@@ -746,6 +800,4 @@
             });
         }
     }
-
-
 }())
