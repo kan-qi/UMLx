@@ -14,7 +14,8 @@ In our nodejs service script, say app.js we have a function to do CPU Intensive 
 
 - pack_data(): parse the req object, extract necessary data to be used for computation
 - fibo(): the function that actually finish the comoputation tasks, tasks considerable time to return
-- res.send(): send feedback to front-end, when this line is executed, user will notice certain feedback is created
+- res.redirect(): redirect user to certain page
+- sendNotification(): function to send a push-notification to browser
 
 ```javascript
 // app.js
@@ -25,7 +26,8 @@ function pack_data(req) {
 app.get('/compute', function(req, res){
 	let packed_data = pack_data(req);
 	let result = fibo(packed_data['fibo_size']);
-	res.send(result)
+	sendNotification('finished compute');
+	res.redirect('xxx')
 })
 ```
 
@@ -61,10 +63,12 @@ app.get('/compute', function(req, res){
     worker.on("message", (return_obj) => {
     	let return_obj = JSON.parse(return_obj);
     	let result = return_obj['result'];
-    	res.send(result);
+    	res.redirect('xxx');
     	worker.kill()
+    	sendNotification('computation finished')
     });
     worker.send(JSON.stringify(packed_data));
+    sendNotification('task is executing in the backend, please wait...')
 })
 ```
 
