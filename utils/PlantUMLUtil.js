@@ -10,7 +10,9 @@
 			 }
 		 
 		 return;
-		
+		// shuang's testing temporary code
+		// return;
+
 	    //to generate svg file.
 	    var command = 'java -jar ./tools/plantuml.jar "'+UMLDiagramInputPath+'"';
 	    if(type === "class_diagram"){

@@ -51,8 +51,6 @@
 	//	var xpath = require('xpath');
 	//	var dom = require('xmldom').DOMParser;
 
-	var xmiSring = "";
-
 	function assignUUID(object) {
 		if (object instanceof Array) {
 			for (var i in object) {
@@ -228,6 +226,7 @@
 		var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 		var accessGraph = constructAccessGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 		var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir);
+		var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir);
 
 		//		console.log("dicCompositeSubclasses");
 		//		console.log(dicCompositeSubclasses);
@@ -1449,6 +1448,73 @@
 			edges: edges
 		};
 	}
+
+	function constructCompositionGraph(topClassUnits, xmiString, outputDir) {
+		
+		var edges = []; // directed edge to describe "extends"
+		var nodes = []; // classes
+		var nodesByName = {}; // by UUID
+
+		for (var i in dicClassUnits) {
+			
+			var classUnit = dicClassUnits[i];
+			var xmiClassUnit = classUnit.attachment;
+
+			console.log("classUnit");
+			console.log(classUnit);
+
+			// e.g. Car class contains an Engine instance
+			var compositionItems = kdmModelUtils.identifyComposition(xmiClassUnit);
+
+			for (var j in compositionItems) {
+				var compositionItem = compositionItems[j];
+
+				var itemClassUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(compositionItem.type))[0];
+
+				// do not consider class outside boundary, e.g. String
+				if (!dicClassUnits[itemClassUnit['$'].UUID].isWithinBoundary) {
+					continue;
+				}
+
+				// add the edge and nodes (the item points to class, b/c item "composes" class)
+				var startNode = nodesByName[itemClassUnit['$'].UUID];
+				if (!startNode) {
+					startNode = {
+						name: itemClassUnit['$'].name,
+						isAbstract: itemClassUnit['$'].isAbstract,
+						component: {
+							// TODO: matters?
+						},
+						UUID: itemClassUnit['$'].UUID,
+					};
+					nodes.push(startNode);
+					nodesByName[startNode.UUID] = startNode;
+				}
+
+				var endNode = nodesByName[classUnit.UUID];
+				if (!endNode) {
+					endNode = {
+						name: classUnit.name,
+						isAbstract: classUnit.isAbstract,
+						component: {
+							// TODO: matters?
+						},
+						UUID: classUnit.UUID,
+					};
+				}
+
+				edges.push({ start: startNode, end: endNode });
+			}
+		}
+
+		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "composition_graph.dotty");
+
+		return {
+			nodes: nodes,
+			edges: edges
+		};
+	}
+
 
 	//	/*
 	//	 * this function will exclude the calls within another function

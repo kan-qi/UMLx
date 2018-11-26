@@ -32,6 +32,8 @@ const { fork } = require('child_process');
 //var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 console.l = console.log;
 console.log = function() {};
+
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
 	var date = new Date();
@@ -126,6 +128,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
 ,{name:'difficult_programming_language', maxCount:1},{name:'uml_file', maxCount:1},{name:'uml_other', maxCount:1}, {name:'model', maxCount:1},{name:'simulation', maxCount:1}]), function(req,res){
+
         var projectInfo = {};
         projectInfo.distributedSystem = req.body['distributed_system'];
         projectInfo.responseTime = req.body['response_time'];
@@ -196,11 +199,8 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
                 , modelInfo = return_obj['modelInfo'];
             if(func === 'error') {
                 res.end("error");
-            } else if (func === 'estimationResultPaneSimplified') {
-                if (estimationResults === '') {
-                    res.render('estimationResultPaneSimplified', {error: "inter process error"});
-                }
-            } else {
+            } 
+            else {
                 res.render(func, {estimationResults:estimationResults, modelInfo: modelInfo});
             }
             worker.kill();
@@ -422,6 +422,22 @@ app.use(function(req, res, next) {
 app.get('/estimationPageAnalysis',function(req,res){
 	res.render('estimationPageAnalysis');
 });
+
+app.get('/estimationAnalysisPackage',function(req,res){
+	res.render('estimationAnalysisPackage');
+});
+
+/*
+ * only for debugging process
+ */
+app.get('/listEstimationRequests', function(req,res){
+	var userId = req.query['uid'];
+	umlModelInfoManager.queryEstimationRequests(function(estimationRequests){
+		console.log(estimationRequests);
+		res.render('estimationRequestList', {estimationRequests: estimationRequests});
+	});
+});
+
 
 ////==================== local machine code for development ==========================
 //

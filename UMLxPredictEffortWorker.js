@@ -45,7 +45,7 @@ process.on("message", (packed_obj) => {
                 effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
                     if(!estimationResults){
                         console.log("error");
-                        return_obj['func'] = 'estimationResultPaneSimplified';
+                        return_obj['func'] = 'error';
                         return_obj['estimationResults'] = '';
                         return_obj['modelInfo'] = '';
                         process.send(JSON.stringify(return_obj));

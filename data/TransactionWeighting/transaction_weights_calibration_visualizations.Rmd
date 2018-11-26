@@ -964,11 +964,12 @@ trainedModels[["SWTIIIModel"]] = SWTIIIresults[[SWTIIIModelSelector]]
 
 saveRDS(trainedModels, file="train_models.rds")
 
-#extract parameters for NT
 trainedModelParameters = list()
+
+#extract parameters for NT
 TNModelParameters = list()
-TNModelParameters[["effortAdj"]] = c(mean(TNresults[[TNModelSelector]][["model"]][["normFactor"]]), var(TNresults[[TNModelSelector]][["model"]][["normFactor"]]))
-TNModelParameters[["sigma"]] = c(mean(TNresults[[TNModelSelector]][["model"]][["sd"]]), var(TNresults[[TNModelSelector]][["model"]][["sd"]]))
+TNModelParameters[["effortAdj"]] = empiricalStats(TNresults[[TNModelSelector]][["model"]][["normFactor"]])
+TNModelParameters[["sigma"]] = empiricalStats(TNresults[[TNModelSelector]][["model"]][["sd"]])
 TNModelParameters[["cuts"]] = list()
 for(i in rownames(TNresults[[TNModelSelector]][["cuts"]])){
   TNModelParameters[["cuts"]][[i]] = TNresults[[TNModelSelector]][["cuts"]][i,]
@@ -977,15 +978,15 @@ levels <- names(TNresults[[TNModelSelector]][["model"]])
 levels <- levels[!levels %in% c("sigma", "sd", "normFactor")]
 TNModelParameters[["levels"]] = list()
 for(i in levels){
-  TNModelParameters[["levels"]][[i]] = c(mean(TNresults[[TNModelSelector]][["model"]][[i]]), var(TNresults[[TNModelSelector]][["model"]][[i]]))
+  TNModelParameters[["levels"]][[i]] = empiricalStats(TNresults[[TNModelSelector]][["model"]][[i]])
 }
 
 trainedModelParameters[["EUCP"]] = TNModelParameters
 
 #extract parameters for SWTII
 SWTIIModelParameters = list()
-SWTIIModelParameters[["effortAdj"]] = c(mean(SWTIIresults[[SWTIIModelSelector]][["model"]][["normFactor"]]), var(SWTIIresults[[SWTIIModelSelector]][["model"]][["normFactor"]]))
-SWTIIModelParameters[["sigma"]] = c(mean(SWTIIresults[[SWTIIModelSelector]][["model"]][["sd"]]), var(SWTIIresults[[SWTIIModelSelector]][["model"]][["sd"]]))
+SWTIIModelParameters[["effortAdj"]] = empiricalStats(SWTIIresults[[SWTIIModelSelector]][["model"]][["normFactor"]])
+SWTIIModelParameters[["sigma"]] = empiricalStats(SWTIIresults[[SWTIIModelSelector]][["model"]][["sd"]])
 SWTIIModelParameters[["cuts"]] = list()
 for(i in rownames(SWTIIresults[[SWTIIModelSelector]][["cuts"]])){
   SWTIIModelParameters[["cuts"]][[i]] = SWTIIresults[[SWTIIModelSelector]][["cuts"]][i,]
@@ -995,15 +996,15 @@ levels <- names(SWTIIresults[[SWTIIModelSelector]][["model"]])
 levels <- levels[!levels %in% c("sigma", "sd", "normFactor")]
 SWTIIModelParameters[["levels"]] = list()
 for(i in levels){
-  SWTIIModelParameters[["levels"]][[i]] = c(mean(SWTIIresults[[SWTIIModelSelector]][["model"]][[i]]), var(SWTIIresults[[SWTIIModelSelector]][["model"]][[i]]))
+  SWTIIModelParameters[["levels"]][[i]] = empiricalStats(SWTIIresults[[SWTIIModelSelector]][["model"]][[i]])
 }
 
 trainedModelParameters[["EXUCP"]] = SWTIIModelParameters
 
 #extract parameters for SWTIII
 SWTIIIModelParameters = list()
-SWTIIIModelParameters[["effortAdj"]] = c(mean(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["normFactor"]]), var(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["normFactor"]]))
-SWTIIIModelParameters[["sigma"]] = c(mean(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["sd"]]), var(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["sd"]]))
+SWTIIIModelParameters[["effortAdj"]] = empiricalStats(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["normFactor"]])
+SWTIIIModelParameters[["sigma"]] = empiricalStats(SWTIIIresults[[SWTIIIModelSelector]][["model"]][["sd"]])
 SWTIIIModelParameters[["cuts"]] = list()
 for(i in rownames(SWTIIIresults[[SWTIIIModelSelector]][["cuts"]])){
   SWTIIIModelParameters[["cuts"]][[i]] = SWTIIIresults[[SWTIIIModelSelector]][["cuts"]][i,]
@@ -1012,7 +1013,7 @@ levels <- names(SWTIIIresults[[SWTIIIModelSelector]][["model"]])
 levels <- levels[!levels %in% c("sigma", "sd", "normFactor")]
 SWTIIIModelParameters[["levels"]] = list()
 for(i in levels){
-  SWTIIIModelParameters[["levels"]][[i]] = c(mean(SWTIIIresults[[SWTIIIModelSelector]][["model"]][[i]]), var(SWTIIIresults[[SWTIIIModelSelector]][["model"]][[i]]))
+  SWTIIIModelParameters[["levels"]][[i]] = empiricalStats(SWTIIIresults[[SWTIIIModelSelector]][["model"]][[i]])
 }
 
 trainedModelParameters[["DUCP"]] = SWTIIIModelParameters
