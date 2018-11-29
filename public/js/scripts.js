@@ -293,13 +293,17 @@ function model_file_update_fnc() {
 
 }
 
-function predict_project_effort_func() {
+function predict_project_effort_func(show_loading_screen = true) {
     var formData = new FormData($('#project-effort-prediction-form')[0]);
     console.log("starting the ajax call to some where");
     console.log(formData);
+    console.log("show loading screen: " + show_loading_screen);
 
     // show loading
-    document.getElementById("loadingScreen").classList.remove("hidden");
+    if(show_loading_screen) {
+        document.getElementById("loadingScreen").classList.remove("hidden");
+    }
+
 
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
@@ -2864,7 +2868,7 @@ function clearSelectedArchives(e) {
 
 // module push notification
 const publicVapidKey = 'BM2EKwsY9E_5r5ewHVlZ1hSwpSfRpvqQm0DPT3C60WQ3md98O0_Tb7c56yFfzFlFyaKqNVfYe1Vv2sul6m4Myt0';
-
+startEvalPush();
 async function startEvalPush() {
     console.log("startEvalPush");
     // alert("startEvalPush");
@@ -2985,7 +2989,9 @@ function getEstimationCookie(cname){
     return "";
 }
 
-function estimationCheckCookie(){
+function estimationCheckCookie(cname){
+    EstimationCookieName = cname;
+    console.log(cname);
     var options=getEstimationCookie(EstimationCookieName);
     if (options == "") {
         var data = {"distributed_system": 3, "response_time": 3};

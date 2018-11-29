@@ -22,7 +22,7 @@ var MongoClient = mongo.MongoClient;
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
-var download = require('download');
+var download = require('download');w
 const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
 
@@ -113,7 +113,7 @@ app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 
 
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
-	res.render('estimationPage');
+	res.render('estimationPage', {cookieName: "EstimationPageOptions"});
 });
 
 app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
@@ -563,7 +563,6 @@ function sendPush(subscription, push_title) {
         console.l("sendPush(): subscription endpoint not find, printing endpoints");
         console.l(endpoints);
     }
-
 }
 
 function evaluateUploadedProject(req) {

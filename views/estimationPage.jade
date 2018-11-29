@@ -15,7 +15,7 @@ html
         //            }
         //        }
         //    }
-    body#upload-body(onload="estimationCheckCookie()")
+    body#upload-body(onload="estimationCheckCookie('#{cookieName}')")
         include heading
         .container.estimation_page_container
             form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
@@ -35,8 +35,8 @@ html
                                         .form-group
                                         label.control-label(for='distributed_system') Distributed System
                                         select#distributed_system.form-control.estimation-selector(name='distributed_system',onChange='estimationOptionChange("distributed_system")')
-                                            option(value=1) very low
-                                            option(value=2) low
+                                            option(value="1") very low
+                                            option(value="2") low
                                             option(value="3",selected="selected") normal
                                             option(value="4") high
                                             option(value="5") very high

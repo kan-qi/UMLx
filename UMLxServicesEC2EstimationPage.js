@@ -104,7 +104,7 @@ app.get('/estimationPage',function(req,res){
 });
 
 app.get('/estimationPageDemo',function(req,res){
-	res.render('estimationPage');
+	res.render('estimationPage', {cookieName: "EstimationPageOptionsEC2Demo"});
 });
 
 app.get('/docmagic-audit', function(req, res){
@@ -203,13 +203,29 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
             else {
                 res.render(func, {estimationResults:estimationResults, modelInfo: modelInfo});
             }
+            sendPush(subscription, 'Evaluation Finished');
             worker.kill();
         });
         console.l("in service: umlfilepath: " + packed_obj['umlFilePath']);
         console.l("in service: packetobj: " + JSON.stringify(packed_obj));
         worker.send(JSON.stringify(packed_obj));
+        let token = req.cookies.appToken;
+        let subscription = endpoints[token];
+        sendPush(subscription, 'Task Sent to backend, please wait');
 });
 
+function sendPush(subscription, push_title) {
+    const payload = JSON.stringify({title: push_title});
+    console.log("DEBUGGGG: ready to send notification");
+    if(subscription) {
+        webpush.sendNotification(subscription, payload).catch(error => {
+            console.error(error.stack);
+        });
+    } else {
+        console.l("sendPush(): subscription endpoint not find, printing endpoints");
+        console.l(endpoints);
+    }
+}
 
 app.get('/surveyPage', function(req, res){
 	
@@ -371,6 +387,32 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 
 })
 
+const webpush = require('web-push');
+
+const publicVapidKey = "BM2EKwsY9E_5r5ewHVlZ1hSwpSfRpvqQm0DPT3C60WQ3md98O0_Tb7c56yFfzFlFyaKqNVfYe1Vv2sul6m4Myt0";
+const privateVapidKey = "zi84jsmnux1jffj4Kt0XnSNWeKVYmQpmRd-lMZkqU-k";
+
+// Replace with your email
+webpush.setVapidDetails('mailto:val@karpov.io', publicVapidKey, privateVapidKey);
+
+
+app.use(require('body-parser').json());
+
+let endpoints = {};
+
+app.post('/subscribe', (req, res) => {
+    console.l('inside /subscribe');
+    const token = req.cookies.appToken;
+    const subscription = req.body;
+    if(subscription) {
+        endpoints[token] = subscription;
+        console.l('server received subsription endpoint');
+    } else {
+        console.l("server didn't receive correct endpoint");
+    }
+    res.status(201).json({});
+    console.l(subscription);
+});
 
 //route middleware to verify a token
 app.use(function(req, res, next) {
@@ -439,6 +481,8 @@ app.get('/listEstimationRequests', function(req,res){
 });
 
 
+
+
 ////==================== local machine code for development ==========================
 //
 //var server = app.listen(8081,'127.0.0.1', function () {
@@ -462,7 +506,7 @@ app.get('/listEstimationRequests', function(req,res){
 //==================== local machine code for development ==========================
 
 var server = app.listen(8081,'0.0.0.0', function () {
-  var host = server.address().address
-  var port = server.address().port
-  console.log("Example app listening at http://%s:%s", host, port)
+  var host = server.address().address;
+  var port = server.address().port;
+  console.l("Example app listening at http://%s:%s", host, port)
 });
