@@ -1,7 +1,7 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
-var path = require('path')
+var path = require('path');
 var admZip = require('adm-zip');
 var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
@@ -104,10 +104,44 @@ app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 
 			path: projectZipFilePath.substring(0, projectZipFilePath.lastIndexOf("\\")) 
 		}))
 		.on('close', function () {
-			console.log(projectZipFilePath);
-			// TODO: start the execution.
+			
+			var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel4;
+			var workingDir = path.dirname(projectZipFilePath);
+
+			fs.readdir(workingDir, function(err, files) {
+				files.forEach(function(filename) {
+					fs.lstat(workingDir + "/" + filename, function(err, stats) {
+						if(err) {
+							return console.log(err);
+						}
+
+						if (!stats.isDirectory()) {
+							return;
+						}
+
+						fs.readdir(workingDir + "/" + filename, function(err, files) {
+							if (err) {
+								return console.log(err);
+							}
+
+							// the directory must contain ".project" file to proceed
+							if (files.indexOf(".project") === -1) {
+								return;
+							}
+
+							generateKDMModel4(workingDir + "/" + filename, function(err, resultPath) {
+								if (err) {
+									return console.log(err);
+								}
+
+								console.log("KDM Complete:", resultPath);
+								res.download(resultPath, "result.xmi");
+							});
+						});
+					});
+				});
+			});
 		});
- 
 });
 
 

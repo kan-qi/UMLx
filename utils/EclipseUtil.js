@@ -1,5 +1,6 @@
 (function(){
 	var fs = require('fs');
+	var path = require('path');
 	var exec = require('child_process').exec;
 	var config = require("../config.js");
 	
@@ -77,7 +78,7 @@
 			 }
 		});
 	    
-}
+	}
 	
 	//change this function to call the exported plugin project of eclipse
 	function generateKDMModel3(projectPath, callbackfunc){
@@ -114,12 +115,74 @@
 			 if(callbackfunc){
 			  callbackfunc(outputFile);
 			 }
-		});
-	    
-}
+		});    
+	}
+
+
+	// helper to wait for KDM output file to exist, and have content
+	// modified from source:
+	// https://stackoverflow.com/a/47764403
+	function checkExistsWithTimeout(filePath, timeout = 100 * 1000) {
+		return new Promise(function (resolve, reject) {
 	
+			var timer = setTimeout(function () {
+				watcher.close();
+				reject(new Error('File did not exists and was not created during the timeout.'));
+			}, timeout);
+	
+			fs.access(filePath, fs.constants.R_OK, function (err) {
+				if (!err) {
+					clearTimeout(timer);
+					watcher.close();
+					resolve();
+				}
+			});
+	
+			var dir = path.dirname(filePath);
+			var basename = path.basename(filePath);
+			var watcher = fs.watch(dir, function (eventType, filename) {
+				if (eventType === 'change' && filename === basename) {
+					clearTimeout(timer);
+					watcher.close();
+					resolve();
+				}
+			});
+		});
+	}
+	
+	function generateKDMModel4(projectPath, callbackfunc) {
+		var appRoot = path.dirname(require.main.filename);
+
+		var outputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
+
+		// use full path (with appRoot) here only
+		var command = config.kdmGenerationCommand + " -consoleLog -noExit "
+			+ appRoot + "/" + projectPath + " "
+			+ appRoot + "/" + outputFile + " -vmargs -Xmx10240M";
+
+		var child = exec(command, function(error, stdout, stderr) {
+			if (error != null) {
+				// On Windows, closing the eclipse window will trigger this error
+				// callbackfunc(new Error("Error generating KDM."));
+				return;
+			}
+		});
+
+		checkExistsWithTimeout(outputFile)
+			.then(function(res) {
+
+				child.kill();
+
+				callbackfunc(null, outputFile);
+			})
+			.catch(function(err) {
+				callbackfunc(err);
+			});
+	}
+
 	module.exports = {
 			generateKDMModel:generateKDMModel,
 			generateKDMModel2:generateKDMModel2,
+			generateKDMModel4: generateKDMModel4
 	}
 })();
