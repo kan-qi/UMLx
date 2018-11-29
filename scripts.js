@@ -417,7 +417,7 @@ function estimate_project_effort_func() {
     form_data.append('model', "EUCP");
     form_data.append('simulation', 0);
     //console.log(formData);
-    //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+    //	formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
         type: 'POST',
         url: "saveEstimation",
@@ -866,7 +866,6 @@ function display_csv_data(url) {
         }
     });
 }
-
 
 function request_display_data() {
     var url = $(this).attr("href");
@@ -2492,7 +2491,7 @@ function buildTable(data) {
         out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
 
         if (level >= 2) {
-            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button><td><tr>";
+            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button><td></tr>";
         }
 
         //console.log("Data");

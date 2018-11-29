@@ -1,0 +1,7 @@
+"C:/Program Files/R/R-3.2.5/bin/Rscript" ./UMLx/data/OpenSource/active_contributors_every_30.R "https://api.github.com/repos/apache/carbondata" "./temp/git_effort_request_results.txt"
+
+node ./UMLxAnalyticToolKit.js "./data/OpenSource/kdm.xml" "./data/OpenSource/debug" "kiss"
+
+node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --select-files "D:\\Research Projects\\UMLx\\data\\Rufuslabs\\repo.json"
+
+forever start UMLxServicesEC2EstimationPage.js 
