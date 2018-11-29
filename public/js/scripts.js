@@ -2987,7 +2987,7 @@ function getEstimationCookie(cname){
 
 function estimationCheckCookie(cname){
     EstimationCookieName = cname;
-    console.log(EstimationCookieName);
+    console.log(cname);
     var options=getEstimationCookie(EstimationCookieName);
     if (options == "") {
         var data = {"distributed_system": 3, "response_time": 3};

@@ -104,7 +104,7 @@ app.get('/estimationPage',function(req,res){
 });
 
 app.get('/estimationPageDemo',function(req,res){
-	res.render('estimationPage');
+	res.render('estimationPage', {cookieName: "EstimationPageOptionsEC2Demo"});
 });
 
 app.get('/docmagic-audit', function(req, res){
