@@ -39,6 +39,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p Is the system a distributed system which was developed on multiple platforms and required communication between the subsystems/components be based on network protocals, events, or remote procedural calls?
                                     .form-group
                                         label.control-label(for='response_time') Response time or throughput performance objectives
                                         select#response_time.form-control.estimation-selector(name='response_time',onChange='estimationOptionChange("response_time")')
@@ -47,6 +48,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, does the target system have to meet the required response time and throughput performance objectives?
                                     .form-group
                                         label.control-label(for='end_user_efficiency') End user efficiency
                                         select#end_user_efficiency.form-control.estimation-selector(name='end_user_efficiency',onChange='estimationOptionChange("end_user_efficiency")')
@@ -55,6 +57,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, does the target system have to meet the required end user efficiency?
                                     .form-group
                                         label.control-label(for='complex_internal_processing') Complex internal processing
                                         select#complex_internal_processing.form-control.estimation-selector(name='complex_internal_processing',onChange='estimationOptionChange("complex_internal_processing")')
@@ -63,6 +66,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree of difficulty, the internal processing should be rated?
                                     .form-group
                                         label.control-label(for='code_must_be_reusable') Code must be reusable
                                         select#code_must_be_reusable.form-control.estimation-selector(name='code_must_be_reusable',onChange='estimationOptionChange("code_must_be_reusable")')
@@ -71,6 +75,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the code should be reusable?
                                     .form-group
                                         label.control-label(for='easy_to_install') Easy to install
                                         select#easy_to_install.form-control.estimation-selector(name='easy_to_install',onChange='estimationOptionChange("easy_to_install")')
@@ -79,6 +84,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the system has to be easy to be installed?
                                     .form-group
                                         label.control-label(for='easy_to_use') Easy to use
                                         select#easy_to_use.form-control.estimation-selector(name='easy_to_use',onChange='estimationOptionChange("easy_to_use")')
@@ -87,6 +93,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the system has to be easy to use?
                                     .form-group
                                         label.control-label(for='portable') Portable
                                         select#portable.form-control.estimation-selector(name='portable',onChange='estimationOptionChange("portable")')
@@ -95,6 +102,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the system has to be able to handle concurrent requests or processes?
                                     .form-group
                                         label.control-label(for='easy_to_change') Easy to change
                                         select#easy_to_change.form-control.estimation-selector(name='easy_to_change',onChange='estimationOptionChange("easy_to_change")')
@@ -103,6 +111,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the system has to be able to handle concurrent requests or processes?
                                     .form-group
                                         label.control-label(for='concurrent') Concurrent
                                         select#concurrent.form-control.estimation-selector(name='concurrent',onChange='estimationOptionChange("concurrent")')
@@ -111,6 +120,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the system has to be able to handle concurrent requests or processes?
                                     .form-group
                                         label.control-label(for='includes_special_security_objectives') Includes special security objectives
                                         select#includes_special_security_objectives.form-control.estimation-selector(name='includes_special_security_objectives',onChange='estimationOptionChange("includes_special_security_objectives")')
@@ -119,6 +129,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the system has to provide access for third parties?
                                     .form-group
                                         label.control-label(for='provides_direct_access_for_third_parties') Provides direct access for third parties
                                         select#provides_direct_access_for_third_parties.form-control.estimation-selector(name='provides_direct_access_for_third_parties',onChange='estimationOptionChange("provides_direct_access_for_third_parties")')
@@ -127,6 +138,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the system has to provide access for third parties?
                                     .form-group
                                         label.control-label(for='special_user_training_facilities_are_required') Special user training facilities are required
                                         select#special_user_training_facilities_are_required.form-control.estimation-selector(name='special_user_training_facilities_are_required',onChange='estimationOptionChange("special_user_training_facilities_are_required")')
@@ -135,7 +147,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
-
+                                        p To what degree, special user training facilities have to provided for the end users?
                                     //input#uuid-page1(type='hidden', name='uuid-page1', value='')
                                     //
                                     //.form-group
@@ -164,6 +176,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p Did the developers have related experience of developing this type of applications?
                                     .form-group
                                         label.control-label(for='application_experience') Application experience
                                         select#application_experience.form-control.estimation-selector(name='application_experience',onChange='estimationOptionChange("application_experience")')
@@ -172,6 +185,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p Did the developers have related experience of developing object-oriented applications?
                                     .form-group
                                         label.control-label(for='object_oriented_experience') Object-oriented experience
                                         select#object_oriented_experience.form-control.estimation-selector(name='object_oriented_experience')
@@ -180,6 +194,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the lead analyst of the team should be rated?
                                     .form-group
                                         label.control-label(for='lead_analyst_capability') Lead analyst capability
                                         select#lead_analyst_capability.form-control.estimation-selector(name='lead_analyst_capability',onChange='estimationOptionChange("lead_analyst_capability")')
@@ -188,6 +203,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the whole team is motived for the project?
                                     .form-group
                                         label.control-label(for='motivation') Motivation
                                         select#motivation.form-control.estimation-selector(name='motivation',onChange='estimationOptionChange("motivation")')
@@ -196,6 +212,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p Are the requiremenst stable over time?
                                     .form-group
                                         label.control-label(for='stable_requirements') Stable requirements
                                         select#stable_requirements.form-control.estimation-selector(name='stable_requirements',onChange='estimationOptionChange("stable_requirements")')
@@ -204,6 +221,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what percentage, the team has part-time stafff?
                                     .form-group
                                         label.control-label(for='part_time_staff') Part-time staff
                                         select#part_time_staff.form-control.estimation-selector(name='part_time_staff',onChange='estimationOptionChange("part_time_staff")')
@@ -212,6 +230,7 @@ html
                                             option(selected="selected", value="3") normal
                                             option(value="4") high
                                             option(value="5") very high
+                                        p To what degree, the chosen programming language are diffficulty to the development team?
                                     .form-group
                                         label.control-label(for='difficult_programming_language') Difficult programming language
                                         select#difficult_programming_language.form-control.estimation-selector(name='difficult_programming_language',onChange='estimationOptionChange("difficult_programming_language")')
