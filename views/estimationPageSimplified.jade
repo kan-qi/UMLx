@@ -18,7 +18,7 @@ html
     body#upload-body
         include heading
         .container.estimation_page_container
-            form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+            form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func(false)', method='post', action='/')
 
                 #sec-1
                     .panel-group
@@ -295,7 +295,6 @@ html
                                     
                                     input#model(type='hidden', name='model', value='eucp_lm')
                                     input#result_page(type='hidden', name='result_page', value='simplified')
-
                                     button.btn.btn-success.pull-right(type='submit') Submit
 
                                 //input#uuid-page4(type='hidden', name='uuid-page4', value='')
