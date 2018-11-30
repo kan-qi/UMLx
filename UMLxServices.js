@@ -22,7 +22,7 @@ var MongoClient = mongo.MongoClient;
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
-var download = require('download');
+var download = require('download');w
 const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
 
@@ -563,7 +563,6 @@ function sendPush(subscription, push_title) {
         console.l("sendPush(): subscription endpoint not find, printing endpoints");
         console.l(endpoints);
     }
-
 }
 
 function evaluateUploadedProject(req) {
