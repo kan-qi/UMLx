@@ -71,7 +71,17 @@
 				
 				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, workDir +"/"+responsePatternsFile);
 
-				var componentInfo = componentIdentifier.identifyComponents(codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.referencedClassUnitsComposite, codeAnalysisResults.dicClassUnits, codeAnalysisResults.dicCompositeSubclasses, Model.OutputDir);
+				var componentInfo = componentIdentifier.identifyComponents(
+					codeAnalysisResults.callGraph, 
+					codeAnalysisResults.accessGraph, 
+					codeAnalysisResults.typeDependencyGraph, 
+					codeAnalysisResults.extendsGraph,
+					codeAnalysisResults.compositionGraph,
+					codeAnalysisResults.referencedClassUnitsComposite, 
+					codeAnalysisResults.dicClassUnits, 
+					codeAnalysisResults.dicCompositeSubclasses, 
+					Model.OutputDir
+				);
 				
 				var componentMappingString = "";
 				
