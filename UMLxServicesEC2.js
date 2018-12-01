@@ -93,7 +93,7 @@ app.set('view engine', 'jade');
 
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
-	res.render('estimationPage');
+	res.render('estimationPage', {cookieName: "EstimationPageOptionsEC2"});
 });
 
 app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}

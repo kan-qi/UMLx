@@ -22,7 +22,7 @@ var MongoClient = mongo.MongoClient;
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
-var download = require('download');
+var download = require('download');w
 const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
 
@@ -93,13 +93,27 @@ app.get('/kdmModelRecoverPage',function(req,res){
 	res.render('kdmModelRecoverPage');
 });
 
-app.post('/genkdmModel',function(req,res){
+app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 }]), function(req,res){
+	console.log(req);
+	
+	var projectZipFilePath = req.files['project-zip-file'][0].path;
+
+	// extract zip file, put at the same directory
+	fs.createReadStream(projectZipFilePath)
+		.pipe(unzip.Extract({ 
+			path: projectZipFilePath.substring(0, projectZipFilePath.lastIndexOf("\\")) 
+		}))
+		.on('close', function () {
+			console.log(projectZipFilePath);
+			// TODO: start the execution.
+		});
+ 
 });
 
 
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
-	res.render('estimationPage');
+	res.render('estimationPage', {cookieName: "EstimationPageOptions"});
 });
 
 app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
@@ -158,11 +172,11 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 			return;
 		}
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
 		modelInfo.projectInfo = projectInfo;
-		console.log('updated model info');
-		console.log(modelInfo);
+//		console.log('updated model info');
+//		console.log(modelInfo);
 		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 			if(!modelInfo){
@@ -197,6 +211,9 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 		});
 	});
 });
+
+console.l = console.log;
+console.log = function() {};
 
 app.get('/signup',function(req,res){
 
@@ -546,7 +563,6 @@ function sendPush(subscription, push_title) {
         console.l("sendPush(): subscription endpoint not find, printing endpoints");
         console.l(endpoints);
     }
-
 }
 
 function evaluateUploadedProject(req) {
@@ -678,8 +694,6 @@ function evaluateUploadedProject(req) {
                                 webpush.sendNotification(subscription, payload).catch(error => {
                                     console.error(error.stack);
                                 });
-                                // }, 1000);
-                                //window.location.reload(true);
                             });
                         });
                     });
@@ -787,6 +801,29 @@ app.get('/deleteModel', function (req, res){
 app.get('/reanalyseRepo', function (req, res){
 
 	var repoId = req.userInfo.repoId;
+
+	/* multiprocess sequence start */
+    const worker = fork('./UMLxReanalyseWorker.js');
+    let token = req.cookies.appToken;
+    console.l("token: " + token);
+    let subscription = endpoints[token];
+    console.l("subscription: " + subscription);
+    worker.on('message', (text) => {
+        if(text.isEqual('ok')) {
+            sendPush(subscription, 'Reanalyse finished');
+        } else {
+            sendPush(subscription, 'Reanalyse Failed');
+            console.l("Reanalyse Failed");
+            console.l(text);
+        }
+        console.l("killing child process");
+        worker.kill();
+    });
+    worker.send(repoId);
+    console.l("DEBUGGGG: Reanalyse task sent to worker");
+    sendPush(subscription, 'Project Reanalysing');
+    res.redirect('/');
+    /* multiprocess sequence end */
 
 	//		console.log(refresh);
 	umlModelInfoManager.queryFullRepoInfo(repoId, function(repoInfo){
@@ -1065,8 +1102,8 @@ app.get('/queryRepoInfo', function(req, res){
 })
 
 app.get('/reloadRepo', function(req, res){
-	//temporary analysis
 	let repoId = req.userInfo.repoId;
+	/* Multiprocess sequence start */
     // const worker = fork('./UMLxReloadWorker.js');
     // let token = req.cookies.appToken;
     // console.l("token: " + token);
@@ -1077,6 +1114,7 @@ app.get('/reloadRepo', function(req, res){
     //         sendPush(subscription, 'Reload finished');
     //     } else {
     //         sendPush(subscription, 'Reload Failed');
+    //         console.l("Reload Failed");
     //         console.l(text);
     //     }
     //     console.l("killing child process");
@@ -1086,24 +1124,21 @@ app.get('/reloadRepo', function(req, res){
     // console.l("DEBUGGGG: reload task sent to worker");
     // sendPush(subscription, 'Project Reloading');
     // res.redirect('/');
-
+    /* multiprocess sequence end */
 
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlModelInfoManager.reloadRepo(repoInfo, function(repoInfo){
 			if(!repoInfo){
-				res.end("error");
+				res.end("repoInfo error");
 				return;
 			}
-
 			effortPredictor.predictEffortRepo(repoInfo, function(repoInfo2){
 				if(!repoInfo2){
 					console.log("effort prediction failed at repo level");
 				}
-
-
-			umlModelInfoManager.updateRepoInfo(repoInfo2, function(repoInfo3){
-				res.redirect('/');
-			});
+                umlModelInfoManager.updateRepoInfo(repoInfo2, function(repoInfo3){
+                    res.redirect('/');
+                });
 			});
 		});
 	});
@@ -1513,6 +1548,15 @@ app.get('/getZipPackage', function (req, res){
 		    }
 		});			
 	});	
+});
+
+app.post('/submitSelectedArchives', function (req, res) {
+	var archives = req.body.archives;
+	archives = JSON.parse(archives);
+	console.log("Submitted archives: ");
+	for (var i = 0; i < archives.length; i++) {
+		console.log(archives[i]);
+	}
 });
 
 //

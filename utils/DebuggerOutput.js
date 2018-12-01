@@ -10,6 +10,7 @@
 		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 //		console.log(token);
 //		console.log(OutputDir);
+		return;
 		mkdirp(OutputDir, function(err) { 
 		fs.writeFile(OutputDir+'/'+token+'.json', JSON.stringify(message), function(err){
 			if(err){

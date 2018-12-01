@@ -32,6 +32,8 @@ const { fork } = require('child_process');
 //var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 console.l = console.log;
 console.log = function() {};
+
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
 	var date = new Date();
@@ -102,7 +104,7 @@ app.get('/estimationPage',function(req,res){
 });
 
 app.get('/estimationPageDemo',function(req,res){
-	res.render('estimationPage');
+	res.render('estimationPage', {cookieName: "EstimationPageOptionsEC2Demo"});
 });
 
 app.get('/docmagic-audit', function(req, res){
@@ -126,6 +128,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
 ,{name:'difficult_programming_language', maxCount:1},{name:'uml_file', maxCount:1},{name:'uml_other', maxCount:1}, {name:'model', maxCount:1},{name:'simulation', maxCount:1}]), function(req,res){
+
         var projectInfo = {};
         projectInfo.distributedSystem = req.body['distributed_system'];
         projectInfo.responseTime = req.body['response_time'];
@@ -196,20 +199,33 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
                 , modelInfo = return_obj['modelInfo'];
             if(func === 'error') {
                 res.end("error");
-            } else if (func === 'estimationResultPaneSimplified') {
-                if (estimationResults === '') {
-                    res.render('estimationResultPaneSimplified', {error: "inter process error"});
-                }
-            } else {
+            } 
+            else {
                 res.render(func, {estimationResults:estimationResults, modelInfo: modelInfo});
             }
+            sendPush(subscription, 'Evaluation Finished');
             worker.kill();
         });
         console.l("in service: umlfilepath: " + packed_obj['umlFilePath']);
         console.l("in service: packetobj: " + JSON.stringify(packed_obj));
         worker.send(JSON.stringify(packed_obj));
+        let token = req.cookies.appToken;
+        let subscription = endpoints[token];
+        sendPush(subscription, 'Task Sent to backend, please wait');
 });
 
+function sendPush(subscription, push_title) {
+    const payload = JSON.stringify({title: push_title});
+    console.log("DEBUGGGG: ready to send notification");
+    if(subscription) {
+        webpush.sendNotification(subscription, payload).catch(error => {
+            console.error(error.stack);
+        });
+    } else {
+        console.l("sendPush(): subscription endpoint not find, printing endpoints");
+        console.l(endpoints);
+    }
+}
 
 app.get('/surveyPage', function(req, res){
 	
@@ -371,6 +387,32 @@ app.post('/signup', upload.fields([{name:'email',maxCount:1},{name:'username', m
 
 })
 
+const webpush = require('web-push');
+
+const publicVapidKey = "BM2EKwsY9E_5r5ewHVlZ1hSwpSfRpvqQm0DPT3C60WQ3md98O0_Tb7c56yFfzFlFyaKqNVfYe1Vv2sul6m4Myt0";
+const privateVapidKey = "zi84jsmnux1jffj4Kt0XnSNWeKVYmQpmRd-lMZkqU-k";
+
+// Replace with your email
+webpush.setVapidDetails('mailto:val@karpov.io', publicVapidKey, privateVapidKey);
+
+
+app.use(require('body-parser').json());
+
+let endpoints = {};
+
+app.post('/subscribe', (req, res) => {
+    console.l('inside /subscribe');
+    const token = req.cookies.appToken;
+    const subscription = req.body;
+    if(subscription) {
+        endpoints[token] = subscription;
+        console.l('server received subsription endpoint');
+    } else {
+        console.l("server didn't receive correct endpoint");
+    }
+    res.status(201).json({});
+    console.l(subscription);
+});
 
 //route middleware to verify a token
 app.use(function(req, res, next) {
@@ -423,6 +465,24 @@ app.get('/estimationPageAnalysis',function(req,res){
 	res.render('estimationPageAnalysis');
 });
 
+app.get('/estimationAnalysisPackage',function(req,res){
+	res.render('estimationAnalysisPackage');
+});
+
+/*
+ * only for debugging process
+ */
+app.get('/listEstimationRequests', function(req,res){
+	var userId = req.query['uid'];
+	umlModelInfoManager.queryEstimationRequests(function(estimationRequests){
+		console.log(estimationRequests);
+		res.render('estimationRequestList', {estimationRequests: estimationRequests});
+	});
+});
+
+
+
+
 ////==================== local machine code for development ==========================
 //
 //var server = app.listen(8081,'127.0.0.1', function () {
@@ -446,7 +506,7 @@ app.get('/estimationPageAnalysis',function(req,res){
 //==================== local machine code for development ==========================
 
 var server = app.listen(8081,'0.0.0.0', function () {
-  var host = server.address().address
-  var port = server.address().port
-  console.log("Example app listening at http://%s:%s", host, port)
+  var host = server.address().address;
+  var port = server.address().port;
+  console.l("Example app listening at http://%s:%s", host, port)
 });

@@ -165,7 +165,7 @@ function analyseXMIModel(projectList, reportDir){
 
 function scanRepo(repoListPath, repoRecordPath){
 		  //to generate svg file.
-			var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+			var classPath = '"./facility-tools/Repo Analyser/bin"';
 		    var command = 'java -classpath '+classPath+' repo.AnalysisKit "scan-repo" "'+repoListPath+'" "'+repoRecordPath+'"';
 		  	console.log(command);
 		  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -184,7 +184,7 @@ function scanRepo(repoListPath, repoRecordPath){
 
 function selectFiles(repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '"./facility-tools/Repo Analyser/bin"';
     var command = 'java -classpath '+classPath+' repo.AnalysisKit "select-files" "'+repoRecordPath+'"';
   	console.log(command);
   	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -202,7 +202,7 @@ function selectFiles(repoRecordPath){
 
 function analyseSloc(repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '"./facility-tools/Repo Analyser/bin"';
    var command = 'java -classpath '+classPath+' repo.AnalysisKit "analyse-sloc" "'+repoRecordPath+'"';
  	console.log(command);
  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -220,7 +220,7 @@ function analyseSloc(repoRecordPath){
 
 function generateSlocReport(repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '"./facility-tools/Repo Analyser/bin"';
   var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoRecordPath+'"';
 	console.log(command);
 	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -277,9 +277,7 @@ var repoRecordPath = repo.reportDir+"\\sloc";
 generateSlocReport(repoRecordPath);
 }
 else if(functionSelection === "--recover-kdm"){
-	
 recoverKDMModel(repo.projectList)
-
 }
 else if(functionSelection === "--calculate-cocomo-estimation-result"){
 	var cocomoDataPath = repo.repoDir+"\\COCOMORatings1.csv";

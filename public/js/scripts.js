@@ -270,6 +270,7 @@ function model_file_update_fnc() {
     $.ajax({
         type: 'POST',
         url: "uploadUMLFileVersion",
+        timeout: 0,
         cache: false,
         processData: false, // Don't process the files
         contentType: false, // Set content type to false as jQuery will tell the server its a query string request
@@ -292,13 +293,17 @@ function model_file_update_fnc() {
 
 }
 
-function predict_project_effort_func() {
+function predict_project_effort_func(show_loading_screen = true) {
     var formData = new FormData($('#project-effort-prediction-form')[0]);
     console.log("starting the ajax call to some where");
     console.log(formData);
+    console.log("show loading screen: " + show_loading_screen);
 
     // show loading
-    document.getElementById("loadingScreen").classList.remove("hidden");
+    if(show_loading_screen) {
+        document.getElementById("loadingScreen").classList.remove("hidden");
+    }
+
 
     //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
     $.ajax({
@@ -2452,32 +2457,24 @@ var dirLink = "public";
 var clickValue;
 var backLink;
 var level = 0;
-var typeChange = "";
-var originalUrl = "";
+function createDir(get) {
+    level = 0;
+    walkDir(get);
+}
+
 function walkDir(get) {
     fileFolder = $(get).data('url');
+    console.log("test", fileFolder);
+    data_type = $(get).data('type');
+    level++;
 
-    if (originalUrl !== fileFolder) {
-        originalUrl = fileFolder;
-        data_type = $(get).data('type');
-        console.log("data_type: " + data_type);
-        console.log("fileFolder:" + fileFolder);
-        if (typeChange !== data_type) {
-            level = 0;
-            typeChange = data_type;
-            console.log("data_type: " + data_type);
+    $.ajax({
+        type: 'GET',
+        url: 'listFileUnderDir?fileFolder=public/' + fileFolder,
+        success: function (data) {
+            buildTable(data);
         }
-
-        level++;
-
-        $.ajax({
-            type: 'GET',
-            url: 'listFileUnderDir?fileFolder=public/' + fileFolder,
-            success: function (data) {
-                buildTable(data);
-            }
-        });
-    }
+    }); 
 
 }
 
@@ -2570,10 +2567,10 @@ function buildTable(data) {
 
         out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
         out += "<table class='row table-striped'>";
-        out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+        out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th><th>Submut</th></tr>";
 
         if (level >= 2) {
-            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button><td><tr>";
+            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button><td></tr>";
         }
 
         //console.log("Data");
@@ -2592,7 +2589,9 @@ function buildTable(data) {
                 out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
                     newKeys[i] +
                     "</a></td><td>folder</td>";
-                out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+                out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
+                var isChecked = projectSelectedArchives.indexOf(path) != -1 ? "checked" : "";
+                out += "<td>" + "<input type='checkbox' value='" + path + "' " + "name='project'" + isChecked + " onchange='onCheckboxChange(this)'>" + "</td></tr>";
             } else {
                 continue;
             }
@@ -2634,13 +2633,16 @@ function buildTable(data) {
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
-                out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+                out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
+                var isChecked = projectSelectedArchives.indexOf(path) != -1 ? "checked" : "";
+                out += "<td>" + "<input type='checkbox' value='" + path + "' " + "name='project'" + isChecked + " onchange='onCheckboxChange(this)'>" + "</td></tr>";
             } else {
                 continue;
             }
         }
         out += "</table>";
-
+        out += "<div id='submitArchivesButton'><button class='btn btn-success' type='button' name='project' onclick='" + "submitSelectedArchives(this)" + "'>" + "Submit" + "</button>";
+        out += "<button class='btn btn-default' type='button' name='project' onclick='" + "clearSelectedArchives(this)" + "'>" + "Clear" + "</button></div>"
         //console.log("Data");
         //console.log(data);
         // console.log("out");
@@ -2755,7 +2757,7 @@ function buildTable2(data) {
 
     out += "<p id='dirAddress' class='col-sm-offset-2 col-sm-10'>" + displayUrl + "</p></div>";
     out += "<table class='row table-striped'>";
-    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th></tr>";
+    out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th><th>Submit</th></tr>";
 
     if (levels >= 2) {
         backUrl = repoLink.split("/")[levels];
@@ -2764,11 +2766,15 @@ function buildTable2(data) {
 
     for (var i = 0; i < newKeys.length; i++) {
         if (type[newKeys[i]] === "Folder") {
+            var path = data[0].parent + "/" + newKeys[i];
             documentUrl = newKeys[i];
             out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-url=" + documentUrl + " onclick='walkRepoDir(this)'>" +
                 newKeys[i] +
                 "</a></td><td>folder</td>";
-            out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+            out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
+            var isChecked = rootSelectedArchives.indexOf(path) != -1 ? "checked" : "";
+            var mode = 'test';
+            out += "<td>" + "<input type='checkbox' value='" + path + "' " + "name='root'" + isChecked + " onchange='onCheckboxChange(this)'>" + "</td></tr>";
         }
         else {
             continue;
@@ -2802,19 +2808,67 @@ function buildTable2(data) {
                     newKeys[i] +
                     "</td><td>file</td>";
             }
-            out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td></tr>"
+            out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>";
+            var isChecked = rootSelectedArchives.indexOf(path) != -1 ? "checked" : "";
+            out += "<td>" + "<input type='checkbox' value='" + path + "' " + "name='root'" + isChecked + " onchange='onCheckboxChange(this)'>" + "</td></tr>";
         }
         else {
             continue;
         }
     }
     out += "</table>";
+    out += "<div id='submitArchivesButton'><button class='btn btn-success' type='button' name='root' onclick='" + "submitSelectedArchives(this)" + "'>" + "Submit" + "</button>";
+    out += "<button class='btn btn-default' type='button' name='root' onclick='" + "clearSelectedArchives(this)" + "'>" + "Clear" + "</button></div>"
     document.getElementById("displayRepoArchive").innerHTML = out;
+}
+
+const rootSelectedArchives = [];
+const projectSelectedArchives = [];
+function onCheckboxChange(checkboxElem) {
+    const curSelectArchives = checkboxElem.name === 'root' ? rootSelectedArchives : projectSelectedArchives;
+    const path = checkboxElem.value;
+    if (checkboxElem.checked) {
+        curSelectArchives.push(path);
+    } else {
+        const index = curSelectArchives.indexOf(path);
+        curSelectArchives.splice(index, 1);
+    }
+}
+
+function submitSelectedArchives(e) {
+    // var cbs = $("#displayRepoArchive input:checkbox:checked");
+    // var archives = [];
+    // for (var i = 0; i < cbs.length; i++) {
+    //     archives.push(cbs[i].name);
+    // }
+    const curSelectArchives = e.name === 'root' ? rootSelectedArchives : projectSelectedArchives;
+    $.ajax({
+        type: 'POST',
+        url: "submitSelectedArchives",
+        data: {archives: JSON.stringify(curSelectArchives)},
+        success: function (response) {
+            console.log(response);
+        },
+        error: function () {
+            console.log("fail");
+        }
+    });
+}
+
+function clearSelectedArchives(e) {
+    const curSelectArchives = e.name === 'root' ? rootSelectedArchives : projectSelectedArchives;
+    curSelectArchives.splice(0, curSelectArchives.length);
+    var elem = document.getElementById("modelArchive");
+    if (e.name == 'root') {
+        walkRepoDir(elem);
+    } else {
+        createDir(elem);
+    }
 }
 
 // module push notification
 const publicVapidKey = 'BM2EKwsY9E_5r5ewHVlZ1hSwpSfRpvqQm0DPT3C60WQ3md98O0_Tb7c56yFfzFlFyaKqNVfYe1Vv2sul6m4Myt0';
-
+startEvalPush();
 async function startEvalPush() {
     console.log("startEvalPush");
     // alert("startEvalPush");
@@ -2935,7 +2989,9 @@ function getEstimationCookie(cname){
     return "";
 }
 
-function estimationCheckCookie(){
+function estimationCheckCookie(cname){
+    EstimationCookieName = cname;
+    console.log(cname);
     var options=getEstimationCookie(EstimationCookieName);
     if (options == "") {
         var data = {"distributed_system": 3, "response_time": 3};

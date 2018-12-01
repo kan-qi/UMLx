@@ -1515,6 +1515,24 @@ function deleteRepo(repoId, callbackfunc) {
         });
 
     }
+    
+    function queryEstimationRequests(callbackfunc){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            
+            db.collection("estimates").find().toArray(function(err, estimates) {
+               if(err) throw err;
+               
+               if(callbackfunc){
+            	   callbackfunc(estimates);
+               }
+
+                db.close();
+              });
+
+        });
+
+    }
 
     function queryRepoIdsForAdmin(userId, callbackfunc){
         MongoClient.connect(url, function(err, db) {
@@ -1841,7 +1859,8 @@ function deleteRepo(repoId, callbackfunc) {
         requestRepoBrief: requestRepoBrief,
         queryAllModelBrief: queryAllModelBrief,
         queryAllModelNames: queryAllModelNames,
-        queryTempRepoInfo: queryTempRepoInfo
+        queryTempRepoInfo: queryTempRepoInfo,
+        queryEstimationRequests: queryEstimationRequests
     }
 	
 }());

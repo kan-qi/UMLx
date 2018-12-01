@@ -15,7 +15,7 @@ html
         //            }
         //        }
         //    }
-    body#upload-body(onload="estimationCheckCookie()")
+    body#upload-body(onload="estimationCheckCookie('#{cookieName}')")
         include heading
         .container.estimation_page_container
             form#project-effort-prediction-form.form-horizontal(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
@@ -35,8 +35,8 @@ html
                                         .form-group
                                         label.control-label(for='distributed_system') Distributed System
                                         select#distributed_system.form-control.estimation-selector(name='distributed_system',onChange='estimationOptionChange("distributed_system")')
-                                            option(value=1) very low
-                                            option(value=2) low
+                                            option(value="1") very low
+                                            option(value="2") low
                                             option(value="3",selected="selected") normal
                                             option(value="4") high
                                             option(value="5") very high
@@ -148,7 +148,7 @@ html
                                             option(value="3",selected="selected") normal
                                             option(value="4") high
                                             option(value="5") very high
-                                        p To what degree, special user training facilities have to provided for the end users?    
+  
                                     //input#uuid-page1(type='hidden', name='uuid-page1', value='')
                                     //
                                     //.form-group
@@ -339,7 +339,7 @@ html
 
         script(type='text/javascript', src='http://code.jquery.com/jquery-1.9.1.min.js')
         script(type='text/javascript', src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js')
-        script(type='text/javascript', src="https://code.highcharts.com/highcharts.src.js")
-        script(type='text/javascript', src="https://code.highcharts.com/modules/histogram-bellcurve.js")
+        script(type='text/javascript', src="https://code.Highcharts.com/Highcharts.src.js")
+        script(type='text/javascript', src="https://code.Highcharts.com/modules/histogram-bellcurve.js")
         script(type='text/javascript', src='js/scripts.js')
         script(type='text/javascript', src="js/charts.js")
