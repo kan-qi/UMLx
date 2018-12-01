@@ -225,8 +225,8 @@
 		var callGraph = constructCallGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 		var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 		var accessGraph = constructAccessGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-		var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir);
-		var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir);
+		var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
+		var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 
 		//		console.log("dicCompositeSubclasses");
 		//		console.log(dicCompositeSubclasses);
@@ -243,6 +243,8 @@
 			dicMethodClass: dicMethodClass,
 			typeDependencyGraph: typeDependencyGraph,
 			accessGraph: accessGraph,
+			extendsGraph: extendsGraph,
+			compositionGraph: compositionGraph,
 			referencedClassUnits: referencedClassUnits,
 			referencedClassUnitsComposite: referencedClassUnitsComposite,
 			dicCompositeSubclasses: dicCompositeSubclasses,
@@ -1385,7 +1387,7 @@
 
 	}
 
-	function constructExtendsGraph(topClassUnits, xmiString, outputDir) {
+	function constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters) {
 
 		var edges = []; // directed edge to describe "extends"
 		var nodes = []; // classes
@@ -1402,6 +1404,7 @@
 
 			console.log("identified extendRelations: " + extendRelations.length);
 
+
 			for (var j in extendRelations) {
 				var extendRelation = extendRelations[j];
 				var childXMIClassUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(extendRelation.from))[0];
@@ -1411,13 +1414,44 @@
 					continue;
 				}
 
+				var childCompositeClassUnitUUID = dicClassComposite[childXMIClassUnit['$'].UUID];
+				var parentCompositeClassUnitUUID = dicClassComposite[parentXMIClassUnit['$'].UUID];
+				
+				var childCompositeClassUnit = dicCompositeClasses[childCompositeClassUnitUUID];
+				var parentCompositeClassUnit = dicCompositeClasses[parentCompositeClassUnitUUID];
+
+				if (!childCompositeClassUnit || !parentCompositeClassUnit) {
+					continue;
+				}
+
+				// Why only check the child?
+				// (written referring to constructCallGraph function, 
+				// in there, only compositeClassUnit is checked)
+				if (childCompositeClassUnit === parentCompositeClassUnit && !childCompositeClassUnit.isComposite) {
+					continue;
+				}
+
+				if (!referencedClassUnitsComposite.includes(childCompositeClassUnit)) {
+					referencedClassUnitsComposite.push(childCompositeClassUnit);
+				}
+				if (!referencedClassUnitsComposite.includes(parentCompositeClassUnit)) {
+					referencedClassUnitsComposite.push(parentCompositeClassUnit);
+				}
+
+				// TODO: create a composite graph
+				// Or is it really necessary?
+
+
+				// create the normal graph (non-composite)
+
 				var startNode = nodesByName[childXMIClassUnit['$'].UUID];
 				if (!startNode) {
 					startNode = {
 						name: childXMIClassUnit['$'].name,
 						isAbstract: childXMIClassUnit['$'].isAbstract,
 						component: {
-							// TODO: matters?
+							name: childCompositeClassUnit.name,
+							classUnit: childCompositeClassUnit.UUID,
 						},
 						UUID: childXMIClassUnit['$'].UUID,
 					};
@@ -1431,7 +1465,8 @@
 						name: parentXMIClassUnit['$'].name,
 						isAbstract: parentXMIClassUnit['$'].isAbstract,
 						component: {
-							// TODO: matters?
+							name: parentCompositeClassUnit.name,
+							classUnit: parentCompositeClassUnit.UUID,
 						},
 						UUID: parentXMIClassUnit['$'].UUID,
 					};
@@ -1449,7 +1484,7 @@
 		};
 	}
 
-	function constructCompositionGraph(topClassUnits, xmiString, outputDir) {
+	function constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters) {
 		
 		var edges = []; // directed edge to describe "extends"
 		var nodes = []; // classes
@@ -1472,9 +1507,34 @@
 				var itemClassUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(compositionItem.type))[0];
 
 				// do not consider class outside boundary, e.g. String
-				if (!dicClassUnits[itemClassUnit['$'].UUID].isWithinBoundary) {
+				if (!dicClassUnits[itemClassUnit['$'].UUID] || !dicClassUnits[itemClassUnit['$'].UUID].isWithinBoundary) {
 					continue;
 				}
+
+				var parentClassUnit = xmiClassUnit;
+
+				// similar to constructExtendsGraph, need to add to composite
+				var itemCompositeClassUnitUUID = dicClassComposite[itemClassUnit['$'].UUID];
+				var parentCompositeClassUnitUUID = dicClassComposite[parentClassUnit['$'].UUID];
+
+				var itemCompositeClassUnit = dicCompositeClasses[itemCompositeClassUnitUUID];
+				var parentCompositeClassUnit = dicCompositeClasses[parentCompositeClassUnitUUID];
+
+				if (!itemCompositeClassUnit || !parentCompositeClassUnit) {
+					continue;
+				}
+
+				if (itemCompositeClassUnit === parentCompositeClassUnit && !itemCompositeClassUnit.isComposite) {
+					continue;
+				}
+
+				if (!referencedClassUnitsComposite.includes(itemCompositeClassUnit)) {
+					referencedClassUnitsComposite.push(itemCompositeClassUnit);
+				}
+				if (!referencedClassUnitsComposite.includes(parentCompositeClassUnit)) {
+					referencedClassUnitsComposite.push(parentCompositeClassUnit);
+				}
+
 
 				// add the edge and nodes (the item points to class, b/c item "composes" class)
 				var startNode = nodesByName[itemClassUnit['$'].UUID];
@@ -1483,7 +1543,8 @@
 						name: itemClassUnit['$'].name,
 						isAbstract: itemClassUnit['$'].isAbstract,
 						component: {
-							// TODO: matters?
+							name: itemCompositeClassUnit.name,
+							classUnit: itemCompositeClassUnit.UUID,
 						},
 						UUID: itemClassUnit['$'].UUID,
 					};
@@ -1497,7 +1558,8 @@
 						name: classUnit.name,
 						isAbstract: classUnit.isAbstract,
 						component: {
-							// TODO: matters?
+							name: parentCompositeClassUnit.name,
+							classUnit: parentCompositeClassUnit.UUID,
 						},
 						UUID: classUnit.UUID,
 					};
