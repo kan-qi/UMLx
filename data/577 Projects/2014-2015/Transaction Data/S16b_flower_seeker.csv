@@ -1,0 +1,159 @@
+d,path,useCase,transactional,tran_length,total_degree, TL, DETs, TD, arch_diff
+1,stl#User:add to cart button->User:add to cart button->add to cart button:check db if available->check db if available:not available error message,Add to cart,TRAN_NA,4,2,4,2,2,8
+2,stl#User:add to cart button->User:add to cart button->add to cart button:check db if available->check db if available:product,Add to cart,TRAN_NA,4,1,4,1,1,4
+3,stl#User:add to cart button->User:add to cart button->add to cart button:check db if available->check db if available:add to cart->add to cart:cart,Add to cart,TRAN_NA,5,0.75,5,1,0.75,3.75
+4,stl#User:not available error message->User:not available error message,Add to cart,CTRL,2,3,2,1,3,6
+5,stl#User:not available error message->User:not available error message,Add to cart,EXTCLL,2,3,2,1,3,6
+6,stl#User:not available error message->User:not available error message,Add to cart,INT,2,3,2,1,3,6
+1,stl#User:Create Profile Page->User:Create Profile Page->Create Profile Page:pre-check if input is empty->pre-check if input is empty:successful information for creation,Create profile,TRAN_NA,4,2.6666666666666665,4,4,2.6666666666666665,10.666666666666666
+2,stl#User:Create Profile Page->User:Create Profile Page->Create Profile Page:pre-check if input is empty->pre-check if input is empty:send information in db->send information in db:user info,Create profile,TRAN_NA,5,1.75,5,3,1.75,8.75
+3,stl#User:Create Profile Page->User:Create Profile Page->Create Profile Page:pre-check if input is empty->pre-check if input is empty:existing profile error message,Create profile,TRAN_NA,4,3.6666666666666665,4,4,3.6666666666666665,14.666666666666666
+4,stl#User:Create Profile Page->User:Create Profile Page->Create Profile Page:pre-check if input is empty->pre-check if input is empty:error message for empty input,Create profile,TRAN_NA,4,2.3333333333333335,4,3,2.3333333333333335,9.333333333333334
+5,stl#User:existing profile error message->User:existing profile error message,Create profile,CTRL,2,4,2,1,4,8
+6,stl#User:existing profile error message->User:existing profile error message,Create profile,EXTCLL,2,4,2,1,4,8
+7,stl#User:existing profile error message->User:existing profile error message,Create profile,INT,2,4,2,1,4,8
+8,stl#User:successful information for creation->User:successful information for creation,Create profile,CTRL,2,1,2,1,1,2
+9,stl#User:successful information for creation->User:successful information for creation,Create profile,EXTCLL,2,1,2,1,1,2
+10,stl#User:successful information for creation->User:successful information for creation,Create profile,INT,2,1,2,1,1,2
+11,stl#User:error message for empty input->User:error message for empty input,Create profile,CTRL,2,15,2,10,15,30
+12,stl#User:error message for empty input->User:error message for empty input,Create profile,EXTCLL,2,15,2,10,15,30
+13,stl#User:error message for empty input->User:error message for empty input,Create profile,INT,2,15,2,10,15,30
+1,stl#User:error message for empty input->User:error message for empty input,Login,CTRL,2,15,2,10,15,30
+2,stl#User:error message for empty input->User:error message for empty input,Login,EXTCLL,2,15,2,10,15,30
+3,stl#User:error message for empty input->User:error message for empty input,Login,INT,2,15,2,10,15,30
+4,stl#User:invalid input error message->User:invalid input error message,Login,CTRL,2,1,2,1,1,2
+5,stl#User:invalid input error message->User:invalid input error message,Login,EXTCLL,2,1,2,1,1,2
+6,stl#User:invalid input error message->User:invalid input error message,Login,INT,2,1,2,1,1,2
+7,stl#User:login page->User:login page->login page:pre-check if input is empty->pre-check if input is empty:query authentication info->query authentication info:user info,Login,TRAN_NA,5,1,5,2,1,5
+8,stl#User:login page->User:login page->login page:pre-check if input is empty->pre-check if input is empty:invalid input error message,Login,TRAN_NA,4,1.6666666666666667,4,3,1.6666666666666667,6.666666666666667
+9,stl#User:login page->User:login page->login page:pre-check if input is empty->pre-check if input is empty:error message for empty input,Login,TRAN_NA,4,1.3333333333333333,4,2,1.3333333333333333,5.333333333333333
+1,stl#User:error message for empty input->User:error message for empty input,Logout,CTRL,2,15,2,10,15,30
+2,stl#User:error message for empty input->User:error message for empty input,Logout,EXTCLL,2,15,2,10,15,30
+3,stl#User:error message for empty input->User:error message for empty input,Logout,INT,2,15,2,10,15,30
+4,stl#User:invalid input error message->User:invalid input error message,Logout,CTRL,2,1,2,1,1,2
+5,stl#User:invalid input error message->User:invalid input error message,Logout,EXTCLL,2,1,2,1,1,2
+6,stl#User:invalid input error message->User:invalid input error message,Logout,INT,2,1,2,1,1,2
+7,stl#User:logout button->User:logout button->logout button:clear session->clear session:query authentication info->query authentication info:Session,Logout,CTRL,5,3.75,5,10,3.75,18.75
+8,stl#User:logout button->User:logout button->logout button:clear session->clear session:invalid input error message,Logout,CTRL,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+9,stl#User:logout button->User:logout button->logout button:clear session->clear session:invalid input error message,Logout,EXTCLL,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+10,stl#User:logout button->User:logout button->logout button:clear session->clear session:invalid input error message,Logout,INT,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+11,stl#User:logout button->User:logout button->logout button:clear session->clear session:error message for empty input,Logout,CTRL,4,5,4,10,5,20
+12,stl#User:logout button->User:logout button->logout button:clear session->clear session:error message for empty input,Logout,EXTCLL,4,5,4,10,5,20
+13,stl#User:logout button->User:logout button->logout button:clear session->clear session:error message for empty input,Logout,INT,4,5,4,10,5,20
+14,stl#User:logout button->User:logout button->logout button:clear session->clear session:Session,Logout,CTRL,4,5,4,10,5,20
+1,stl#florist:information is invalid->florist:information is invalid,Manage Catalog,CTRL,2,1,2,1,1,2
+2,stl#florist:information is invalid->florist:information is invalid,Manage Catalog,EXTCLL,2,1,2,1,1,2
+3,stl#florist:information is invalid->florist:information is invalid,Manage Catalog,INT,2,1,2,1,1,2
+4,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:save uploaded information to db->save uploaded information to db:category,Manage Catalog,TRAN_NA,5,0.25,5,1,0.25,1.25
+5,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:information is invalid,Manage Catalog,TRAN_NA,4,0.6666666666666666,4,2,0.6666666666666666,2.6666666666666665
+6,stl#florist:catalog manage page->florist:catalog manage page->catalog manage page:pre-check if required information valid->pre-check if required information valid:exceeded limit error message,Manage Catalog,TRAN_NA,4,0.6666666666666666,4,2,0.6666666666666666,2.6666666666666665
+7,stl#florist:exceeded limit error message->florist:exceeded limit error message,Manage Catalog,CTRL,2,1,2,1,1,2
+8,stl#florist:exceeded limit error message->florist:exceeded limit error message,Manage Catalog,EXTCLL,2,1,2,1,1,2
+9,stl#florist:exceeded limit error message->florist:exceeded limit error message,Manage Catalog,INT,2,1,2,1,1,2
+1,stl#User:invalid information error message->User:invalid information error message,Manage Profile,CTRL,2,1,2,1,1,2
+2,stl#User:invalid information error message->User:invalid information error message,Manage Profile,EXTCLL,2,1,2,1,1,2
+3,stl#User:invalid information error message->User:invalid information error message,Manage Profile,INT,2,1,2,1,1,2
+4,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:update profile entry->update profile entry:user info,Manage Profile,CTRL,5,3.75,5,10,3.75,18.75
+5,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:update profile entry->update profile entry:successful change message,Manage Profile,CTRL,5,1,5,1,1,5
+6,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:update profile entry->update profile entry:successful change message,Manage Profile,EXTCLL,5,1,5,1,1,5
+7,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:update profile entry->update profile entry:successful change message,Manage Profile,INT,5,1,5,1,1,5
+8,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:invalid information error message,Manage Profile,CTRL,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+9,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:invalid information error message,Manage Profile,EXTCLL,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+10,stl#User:profile edit page->User:profile edit page->profile edit page:pre-check required fields->pre-check required fields:invalid information error message,Manage Profile,INT,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+11,stl#User:successful change message->User:successful change message,Manage Profile,CTRL,2,4,2,1,4,8
+12,stl#User:successful change message->User:successful change message,Manage Profile,EXTCLL,2,4,2,1,4,8
+13,stl#User:successful change message->User:successful change message,Manage Profile,INT,2,4,2,1,4,8
+14,stl#User:existing profile error message->User:existing profile error message,Manage Profile,CTRL,2,4,2,1,4,8
+15,stl#User:existing profile error message->User:existing profile error message,Manage Profile,EXTCLL,2,4,2,1,4,8
+16,stl#User:existing profile error message->User:existing profile error message,Manage Profile,INT,2,4,2,1,4,8
+17,stl#User:Edit profile button->User:Edit profile button->Edit profile button:display profile edit page,Manage Profile,CTRL,3,2,3,2,2,6
+1,stl#thirdpart payment system:approve transaction and display successful message->thirdpart payment system:approve transaction and display successful message->approve transaction and display successful message:payment successful message->payment successful message:redirect to payment page->redirect to payment page:missing information for payment message,Place Order,TRAN_NA,5,0.25,5,1,0.25,1.25
+2,stl#thirdpart payment system:send error message for invalid payment information->thirdpart payment system:send error message for invalid payment information->send error message for invalid payment information:invalid payment inforrmation->invalid payment inforrmation:redirect to payment page->redirect to payment page:missing information for payment message,Place Order,TRAN_NA,5,0.75,5,3,0.75,3.75
+3,stl#User:missing information for payment message->User:missing information for payment message,Place Order,CTRL,2,1,2,1,1,2
+4,stl#User:missing information for payment message->User:missing information for payment message,Place Order,EXTCLL,2,1,2,1,1,2
+5,stl#User:missing information for payment message->User:missing information for payment message,Place Order,INT,2,1,2,1,1,2
+6,stl#User:payment information page->User:payment information page->payment information page:pre-check if required information is empty->pre-check if required information is empty:verify payment information,Place Order,CTRL,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+7,stl#User:payment information page->User:payment information page->payment information page:pre-check if required information is empty->pre-check if required information is empty:verify payment information,Place Order,EXTCLL,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+8,stl#User:payment information page->User:payment information page->payment information page:pre-check if required information is empty->pre-check if required information is empty:verify payment information,Place Order,INT,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+9,stl#User:payment information page->User:payment information page->payment information page:pre-check if required information is empty->pre-check if required information is empty:missing information for payment message,Place Order,CTRL,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+10,stl#User:payment information page->User:payment information page->payment information page:pre-check if required information is empty->pre-check if required information is empty:missing information for payment message,Place Order,EXTCLL,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+11,stl#User:payment information page->User:payment information page->payment information page:pre-check if required information is empty->pre-check if required information is empty:missing information for payment message,Place Order,INT,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+1,stl#customer:dashboard page->customer:dashboard page->dashboard page:display unread message->display unread message:unread message->unread message:display comment input panel->display comment input panel:reply input panel->reply input panel:save replied message->save replied message:message,Private Message - Florist,TRAN_NA,8,0.7142857142857143,8,4,0.7142857142857143,5.714285714285714
+2,stl#customer:dashboard page->customer:dashboard page->dashboard page:display unread message->display unread message:unread message->unread message:display comment input panel->display comment input panel:message,Private Message - Florist,TRAN_NA,6,0.4,6,3,0.4,2.4000000000000004
+3,stl#customer:dashboard page->customer:dashboard page->dashboard page:display unread message->display unread message:message,Private Message - Florist,TRAN_NA,4,0.6666666666666666,4,3,0.6666666666666666,2.6666666666666665
+4,stl#customer:reply input panel->customer:reply input panel->reply input panel:save replied message->save replied message:message,Private Message - Florist,TRAN_NA,4,1,4,1,1,4
+5,stl#customer:unread message->customer:unread message->unread message:display comment input panel->display comment input panel:reply input panel->reply input panel:save replied message->save replied message:message,Private Message - Florist,TRAN_NA,6,0.6,6,1,0.6,3.5999999999999996
+6,stl#customer:unread message->customer:unread message->unread message:display comment input panel->display comment input panel:message,Private Message - Florist,TRAN_NA,4,5,4,10,5,20
+1,stl#customer:comment and concerns panel->customer:comment and concerns panel->comment and concerns panel:save comments/concerns->save comments/concerns:successful communication message,Private message,TRAN_NA,4,1,4,2,1,4
+2,stl#customer:comment and concerns panel->customer:comment and concerns panel->comment and concerns panel:save comments/concerns->save comments/concerns:message,Private message,TRAN_NA,4,1,4,2,1,4
+3,stl#customer:exceeded limit error message->customer:exceeded limit error message,Private message,CTRL,2,1,2,1,1,2
+4,stl#customer:exceeded limit error message->customer:exceeded limit error message,Private message,EXTCLL,2,1,2,1,1,2
+5,stl#customer:exceeded limit error message->customer:exceeded limit error message,Private message,INT,2,1,2,1,1,2
+6,stl#customer:successful communication message->customer:successful communication message,Private message,CTRL,2,15,2,10,15,30
+7,stl#customer:chat button->customer:chat button->chat button:display chat panel->display chat panel:comment and concerns panel->comment and concerns panel:save comments/concerns->save comments/concerns:successful communication message,Private message,TRAN_NA,6,0.6,6,2,0.6,3.5999999999999996
+8,stl#customer:chat button->customer:chat button->chat button:display chat panel->display chat panel:comment and concerns panel->comment and concerns panel:save comments/concerns->save comments/concerns:message,Private message,TRAN_NA,6,0.6,6,2,0.6,3.5999999999999996
+1,stl#florist:Order page->florist:Order page->Order page:update order status information->update order status information:update successful page,Provide tracking information,TRAN_NA,4,0.3333333333333333,4,1,0.3333333333333333,1.3333333333333333
+2,stl#florist:Order page->florist:Order page->Order page:update order status information->update order status information:order,Provide tracking information,TRAN_NA,4,5,4,10,5,20
+3,stl#florist:update successful page->florist:update successful page,Provide tracking information,CTRL,2,1,2,1,1,2
+4,stl#florist:update successful page->florist:update successful page,Provide tracking information,EXTCLL,2,1,2,1,1,2
+5,stl#florist:update successful page->florist:update successful page,Provide tracking information,INT,2,1,2,1,1,2
+1,stl#customer:too short review error message->customer:too short review error message,Review and Rating,CTRL,2,15,2,10,15,30
+2,stl#customer:too short review error message->customer:too short review error message,Review and Rating,EXTCLL,2,15,2,10,15,30
+3,stl#customer:too short review error message->customer:too short review error message,Review and Rating,INT,2,15,2,10,15,30
+4,stl#customer:review button->customer:review button->review button:display review penal->display review penal:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:too short review error message,Review and Rating,CTRL,6,3,6,10,3,18
+5,stl#customer:review button->customer:review button->review button:display review penal->display review penal:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:too short review error message,Review and Rating,EXTCLL,6,3,6,10,3,18
+6,stl#customer:review button->customer:review button->review button:display review penal->display review penal:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:too short review error message,Review and Rating,INT,6,3,6,10,3,18
+7,stl#customer:review button->customer:review button->review button:display review penal->display review penal:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:store review and rating information->store review and rating information:review,Review and Rating,TRAN_NA,7,2.5,7,10,2.5,17.5
+8,stl#customer:review panel->customer:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:too short review error message,Review and Rating,CTRL,4,5,4,10,5,20
+9,stl#customer:review panel->customer:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:too short review error message,Review and Rating,EXTCLL,4,5,4,10,5,20
+10,stl#customer:review panel->customer:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:too short review error message,Review and Rating,INT,4,5,4,10,5,20
+11,stl#customer:review panel->customer:review panel->review panel:pre-check if length of review is legal->pre-check if length of review is legal:store review and rating information->store review and rating information:review,Review and Rating,TRAN_NA,5,3.75,5,10,3.75,18.75
+1,stl#User:No product error message->User:No product error message,Search Product,CTRL,2,15,2,10,15,30
+2,stl#User:No product error message->User:No product error message,Search Product,EXTCLL,2,15,2,10,15,30
+3,stl#User:No product error message->User:No product error message,Search Product,INT,2,15,2,10,15,30
+4,stl#User:product page->User:product page,Search Product,CTRL,2,15,2,10,15,30
+5,stl#User:product search page->User:product search page->product search page:query product by criteria->query product by criteria:product page,Search Product,CTRL,4,5,4,10,5,20
+6,stl#User:product search page->User:product search page->product search page:query product by criteria->query product by criteria:product,Search Product,CTRL,4,5,4,10,5,20
+7,stl#User:product search page->User:product search page->product search page:query product by criteria->query product by criteria:No product error message,Search Product,CTRL,4,5,4,10,5,20
+8,stl#User:product search page->User:product search page->product search page:query product by criteria->query product by criteria:No product error message,Search Product,EXTCLL,4,5,4,10,5,20
+9,stl#User:product search page->User:product search page->product search page:query product by criteria->query product by criteria:No product error message,Search Product,INT,4,5,4,10,5,20
+1,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:order status,Track Order,CTRL,4,5,4,10,5,20
+2,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:order status,Track Order,EXTCLL,4,5,4,10,5,20
+3,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:order status,Track Order,INT,4,5,4,10,5,20
+4,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:order,Track Order,CTRL,4,5,4,10,5,20
+5,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:no order history page,Track Order,CTRL,4,5,4,10,5,20
+6,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:no order history page,Track Order,EXTCLL,4,5,4,10,5,20
+7,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:no order history page,Track Order,INT,4,5,4,10,5,20
+8,stl#user:order status->user:order status,Track Order,CTRL,2,15,2,10,15,30
+9,stl#user:order status->user:order status,Track Order,EXTCLL,2,15,2,10,15,30
+10,stl#user:order status->user:order status,Track Order,INT,2,15,2,10,15,30
+11,stl#user:no order history page->user:no order history page,Track Order,CTRL,2,15,2,10,15,30
+12,stl#user:no order history page->user:no order history page,Track Order,EXTCLL,2,15,2,10,15,30
+13,stl#user:no order history page->user:no order history page,Track Order,INT,2,15,2,10,15,30
+1,stl#florist:Upload page->florist:Upload page->Upload page:pre-check if required information valid->pre-check if required information valid:save uploaded information to db->save uploaded information to db:category,Upload catalog,TRAN_NA,5,0.25,5,1,0.25,1.25
+2,stl#florist:Upload page->florist:Upload page->Upload page:pre-check if required information valid->pre-check if required information valid:information is invalid,Upload catalog,TRAN_NA,4,0.6666666666666666,4,2,0.6666666666666666,2.6666666666666665
+3,stl#florist:Upload page->florist:Upload page->Upload page:pre-check if required information valid->pre-check if required information valid:exceeded limit error message,Upload catalog,TRAN_NA,4,0.6666666666666666,4,2,0.6666666666666666,2.6666666666666665
+4,stl#florist:information is invalid->florist:information is invalid,Upload catalog,CTRL,2,1,2,1,1,2
+5,stl#florist:information is invalid->florist:information is invalid,Upload catalog,EXTCLL,2,1,2,1,1,2
+6,stl#florist:information is invalid->florist:information is invalid,Upload catalog,INT,2,1,2,1,1,2
+7,stl#florist:exceeded limit error message->florist:exceeded limit error message,Upload catalog,CTRL,2,1,2,1,1,2
+8,stl#florist:exceeded limit error message->florist:exceeded limit error message,Upload catalog,EXTCLL,2,1,2,1,1,2
+9,stl#florist:exceeded limit error message->florist:exceeded limit error message,Upload catalog,INT,2,1,2,1,1,2
+1,stl#florist:Order history button->florist:Order history button->Order history button:retrieve order history for a florist->retrieve order history for a florist:order history list,View Past Transactions,TRAN_NA,4,5,4,10,5,20
+2,stl#florist:Order history button->florist:Order history button->Order history button:retrieve order history for a florist->retrieve order history for a florist:order,View Past Transactions,TRAN_NA,4,5,4,10,5,20
+3,stl#florist:Order history button->florist:Order history button->Order history button:retrieve order history for a florist->retrieve order history for a florist:no order history page,View Past Transactions,TRAN_NA,4,5,4,10,5,20
+4,stl#florist:no order history page->florist:no order history page,View Past Transactions,CTRL,2,15,2,10,15,30
+5,stl#florist:no order history page->florist:no order history page,View Past Transactions,EXTCLL,2,15,2,10,15,30
+6,stl#florist:no order history page->florist:no order history page,View Past Transactions,INT,2,15,2,10,15,30
+7,stl#florist:order history list->florist:order history list,View Past Transactions,CTRL,2,15,2,10,15,30
+8,stl#florist:order history list->florist:order history list,View Past Transactions,EXTCLL,2,15,2,10,15,30
+9,stl#florist:order history list->florist:order history list,View Past Transactions,INT,2,15,2,10,15,30
+1,stl#User:order history list->User:order history list,View order history,CTRL,2,15,2,10,15,30
+2,stl#User:order history list->User:order history list,View order history,EXTCLL,2,15,2,10,15,30
+3,stl#User:order history list->User:order history list,View order history,INT,2,15,2,10,15,30
+4,stl#User:no order history page->User:no order history page,View order history,CTRL,2,15,2,10,15,30
+5,stl#User:no order history page->User:no order history page,View order history,EXTCLL,2,15,2,10,15,30
+6,stl#User:no order history page->User:no order history page,View order history,INT,2,15,2,10,15,30
+7,stl#User:Order history button->User:Order history button->Order history button:retrieve order history->retrieve order history:order history list,View order history,TRAN_NA,4,5,4,10,5,20
+8,stl#User:Order history button->User:Order history button->Order history button:retrieve order history->retrieve order history:order,View order history,TRAN_NA,4,5,4,10,5,20
+9,stl#User:Order history button->User:Order history button->Order history button:retrieve order history->retrieve order history:no order history page,View order history,TRAN_NA,4,5,4,10,5,20

@@ -1,0 +1,130 @@
+---
+title: "Lambda range"
+author: "Songyh"
+date: "3/16/2018"
+output: pdf_document
+---
+
+```{r}
+# at first we use an example to compute maximum value for lambda
+```
+
+
+```{r}
+x = matrix(rnorm(100 * 20), 100, 20)
+y = rnorm(100)
+```
+
+```{r}
+# define my own scale function to simulate that in glmnet
+myscale = function(x) sqrt(sum((x - mean(x)) ^ 2) / length(x))
+```
+
+```{r}
+# normalize x and y
+sx = as.matrix(scale(x, scale = apply(x, 2, myscale)))
+sy = as.vector(scale(y, scale = myscale(y)))
+```
+
+
+```{r}
+max(abs(colSums(sx * sy))) / dim(x)[1]
+```
+
+```{r}
+# compare it to glmnet
+```
+
+
+```{r}
+library('glmnet')
+gl = glmnet(x = sx, y = sy)
+```
+
+```{r}
+gl$lambda
+```
+
+```{r}
+# maximum value of lambda is same with result we get
+max(gl$lambda)
+```
+
+```{r}
+print(gl)
+```
+
+
+```{r}
+# lambda path
+
+# lambda can be provided, but is typically not and the program constructs a sequence. 
+
+# When automatically generated, the λ sequence is determined by lambda.max and lambda.min.ratio. 
+
+# The latter is the ratio of smallest value of the generated λ sequence (say lambda.min) to lambda.max. 
+
+# The program then generated nlambda values linear on the log scale from lambda.max down to lambda.min
+```
+
+```{r}
+# lambda.min.ratio
+
+# Smallest value for lambda, as a fraction of lambda.max, the (data derived) entry value (i.e. the smallest value for which all coefficients are zero). 
+
+# The default depends on the sample size nobs relative to the number of variables nvars. If nobs > nvars, the default is 0.0001, close to zero. 
+
+# If nobs < nvars, the default is 0.01. A very small value of lambda.min.ratio will lead to a saturated fit in the nobs < nvars case. 
+
+# This is undefined for "binomial" and "multinomial" models, and glmnet will exit gracefully when the percentage deviance explained is almost 1.
+
+```
+
+```{r}
+# stop creteria
+
+# According to the default internal settings, the computations stop if either the fractional change in deviance down the path is less than 10−5 or the fraction of explained deviance reaches 0.999.
+
+```
+
+```{r}
+# % dev  =  1 - deviance_model / deviance_null
+# deviance_model = 2 * (loglike_saturated_model - loglike_current)
+# deviance_null = 2 * (loglike_saturated_model - loglike_intercept_only)
+```
+
+
+```{r}
+max_lambda = max(gl$lambda)
+min_lambda = min(gl$lambda)
+k = 100
+```
+
+```{r}
+log_seq = seq(from  = log(min_lambda), to = log(max_lambda), length.out = k)
+```
+
+```{r}
+seq = exp(log_seq)
+# sort(log_seq, decreasing = T)
+```
+
+```{r}
+# this sequence is close lambda sequence in glmnet
+sort(seq, decreasing = T)
+```
+
+```{r}
+[1] 0.1785388839 0.1626779816 0.1482261180 0.1350581182 0.1230599273 0.1121276225
+ [7] 0.1021665135 0.0930903221 0.0848204344 0.0772852208 0.0704194148 0.0641635481
+[13] 0.0584634353 0.0532697048 0.0485373711 0.0442254448 0.0402965782 0.0367167412
+[19] 0.0334549271 0.0304828836 0.0277748683 0.0253074255 0.0230591836 0.0210106693
+[25] 0.0191441393 0.0174434267 0.0158938008 0.0144818393 0.0131953126 0.0120230774
+[31] 0.0109549804 0.0099817701 0.0090950172 0.0082870409 0.0075508430 0.0068800469
+[37] 0.0062688425 0.0057119358 0.0052045032 0.0047421495 0.0043208700 0.0039370158
+[43] 0.0035872622 0.0032685797 0.0029782081 0.0027136323 0.0024725607 0.0022529052
+[49] 0.0020527633 0.0018704015 0.0017042402 0.0015528402 0.0014148901 0.0012891952
+[55] 0.0011746666 0.0010703125 0.0009752289 0.0008885922 0.0008096521 0.0007377249
+[61] 0.0006721874 0.0006124722 0.0005580618 0.0005084851 0.0004633127
+```
+
