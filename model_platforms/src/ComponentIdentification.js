@@ -30,7 +30,17 @@
 //	var dom = require('xmldom').DOMParser;
 
 
-  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classes, classUnits, dicCompositeSubclasses, outputDir) {
+	function identifyComponents(
+		callGraph, 
+		accessGraph, 
+		typeDependencyGraph, 
+		extendsGraph,
+		compositionGraph,
+		classes, 
+		classUnits, 
+		dicCompositeSubclasses, 
+		outputDir
+	) {
 
 		// console.log("!!!!!!!!!!!");
 		// console.log(dicCompositeSubclasses);
@@ -62,18 +72,11 @@
 			classesByName[classUnit.name] = classUnit;
 		}
 
-    // console.log("classesAll");
-		// console.log(classesAll);
-		// console.log("classes");
-		// console.log(classes);
-		// console.log("classDic");
-		// console.log(classDic);
-		// console.log("classArray");
-		// console.log(classArray);
-
 		var callMetric = calculateCallMetric(callGraph, classes, classDic, methods);
 		var accessMetric = calculateAccessMetric(accessGraph, classes, classDic, methods);
 		var typeDependencyMetric = calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods);
+		var extendsMetric = calculateExtendsMetric(extendsGraph, classes, classDic, methods);
+		var compositionMetric = calculateCompositionMetric(compositionGraph, classes, classDic, methods);
 
 		var metric = zeroArray(classes.length, classes.length);
 		var maxMetric = 0;
@@ -81,8 +84,8 @@
 
 		for (var i = 0; i < classes.length; i++) {
 			for (var j = 0; j < classes.length; j++) {
-				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j];
-				maxMetric = metric[i][j] > maxMetric ? metric[i][j] : maxMetric;
+				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j] + extendsMetric[i][j] + compositionMetric[i][j];
+				maxMetric = Math.max(maxMetric, metric[i][j]);
 			}
 		}
 
@@ -158,11 +161,6 @@
 			currentLevel = nextLevel;
 			currentLevelDepth++;
 		}
-
-		// console.log("currentLevel");
-		// console.log(currentLevel);
-		//
-		//
 
 
 		for (var i in currentLevel) {
@@ -269,9 +267,6 @@
 			}
 		}
 
-//		console.log("components");
-//		console.log(components);
-
 		return {
 			dicComponents: dicComponents,
 			dicClassComponent: dicClassComponent
@@ -335,7 +330,7 @@
 
 	}
 
-  function zeroArray(column, row) {
+	function zeroArray(column, row) {
 		var array = [];
 		for (var i = 0; i < column; i++) {
 			var tmp = [];
@@ -424,7 +419,7 @@
 
     // console.log(classArray);
 		console.log(typeDependencyMetrics);
-    return typeDependencyMetrics;
+		return typeDependencyMetrics;
 	}
 
 	function calculateAccessMetric(accessGraph, classes, classDic, methods) {
@@ -448,7 +443,7 @@
 			attrs.push(classUnit.StorableUnits.length);
 		}
 
-    var access = zeroArray(classes.length, classes.length);
+		var access = zeroArray(classes.length, classes.length);
 		var accessors = {};
 		var accessed = {};
 		var accessMetrics = zeroArray(classes.length, classes.length);
@@ -496,7 +491,7 @@
 			}
 		}
 
-    // console.log(classArray);
+		// console.log(classArray);
 		console.log(accessMetrics);
 		return accessMetrics;
 
@@ -511,7 +506,7 @@
 		// var classDic = {};
 		// var classArray = [];
 		// var methods = []; // store the number of methods in each class
-    //
+		//
 		// for(var i in classes) {
 		// 	var classUnit = classes[i];
 		// 	classDic[classUnit.UUID] = i;
@@ -530,10 +525,10 @@
 		var callees = {};
 		var callMetrics = zeroArray(classes.length, classes.length);
 
-    // console.log(calls);
+		// console.log(calls);
 
 		for (var i in callGraph.edgesComposite) {
-      var edge = callGraph.edgesComposite[i];
+			var edge = callGraph.edgesComposite[i];
 			var col = classDic[edge.start.component.classUnit];
 			var row = classDic[edge.end.component.classUnit];
 			// classArray[col] = false;
@@ -581,7 +576,7 @@
 			}
 		}
 
-    // console.log(classArray);
+		// console.log(classArray);
 		console.log(callMetrics);
 		return callMetrics;
 
@@ -596,6 +591,40 @@
 		// }
 		// console.log(classDic);
 		// console.log(classArray);
+	}
+
+	function calculateExtendsMetric(extendsGraph, classes, classDic, methods) {
+		var extendsMetrics = zeroArray(classes.length, classes.length);
+
+		if (!extendsGraph) {
+			return extendsMetrics;
+		}
+
+		for (var i in extendsGraph.edges) {
+			var edge = extendsGraph.edges[i];
+			var col = classDic[edge.start.component.classUnit];
+			var row = classDic[edge.end.component.classUnit];
+			extendsMetrics[col][row]++;
+		}
+
+		return extendsMetrics;
+	}
+
+	function calculateCompositionMetric(compositionGraph, classes, classDic, methods) {
+		var compositionMetrics = zeroArray(classes.length, classes.length);
+
+		if (!compositionGraph) {
+			return compositionMetrics;
+		}
+
+		for (var i in compositionGraph.edges) {
+			var edge = compositionGraph.edges[i];
+			var col = classDic[edge.start.component.classUnit];
+			var row = classDic[edge.end.component.classUnit];
+			compositionMetrics[col][row]++;
+		}
+
+		return compositionMetrics;
 	}
 
 // mode => 0: SINGLE_LINKAGE; 1: CONPLETE_LINKAGE; 2: AVERAGE_LINKAGE
