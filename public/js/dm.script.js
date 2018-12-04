@@ -127,7 +127,31 @@ function createAudit() {
 			"Notes": Notes,
 			"RepeatOnField": RepeatOnField,
 			"Severity": Severity,
-			"SubCategory": SubCategory
+			"SubCategory": SubCategory,
+			//second screen
+			"Date": Date,
+			"Time": Time,
+			"User": User,
+			"NoteComment": NoteComment,
+			"InceptionDate": InceptionDate,
+			"LastValidationDate": LastValidationDate,
+			"ValidationMonths": ValidationMonths,
+			"FirstValidationBy": FirstValidationBy,
+			"SecondValidationBy": SecondValidationBy,
+			"OwnedByGroup": OwnedByGroup,
+			//second screen
+			"ApplicableScript": ApplicableScript,
+			"AuditScript": AuditScript,
+			"ReturnPos":ReturnPos,
+			"MISMOPath": MISMOPath,
+			"WebsheetPath": WebsheetPath,
+			"FieldName": FieldName,
+			"DataType": DataType,
+			"DataFormat": DataFormat,
+			"RequiredField": RequiredField,
+			"MessageText": MessageText,
+			"ListSource": ListSource
+
 		},
 		function (msg) {
 			//console.log(data1[0]);
@@ -210,6 +234,29 @@ function replaceAudit() {
 	var Severity = $('#replaceAuditForm div[id=Severity] .btn:first-child').val();
 	var SubCategory = $('#replaceAuditForm div[id=SubCategory] .btn:first-child').val();
 
+
+	var Date = $('#replaceAuditForm div[id=Date] .btn:first-child').val();
+	var Time = $('#replaceAuditForm input[name=Time]').val();
+	var User = $('#replaceAuditForm input[name=User]').val();
+	var NoteComment = $('#replaceAuditForm div[id=NoteComment] .btn:first-child').val();
+	var InceptionDate = $('#replaceAuditForm input[name=InceptionDate]').val();
+	var LastValidationDate = $('#replaceAuditForm input[name=LastValidationDate]').val();
+	var ValidationMonths = $('#replaceAuditForm div[id=ValidationMonths] .btn:first-child').val();
+	var FirstValidationBy = $('#replaceAuditForm input[name=FirstValidationBy]').val();
+	var SecondValidationBy = $('#replaceAuditForm input[name=SecondValidationBy]').val();
+	var OwnedByGroup = $('#replaceAuditForm div[id=OwnedByGroup] .btn:first-child').val();
+	var ApplicableScript = $('#replaceAuditForm input[name=ApplicableScript]').val();
+	var AuditScript = $('#replaceAuditForm input[name=AuditScript]').val();
+	var ReturnPos = $('#replaceAuditForm div[id=ReturnPos] .btn:first-child').val();
+	var MISMOPath = $('#replaceAuditForm input[name=MISMOPath]').val();
+	var WebsheetPath = $('#replaceAuditForm input[name=WebsheetPath]').val();
+	var FieldName = $('#replaceAuditForm div[id=FieldName] .btn:first-child').val();
+	var DataType = $('#replaceAuditForm input[name=DataType]').val();
+	var DataFormat = $('#replaceAuditForm input[name=DataFormat]').val();
+	var RequiredField = $('#replaceAuditForm div[id=RequiredField] .btn:first-child').val();
+	var MessageText = $('#replaceAuditForm input[name=MessageText]').val();
+	var ListSource = $('#replaceAuditForm input[name=ListSource]').val();
+
 	audit.set(_id,
 		{
 			//"websheet_model_id": websheet_model_id,
@@ -231,7 +278,30 @@ function replaceAudit() {
 			"Notes": Notes,
 			"RepeatOnField": RepeatOnField,
 			"Severity": Severity,
-			"SubCategory": SubCategory
+			"SubCategory": SubCategory,
+	//second screen
+			"Date": Date,
+			"Time": Time,
+			"User": User,
+			"NoteComment": NoteComment,
+			"InceptionDate": InceptionDate,
+			"LastValidationDate": LastValidationDate,
+			"ValidationMonths": ValidationMonths,
+			"FirstValidationBy": FirstValidationBy,
+			"SecondValidationBy": SecondValidationBy,
+			"OwnedByGroup": OwnedByGroup,
+			//second screen
+			"ApplicableScript": ApplicableScript,
+			"AuditScript": AuditScript,
+			"ReturnPos":ReturnPos,
+			"MISMOPath": MISMOPath,
+			"WebsheetPath": WebsheetPath,
+			"FieldName": FieldName,
+			"DataType": DataType,
+			"DataFormat": DataFormat,
+			"RequiredField": RequiredField,
+			"MessageText": MessageText,
+			"ListSource": ListSource
 		},
 		success, error);
 	return false;
@@ -282,6 +352,28 @@ function updateAudit() {
 	var Severity = $('#auditForm div[id=Severity] .btn:first-child').val();
 	var SubCategory = $('#auditForm div[id=SubCategory] .btn:first-child').val();
 
+	var Date = $('#auditForm div[id=Date] .btn:first-child').val();
+	var Time = $('#auditForm div[id=Time] .btn:first-child').val();
+	var User = $('#auditForm div[id=User] .btn:first-child').val();
+	var NoteComment = $('#auditForm div[id=NoteComment] .btn:first-child').val();
+	var InceptionDate = $('#auditForm div[id=InceptionDate] .btn:first-child').val();
+	var LastValidationDate = $('#auditForm div[id=LastValidationDate] .btn:first-child').val();
+	var ValidationMonths = $('#auditForm div[id=ValidationMonths] .btn:first-child').val();
+	var FirstValidationBy = $('#auditForm div[id=FirstValidationBy] .btn:first-child').val();
+	var SecondValidationBy = $('#auditForm div[id=SecondValidationBy] .btn:first-child').val();
+	var OwnedByGroup = $('#auditForm div[id=OwnedByGroup] .btn:first-child').val();
+	var ApplicableScript = $('#auditForm div[id=ApplicableScript] .btn:first-child').val();
+	var AuditScript = $('#auditForm div[id=AuditScript] .btn:first-child').val();
+			var ReturnPos = $('#auditForm div[id=ReturnPos] .btn:first-child').val();
+			var MISMOPath = $('#auditForm div[id=MISMOPath] .btn:first-child').val();
+			var WebsheetPath = $('#auditForm div[id=WebsheetPath] .btn:first-child').val();
+			var FieldName = $('#auditForm div[id=FieldName] .btn:first-child').val();
+			var DataType = $('#auditForm div[id=DataType] .btn:first-child').val();
+			var DataFormat = $('#auditForm div[id=DataFormat] .btn:first-child').val();
+			var RequiredField = $('#auditForm div[id=RequiredField] .btn:first-child').val();
+			var MessageText = $('#auditForm div[id=MessageText] .btn:first-child').val();
+			var ListSource = $('#auditForm div[id=ListSource] .btn:first-child').val();
+
 
 	audit.update(_id,
 		{
@@ -304,7 +396,32 @@ function updateAudit() {
 			"Notes": Notes,
 			"RepeatOnField": RepeatOnField,
 			"Severity": Severity,
-			"SubCategory": SubCategory
+			"SubCategory": SubCategory,
+			//second screen
+			"Date": Date,
+			"Time": Time,
+			"User": User,
+			"NoteComment": NoteComment,
+			"InceptionDate": InceptionDate,
+			"LastValidationDate": LastValidationDate,
+			"ValidationMonths": ValidationMonths,
+			"FirstValidationBy": FirstValidationBy,
+			"SecondValidationBy": SecondValidationBy,
+			"OwnedByGroup": OwnedByGroup,
+			//second screen
+			"ApplicableScript": ApplicableScript,
+			"AuditScript": AuditScript,
+			"ReturnPos":ReturnPos,
+			"MISMOPath": MISMOPath,
+			"WebsheetPath": WebsheetPath,
+			"FieldName": FieldName,
+			"DataType": DataType,
+			"DataFormat": DataFormat,
+			"RequiredField": RequiredField,
+			"MessageText": MessageText,
+			"ListSource": ListSource
+
+
 		},
 		function (msg) {
 			if (msg.result && msg.result.ok) {
@@ -362,6 +479,49 @@ function loadUpdateAudit(msg) {
 	$('#auditForm #Severity #dropdownMenuButton').html(audit.Severity);
 	$('#auditForm #SubCategory').attr("value", audit.SubCategory);
 	$('#auditForm #SubCategory #dropdownMenuButton').html(audit.SubCategory);
+
+	$('#auditForm #Date').attr("value", audit.Date);
+	$('#auditForm #Date #dropdownMenuButton').html(audit.Date);
+	$('#auditForm #Time').attr("value", audit.Time);
+	$('#auditForm #Time #dropdownMenuButton').html(audit.Time);
+	$('#auditForm #User').attr("value", audit.User);
+	$('#auditForm #User #dropdownMenuButton').html(audit.User);
+	$('#auditForm #NoteComment').attr("value", audit.NoteComment);
+	$('#auditForm #NoteComment #dropdownMenuButton').html(audit.NoteComment);
+	$('#auditForm #InceptionDate').attr("value", audit.InceptionDate);
+	$('#auditForm #InceptionDate #dropdownMenuButton').html(audit.InceptionDate);
+	$('#auditForm #LastValidationDate').attr("value", audit.LastValidationDate);
+	$('#auditForm #LastValidationDate #dropdownMenuButton').html(audit.LastValidationDate);
+	$('#auditForm #FirstValidationBy').attr("value", audit.FirstValidationBy);
+	$('#auditForm #FirstValidationBy #dropdownMenuButton').html(audit.FirstValidationBy);
+	$('#auditForm #SecondValidationBy').attr("value", audit.SecondValidationBy);
+	$('#auditForm #SecondValidationBy #dropdownMenuButton').html(audit.SecondValidationBy);
+	$('#auditForm #OwnedByGroup').attr("value", audit.OwnedByGroup);
+	$('#auditForm #OwnedByGroup #dropdownMenuButton').html(audit.OwnedByGroup);
+	
+	$('#auditForm #ApplicableScript').attr("value", audit.ApplicableScript);
+	$('#auditForm #ApplicableScript #dropdownMenuButton').html(audit.ApplicableScript);
+	$('#auditForm #AuditScript').attr("value", audit.AuditScript);
+	$('#auditForm #AuditScript #dropdownMenuButton').html(audit.AuditScript);
+	$('#auditForm #ReturnPos').attr("value", audit.ReturnPos);
+	$('#auditForm #ReturnPos #dropdownMenuButton').html(audit.ReturnPos);
+	$('#auditForm #MISMOPath').attr("value", audit.MISMOPath);
+	$('#auditForm #MISMOPath #dropdownMenuButton').html(audit.MISMOPath);
+	$('#auditForm #WebsheetPath').attr("value", audit.WebsheetPath);
+	$('#auditForm #WebsheetPath #dropdownMenuButton').html(audit.WebsheetPath);
+	$('#auditForm #FieldName').attr("value", audit.FieldName);
+	$('#auditForm #FieldName #dropdownMenuButton').html(audit.FieldName);
+
+	$('#auditForm #DataType').attr("value", audit.DataType);
+	$('#auditForm #DataType #dropdownMenuButton').html(audit.DataType);
+	$('#auditForm #DataFormat').attr("value", audit.DataFormat);
+	$('#auditForm #DataFormat #dropdownMenuButton').html(audit.DataFormat);
+	$('#auditForm #RequiredField').attr("value", audit.RequiredField);
+	$('#auditForm #RequiredField #dropdownMenuButton').html(audit.RequiredField);
+	$('#auditForm #MessageText').attr("value", audit.MessageText);
+	$('#auditForm #MessageText #dropdownMenuButton').html(audit.MessageText);
+	$('#auditForm #ListSource').attr("value", audit.ListSource);
+	$('#auditForm #ListSource #dropdownMenuButton').html(audit.ListSource);
 
 	$(".dropdown-menu a").click(function () {
 
