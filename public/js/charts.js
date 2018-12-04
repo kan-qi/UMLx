@@ -105,7 +105,7 @@ function display()
                     var img_link = response[i]['dist chart path'].substring(7,response[i]['dist chart path'].length);
                     $('.modal-body').html('<img src="' + img_link + '">');
                     document.getElementById("mytable").innerHTML +=  "<tr align='center'><td>"+response[i]["column name"] +"</td><td>" + response[i].statistics.mean + "</td><td>" +  response[i].statistics.variance + "</td><td>" +  response[i].statistics.first_quartile + "</td><td>" +  response[i].statistics.median + "</td><td>" + response[i].statistics.third_quartile + "</td><td>" + response[i].statistics.kurtosis 
-                    + "</td><td><input type='image' onclick = 'showModalDetails(\"" + img_link + "\");return false;' value='Display Chart' src='img/display_btn.png'> <input type='image' class='table-button' onclick='showDistributionChart(\"" + url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal1' + "\",\"" + '#model1-body' +"\");return false;' src='img/dist_btn.png' value=''> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>";
+                    + "</td><td><input type='image' class='table-button' onclick = 'showModalDetails(\"" + img_link + "\");return false;' value='Display Chart' src='img/display_btn.png'> <input type='image' class='table-button' onclick='showDistributionChart(\"" + url1 + "\",\"" + response[i]["column name"] + "\",\"" + '#myModal1' + "\",\"" + '#model1-body' +"\");return false;' src='img/dist_btn.png' value=''> <input type='checkbox' name='checkbox' value=\"" + response[i]["column name"] + "\"></td></tr>";
             }
             document.getElementById("details").innerHTML += "</form>";
        },

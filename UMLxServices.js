@@ -22,7 +22,7 @@ var MongoClient = mongo.MongoClient;
 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
-var download = require('download');w
+var download = require('download');
 const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
 
