@@ -93,6 +93,60 @@ app.get('/kdmModelRecoverPage',function(req,res){
 	res.render('kdmModelRecoverPage');
 });
 
+app.post('/genKDM', upload.fields([{ name: 'workingDir', maxCount: 1 }]), function(req,res){
+	console.log(req);
+	
+	var workingDir = "public/"+req.body['workingDir'];
+
+	console.log(workingDir);
+			
+			var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel4;
+			// var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel2;
+
+			// var workingDir = path.dirname(projectZipFilePath);
+
+			fs.readdir(workingDir, function(err, files) {
+
+				if (files.indexOf(".project") === -1) {
+								return;
+				}
+
+				// files.forEach(function(filename) {
+					
+			        // console.log(workingDir + "/" + filename);
+
+					// fs.lstat(workingDir + "/" + filename, function(err, stats) {
+					// 	if(err) {
+					// 		return console.log(err);
+					// 	}
+
+						// if (!stats.isDirectory()) {
+						// 	return;
+						// }
+
+
+						// fs.readdir(workingDir + "/" + filename, function(err, files) {
+						// 	if (err) {
+						// 		return console.log(err);
+						// 	}
+
+							// the directory must contain ".project" file to proceed
+							
+
+							generateKDMModel4(workingDir, function(err, resultPath) {
+								if (err) {
+									return console.log(err);
+								}
+
+								console.log("KDM Complete:", resultPath);
+								res.end("success");
+							});
+						// });
+					// });
+				// });
+});
+});
+
 app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 }]), function(req,res){
 	console.log(req);
 	
@@ -246,8 +300,8 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	});
 });
 
-console.l = console.log;
-console.log = function() {};
+// console.l = console.log;
+// console.log = function() {};
 
 app.get('/signup',function(req,res){
 
@@ -1584,13 +1638,44 @@ app.get('/getZipPackage', function (req, res){
 	});	
 });
 
-app.post('/submitSelectedArchives', function (req, res) {
+app.post('/analyseSLOC', function (req, res) {
 	var archives = req.body.archives;
 	archives = JSON.parse(archives);
+
+	console.log(req.body.workingDir);
+
+	var workingDir = "public/"+req.body.workingDir;
+	
+	var analyseSLOC = require('./utils/RepoAnalyzerUtil').analyseSLOC;
+
+	var filePaths = "";
+	var appRoot = path.dirname(require.main.filename);
+
 	console.log("Submitted archives: ");
 	for (var i = 0; i < archives.length; i++) {
 		console.log(archives[i]);
+		filePaths += appRoot+"/public/"+archives[i];
+		if(i != archives.legnth - 1){
+			filePaths += "\n";
+		}
 	}
+
+	var writeFile = require('./utils/FileManagerUtil').writeFileSync;
+	
+	var outputFilePath = workingDir+"/fileList.txt";
+	
+	writeFile(outputFilePath, filePaths);
+	
+	console.log("hello");
+	analyseSLOC(outputFilePath, workingDir, function(result){
+        if(result){
+			console.log(result);
+		}
+		else{
+			console.log("error in analysing SLOC");
+		}
+	});
+
 });
 
 //

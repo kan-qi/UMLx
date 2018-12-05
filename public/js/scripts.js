@@ -2457,6 +2457,7 @@ var dirLink = "public";
 var clickValue;
 var backLink;
 var level = 0;
+var fileFolder = "";
 function createDir(get) {
     level = 0;
     walkDir(get);
@@ -2467,6 +2468,18 @@ function walkDir(get) {
     console.log("test", fileFolder);
     data_type = $(get).data('type');
     level++;
+
+    $.ajax({
+        type: 'GET',
+        url: 'listFileUnderDir?fileFolder=public/' + fileFolder,
+        success: function (data) {
+            buildTable(data);
+        }
+    }); 
+
+}
+
+function refresh() {
 
     $.ajax({
         type: 'GET',
@@ -2641,8 +2654,11 @@ function buildTable(data) {
             }
         }
         out += "</table>";
-        out += "<div id='submitArchivesButton'><button class='btn btn-success' type='button' name='project' onclick='" + "submitSelectedArchives(this)" + "'>" + "Submit" + "</button>";
+        out += "<div id='submitArchivesButton'><button class='btn btn-success' type='button' name='project' onclick='" + "refresh()" + "'>" + "Refresh" + "</button>";
         out += "<button class='btn btn-default' type='button' name='project' onclick='" + "clearSelectedArchives(this)" + "'>" + "Clear" + "</button></div>"
+        out += "<button class='btn btn-default' type='button' name='project' onclick='" + "analyseSLOC(this)" + "'>" + "SLOC" + "</button></div>"
+        out += "<button class='btn btn-default' type='button' name='project' onclick='" + "genKDM(this)" + "'>" + "Gen KDM" + "</button></div>"
+        out += "<button class='btn btn-default' type='button' name='project' onclick='" + "analyseEffort(this)" + "'>" + "Analyse Effort" + "</button></div>"
         //console.log("Data");
         //console.log(data);
         // console.log("out");
@@ -2835,7 +2851,27 @@ function onCheckboxChange(checkboxElem) {
     }
 }
 
-function submitSelectedArchives(e) {
+// function submitSelectedArchives(e) {
+//     // var cbs = $("#displayRepoArchive input:checkbox:checked");
+//     // var archives = [];
+//     // for (var i = 0; i < cbs.length; i++) {
+//     //     archives.push(cbs[i].name);
+//     // }
+//     const curSelectArchives = e.name === 'root' ? rootSelectedArchives : projectSelectedArchives;
+//     $.ajax({
+//         type: 'POST',
+//         url: "submitSelectedArchives",
+//         data: {archives: JSON.stringify(curSelectArchives)},
+//         success: function (response) {
+//             console.log(response);
+//         },
+//         error: function () {
+//             console.log("fail");
+//         }
+//     });
+// }
+
+function analyseSLOC(e) {
     // var cbs = $("#displayRepoArchive input:checkbox:checked");
     // var archives = [];
     // for (var i = 0; i < cbs.length; i++) {
@@ -2844,10 +2880,32 @@ function submitSelectedArchives(e) {
     const curSelectArchives = e.name === 'root' ? rootSelectedArchives : projectSelectedArchives;
     $.ajax({
         type: 'POST',
-        url: "submitSelectedArchives",
-        data: {archives: JSON.stringify(curSelectArchives)},
+        url: "analyseSLOC",
+        data: {archives: JSON.stringify(curSelectArchives), workingDir: fileFolder},
         success: function (response) {
             console.log(response);
+        },
+        error: function () {
+            console.log("fail");
+        }
+    });
+}
+
+function genKDM(e) {
+    // var cbs = $("#displayRepoArchive input:checkbox:checked");
+    // var archives = [];
+    // for (var i = 0; i < cbs.length; i++) {
+    //     archives.push(cbs[i].name);
+    // }
+    // var fileFolder = $(e).data('url');
+    $.ajax({
+        type: 'POST',
+        url: "genKDM",
+        data: {workingDir: fileFolder},
+        success: function (response) {
+            console.log(response);
+            refresh();
+            
         },
         error: function () {
             console.log("fail");

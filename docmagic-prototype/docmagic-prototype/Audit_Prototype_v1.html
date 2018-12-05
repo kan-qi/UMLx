@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Audit Input</title>
+	<link rel="stylesheet" href="css/docmagic-style.css"></link>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"></link>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="./JavaScript/Adapter.js"></script>
+	<script type="text/javascript" src="./JavaScript/AUDIT.js"></script>
+</head>
+<body>
+	<script type="text/javascript">
+
+		function success(msg) { 
+			//console.log(data1[0]);
+          //var jsonString = data1[0];
+          var jsonPretty = JSON.stringify(msg, null, 2);
+          console.log(jsonPretty);
+
+          $('#results').text(jsonPretty);
+          console.log(msg);
+      }
+		function error(msg) { 
+		  //alert(msg)
+		  //var jsonString = data1[0];
+          var jsonPretty = JSON.stringify(msg, null, 2);
+          //console.log(jsonPretty)
+          //document.body.innerHTML += JSON.stringify(xhr,null,10)
+          //document.body.innerHTML = jsonPretty
+          //console.log(xhr);
+			console.log(msg); 
+			$('#results').text(jsonPretty);
+		}
+
+		// READ ================================================================
+		// ReadMany
+		// Return: Array
+		function readAudit(){
+		audit.read({}, success, error)
+		return false;
+		}
+
+		function displayAudits(){
+		audit.read({}, function(audits){
+				//console.log(data1[0]);
+          //var jsonString = data1[0];
+          var jsonPretty = JSON.stringify(audits, null, 2);
+          console.log(jsonPretty)
+          //document.body.innerHTML += JSON.stringify(xhr,null,10)
+          //document.body.innerHTML = jsonPretty
+          //console.log(xhr);
+
+
+			var tableStr = "<table style=\"width:90%; margin:auto\" class=\"table\">";
+			tableStr += "<tr>";
+				tableStr += "<th scope=\"col\" style=\"text-align:center;\">";
+				tableStr += "ID";
+				tableStr += "</th>";
+				tableStr += "<th scope=\"col\" style=\"text-align:center;\">";
+				tableStr += "Description";
+				tableStr += "</th>";
+				tableStr += "<th scope=\"col\" style=\"text-align:center;\">";
+				tableStr += "Edit";
+				tableStr += "</th>";
+				tableStr += "<th scope=\"col\" style=\"text-align:center;\">";
+				tableStr += "Delete";
+				tableStr += "</th>";
+			for(var i in audits){
+				var audit = audits[i];
+				tableStr += "<tr>";
+				tableStr += "<td scope=\"col\" style=\"text-align:center;\">";
+				tableStr += Number(i)+1;
+				tableStr += "</td>";
+					tableStr += "<td scope=\"col\" style=\"text-align:center;\">";
+				tableStr += audits[i].Description;
+				tableStr += "</td>";
+				tableStr += "<td scope=\"col\" style=\"text-align:center;\">";
+				tableStr += '<button class="btn btn-light" onclick="displayUpdateAuditForm(\''+audits[i]._id+'\');">';
+				tableStr += "Edit";
+				tableStr += "</button>";
+				tableStr += "</td>";
+					tableStr += "<td scope=\"col\" style=\"text-align:center;\">";
+					tableStr += '<button class="btn btn-light" onclick="deleteAuditByID(\''+audits[i]._id+'\');">';
+				tableStr += "Delete";
+				tableStr += "</button>";
+				tableStr += "</td>";
+				tableStr += "</tr>";
+			}
+			tableStr += "</table>";
+ 		  
+ 		  $('#results').html(tableStr);	
+
+
+		}, error)
+
+		}
+
+		//setup
+		audit = AUDIT;
+		displayAudits();
+
+		// Read one via id
+		// Return: Object
+		// audit.get("5bb5e8b8467ec74b5ec111f7", success, error);
+
+		// CREATE ==============================================================
+		// Ceate one
+		function createAudit(){
+
+		// var websheet_model_id = $('#auditForm input[name=websheet_model_id]').val();
+		var Description = $('#auditForm input[name=Description]').val();
+		var AuditLogic = $('#auditForm input[name=AuditLogic]').val();
+		var LoanTypes = $('#auditForm input[name=LoanTypes]').val();
+		var ApplicableLogic = $('#auditForm input[name=ApplicableLogic]').val();
+		var Category = $('#auditForm div[id=Category] .btn:first-child').val();
+		var DetailsURL = $('#auditForm input[name=DetailsURL]').val();
+		var LockAudit = $('#auditForm input[id=LockAudit]').is(":checked")?"true":"false";
+		// var LockAudit = $('#auditForm input[name=LockAudit]').val();
+		var MessageCmd = $('#auditForm input[name=MessageCmd]').val();
+		var States = $('#auditForm input[name=States]').val();
+
+		
+		audit.create(
+							{
+							    "Description": Description,
+						        "AuditLogic": AuditLogic,
+						        "LoanTypes": LoanTypes,
+						        "ApplicableLogic": ApplicableLogic,
+						        "Category": Category,
+						        "DetailsURL": DetailsURL,
+						        "LockAudit": LockAudit,
+						        "MessageCmd": MessageCmd,
+						        "States": States
+							}, 
+							function (msg) { 
+			//console.log(data1[0]);
+          //var jsonString = data1[0];
+          var jsonPretty = JSON.stringify(msg, null, 2);
+          console.log(jsonPretty);
+          //console.log(xhr);
+
+          if(msg.result.ok){
+          	alert("an audit is created")
+          }
+          else{
+          	alert("error")
+          }
+
+          //$('#results').text(jsonPretty);
+		displayAudits();
+
+          console.log(msg);
+      }, error); 
+
+		return false;
+		}
+
+		// Delete by id
+		function deleteAuditByID(_id){
+
+		//var _id = $('#auditForm input[name=_id]').val();
+
+		console.log(_id)
+
+		if(!_id){
+			alert("error")
+			return;
+		}
+
+		audit.delete(	
+						{ 
+							"_id": _id
+
+						}, 
+							function(msg){
+								console.log(msg)
+								if(msg.result && msg.result.ok){
+							displayAudits();
+							alert("delete succeeded");
+						}
+						else{
+							alert("delete failed");
+						}
+							}, error);
+		return false;
+		}
+
+		// set =================================================================
+		// Replace the a single document
+		function replaceAudit(){
+		var _id = $('#replaceAuditForm input[name=_id]').val();
+
+		//var websheet_model_id = $('#replaceAuditForm input[name=websheet_model_id]').val();
+		var Description = $('#replaceAuditForm input[name=Description]').val();
+		var AuditLogic = $('#replaceAuditForm input[name=AuditLogic]').val();
+		var LoanTypes = $('#replaceAuditForm input[name=LoanTypes]').val();
+		var ApplicableLogic = $('#replaceAuditForm input[name=ApplicableLogic]').val();
+		var Category = $('#replaceAuditForm div[id=Category] .btn:first-child').val();
+		var DetailsURL = $('#replaceAuditForm input[name=DetailsURL]').val();
+		var LockAudit = $('#replaceAuditForm input[id=LockAudit]').is(":checked")?"true":"false";
+		//var LockAudit = $('#replaceAuditForm input[name=LockAudit]').val();
+		var MessageCmd = $('#replaceAuditForm input[name=MessageCmd]').val();
+		var States = $('#replaceAuditForm input[name=States]').val();
+
+
+		audit.set(_id, 
+					{
+						//"websheet_model_id": websheet_model_id,
+						        "Description": Description,
+						        "AuditLogic": AuditLogic,
+						        "LoanTypes": LoanTypes,
+						        "ApplicableLogic": ApplicableLogic,
+						        "Category": Category,
+						        "DetailsURL": DetailsURL,
+						        "LockAudit": LockAudit,
+						          "MessageCmd": MessageCmd,
+						          "States": States
+					}, 
+					success, error);
+		return false;
+		}
+
+		function displayUpdateAuditForm(_id){
+		audit.read(
+							{
+								_id:_id,
+							}, 
+							loadUpdateAudit, error);
+		}
+
+		// update ==============================================================
+		// modify the specific fileds
+		function updateAudit(){
+
+
+		var _id = $('#auditForm input[name=_id]').val();
+
+		if(!_id){
+			console.log("please create/select audit first!")
+			alert("please select audit by clicking edit button for updating!")
+			return;
+		}
+
+		console.log(_id)
+
+		//var websheet_model_id = $('#auditForm input[name=websheet_model_id]').val();
+		var Description = $('#auditForm input[name=Description]').val();
+		var AuditLogic = $('#auditForm input[name=AuditLogic]').val();
+		var LoanTypes = $('#auditForm div[id=Category] .btn:first-child').val();
+		var ApplicableLogic = $('#auditForm input[name=ApplicableLogic]').val();
+		var Category = $('#auditForm div[id=Category] .btn:first-child').val();
+		var DetailsURL = $('#auditForm input[name=DetailsURL]').val();
+		// var LockAudit = $('#auditForm input[name=LockAudit]').val();
+		var LockAudit = $('#auditForm input[id=LockAudit]').is(":checked")?"true":"false";
+		var MessageCmd = $('#auditForm input[name=MessageCmd]').val();
+		var States = $('#auditForm input[name=States]').val();
+
+
+		audit.update(_id, 
+					{
+						//"websheet_model_id": websheet_model_id,
+						        "Description": Description,
+						        "AuditLogic": AuditLogic,
+						        "LoanTypes": LoanTypes,
+						        "ApplicableLogic": ApplicableLogic,
+						        "Category": Category,
+						        "DetailsURL": DetailsURL,
+						        "LockAudit": LockAudit,
+						          "MessageCmd": MessageCmd,
+ 							       "States": States
+					}, 
+					function (msg){
+						if(msg.result && msg.result.ok){
+							displayAudits();
+							alert("update succeeded");
+						}
+						else{
+							alert("update failed");
+						}
+					}, error);
+		return false;
+		}
+
+		function loadUpdateAudit(msg){
+	console.log(msg[0])
+	var audit = msg[0];
+	if(!audit){
+		alert("error");
+		return false;
+	}
+
+        $('#auditForm #_id').attr("value", audit._id);
+		$('#auditForm #_id').attr("placeholder", audit._id);
+		$('#auditForm #Description').attr("value", audit.Description);
+		$('#auditForm #Description').attr("placeholder", audit.Description);
+		$('#auditForm #AuditLogic').attr("value", audit.AuditLogic);
+		$('#auditForm #AuditLogic').attr("placeholder", audit.AuditLogic);
+		$('#auditForm #LoanTypes').attr("value", audit.LoanTypes);
+		$('#auditForm #LoanTypes').attr("placeholder", audit.LoanTypes);
+		$('#auditForm #ApplicableLogic').attr("value", audit.ApplicableLogic);
+		$('#auditForm #ApplicableLogic').attr("placeholder", audit.ApplicableLogic);
+		$('#auditForm #Catetory').attr("value", audit.Category);
+		$('#auditForm #Category #dropdownMenuButton').html(audit.Category);
+		$('#auditForm #DetailsURL').attr("value", audit.DetailsURL);
+		$('#auditForm #DetailsURL').attr("placeholder", audit.DetailsURL);
+		$('#auditForm #LockAudit').attr("value", audit.LockAudit);
+		audit.LockAudit?$('#auditForm #LockAudit').attr("checked"):$('#auditForm #LockAudit').removeAttr("checked");
+		$('#auditForm #MessageCmd').attr("value", audit.MessageCmd);
+		$('#auditForm #MessageCmd').attr("placeholder", audit.MessageCmd);
+		$('#auditForm #States').attr("value", audit.States);
+		$('#auditForm #States').attr("placeholder", audit.States);
+
+			
+    $(".dropdown-menu a").click(function(){
+
+      $(this).closest(".dropdown").find(".btn:first-child").text($(this).text());
+       $(this).closest(".dropdown").find(".btn:first-child").val($(this).text());
+
+   });
+
+		}
+
+
+	</script>
+
+  <div class="row equal h-100" style="width:95%;height: 98%; margin: 15px auto">
+  <!-- <div id="left-col" class="col-md-4 pr-md-2"> -->
+  <div style="width:65%;float:left; height: 100%; padding: 15px" class="card">
+  	<!-- <div style="margin: 3px">Request:</div> -->
+  	<div style="margin: 3px" id="container">
+  		<form style="margin: auto; width: 90%; margin-top: 10px" id="auditForm" onSubmit="return false"><input class="form-control" type="hidden" id="_id" name="_id" value="">
+  		<table id="auditFormTable" style="height:100%">
+  			<tbody>
+  			<tr>
+  			<td colspan="2">
+		<label for="Description">Description:</label><input class="form-control" type="text" id="Description" name="Description" value=""><br> 
+	</td>
+</tr>
+<tr>
+  <td colspan="2">
+		<label for="Notes">Notes:</label><input class="form-control" type="text" id="Notes" name="Notes" value=""><br> 
+	</td>
+</tr>
+<tr>
+<tr>
+	<td>
+		<!-- start with category -->	
+		<div style="padding-top:5px; padding-bottom: 5px" id="LoanTypes">
+		<label for="LoanTypes">Loan Types:</label>
+ <div class="dropdown" style="display:inline; margin: auto;">
+  <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="LoanTypesButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Loan Type(s)
+  </button>
+  <div class="dropdown-menu" aria-labelledby="LoanTypesButton">
+    <a class="dropdown-item" href="#">1. APP APPLICATION</a>
+    <a class="dropdown-item" href="#">2. ADW ADVANCEMENT</a>
+    <a class="dropdown-item" href="#">3. CON CONSTRUCTION</a>
+    <a class="dropdown-item" href="#">4. CONTP CONSTRUCTION TO PERM</a>
+    <a class="dropdown-item" href="#">5. DOW CONVENTIONAL</a>
+    <a class="dropdown-item" href="#">6. E EDUCATION</a>
+    <a class="dropdown-item" href="#">7. FHA FHA</a>
+    <a class="dropdown-item" href="#">8. FHAT1 FHA TITLE 1</a>
+    <a class="dropdown-item" href="#">9. HEDM HOME EQUITV CONVERSION MORTAGE</a>
+    <a class="dropdown-item" href="#">10. Q QTHEP</a>
+    <a class="dropdown-item" href="#">11. USDA</a>
+    <a class="dropdown-item" href="#">12. A</a>
+  </div>
+</div>
+</div><br>
+	</td>
+	<td>
+
+<!-- start with category -->	
+<div style="padding-top:5px; padding-bottom: 5px" id="States">
+<label for="States">States:</label>
+ <div class="dropdown" style="display:inline; margin: auto;">
+  <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="StatesButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    States
+  </button>
+  <div class="dropdown-menu scrollable-menu" aria-labelledby="StatesButton">
+    <a class="dropdown-item" href="#">1. H HWTSTATES</a>
+    <a class="dropdown-item" href="#">2. H US-STATE-SPECIFIC</a>
+    <a class="dropdown-item" href="#">3. HK ALASKA</a>
+    <a class="dropdown-item" href="#">4. AK9 THE STATE OF ALASKA</Ca>
+    <a class="dropdown-item" href="#">5. AL ALABAMA</a>
+    <a class="dropdown-item" href="#">6. ALL ALL STATES</a>
+    <a class="dropdown-item" href="#">7. ALB THE STATE OF ALABAMA</a>
+    <a class="dropdown-item" href="#">8. AM THE UNITED STATES OF AMERICA</a>
+    <a class="dropdown-item" href="#">9. AP ARMED FORCES PACIFIC</a>
+    <a class="dropdown-item" href="#">10. AR ARKANSAS</a>
+    <a class="dropdown-item" href="#">11. ARS THE STATE OF ARKANSAS</a>
+    <a class="dropdown-item" href="#">12. AS AMERICAN SAMOA</a>
+    <a class="dropdown-item" href="#">13. AU AUSTRALIA</a>
+    <a class="dropdown-item" href="#">14. AZ ARIZONA</a>
+    <a class="dropdown-item" href="#">15. AZS THE STATE OF ARIZONA</a>
+    <a class="dropdown-item" href="#">16. BRITISH COLUMBIA</a>
+    <a class="dropdown-item" href="#">17. BK BANGKOK</a>
+    <a class="dropdown-item" href="#">18. BS BAHAMAS</a>
+    <a class="dropdown-item" href="#">19. BW BRITISH WEST INDIES</a>
+    <a class="dropdown-item" href="#">20. CA CALIFRONIA</a>
+    <a class="dropdown-item" href="#">21. CAB THE STATE OF CALIFORNIA</a>
+    <a class="dropdown-item" href="#">22. CI CAYMAN ISLANDS</a>
+    <a class="dropdown-item" href="#">23. CMA COMMONWEALTH OF MASSACHUSETTS</a>
+    <a class="dropdown-item" href="#">24. CO COLORADO</a>
+    <a class="dropdown-item" href="#">25. COOK COOK COUNTY</a>
+    <a class="dropdown-item" href="#">26. COS THE STATE OF COLORADO</a>
+    <a class="dropdown-item" href="#">27. CO COLORADO</a>
+    <a class="dropdown-item" href="#">28. COOK COOK COUNTY</a>
+    <a class="dropdown-item" href="#">29. COS THE STATE OF COLORADO</a>
+    <a class="dropdown-item" href="#">30. CPA COMMONWEALTH OF PENNSYLVANIA</a>
+    <a class="dropdown-item" href="#">31. CT CONNECTICUT</a>
+    <a class="dropdown-item" href="#">32. CTS THE STATE OF CONNECTICUT</a>
+    <a class="dropdown-item" href="#">33. CVA THE COMMONWEALTH OF VIRGINIA</a>
+    <a class="dropdown-item" href="#">34. DISTRICT OF COLUMBIA</a>
+    <a class="dropdown-item" href="#">35. DELAWARE</a>
+    <a class="dropdown-item" href="#">36. THE STATE OF DELAWARE</a>
+    <a class="dropdown-item" href="#">37. ES EL SALYADOR</a>
+    <a class="dropdown-item" href="#">38. FANNIE FANNIE MAE (LIKE $32)</a>
+    <a class="dropdown-item" href="#">39. FCU US FEDERA CREDIT UNION ACT</a>
+    <a class="dropdown-item" href="#">40. FL FLORIDA</a>
+  </div>
+</div>
+</div><br> 
+	</td>
+</tr>
+<td>
+<!-- start category -->
+		<div style="padding-top:5px; padding-bottom: 5px" id="Severity">
+		<label for="Severity">Severity:</label>
+ <div class="dropdown" style="display:inline; margin: auto;">
+  <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="serverityButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Serverity
+  </button>
+  <div class="dropdown-menu" aria-labelledby="serverityButton">
+    <a class="dropdown-item" href="#">W: Warning</a>
+    <a class="dropdown-item" href="#">F: Fatal</a>
+    <a class="dropdown-item" href="#">N: None(disable)</a>
+  </div>
+</div>
+<!-- end category -->
+</td>
+<td>
+
+<!-- start category -->
+		<div style="padding-top:5px; padding-bottom: 5px" id="LoanStages">
+		<label for="LoanStages">Loan Stages:</label>
+ <div class="dropdown" style="display:inline; margin: auto;">
+  <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="LoanStagesButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Loan Stages
+  </button>
+  <div class="dropdown-menu" aria-labelledby="LoanStagesButton">
+    <a class="dropdown-item" href="#">Application: Application</a>
+    <a class="dropdown-item" href="#">Closing: closing</a>
+    <a class="dropdown-item" href="#">Disclosure: Disclosure</a>
+    <a class="dropdown-item" href="#">PostClosing: Post Closing</a>
+    <a class="dropdown-item" href="#">PreClosing: Pre-Closing</a>
+    <a class="dropdown-item" href="#">Verification: Verification</a>
+  </div>
+</div>
+<!-- end category -->
+</div><br> 
+</td>
+</tr>
+<tr>
+<td colspan="2">
+		<label for="RepeatOnField">Repeat on Field:</label><input class="form-control" type="text" id="RepeatOnField" name="RepeatOnField" value=""><br> 
+		<!-- <label for="Category">Category:</label><input class="form-control" type="text" id="Category" name="Category" value=""><br>  -->
+</td>
+</tr>
+<tr>
+<td colspan="2">
+		<label for="ApplicableLogic">Applicable Logic:</label><input class="form-control" type="text" id="ApplicableLogic" name="ApplicableLogic" value=""><br> 
+		<!-- <label for="Category">Category:</label><input class="form-control" type="text" id="Category" name="Category" value=""><br>  -->
+</td>
+</tr>
+<tr>
+<td colspan="2">
+
+		<label for="AuditLogic">Audit Logic:</label><input class="form-control" type="text" id="AuditLogic" name="AuditLogic" value=""><br>
+<!-- end with category -->
+</td>
+</tr>
+<tr>
+<td colspan="2">
+
+		<label for="MessageCmd">Message Cmd:</label><input class="form-control" type="text" id="MessageCmd" name="MessageCmd" value=""><br> 
+
+</td>
+</tr>
+<tr>
+<td colspan="2">
+		<label for="DetailsURL">Details URL:</label><input class="form-control" type="text" id="DetailsURL" name="DetailsURL" value=""><br> 
+		<!-- <label for="LockAudit">Lock Audit:</label><input class="form-control" type="text" id="LockAudit" name="LockAudit" value=""><br>  -->
+</td>
+</tr>
+<tr>
+<td>
+  <div class="form-check" style="margin-left:20px; margin-top:5px; margin-bottom:5px">
+    <input type="checkbox" class="form-check-input" id="IncludeUponPossing">
+    <label class="form-check-label" for="IncludeUponPossing">Include Upon Possing?</label>
+  </div><br> 
+</td>
+<td>
+		<!-- start category -->
+		<div style="padding-top:5px; padding-bottom: 5px" id="Category">
+		<label for="Category">Category:</label>
+ <div class="dropdown" style="display:inline; margin: auto;">
+  <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Catetory
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">ATR_TESTING: Test AbilityToReplay</a>
+    <a class="dropdown-item" href="#">AbilityToPay: AbilityToReplay</a>
+    <a class="dropdown-item" href="#">Custom: Custom</a>
+    <a class="dropdown-item" href="#">DataValidation: Data Validation</a>
+    <a class="dropdown-item" href="#">Federal: Federal Audits</a>
+    <a class="dropdown-item" href="#">FederalAudits: Federal Audits</a>
+    <a class="dropdown-item" href="#">FreeExtended: Free Basic Extended Audits</a>
+    <a class="dropdown-item" href="#">GSE: GSE</a>
+    <a class="dropdown-item" href="#">HC: Hard-Coded Audit</a>
+    <a class="dropdown-item" href="#">HighCost: High Cost</a>
+    <a class="dropdown-item" href="#">Integration: Integration Partner Audits</a>
+    <a class="dropdown-item" href="#">LoanType: Loan Type</a>
+    <a class="dropdown-item" href="#">State: State Specific</a>
+    <a class="dropdown-item" href="#">TRID: TILA/REPA Tolerance Audits</a>
+    <a class="dropdown-item" href="#">Test: Test</a>
+  </div>
+</div>
+<!-- end category -->
+</td>
+</tr>
+<tr>
+<td>
+  <div class="form-check" style="margin-left:20px; margin-top:5px; margin-bottom:5px">
+    <input type="checkbox" class="form-check-input" id="LockAudit">
+    <label class="form-check-label" for="LockAudit">Lock Audit</label>
+  </div><br> 
+</td>
+<td>
+<!-- start category -->
+		<div style="padding-top:5px; padding-bottom: 5px" id="SubCategory">
+		<label for="SubCategory">SubCategory:</label>
+ <div class="dropdown" style="display:inline; margin: auto;">
+  <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    SubCatetory
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">ATR_TESTING: Test AbilityToReplay</a>
+    <a class="dropdown-item" href="#">AbilityToPay: AbilityToReplay</a>
+    <a class="dropdown-item" href="#">Custom: Custom</a>
+    <a class="dropdown-item" href="#">DataValidation: Data Validation</a>
+    <a class="dropdown-item" href="#">Federal: Federal Audits</a>
+    <a class="dropdown-item" href="#">FederalAudits: Federal Audits</a>
+    <a class="dropdown-item" href="#">FreeExtended: Free Basic Extended Audits</a>
+    <a class="dropdown-item" href="#">GSE: GSE</a>
+    <a class="dropdown-item" href="#">HC: Hard-Coded Audit</a>
+    <a class="dropdown-item" href="#">HighCost: High Cost</a>
+    <a class="dropdown-item" href="#">Integration: Integration Partner Audits</a>
+    <a class="dropdown-item" href="#">LoanType: Loan Type</a>
+    <a class="dropdown-item" href="#">State: State Specific</a>
+    <a class="dropdown-item" href="#">TRID: TILA/REPA Tolerance Audits</a>
+    <a class="dropdown-item" href="#">Test: Test</a>
+  </div>
+</div>
+<!-- end category -->
+  </div>
+</div>
+<!-- end category -->
+</td>
+</tr>
+<tr>
+<td>
+  <div class="form-check" style="margin-left:20px; margin-top:5px; margin-bottom:5px">
+    <input type="checkbox" class="form-check-input" id="HardCoded">
+    <label class="form-check-label" for="HardCoded">Hard Coded?</label>
+  </div><br> 
+</td>
+<td>
+<label for="JiraIssue">Jira Issue#:</label><input class="form-control" type="text" id="JiraIssue" name="JiraIssue" value=""><br>
+</td>
+</tr>
+<tr>
+<td>
+		<button class="btn btn-light" type="submit" onclick="javascript:createAudit()">Create</button> 
+</td>
+<td>
+		<button class="btn btn-light" type="submit" onclick="javascript:updateAudit()">Update</button>
+</td>
+</tr>
+</tbody>
+</table>
+       </form>
+  	</div>
+  </div>
+<!-- </div> -->
+ <!-- <div id="right-col" class="col-md-9 pl-md-4"> -->
+  <div style="width:30%;float:left; padding: 15px; overflow:scroll; max-height:1123px"  class="card">
+<!--   	<div style="margin: 3px">Results:</div> -->
+  	<div style="margin: auto; width: 95%; margin-top: 10px" id="results"></div>
+  </div>
+ <!-- </div> -->
+  <div style="clear:both"></div>
+  </div>
+
+<script type="text/javascript">
+		 $(function(){
+
+    $(".dropdown-menu a").click(function(){
+
+      $(this).closest(".dropdown").find(".btn:first-child").text($(this).text());
+       $(this).closest(".dropdown").find(".btn:first-child").val($(this).text());
+
+   });
+
+});
+		 
+</script>
+</body>
+</html>

@@ -8,11 +8,11 @@ if estimationResults
         thead
           tr
             th Model
-            th Effort (PH)
+            th Effort
             th Schedule (Months)
             th PH/Month
             th #{estimationResults.SizeMetric}
-            th Personnel (FT Developers)
+            th Personnel (Developers)
         tbody
           tr.estimation-table
             td #{estimationResults.EstimationModel}
@@ -29,10 +29,10 @@ if estimationResults
         tr
           th#number_column Number
           th#Use_Case Use Case
-          th#EffortPH Effort (PH)
+          th#EffortPH Effort
           th#SizeMeasurement #{estimationResults.SizeMetric}
           th#Duration Schedule (Months)
-          th#Personnel Personnel (FT Developers)
+          th#Personnel Personnel (Developers)
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
             tr.estimation-table
@@ -44,5 +44,4 @@ if estimationResults
               td #{estimationResults.UseCases[i].Personnel}
         - }
 
-a(href='/getZipPackage?repo_id=#{modelInfo.repo_id}&model_id=#{modelInfo.fileId}') Download Package
-
+  a(href='/getZipPackage?repo_id=#{modelInfo.repo_id}&model_id=#{modelInfo.fileId}') Download Package

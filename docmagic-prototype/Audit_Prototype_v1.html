@@ -9,338 +9,27 @@
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
 	<script type="text/javascript" src="./JavaScript/Adapter.js"></script>
 	<script type="text/javascript" src="./JavaScript/AUDIT.js"></script>
+    <script type="text/javascript" src="./js/dm.script.js"></script>
+
 </head>
 <body>
-	<script type="text/javascript">
-
-		function success(msg) { 
-			//console.log(data1[0]);
-          //var jsonString = data1[0];
-          var jsonPretty = JSON.stringify(msg, null, 2);
-          console.log(jsonPretty);
-
-          $('#results').text(jsonPretty);
-          console.log(msg);
-      }
-		function error(msg) { 
-		  //alert(msg)
-		  //var jsonString = data1[0];
-          var jsonPretty = JSON.stringify(msg, null, 2);
-          //console.log(jsonPretty)
-          //document.body.innerHTML += JSON.stringify(xhr,null,10)
-          //document.body.innerHTML = jsonPretty
-          //console.log(xhr);
-			console.log(msg); 
-			$('#results').text(jsonPretty);
-		}
-
-		// READ ================================================================
-		// ReadMany
-		// Return: Array
-		function readAudit(){
-		audit.read({}, success, error)
-		return false;
-		}
-
-		function displayAudits(){
-		audit.read({}, function(audits){
-				//console.log(data1[0]);
-          //var jsonString = data1[0];
-          var jsonPretty = JSON.stringify(audits, null, 2);
-          console.log(jsonPretty)
-          //document.body.innerHTML += JSON.stringify(xhr,null,10)
-          //document.body.innerHTML = jsonPretty
-          //console.log(xhr);
-
-
-			var tableStr = "<table style=\"width:90%; margin:auto\" class=\"table\">";
-			tableStr += "<tr>";
-				tableStr += "<th scope=\"col\" style=\"text-align:center;\">";
-				tableStr += "ID";
-				tableStr += "</th>";
-				tableStr += "<th scope=\"col\" style=\"text-align:center;\">";
-				tableStr += "Description";
-				tableStr += "</th>";
-				tableStr += "<th scope=\"col\" style=\"text-align:center;\">";
-				tableStr += "Edit";
-				tableStr += "</th>";
-				tableStr += "<th scope=\"col\" style=\"text-align:center;\">";
-				tableStr += "Delete";
-				tableStr += "</th>";
-			for(var i in audits){
-				var audit = audits[i];
-				tableStr += "<tr>";
-				tableStr += "<td scope=\"col\" style=\"text-align:center;\">";
-				tableStr += Number(i)+1;
-				tableStr += "</td>";
-					tableStr += "<td scope=\"col\" style=\"text-align:center;\">";
-				tableStr += audits[i].Description;
-				tableStr += "</td>";
-				tableStr += "<td scope=\"col\" style=\"text-align:center;\">";
-				tableStr += '<button class="btn btn-light" onclick="displayUpdateAuditForm(\''+audits[i]._id+'\');">';
-				tableStr += "Edit";
-				tableStr += "</button>";
-				tableStr += "</td>";
-					tableStr += "<td scope=\"col\" style=\"text-align:center;\">";
-					tableStr += '<button class="btn btn-light" onclick="deleteAuditByID(\''+audits[i]._id+'\');">';
-				tableStr += "Delete";
-				tableStr += "</button>";
-				tableStr += "</td>";
-				tableStr += "</tr>";
-			}
-			tableStr += "</table>";
- 		  
- 		  $('#results').html(tableStr);	
-
-
-		}, error)
-
-		}
-
-		//setup
-		audit = AUDIT;
-		displayAudits();
-
-		// Read one via id
-		// Return: Object
-		// audit.get("5bb5e8b8467ec74b5ec111f7", success, error);
-
-		// CREATE ==============================================================
-		// Ceate one
-		function createAudit(){
-
-		// var websheet_model_id = $('#auditForm input[name=websheet_model_id]').val();
-		var Description = $('#auditForm input[name=Description]').val();
-		var AuditLogic = $('#auditForm input[name=AuditLogic]').val();
-		var LoanTypes = $('#auditForm input[name=LoanTypes]').val();
-		var ApplicableLogic = $('#auditForm input[name=ApplicableLogic]').val();
-		var Category = $('#auditForm div[id=Category] .btn:first-child').val();
-		var DetailsURL = $('#auditForm input[name=DetailsURL]').val();
-		var LockAudit = $('#auditForm input[id=LockAudit]').is(":checked")?"true":"false";
-		// var LockAudit = $('#auditForm input[name=LockAudit]').val();
-		var MessageCmd = $('#auditForm input[name=MessageCmd]').val();
-		var States = $('#auditForm input[name=States]').val();
-
-		
-		audit.create(
-							{
-							    "Description": Description,
-						        "AuditLogic": AuditLogic,
-						        "LoanTypes": LoanTypes,
-						        "ApplicableLogic": ApplicableLogic,
-						        "Category": Category,
-						        "DetailsURL": DetailsURL,
-						        "LockAudit": LockAudit,
-						        "MessageCmd": MessageCmd,
-						        "States": States
-							}, 
-							function (msg) { 
-			//console.log(data1[0]);
-          //var jsonString = data1[0];
-          var jsonPretty = JSON.stringify(msg, null, 2);
-          console.log(jsonPretty);
-          //console.log(xhr);
-
-          if(msg.result.ok){
-          	alert("an audit is created")
-          }
-          else{
-          	alert("error")
-          }
-
-          //$('#results').text(jsonPretty);
-		displayAudits();
-
-          console.log(msg);
-      }, error); 
-
-		return false;
-		}
-
-		// Delete by id
-		function deleteAuditByID(_id){
-
-		//var _id = $('#auditForm input[name=_id]').val();
-
-		console.log(_id)
-
-		if(!_id){
-			alert("error")
-			return;
-		}
-
-		audit.delete(	
-						{ 
-							"_id": _id
-
-						}, 
-							function(msg){
-								console.log(msg)
-								if(msg.result && msg.result.ok){
-							displayAudits();
-							alert("delete succeeded");
-						}
-						else{
-							alert("delete failed");
-						}
-							}, error);
-		return false;
-		}
-
-		// set =================================================================
-		// Replace the a single document
-		function replaceAudit(){
-		var _id = $('#replaceAuditForm input[name=_id]').val();
-
-		//var websheet_model_id = $('#replaceAuditForm input[name=websheet_model_id]').val();
-		var Description = $('#replaceAuditForm input[name=Description]').val();
-		var AuditLogic = $('#replaceAuditForm input[name=AuditLogic]').val();
-		var LoanTypes = $('#replaceAuditForm input[name=LoanTypes]').val();
-		var ApplicableLogic = $('#replaceAuditForm input[name=ApplicableLogic]').val();
-		var Category = $('#replaceAuditForm div[id=Category] .btn:first-child').val();
-		var DetailsURL = $('#replaceAuditForm input[name=DetailsURL]').val();
-		var LockAudit = $('#replaceAuditForm input[id=LockAudit]').is(":checked")?"true":"false";
-		//var LockAudit = $('#replaceAuditForm input[name=LockAudit]').val();
-		var MessageCmd = $('#replaceAuditForm input[name=MessageCmd]').val();
-		var States = $('#replaceAuditForm input[name=States]').val();
-
-
-		audit.set(_id, 
-					{
-						//"websheet_model_id": websheet_model_id,
-						        "Description": Description,
-						        "AuditLogic": AuditLogic,
-						        "LoanTypes": LoanTypes,
-						        "ApplicableLogic": ApplicableLogic,
-						        "Category": Category,
-						        "DetailsURL": DetailsURL,
-						        "LockAudit": LockAudit,
-						          "MessageCmd": MessageCmd,
-						          "States": States
-					}, 
-					success, error);
-		return false;
-		}
-
-		function displayUpdateAuditForm(_id){
-		audit.read(
-							{
-								_id:_id,
-							}, 
-							loadUpdateAudit, error);
-		}
-
-		// update ==============================================================
-		// modify the specific fileds
-		function updateAudit(){
-
-
-		var _id = $('#auditForm input[name=_id]').val();
-
-		if(!_id){
-			console.log("please create/select audit first!")
-			alert("please select audit by clicking edit button for updating!")
-			return;
-		}
-
-		console.log(_id)
-
-		//var websheet_model_id = $('#auditForm input[name=websheet_model_id]').val();
-		var Description = $('#auditForm input[name=Description]').val();
-		var AuditLogic = $('#auditForm input[name=AuditLogic]').val();
-		var LoanTypes = $('#auditForm div[id=Category] .btn:first-child').val();
-		var ApplicableLogic = $('#auditForm input[name=ApplicableLogic]').val();
-		var Category = $('#auditForm div[id=Category] .btn:first-child').val();
-		var DetailsURL = $('#auditForm input[name=DetailsURL]').val();
-		// var LockAudit = $('#auditForm input[name=LockAudit]').val();
-		var LockAudit = $('#auditForm input[id=LockAudit]').is(":checked")?"true":"false";
-		var MessageCmd = $('#auditForm input[name=MessageCmd]').val();
-		var States = $('#auditForm input[name=States]').val();
-
-
-		audit.update(_id, 
-					{
-						//"websheet_model_id": websheet_model_id,
-						        "Description": Description,
-						        "AuditLogic": AuditLogic,
-						        "LoanTypes": LoanTypes,
-						        "ApplicableLogic": ApplicableLogic,
-						        "Category": Category,
-						        "DetailsURL": DetailsURL,
-						        "LockAudit": LockAudit,
-						          "MessageCmd": MessageCmd,
- 							       "States": States
-					}, 
-					function (msg){
-						if(msg.result && msg.result.ok){
-							displayAudits();
-							alert("update succeeded");
-						}
-						else{
-							alert("update failed");
-						}
-					}, error);
-		return false;
-		}
-
-		function loadUpdateAudit(msg){
-	console.log(msg[0])
-	var audit = msg[0];
-	if(!audit){
-		alert("error");
-		return false;
-	}
-
-        $('#auditForm #_id').attr("value", audit._id);
-		$('#auditForm #_id').attr("placeholder", audit._id);
-		$('#auditForm #Description').attr("value", audit.Description);
-		$('#auditForm #Description').attr("placeholder", audit.Description);
-		$('#auditForm #AuditLogic').attr("value", audit.AuditLogic);
-		$('#auditForm #AuditLogic').attr("placeholder", audit.AuditLogic);
-		$('#auditForm #LoanTypes').attr("value", audit.LoanTypes);
-		$('#auditForm #LoanTypes').attr("placeholder", audit.LoanTypes);
-		$('#auditForm #ApplicableLogic').attr("value", audit.ApplicableLogic);
-		$('#auditForm #ApplicableLogic').attr("placeholder", audit.ApplicableLogic);
-		$('#auditForm #Catetory').attr("value", audit.Category);
-		$('#auditForm #Category #dropdownMenuButton').html(audit.Category);
-		$('#auditForm #DetailsURL').attr("value", audit.DetailsURL);
-		$('#auditForm #DetailsURL').attr("placeholder", audit.DetailsURL);
-		$('#auditForm #LockAudit').attr("value", audit.LockAudit);
-		audit.LockAudit?$('#auditForm #LockAudit').attr("checked"):$('#auditForm #LockAudit').removeAttr("checked");
-		$('#auditForm #MessageCmd').attr("value", audit.MessageCmd);
-		$('#auditForm #MessageCmd').attr("placeholder", audit.MessageCmd);
-		$('#auditForm #States').attr("value", audit.States);
-		$('#auditForm #States').attr("placeholder", audit.States);
-
-			
-    $(".dropdown-menu a").click(function(){
-
-      $(this).closest(".dropdown").find(".btn:first-child").text($(this).text());
-       $(this).closest(".dropdown").find(".btn:first-child").val($(this).text());
-
-   });
-
-		}
-
-
-	</script>
-
   <div class="row equal h-100" style="width:95%;height: 98%; margin: 15px auto">
   <!-- <div id="left-col" class="col-md-4 pr-md-2"> -->
   <div style="width:65%;float:left; height: 100%; padding: 15px" class="card">
   	<!-- <div style="margin: 3px">Request:</div> -->
-  	<div style="margin: 3px" id="container">
+    <div style="margin: 3px" id="container">
   		<form style="margin: auto; width: 90%; margin-top: 10px" id="auditForm" onSubmit="return false"><input class="form-control" type="hidden" id="_id" name="_id" value="">
-  		<table id="auditFormTable" style="height:100%">
+      <div id="page1">
+        <table id="auditFormTable" style="height:100%">
   			<tbody>
   			<tr>
   			<td colspan="2">
-		<label for="Description">Description:</label><input class="form-control" type="text" id="Description" name="Description" value=""><br> 
+		<label for="Description">1) Description:</label><input class="form-control" type="text" id="Description" name="Description" value=""><br> 
 	</td>
 </tr>
 <tr>
   <td colspan="2">
-		<label for="Notes">Notes:</label><input class="form-control" type="text" id="Notes" name="Notes" value=""><br> 
+		<label for="Notes">2) Notes:</label><input class="form-control" type="text" id="Notes" name="Notes" value=""><br> 
 	</td>
 </tr>
 <tr>
@@ -348,7 +37,7 @@
 	<td>
 		<!-- start with category -->	
 		<div style="padding-top:5px; padding-bottom: 5px" id="LoanTypes">
-		<label for="LoanTypes">Loan Types:</label>
+		<label for="LoanTypes">3) Loan Types:</label>
  <div class="dropdown" style="display:inline; margin: auto;">
   <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="LoanTypesButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Loan Type(s)
@@ -374,7 +63,7 @@
 
 <!-- start with category -->	
 <div style="padding-top:5px; padding-bottom: 5px" id="States">
-<label for="States">States:</label>
+<label for="States">4) States:</label>
  <div class="dropdown" style="display:inline; margin: auto;">
   <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="StatesButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     States
@@ -428,7 +117,7 @@
 <td>
 <!-- start category -->
 		<div style="padding-top:5px; padding-bottom: 5px" id="Severity">
-		<label for="Severity">Severity:</label>
+		<label for="Severity">5) Severity:</label>
  <div class="dropdown" style="display:inline; margin: auto;">
   <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="serverityButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Serverity
@@ -445,7 +134,7 @@
 
 <!-- start category -->
 		<div style="padding-top:5px; padding-bottom: 5px" id="LoanStages">
-		<label for="LoanStages">Loan Stages:</label>
+		<label for="LoanStages">6) Loan Stages:</label>
  <div class="dropdown" style="display:inline; margin: auto;">
   <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="LoanStagesButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Loan Stages
@@ -465,33 +154,33 @@
 </tr>
 <tr>
 <td colspan="2">
-		<label for="RepeatOnField">Repeat on Field:</label><input class="form-control" type="text" id="RepeatOnField" name="RepeatOnField" value=""><br> 
+		<label for="RepeatOnField">7) Repeat on Field:</label><input class="form-control" type="text" id="RepeatOnField" name="RepeatOnField" value=""><br> 
 		<!-- <label for="Category">Category:</label><input class="form-control" type="text" id="Category" name="Category" value=""><br>  -->
 </td>
 </tr>
 <tr>
 <td colspan="2">
-		<label for="ApplicableLogic">Applicable Logic:</label><input class="form-control" type="text" id="ApplicableLogic" name="ApplicableLogic" value=""><br> 
+		<label for="ApplicableLogic">8) Applicable Logic:</label><input class="form-control" type="text" id="ApplicableLogic" name="ApplicableLogic" value=""><br> 
 		<!-- <label for="Category">Category:</label><input class="form-control" type="text" id="Category" name="Category" value=""><br>  -->
 </td>
 </tr>
 <tr>
 <td colspan="2">
 
-		<label for="AuditLogic">Audit Logic:</label><input class="form-control" type="text" id="AuditLogic" name="AuditLogic" value=""><br>
+		<label for="AuditLogic">9) Audit Logic:</label><input class="form-control" type="text" id="AuditLogic" name="AuditLogic" value=""><br>
 <!-- end with category -->
 </td>
 </tr>
 <tr>
 <td colspan="2">
 
-		<label for="MessageCmd">Message Cmd:</label><input class="form-control" type="text" id="MessageCmd" name="MessageCmd" value=""><br> 
+		<label for="MessageCmd">10) Message Cmd:</label><input class="form-control" type="text" id="MessageCmd" name="MessageCmd" value=""><br> 
 
 </td>
 </tr>
 <tr>
 <td colspan="2">
-		<label for="DetailsURL">Details URL:</label><input class="form-control" type="text" id="DetailsURL" name="DetailsURL" value=""><br> 
+		<label for="DetailsURL">11) Details URL:</label><input class="form-control" type="text" id="DetailsURL" name="DetailsURL" value=""><br> 
 		<!-- <label for="LockAudit">Lock Audit:</label><input class="form-control" type="text" id="LockAudit" name="LockAudit" value=""><br>  -->
 </td>
 </tr>
@@ -499,13 +188,13 @@
 <td>
   <div class="form-check" style="margin-left:20px; margin-top:5px; margin-bottom:5px">
     <input type="checkbox" class="form-check-input" id="IncludeUponPossing">
-    <label class="form-check-label" for="IncludeUponPossing">Include Upon Possing?</label>
+    <label class="form-check-label" for="IncludeUponPossing">12) Include Upon Possing?</label>
   </div><br> 
 </td>
 <td>
 		<!-- start category -->
 		<div style="padding-top:5px; padding-bottom: 5px" id="Category">
-		<label for="Category">Category:</label>
+		<label for="Category">14) Category:</label>
  <div class="dropdown" style="display:inline; margin: auto;">
   <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     Catetory
@@ -535,33 +224,24 @@
 <td>
   <div class="form-check" style="margin-left:20px; margin-top:5px; margin-bottom:5px">
     <input type="checkbox" class="form-check-input" id="LockAudit">
-    <label class="form-check-label" for="LockAudit">Lock Audit</label>
+    <label class="form-check-label" for="LockAudit">13) Lock Audit</label>
   </div><br> 
 </td>
 <td>
 <!-- start category -->
 		<div style="padding-top:5px; padding-bottom: 5px" id="SubCategory">
-		<label for="SubCategory">SubCategory:</label>
+		<label for="SubCategory">15) SubCategory:</label>
  <div class="dropdown" style="display:inline; margin: auto;">
   <button class="btn btn-secondary dropdown-toggle" style="width:48%" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
     SubCatetory
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="#">ATR_TESTING: Test AbilityToReplay</a>
-    <a class="dropdown-item" href="#">AbilityToPay: AbilityToReplay</a>
-    <a class="dropdown-item" href="#">Custom: Custom</a>
-    <a class="dropdown-item" href="#">DataValidation: Data Validation</a>
-    <a class="dropdown-item" href="#">Federal: Federal Audits</a>
-    <a class="dropdown-item" href="#">FederalAudits: Federal Audits</a>
-    <a class="dropdown-item" href="#">FreeExtended: Free Basic Extended Audits</a>
-    <a class="dropdown-item" href="#">GSE: GSE</a>
-    <a class="dropdown-item" href="#">HC: Hard-Coded Audit</a>
-    <a class="dropdown-item" href="#">HighCost: High Cost</a>
-    <a class="dropdown-item" href="#">Integration: Integration Partner Audits</a>
-    <a class="dropdown-item" href="#">LoanType: Loan Type</a>
-    <a class="dropdown-item" href="#">State: State Specific</a>
-    <a class="dropdown-item" href="#">TRID: TILA/REPA Tolerance Audits</a>
-    <a class="dropdown-item" href="#">Test: Test</a>
+    <a class="dropdown-item" href="#">FHLMC: Freddie Mac Points and Fees</a>
+    <a class="dropdown-item" href="#">FNMA: Fannie Mae Points and Fees</a>
+    <a class="dropdown-item" href="#">HPML: State HPML</a>
+    <a class="dropdown-item" href="#">Section32: Section 32</a>
+    <a class="dropdown-item" href="#">Section35: Section 35</a>
+    <a class="dropdown-item" href="#">State: State High Cost</a>
   </div>
 </div>
 <!-- end category -->
@@ -574,23 +254,205 @@
 <td>
   <div class="form-check" style="margin-left:20px; margin-top:5px; margin-bottom:5px">
     <input type="checkbox" class="form-check-input" id="HardCoded">
-    <label class="form-check-label" for="HardCoded">Hard Coded?</label>
+    <label class="form-check-label" for="HardCoded">16) Hard Coded?</label>
   </div><br> 
 </td>
 <td>
-<label for="JiraIssue">Jira Issue#:</label><input class="form-control" type="text" id="JiraIssue" name="JiraIssue" value=""><br>
+<label for="JiraIssue">17) Jira Issue#:</label><input class="form-control" type="text" id="JiraIssue" name="JiraIssue" value=""><br>
 </td>
 </tr>
 <tr>
 <td>
+        <button class="btn btn-light disabled" type="button" onclick="return false;">Previous</button> 
 		<button class="btn btn-light" type="submit" onclick="javascript:createAudit()">Create</button> 
 </td>
 <td>
-		<button class="btn btn-light" type="submit" onclick="javascript:updateAudit()">Update</button>
+    <button class="btn btn-light" type="submit" onclick="javascript:updateAudit()">Update</button>
+        <button class="btn btn-light" type="button" onclick="showPage(2);">Next</button> 
 </td>
 </tr>
 </tbody>
 </table>
+
+</div>
+<div id="page2" class="hidden">
+<table>
+<tr>
+<td>
+ <label for="Date">1) Date:</label><input class="form-control" type="text" id="Date" name="Date" value=""><br> 
+</td>
+<td>
+<label for="Time">2) Time:</label><input class="form-control" type="text" id="Time" name="Time" value=""><br> 
+</td>
+<td>
+<label for="User">3) User:</label><input class="form-control" type="text" id="User" name="User" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="NoteComment">4) Note/Comment:</label><textarea type="text" rows="3" class="form-control" id="NoteComment" name="NoteComment" value=""></textarea>
+</td>
+</tr>
+<tr>
+<td colspan="3">
+ <label for="InceptionDate">5) Inception Date:</label><input class="form-control" type="text" id="InceptionDate" name="InceptionDate" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+ <label for="LastValidationDate">6) Last Validation Date:</label><input class="form-control" type="text" id="LastValidationDate" name="LastValidationDate" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="ValidationMonths">7) Validation Months:</label><input class="form-control" type="text" id="ValidationMonths" name="ValidationMonths" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="FirstValidationby">8) First Validation by:</label><input class="form-control" type="text" id="FirstValidationBy" name="FirstValidationBy" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="SecondValidationBy">9) Second Validation by:</label><input class="form-control" type="text" id="SecondValidationBy" name="SecondValidationBy" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="OwnedByGroup">10) Owned by Group:</label><input class="form-control" type="text" id="OwnedByGroup" name="OwnedByGroup" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td colspan="3">
+&nbsp;
+</td>
+</tr>
+<tr>
+<td>
+        <button class="btn btn-light" type="button" onclick="showPage(1);">Previous</button> 
+		<button class="btn btn-light" type="submit" onclick="javascript:createAudit()">Create</button> 
+</td>
+<td>
+</td>
+<td>
+    <button class="btn btn-light" type="submit" onclick="javascript:updateAudit()">Update</button>
+        <button class="btn btn-light" type="button" onclick="showPage(3);">Next</button> 
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="page3" class="hidden">
+<table style="width:100%">
+<tbody>
+<tr>
+<td colspan="3">
+<label for="ApplicableScript">1) Applicable Script:</label><input class="form-control" type="text" id="ApplicableScript" name="ApplicableScript" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="AuditScript">2) Audit Script:</label><input class="form-control" type="text" id="AuditScript" name="AuditScript" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="ReturnPos">3) Return Pos:</label><input class="form-control" type="text" id="ReturnPos" name="ReturnPos" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="MISMOPath">4) MISMO Path:</label><input class="form-control" type="text" id="MISMOPath" name="MISMOPath" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="WebsheetPath">5) Websheet Path:</label><input class="form-control" type="text" id="WebsheetPath" name="WebsheetPath" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="FieldName">6) Field Name:</label><input class="form-control" type="text" id="FieldName" name="FieldName" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="DataType">7) Data Type:</label><input class="form-control" type="text" id="DataType" name="DataType" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="DataFormat">8) Data Format:</label><input class="form-control" type="text" id="DataFormat" name="DataFormat" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="RequiredField">9) Required Field:</label><input class="form-control" type="text" id="RequiredField" name="RequiredField" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="MessageText">10) Message Text:</label><input class="form-control" type="text" id="MessageText" name="MessageText" value=""><br> 
+</td>
+</tr>
+<tr>
+<td colspan="3">
+<label for="ListSource">11) List Source:</label><input class="form-control" type="text" id="ListSource" name="ListSource" value=""><br> 
+</td>
+</tr>
+<tr>
+<td>
+        <button class="btn btn-light" type="button" onclick="showPage(2);">Previous</button> 
+		<button class="btn btn-light" type="submit" onclick="javascript:createAudit()">Create</button> 
+</td>
+<td>
+    <button class="btn btn-light" type="submit" onclick="javascript:updateAudit()">Update</button>
+        <button class="btn btn-light disabled" type="button" onclick="return false;">Next</button> 
+</td>
+</tr>
+</tbody>
+</table>
+</div>
        </form>
   	</div>
   </div>
@@ -615,6 +477,22 @@
    });
 
 });
+
+function showPage(pageNumer) {
+        for (var i = 1; i <= 4; i++) {
+          var classList = document.getElementById("page" + i).classList;
+          if (i != pageNumer) {
+            classList.add("hidden");
+          } else {
+            classList.remove("hidden");
+          }
+        }
+}
+      
+function showLoading() {
+        var classList = document.getElementById("loadingScreen").classList;
+        classList.remove("hidden");
+}
 		 
 </script>
 </body>

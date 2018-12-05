@@ -17,6 +17,6 @@ module.exports ={
 //		'debugOutputDir': debugOutputDir,
 //		 setDebugOutputDir: setDebugOutputDir
 
-		"kdmGenerationCommand": "C:\\Users\\Billy\\GitHub\\452\\testMonitor3Product2\\eclipse\\eclipse.exe"
+		"kdmGenerationCommand": "\"C:\\Users\\flyqk\\Documents\\Research Projects\\tools\\testMonitor3Product2\\eclipse\\eclipse.exe\""
 
 }

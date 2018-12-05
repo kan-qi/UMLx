@@ -156,14 +156,17 @@
 		var outputFile = projectPath + "/eclipse_gen_umlx_kdm.xmi";
 
 		// use full path (with appRoot) here only
-		var command = config.kdmGenerationCommand + " -consoleLog -noExit "
-			+ appRoot + "/" + projectPath + " "
-			+ appRoot + "/" + outputFile + " -vmargs -Xmx10240M";
+		var command = config.kdmGenerationCommand + " -consoleLog -noExit \""
+			+ appRoot + "/" + projectPath + "\" \""
+			+ appRoot + "/" + outputFile + "\" -vmargs -Xmx10240M";
+
+	   console.log(command);
 
 		var child = exec(command, function(error, stdout, stderr) {
 			if (error != null) {
 				// On Windows, closing the eclipse window will trigger this error
 				// callbackfunc(new Error("Error generating KDM."));
+				console.log("error in generating KDM model.")
 				return;
 			}
 		});
@@ -174,6 +177,8 @@
 				child.kill();
 
 				callbackfunc(null, outputFile);
+
+				console.log("kdm generation is finished.")
 			})
 			.catch(function(err) {
 				callbackfunc(err);

@@ -54,7 +54,7 @@ process.on("message", (packed_obj) => {
                     modelInfo[estimationModel] = estimationResults;
                     modelInfo.repo_id = repoInfo._id;
 
-                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
+//                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
                         if(formInfo['result_page'] && formInfo['result_page'] === 'simplified'){
                             return_obj['func'] = 'estimationResultPaneSimplified';
                             return_obj['estimationResults'] = estimationResults;
@@ -73,7 +73,7 @@ process.on("message", (packed_obj) => {
                             return_obj['modelInfo'] = modelInfo;
                             process.send(JSON.stringify(return_obj));
                         }
-                    });
+//                    });
                 });
             });
         });

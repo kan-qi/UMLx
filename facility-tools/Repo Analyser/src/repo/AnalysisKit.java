@@ -241,6 +241,16 @@ public class AnalysisKit {
 				e.printStackTrace();
 			}
 		}
+		else if(command.equals("cloc")) {
+			String filePath = args[1];
+			String outputDir = args[2];
+			AnalysisKit analysisKit = new AnalysisKit();
+			try {
+				analysisKit.calCloc(filePath, outputDir);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 		else if(command.equals("scan-repo")) {
 			String projectListPath = args[1];
 			String outputDir = args[2];
