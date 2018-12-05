@@ -106,12 +106,71 @@ function createAudit() {
 	var MessageCmd = $('#auditForm input[name=MessageCmd]').val();
 	var States = $('#auditForm input[name=States]').val();
 
+			var HardCoded = $('#auditForm input[name=HardCoded]').val();
+			var IncludeUponPossing = $('#auditForm input[name=IncludeUponPossing]').val();
+			var JiraIssue = $('#auditForm input[name=JiraIssue]').val();
+			var LoanStages = $('#auditForm input[name=LoanStages]').val();
+			var LoanTypes = $('#auditForm input[name=LoanTypes]').val();
+			var Notes = $('#auditForm input[name=Notes]').val();
+			var RepeatOnField = $('#auditForm input[name=RepeatOnField]').val();
+			var Severity = $('#auditForm input[name=Severity]').val();
+			var SubCategory = $('#auditForm input[name=SubCategory]').val();
+
+
+			"User": User,
+			"NoteComment": NoteComment,
+			"InceptionDate": InceptionDate,
+			"LastValidationDate": LastValidationDate,
+			"ValidationMonths": ValidationMonths,
+			"FirstValidationBy": FirstValidationBy,
+			"SecondValidationBy": SecondValidationBy,
+			"OwnedByGroup": OwnedByGroup,
+
+var User = $('#auditForm input[name=User]').val();
+var NoteComment = $('#auditForm input[name=NoteComment]').val();
+var InceptionDate = $('#auditForm input[name=InceptionDate]').val();
+var LastValidationDate = $('#auditForm input[name=LastValidationDate]').val();
+var ValidationMonths = $('#auditForm input[name=ValidationMonths]').val();
+var FirstValidationBy = $('#auditForm input[name=FirstValidationBy]').val();
+var SecondValidationBy = $('#auditForm input[name=SecondValidationBy]').val();
+var OwnedByGroup = $('#auditForm input[name=OwnedByGroup]').val();
+
+
+
+
+
+
+			// //second screen
+			// "ApplicableScript": ApplicableScript,
+			// "AuditScript": AuditScript,
+			// "ReturnPos":ReturnPos,
+			// "MISMOPath": MISMOPath,
+			// "WebsheetPath": WebsheetPath,
+			// "FieldName": FieldName,
+			// "DataType": DataType,
+			// "DataFormat": DataFormat,
+			// "RequiredField": RequiredField,
+			// "MessageText": MessageText,
+			// "ListSource": ListSource
+
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+var User = $('#auditForm input[name=User]').val();
+
 
 	audit.create(
 		{
 			"Description": Description,
 			"AuditLogic": AuditLogic,
-			"LoanTypes": LoanTypes,
 			"ApplicableLogic": ApplicableLogic,
 			"Category": Category,
 			"DetailsURL": DetailsURL,
@@ -123,7 +182,6 @@ function createAudit() {
 			"JiraIssue": JiraIssue,
 			"LoanStages": LoanStages,
 			"LoanTypes": LoanTypes,
-			"LockAudit": LoanAudit,
 			"Notes": Notes,
 			"RepeatOnField": RepeatOnField,
 			"Severity": Severity,
@@ -151,7 +209,6 @@ function createAudit() {
 			"RequiredField": RequiredField,
 			"MessageText": MessageText,
 			"ListSource": ListSource
-
 		},
 		function (msg) {
 			//console.log(data1[0]);
