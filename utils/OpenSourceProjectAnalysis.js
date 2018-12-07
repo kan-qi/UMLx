@@ -225,12 +225,12 @@ function analyseSloc(repoRecordPath){
  	});
 }
 
-function generateSlocReport(repoRecordPath){
+function generateSlocReport(repoListPath, repoRecordPath){
 	 //to generate svg file.
 //	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
 	var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
 
-  var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoRecordPath+'"';
+  var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoListPath+'" "'+repoRecordPath+'"';
 	console.log(command);
 	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
 		if (error !== null) {
@@ -283,7 +283,8 @@ else if(functionSelection === "--generate-sloc-report"){
 	//4. calculate sloc for each repo
 //var repoListDir= repo.reportDir+"\\temp";
 var repoRecordPath = repo.reportDir+"\\sloc";
-generateSlocReport(repoRecordPath);
+var repoListPath = repoRecordPath+"\\fileList.txt";
+generateSlocReport(repoListPath, repoRecordPath);
 }
 else if(functionSelection === "--recover-kdm"){
 recoverKDMModel(repo.projectList)

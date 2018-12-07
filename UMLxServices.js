@@ -89,6 +89,389 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', './views');
 app.set('view engine', 'jade');
 
+app.get('/codeAnalysisPage',function(req,res){
+	res.render('codeAnalysisPage');
+});
+
+app.post('/analyseSrc',function(req,res){
+	console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+			console.log(config);
+			config.configFilePath = configFilePath;
+			 res.send(config);
+	});
+
+});
+
+app.post('/genRepoReport',function(req,res){
+	console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+			console.log(config);
+			config.configFilePath = configFilePath;
+			
+			
+var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir+"\\analysis-results-folders.txt").split(/\r?\n/g);
+var transactionFiles = [];
+var filteredTransactionFiles = [];
+var modelEvaluationFiles = [];
+for(var i in modelOutputDirs){
+  //code here using lines[i] which will give you each line
+	var modelOutputDir = modelOutputDirs[i];
+
+	if(modelOutputDir === ""){
+		continue;
+	}
+	
+	filteredTransactionFiles.push(modelOutputDir+"\\"+"filteredTransactionEvaluation.csv");
+	transactionFiles.push(modelOutputDir+"\\"+"transactionEvaluation.csv");
+	modelEvaluationFiles.push(modelOutputDir+"\\"+"modelEvaluation.csv");
+}
+
+
+var modelEvaluationContents = FileManagerUtil.readFilesSync(modelEvaluationFiles);
+var modelEvaluationConsolidation = "";
+for(var i in modelEvaluationContents){
+	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
+	  if(i == 0){
+		  modelEvaluationConsolidation += modelEvaluationLines[0]+","+"transaction_file";
+	  }
+		  for(var j = 1; j < modelEvaluationLines.length; j++){
+		  if(modelEvaluationLines[j] === ""){
+			  continue;
+		  }
+
+		  modelEvaluationConsolidation += "\n"+modelEvaluationLines[j]+","+filteredTransactionFiles[i];
+		  
+		  }
+}
+	  
+FileManagerUtil.writeFileSync(repo.reportDir+"\\modelEvaluations.csv", modelEvaluationConsolidation);
+
+var transactionEvaluationContents = FileManagerUtil.readFilesSync(transactionFiles);
+var transactionEvaluationConsolidation = "";
+
+//console.log(transactionEvaluationContents);
+
+function filter(transaction){
+	var invalidTerms = ["message", "Message", "undefined", "error", "information", "Information"]
+	for(var i in invalidTerms){
+		if(transaction.indexOf(invalidTerms[i])>-1 && transaction.split("->").length < 3){
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+for(var i in transactionEvaluationContents){
+	var identifiedTransactions = {};
+	//remove duplicate transactions and write back.
+	 var transactionEvaluationLines = transactionEvaluationContents[i].split(/\r?\n/g);
+	 var filteredTransactionEvaluationStr = transactionEvaluationLines[0];
+	  if(i == 0){
+		  transactionEvaluationConsolidation += transactionEvaluationLines[0];
+	  }
+		  for(var j = 1; j < transactionEvaluationLines.length; j++){
+		 var transactionEvaluationFields = transactionEvaluationLines[j].split(/,/g);
+		  if(transactionEvaluationLines[j] === "" || filter(transactionEvaluationFields[1]) || identifiedTransactions[transactionEvaluationFields[1].replace(/\s/g, "").toLowerCase()]){
+			  	  console.log("duplicates");
+			  	  console.log(transactionEvaluationFields[1]);
+				  continue;
+		  }
+		  identifiedTransactions[transactionEvaluationFields[1].replace(/\s+/g, "").toLowerCase()] = 1;
+		  filteredTransactionEvaluationStr += "\n"+transactionEvaluationLines[j];
+		  transactionEvaluationConsolidation += "\n"+transactionEvaluationLines[j]+","+i;
+		  
+		  }
+	  
+	  var transactionFilePath = transactionFiles[i];
+	  FileManagerUtil.writeFileSync(filteredTransactionFiles[i],  filteredTransactionEvaluationStr);
+}
+
+	   FileManagerUtil.writeFileSync(repo.repoDir+"\\transactionEvaluations.csv", transactionEvaluationConsolidation);
+
+	});
+
+});
+
+app.post('/analyseRepo',function(req,res){
+	console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+			console.log(config);
+			config.configFilePath = configFilePath;
+			 res.send(config);
+	});
+
+});
+
+app.post('/analyseRepo',function(req,res){
+	console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+		var reportDir = config.reportDir;
+
+			var reportPath = reportDir+"\\analysis-results-folders.txt";
+	global.debugCache = new Object();
+//	FileManagerUtil.deleteFileSync(reportPath);
+	
+	  //use promise to construct the repo objects
+    function analyseModel(projectXMI, projectName, reportDir){
+        return new Promise((resolve, reject) => {
+//        	config.setDebugOutputDir(projectPath+"/debug");
+        	
+
+        if(!projectName){
+        		projectName = ""
+        }
+        	
+   		 let date = new Date();
+   	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+   	     analysisDate = analysisDate+"@"+Date.now();
+   	   
+   	     projectName = projectName + "_"+analysisDate;
+        	
+        	var outputDir = reportDir +"\\"+projectName+"_analysis";
+        	global.debugOutputDir = outputDir + "/debug";
+        	var inputFile = projectXMI;
+        	
+        	console.log(inputFile);
+        	
+        	mkdirp(outputDir, function(err) { 
+        	fs.exists(inputFile, (exists) => {
+        	if(!exists){
+        		console.log(inputFile+" doesn't exist.");
+        		resolve();
+        	}
+        	else{
+            //to generate svg file.
+        	UMLxAnalyticToolKit.analyseSrc(inputFile, outputDir, projectName, function(model){
+        		if(!model){
+        			console.log('analysis error!');
+            		resolve();
+            		return;
+        		}
+        		console.log("finished sr analysis");
+        		FileManagerUtil.appendFile(reportPath, model.OutputDir+"\n", function(message){
+            		console.log('analysis finished!');
+            		console.log(message);
+            		resolve();
+        		})
+        		  
+        	});
+        	
+        	}
+      	  });
+        	});
+        	
+        });
+    }
+    
+    return Promise.all(projectList.map(project=>{
+        return analyseModel(project.path+"\\"+project.modelFile, project.tag, reportDir);
+    })).then(
+        function(){
+			console.log("=============Cache==============");
+			var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
+			for (var key in global.debugCache) {
+				mkdirp(OutputDir, function(err) { 
+					fs.writeFile(key, global.debugCache[key], function(err){
+						if(err){
+							console.log(err);
+						}
+					});
+					});
+				}
+			console.log("Finish write debug cache in files");
+            return new Promise((resolve, reject) => {
+                setTimeout(function(){
+                	console.log("analysis finished");
+                    resolve();
+                }, 0);
+            });
+        }
+
+    ).catch(function(err){
+        console.log(err);
+    });
+	
+	});
+
+});
+
+app.post('/genCOCOMOReport',function(req,res){
+	// console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = req.body['configFile'];
+
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+
+		var fileList = config.reportDir+"/fileList.txt";
+
+		if(!fileManagerUtil.existsSync(fileList)){
+		    var paths = "";
+			 var projectList = config.projectList;
+            for(var i = 0; i < projectList.length; i++){
+                var project = projectList[i];
+				paths += project.path;
+				if(i != projectList.length - 1){
+				paths += "\n";
+				}
+			}
+
+			fileManagerUtil.writeFileSync(fileList, paths);
+		}
+
+		var slocReport = config.reportDir+"/slocReport.csv";
+		if(!fileManagerUtil.existsSync(slocReport)){
+			var generateSlocReport = require('./utils/RepoAnalyzerUtil').generateSlocReport;
+
+		generateSlocReport(fileList, slocReport);
+		}
+
+		
+		var cocomoCalculator = require("./effort_estimators/COCOMOCalculator.js");
+		var cocomoDataPath = config.repoDir+"\\COCOMORatings.csv";
+
+		if(!fileManagerUtil.existsSync(cocomoDataPath)){
+			var slocReport = fileManagerUtil.loadCSVFileSync(slocReport, true);
+			var cocomoValues = cocomoCalculator.genDefaultValues();
+			var rows = "PROJ,KSLOC";
+			for(var i in cocomoValues){
+				rows += ","+i;				
+			}
+			rows += "\n";
+
+			console.log(rows);
+
+			for(var i = 0; i < slocReport.length; i++){
+				var slocReportItem = slocReport[i];
+				// console.log(slocReportItem);
+				rows += slocReportItem.project;
+			 	rows += ","+Number(slocReportItem.code)*0.001;
+				for(var j in cocomoValues){
+					rows += ","+cocomoValues[j];
+				}
+
+				if(i != slocReport.length - 1){
+					rows += "\n";
+				}
+			}
+
+			// console.log(rows);
+
+			fileManagerUtil.writeFileSync(cocomoDataPath, rows);
+		}
+
+		var cocomoDataResults= config.repoDir+"\\COCOMOResults.csv";
+		cocomoCalculator.loadCOCOMOData(cocomoDataPath, function(cocomoDataList){
+
+		// console.log(cocomoDataList);
+
+		var rows = "";
+
+		for(var i = 0; i < cocomoDataList.length; i++){
+	
+		var cocomoData = cocomoCalculator.estimateProjectEffort(cocomoDataList[i]);
+
+		console.log(cocomoData);
+				
+		if(i == 0){
+			rows += "PROJ, KSLOC, Effort";
+			for(var j in cocomoData.SF){
+				rows += ","+j;
+			}
+
+			for(var j in cocomoData.EM){
+				for(var k in cocomoData.EM[j]){
+				rows += ","+k;
+				}
+			}
+		}
+
+		rows += "\n";
+
+		rows += cocomoData.PROJ;
+		rows += ","+cocomoData.KSLOC;
+		rows += ","+cocomoData.PH_most_likely;
+		for(var j in cocomoData.SF){
+				rows += ","+cocomoData.SF[j];
+			}
+
+			for(var j in cocomoData.EM){
+				for(var k in cocomoData.EM[j]){
+				rows += ","+cocomoData.EM[j][k];
+				}
+			}
+			
+			
+		}
+		fileManagerUtil.writeFileSync(cocomoDataResults, rows);
+
+
+	});
+	});
+});
+
+app.post('/genSrcReport',function(req,res){
+	// console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = req.body['configFile'];
+
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+
+		    var paths = "";
+			 var projectList = config.projectList;
+            for(var i = 0; i < projectList.length; i++){
+                var project = projectList[i];
+				paths += project.path;
+				if(i != projectList.length - 1){
+				paths += "\n";
+				}
+			}
+
+			var fileList = config.reportDir+"/fileList.txt";
+
+			fileManagerUtil.writeFileSync(fileList, paths);
+		
+			var generateSlocReport = require('./utils/RepoAnalyzerUtil').generateSlocReport;
+
+			generateSlocReport(fileList, config.reportDir+"/slocReport.csv");
+	});
+});
+
 app.get('/kdmModelRecoverPage',function(req,res){
 	res.render('kdmModelRecoverPage');
 });
@@ -1450,6 +1833,12 @@ app.get('/queryUsers', function(req,res){
 app.get('/listFileUnderDir', function(req, res) {
 	var filePath = req.query.fileFolder;
 
+	var isAbsolute = false;
+	if(filePath.includes(":")){
+		isAbsolute = true;
+		filePath = filePath.replace(/public\//g, "");
+	}
+	
     function recurDir(filePath, done) {
         var results = [];
         fs.readdir(filePath, function(err, list){
@@ -1469,7 +1858,8 @@ app.get('/listFileUnderDir', function(req, res) {
 							entry.url = file;
 							entry.size = stat.size;
 							entry.date = stat.birthtime;
-							entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							// entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							entry.parent = filePath;
 							results.push(entry);
 							if (!--pending) {
 								done(null, results);
@@ -1491,6 +1881,10 @@ app.get('/listFileUnderDir', function(req, res) {
 app.get('/fetchDocument', function (req, res) {
 
     var docPath = req.query.DocFolder;
+
+	if(!docPath.includes(":")){
+		docPath = "public/"+docPath;
+	}
 
     fs.readFile(docPath, function (err, data) {
         if (err) {
@@ -1645,16 +2039,27 @@ app.post('/analyseSLOC', function (req, res) {
 	console.log(req.body.workingDir);
 
 	var workingDir = "public/"+req.body.workingDir;
-	
+
+	if(workingDir.includes(":")){
+		workingDir = workingDir.replace(/public\//g, "");
+	}
+
 	var analyseSLOC = require('./utils/RepoAnalyzerUtil').analyseSLOC;
 
 	var filePaths = "";
-	var appRoot = path.dirname(require.main.filename);
+	var appRoot = path.dirname(require.main.filename)+"/public";
 
 	console.log("Submitted archives: ");
 	for (var i = 0; i < archives.length; i++) {
 		console.log(archives[i]);
-		filePaths += appRoot+"/public/"+archives[i];
+
+		if(archives[i].includes(":")){
+			filePaths += archives[i];
+		}
+		else{
+			filePaths += appRoot+"/"+archives[i];
+		}
+
 		if(i != archives.legnth - 1){
 			filePaths += "\n";
 		}

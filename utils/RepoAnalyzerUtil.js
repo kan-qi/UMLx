@@ -33,9 +33,30 @@
  	});
 	
 	}
+
+	function generateSlocReport(projectListPath, outputPath){
+  //to generate svg file.
+//	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+
+  var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+projectListPath+'" "'+outputPath+'"';
+	console.log(command);
+	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+		if (error !== null) {
+			console.log('exec error: ' + error);
+		}
+		console.log('The file was saved!');
+		  
+	});
+	
+	child.stdout.on('data', function(data) {
+	    console.log(data); 
+	});
+}
 	
 	
 	module.exports = {
-			 analyseSLOC:  analyseSLOC
+			 analyseSLOC:  analyseSLOC,
+			 generateSlocReport: generateSlocReport
 	}
 })();

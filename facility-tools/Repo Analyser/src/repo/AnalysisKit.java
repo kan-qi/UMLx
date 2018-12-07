@@ -105,10 +105,12 @@ public class AnalysisKit {
 		}
 	}
 	
-	public void generateSlocReport(String repoRecordPath) throws Exception {
-		System.out.println(repoRecordPath+"\\sloc_report.csv");
+	public void generateSlocReport(String repoListPath, String repoRecordPath) throws Exception {
+//		System.out.println(repoRecordPath+"\\sloc_report.csv");
 		
-		File repoListFile = new File(repoRecordPath+"\\repositories.txt");
+//		File repoListFile = new File(repoRecordPath+"\\repositories.txt");
+		
+		File repoListFile = new File(repoListPath);
 		
 		FileInputStream fis = new FileInputStream(repoListFile);
 
@@ -123,14 +125,15 @@ public class AnalysisKit {
 				if(!repoDir.exists()) {
 					continue;
 				}
-				projectRecordPaths.put(repoDir.getName(), repoRecordPath+"\\"+getRepoDirNameByPath(line.replaceAll("\\s+$", "")));
+//				projectRecordPaths.put(repoDir.getName(), repoRecordPath+"\\"+getRepoDirNameByPath(line.replaceAll("\\s+$", "")));
+				projectRecordPaths.put(repoDir.getName(), line);
 			}
 		}
 	 
 		br.close();
 		
 		StringBuilder reportString = new StringBuilder();
-		reportString.append("projecct, files, blank, comment, code\n");
+		reportString.append("project, files, blank, comment, code\n");
 		for(String projectName : projectRecordPaths.keySet()) {
 				String projectRecordPath = projectRecordPaths.get(projectName);
 				System.out.println(projectRecordPath+"\\cloc_report.txt");
@@ -159,7 +162,7 @@ public class AnalysisKit {
 				br.close();
 		}
 		
-		File reportFile = new File(repoRecordPath+"\\sloc_report.csv");
+		File reportFile = new File(repoRecordPath);
 		
 		if(repoListFile == null || !repoListFile.exists()){
 			throw new Exception("repo doesn't exist!");
@@ -276,11 +279,13 @@ public class AnalysisKit {
 		}
 		else if(command.equals("generate-report")) {
 //			final String fileListPath = "./tools/temp/repositories.txt";
-			
-			String repoRecordPath = args[1];
+
+			String repoListPath = args[1];
+			String repoRecordPath = args[2];
+
 			AnalysisKit analysisKit = new AnalysisKit();
 			try {
-				analysisKit.generateSlocReport(repoRecordPath);
+				analysisKit.generateSlocReport(repoListPath, repoRecordPath);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

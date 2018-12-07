@@ -290,7 +290,6 @@ function model_file_update_fnc() {
     });
 
     return false;
-
 }
 
 function predict_project_effort_func(show_loading_screen = true) {
@@ -737,14 +736,14 @@ function fileDownload() {
 }
 
 
-function openFile() {
-    var url = $(this).attr("href");
+function openFile(e) {
+    var url = $(e).data("path");
 
     // console.log('========url===============');
     // console.log(url);
 
     gloablUrlForDownload = url;
-    url = "public" + url;
+    // url = "public" + url;
 
     //var url = $(this).data("url");
 
@@ -873,8 +872,8 @@ function display_csv_data(url) {
 }
 
 function request_display_data() {
-    var url = $(this).attr("href");
-    url = "public/" + url.substring(1)
+    var url = $(this).data("path");
+    // url = "public/" + url.substring(1)
     
     display_csv_data(url);
 
@@ -1314,7 +1313,7 @@ $(document).ready(function () {
     //$(document).on('click','#dump-model-evaluation-for-use-cases-btn', dump_model_evaluation_for_use_cases_func);
     $(document).on('click', '.dumpEvaluationData', request_display_data);
     $(document).on('click', '.dumpAnalyticsData', request_display_data);
-    $(document).on('click', '.fileLink', openFile);
+    // $(document).on('click', '.fileLink', openFile);
     
     $(document).on("click", '#model-evaluation-tab', requestUseCaseDistributionCharts);
 
@@ -2471,7 +2470,7 @@ function walkDir(get) {
 
     $.ajax({
         type: 'GET',
-        url: 'listFileUnderDir?fileFolder=public/' + fileFolder,
+        url: 'listFileUnderDir?fileFolder='+fileFolder,
         success: function (data) {
             buildTable(data);
         }
@@ -2483,7 +2482,7 @@ function refresh() {
 
     $.ajax({
         type: 'GET',
-        url: 'listFileUnderDir?fileFolder=public/' + fileFolder,
+        url: 'listFileUnderDir?fileFolder='+fileFolder,
         success: function (data) {
             buildTable(data);
         }
@@ -2583,7 +2582,7 @@ function buildTable(data) {
         out += "<tr><th>Name</th><th>File Type</th><th>Size</th><th>Creation Date</th><th>Submut</th></tr>";
 
         if (level >= 2) {
-            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + " onclick='backDir(this)'>Back</button><td></tr>";
+            out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url='" + parentUrl.substring(0, parentUrl.lastIndexOf("/")) + "' onclick='backDir(this)'>Back</button><td></tr>";
         }
 
         //console.log("Data");
@@ -2597,9 +2596,10 @@ function buildTable(data) {
                 //console.log(newKeys[i]);
                 var path = parentUrl + "/" + newKeys[i];
                 //console.log("pathbefore: " + path);
-                path = path.substring(7);
+                // path = path.substring(7);
                 //console.log("path: " + path);
-                out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=" + data_type + " data-url=" + path + " onclick='walkDir(this)'>" +
+                console.log(path);
+                out += "<tr><td style='float:left'><img style='width:40px; height:35px' src='../img/folder.png'><a href='#' id='div" + i + "' data-type=\"" + type[data[i].url] + "\" data-url=\"" + path + "\" onclick='walkDir(this)'>" +
                     newKeys[i] +
                     "</a></td><td>folder</td>";
                 out += "<td>" + kb[newKeys[i]] + " KB</td><td>" + dateData[newKeys[i]] + "</td>"
@@ -2622,27 +2622,27 @@ function buildTable(data) {
                 var path = parentUrl + "/" + newKeys[i];
                 // console.log("path: " + path);
                 if (newKeys[i].endsWith(".csv")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/csv.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".txt")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".svg")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else if (newKeys[i].endsWith(".json")) {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
                 else {
-                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                    out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                         newKeys[i] +
                         "</a></td><td>file</td>";
                 }
@@ -2664,8 +2664,13 @@ function buildTable(data) {
         // console.log("out");
         //console.log(out);
 
+        if(document.getElementById("displayArchive")){
         document.getElementById("displayArchive").innerHTML = out;
+        }
+        
+        if(document.getElementById("displayUploads")){
         document.getElementById("displayUploads").innerHTML = out;
+        }
     }
 
 }
@@ -2687,7 +2692,8 @@ $('#collapse2').on('hidden.bs.collapse', function () {
     $(".collapseButtom2").addClass('glyphicon-triangle-left').removeClass('glyphicon-triangle-bottom');
 });
 
-var repoLink = "public";
+var repoLink = "";
+// var repoLink = "public";
 var documentUrl;
 var backUrl;
 var levels = 0;
@@ -2777,7 +2783,7 @@ function buildTable2(data) {
 
     if (levels >= 2) {
         backUrl = repoLink.split("/")[levels];
-        out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url=" + backUrl + " onclick='walkRepoDir(this)'>Back</button></td></tr>";
+        out += "<tr><td align='left'><button id='backButton' class='btn btn-default' data-url='" + backUrl + "' onclick='walkRepoDir(this)'>Back</button></td></tr>";
     }
 
     for (var i = 0; i < newKeys.length; i++) {
@@ -2800,27 +2806,27 @@ function buildTable2(data) {
         if (type[newKeys[i]] === "File") {
             var path = data[0].parent + "/" + newKeys[i];
             if (newKeys[i].endsWith(".csv")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px'  src='../img/csv.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".txt")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/txt.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".svg")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/svg.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else if (newKeys[i].endsWith(".json")) {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/json.png'><a onclick='openFile(this)' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
             else {
-                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a class='fileLink' href='" + path.replace("public", "") + "'>" +
+                out += "<tr><td style='float:left'><img style='width:40px; height:40px' src='../img/emptyfile.jpg'><a onclick='openFile(this)' data-path='" + path + "'>" +
                     newKeys[i] +
                     "</td><td>file</td>";
             }
@@ -2911,6 +2917,197 @@ function genKDM(e) {
             console.log("fail");
         }
     });
+}
+
+
+function analyseProjectSrc(e){
+ var path = $(e).data("url");
+
+ console.log(path);
+
+ $("#file-list-panel-body").html("<div><p>"+path+"</p><div id=\"displayArchive\"></div></div>");
+
+ createDir(e);
+
+//  $(document).on('click', '.fileLink', openFile);
+
+}
+
+function backToRepoConfig(e){
+    var configFile = $(e).data("url");
+    console.log(configFile);
+    createDir(e);
+}
+
+function genRepoReport(e){
+var configFile = $(e).data("url");
+
+    console.log(configFile);
+
+//  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+    $.ajax({
+        type: 'POST',
+        url: "genRepoReport",
+        cache: false,
+        processData: false, // Don't process the files
+        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        data: {configFile: configFile},
+        enctype: 'multipart/form-data',
+        //async: false,
+        success: function () {
+            console.log();
+           
+        },
+        error: function (err) {
+            // hide loading
+            // document.getElementById("loadingScreen").classList.add("hidden");
+
+            console.log("fail");
+            console.log(err);
+            alert("There was an error");
+        }
+    });
+}
+
+function analyseRepo(e){
+var configFile = $(e).data("url");
+
+    console.log(configFile);
+
+//  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+    $.ajax({
+        type: 'POST',
+        url: "analyseRepo",
+        cache: false,
+        processData: false, // Don't process the files
+        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        data: {configFile: configFile},
+        enctype: 'multipart/form-data',
+        //async: false,
+        success: function () {
+            console.log();
+           
+        },
+        error: function (err) {
+            // hide loading
+            // document.getElementById("loadingScreen").classList.add("hidden");
+
+            console.log("fail");
+            console.log(err);
+            alert("There was an error");
+        }
+    });
+}
+
+function genCOCOMOReport(e){
+    var configFile = $(e).data("url");
+
+    console.log(configFile);
+
+//  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+    $.ajax({
+        type: 'POST',
+        url: "genCOCOMOReport",
+        cache: false,
+        processData: false, // Don't process the files
+        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        data: {configFile: configFile},
+        enctype: 'multipart/form-data',
+        //async: false,
+        success: function () {
+            console.log();
+           
+        },
+        error: function (err) {
+            // hide loading
+            // document.getElementById("loadingScreen").classList.add("hidden");
+
+            console.log("fail");
+            console.log(err);
+            alert("There was an error");
+        }
+    });
+}
+
+function genSrcReport(e){
+    var configFile = $(e).data("url");
+
+    console.log(configFile);
+
+//  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+    $.ajax({
+        type: 'POST',
+        url: "genSrcReport",
+        cache: false,
+        processData: false, // Don't process the files
+        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        data: {configFile: configFile},
+        enctype: 'multipart/form-data',
+        //async: false,
+        success: function () {
+            console.log();
+           
+        },
+        error: function (err) {
+            // hide loading
+            // document.getElementById("loadingScreen").classList.add("hidden");
+
+            console.log("fail");
+            console.log(err);
+            alert("There was an error");
+        }
+    });
+
+}
+ 
+function analyseSrc() {
+    var formData = new FormData($('#source-code-analysis-form')[0]);
+    console.log("starting the ajax call to some where");
+    console.log(formData);
+
+    //  formData.append('file', $('#model-file-submit-form')[0].files[0], 'uml_file');
+    $.ajax({
+        type: 'POST',
+        url: "analyseSrc",
+        cache: false,
+        processData: false, // Don't process the files
+        contentType: false, // Set content type to false as jQuery will tell the server its a query string request
+        data: formData,
+        enctype: 'multipart/form-data',
+        //async: false,
+        success: function (response) {
+            // hide loading
+            // document.getElementById("loadingScreen").classList.add("hidden");
+
+            console.log(response);
+            var htmlContent = "<div>";
+            htmlContent += "<p>"+response.reportDir+"/<p>";
+            var projectList = response.projectList;
+            for(var i in projectList){
+                var project = projectList[i];
+                htmlContent += "<div><a onclick=\"analyseProjectSrc(this)\" data-url=\""+project.path+"\">"+project.tag+"</a></div>";
+            }
+
+            htmlContent += "</div>"
+            $("#file-list-panel-body").html(htmlContent);
+            console.log(response.configFilePath);
+            $("#backBtn").attr('data-url', response.configFilePath);
+            $("#reportBtn").attr('data-url', response.configFilePath);
+            $("#cocomoBtn").attr('data-url', response.configFilePath);
+            $("#analyseRepoBtn").attr('data-url', response.configFilePath);
+            $("#genRepoReportBtn").attr('data-url', response.configFilePath);
+            
+        },
+        error: function (err) {
+            // hide loading
+            // document.getElementById("loadingScreen").classList.add("hidden");
+
+            console.log("fail");
+            console.log(err);
+            alert("There was an error");
+        }
+    });
+    return false;
 }
 
 function clearSelectedArchives(e) {

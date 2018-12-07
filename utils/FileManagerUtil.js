@@ -28,6 +28,10 @@
 			  fs.unlinkSync(filePath);
           }
 	 }
+
+	 function existsSync(filePath){
+			return fs.existsSync(filePath);
+	 }
 	 
 	 function readFilesSync(filePaths){
 		 var fileContents = [];
@@ -139,12 +143,48 @@
 				    }
 			});
 		},
+		loadCSVFileSync: function(csvFilePath, header){
+			var str = fs.readFileSync(csvFilePath, 'utf-8');
+				    data = parseCSVData(str, header);
+				    
+					return data;
+		},
+		readFile: function(filePath, callbackfunc){
+			fs.readFile(filePath, 'utf-8', (err, str) => {
+				   if (err) {
+					if(callbackfunc){
+						callbackfunc(false);
+					}
+					return;
+				   }
+//				    console.log(data);
+				   if(callbackfunc){
+					   callbackfunc(str);
+				   }
+			});
+		},
+		readJSON: function(filePath, callbackfunc){
+			fs.readFile(filePath, 'utf-8', (err, str) => {
+				   if (err) {
+					if(callbackfunc){
+						callbackfunc(false);
+					}
+					return;
+				   }
+//				    console.log(data);
+				 var obj = JSON.parse(str);
+				   if(callbackfunc){
+					   callbackfunc(obj);
+				   }
+			});
+		},
 		parseCSVData: parseCSVData,
 			deleteFolderRecursive : deleteFolderRecursive,
 			readFilesSync : readFilesSync,
 			readFileSync: readFileSync,
 			writeFileSync: writeFileSync,
 			deleteFileSync: deleteFileSync,
-			appendFile: appendFile
+			appendFile: appendFile,
+			existsSync: existsSync
 	}
 }())

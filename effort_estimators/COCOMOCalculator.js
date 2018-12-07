@@ -422,6 +422,34 @@
 //			console.log(cocomoData);
 			return cocomoData;
 		},
+		genDefaultValues: function(){
+			var COCOMO = {
+			PREC: "N",
+				FLEX: "N",
+				RESL: "N",
+				TEAM: "N",
+				PMAT: "N",
+					RELY: "N",
+					DATA: "N",
+					CPLX: "N",
+					RUSE:"N",
+					DOCU: "N",
+					TIME:"N",
+					STOR: "N",
+					PVOL: "N",
+					ACAP: "N",
+					PCAP: "N",
+					PCON: "N",
+					APEX: "N",
+					PLEX: "N",
+					LTEX: "N",
+					TOOL: "N",
+					SITE: "N",
+					SCED: "N"
+			};
+
+			return COCOMO;
+		},
 		//this function is not used for now.
 		loadCOCOMOData: function(ModelDataFilePath, callbackfunc){
 			var fileManagerUtil = require("../utils/FileManagerUtil.js");
@@ -467,7 +495,7 @@
 
 				
 				if(callbackfunc){
-					callbackfunc(cocomoDataList);
+					callbackfunc(cocomoDataList, outputStr);
 				}
 			});
 		}
