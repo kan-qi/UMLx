@@ -123,7 +123,11 @@
 				Avg_TD: 0,
 				Avg_TC: 0,
 				Avg_DETs: 0,
-				Arch_Diff: 0
+				Arch_Diff: 0,
+				ComponentNum : 0,
+				BoundaryNum : 0,
+				ControlNum : 0,
+				EntityNum : 0,
 		}
 		
 			
@@ -141,15 +145,21 @@
 			var total_TD = 0;
 			var total_TC = 0;
 			var total_DETs = 0;
+
+			var i = useCaseInfo.Transactions.length;
 			
-			for ( var j in useCaseInfo.Transactions) {
+			while (i--) {
 				
-				var transaction = useCaseInfo.Transactions[j];
 				 console.log('--------Process Transaction-------');
 //				 console.log(transaction);
 //				 console.log(modelInfo);
 				
-				transactionProcessor.processTransaction(transaction, useCaseInfo, modelInfo);
+				var transaction = useCaseInfo.Transactions[i];
+
+				if(!transactionProcessor.processTransaction(transaction, useCaseInfo, modelInfo)){
+					useCaseInfo.Transactions.splice(i, 1);
+					continue;
+				}
 
 				var transactionalOperations = transaction['TransactionAnalytics'].Transactional;
 				
@@ -186,6 +196,13 @@
 				total_TL += transaction['TransactionAnalytics'].TL;
 				total_TC += transaction['TransactionAnalytics'].TC;
 				total_DETs += transaction['TransactionAnalytics'].DETs;
+
+
+				useCaseInfo['TransactionAnalytics'].ComponentNum += transaction['TransactionAnalytics'].ComponentNum;
+				useCaseInfo['TransactionAnalytics'].BoundaryNum += transaction['TransactionAnalytics'].BoundaryNum;
+				useCaseInfo['TransactionAnalytics'].ControlNum += transaction['TransactionAnalytics'].ControlNum;
+				useCaseInfo['TransactionAnalytics'].EntityNum += transaction['TransactionAnalytics'].Entity;
+				useCaseInfo['TransactionAnalytics'].ActorNum += transaction['TransactionAnalytics'].ActorNum;
 				
 			}
 			
@@ -206,7 +223,7 @@
 			useCaseInfo['TransactionAnalytics'].Arch_Diff =  useCaseInfo['TransactionAnalytics'].Avg_TD * useCaseInfo["TransactionAnalytics"].Avg_TL;
 			
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("transactions"+useCaseInfo.Name,useCaseInfo.Transactions);
+		debug.writeJson("transactions_"+useCaseInfo.Name,useCaseInfo.Transactions);
 		
 			
 			if(callbackfunc){
@@ -257,7 +274,12 @@
 				Avg_TL:0,
 				Avg_TC: 0,
 				Avg_DETs: 0,
-				Arch_Diff:0
+				Arch_Diff:0,
+				ActorNum : 0,
+				ComponentNum : 0,
+				BoundaryNum : 0,
+				ControlNum : 0,
+				EntityNum : 0,
 		};
 
 		var EI = 0;
@@ -338,6 +360,12 @@
 			
 
 			}
+
+				modelInfo['TransactionAnalytics'].ComponentNum += useCaseInfo['TransactionAnalytics'].ComponentNum;
+				modelInfo['TransactionAnalytics'].BoundaryNum += useCaseInfo['TransactionAnalytics'].BoundaryNum;
+				modelInfo['TransactionAnalytics'].ControlNum += useCaseInfo['TransactionAnalytics'].ControlNum;
+				modelInfo['TransactionAnalytics'].EntityNum += useCaseInfo['TransactionAnalytics'].Entity;
+				modelInfo['TransactionAnalytics'].ActorNum += useCaseInfo['TransactionAnalytics'].ActorNum;
 			
 		}
 
@@ -429,7 +457,7 @@
 			repoInfo['TransactionAnalytics'].EXTIVK += modelInfo['TransactionAnalytics'].EXTIVK;
 			repoInfo['TransactionAnalytics'].EXTCLL += modelInfo['TransactionAnalytics'].EXTCLL;
 			
-			tranLength = useCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_TL;
+			tramodelInfoseCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_TL;
 			tranDegree = useCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_TD;
 			tranComponents = useCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_TC;
 			tranDETs = useCaseInfo['TransactionAnalytics'].NT*useCaseInfo['TransactionAnalytics'].Avg_DETs;

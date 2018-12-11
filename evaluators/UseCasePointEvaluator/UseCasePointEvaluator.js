@@ -141,8 +141,8 @@
 		TFactor += Number(modelInfo.projectInfo.userTrainingFacilitiesRequired)*1.0;
 		modelInfo['UseCasePointData'].TCF = 0.6 + (0.01 * TFactor);
 		}
-		//change this later
-		modelInfo['UseCasePointData'].TCF = 1;
+		// //change this later
+		// modelInfo['UseCasePointData'].TCF = 1;
 		
 		modelInfo['UseCasePointData'].EF = 1;
 		var EFactor = 0;
@@ -157,8 +157,8 @@
 		EFactor += Number(modelInfo.projectInfo.difficultProgrammingLanguage) * -1.0;
 		modelInfo['UseCasePointData'].EF = 1.4+(-0.03 * EFactor);
 		}
-		//change this later
-		modelInfo['UseCasePointData'].EF = 1;
+		// //change this later
+		// modelInfo['UseCasePointData'].EF = 1;
 		
 		
 		var simpleUC = 0;

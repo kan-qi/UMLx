@@ -13,9 +13,9 @@ if estimationResults
             th PH/Month
             th #{estimationResults.SizeMetric}
             th Personnel
-            th UI Developer
-            th Full Stack
-            th Database Developer
+            th UI
+            th Business Logic
+            th Database
         tbody
           tr.estimation-table
             td #{estimationResults.EstimationModel}
@@ -36,28 +36,28 @@ if estimationResults
           th#number_column Number
           th#Use_Case Use Case
           th#EffortPH Effort
-          th#EffortPM Effort PM
-          th#EffortDev Effort Dev
-          th#EffortSyn Effort Syn
-          th#Business Business Value
-          th#BVEffort BV/Effort
+          //th#EffortPM Effort PM
+          //th#EffortDev Effort Dev
+          //th#EffortSyn Effort Syn
+          //th#Business Business Value
+          //th#BVEffort BV/Effort
           th#SizeMeasurement #{estimationResults.SizeMetric}
           th#Duration Schedule (Months)
           th#Personnel Personnel
-          th#Personnel_UI UI Developer
-          th#Personnel_FS Full Stack
-          th#Personnel_DB Database Developer
+          th#Personnel_UI UI
+          th#Personnel_FS Business Logic
+          th#Personnel_DB Database
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
             tr.estimation-table
               td #{i}
               td #{estimationResults.UseCases[i].Name}
               td #{estimationResults.UseCases[i].Effort}
-              td #{estimationResults.UseCases[i].useCasePMEffort}
-              td #{estimationResults.UseCases[i].useCaseDEVEffort}
-              td #{estimationResults.UseCases[i].synthesizedEffort}
-              td #{estimationResults.UseCases[i].BusinessValue}
-              td #{estimationResults.UseCases[i].BVEffortRatio}
+              //td #{estimationResults.UseCases[i].useCasePMEffort}
+              //td #{estimationResults.UseCases[i].useCaseDEVEffort}
+              //td #{estimationResults.UseCases[i].synthesizedEffort}
+              //td #{estimationResults.UseCases[i].BusinessValue}
+              //td #{estimationResults.UseCases[i].BVEffortRatio}
               td #{estimationResults.UseCases[i].SizeMeasurement}
               td #{estimationResults.UseCases[i].Duration}
               td #{estimationResults.UseCases[i].Personnel}

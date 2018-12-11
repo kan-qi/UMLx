@@ -253,7 +253,7 @@
 		domainModelInfo["ComponentAnalytics"] = {
 				AttributeNum :0,
 				OperationNum :0,
-				EntityNum :0,
+				// EntityNum :0,
 				ClassNum: 0,
                 TopLevelClasses :0,
                 AverageDepthInheritanceTree :0,
@@ -284,7 +284,7 @@
 
 			var attributeNum = 0;
 			var operationNum = 0;
-			var entityNum = 0;
+			// var entityNum = 0;
 			var classNum = 0;
             var topLevelClasses = 0;
             var averageDepthInheritanceTree = 0;
@@ -303,7 +303,7 @@
 
 			for ( var i in domainModelInfo.Elements) {
                             var element = domainModelInfo.Elements[i];
-                            entityNum++;
+                            // entityNum++;
                             classNum++;
                             
                             var attributeNum_cls = 0;
@@ -418,7 +418,7 @@
                element.couplingBetweenObjects = element.numberOfInheritanceRelationships+element.numberOfAssociationRelationships+element.numberOfUsageRelationships;
 		 }
 			
-			averageDepthInheritanceTree = entityNum === 0? 0: averageDepthInheritanceTree/entityNum;
+			averageDepthInheritanceTree = classNum === 0? 0: averageDepthInheritanceTree/classNum;
 			 numberOfInheritanceRelationships =  numberOfInheritanceRelationships/2;
 			
 			var usageNum = 0;
@@ -448,7 +448,7 @@
 			domainModelInfo["ComponentAnalytics"].AttributeNum = attributeNum;
 			domainModelInfo["ComponentAnalytics"].InstanceVarNum = instanceVarNum;
 			domainModelInfo["ComponentAnalytics"].OperationNum = operationNum;
-			domainModelInfo["ComponentAnalytics"].EntityNum = entityNum;
+			// domainModelInfo["ComponentAnalytics"].ClassNum = entityNum;
 			domainModelInfo["ComponentAnalytics"].ClassNum = classNum;
             domainModelInfo["ComponentAnalytics"].TopLevelClasses = topLevelClasses;
             domainModelInfo["ComponentAnalytics"].AverageDepthInheritanceTree = averageDepthInheritanceTree;
@@ -460,17 +460,17 @@
             domainModelInfo["ComponentAnalytics"].ObjectDataNum = objectdataNum;
 			domainModelInfo["ComponentAnalytics"].ParameterNum = parameterNum;
 			domainModelInfo["ComponentAnalytics"].ExternalOperNum = externalOperNum;
-			domainModelInfo["ComponentAnalytics"].AvgInstVar = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : instanceVarNum / domainModelInfo["ComponentAnalytics"].EntityNum;
+			domainModelInfo["ComponentAnalytics"].AvgInstVar = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : instanceVarNum / domainModelInfo["ComponentAnalytics"].ClassNum;
 			domainModelInfo["ComponentAnalytics"].UsageNum = usageNum;
 			domainModelInfo["ComponentAnalytics"].RealNum = realNum;
 			domainModelInfo["ComponentAnalytics"].AssocNum = assocNum;
 			domainModelInfo["ComponentAnalytics"].GeneralNum = generalNum;
-			domainModelInfo["ComponentAnalytics"].AvgOperation = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].OperationNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgAttribute = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AttributeNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgParameter = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].ParameterNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgUsage = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].UsageNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgReal = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].RealNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgAssoc = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AssocNum / domainModelInfo["ComponentAnalytics"].EntityNum;
+			domainModelInfo["ComponentAnalytics"].AvgOperation = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].OperationNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgAttribute = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AttributeNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgParameter = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].ParameterNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgUsage = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].UsageNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgReal = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].RealNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgAssoc = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AssocNum / domainModelInfo["ComponentAnalytics"].ClassNum;
 
 
 		if (callbackfunc) {
@@ -609,7 +609,7 @@
 //				DiagramNum : 0,
 				AttributeNum : 0,
 				OperationNum : 0,
-				EntityNum : 0,
+				// EntityNum : 0,
 				ActivityNum : 0,
 				TranNum : 0,
 				UseCaseNum : 0,
@@ -685,7 +685,7 @@
 		if(domainModelInfo && domainModelInfo["ComponentAnalytics"]){
 		modelInfo["ComponentAnalytics"].AttributeNum = domainModelInfo["ComponentAnalytics"].AttributeNum;
 		modelInfo["ComponentAnalytics"].OperationNum = domainModelInfo["ComponentAnalytics"].OperationNum;
-		modelInfo["ComponentAnalytics"].EntityNum = domainModelInfo["ComponentAnalytics"].EntityNum;
+		// modelInfo["ComponentAnalytics"].EntityNum = domainModelInfo["ComponentAnalytics"].ClassNum;
 		modelInfo["ComponentAnalytics"].AttributeNum = domainModelInfo["ComponentAnalytics"].AttributeNum;
 		modelInfo["ComponentAnalytics"].OperationNum = domainModelInfo["ComponentAnalytics"].OperationNum
 		modelInfo["ComponentAnalytics"].ClassNum  = domainModelInfo["ComponentAnalytics"].ClassNum;
@@ -891,10 +891,19 @@
 		var elementAnalyticsStr = elementNum == 0 ? "id,element,useCase,type,component\n" : "";
 		var transactionAnalyticsStr = transactionNum == 0 ? "id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num\n" : "";
 
-			for ( var i in useCase.Transactions) {
+			var i = useCase.Transactions.length;
+			
+			while (i--) {
+
 				var transaction = useCase.Transactions[i];
 				console.log(transaction);
-				useCaseComponentsProcessor.processTransaction(transaction, useCase);
+
+				if(!useCaseComponentsProcessor.processTransaction(transaction, useCase)){
+					useCase.Transactions.splice(i, 1);
+					continue;
+				}
+
+				// useCaseComponentsProcessor.processTransaction(transaction, useCase);
 				transactionNum++;
 				transactionAnalyticsStr += transactionNum + ","
 						+ transaction.TransactionStr.replace(/,/gi, "") + ","

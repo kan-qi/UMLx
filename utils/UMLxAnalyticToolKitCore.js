@@ -13,11 +13,11 @@
     
     var UMLEvaluator = require('../UMLEvaluator.js');
     var UMLModelExtractor = require("../UMLModelExtractor.js");
-    var EffortPredictor = require("../EffortPredictor.js");
+    var EffortPredictor = require("../UMLxEffortPredictor.js");
     
 	var path = require('path');
 
-	var isForPackage = false;
+	// var isForPackage = false;
 
     function analyseUML(inputFilePath, outputDir, projectName, callbackfunc) {
 
@@ -313,11 +313,13 @@
 				let model_elements_table_content = '';
 
 				let model_elements_folder = '';
-				if (isForPackage) {
-					model_elements_folder = './public/output/repo' + model.repo_id + '/' + model.fileId + '/' + model.UseCases[key]._id;
-				} else {
-					model_elements_folder = './data/StandAloneToolKit/output/' + model.UseCases[key]._id;
-				}				
+				// if (isForPackage) {
+					// model_elements_folder = './public/output/repo' + model.repo_id + '/' + model.fileId + '/' + model.UseCases[key]._id;
+				// } else {
+					// model_elements_folder = './data/StandAloneToolKit/output/' + model.UseCases[key]._id;
+				// }				
+
+				model_elements_folder = model.OutputDir+"/"+ model.UseCases[key]._id;
 
 				fs.readdirSync(model_elements_folder).forEach((file, index) => {
 					let stats = fs.statSync(model_elements_folder + '/' + file);
@@ -384,11 +386,13 @@
 		let model_analytics_table_content = '';
 
 		let testFolder = '';
-		if (isForPackage) {
-			testFolder = './public/output/repo' + model.repo_id + '/' + model.fileId;
-		} else {
-			testFolder = './data/StandAloneToolKit/output';
-		}		
+		// if (isForPackage) {
+		// 	testFolder = './public/output/repo' + model.repo_id + '/' + model.fileId;
+		// } else {
+		// 	testFolder = './data/StandAloneToolKit/output';
+		// }		
+
+		testFolder = model.OutputDir+"/"+ model.UseCases[key]._id;
 
 		fs.readdirSync(testFolder).forEach((file, index) => {
 			let stats = fs.statSync(testFolder + '/' + file);
@@ -733,7 +737,7 @@
     }
 
 	function generateReport(model, callbackfunc) {
-		isForPackage = true;
+		// isForPackage = true;
 	    readUsecaseJson(model, function (html_table) {
 	        console.log("generate use cases");
 	        createStream(model, function (rt_object) {

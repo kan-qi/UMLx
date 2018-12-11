@@ -75,6 +75,13 @@
 					
 				}
 				transaction.TransactionStr = TransactionStr;
+
+				if(transaction.TransactionStr.includes("undefined")){
+					console.log("undefined transactions");
+					return false;
+				}
+				
+				
 //				if(transactionLength > 0){
 //					avgDegree = avgDegree / transactionLength;
 //				}
@@ -91,6 +98,7 @@
 				transaction.entityNum = entityNum;
 				transaction.actorNum = actorNum;
 				transaction.length = transaction.Nodes.length;
+
 				return true;
 				
 			},

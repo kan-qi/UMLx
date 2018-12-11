@@ -20,7 +20,8 @@
 	// this json object should be copied from the trained model from transaction analysis
 	var transactionWeightingSchema = {
 			  "EUCP": {
-				    "effortAdj": [7.0161, 4.8481],
+					// "effortAdj": [1.2161, 4.8481],
+					"effortAdj": [7.0161, 4.8481],
 				    "sigma": [324.5969, 1060.5522],
 				    "cuts": [],
 				    "levels": {
@@ -286,11 +287,9 @@
 						 var command1 = './Rscript/LinearRegressionForUseCasePoints.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['ExtendedUseCasePointData'].repoUseCasePointEvaluationResultsPath+'"';
 						 RScriptExec.runRScript(command1,function(result){
 								if (!result) {
-									return;
-								
-
 //									console.log('exec error: ' + error);
 									console.log('exec error: repo id=' + repoInfo._id);
+									return;
 								}
 								
 							

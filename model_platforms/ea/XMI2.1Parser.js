@@ -165,7 +165,7 @@
 		
 		//create a catalog for the different types of the elements.
 		var XMICustomProfiles = jp.query(XMIUMLModel, '$..["thecustomprofile:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
-		XMICustomProfiles = jp.query(XMIUMLModel, '$..["VHDL:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;});
+		XMICustomProfiles =  XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["VHDL:entity"][?(@["$"])]').map((obj) => {obj.type="entity"; return obj;}));
 		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:control"][?(@["$"])]').map((obj) => {obj.type="control"; return obj;}));
 		XMICustomProfiles = XMICustomProfiles.concat(jp.query(XMIUMLModel, '$..["thecustomprofile:boundary"][?(@["$"])]').map((obj) => {obj.type="boundary"; return obj;}));
 		

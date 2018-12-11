@@ -7,7 +7,7 @@ var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
 var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
-var effortPredictor = require("./EffortPredictor.js");
+var effortPredictor = require("./UMLxEffortPredictor.js");
 //var COCOMOCalculator = require("./COCOMOCalculator.js");
 var multer = require('multer');
 var jade = require('jade');
@@ -31,7 +31,7 @@ const { fork } = require('child_process');
 //var removeDir = require('some-custom-fs');
 //var effortPredictor = require("./model_estimator/ProjectEffortEstimator.js");
 console.l = console.log;
-console.log = function() {};
+// console.log = function() {};
 
 
 var storage = multer.diskStorage({
@@ -151,6 +151,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
         projectInfo.stableRequirements = req.body['stable_requirements'];
         projectInfo.partTimeStaff = req.body['part_time_staff'];
         projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+
         let packed_obj = {};
         if(!req.files['uml_file']){
             console.log("empty uml file");

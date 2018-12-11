@@ -166,18 +166,18 @@
 //		
 		
 
-		var boundaryNum =  modelInfo["ComponentAnalytics"].BoundaryNum;
-		var controlNum = modelInfo["ComponentAnalytics"].ControlNum;
-		var entityNum = modelInfo["ComponentAnalytics"].EntityNum;
-		var totalNum = boundaryNum + controlNum + entityNum;
+		// var boundaryNum =  modelInfo["ComponentAnalytics"].BoundaryNum;
+		// var controlNum = modelInfo["ComponentAnalytics"].ControlNum;
+		// var entityNum = modelInfo["ComponentAnalytics"].EntityNum;
+		// var totalNum = boundaryNum + controlNum + entityNum;
 		
-	    var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
-	    var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
-	    var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
+	    // var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
+	    // var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
+	    // var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
 	    
-		estimationResults.Personnel_UI = parseFloat(personnel_UI_estimated*100).toFixed(2)+"%";
-		estimationResults.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
-		estimationResults.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
+		// estimationResults.Personnel_UI = parseFloat(personnel_UI_estimated*100).toFixed(2)+"%";
+		// estimationResults.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
+		// estimationResults.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
 		
 		estimationResults.Personnel = Math.ceil(personnel);
 		
@@ -193,7 +193,10 @@
 			useCaseEstimatesById[estimationResults.UseCases[i]._id] = estimationResults.UseCases[i];
 		}
 		
-		
+		var viewEffortWeight = 0;
+		var controlEffortWeight = 0;
+		var modelEffortWeight = 0;
+
 		//calculate distributions
 
 		//distribute project effort
@@ -299,7 +302,11 @@
 				
 			    var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
 			    var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
-			    var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
+				var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
+				
+				viewEffortWeight += personnel_UI_estimated;
+				controlEffortWeight += personnel_FS_estimated;
+				modelEffortWeight += personnel_DB_estimated;
 
 //			    var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
 //			    var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
@@ -327,6 +334,11 @@
 				
 				estimationResults.UseCases.push(useCaseEstimates);
 		}
+
+		var totalWeight = viewEffortWeight+controlEffortWeight+modelEffortWeight;
+		estimationResults.Personnel_UI = parseFloat(viewEffortWeight/totalWeight*100).toFixed(2)+"%";
+		estimationResults.Personnel_DB = parseFloat(modelEffortWeight/totalWeight*100).toFixed(2)+"%";
+		estimationResults.Personnel_FS = parseFloat(controlEffortWeight/totalWeight*100).toFixed(2)+"%";
 		
 
 		console.log("estimation result");
@@ -334,6 +346,7 @@
 		
 		
 	}
+	
 	// distribute the effort to different types of components.
 	function estimateMVCEffort(modelInfo, estimationResults, projectEffort, modelConfig){
 		
@@ -347,6 +360,7 @@
 		var viewWeight = 0;
 		var entityWeight = 0;
 		var controlWeight = 0;
+
 		for(var i in domainModelInfo.Elements){
 			var element = domainModelInfo.Elements[i];
 //			console.log("domain elements");

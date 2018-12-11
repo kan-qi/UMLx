@@ -474,6 +474,7 @@ function showEstimationChart(chartsTag)
                 name.push(response.UseCases[i].Name);
             }
             console.log(Effort);
+            // console.log(chartsTag);
             $(chartsTag).find('#estimation-charts').highcharts({
                 chart: {
                     type: 'column',
