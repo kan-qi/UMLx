@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "PaymentController" as 09
+participant "Notifyadministrator" as 19
+participant "Reservation" as 29
+participant "Loginbutton" as 39
+participant "$help://use_case_model_pattern.htm" as 59
+participant "User" as 109
+participant "$help://usecasediagram.htm" as 119
+
+user -> 09: personalhomepage()
+activate 09
+
+deactivate 09
+
+user -> 19: notallowedtologinmessage()
+activate 19
+
+deactivate 19
+
+user -> 29: Invaliduserinformation()
+activate 29
+
+deactivate 29
+
+user -> 39: Loginbutton()
+activate 39
+
+39 -> 59: Validateusernameandpassword()
+activate 59
+
+59 -> 29: Invaliduserinformation()
+activate 29
+
+deactivate 29
+
+59 -> 109: UserInfo()
+activate 109
+
+deactivate 109
+
+59 -> 119: redirecttheusertotheirpersonalhomepage()
+activate 119
+
+119 -> 09: personalhomepage()
+activate 09
+
+deactivate 09
+
+deactivate 119
+
+deactivate 59
+
+39 -> 39: disabletheusersprivilegetologin()
+39 -> 19: Notifyadministrator()
+activate 19
+
+19 -> 39: notallowedtologinmessage()
+deactivate 39
+
+19 -> 19: administratoremailbox()
+deactivate 19
+
+@enduml

@@ -1,0 +1,398 @@
+id,element,useCase,type,component
+1,User:Building Assignments Page,Add EMT building assignment in emergency,boundary,EMT Building Assignment
+2,User:EMT form page,Add EMT building assignment in emergency,entity,Triagecategory
+3,User:Supervisors' emergency homepage,Add EMT building assignment in emergency,boundary,Supervisor
+4,User:Building Assignments Page,Add EMT building assignment in emergency,boundary,EMT Building Assignment
+5,User:submitted add EMT Form page,Add EMT building assignment in emergency,entity,Triagecategory
+6,User:"Add EMT Assignment" button,Add EMT building assignment in emergency,boundary,EMT Building Assignment
+7,"Add EMT Assignment" button:Redirects to the building assignments page,Add EMT building assignment in emergency,boundary,EMT Building Assignment
+8,Building Assignments Page:returns add EMT from page,Add EMT building assignment in emergency,boundary,returnsaddEMTfrompage
+9,Redirects to the building assignments page:Building Assignments Page,Add EMT building assignment in emergency,boundary,EMT Building Assignment
+10,Validates Input:EMT form page,Add EMT building assignment in emergency,boundary,returnsaddEMTfrompage
+11,returns add EMT from page:EMT form page,Add EMT building assignment in emergency,boundary,returnsaddEMTfrompage
+12,Prints out the list of victims:Supervisors' emergency homepage,Add EMT building assignment in emergency,boundary,Supervisor
+13,Prints out the list of victims:Triage category,Add EMT building assignment in emergency,entity,Triagecategory
+14,Validates Input:Prints out the list of victims,Add EMT building assignment in emergency,control,Victim
+15,Redirects to the building assignments page:Volunteer assignment and EMT assignment DB,Add EMT building assignment in emergency,boundary,EMT Building Assignment
+16,Validates Input:submitted add EMT Form page,Add EMT building assignment in emergency,boundary,returnsaddEMTfrompage
+17,returns add EMT from page:Validates Input,Add EMT building assignment in emergency,control,ValidatesInput
+18,stl#User:Building Assignments Page,Add EMT building assignment in emergency,Stimulus,undefined
+19,stl#User:EMT form page,Add EMT building assignment in emergency,Stimulus,undefined
+20,stl#User:Supervisors' emergency homepage,Add EMT building assignment in emergency,Stimulus,undefined
+21,stl#User:Building Assignments Page,Add EMT building assignment in emergency,Stimulus,undefined
+22,stl#User:submitted add EMT Form page,Add EMT building assignment in emergency,Stimulus,undefined
+23,stl#User:"Add EMT Assignment" button,Add EMT building assignment in emergency,Stimulus,undefined
+24,Supervisor:Add building/hub button,Add buildings/hubs to the datbase,control,Building
+25,Supervisor:null input informaiton error,Add buildings/hubs to the datbase,control,ValidatesInput
+26,Supervisor:Input invalid error,Add buildings/hubs to the datbase,control,ValidatesInput
+27,Supervisor:Manage bildings/hubs/disasters page,Add buildings/hubs to the datbase,control,Disaster
+28,Supervisor:Building/hub form page,Add buildings/hubs to the datbase,control,Building
+29,Add building/hub button:Redirects to the add building/hub form page,Add buildings/hubs to the datbase,control,Building
+30,Building/hub form page:System validates input,Add buildings/hubs to the datbase,control,ValidatesInput
+31,Redirects to the add building/hub form page:Building/hub form page,Add buildings/hubs to the datbase,control,Building
+32,Input invalid error:Validates input as being correct,Add buildings/hubs to the datbase,control,ValidatesInput
+33,System validates input:Input invalid error,Add buildings/hubs to the datbase,control,ValidatesInput
+34,Insert the new record into db:building/hubdb,Add buildings/hubs to the datbase,control,Building
+35,System validates input:Insert the new record into db,Add buildings/hubs to the datbase,entity,Transport Coordinator
+36,Redirects to the management buildings/hubs/disasters page:Manage bildings/hubs/disasters page,Add buildings/hubs to the datbase,control,Disaster
+37,System updates record in the database:Redirects to the management buildings/hubs/disasters page,Add buildings/hubs to the datbase,boundary,EMT Building Assignment
+38,System updates record in the database:building/hubdb,Add buildings/hubs to the datbase,control,Building
+39,Validates input as being correct:System updates record in the database,Add buildings/hubs to the datbase,control,System Boundary
+40,Validates input as being correct:null input informaiton error,Add buildings/hubs to the datbase,control,ValidatesInput
+41,stl#Supervisor:Add building/hub button,Add buildings/hubs to the datbase,Stimulus,undefined
+42,stl#Supervisor:null input informaiton error,Add buildings/hubs to the datbase,Stimulus,undefined
+43,stl#Supervisor:Input invalid error,Add buildings/hubs to the datbase,Stimulus,undefined
+44,stl#Supervisor:Manage bildings/hubs/disasters page,Add buildings/hubs to the datbase,Stimulus,undefined
+45,stl#Supervisor:Building/hub form page,Add buildings/hubs to the datbase,Stimulus,undefined
+46,Supervisor:"add individual" button,Add individuals to the list of allowed users,control,ViewIndividualspage
+47,Supervisor:View Individual's page,Add individuals to the list of allowed users,control,ViewIndividualspage
+48,Supervisor:invalidate error message,Add individuals to the list of allowed users,control,ValidatesInput
+49,Supervisor:OTP empty error message,Add individuals to the list of allowed users,boundary,returnsaddEMTfrompage
+50,Supervisor:Add invidual form page,Add individuals to the list of allowed users,control,ViewIndividualspage
+51,"add individual" button:redirects to the add individual form page,Add individuals to the list of allowed users,control,ViewIndividualspage
+52,Add invidual form page:validates input,Add individuals to the list of allowed users,control,ValidatesInput
+53,redirects to the add individual form page:Add invidual form page,Add individuals to the list of allowed users,control,ViewIndividualspage
+54,Insert the new individual's record into db:Redirect View Individual's Page,Add individuals to the list of allowed users,control,ViewIndividualspage
+55,Insert the new individual's record into db:individuals record db,Add individuals to the list of allowed users,control,ViewIndividualspage
+56,validates input:Insert the new individual's record into db,Add individuals to the list of allowed users,control,ViewIndividualspage
+57,Redirect View Individual's Page:send ot device,Add individuals to the list of allowed users,control,Victim
+58,Redirect View Individual's Page:View Individual's page,Add individuals to the list of allowed users,control,ViewIndividualspage
+59,receive and storate device id at local storage:individuals record db,Add individuals to the list of allowed users,control,ViewIndividualspage
+60,validates input:invalidate error message,Add individuals to the list of allowed users,control,ValidatesInput
+61,send ot device:receive and storate device id at local storage,Add individuals to the list of allowed users,control,ViewIndividualspage
+62,stl#Supervisor:"add individual" button,Add individuals to the list of allowed users,Stimulus,undefined
+63,stl#Supervisor:View Individual's page,Add individuals to the list of allowed users,Stimulus,undefined
+64,stl#Supervisor:invalidate error message,Add individuals to the list of allowed users,Stimulus,undefined
+65,stl#Supervisor:OTP empty error message,Add individuals to the list of allowed users,Stimulus,undefined
+66,stl#Supervisor:Add invidual form page,Add individuals to the list of allowed users,Stimulus,undefined
+67,Supervisor:View Individual's page,Add volunteers to the system,control,ViewIndividualspage
+68,Supervisor:Add invidual form page,Add volunteers to the system,control,ViewIndividualspage
+69,Supervisor:"add individual" button,Add volunteers to the system,control,ViewIndividualspage
+70,Supervisor:invalidate error message,Add volunteers to the system,control,ValidatesInput
+71,"add individual" button:redirects to the add individual form page,Add volunteers to the system,control,ViewIndividualspage
+72,Add invidual form page:validates input,Add volunteers to the system,control,ValidatesInput
+73,redirects to the add individual form page:Add invidual form page,Add volunteers to the system,control,ViewIndividualspage
+74,Insert the new individual's record into db:generate one time pass (OTP) and send it to users,Add volunteers to the system,control,$help://use_case_model_pattern.htm
+75,Insert the new individual's record into db:individuals record db,Add volunteers to the system,control,ViewIndividualspage
+76,validates input:Insert the new individual's record into db,Add volunteers to the system,control,ViewIndividualspage
+77,redirect to individua's page:View Individual's page,Add volunteers to the system,control,ViewIndividualspage
+78,generate one time pass (OTP) and send it to users:redirect to individua's page,Add volunteers to the system,control,ViewIndividualspage
+79,validates input:invalidate error message,Add volunteers to the system,control,ValidatesInput
+80,stl#Supervisor:View Individual's page,Add volunteers to the system,Stimulus,undefined
+81,stl#Supervisor:Add invidual form page,Add volunteers to the system,Stimulus,undefined
+82,stl#Supervisor:"add individual" button,Add volunteers to the system,Stimulus,undefined
+83,stl#Supervisor:invalidate error message,Add volunteers to the system,Stimulus,undefined
+84,User:"Emergency" button,Add/Chose Disaster,boundary,EMT Building Assignment
+85,User:Disaster page,Add/Chose Disaster,control,Disaster
+86,User:Disaster page,Add/Chose Disaster,control,Disaster
+87,User:Superviser's emergency disaster homepage,Add/Chose Disaster,control,Disaster
+88,"Emergency" button:System redirects to Disaste page,Add/Chose Disaster,control,Disaster
+89,Disaster page:validate theat all fields are non-empty,Add/Chose Disaster,control,ValidatesInput
+90,System redirects to Disaste page:Disaster page,Add/Chose Disaster,control,Disaster
+91,System inserts the disaster record in the database:Disaster record db,Add/Chose Disaster,control,Disaster
+92,System inserts the disaster record in the database:Superviser's emergency disaster homepage,Add/Chose Disaster,control,Disaster
+93,validate theat all fields are non-empty:Superviser's emergency disaster homepage,Add/Chose Disaster,control,Disaster
+94,validate theat all fields are non-empty:System inserts the disaster record in the database,Add/Chose Disaster,control,Disaster
+95,stl#User:"Emergency" button,Add/Chose Disaster,Stimulus,undefined
+96,stl#User:Disaster page,Add/Chose Disaster,Stimulus,undefined
+97,stl#User:Disaster page,Add/Chose Disaster,Stimulus,undefined
+98,stl#User:Superviser's emergency disaster homepage,Add/Chose Disaster,Stimulus,undefined
+99,Transport Coordinator:category's page,Enter Victim Data,boundary,categoryspage
+100,Transport Coordinator:volunteer homepage,Enter Victim Data,control,Volunteer
+101,Transport Coordinator:"is he breathing" page,Enter Victim Data,boundary,categoryspage
+102,Transport Coordinator:Error message,Enter Victim Data,boundary,categoryspage
+103,Transport Coordinator:Vlunteer Diaster Homepage,Enter Victim Data,control,Volunteer
+104,Transport Coordinator:"add victim" button,Enter Victim Data,control,Victim
+105,Transport Coordinator:Respiration/perfusion/metal status page,Enter Victim Data,boundary,returnsaddEMTfrompage
+106,"add victim" button:Redirects to the "is he breathing" page,Enter Victim Data,boundary,categoryspage
+107,"is he breathing" page:Redirects to respiration/perfusion/metal status page,Enter Victim Data,boundary,Redirectstorespirationperfusionmetalstatuspage
+108,Redirects to the "is he breathing" page:"is he breathing" page,Enter Victim Data,boundary,categoryspage
+109,Categorizes the victim:Category page,Enter Victim Data,boundary,categoryspage
+110,Categorizes the victim:Redirects to category's page,Enter Victim Data,boundary,categoryspage
+111,Respiration/perfusion/metal status page:Categorizes the victim,Enter Victim Data,control,Victim
+112,Updates the database for building information:Categorizes the victim,Enter Victim Data,control,Victim
+113,Vaidates the input:Error message,Enter Victim Data,boundary,categoryspage
+114,Redirects to respiration/perfusion/metal status page:Hospital information,Enter Victim Data,boundary,Redirectstorespirationperfusionmetalstatuspage
+115,Redirects to category's page:Vaidates the input,Enter Victim Data,control,ValidatesInput
+116,Redirects to category's page:category's page,Enter Victim Data,boundary,categoryspage
+117,Redirects to respiration/perfusion/metal status page:Respiration/perfusion/metal status page,Enter Victim Data,boundary,Redirectstorespirationperfusionmetalstatuspage
+118,Redirects to respiration/perfusion/metal status page:Updates the database for building information,Enter Victim Data,control,Building
+119,Vaidates the input:add new victim record to db,Enter Victim Data,control,Victim
+120,add new victim record to db:Vlunteer Diaster Homepage,Enter Victim Data,control,Volunteer
+121,add new victim record to db:volunteer homepage,Enter Victim Data,control,Volunteer
+122,add new victim record to db:db,Enter Victim Data,entity,db
+123,stl#Transport Coordinator:category's page,Enter Victim Data,Stimulus,undefined
+124,stl#Transport Coordinator:volunteer homepage,Enter Victim Data,Stimulus,undefined
+125,stl#Transport Coordinator:"is he breathing" page,Enter Victim Data,Stimulus,undefined
+126,stl#Transport Coordinator:Error message,Enter Victim Data,Stimulus,undefined
+127,stl#Transport Coordinator:Vlunteer Diaster Homepage,Enter Victim Data,Stimulus,undefined
+128,stl#Transport Coordinator:"add victim" button,Enter Victim Data,Stimulus,undefined
+129,stl#Transport Coordinator:Respiration/perfusion/metal status page,Enter Victim Data,Stimulus,undefined
+130,User:MedFPS homepage,Login to MEDFRS Website,boundary,returnsaddEMTfrompage
+131,User:Login error message,Login to MEDFRS Website,boundary,returnsaddEMTfrompage
+132,User:Login page,Login to MEDFRS Website,boundary,categoryspage
+133,User:Empty username and password error message,Login to MEDFRS Website,boundary,returnsaddEMTfrompage
+134,Authenticate the username and password:Redirect to MedFPS Supervisor/coordinate homepage,Login to MEDFRS Website,boundary,Redirectstorespirationperfusionmetalstatuspage
+135,Authenticate the username and password:Username and password db,Login to MEDFRS Website,control,User
+136,Authenticate the username and password:Login error message,Login to MEDFRS Website,boundary,returnsaddEMTfrompage
+137,Check user and password entered:Authenticate the username and password,Login to MEDFRS Website,control,$help://use_case_model_pattern.htm
+138,Check user and password entered:Empty username and password error message,Login to MEDFRS Website,boundary,returnsaddEMTfrompage
+139,Login page:Check user and password entered,Login to MEDFRS Website,control,$help://usecasediagram.htm
+140,Redirect to MedFPS Supervisor/coordinate homepage:MedFPS homepage,Login to MEDFRS Website,boundary,returnsaddEMTfrompage
+141,stl#User:MedFPS homepage,Login to MEDFRS Website,Stimulus,undefined
+142,stl#User:Login error message,Login to MEDFRS Website,Stimulus,undefined
+143,stl#User:Login page,Login to MEDFRS Website,Stimulus,undefined
+144,stl#User:Empty username and password error message,Login to MEDFRS Website,Stimulus,undefined
+145,User:"log out" button,Logout,boundary,logoutbutton
+146,User:MedFPS homepage,Logout,boundary,returnsaddEMTfrompage
+147,"log out" button:Logout,Logout,boundary,logoutbutton
+148,Display MedFPS homepage:MedFPS homepage,Logout,boundary,returnsaddEMTfrompage
+149,Logout:Display MedFPS homepage,Logout,boundary,categoryspage
+150,stl#User:"log out" button,Logout,Stimulus,undefined
+151,stl#User:MedFPS homepage,Logout,Stimulus,undefined
+152,Supervisor:Delete Page,Manage individuals in the database,boundary,categoryspage
+153,Supervisor:Update individual's record,Manage individuals in the database,control,ValidatesInput
+154,Supervisor:Individual details page,Manage individuals in the database,boundary,returnsaddEMTfrompage
+155,Supervisor:"manage individuals" button,Manage individuals in the database,boundary,logoutbutton
+156,Supervisor:Update Individual Form Page,Manage individuals in the database,boundary,categoryspage
+157,Supervisor:Management Individuals Page,Manage individuals in the database,boundary,EMT Building Assignment
+158,"manage individuals" button:Redirects to the management individusal page,Manage individuals in the database,boundary,Redirectstorespirationperfusionmetalstatuspage
+159,Redirect to delete page:Delete Page,Manage individuals in the database,boundary,categoryspage
+160,Individual details page:Redirects to the update individual form page,Manage individuals in the database,boundary,Redirectstorespirationperfusionmetalstatuspage
+161,Redirects to the management individusal page:Individual details page,Manage individuals in the database,boundary,returnsaddEMTfrompage
+162,Update individual's record:Individual records,Manage individuals in the database,entity,Transport Coordinator
+163,Redirects to the manage individuals page:Management Individuals Page,Manage individuals in the database,boundary,EMT Building Assignment
+164,Update Individual Form Page:Redirect to delete page,Manage individuals in the database,boundary,Redirectstorespirationperfusionmetalstatuspage
+165,Update individual's record:Redirects to the manage individuals page,Manage individuals in the database,boundary,Redirectstorespirationperfusionmetalstatuspage
+166,Redirects to the update individual form page:Update Individual Form Page,Manage individuals in the database,boundary,categoryspage
+167,Redirects to the update individual form page:Validates input,Manage individuals in the database,control,ValidatesInput
+168,Update Individual Form Page:Update individual's record,Manage individuals in the database,control,ValidatesInput
+169,Validates input:Update individual's record,Manage individuals in the database,control,ValidatesInput
+170,stl#Supervisor:Delete Page,Manage individuals in the database,Stimulus,undefined
+171,stl#Supervisor:Update individual's record,Manage individuals in the database,Stimulus,undefined
+172,stl#Supervisor:Individual details page,Manage individuals in the database,Stimulus,undefined
+173,stl#Supervisor:"manage individuals" button,Manage individuals in the database,Stimulus,undefined
+174,stl#Supervisor:Update Individual Form Page,Manage individuals in the database,Stimulus,undefined
+175,stl#Supervisor:Management Individuals Page,Manage individuals in the database,Stimulus,undefined
+176,Transport Coordinator:Vlunteer Diaster Homepage,Manage victim emergency emt assignment information,control,Volunteer
+177,Transport Coordinator:category's page,Manage victim emergency emt assignment information,boundary,categoryspage
+178,Transport Coordinator:management assigments details page,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+179,Transport Coordinator:Management victims/EMT asignments page,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+180,Transport Coordinator:null input informaiton error,Manage victim emergency emt assignment information,control,ValidatesInput
+181,Transport Coordinator:"Manage victims/EMT assignments" button,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+182,Transport Coordinator:Update Victims Assignments Form Page,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+183,Transport Coordinator:volunteer homepage,Manage victim emergency emt assignment information,control,Volunteer
+184,"Manage victims/EMT assignments" button:Redirect to management/EMT assignments page,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+185,Redirects to update victim assignment form page:Hospital information,Manage victim emergency emt assignment information,boundary,Redirectstorespirationperfusionmetalstatuspage
+186,Redirects to the manage victims/EMT assignmetns page:Management victims/EMT asignments page,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+187,Redirect to management/EMT assignments page:management assigments details page,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+188,Redirects to the manage victims/EMT assignmetns page:add new victim record to db,Manage victim emergency emt assignment information,control,Victim
+189,System updates record in the database:Redirects to the manage victims/EMT assignmetns page,Manage victim emergency emt assignment information,boundary,Redirectstorespirationperfusionmetalstatuspage
+190,Redirects to update victim assignment form page:Update Victims Assignments Form Page,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+191,management assigments details page:Redirects to update victim assignment form page,Manage victim emergency emt assignment information,boundary,Redirectstorespirationperfusionmetalstatuspage
+192,System updates record in the database:category's page,Manage victim emergency emt assignment information,boundary,categoryspage
+193,System updates record in the database:assignment detail database,Manage victim emergency emt assignment information,boundary,EMT Building Assignment
+194,Validates input as being correct:System updates record in the database,Manage victim emergency emt assignment information,control,System Boundary
+195,Update Victims Assignments Form Page:Validates input as being correct,Manage victim emergency emt assignment information,control,ValidatesInput
+196,Validates input as being correct:null input informaiton error,Manage victim emergency emt assignment information,control,ValidatesInput
+197,add new victim record to db:Vlunteer Diaster Homepage,Manage victim emergency emt assignment information,control,Volunteer
+198,add new victim record to db:db,Manage victim emergency emt assignment information,entity,db
+199,add new victim record to db:volunteer homepage,Manage victim emergency emt assignment information,control,Volunteer
+200,stl#Transport Coordinator:Vlunteer Diaster Homepage,Manage victim emergency emt assignment information,Stimulus,undefined
+201,stl#Transport Coordinator:category's page,Manage victim emergency emt assignment information,Stimulus,undefined
+202,stl#Transport Coordinator:management assigments details page,Manage victim emergency emt assignment information,Stimulus,undefined
+203,stl#Transport Coordinator:Management victims/EMT asignments page,Manage victim emergency emt assignment information,Stimulus,undefined
+204,stl#Transport Coordinator:null input informaiton error,Manage victim emergency emt assignment information,Stimulus,undefined
+205,stl#Transport Coordinator:"Manage victims/EMT assignments" button,Manage victim emergency emt assignment information,Stimulus,undefined
+206,stl#Transport Coordinator:Update Victims Assignments Form Page,Manage victim emergency emt assignment information,Stimulus,undefined
+207,stl#Transport Coordinator:volunteer homepage,Manage victim emergency emt assignment information,Stimulus,undefined
+208,Transport Coordinator:"Manage buildings/hubs/disasters" button,Management buildings/hubs/disasters in the database,control,Building
+209,Transport Coordinator:Management buildings/hub/disasters page,Management buildings/hubs/disasters in the database,boundary,EMT Building Assignment
+210,Transport Coordinator:Manage bildings/hubs/disasters page,Management buildings/hubs/disasters in the database,control,Disaster
+211,Transport Coordinator:null input informaiton error,Management buildings/hubs/disasters in the database,control,ValidatesInput
+212,Transport Coordinator:update building/hub/disaster form page,Management buildings/hubs/disasters in the database,control,Building
+213,"Manage buildings/hubs/disasters" button:Redirects to the management buildings/hubs/disasters page,Management buildings/hubs/disasters in the database,boundary,EMT Building Assignment
+214,Delete records from the database:builds/hubs/diasters db,Management buildings/hubs/disasters in the database,control,Building
+215,Management buildings/hub/disasters page:Delete records from the database,Management buildings/hubs/disasters in the database,boundary,returnsaddEMTfrompage
+216,Redirects to the management buildings/hubs/disasters page:Manage bildings/hubs/disasters page,Management buildings/hubs/disasters in the database,control,Disaster
+217,Management buildings/hub/disasters page:Redirects to update building/hub/disaster form page,Management buildings/hubs/disasters in the database,boundary,Redirectstorespirationperfusionmetalstatuspage
+218,Redirects to the management buildings/hubs/disasters page:Management buildings/hub/disasters page,Management buildings/hubs/disasters in the database,boundary,EMT Building Assignment
+219,System updates record in the database:Redirects to the management buildings/hubs/disasters page,Management buildings/hubs/disasters in the database,boundary,EMT Building Assignment
+220,Redirects to update building/hub/disaster form page:update building/hub/disaster form page,Management buildings/hubs/disasters in the database,control,Building
+221,System updates record in the database:builds/hubs/diasters db,Management buildings/hubs/disasters in the database,control,Building
+222,Validates input as being correct:System updates record in the database,Management buildings/hubs/disasters in the database,control,System Boundary
+223,Validates input as being correct:null input informaiton error,Management buildings/hubs/disasters in the database,control,ValidatesInput
+224,update building/hub/disaster form page:Validates input as being correct,Management buildings/hubs/disasters in the database,control,ValidatesInput
+225,stl#Transport Coordinator:"Manage buildings/hubs/disasters" button,Management buildings/hubs/disasters in the database,Stimulus,undefined
+226,stl#Transport Coordinator:Management buildings/hub/disasters page,Management buildings/hubs/disasters in the database,Stimulus,undefined
+227,stl#Transport Coordinator:Manage bildings/hubs/disasters page,Management buildings/hubs/disasters in the database,Stimulus,undefined
+228,stl#Transport Coordinator:null input informaiton error,Management buildings/hubs/disasters in the database,Stimulus,undefined
+229,stl#Transport Coordinator:update building/hub/disaster form page,Management buildings/hubs/disasters in the database,Stimulus,undefined
+230,Supervisor:authentification failure message,On time login to MedFRS Device App,boundary,Redirectstorespirationperfusionmetalstatuspage
+231,Supervisor:volunteer homepage,On time login to MedFRS Device App,control,Volunteer
+232,Supervisor:Individual details page,On time login to MedFRS Device App,boundary,returnsaddEMTfrompage
+233,Supervisor:OTP page,On time login to MedFRS Device App,boundary,categoryspage
+234,Supervisor:Delete Page,On time login to MedFRS Device App,boundary,categoryspage
+235,Supervisor:Management Individuals Page,On time login to MedFRS Device App,boundary,EMT Building Assignment
+236,Supervisor:Update Individual Form Page,On time login to MedFRS Device App,boundary,categoryspage
+237,Supervisor:OTP empty error message,On time login to MedFRS Device App,boundary,returnsaddEMTfrompage
+238,Redirect to delete page:Delete Page,On time login to MedFRS Device App,boundary,categoryspage
+239,Individual details page:authenticate the OTP,On time login to MedFRS Device App,boundary,categoryspage
+240,check OTP entered is non-empty:Individual details page,On time login to MedFRS Device App,boundary,returnsaddEMTfrompage
+241,receive and storate device id at local storage:Management Individuals Page,On time login to MedFRS Device App,boundary,EMT Building Assignment
+242,check OTP entered is non-empty:OTP empty error message,On time login to MedFRS Device App,boundary,returnsaddEMTfrompage
+243,OTP page:check local storage,On time login to MedFRS Device App,boundary,categoryspage
+244,Update Individual Form Page:Redirect to delete page,On time login to MedFRS Device App,boundary,Redirectstorespirationperfusionmetalstatuspage
+245,Update Individual Form Page:send ot device,On time login to MedFRS Device App,control,Victim
+246,authenticate the OTP:Update Individual Form Page,On time login to MedFRS Device App,boundary,categoryspage
+247,authenticate the OTP:generates unique device id,On time login to MedFRS Device App,control,ValidatesInput
+248,check OTP entered is non-empty:authenticate the OTP,On time login to MedFRS Device App,boundary,categoryspage
+249,generates unique device id:authentification failure message,On time login to MedFRS Device App,boundary,Redirectstorespirationperfusionmetalstatuspage
+250,check OTP entered is non-empty:local storage,On time login to MedFRS Device App,boundary,categoryspage
+251,check local storage:check OTP entered is non-empty,On time login to MedFRS Device App,control,Disaster
+252,check local storage:volunteer homepage,On time login to MedFRS Device App,control,Volunteer
+253,generates unique device id:send ot device,On time login to MedFRS Device App,control,Victim
+254,receive and storate device id at local storage:local storage,On time login to MedFRS Device App,boundary,categoryspage
+255,receive and storate device id at local storage:volunteer homepage,On time login to MedFRS Device App,control,Volunteer
+256,send ot device:receive and storate device id at local storage,On time login to MedFRS Device App,boundary,Redirectstorespirationperfusionmetalstatuspage
+257,stl#Supervisor:authentification failure message,On time login to MedFRS Device App,Stimulus,undefined
+258,stl#Supervisor:volunteer homepage,On time login to MedFRS Device App,Stimulus,undefined
+259,stl#Supervisor:Individual details page,On time login to MedFRS Device App,Stimulus,undefined
+260,stl#Supervisor:OTP page,On time login to MedFRS Device App,Stimulus,undefined
+261,stl#Supervisor:Delete Page,On time login to MedFRS Device App,Stimulus,undefined
+262,stl#Supervisor:Management Individuals Page,On time login to MedFRS Device App,Stimulus,undefined
+263,stl#Supervisor:Update Individual Form Page,On time login to MedFRS Device App,Stimulus,undefined
+264,stl#Supervisor:OTP empty error message,On time login to MedFRS Device App,Stimulus,undefined
+265,Transport Coordinator:Building Assignments Page,Record victim transportation,boundary,EMT Building Assignment
+266,Transport Coordinator:submitted add EMT Form page,Record victim transportation,boundary,returnsaddEMTfrompage
+267,Transport Coordinator:EMT form page,Record victim transportation,boundary,categoryspage
+268,Transport Coordinator:Empty error message,Record victim transportation,boundary,returnsaddEMTfrompage
+269,Transport Coordinator:Transport coordinator's homepage,Record victim transportation,entity,Transport Coordinator
+270,Transport Coordinator:Building Assignments Page,Record victim transportation,boundary,EMT Building Assignment
+271,Transport Coordinator:victim information input and medical information input,Record victim transportation,boundary,Redirectstorespirationperfusionmetalstatuspage
+272,Building Assignments Page:Insert record into db,Record victim transportation,entity,Transport Coordinator
+273,Insert record into db:EMT form page,Record victim transportation,boundary,categoryspage
+274,Updates the database for building information:EMT form page,Record victim transportation,boundary,categoryspage
+275,Insert record into db:Empty error message,Record victim transportation,boundary,returnsaddEMTfrompage
+276,Insert record into db:Hospital information,Record victim transportation,boundary,checkthebarcodeambulancenumberandhospitalinfo
+277,Insert record into db:Updates the database for building information,Record victim transportation,control,Building
+278,check the barcode ambulance number and hospital info:Insert record into db,Record victim transportation,entity,Transport Coordinator
+279,Redirects to the transport coordinator's homepage:Triage category,Record victim transportation,boundary,categoryspage
+280,Redirects to the transport coordinator's homepage:Transport coordinator's homepage,Record victim transportation,entity,Transport Coordinator
+281,Updates the database for building information:Redirects to the transport coordinator's homepage,Record victim transportation,entity,Transport Coordinator
+282,Updates the database for building information:submitted add EMT Form page,Record victim transportation,boundary,returnsaddEMTfrompage
+283,victim information input and medical information input:check the barcode ambulance number and hospital info,Record victim transportation,boundary,checkthebarcodeambulancenumberandhospitalinfo
+284,stl#Transport Coordinator:Building Assignments Page,Record victim transportation,Stimulus,undefined
+285,stl#Transport Coordinator:submitted add EMT Form page,Record victim transportation,Stimulus,undefined
+286,stl#Transport Coordinator:EMT form page,Record victim transportation,Stimulus,undefined
+287,stl#Transport Coordinator:Empty error message,Record victim transportation,Stimulus,undefined
+288,stl#Transport Coordinator:Transport coordinator's homepage,Record victim transportation,Stimulus,undefined
+289,stl#Transport Coordinator:Building Assignments Page,Record victim transportation,Stimulus,undefined
+290,stl#Transport Coordinator:victim information input and medical information input,Record victim transportation,Stimulus,undefined
+291,Supervisor:"Resend OTP" Page,Resent one time pass email,boundary,returnsaddEMTfrompage
+292,Supervisor:Manage Individuals Page,Resent one time pass email,entity,Transport Coordinator
+293,Supervisor:"manage individuals" button,Resent one time pass email,entity,Transport Coordinator
+294,Supervisor:Manage individualss page with list of individual details,Resent one time pass email,boundary,checkthebarcodeambulancenumberandhospitalinfo
+295,"Resend OTP" Page:clears device ID of volunteer,Resent one time pass email,control,Volunteer
+296,"Resend OTP" Page:Redirect to the manage individuals page,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+297,"Resend OTP" Page:Redirects to the manage individuals page,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+298,Redirects to the individual resend OTP page:"Resend OTP" Page,Resent one time pass email,boundary,returnsaddEMTfrompage
+299,"manage individuals" button:Redirects tot he manage individual page with list of individual details,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+300,Redirect to the manage individuals page:Manage Individuals Page,Resent one time pass email,entity,Transport Coordinator
+301,Manage individualss page with list of individual details:Redirects to the individual resend OTP page,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+302,Redirects tot he manage individual page with list of individual details:Manage individualss page with list of individual details,Resent one time pass email,boundary,checkthebarcodeambulancenumberandhospitalinfo
+303,sends OTP to volunteer's email ID:Redirect to the manage individuals page,Resent one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+304,Redirects to the individual resend OTP page:Username and password db,Resent one time pass email,control,User
+305,clears device ID of volunteer:sends OTP to volunteer's email ID,Resent one time pass email,control,Volunteer
+306,clears device ID of volunteer:volunteer info database,Resent one time pass email,control,Volunteer
+307,stl#Supervisor:"Resend OTP" Page,Resent one time pass email,Stimulus,undefined
+308,stl#Supervisor:Manage Individuals Page,Resent one time pass email,Stimulus,undefined
+309,stl#Supervisor:"manage individuals" button,Resent one time pass email,Stimulus,undefined
+310,stl#Supervisor:Manage individualss page with list of individual details,Resent one time pass email,Stimulus,undefined
+311,Supervisor:management page with list of individual details,Retrieve and update victim data,boundary,EMT Building Assignment
+312,Supervisor:management page with list of individual details,Retrieve and update victim data,boundary,EMT Building Assignment
+313,Supervisor:"Manage individuals" button,Retrieve and update victim data,entity,Transport Coordinator
+314,Supervisor:Manage Individuals Page,Retrieve and update victim data,entity,Transport Coordinator
+315,Supervisor:Individual resend OTP page,Retrieve and update victim data,control,ValidatesInput
+316,"Manage individuals" button:Redirect to the manage individuals page with list of individual details,Retrieve and update victim data,boundary,Redirectstorespirationperfusionmetalstatuspage
+317,Individual resend OTP page:clears device ID of volunteer in db,Retrieve and update victim data,control,Volunteer
+318,Individual resend OTP page:Manage Individuals Page,Retrieve and update victim data,entity,Transport Coordinator
+319,Redirects to the individual resent otp page:Individual resend OTP page,Retrieve and update victim data,control,ValidatesInput
+320,Redirect to the manage individuals page:Manage Individuals Page,Retrieve and update victim data,entity,Transport Coordinator
+321,sends OTP to volunteer email ID:Redirect to the manage individuals page,Retrieve and update victim data,boundary,Redirectstorespirationperfusionmetalstatuspage
+322,Redirect to the manage individuals page with list of individual details:management page with list of individual details,Retrieve and update victim data,boundary,EMT Building Assignment
+323,management page with list of individual details:Redirects to the individual resent otp page,Retrieve and update victim data,boundary,Redirectstorespirationperfusionmetalstatuspage
+324,clears device ID of volunteer in db:sends OTP to volunteer email ID,Retrieve and update victim data,control,Volunteer
+325,clears device ID of volunteer in db:volunteer database,Retrieve and update victim data,control,Volunteer
+326,sends OTP to volunteer email ID:volunteer database,Retrieve and update victim data,control,Volunteer
+327,stl#Supervisor:management page with list of individual details,Retrieve and update victim data,Stimulus,undefined
+328,stl#Supervisor:management page with list of individual details,Retrieve and update victim data,Stimulus,undefined
+329,stl#Supervisor:"Manage individuals" button,Retrieve and update victim data,Stimulus,undefined
+330,stl#Supervisor:Manage Individuals Page,Retrieve and update victim data,Stimulus,undefined
+331,stl#Supervisor:Individual resend OTP page,Retrieve and update victim data,Stimulus,undefined
+332,Supervisor:Find Victim Form Page,Track victims,control,Victim
+333,Supervisor:Error message,Track victims,boundary,categoryspage
+334,Supervisor:Search Result Page,Track victims,boundary,returnsaddEMTfrompage
+335,Supervisor:Track Victims button,Track victims,control,Victim
+336,Supervisor:Victim information page iwth list of victim details,Track victims,boundary,Redirectstorespirationperfusionmetalstatuspage
+337,Validates input as being correct:Error message,Track victims,boundary,categoryspage
+338,Find Victim Form Page:Validates input as being correct,Track victims,control,ValidatesInput
+339,Redirects to find victim form page:Find Victim Form Page,Track victims,control,Victim
+340,Redirect to the victim information page with list of victim details:Victim information page iwth list of victim details,Track victims,boundary,Redirectstorespirationperfusionmetalstatuspage
+341,Track Victims button:Redirect to the victim information page with list of victim details,Track victims,boundary,Redirectstorespirationperfusionmetalstatuspage
+342,Victim information page iwth list of victim details:Redirects to find victim form page,Track victims,boundary,Redirectstorespirationperfusionmetalstatuspage
+343,query database:Search Result Page,Track victims,boundary,returnsaddEMTfrompage
+344,query database:Triage category,Track victims,boundary,categoryspage
+345,Validates input as being correct:query database,Track victims,control,User
+346,query database:Victim info db,Track victims,control,Victim
+347,stl#Supervisor:Find Victim Form Page,Track victims,Stimulus,undefined
+348,stl#Supervisor:Error message,Track victims,Stimulus,undefined
+349,stl#Supervisor:Search Result Page,Track victims,Stimulus,undefined
+350,stl#Supervisor:Track Victims button,Track victims,Stimulus,undefined
+351,stl#Supervisor:Victim information page iwth list of victim details,Track victims,Stimulus,undefined
+352,Transport coordiner:Transport coordinate page,Update Victim Transportation,entity,Transport Coordinator
+353,Transport coordiner:invalid input error message,Update Victim Transportation,control,ValidatesInput
+354,Transport coordiner:"update" button,Update Victim Transportation,control,ValidatesInput
+355,Transport coordiner:"update" button,Update Victim Transportation,control,ValidatesInput
+356,Transport coordiner:update victim tracking form page,Update Victim Transportation,control,Victim
+357,Transport coordiner:update victim tracking form page,Update Victim Transportation,control,Victim
+358,"update" button:Redirects to the update victim tracking form page,Update Victim Transportation,boundary,Redirectstorespirationperfusionmetalstatuspage
+359,Redirects to the transport coordinator page:Transport coordinate page,Update Victim Transportation,entity,Transport Coordinator
+360,update victim tracking record:Redirects to the transport coordinator page,Update Victim Transportation,entity,Transport Coordinator
+361,Redirects to the update victim tracking form page:update victim tracking form page,Update Victim Transportation,control,Victim
+362,validate input:Transport coordinate page,Update Victim Transportation,entity,Transport Coordinator
+363,validate input:invalid input error message,Update Victim Transportation,control,ValidatesInput
+364,update victim tracking record:tracking record database,Update Victim Transportation,entity,Transport Coordinator
+365,update victim tracking form page:validate input,Update Victim Transportation,control,ValidatesInput
+366,validate input:update victim tracking record,Update Victim Transportation,control,Victim
+367,stl#Transport coordiner:Transport coordinate page,Update Victim Transportation,Stimulus,undefined
+368,stl#Transport coordiner:invalid input error message,Update Victim Transportation,Stimulus,undefined
+369,stl#Transport coordiner:"update" button,Update Victim Transportation,Stimulus,undefined
+370,stl#Transport coordiner:"update" button,Update Victim Transportation,Stimulus,undefined
+371,stl#Transport coordiner:update victim tracking form page,Update Victim Transportation,Stimulus,undefined
+372,stl#Transport coordiner:update victim tracking form page,Update Victim Transportation,Stimulus,undefined
+373,supervisor:Manage individuals button,resend one time pass email,entity,Transport Coordinator
+374,supervisor:Resend OTP page,resend one time pass email,boundary,categoryspage
+375,supervisor:list of individual details page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+376,supervisor:list of individual details page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+377,supervisor:Manage individuals button,resend one time pass email,entity,Transport Coordinator
+378,supervisor:Transport coordinate page,resend one time pass email,entity,Transport Coordinator
+379,Manage individuals button:Redirects to the manage individuals page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+380,Redirect to management indivisuals page:Transport coordinate page,resend one time pass email,entity,Transport Coordinator
+381,sends OTP to volunteer's email ID:Redirect to management indivisuals page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+382,Redirects to the individual resend OTP page:Resend OTP page,resend one time pass email,boundary,categoryspage
+383,Redirects to the individual resend OTP page:redirects to the manage individuals page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+384,list of individual details page:Redirects to the individual resend OTP page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+385,Redirects to the manage individuals page:list of individual details page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+386,Resend OTP page:redirect to the manage individuals page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+387,Resend OTP page:clears device id of volunteer ,resend one time pass email,control,Volunteer
+388,clears device id of volunteer :Transport coordinate page,resend one time pass email,entity,Transport Coordinator
+389,clears device id of volunteer :sends OTP to volunteer's email ID,resend one time pass email,control,Volunteer
+390,redirect to the manage individuals page:list of individual details page,resend one time pass email,boundary,Redirectstorespirationperfusionmetalstatuspage
+391,sends OTP to volunteer's email ID:tracking record database,resend one time pass email,entity,Transport Coordinator
+392,stl#supervisor:Manage individuals button,resend one time pass email,Stimulus,undefined
+393,stl#supervisor:Resend OTP page,resend one time pass email,Stimulus,undefined
+394,stl#supervisor:list of individual details page,resend one time pass email,Stimulus,undefined
+395,stl#supervisor:list of individual details page,resend one time pass email,Stimulus,undefined
+396,stl#supervisor:Manage individuals button,resend one time pass email,Stimulus,undefined
+397,stl#supervisor:Transport coordinate page,resend one time pass email,Stimulus,undefined

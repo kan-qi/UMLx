@@ -1,0 +1,42 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Student Profile " as 09
+participant "Homepage" as 19
+participant "Database" as 29
+participant "Progress Report" as 39
+
+User -> 09: Createstudents()
+activate 09
+
+09 -> 09: CreateStudentloginandaddstudentdetail()
+09 -> 09: Addstudentinformation()
+09 -> 29: Database()
+activate 29
+
+deactivate 29
+
+09 -> 39: Dialogueboxprompts()
+activate 39
+
+39 -> 09: Createstudents()
+09 -> 09: CreateStudentloginandaddstudentdetail()
+deactivate 09
+
+39 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 39
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

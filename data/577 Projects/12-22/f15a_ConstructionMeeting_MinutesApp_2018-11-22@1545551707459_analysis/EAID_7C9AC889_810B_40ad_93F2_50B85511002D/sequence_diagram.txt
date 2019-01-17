@@ -1,0 +1,87 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Usert EndPoints" as 09
+participant "Meeting" as 19
+participant "Hompage" as 29
+participant "Meeting Log" as 39
+participant "<<block>>    <<system>>   Meeting minutes Android" as 49
+participant "Meeting Minute" as 59
+participant "<<entity>>  User  Datastore" as 89
+
+User -> 09: selectstheexportbutton()
+activate 09
+
+09 -> 49: Meetingissavedontheadministrator��sandroiddeviceinPDFformat()
+activate 49
+
+49 -> 39: logdb()
+activate 39
+
+deactivate 39
+
+49 -> 89: invalidinformationisdisplayedtotheuser()
+activate 89
+
+89 -> 29: Hompage()
+activate 29
+
+deactivate 29
+
+deactivate 89
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: Choosesameeting()
+activate 19
+
+19 -> 49: Meetingissavedontheadministrator��sandroiddeviceinPDFformat()
+activate 49
+
+49 -> 39: logdb()
+activate 39
+
+deactivate 39
+
+49 -> 89: invalidinformationisdisplayedtotheuser()
+activate 89
+
+deactivate 89
+
+deactivate 49
+
+deactivate 19
+
+User -> 29: Hompage()
+activate 29
+
+deactivate 29
+
+User -> 39: Choosestheoptiontogeneratemeetinglog()
+activate 39
+
+39 -> 59: displaysthegeneratemeetingscreen()
+activate 59
+
+59 -> 49: Meetingissavedontheadministrator��sandroiddeviceinPDFformat()
+activate 49
+
+49 -> 39: logdb()
+deactivate 39
+
+49 -> 89: invalidinformationisdisplayedtotheuser()
+activate 89
+
+deactivate 89
+
+deactivate 49
+
+deactivate 59
+
+@enduml

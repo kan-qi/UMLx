@@ -1,0 +1,290 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class LEMAIntegratedfamilyaccountabilitysystem {
+~ LEMAIntegratedfamilyaccountabilitysystem()
+}
+
+class ClassGradeInfo {
+- Assignment Name:EAJava_string
+- Class bubble #:EAJava_int
+- Class Date:EAJava_date
+- semester:EAJava_char
+- Student Grade:EAJava_char
+- Student ID:EAJava_int
+~ ClassGradeInfo()
+~ Inputuploadgradeinfo()
+}
+
+class CassAttendanceInfo {
+- Class bubble #:EAJava_int
+- Class Date:EAJava_date
+- Semester:EAJava_string
+- Student Attendance:EAJava_int
+- Student ID:EAJava_int
+~ CassAttendanceInfo()
+~ Database()
+~ Selectattendanceandsemester()
+~ Logoutandterminatethesession()
+~ update()
+~ Chooseoneuserandupdate()
+~ Updateinformationindatabase()
+}
+
+class RequestReportpage {
+~ RequestReportpage()
+~ Redirecttohomepage()
+}
+
+class performanceInputController {
+~ getClassAttendanceInfo():EAJava_void
+~ getListofClass():EAJava_void
+~ getSemesterInfo():EAJava_void
+~ InputAttendanceInfo():EAJava_void
+~ select&upload gradefile():EAJava_void
+~ Viewperformancepage()
+}
+
+class ResourceController {
+~ getResourceInfo():EAJava_void
+~ InputChangeResourceInfo():EAJava_void
+~ InputNewResourceInfo():EAJava_void
+~ Accessallresourcesbutton()
+~ Showallregisterresources()
+}
+
+class ResourceInputpage {
+~ ResourceInputpage()
+~ Showresourcesinformation()
+~ Logoutpage()
+}
+
+class ResourceListwithStatus {
+- Date:EAJava_date
+- Resource ID:EAJava_int
+- Resource Name:EAJava_char
+- Resource Status:EAJava_char
+- Resource Type:EAJava_char
+~ addResourceInfo():EAJava_void
+~ updateResourceInfo():EAJava_void
+~ Showlistsofresources()
+}
+
+class Resourcepage {
+~ Resourcepage()
+~ Registepage()
+~ Chooseoneofresourcesandupdate()
+}
+
+class AdministratorInfo {
+- Admin ID:EAJava_int
+- passwd:EAJava_string
+- User level:EAJava_int
+~ AdministratorInfo()
+~ Showlistofinformation()
+}
+
+class ParentInfo {
+- Address:EAJava_string
+- email address:EAJava_string
+- email message:EAJava_string
+- Gender:EAJava_char
+- Parent Cell Phone:EAJava_string
+- Parent Name:EAJava_string
+- passwd:EAJava_string
+- Student ID:EAJava_int
+- User Level:EAJava_int
+~ updateMessage():EAJava_void
+}
+
+class StudentInfo {
+- Gender:EAJava_char
+- Parent ID:EAJava_int
+- passwd:EAJava_string
+- School code:EAJava_string
+- Student Address:EAJava_string
+- Student ID:EAJava_int
+- Student Name:EAJava_string
+- User level:EAJava_int
+~ StudentInfo()
+~ Showallstudentsdata()
+~ Displaystudentpage()
+}
+
+class TeacherInfo {
+- Gender:EAJava_char
+- passwd:EAJava_char
+- Teacher ID:EAJava_int
+- Teacher name:EAJava_char
+- User level:EAJava_char
+~ TeacherInfo()
+}
+
+class UserInfoInputPage {
+~ UserInfoInputPage()
+~ inputuserimformation()
+~ Showuser()
+~ Loginpage()
+}
+
+class UserInfoManagementPage {
+~ UserInfoManagementPage()
+~ Displayuserinformation()
+}
+
+class UserManagementController {
+~ getUserInfo():EAJava_void
+~ InputNewUserInfo():EAJava_void
+~ UpdateUserInfo():EAJava_void
+~ Manageuserbutton()
+}
+
+class SchedulerInfo {
+- passwd:EAJava_char
+- ScheduleID:EAJava_int
+- User level:EAJava_char
+~ SchedulerInfo()
+}
+
+class AdminInfo {
+- Admin ID:EAJava_int
+- passwd:EAJava_char
+- User level:EAJava_char
+~ AdminInfo()
+~ Add()
+}
+
+class ClassAttendanceInfo {
+- Class bubble #:EAJava_int
+- Class Date:EAJava_date
+- semester:EAJava_char
+- Student ID:EAJava_int
+~ ClassAttendanceInfo()
+}
+
+class ClassInfo {
+- Class bubble #:EAJava_int
+- Class date:EAJava_date
+- Class time:EAJava_date
+- Teacher Name:EAJava_char
+~ ClassInfo()
+}
+
+class Class1 {
+~ Class1()
+}
+
+class ClassAttendanceReport {
+- Class bubble #:EAJava_int
+- Class Date:EAJava_date
+- semester:EAJava_char
+- Student ID:EAJava_int
+~ ClassAttendanceReport()
+~ Validateusernameandpassword()
+}
+
+class ClassGradeReport {
+- Assignment Name:EAJava_string
+- Class bubble #:EAJava_int
+- Class Date:EAJava_date
+- semester:EAJava_char
+- Student Grade:EAJava_char
+- Student ID:EAJava_int
+~ ClassGradeReport()
+}
+
+class ErrorReport {
+- Date:EAJava_date
+- Error Type:EAJava_char
+- Request Query:EAJava_char
+- Time:EAJava_date
+- User ID:EAJava_int
+~ ErrorReport()
+~ Reviewerrorpage()
+~ chooseareportsemester()
+}
+
+class GradeAttendanceReportForStudentParent {
+- Assignment Name:EAJava_string
+- Class bubble #:EAJava_int
+- Class date:EAJava_date
+- Letter Grade (every 5 weeks):EAJava_char
+- Student Attendance:EAJava_int
+- Student Grade:EAJava_char
+- Student ID:EAJava_int
+- Student Name:EAJava_char
+~ GradeAttendanceReportForStudentParent()
+~ Returnstudentsperformancepage()
+}
+
+class Notificationloghistories {
+- Class Bubble #:EAJava_int
+- Date:EAJava_date
+- Parent Cell Phone:EAJava_string
+- Parent Name:EAJava_string
+- Student Attendance:EAJava_int
+- Student Grade:EAJava_char
+- Student ID:EAJava_int
+- Student Name:EAJava_string
+- teacher ID:EAJava_int
+~ updateHistory():EAJava_void
+~ Displayconfirmation()
+}
+
+class Notificationmessage {
+- Class Bubble #:EAJava_int
+- Class Date:EAJava_date
+- Parent Cell Phone:EAJava_string
+- Student Attendance:EAJava_int
+- Student Grade:EAJava_char
+- Student ID:EAJava_int
+- Student Name:EAJava_string
+- teacher ID:EAJava_int
+~ updateMessage():EAJava_void
+~ Showoptions()
+~ Displayconfirmationpage()
+}
+
+class StudenttInfo {
+- Gender:EAJava_char
+- Parent ID:EAJava_int
+- passwd:EAJava_char
+- School code:EAJava_int
+- Student address:EAJava_char
+- Student ID:EAJava_int
+- Student Name:EAJava_char
+- User Level:EAJava_int
+~ StudenttInfo()
+}
+
+class SendMessagepage {
+~ SendMessagepage()
+~ Homepage()
+}
+
+class SendMessageController {
+~ getParentInfo():EAJava_void
+~ getStudentInfo():EAJava_void
+~ requestSendMessage():EAJava_void
+~ Showallerromessage()
+}
+
+class Object1 
+
+class Delete {
+~ Delete()
+}
+
+performanceInputController <|-- RequestReportpage
+
+ResourceController <|-- ResourceInputpage
+
+ResourceController <|-- Resourcepage
+
+UserManagementController <|-- UserInfoManagementPage
+
+UserManagementController <|-- UserInfoInputPage
+
+SendMessagepage --> SendMessageController
+
+@enduml

@@ -1,0 +1,80 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "pdfformatisnotvalidmessage" as 09
+participant "addasubscriberrecorderintothedatabase" as 39
+participant "Twitter" as 99
+participant "System Boundary" as 129
+
+User -> 09: shwosuccessmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: Norecordexistmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: errormessage()
+activate 09
+
+deactivate 09
+
+User -> 39: theemailhasalreadysubscribedmessage()
+activate 39
+
+deactivate 39
+
+User -> 39: subscribebaronwebsite()
+activate 39
+
+39 -> 129: checkemailredundancy()
+activate 129
+
+129 -> 09: displayerrormessagewhennorecordexists()
+activate 09
+
+09 -> 09: Norecordexistmessage()
+deactivate 09
+
+09 -> 39: addasubscriberrecorderintothedatabase()
+39 -> 09: shwosuccessmessage()
+activate 09
+
+deactivate 09
+
+39 -> 09: errormessage()
+activate 09
+
+deactivate 09
+
+39 -> 99: websitecontent()
+activate 99
+
+deactivate 99
+
+deactivate 39
+
+09 -> 09: errormessage()
+activate 09
+
+deactivate 09
+
+09 -> 39: theemailhasalreadysubscribedmessage()
+activate 39
+
+deactivate 39
+
+deactivate 129
+
+User -> 09: errormessage()
+activate 09
+
+deactivate 09
+
+@enduml

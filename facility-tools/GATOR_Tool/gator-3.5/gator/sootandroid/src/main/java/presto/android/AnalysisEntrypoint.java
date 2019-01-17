@@ -71,25 +71,33 @@ public class AnalysisEntrypoint {
       Configs.addLibraryPackage("android.support.*");
       Configs.addLibraryPackage("com.google.android.gms.*");
     }
-
+    
+    StringBuilder sb = new StringBuilder();
     for (SootClass c : Scene.v().getClasses()) {
+    sb.append(c.getName()+"\n");
       if (Configs.isLibraryClass(c.getName())) {
         if ((!c.isPhantomClass()) && c.isApplicationClass()) {
           c.setLibraryClass();
         }
       }
     }
+    
+    Debug2.v().printf("classes: %s", sb.toString());
 
-    // Analysis
-    // TODO: use reflection to allow nice little extensions.
-    if (Configs.guiAnalysis) {
-      GUIAnalysis guiAnalysis = GUIAnalysis.v();
-      guiAnalysis.run();
-      Date endTime = new Date();
-      Logger.verb(this.getClass().getSimpleName(),
-              "Soot stopped on " + endTime);
-      System.exit(0);
-    }
+//    // Analysis
+//    // TODO: use reflection to allow nice little extensions.
+//    if (Configs.guiAnalysis) {
+//      GUIAnalysis guiAnalysis = GUIAnalysis.v();
+//      guiAnalysis.run();
+//      Date endTime = new Date();
+//      Logger.verb(this.getClass().getSimpleName(),
+//              "Soot stopped on " + endTime);
+//      System.exit(0);
+//    }
+    
+    CodeAnalysis codeAnalysis = CodeAnalysis.v();
+    codeAnalysis.run();
+    System.exit(0);
   }
 
   void validate() {

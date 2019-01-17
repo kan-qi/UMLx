@@ -1,0 +1,121 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "Case Manager" as 09
+participant "Manager" as 19
+participant "validaterole" as 39
+participant "Limited_User" as 59
+participant "Case_email" as 69
+participant "Cases" as 79
+participant "Users" as 89
+participant "Case_education_history" as 149
+participant "User Security Question" as 179
+
+Administrator -> 09: usermanagementpage()
+activate 09
+
+09 -> 179: queryuserinformation()
+activate 179
+
+179 -> 69: Emailprotocol()
+activate 69
+
+deactivate 69
+
+179 -> 89: User()
+activate 89
+
+deactivate 89
+
+179 -> 09: userinformationpage()
+09 -> 59: displayusereditpage()
+activate 59
+
+59 -> 59: usereditpage()
+59 -> 39: validateinputuserinformation()
+activate 39
+
+39 -> 39: invalidinputinformationerror()
+deactivate 39
+
+39 -> 179: saveinputuserinformation()
+179 -> 79: Case()
+activate 79
+
+deactivate 79
+
+179 -> 89: User()
+activate 89
+
+deactivate 89
+
+179 -> 149: displayuserinformation()
+activate 149
+
+149 -> 09: userinformationpage()
+09 -> 59: displayusereditpage()
+deactivate 59
+
+deactivate 09
+
+deactivate 149
+
+deactivate 179
+
+Administrator -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+Administrator -> 09: userinformationpage()
+activate 09
+
+09 -> 59: displayusereditpage()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+Administrator -> 39: invalidinputinformationerror()
+activate 39
+
+deactivate 39
+
+Administrator -> 09: UserManagementButton()
+activate 09
+
+09 -> 39: validateroleofuser()
+activate 39
+
+39 -> 39: role()
+deactivate 39
+
+39 -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+39 -> 09: usermanagementpage()
+09 -> 179: queryuserinformation()
+activate 179
+
+deactivate 179
+
+deactivate 09
+
+Administrator -> 59: usereditpage()
+activate 59
+
+59 -> 39: validateinputuserinformation()
+activate 39
+
+deactivate 39
+
+deactivate 59
+
+@enduml

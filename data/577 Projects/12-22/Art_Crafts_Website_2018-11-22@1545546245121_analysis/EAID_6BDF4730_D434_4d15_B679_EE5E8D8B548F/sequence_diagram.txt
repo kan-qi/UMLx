@@ -1,0 +1,39 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Administrator" as 09
+participant "Showconfirmationpage" as 19
+
+User -> 09: Contacttheadminpage()
+activate 09
+
+09 -> 19: Chooseacontactform()
+activate 19
+
+19 -> 09: Admindb()
+deactivate 09
+
+19 -> 19: Showconfirmationpage()
+19 -> 09: Contacttheadminpage()
+activate 09
+
+09 -> 19: Chooseacontactform()
+deactivate 19
+
+deactivate 09
+
+19 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

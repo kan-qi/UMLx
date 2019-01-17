@@ -1,0 +1,71 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "savedSearch" as 09
+participant "linkin data" as 39
+participant "Favorite Job" as 59
+participant "search result" as 79
+participant "Editprofilebutton" as 109
+
+User -> 09: searchsavedsuccessfullymessage()
+activate 09
+
+09 -> 39: validateinputdata()
+activate 39
+
+39 -> 39: Invalidinputdata()
+deactivate 39
+
+39 -> 109: saveupdatedprofile()
+activate 109
+
+109 -> 79: searchresult()
+activate 79
+
+deactivate 79
+
+deactivate 109
+
+deactivate 09
+
+User -> 09: searchsavedunsuccessfullyerrormessage()
+activate 09
+
+deactivate 09
+
+User -> 09: Savesearchbutton()
+activate 09
+
+09 -> 59: savefiltersandcriteria()
+activate 59
+
+59 -> 09: searchsavedsuccessfullymessage()
+09 -> 39: validateinputdata()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+59 -> 79: searchresult()
+activate 79
+
+deactivate 79
+
+59 -> 09: searchsavedunsuccessfullyerrormessage()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+User -> 39: Invalidinputdata()
+activate 39
+
+deactivate 39
+
+@enduml

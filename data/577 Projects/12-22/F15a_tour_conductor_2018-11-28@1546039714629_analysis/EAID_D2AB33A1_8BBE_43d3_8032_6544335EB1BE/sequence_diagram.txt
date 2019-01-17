@@ -1,0 +1,71 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Creator
+participant "Errormessage" as 09
+participant "redirecttosignuppage" as 39
+participant "checkloginInfo" as 49
+
+Creator -> 09: signuperrormessage()
+activate 09
+
+09 -> 39: redirecttosignuppage()
+activate 39
+
+39 -> 09: registerpage()
+09 -> 49: processlogininfo()
+activate 49
+
+49 -> 49: saveuserinfo()
+49 -> 49: UserInfo()
+deactivate 49
+
+49 -> 09: signuperrormessage()
+09 -> 39: redirecttosignuppage()
+deactivate 39
+
+deactivate 09
+
+Creator -> 09: loginerror()
+activate 09
+
+09 -> 39: redirecttologinpage()
+activate 39
+
+39 -> 49: Loginpage()
+activate 49
+
+49 -> 49: checkloginInfo()
+49 -> 49: UserInfo()
+deactivate 49
+
+49 -> 09: loginerror()
+09 -> 39: redirecttologinpage()
+deactivate 39
+
+deactivate 09
+
+Creator -> 09: registerpage()
+activate 09
+
+09 -> 49: processlogininfo()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+Creator -> 39: Loginpage()
+activate 39
+
+39 -> 49: checkloginInfo()
+activate 49
+
+deactivate 49
+
+deactivate 39
+
+@enduml

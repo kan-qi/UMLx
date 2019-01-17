@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "checktheexistenceschedule" as 09
+participant "emptyannouncementform" as 19
+
+User -> 09: Myschedulelink()
+activate 09
+
+09 -> 09: checktheexistenceschedule()
+09 -> 09: Displaymyschedulepagewithscheduleinformation()
+09 -> 19: popfailurecheckinannouncement()
+activate 19
+
+19 -> 19: failurecheckinannouncement()
+deactivate 19
+
+09 -> 09: schedule()
+deactivate 09
+
+09 -> 19: popupsuccesscheckinannouncement()
+activate 19
+
+19 -> 19: successcheckinannouncement()
+deactivate 19
+
+09 -> 09: nonexistencealert()
+activate 09
+
+deactivate 09
+
+09 -> 09: myschedulepage()
+activate 09
+
+deactivate 09
+
+09 -> 09: schedule()
+activate 09
+
+deactivate 09
+
+User -> 19: failurecheckinannouncement()
+activate 19
+
+deactivate 19
+
+User -> 19: successcheckinannouncement()
+activate 19
+
+deactivate 19
+
+User -> 09: myschedulepage()
+activate 09
+
+deactivate 09
+
+User -> 09: nonexistencealert()
+activate 09
+
+deactivate 09
+
+@enduml

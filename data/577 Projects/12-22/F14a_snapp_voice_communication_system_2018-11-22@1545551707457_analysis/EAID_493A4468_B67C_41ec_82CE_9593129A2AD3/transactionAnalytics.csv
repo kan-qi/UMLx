@@ -1,0 +1,9 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Customer:request manager conference button->Customer:request manager conference button->request manager conference button:send conference request->send conference request:Twilio API,Request Manager Conference,4,0,3,0,0
+2,stl#Customer:Popup of manager's acceptance->Customer:Popup of manager's acceptance->Popup of manager's acceptance:autodialing list,Request Manager Conference,3,1,0,1,0
+3,stl#Customer:conference cancel notification->Customer:conference cancel notification,Request Manager Conference,2,0,1,0,0
+4,stl#Manager:connect to ongoing call->Manager:connect to ongoing call->connect to ongoing call:Twilio API,Request Manager Conference,3,0,2,0,0
+5,stl#Manager:popup with request detail of the agent->Manager:popup with request detail of the agent,Request Manager Conference,2,0,1,0,0
+6,stl#Twilio API:Notify Manager->Twilio API:Notify Manager->Notify Manager:popup with request detail of the agent,Request Manager Conference,3,1,1,0,0
+7,stl#Twilio API:notify cancel request->Twilio API:notify cancel request->notify cancel request:conference cancel notification,Request Manager Conference,3,0,2,0,0
+8,stl#Twilio API:notify acceptance from manager->Twilio API:notify acceptance from manager->notify acceptance from manager:Popup of manager's acceptance->Popup of manager's acceptance:autodialing list,Request Manager Conference,4,2,0,1,0

@@ -1,0 +1,50 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "Reservation" as 09
+participant "Slot" as 39
+participant "SurgeryCenter" as 69
+
+user -> 09: Reservationrequestslist()
+activate 09
+
+deactivate 09
+
+user -> 09: Youhavenotreceivedreservationrequestmessage()
+activate 09
+
+deactivate 09
+
+user -> 09: ViewReservationRequestsButton()
+activate 09
+
+09 -> 09: displayreservationrequests()
+09 -> 09: Reservationrequestslist()
+deactivate 09
+
+09 -> 69: SurgicalrequestInfo()
+activate 69
+
+deactivate 69
+
+09 -> 09: Youhavenotreceivedreservationrequestmessage()
+activate 09
+
+deactivate 09
+
+09 -> 39: displaythesurgicalslotinfo()
+activate 39
+
+39 -> 39: updatedsurgicalslotinfo()
+deactivate 39
+
+user -> 39: updatedsurgicalslotinfo()
+activate 39
+
+deactivate 39
+
+@enduml

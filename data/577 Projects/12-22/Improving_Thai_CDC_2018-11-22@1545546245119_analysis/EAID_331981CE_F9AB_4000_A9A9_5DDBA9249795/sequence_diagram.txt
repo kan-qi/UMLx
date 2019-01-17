@@ -1,0 +1,84 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User 
+participant "Retypenew�Cpassword" as 09
+participant "Clicksubmit" as 29
+participant "Homepage" as 49
+participant "Userdb" as 89
+participant "mass mailing template" as 129
+
+User  -> 09: Retypenew�Cpassword()
+activate 09
+
+09 -> 09: Changeworkerspassword()
+09 -> 89: Userdb()
+activate 89
+
+deactivate 89
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+User  -> 09: Typeinnewpassword()
+activate 09
+
+09 -> 09: Changeworkerspassword()
+09 -> 89: Userdb()
+activate 89
+
+deactivate 89
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+User  -> 29: Clickthelink()
+activate 29
+
+29 -> 09: Askworkertypeinnewpassword()
+activate 09
+
+09 -> 09: Changeworkerspassword()
+09 -> 89: Userdb()
+activate 89
+
+deactivate 89
+
+09 -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+deactivate 29
+
+User  -> 09: clickchangepasswordbutton()
+activate 09
+
+09 -> 129: SendalinktoworkersemailboxregisteredinSalesforce()
+activate 129
+
+129 -> 09: Askworkertypeinnewpassword()
+09 -> 09: Changeworkerspassword()
+deactivate 09
+
+deactivate 129
+
+User  -> 49: Homepage()
+activate 49
+
+deactivate 49
+
+@enduml

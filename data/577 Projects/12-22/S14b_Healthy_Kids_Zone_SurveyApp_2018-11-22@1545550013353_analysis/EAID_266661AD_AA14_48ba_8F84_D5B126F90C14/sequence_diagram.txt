@@ -1,0 +1,80 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "SurveyConfigurationPage" as 09
+participant "SurveyExportPage" as 19
+participant "SurveyDeploymentPage" as 29
+participant "Survey Management" as 39
+participant "MySQLDatabase" as 99
+
+administrator -> 09: confirmationmessage()
+activate 09
+
+09 -> 09: redirectsurveydeletionpage()
+09 -> 19: surveylistpage()
+activate 19
+
+19 -> 39: checkanswersundersurvey()
+activate 39
+
+39 -> 09: confirmmessageaboutirreversibleoperation()
+09 -> 39: surveymonkey()
+deactivate 39
+
+09 -> 09: confirmationmessage()
+09 -> 09: redirectsurveydeletionpage()
+deactivate 09
+
+09 -> 29: deletesurveyfromdb()
+activate 29
+
+29 -> 39: surveymonkey()
+activate 39
+
+deactivate 39
+
+29 -> 29: deletesuccesmessage()
+deactivate 29
+
+29 -> 39: surveydb()
+activate 39
+
+deactivate 39
+
+09 -> 99: surveydatabase()
+activate 99
+
+deactivate 99
+
+39 -> 39: surveydb()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+09 -> 29: deletesurveyfromdb()
+activate 29
+
+deactivate 29
+
+administrator -> 19: surveylistpage()
+activate 19
+
+19 -> 39: checkanswersundersurvey()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+administrator -> 29: deletesuccesmessage()
+activate 29
+
+deactivate 29
+
+@enduml

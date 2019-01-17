@@ -1,0 +1,79 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "ClassGrade Info" as 09
+participant "Send Messagepage" as 29
+participant "User Management Controller" as 39
+participant "Cass Attendance Info" as 49
+participant "Notification log-histories" as 69
+
+User -> 09: Inputuploadgradeinfo()
+activate 09
+
+09 -> 69: Displayconfimation()
+activate 69
+
+69 -> 49: Database()
+activate 49
+
+deactivate 49
+
+69 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 69
+
+deactivate 09
+
+User -> 09: Inputuploadgradeinfo()
+activate 09
+
+09 -> 69: Displayconfimation()
+activate 69
+
+69 -> 49: Database()
+activate 49
+
+deactivate 49
+
+69 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 69
+
+deactivate 09
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User -> 39: Managegradebutton()
+activate 39
+
+39 -> 69: Displayconfimation()
+activate 69
+
+69 -> 49: Database()
+activate 49
+
+deactivate 49
+
+69 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 69
+
+deactivate 39
+
+@enduml

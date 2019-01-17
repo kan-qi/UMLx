@@ -3,6 +3,8 @@
  * 
  * This script relies on KDM and Java model 
  * 
+ * This module implements the xml file generated from gator which identify instances of listeners.
+ * 
  * The goal is the establish the control flow between the modules...
  * Identify the stimuli.
  * Identify the boundary.
@@ -19,110 +21,91 @@
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
 	
-	function identifyResponse(codeAnalysisResults, responsePatternsFilePath){
+	function identifyResponse(codeAnalysisResults, UIHierFilePath){
+		
 		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
-		var methodPatterns = ['main'];
-		var parameterTypePatterns = ['event', 'Event'];
-		var parameterPatterns = ['event', 'Event'];
 		
 		var scannedMethods = [];
 		
 		if (responsePatternsFilePath && fs.existsSync(responsePatternsFilePath)) {
 		 
-		var contents = fs.readFileSync(responsePatternsFilePath, 'utf8');
+		var UIHierStr = fs.readFileSync(UIHierFilePath, 'utf8');
+		
+		var handlers = jp.query(UIHierStr, '$..EventAndHandler[?(@[\'$\'][\'realHandler\'])]');
+		
+
+		var dicResponseMethodUnits = {};
 		
 //		console.log(contents);
 		
-		if(contents){
-		var lines = contents.split(/\r?\n/g);
-		 
-	    for(var i = 0;i < lines.length;i++){
-	        //code here using lines[i] which will give you each line
-	    	var line = lines[i];
-	    	
-	    	var segs = line.split(/ /g);
-	    	
-	    	if(segs.length == 2){
-	    		var type = segs[0];
-	    		if(type === "method"){
-	    			methodPatterns.push(segs[1]);
-	    		}
-	    		else if(type === "param"){
-	    			parameterPatterns.push(segs[1]);
-	    		}
-	    		else if(type === "param-type"){
-	    			parameterTypePatterns.push(segs[1]);
-	    		}
-	    	}
-	    }
-		}
-		   // Do something
+		for(var i in handlers){
+			var handler = handlers[i];
+			var invokerLocation = handler['$']['realHandler'].replace(/\&lt;/g, "").replace(/\$gt;/g, "");
+			var classMethod = invokerLocation.split(": ");
+			var className = classMethod[0];
+			var methodName = classMethod[1];
+			
+			dicMethodUnits[methodName].isResponse = true;
+			
+			dicResponseMethodUnits[methodUnit.UUID] = dicMethodUnits[methodName];
 		}
 		
-//		console.log("method patterns");
-//		console.log(methodPatterns);
-//		console.log("parameter type patterns");
-//		console.log(parameterTypePatterns);
-//		console.log("parameter patterns");
-//		console.log(parameterPatterns);
 		
-		var dicResponseMethodUnits = {};
-		
-		for(var i in dicMethodUnits){
-			var methodUnit = dicMethodUnits[i];
+//		for(var i in dicMethodUnits){
+//			var methodUnit = dicMethodUnits[i];
+////			
+////
+////			if(methodUnit.name === "main"){
+////				MethodUnit.isResponse = true;
+////			}
+////			
+////			for(var j in methodPatterns){
+////				if(methodUnit.Signature.name.match(methodPatterns[j])){
+////					methodUnit.isResponse = true;
+////					break;
+////				}	
+////			}
 //			
-//
-//			if(methodUnit.name === "main"){
-//				MethodUnit.isResponse = true;
+//			if(methodUnit.isResponse){
+//				dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
+//				continue;
 //			}
 //			
-			for(var j in methodPatterns){
-				if(methodUnit.Signature.name.match(methodPatterns[j])){
-					methodUnit.isResponse = true;
-					break;
-				}	
-			}
-			
-			if(methodUnit.isResponse){
-				dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
-				continue;
-			}
-			
-			for(var j in methodUnit.parameterUnits){
-				var parameterUnit = methodUnit.parameterUnits[j];
-//				if(parameterUnit.type.indexOf("event") !=-1 || parameterUnit.type.indexOf("Event") !=-1) {
-//						MethodUnit.isResponse = true;
-//						console.log("found response method");
+//			for(var j in methodUnit.parameterUnits){
+//				var parameterUnit = methodUnit.parameterUnits[j];
+////				if(parameterUnit.type.indexOf("event") !=-1 || parameterUnit.type.indexOf("Event") !=-1) {
+////						MethodUnit.isResponse = true;
+////						console.log("found response method");
+////				}
+//				
+//				for(var k in parameterPatterns){
+//					var parameterPattern = parameterPatterns[k];
+//					if(parameterUnit.name.match(parameterPattern)){
+//						methodUnit.isResponse = true
+//						break;
+//					}
 //				}
-				
-				for(var k in parameterPatterns){
-					var parameterPattern = parameterPatterns[k];
-					if(parameterUnit.name.match(parameterPattern)){
-						methodUnit.isResponse = true
-						break;
-					}
-				}
-				
-				if(methodUnit.isResponse){
-					dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
-					break;
-				}
-				
-				for(var k in parameterTypePatterns){
-					var parameterTypePattern = parameterTypePatterns[k];
-					if(parameterUnit.type.name.match(parameterTypePattern)){
-						methodUnit.isResponse = true
-						break;
-					}
-				}
-				
-
-				if(methodUnit.isResponse){
-					dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
-					break;
-				}
-			}
-		}
+//				
+//				if(methodUnit.isResponse){
+//					dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
+//					break;
+//				}
+//				
+//				for(var k in parameterTypePatterns){
+//					var parameterTypePattern = parameterTypePatterns[k];
+//					if(parameterUnit.type.name.match(parameterTypePattern)){
+//						methodUnit.isResponse = true
+//						break;
+//					}
+//				}
+//				
+//
+//				if(methodUnit.isResponse){
+//					dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
+//					break;
+//				}
+//			}
+//		}
 		
 		
 //		for(var i in dicMethodUnits){

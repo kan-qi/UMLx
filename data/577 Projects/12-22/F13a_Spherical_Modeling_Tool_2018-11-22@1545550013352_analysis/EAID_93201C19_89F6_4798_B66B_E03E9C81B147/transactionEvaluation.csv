@@ -1,0 +1,9 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:List of usrs with specific sphere->User:List of usrs with specific sphere->List of usrs with specific sphere:add association in db->add association in db:sends notification to second user->sends notification to second user:success message,Edit nodes in table,TRAN_NA,5,1,2.5,4,12.5
+2,stl#User:a list of ones->User:a list of ones->a list of ones:update DB with new values->update DB with new values:nodes,Edit nodes in table,TRAN_NA,4,1,1,3,4
+3,stl#User:a list of ones->User:a list of ones->a list of ones:update DB with new values->update DB with new values:node is not updated message,Edit nodes in table,TRAN_NA,4,0,1.3333333333333333,3,5.333333333333333
+4,stl#User:a list of ones->User:a list of ones->a list of ones:update DB with new values->update DB with new values:Redirect to sphere overview->Redirect to sphere overview:Sphere overview,Edit nodes in table,TRAN_NA,5,1,3,4,15
+5,stl#User:a list of ones->User:a list of ones->a list of ones:update DB with new values->update DB with new values:List of usrs with specific sphere->List of usrs with specific sphere:add association in db->add association in db:sends notification to second user->sends notification to second user:success message,Edit nodes in table,TRAN_NA,7,1,2,6,14
+6,stl#User:success message->User:success message,Edit nodes in table,CTRL;EXTCLL;INT,2,0,2,1,4
+7,stl#User:Sphere overview->User:Sphere overview,Edit nodes in table,CTRL;EXTCLL;INT,2,0,5,1,10
+8,stl#User:node is not updated message->User:node is not updated message,Edit nodes in table,CTRL;EXTCLL;INT,2,0,2,1,4

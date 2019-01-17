@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#user:confirmation message->user:confirmation message,Cancel submitted reservation,CTRL;EXTCLL;INT,2,0,2,1,4
+2,stl#user:"cancel" button->user:"cancel" button->"cancel" button:cancel message->cancel message:display a message about cancel reservation->display a message about cancel reservation:confirmation message,Cancel submitted reservation,TRAN_NA,5,1,2.5,4,12.5
+3,stl#user:"cancel" button->user:"cancel" button->"cancel" button:cancel message->cancel message:reservation info,Cancel submitted reservation,CTRL;EXTCLL;INT,4,0,2.6666666666666665,3,10.666666666666666
+4,stl#user:"cancel" button->user:"cancel" button->"cancel" button:cancel message->cancel message:List of all submitted reservations,Cancel submitted reservation,CTRL;EXTCLL;INT,4,0,2.6666666666666665,3,10.666666666666666
+5,stl#user:List of all submitted reservations->user:List of all submitted reservations,Cancel submitted reservation,CTRL;EXTCLL;INT,2,0,4,1,8

@@ -1,0 +1,88 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Vender Registration Form" as 09
+participant "ClickUsersalluserstab" as 19
+participant "Homepage" as 29
+participant "Medical Profile" as 39
+participant "Notifytheadminthattheuserisupdated" as 49
+participant "Vender Profile" as 59
+participant "Medical Create Form" as 79
+
+User -> 09: Movemouseonthevendor��sname()
+activate 09
+
+09 -> 79: Editandremovebuttonappears()
+activate 79
+
+79 -> 59: Redirecttoapageshowsvendordetails()
+activate 59
+
+59 -> 49: Notifytheadminthattheuserisupdated()
+activate 49
+
+49 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 49
+
+deactivate 59
+
+deactivate 79
+
+deactivate 09
+
+User -> 19: ClickUsersalluserstab()
+activate 19
+
+19 -> 19: Redirectusertoauserpagelistedwithallusers()
+19 -> 79: Editandremovebuttonappears()
+activate 79
+
+79 -> 59: Redirecttoapageshowsvendordetails()
+activate 59
+
+deactivate 59
+
+deactivate 79
+
+deactivate 19
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User -> 39: ClickEdit()
+activate 39
+
+39 -> 59: Redirecttoapageshowsvendordetails()
+activate 59
+
+59 -> 49: Notifytheadminthattheuserisupdated()
+activate 49
+
+deactivate 49
+
+deactivate 59
+
+deactivate 39
+
+User -> 49: Changetheroleindetailpagefromvendorandclickupdateuser()
+activate 49
+
+49 -> 49: Notifytheadminthattheuserisupdated()
+49 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 49
+
+@enduml

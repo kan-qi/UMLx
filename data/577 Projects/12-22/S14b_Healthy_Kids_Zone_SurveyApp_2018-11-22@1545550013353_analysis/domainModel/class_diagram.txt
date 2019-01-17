@@ -1,0 +1,703 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class AssociationManagement {
+~ school_add()
+~ school_modify()
+~ school_delete()
+~ path_add()
+~ path_modify()
+~ path_delete()
+~ association_add()
+~ association_delete()
+~ get_SPS()
+~ errormessage()
+~ sameschoolandnamemessage()
+~ drapstartingpointandtypepathname()
+~ pathandlocationinformation()
+~ displayafunctionmenu()
+~ checkifassociationbetweenpathandsurveyindb()
+~ noanswerunderpathmessage()
+}
+
+class HomeScreen {
+~ onLoad()
+~ onClickNew()
+~ onCLickLoad()
+~ inserttheschoolandaddress()
+~ comment()
+}
+
+class LoginPage {
+- username:EAJava_void
+- password:EAJava_void
+~ onClickLogin()
+~ logoutbutton()
+~ redirecttoHKZloginpage()
+}
+
+class Map {
+- Marker:EAJava_void
+~ onClickMap()
+~ onClickMarker()
+~ addmarker()
+~ mapofselectedpaths()
+~ mapview()
+}
+
+class MobileService {
+~ post_answers()
+~ request_surveys()
+~ request_questions()
+~ post_markers()
+~ insertsuccess()
+}
+
+class MySQLDatabase {
+~ MySQLDatabase()
+~ checksurveyandinserttodatatodatabase()
+~ loadpathlistfromthedatabase()
+}
+
+class QuestionCategoryScreen {
+- QuestionList:EAJava_void
+~ onLoad()
+~ onLoadCategory()
+~ retrieveschoolinformationfromdb()
+~ executefeaturenaanddisplaycategories()
+}
+
+class QuestionScreen {
+- q_id:EAJava_void
+- Answer:EAJava_void
+~ onLoadQuestion()
+~ fillAnswer()
+~ onClickNext()
+~ onClickPrevious()
+~ showMap()
+~ displayquestionlist()
+~ sendrequest()
+~ unsweredquestionsfoundmessage()
+}
+
+class SPSListScreen {
+- SPSList:EAJava_void
+- School:EAJava_void
+- Path:EAJava_void
+- Survey:EAJava_void
+~ onLoad()
+~ getSchools()
+~ getPaths()
+~ getSurveys()
+~ loadSurvey()
+~ shcoollist()
+~ pathlist()
+~ displayschoollist()
+}
+
+class SurveyManagement {
+~ getSMList()
+~ getDBList()
+~ survey_imports()
+~ survey_delete()
+~ survey_deploy()
+~ survey_retract()
+~ survey_export()
+~ surveymonkey()
+~ retriveschoolpathandsurvey()
+~ successmessage()
+~ commenttextovermap()
+~ checkanswersundersurvey()
+~ nosavedsurveyfoundmessage()
+~ loadandcontinueasurveyfrorecord()
+~ updatesurveyindb()
+}
+
+class SurveyConfigurationPage {
+- SPSList:EAJava_void
+- School:EAJava_void
+- Path:EAJava_void
+- Survey:EAJava_void
+~ onLoadPage()
+~ onClickAddSchool()
+~ onClickModifySchool()
+~ onClickDeleteSchool()
+~ onClickAddPath()
+~ onClickModifyPath()
+~ onClickDeletePath()
+~ onClickAddAssociation()
+~ onClickDeleteAssociation()
+~ savepathandlocationinformation()
+~ confirmationpage()
+~ redirectsurveydeletionpage()
+~ confirmmessageaboutirreversibleoperation()
+}
+
+class SurveyDeploymentPage {
+- DBList:EAJava_void
+~ onLoadPage()
+~ onClickDeploy()
+~ onClickRetract()
+~ retrievesurveydetail()
+~ deletesuccesmessage()
+~ deletesurveyfromdb()
+~ loadsurveybutton()
+}
+
+class SurveyExportPage {
+- DBList:EAJava_void
+~ onLoadPage()
+~ onClickExport()
+~ surveylistpage()
+~ surveyreport()
+}
+
+class SurveyImportPage {
+- SMList:EAJava_void
+- DBList:EAJava_void
+~ onLoadPage()
+~ onClickImport()
+~ onClickDelete()
+~ surveyimportpage()
+~ prompterrormessage()
+}
+
+class WebsiteLogin {
+~ login()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+~ checkrelatedanswersunderpaths()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+~ updatetheanswerinthetemporarystoragefile()
+~ tempoararyfile()
+}
+
+class answer {
+~ answer()
+~ answerstoredsucceeded()
+~ insertanswertostorage()
+~ checkcompleteanswers()
+}
+
+class Object1 
+
+class schoolinformaiton {
+~ schoolinformaiton()
+~ pathandlocationinformation()
+~ schoollistpage()
+~ deletetheschoolandaddress()
+~ quitwithoutsavingbutton()
+~ submitbutton()
+}
+
+class outofavailablestorageerror {
+~ outofavailablestorageerror()
+~ errormessageforover500characters()
+}
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+AssociationManagement .. SurveyConfigurationPage
+
+@enduml

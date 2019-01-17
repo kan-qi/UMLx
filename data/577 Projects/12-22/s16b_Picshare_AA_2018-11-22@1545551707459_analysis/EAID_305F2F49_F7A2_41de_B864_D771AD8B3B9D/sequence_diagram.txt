@@ -1,0 +1,116 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Optionstopost" as 09
+participant "Hashtagicon" as 19
+participant "Warninginformationofduplicate" as 29
+participant "AppMainPage" as 39
+participant "DeleteEventButton" as 59
+participant "textboxforusertoinputname" as 99
+participant "Picture" as 149
+
+User -> 09: Optionstopost()
+activate 09
+
+09 -> 09: retriveuserslocationandpoststhepictureatlocation()
+09 -> 149: Picture()
+activate 149
+
+deactivate 149
+
+deactivate 09
+
+User -> 19: CameraIcon()
+activate 19
+
+19 -> 29: LaunchCameraApplication()
+activate 29
+
+29 -> 39: CameraApp()
+activate 39
+
+39 -> 29: opensupthegalleryapplication()
+29 -> 29: galleryapplication()
+29 -> 149: showsthepictureandtextboxforcaption()
+activate 149
+
+149 -> 59: EventandcaptionInput()
+activate 59
+
+59 -> 99: showatextboxforusertoinputeventname()
+activate 99
+
+99 -> 99: textboxforusertoinputname()
+99 -> 149: storepictureintheevent()
+149 -> 149: Picture()
+deactivate 149
+
+deactivate 99
+
+59 -> 59: storepictureintheevent()
+59 -> 149: Picture()
+activate 149
+
+deactivate 149
+
+deactivate 59
+
+deactivate 29
+
+39 -> 59: EventandcaptionInput()
+activate 59
+
+59 -> 99: showatextboxforusertoinputeventname()
+activate 99
+
+deactivate 99
+
+59 -> 59: storepictureintheevent()
+deactivate 59
+
+39 -> 09: showpictureandoptionstopostnearbyortoanevent()
+activate 09
+
+09 -> 09: Optionstopost()
+09 -> 09: retriveuserslocationandpoststhepictureatlocation()
+deactivate 09
+
+deactivate 39
+
+deactivate 19
+
+User -> 29: galleryapplication()
+activate 29
+
+29 -> 149: showsthepictureandtextboxforcaption()
+activate 149
+
+deactivate 149
+
+deactivate 29
+
+User -> 39: CameraApp()
+activate 39
+
+39 -> 29: opensupthegalleryapplication()
+activate 29
+
+deactivate 29
+
+39 -> 59: EventandcaptionInput()
+activate 59
+
+deactivate 59
+
+39 -> 09: showpictureandoptionstopostnearbyortoanevent()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+@enduml

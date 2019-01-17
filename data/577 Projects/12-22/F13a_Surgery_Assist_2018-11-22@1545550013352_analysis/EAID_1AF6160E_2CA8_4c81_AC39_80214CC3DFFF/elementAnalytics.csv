@@ -1,0 +1,19 @@
+id,element,useCase,type,component
+1,user:"decline" button in the request list,Decline Reservation Request,boundary,declinemessage
+2,user:decline message,Decline Reservation Request,boundary,declinemessage
+3,user:Empty list of unconfirmed reservation requests,Decline Reservation Request,boundary,ReservationController
+4,user:"View unconfirmed reservation requests" button,Decline Reservation Request,boundary,ReservationController
+5,user:decline reason prompt,Decline Reservation Request,boundary,declinemessage
+6,"View unconfirmed reservation requests" button:retrieve a list of unconfirmed reservations,Decline Reservation Request,boundary,ReservationController
+7,"decline" button in the request list:Prompt for decline reason input,Decline Reservation Request,control,ProxyConnector
+8,retrieve a list of unconfirmed reservations:"decline" button in the request list,Decline Reservation Request,boundary,declinemessage
+9,Display a decline message:decline message,Decline Reservation Request,boundary,declinemessage
+10,decline reason prompt:Display a decline message,Decline Reservation Request,boundary,declinemessage
+11,retrieve a list of unconfirmed reservations:Empty list of unconfirmed reservation requests,Decline Reservation Request,boundary,ReservationController
+12,Prompt for decline reason input:decline reason prompt,Decline Reservation Request,boundary,declinemessage
+13,retrieve a list of unconfirmed reservations:reservation info,Decline Reservation Request,boundary,Reservation
+14,stl#user:"decline" button in the request list,Decline Reservation Request,Stimulus,undefined
+15,stl#user:decline message,Decline Reservation Request,Stimulus,undefined
+16,stl#user:Empty list of unconfirmed reservation requests,Decline Reservation Request,Stimulus,undefined
+17,stl#user:"View unconfirmed reservation requests" button,Decline Reservation Request,Stimulus,undefined
+18,stl#user:decline reason prompt,Decline Reservation Request,Stimulus,undefined

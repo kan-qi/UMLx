@@ -1,0 +1,81 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor BlackProfessionals.net checking systemactor User
+participant "ActivityLogger" as 09
+participant "LinkedIn API" as 19
+participant "SearchEngine" as 29
+participant "Message" as 39
+participant "Logoutbutton" as 49
+participant "SearchResultEntity" as 79
+participant "Courses" as 89
+
+BlackProfessionals.net checking system -> 09: redirecttologinpage()
+activate 09
+
+09 -> 39: Loginpage()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+BlackProfessionals.net checking system -> 19: redirecttomainpage()
+activate 19
+
+19 -> 39: Loginpage()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+User -> 39: Loginpage()
+activate 39
+
+deactivate 39
+
+User -> 49: Logoutbutton()
+activate 49
+
+49 -> 79: clearcurrentsession()
+activate 79
+
+79 -> 29: BlackProfessionalsnetcheckingsystem()
+activate 29
+
+29 -> 09: redirecttologinpage()
+activate 09
+
+deactivate 09
+
+29 -> 19: redirecttomainpage()
+activate 19
+
+deactivate 19
+
+deactivate 29
+
+79 -> 89: Session()
+activate 89
+
+deactivate 89
+
+79 -> 09: redirecttologinpage()
+activate 09
+
+09 -> 39: Loginpage()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+deactivate 79
+
+deactivate 49
+
+@enduml

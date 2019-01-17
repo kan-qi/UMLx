@@ -1,0 +1,19 @@
+id,element,useCase,type,component
+1,user:View Profile Button,View Profile,boundary,Loginbutton
+2,user:personal home page,View Profile,boundary,PaymentController
+3,user:Invalid user information,View Profile,boundary,Reservation
+4,user:User profile,View Profile,boundary,User
+5,Validate username and password:Invalid user information,View Profile,boundary,Reservation
+6,Validate username and password:User Info,View Profile,boundary,User
+7,User profile:disable the user's privilege to login,View Profile,boundary,Loginbutton
+8,User profile:Validate username and password,View Profile,control,$help://use_case_model_pattern.htm
+9,display user profile to user:User profile,View Profile,boundary,User
+10,Validate username and password:redirect the user to their personal home page,View Profile,control,$help://usecasediagram.htm
+11,display user profile to user:View Profile Button,View Profile,boundary,Loginbutton
+12,disable the user's privilege to login:display user profile to user,View Profile,entity,userController
+13,display user profile to user:use profile info,View Profile,entity,userController
+14,redirect the user to their personal home page:personal home page,View Profile,boundary,PaymentController
+15,stl#user:View Profile Button,View Profile,Stimulus,undefined
+16,stl#user:personal home page,View Profile,Stimulus,undefined
+17,stl#user:Invalid user information,View Profile,Stimulus,undefined
+18,stl#user:User profile,View Profile,Stimulus,undefined

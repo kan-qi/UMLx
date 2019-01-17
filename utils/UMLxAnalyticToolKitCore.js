@@ -377,7 +377,6 @@
 					</div>
 				`
 			}			
-		}
 
 		let EUCP_content = generateEstimationReshltPane(model.eucp_lm, model);
 		let EXUCP_content = generateEstimationReshltPane(model.exucp_lm, model);
@@ -392,7 +391,7 @@
 		// 	testFolder = './data/StandAloneToolKit/output';
 		// }		
 
-		testFolder = model.OutputDir+"/"+ model.UseCases[key]._id;
+		testFolder = model.OutputDir;
 
 		fs.readdirSync(testFolder).forEach((file, index) => {
 			let stats = fs.statSync(testFolder + '/' + file);
@@ -632,6 +631,13 @@
         if (callback) {
             callback(htmlBody);
         }
+
+		}
+		else{
+			if(callback){
+				callback(false);
+			}
+		}
     }
 
     function generateEstimationReshltPane(estimationResults, modelInfo) {

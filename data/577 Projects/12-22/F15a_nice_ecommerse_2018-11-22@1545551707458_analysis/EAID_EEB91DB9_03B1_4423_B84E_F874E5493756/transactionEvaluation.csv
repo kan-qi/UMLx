@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:main page->User:main page,Login,CTRL;EXTCLL;DM;EI,2,0,2,1,4
+2,stl#User:login page->User:login page->login page:query user info->query user info:user info,Login,TRAN_NA,4,2,1.6666666666666667,3,6.666666666666667
+3,stl#User:login page->User:login page->login page:query user info->query user info:main page,Login,TRAN_NA,4,2,1.6666666666666667,3,6.666666666666667
+4,stl#User:login page->User:login page->login page:query user info->query user info:login information invalid box,Login,TRAN_NA,4,1,1.6666666666666667,3,6.666666666666667
+5,stl#User:login information invalid box->User:login information invalid box,Login,CTRL;EXTCLL;INT,2,0,2,1,4

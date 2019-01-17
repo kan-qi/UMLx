@@ -1,0 +1,134 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Email protocolactor LinkedInactor User
+participant "Email" as 09
+participant "Experience" as 29
+participant "LinkedIn API" as 49
+participant "Invitation" as 69
+participant "Message" as 79
+participant "System Boundary" as 119
+
+Email protocol -> 09: returnthestatusofemailbeingsent()
+activate 09
+
+09 -> 69: Invitationpage()
+activate 69
+
+deactivate 69
+
+09 -> 79: emailsendingfailedmessage()
+activate 79
+
+deactivate 79
+
+deactivate 09
+
+LinkedIn -> 29: Alistoffriends()
+activate 29
+
+29 -> 119: Checkiffriendsexistinsystem()
+activate 119
+
+119 -> 69: Friendlistforinvitation()
+activate 69
+
+69 -> 09: sendemailtofriend()
+activate 09
+
+09 -> 09: Emailprotocol()
+09 -> 09: returnthestatusofemailbeingsent()
+deactivate 09
+
+deactivate 69
+
+119 -> 29: Fiends()
+deactivate 29
+
+deactivate 119
+
+LinkedIn -> 09: popupinputemailandpasswordpage()
+activate 09
+
+09 -> 49: Linkedinloginpage()
+activate 49
+
+49 -> 69: redirecttoinvitationpage()
+activate 69
+
+69 -> 69: Invitationpage()
+deactivate 69
+
+49 -> 49: ValidatelogininfobyLinkedIn()
+49 -> 49: LinkedIn()
+49 -> 29: Alistoffriends()
+activate 29
+
+deactivate 29
+
+49 -> 09: popupinputemailandpasswordpage()
+deactivate 09
+
+deactivate 49
+
+49 -> 79: loginfailmessage()
+activate 79
+
+deactivate 79
+
+User -> 69: Friendlistforinvitation()
+activate 69
+
+69 -> 09: sendemailtofriend()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+User -> 79: emailsendingfailedmessage()
+activate 79
+
+deactivate 79
+
+User -> 69: invitebutton()
+activate 69
+
+69 -> 29: getfriendlist()
+activate 29
+
+29 -> 49: LinkedIn()
+activate 49
+
+49 -> 29: Alistoffriends()
+deactivate 29
+
+49 -> 09: popupinputemailandpasswordpage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 69
+
+User -> 69: Invitationpage()
+activate 69
+
+deactivate 69
+
+User -> 49: Linkedinloginpage()
+activate 49
+
+49 -> 69: redirecttoinvitationpage()
+activate 69
+
+deactivate 69
+
+49 -> 49: ValidatelogininfobyLinkedIn()
+deactivate 49
+
+@enduml

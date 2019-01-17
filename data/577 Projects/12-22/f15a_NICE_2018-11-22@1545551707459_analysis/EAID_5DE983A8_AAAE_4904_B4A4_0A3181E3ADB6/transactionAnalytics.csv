@@ -1,0 +1,4 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:Buyer select payment method	->User:Buyer select payment method	->Buyer select payment method	:Redirect to third party payment page with total amount->Redirect to third party payment page with total amount:Get receipt from third party payment method->Get receipt from third party payment method:clear cart item and generate orders->clear cart item and generate orders:Homepage,UC6: Check out,6,0,5,0,0
+2,stl#User:Homepage->User:Homepage,UC6: Check out,2,0,1,0,0
+3,stl#User:Finish payment->User:Finish payment->Finish payment:Get receipt from third party payment method->Get receipt from third party payment method:clear cart item and generate orders->clear cart item and generate orders:Homepage,UC6: Check out,5,0,4,0,0

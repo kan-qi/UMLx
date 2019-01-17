@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "OrderForm" as 09
+participant "location" as 19
+participant "FloristProfileController" as 29
+participant "checkdbifavailable" as 49
+participant "user_location" as 79
+participant "User" as 99
+
+User -> 09: errormessageforemptyinput()
+activate 09
+
+deactivate 09
+
+User -> 19: successfulinformationforcreation()
+activate 19
+
+deactivate 19
+
+User -> 29: existingprofileerrormessage()
+activate 29
+
+deactivate 29
+
+User -> 29: CreateProfilePage()
+activate 29
+
+29 -> 49: precheckifinputisempty()
+activate 49
+
+49 -> 09: errormessageforemptyinput()
+activate 09
+
+deactivate 09
+
+49 -> 29: existingprofileerrormessage()
+deactivate 29
+
+49 -> 79: sendinformationindb()
+activate 79
+
+79 -> 99: userinfo()
+activate 99
+
+deactivate 99
+
+deactivate 79
+
+49 -> 19: successfulinformationforcreation()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+@enduml

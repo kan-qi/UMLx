@@ -1,0 +1,96 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Transport Coordinator
+participant "Building" as 09
+participant "EMT Building Assignment" as 19
+participant "Disaster" as 29
+participant "ValidatesInput" as 39
+participant "returnsaddEMTfrompage" as 79
+participant "Redirectstorespirationperfusionmetalstatuspage" as 99
+participant "System Boundary" as 149
+
+Transport Coordinator -> 09: Managebuildingshubsdisastersbutton()
+activate 09
+
+09 -> 19: Redirectstothemanagementbuildingshubsdisasterspage()
+activate 19
+
+19 -> 19: Managementbuildingshubdisasterspage()
+19 -> 79: Deleterecordsfromthedatabase()
+activate 79
+
+79 -> 09: buildshubsdiastersdb()
+deactivate 09
+
+deactivate 79
+
+19 -> 99: Redirectstoupdatebuildinghubdisasterformpage()
+activate 99
+
+99 -> 09: updatebuildinghubdisasterformpage()
+activate 09
+
+09 -> 39: Validatesinputasbeingcorrect()
+activate 39
+
+39 -> 149: Systemupdatesrecordinthedatabase()
+activate 149
+
+149 -> 19: Redirectstothemanagementbuildingshubsdisasterspage()
+19 -> 29: Managebildingshubsdisasterspage()
+activate 29
+
+deactivate 29
+
+deactivate 19
+
+149 -> 09: buildshubsdiastersdb()
+deactivate 09
+
+deactivate 149
+
+39 -> 39: nullinputinformaitonerror()
+deactivate 39
+
+deactivate 99
+
+Transport Coordinator -> 19: Managementbuildingshubdisasterspage()
+activate 19
+
+19 -> 79: Deleterecordsfromthedatabase()
+activate 79
+
+deactivate 79
+
+19 -> 99: Redirectstoupdatebuildinghubdisasterformpage()
+activate 99
+
+deactivate 99
+
+deactivate 19
+
+Transport Coordinator -> 29: Managebildingshubsdisasterspage()
+activate 29
+
+deactivate 29
+
+Transport Coordinator -> 39: nullinputinformaitonerror()
+activate 39
+
+deactivate 39
+
+Transport Coordinator -> 09: updatebuildinghubdisasterformpage()
+activate 09
+
+09 -> 39: Validatesinputasbeingcorrect()
+activate 39
+
+deactivate 39
+
+deactivate 09
+
+@enduml

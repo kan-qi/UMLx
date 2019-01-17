@@ -1,0 +1,96 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Adminactor User
+participant "Registerbutton" as 09
+participant "Question Form" as 59
+participant "Administrator Profile" as 99
+participant "Search Results" as 159
+
+Admin -> 09: RegistrationDetail()
+activate 09
+
+09 -> 99: savetheapprovalstatusofregistration()
+activate 99
+
+99 -> 59: registrationinformation()
+activate 59
+
+deactivate 59
+
+deactivate 99
+
+deactivate 09
+
+Admin -> 09: registrationbutton()
+activate 09
+
+09 -> 59: displayregistratiionrequests()
+activate 59
+
+59 -> 09: listofregistrations()
+09 -> 09: Queryregistrationdetail()
+09 -> 59: registrationinformation()
+deactivate 59
+
+09 -> 09: RegistrationDetail()
+09 -> 99: savetheapprovalstatusofregistration()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+59 -> 59: registrationinformation()
+activate 59
+
+deactivate 59
+
+09 -> 159: redirecttosearchpanel()
+activate 159
+
+159 -> 09: registrationpage()
+activate 09
+
+09 -> 59: saveinformationforverification()
+activate 59
+
+59 -> 59: registrationinformation()
+deactivate 59
+
+deactivate 09
+
+deactivate 159
+
+Admin -> 09: listofregistrations()
+activate 09
+
+09 -> 09: Queryregistrationdetail()
+deactivate 09
+
+User -> 09: registrationpage()
+activate 09
+
+09 -> 59: saveinformationforverification()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+User -> 09: Registerbutton()
+activate 09
+
+09 -> 09: displayregistrationpage()
+09 -> 09: registrationpage()
+09 -> 59: saveinformationforverification()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+@enduml

@@ -1,0 +1,70 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Receivefeedbackandsuccessfulmessage" as 19
+participant "Search" as 29
+participant "PetFinder Interface" as 39
+participant "Display" as 59
+participant "Sendtheformtobackendtocheckitsvalid" as 79
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Receiveresultsdata()
+activate 19
+
+19 -> 59: CallDisplayProcess()
+activate 59
+
+59 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+deactivate 19
+
+User -> 29: ClickSearchButton()
+activate 29
+
+29 -> 79: Sendtheformtobackendandcallthefunctiontofetchthesuitableresults()
+activate 79
+
+79 -> 59: CallDisplayProcess()
+activate 59
+
+59 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+deactivate 79
+
+deactivate 29
+
+User -> 39: Enterkeyrequirementsinfilter()
+activate 39
+
+39 -> 79: Sendtheformtobackendandcallthefunctiontofetchthesuitableresults()
+activate 79
+
+79 -> 59: CallDisplayProcess()
+activate 59
+
+deactivate 59
+
+deactivate 79
+
+deactivate 39
+
+@enduml

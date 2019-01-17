@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Displayslistoftablesalongwithemptydropbuttonsnexttothem" as 09
+participant "webpage" as 19
+participant "Application Server Component" as 39
+participant "User interface component" as 69
+
+User -> 09: ClickonEmptyDroptablesbutton()
+activate 09
+
+09 -> 39: Showsdatabaseinformation()
+activate 39
+
+39 -> 09: Displayslistoftablesalongwithemptydropbuttonsnexttothem()
+09 -> 69: Responsesdeletedfromtable()
+activate 69
+
+69 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 69
+
+deactivate 09
+
+deactivate 39
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 09: selectsemptyforuserResponsestable()
+activate 09
+
+09 -> 09: Displayslistoftablesalongwithemptydropbuttonsnexttothem()
+09 -> 69: Responsesdeletedfromtable()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+User -> 39: ClickonDatabasebuttononsidebar()
+activate 39
+
+39 -> 39: Showsdatabaseinformation()
+39 -> 09: Displayslistoftablesalongwithemptydropbuttonsnexttothem()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+@enduml

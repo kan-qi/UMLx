@@ -1,0 +1,63 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Application Server Component" as 09
+participant "$help://usecasediagram.htm" as 39
+participant "Browser" as 49
+participant "System Boundary" as 79
+
+User -> 09: ClickContinuebutton()
+activate 09
+
+09 -> 79: Systemloadsanddisplaysfirstscenario()
+activate 79
+
+79 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+activate 49
+
+deactivate 49
+
+deactivate 79
+
+deactivate 09
+
+User -> 09: ClickonCivilianorveteranradiobutton()
+activate 09
+
+09 -> 79: Systemloadsanddisplaysfirstscenario()
+activate 79
+
+79 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+activate 49
+
+deactivate 49
+
+deactivate 79
+
+deactivate 09
+
+User -> 09: ClickContinuebutton()
+activate 09
+
+09 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+User -> 39: Userdoesnotselectanyradiobutton()
+activate 39
+
+39 -> 49: Browseralertsuserthattheyhavenotselectedanyoption()
+activate 49
+
+deactivate 49
+
+deactivate 39
+
+@enduml

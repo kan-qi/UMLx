@@ -1,0 +1,136 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Actoractor User
+participant "event" as 09
+participant "RangeButtonsDefaultmyhome" as 29
+participant "DisplaypoppAuthenticationFailedonLogInScreen" as 59
+participant "photolist" as 69
+participant "SignupScreen" as 89
+participant "HandlePasswordError" as 129
+
+Actor -> 09: EventScreen()
+activate 09
+
+09 -> 09: Determineifuseriseventowner()
+09 -> 09: Event()
+deactivate 09
+
+09 -> 29: HideEditButton()
+activate 29
+
+29 -> 09: EventScreen()
+activate 09
+
+09 -> 09: Determineifuseriseventowner()
+deactivate 09
+
+09 -> 59: DisplayRemainingEventTime()
+activate 59
+
+59 -> 09: Event()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+09 -> 69: PhotoCollection()
+activate 69
+
+deactivate 69
+
+09 -> 09: RetrievePhotosforEvent()
+activate 09
+
+09 -> 129: Handlephotoretrievalerror()
+activate 129
+
+129 -> 09: EventScreen()
+09 -> 09: Determineifuseriseventowner()
+deactivate 09
+
+09 -> 59: DisplayRemainingEventTime()
+activate 59
+
+deactivate 59
+
+09 -> 69: PhotoCollection()
+activate 69
+
+deactivate 69
+
+09 -> 09: RetrievePhotosforEvent()
+activate 09
+
+09 -> 69: PhotoCollection()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+09 -> 89: NavigatetoPhotoSelectedScreen()
+activate 89
+
+deactivate 89
+
+deactivate 129
+
+09 -> 89: NavigatetoPhotoSelectedScreen()
+activate 89
+
+deactivate 89
+
+deactivate 29
+
+09 -> 59: DisplayRemainingEventTime()
+activate 59
+
+deactivate 59
+
+09 -> 69: PhotoCollection()
+activate 69
+
+deactivate 69
+
+09 -> 09: RetrievePhotosforEvent()
+activate 09
+
+deactivate 09
+
+09 -> 89: NavigatetoPhotoSelectedScreen()
+activate 89
+
+deactivate 89
+
+User -> 09: EventScreen()
+activate 09
+
+09 -> 09: Determineifuseriseventowner()
+deactivate 09
+
+09 -> 59: DisplayRemainingEventTime()
+activate 59
+
+deactivate 59
+
+09 -> 69: PhotoCollection()
+activate 69
+
+deactivate 69
+
+09 -> 09: RetrievePhotosforEvent()
+activate 09
+
+deactivate 09
+
+09 -> 89: NavigatetoPhotoSelectedScreen()
+activate 89
+
+deactivate 89
+
+@enduml

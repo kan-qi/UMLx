@@ -1,0 +1,210 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class blockGoogleCloudDatastore {
+~ blockGoogleCloudDatastore()
+}
+
+class blocksystemMeetingminutesAndroid {
+~ blocksystemMeetingminutesAndroid()
+~ SelectssettingsbuttonfromtheAndroidtoolbar()
+~ Meetingissavedontheadministrator��sandroiddeviceinPDFformat()
+~ Meetingispublishedandaccessibletootheradministratorsandusersontheattendeelist()
+~ OpenstheConstructionMeetingMinutesAndroidapplication()
+}
+
+class blockGoogleAppEngineBackEndServer {
+~ blockGoogleAppEngineBackEndServer()
+}
+
+class Meeting {
+~ Meeting()
+~ Selectsthecreateameetingoption()
+~ displaysthepublishmeetingscreen()
+~ Displaysmeetingdetailsandassignee()
+}
+
+class MeetingLog {
+~ MeetingLog()
+~ Choosestheoptiontogeneratemeetinglog()
+~ logdb()
+}
+
+class MeetingMinute {
+~ MeetingMinute()
+~ displaysthecreateameetingscreen()
+}
+
+class MeetingMinuteContent {
+~ MeetingMinuteContent()
+~ Commentisdisplayedalongwiththeassigneethatsubmittedit()
+~ Dropdownsettingsmenuisdisplayed()
+~ Entersmeetinginformationandattendeelist()
+~ Addscommenttotheminute()
+}
+
+class Project {
+~ Project()
+~ Selectschangeprojectoption()
+~ Selectsatask()
+}
+
+class StatusNotification {
+~ StatusNotification()
+~ Therequestingusercannowlogintotheapplication()
+~ PublishesmeetingandsendsaParsePushnotification()
+~ Displaysmessagetotheusertonotifythem()
+}
+
+class AccountController {
+~ createUser():EAJava_void
+~ getAccountStatus():EAJava_void
+~ getUser():EAJava_void
+~ sendNotification():EAJava_void
+~ set AccountStatus():EAJava_void
+~ updateUser():EAJava_void
+}
+
+class ApproveSignupScreen {
+~ ApproveSignupScreen()
+}
+
+class Class1 {
+~ Class1()
+}
+
+class Class2 {
+~ email():EAJava_void
+~ name():EAJava_void
+~ phone():EAJava_void
+}
+
+class EditProfileScreen {
+~ EditProfileScreen()
+~ displaystheselectaprojectscreen()
+~ Selectstheeditprofileoption()
+}
+
+class LoginScreen {
+~ LoginScreen()
+~ Logininpage()
+~ displaystheviewpendingtasksscreen()
+}
+
+class SignUpScreen {
+~ SignUpScreen()
+~ Selectsasignuprequest()
+~ opensuptothesignuppage()
+~ displaystheviewassigntasksscreen()
+}
+
+class User {
+- businessName:EAJava_string
+- email:EAJava_string
+- name:EAJava_string
+- password:EAJava_string
+- phone:EAJava_string
+- status:EAJava_string
+- userName:EAJava_string
+- undefined:EAID_10FC2442_A647_446d_946B_389BB2DC9EFF
+~ User()
+}
+
+class UserEndPoints {
+~ doesExist():EAJava_void
+~ get():EAJava_void
+~ insert():EAJava_void
+~ list():EAJava_void
+~ remove():EAJava_void
+~ update():EAJava_void
+~ Verifiesattendeelistcontainsvalidusers()
+}
+
+class entityCommentDatastore {
+~ entityCommentDatastore()
+~ Submitsacommenttoanassignedtask()
+~ Choosestheoptiontoviewstatusofcomment()
+}
+
+class entityMeetingDatastore {
+~ entityMeetingDatastore()
+~ Choosesacreatedmeetingforwhichtopublishandthenselectsthepublishbutton()
+}
+
+class entityMinuteDatastore {
+~ entityMinuteDatastore()
+~ Inputsdesiredinformationandselectstheupdateoption()
+~ submitstheinformationtobeapprovedbyanadministrator()
+~ Choosestheoptiontoviewpendingtasksfromtheadministrator��sdashboard()
+}
+
+class entityProjectDatastore {
+~ entityProjectDatastore()
+}
+
+class entityUserDatastore {
+~ entityUserDatastore()
+~ displaysrequestdetailssuchasuserinfoandaccounttype()
+~ invalidinformationisdisplayedtotheuser()
+~ validateusenameandpassword()
+~ Choosestheoptiontoviewassigntask()
+}
+
+class CommenttEndPoints {
+~ get():EAJava_void
+~ insert():EAJava_void
+~ list():EAJava_void
+~ remove():EAJava_void
+~ update():EAJava_void
+~ Selectstheviewsubmittedcommentsoption()
+~ Pressestheacceptcommentbutton()
+~ Inputscommentforselectedtask()
+~ displaystheviewcommentscreen()
+}
+
+class MeetingEndPoints {
+~ MeetingEndPoints()
+}
+
+class MinuteEndPoints {
+~ get():EAJava_void
+~ insert():EAJava_void
+~ list():EAJava_void
+~ remove():EAJava_void
+~ update():EAJava_void
+~ attemptstoverifytheinputs()
+}
+
+class Objectify {
+~ delete():EAJava_void
+~ load():EAJava_void
+~ save():EAJava_void
+}
+
+class ProjectEndPoints {
+~ get():EAJava_void
+~ insert():EAJava_void
+~ list():EAJava_void
+~ remove():EAJava_void
+~ update():EAJava_void
+~ Selectssubmit()
+}
+
+class UsertEndPoints {
+~ doesExist():EAJava_void
+~ get():EAJava_void
+~ insert():EAJava_void
+~ list():EAJava_void
+~ remove():EAJava_void
+~ update():EAJava_void
+~ selectstheexportbutton()
+}
+
+class Hompage {
+~ Hompage()
+~ showconfirmationpage()
+}
+
+Class1 <|-- SignUpScreen
+
+@enduml

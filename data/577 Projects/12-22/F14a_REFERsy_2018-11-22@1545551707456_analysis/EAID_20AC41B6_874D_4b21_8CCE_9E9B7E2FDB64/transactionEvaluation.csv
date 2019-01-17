@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:user profile page->User:user profile page,Create a new account,CTRL;EXTCLL;INT,2,0,2,1,4
+2,stl#User:invalid input information->User:invalid input information,Create a new account,CTRL;EXTCLL;INT,2,0,3,1,6
+3,stl#User:Account create page->User:Account create page->Account create page:validate input information->validate input information:save user account->save user account:user profile page,Create a new account,TRAN_NA,5,1,2,4,10
+4,stl#User:Account create page->User:Account create page->Account create page:validate input information->validate input information:save user account->save user account:account,Create a new account,TRAN_NA,5,2,2,4,10
+5,stl#User:Account create page->User:Account create page->Account create page:validate input information->validate input information:invalid input information,Create a new account,TRAN_NA,4,0,2.6666666666666665,3,10.666666666666666

@@ -1,0 +1,88 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Displaysuccessmessagetouser" as 09
+participant "Sharebutton" as 19
+participant "EditSphereView" as 29
+participant "VizualizationView" as 69
+participant "EmailSender" as 79
+participant "CreateSphereView" as 89
+participant "AuthorizationChecker" as 99
+participant "SphereModel" as 109
+
+User -> 09: alistofaccessiblespheres()
+activate 09
+
+09 -> 89: queryforthelatestspheredata()
+activate 89
+
+89 -> 109: spheredata()
+activate 109
+
+deactivate 109
+
+89 -> 79: render2Dpolarchat()
+activate 79
+
+79 -> 19: 2Dpolarchart()
+activate 19
+
+deactivate 19
+
+deactivate 79
+
+89 -> 09: textualmessage()
+deactivate 09
+
+deactivate 89
+
+User -> 19: 2Dpolarchart()
+activate 19
+
+deactivate 19
+
+User -> 29: Listofusrswithspecificsphere()
+activate 29
+
+29 -> 69: addassociationindb()
+activate 69
+
+69 -> 99: sendsnotificationtoseconduser()
+activate 99
+
+99 -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+deactivate 99
+
+deactivate 69
+
+29 -> 79: render2Dpolarchat()
+activate 79
+
+79 -> 19: 2Dpolarchart()
+activate 19
+
+deactivate 19
+
+deactivate 79
+
+deactivate 29
+
+User -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: textualmessage()
+activate 09
+
+deactivate 09
+
+@enduml

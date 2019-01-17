@@ -13,14 +13,21 @@ import presto.android.Configs.AsyncOpStrategy;
 import presto.android.Configs.TestGenStrategy;
 import soot.Pack;
 import soot.PackManager;
+import soot.Scene;
 import soot.SceneTransformer;
+import soot.SootMethod;
 import soot.Transform;
+import soot.options.Options;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -198,6 +205,7 @@ public class Main {
     Logger.trace("SETUP", "classpath : " + classpath);
     // Setup an artificial phase to call into our analysis entrypoint. We can
     // run it with or without call graph construction (CHA is chosen here).
+    Configs.withCHA = true;
     if (Configs.withCHA) {
       String packName = "wjtp";
       String phaseName = "wjtp.gui";
@@ -213,6 +221,7 @@ public class Main {
               "-process-dir", Configs.bytecodes,
               "-cp", classpath,
       };
+            
       readWidgetMap();
       PrerunEntrypoint.v().run();
       setupAndInvokeSootHelper(packName, phaseName, sootArgs);
@@ -262,7 +271,6 @@ public class Main {
     // Finally, invoke Soot
 
     //readAndApplySignatureList();
-
 
     soot.Main.main(sootArgs);
   }

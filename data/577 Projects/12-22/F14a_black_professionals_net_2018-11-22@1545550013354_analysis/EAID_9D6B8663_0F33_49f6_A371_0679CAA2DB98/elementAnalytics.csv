@@ -1,0 +1,16 @@
+id,element,useCase,type,component
+1,User:Search bar,General Search Functionality,actor,SearchEngine
+2,User:list of random recommendations,General Search Functionality,control,Recommendation Letter
+3,User:No matched results found,General Search Functionality,entity,SearchResult
+4,User:Input message invalidty,General Search Functionality,control,Message
+5,check validity of input search string:Input message invalidty,General Search Functionality,control,Message
+6,query matched users:No matched results found,General Search Functionality,entity,SearchResult
+7,Search bar:check validity of input search string,General Search Functionality,control,IndividualSearch
+8,check validity of input search string:sql injection protection,General Search Functionality,boundary,Connection
+9,sql injection protection:list of random recommendations,General Search Functionality,control,Recommendation Letter
+10,query matched users:recommendations,General Search Functionality,control,Recommendation Letter
+11,sql injection protection:query matched users,General Search Functionality,control,UserRecommender
+12,stl#User:Search bar,General Search Functionality,Stimulus,undefined
+13,stl#User:list of random recommendations,General Search Functionality,Stimulus,undefined
+14,stl#User:No matched results found,General Search Functionality,Stimulus,undefined
+15,stl#User:Input message invalidty,General Search Functionality,Stimulus,undefined

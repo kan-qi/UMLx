@@ -1,0 +1,70 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Authentication" as 19
+participant "User Error Log" as 29
+participant "User Authentication" as 39
+participant "Shelter Information" as 49
+participant "Display" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: ClickLoadMorebutton()
+activate 19
+
+19 -> 59: CallthefunctiontoanalyzeJSONlistanddisplaytheresultsfrommodellist()
+activate 59
+
+59 -> 49: showconfirmationpage()
+activate 49
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 59
+
+deactivate 19
+
+User -> 29: Clicklogin()
+activate 29
+
+29 -> 59: CallthefunctiontoanalyzeJSONlistanddisplaytheresultsfrommodellist()
+activate 59
+
+59 -> 49: showconfirmationpage()
+activate 49
+
+deactivate 49
+
+deactivate 59
+
+deactivate 29
+
+User -> 39: Receiveverificationandsessiondata()
+activate 39
+
+39 -> 49: showconfirmationpage()
+activate 49
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 39
+
+@enduml

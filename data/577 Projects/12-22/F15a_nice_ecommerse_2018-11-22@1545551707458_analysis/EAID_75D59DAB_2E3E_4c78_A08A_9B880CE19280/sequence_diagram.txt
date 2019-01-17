@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor vendor
+participant "Buyer Registration Form" as 09
+participant "$help://domain_model_pattern.htm" as 19
+participant "Medical Create Form" as 29
+participant "notifyuser" as 49
+
+vendor -> 09: registrationpage()
+activate 09
+
+09 -> 49: verifyuserinfo()
+activate 49
+
+49 -> 49: adduserinfo()
+49 -> 19: mainpage()
+activate 19
+
+deactivate 19
+
+49 -> 49: userinfo()
+deactivate 49
+
+49 -> 29: invalidinfomessage()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+vendor -> 19: mainpage()
+activate 19
+
+deactivate 19
+
+vendor -> 29: invalidinfomessage()
+activate 29
+
+deactivate 29
+
+@enduml

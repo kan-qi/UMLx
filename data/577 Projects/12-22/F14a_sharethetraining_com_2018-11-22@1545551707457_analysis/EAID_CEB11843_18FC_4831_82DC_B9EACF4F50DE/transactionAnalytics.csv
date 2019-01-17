@@ -1,0 +1,10 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Attendee:Home page->Attendee:Home page,Register course,2,1,0,0,0
+2,stl#Attendee:Payment page->Attendee:Payment page->Payment page:make payment->make payment:EventBrite,Register course,4,3,0,0,0
+3,stl#Attendee:registration success->Attendee:registration success,Register course,2,1,0,0,0
+4,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:setupPayment->setupPayment:course,Register course,4,2,1,0,0
+5,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:setupPayment->setupPayment:EventBrite,Register course,4,3,0,0,0
+6,stl#Attendee:Course detail page->Attendee:Course detail page->Course detail page:Redirect to home page->Redirect to home page:Home page,Register course,4,2,1,0,0
+7,stl#EventBrite:receive payment result->EventBrite:receive payment result->receive payment result:Send out confirmation email->Send out confirmation email:registration success,Register course,4,2,1,0,0
+8,stl#EventBrite:receive payment result->EventBrite:receive payment result->receive payment result:Send out confirmation email->Send out confirmation email:Email protocol,Register course,4,1,2,0,0
+9,stl#EventBrite:bring up payment page->EventBrite:bring up payment page->bring up payment page:Payment page->Payment page:make payment->make payment:EventBrite,Register course,5,4,0,0,0

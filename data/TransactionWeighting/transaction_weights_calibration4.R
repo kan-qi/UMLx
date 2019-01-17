@@ -278,7 +278,7 @@ chisqTest <- function(dist){
   1-pchisq(X2,gdl) ## p-value
 }
 
-discretize <- function(data, n) {
+discretize <- function(shape, rate, n) {
 	# Discretizes continuous data into different levels of complexity based on
 	# quantiles of normal distribution defined by the data.
 	#
@@ -300,15 +300,15 @@ discretize <- function(data, n) {
   
   quantiles <- seq(1/n, 1 - (1/n), 1/n)
   
-  tableValues <- table(data)
+  #tableValues <- table(data)
   
-  data <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
+  #data <- rep(as.numeric(names(tableValues)), as.integer(tableValues/100))
 	
-	fit.gamma <- fitdist(data, distr = "gamma", method = "mle", lower = c(0, 0))
+	#fit.gamma <- fitdist(data, distr = "gamma", method = "mle", lower = c(0, 0))
 	# Check result
-	shape = coefficients(fit.gamma)["shape"]
-	rate = coefficients(fit.gamma)["rate"]
-	print(coefficients(fit.gamma))
+	#shape = coefficients(fit.gamma)["shape"]
+	#rate = coefficients(fit.gamma)["rate"]
+	#print(coefficients(fit.gamma))
 	
 	cutPoints <- qgamma(quantiles, shape, rate, lower.tail = TRUE)
 	cutPoints <- c(-Inf, cutPoints, Inf)
@@ -545,7 +545,8 @@ genMeans <- function(n) {
     return(c(l1 = 1, l2 = 2)[1:n])
   }
   else {
-    ret <- c(1, 1)
+    #ret <- c(1, 1)
+    ret <- c(1, 2)
     while (length(ret) != n) {
       nextFib <- ret[length(ret)] + ret[length(ret) - 1]
       ret <- c(ret, nextFib)
@@ -731,12 +732,12 @@ posterior <- function(sample, B, varianceMatrix, normFactor, var, x, y){
 
 proposalfunction <- function(B, normFactor, sd){
   #sd <- 10
-  sample <- rep(0, length(B)+2)
-  names(sample) <- c(names(B), "normFactor", "sd")
+  sample <- rep(0, 2*length(B)+2)
+  names(sample) <- c(names(B), paste(names(B), "sigma", sep="_"), "normFactor", "sd")
   
   sigma <- c(0.1)
   if(length(B)>1){
-  for (i in 1:length(B)) {
+  for (i in 2:length(B)) {
     sigma <- c(sigma, 1/5* (abs(B[i] - B[i - 1]))+0.1)
   }
   }
@@ -745,7 +746,7 @@ proposalfunction <- function(B, normFactor, sd){
   sample[names(B)] <- rnorm(length(B),mean = B, sd = sigma)
   sample["normFactor"] <- rnorm(1, normFactor, 0.1)
   sample['sd'] <- rnorm(1, sd, 3)
-  sample['sigma'] <- sigma
+  sample[paste(names(B), "sigma", sep="_")] <- sigma
   return(sample)
 }
 
@@ -753,40 +754,51 @@ proposalProbability <- function(x1, x2){
   #
   # return the proposal probability g(x1|x2)
   #
+  #x1 = chain[1,]
+  #x2 = proposal
   
-  probB <- sum(dnorm(x1["B"],mean = x2["B"], sd = x2["sigma"], log = T))
+  levels <- paste("l", seq(1:((length(x1)-2)/2)), sep="");
+  
+  #print(levels)
+  #print(x1)
+  #print(x2)
+  #print(x1[levels])
+  #print(x2[levels])
+  #print(x2[paste(levels, "sigma", sep="_")])
+  probB <- sum(dnorm(x1[levels],mean = x2[levels], sd = x2[paste(levels, "sigma", sep="_")], log = T))
   probNormFactor <- dnorm(x1["normFactor"], x2["normFactor"], 0.1, log=T)
   probSD <- dnorm(x1["sd"], x2["sd"], log=T)
   return(probB+probNormFactor+probSD)
   
 }
 
-run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normFactor, var){
-  #priorB <- B
-  #normFactor <- normFactor1
-  #if(normFactor < 1){
-  #  normFactor = 1
-  #}
+
+run_metropolis_MCMC1 <- function(regressionData, N, priorB, varianceMatrix, normFactor, var){
   
-  #N <-1000
-  #B <- means
+  #regressionData <- regressionData1
+  #N <- 10000
+  #priorB <- means
   #varianceMatrix <- covar
-  #normFactor1 <- normFactor['mean']
+  #normFactor <- normFactor['mean']
   #var <- normFactor['var']
   
-  chain = matrix(nrow=N+1, ncol=length(priorB)+3)
-  colnames(chain) <- c(names(priorB), "normFactor", "sd", "sigma")
+  chain = matrix(nrow=N+1, ncol=2*length(priorB)+2)
+  
+  #print(paste(names(priorB), "sigma", sep="_"))
+  
+  colnames(chain) <- c(names(priorB), paste(names(priorB), "sigma", sep="_"), "normFactor", "sd")
+  
   chain[1, "normFactor"] <- normFactor
   chain[1, names(priorB)] <- priorB
   chain[1, "sd"] <- 10
   
   sigma <- c(0.1)
   if(length(priorB)>1){
-    for (i in 1:length(priorB)) {
+    for (i in 2:length(priorB)) {
       sigma <- c(sigma, 1/5* (abs(priorB[i] - priorB[i - 1]))+0.1)
     }
   }
-  chain[1, "signma"] = sigma
+  chain[1, paste(names(priorB), "sigma", sep="_")] = sigma
   #probabs <- c()
   #acceptance <- c()
   for (i in 1:N){
@@ -794,8 +806,65 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
     #proposal = sample
     `%ni%` <- Negate(`%in%`)
     update <- posterior(proposal, priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
-    posterior <- posterior(chain[i,], priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
-    probab = min(c(1, exp(update + proposalProbability(chain[i,], proposal) - posterior - proposalProbability(proposal, chain[i, ]))))
+    postP <- posterior(chain[i,], priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
+    #probabs = c(probabs, probab)
+    #print(probab)
+    #the better way of calculating the acceptance rate
+    
+    probab = exp(update - postP)
+    
+    
+    
+    if (runif(1) < probab){
+      chain[i+1,] = proposal
+      #print("accept")
+      #acceptance = c(acceptance, "accept")
+    }else{
+      chain[i+1,] = chain[i,]
+      #print("not accept")
+      #acceptance = c(acceptance, "not accept")
+    }
+  }
+  
+  return(chain)
+}
+
+
+run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normFactor, var){
+  
+  #regressionData <- regressionData1
+  #N <- 10000
+  #priorB <- means
+  #varianceMatrix <- covar
+  #normFactor <- normFactor['mean']
+  #var <- normFactor['var']
+  
+  chain = matrix(nrow=N+1, ncol=2*length(priorB)+2)
+  
+  #print(paste(names(priorB), "sigma", sep="_"))
+  
+  colnames(chain) <- c(names(priorB), paste(names(priorB), "sigma", sep="_"), "normFactor", "sd")
+  
+  chain[1, "normFactor"] <- normFactor
+  chain[1, names(priorB)] <- priorB
+  chain[1, "sd"] <- 10
+  
+  sigma <- c(0.1)
+  if(length(priorB)>1){
+    for (i in 2:length(priorB)) {
+      sigma <- c(sigma, 1/5* (abs(priorB[i] - priorB[i - 1]))+0.1)
+    }
+  }
+  chain[1, paste(names(priorB), "sigma", sep="_")] = sigma
+  #probabs <- c()
+  #acceptance <- c()
+  for (i in 1:N){
+    proposal = proposalfunction(chain[i,names(priorB)], chain[i,"normFactor"], chain[i, "sd"])
+    #proposal = sample
+    `%ni%` <- Negate(`%in%`)
+    update <- posterior(proposal, priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
+    postP <- posterior(chain[i,], priorB, varianceMatrix, normFactor, var, regressionData[ , !(colnames(regressionData) %in% c("Effort"))], regressionData[,c("Effort")])
+    probab = min(c(1, exp(update + proposalProbability(chain[i,], proposal) - postP - proposalProbability(proposal, chain[i, ]))))
     #probabs = c(probabs, probab)
     #print(probab)
     #the better way of calculating the acceptance rate
@@ -816,8 +885,16 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
 }
 
 bayesfit3<-function(regressionData, N, B, varianceMatrix, normFactor, var){
+  
+  #regressionData <- regressionData1
+  #N <- 10000
+  #B <- means
+  #varianceMatrix <- covar
+  #normFactor <- normFactor['mean']
+  #var <- normFactor['var']
 
   #startvalue = c(4,0,10)
+  #chain = run_metropolis_MCMC(regressionData, N, B, varianceMatrix, normFactor, var)
   chain = run_metropolis_MCMC(regressionData, N, B, varianceMatrix, normFactor, var)
   
   burnIn = 5000
@@ -1003,6 +1080,12 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
   
   projects <- rownames(effortData)
   #combinedData <- combineData(transactionFiles)
+  
+  distParams = list();
+  distParams[['TL']] = list(shape=6.543586, rate=1.160249);
+  distParams[['TD']] = list(shape=3.6492150, rate=0.6985361);
+  distParams[['DETs']] = list(shape=1.6647412, rate=0.1691911);
+  
 
   paramAvg <- if (length(parameters) == 1) mean(combinedData[, parameters]) else colMeans(combinedData[, parameters])
   paramSD <- if (length(parameters) == 1) sd(combinedData[, parameters]) else apply(combinedData[, parameters], 2, sd)
@@ -1014,7 +1097,9 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
     cutPoints <- matrix(NA, nrow = length(parameters), ncol = i + 1)
     rownames(cutPoints) <- parameters
     for (p in parameters) {
-      cutPoints[p, ] <- discretize(combinedData[, p], i)
+      #cutPoints[p, ] <- discretize(combinedData[, p], i)
+      
+      cutPoints[p, ] <- discretize(distParams[[p]][['shape']], distParams[[p]][['rate']], i)
     }
     #numFiles <- sum(grepl(".csv", dir(folder), ignore.case = TRUE))
     levels <- genColNames(parameters, i)
@@ -1051,9 +1136,8 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
     
     #the bayesian model fit
     
-    #bayesianModel <- bayesfit3(regressionData1, 10000, means, covar, normFactor['mean'], normFactor['var'])
-    
-    #validationResults <- crossValidate(regressionData1, k)
+    bayesianModel <- bayesfit3(regressionData1, 10000, means, covar, normFactor['mean'], normFactor['var'])
+    validationResults <- crossValidate(regressionData1, k)
     
     #the regression model fit
     regressionModel <- lm(Effort ~ . - 1, as.data.frame(regressionData1));
@@ -1083,10 +1167,10 @@ performSearch <- function(n, effortData, combinedData, transactionFiles, paramet
     #print("cross validation")
     searchResults[[i]] <- list(
                                numOfTrans = numOfTrans,
-                               #MSE = validationResults["MSE"], 
-                               #MMRE = validationResults["MMRE"], 
-                               #PRED = validationResults["PRED"],
-                               #model = bayesianModel,
+                               MSE = validationResults["MSE"], 
+                               MMRE = validationResults["MMRE"], 
+                               PRED = validationResults["PRED"],
+                               model = bayesianModel,
                                priorModel = priorModel,
                                regressionModel = regressionModel,
                                priorModelAccuracyMeasure = validationResults2,

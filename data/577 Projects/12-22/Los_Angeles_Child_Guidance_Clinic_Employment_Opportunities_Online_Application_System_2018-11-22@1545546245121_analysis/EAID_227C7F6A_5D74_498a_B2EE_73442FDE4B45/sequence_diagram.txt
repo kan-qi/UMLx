@@ -1,0 +1,100 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Job Postings and Accounts Controller" as 09
+participant "Online Application" as 19
+participant "Login Page" as 29
+participant "upload Documents" as 39
+participant "New Account Details" as 49
+participant "Hiring Report" as 59
+participant "Online application page" as 79
+participant "Update User Profile Page" as 89
+participant "Edit Job posting page" as 119
+
+User -> 09: selecttheappropriatepostings()
+activate 09
+
+09 -> 119: retrievesthepostingselected()
+activate 119
+
+119 -> 79: Showconfirmationpage()
+activate 79
+
+79 -> 59: ApproveHiredb()
+activate 59
+
+deactivate 59
+
+79 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+deactivate 79
+
+119 -> 119: respondswithamessageconfirming()
+119 -> 19: addcandidatetoapplicantlist()
+activate 19
+
+19 -> 89: generateamessagetoinformUser()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+deactivate 119
+
+deactivate 09
+
+User -> 19: clicksubmitbutton()
+activate 19
+
+19 -> 19: addcandidatetoapplicantlist()
+19 -> 89: generateamessagetoinformUser()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+User -> 39: uploadrelevantdocuments()
+activate 39
+
+39 -> 119: respondswithamessageconfirming()
+activate 119
+
+119 -> 19: addcandidatetoapplicantlist()
+activate 19
+
+deactivate 19
+
+deactivate 119
+
+deactivate 39
+
+User -> 49: fillsoutrelevantdata()
+activate 49
+
+49 -> 119: respondswithamessageconfirming()
+activate 119
+
+119 -> 19: addcandidatetoapplicantlist()
+activate 19
+
+deactivate 19
+
+deactivate 119
+
+deactivate 49
+
+@enduml
