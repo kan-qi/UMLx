@@ -199,13 +199,13 @@ public class CodeAnalysis {
 	  
 	  public String toJSONString() {
 		  StringBuilder str = new StringBuilder();
-		  str.append("{uuid:\""+ 
+		  str.append("{\"uuid\":\""+ 
 				  this.uuid+"\","+
-				  "name:\""+
+				  "\"name\":\""+
 				  this.name+"\","+
-				  "isWithinBoundary:\""+
+				  "\"isWithinBoundary\":\""+
 				  this.isWithinBoundary+"\","+
-				  "methodUnits:["
+				  "\"methodUnits\":["
 				  );
 		  int i = 0;
 		  for(MethodUnit methodUnit : methodUnits) {
@@ -240,9 +240,9 @@ public class CodeAnalysis {
 	  public String toJSONString() {
 		  Iterator<ClassUnit> iterator = classUnits.iterator();
 		  StringBuilder Json = new StringBuilder();
-		  Json.append("{name: \""+name+"\",");
-		  Json.append("uuid: \""+uuid+"\",");
-		  Json.append("classUnits: [");
+		  Json.append("{\"name\": \""+name+"\",");
+		  Json.append("\"uuid\": \""+uuid+"\",");
+		  Json.append("\"classUnits\": [");
 		  while(iterator.hasNext()) {
 			  ClassUnit classUnit = iterator.next();
 //			  Json.append(classUnit.toJSONString());
@@ -463,9 +463,9 @@ String convertGraphsToJSON(Set<ClassUnit[]> edges, Set<CompositeClassUnit[]> com
 			if(compEdge[0] == null || compEdge[1] == null) {
 				continue;
 			}
-			outputS += "{start:\""+compEdge[0].uuid+"\",";
+			outputS += "{\"start\":\""+compEdge[0].uuid+"\",";
 //			outputS += "->";
-			outputS += "end:\""+compEdge[1].uuid+"\"}";
+			outputS += "\"end\":\""+compEdge[1].uuid+"\"}";
 //			outputS += "\n";
 			if(i != compositeEdges.size()-1) {
 				outputS += ",";
@@ -481,9 +481,9 @@ String convertGraphsToJSON(Set<ClassUnit[]> edges, Set<CompositeClassUnit[]> com
 			if(edge[0] == null || edge[1] == null) {
 				continue;
 			}
-			outputS += "{start:\""+edge[0].uuid+"\",";
+			outputS += "{\"start\":\""+edge[0].uuid+"\",";
 //			outputS += "->";
-			outputS += "end:\""+edge[1].uuid+"\"}";
+			outputS += "\"end\":\""+edge[1].uuid+"\"}";
 //			outputS += "\n";
 			if(i != edges.size()-1) {
 				outputS += ",";
@@ -604,7 +604,7 @@ String convertGraphsToJSON(Set<ClassUnit[]> edges, Set<CompositeClassUnit[]> com
     
     // output referenced classes
     String outputS = "{";
-    outputS += "classUnits:[";
+    outputS += "\"classUnits\":[";
 	
   	for(int i = 0; i < classUnits.size(); i++) {
   		ClassUnit CU = classUnits.get(i);
@@ -615,7 +615,7 @@ String convertGraphsToJSON(Set<ClassUnit[]> edges, Set<CompositeClassUnit[]> com
   	}
   	
 	outputS += "]";
-	outputS += ", compositeClassUnits:[";
+	outputS += ", \"compositeClassUnits\":[";
     
 	// output referenced composite classes
 	int i = 0;
@@ -661,9 +661,9 @@ String convertGraphsToJSON(Set<ClassUnit[]> edges, Set<CompositeClassUnit[]> com
 //    identifyAggregateClassUnits(xmiString);
     
     CallGraph callGraph = genCallGraph();
-	outputS += ",callGraph:"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-	outputS += ",accessGraph:"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	//	var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 //	var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 

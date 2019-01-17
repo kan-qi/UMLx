@@ -41,7 +41,6 @@
 		dicCompositeSubclasses, 
 		outputDir
 	) {
-
 		// console.log("!!!!!!!!!!!");
 		// console.log(dicCompositeSubclasses);
 
@@ -61,14 +60,14 @@
 
 		for(var i in classes) {
 			var classUnit = classes[i];
-			classDic[classUnit.UUID] = i;
+			classDic[classUnit.uuid] = i;
 			var classU = {
-				UUID: classUnit.UUID,
+				UUID: classUnit.uuid,
 				name: classUnit.name,
 				// notReferenced: true
 			}
 			classArray.push(classU);
-			methods.push(classUnit.MethodUnits.length);
+			methods.push(classUnit.methodUnits.length);
 			classesByName[classUnit.name] = classUnit;
 		}
 
@@ -263,7 +262,7 @@
 			dicComponents[component.uuid] = component;
 
 			for (var j in classUnits) {
-				dicClassComponent[classUnits[j].UUID] = component.uuid;
+				dicClassComponent[classUnits[j].uuid] = component.uuid;
 			}
 		}
 
@@ -360,13 +359,13 @@
 		//
 		// for(var i in classes) {
 		// 	var classUnit = classes[i];
-		// 	classDic[classUnit.UUID] = i;
+		// 	classDic[classUnit.uuid] = i;
 		// 	var classU = {
-		// 		UUID: classUnit.UUID,
+		// 		UUID: classUnit.uuid,
 		// 		name: classUnit.name
 		// 	}
 		// 	classArray.push(classU);
-		// 	methods.push(classUnit.MethodUnits.length);
+		// 	methods.push(classUnit.methodUnits.length);
 		// }
 
 		var attrs = zeroArray(classes.length, classes.length); //  the number of attributes of class Cli whose type is class Clj.
@@ -433,13 +432,13 @@
 
 		for(var i in classes) {
 			var classUnit = classes[i];
-			// classDic[classUnit.UUID] = i;
+			// classDic[classUnit.uuid] = i;
 			// var classU = {
-			// 	UUID: classUnit.UUID,
+			// 	UUID: classUnit.uuid,
 			// 	name: classUnit.name
 			// }
 			// classArray.push(classU);
-			// methods.push(classUnit.MethodUnits.length);
+			// methods.push(classUnit.methodUnits.length);
 			attrs.push(classUnit.StorableUnits.length);
 		}
 
@@ -460,22 +459,22 @@
 				accessors[col] = {}
 			}
 			if (!(row in accessors[col])) {
-				accessors[col][row] = new Set([edge.start.UUID]);
+				accessors[col][row] = new Set([edge.start.uuid]);
 			}
-			// else if (!(callers[col][row].has(edge.start.UUID))) {
+			// else if (!(callers[col][row].has(edge.start.uuid))) {
 			else {
-				accessors[col][row].add(edge.start.UUID);
+				accessors[col][row].add(edge.start.uuid);
 			}
 
 			if (!(col in accessed)) {
 				accessed[col] = {}
 			}
 			if (!(row in accessed[col])) {
-				accessed[col][row] = new Set([edge.end.UUID]);
+				accessed[col][row] = new Set([edge.end.uuid]);
 			}
-			// else if (!(callees[col][row].has(edge.end.UUID))) {
+			// else if (!(callees[col][row].has(edge.end.uuid))) {
 			else {
-				accessed[col][row].add(edge.start.UUID);
+				accessed[col][row].add(edge.start.uuid);
 			}
 		}
 
@@ -509,13 +508,13 @@
 		//
 		// for(var i in classes) {
 		// 	var classUnit = classes[i];
-		// 	classDic[classUnit.UUID] = i;
+		// 	classDic[classUnit.uuid] = i;
 		// 	var classU = {
-		// 		UUID: classUnit.UUID,
+		// 		UUID: classUnit.uuid,
 		// 		name: classUnit.name
 		// 	}
 		// 	classArray.push(classU);
-		// 	methods.push(classUnit.MethodUnits.length);
+		// 	methods.push(classUnit.methodUnits.length);
 		// }
 
 		var calls = zeroArray(classes.length, classes.length);
@@ -547,20 +546,20 @@
 				callers[col] = {}
 			}
 			if (!(row in callers[col])) {
-				callers[col][row] = new Set([edge.start.UUID]);
+				callers[col][row] = new Set([edge.start.uuid]);
 			}
-			else if (!(callers[col][row].has(edge.start.UUID))) {
-				callers[col][row].add(edge.start.UUID);
+			else if (!(callers[col][row].has(edge.start.uuid))) {
+				callers[col][row].add(edge.start.uuid);
 			}
 
 			if (!(col in callees)) {
 				callees[col] = {}
 			}
 			if (!(row in callees[col])) {
-				callees[col][row] = new Set([edge.end.UUID]);
+				callees[col][row] = new Set([edge.end.uuid]);
 			}
-			else if (!(callees[col][row].has(edge.end.UUID))) {
-				callees[col][row].add(edge.start.UUID);
+			else if (!(callees[col][row].has(edge.end.uuid))) {
+				callees[col][row].add(edge.start.uuid);
 			}
 		}
 
@@ -748,7 +747,7 @@
 
 		for (var i in classUnits) {
 			var classUnit = classUnits[i];
-			if (classUUID == classUnit.UUID) {
+			if (classUUID == classUnit.uuid) {
 				return classUnit;
 			}
 		}
@@ -857,7 +856,7 @@
 				var row = cluster["value"].toString();
 				var classes = rowDic[row];
 				var classSelected = classes[classes.length-1];
-				var children = dicCompositeSubclasses[classSelected.UUID];
+				var children = dicCompositeSubclasses[classSelected.uuid];
 				classClusters["size"] = children.length;
 				// var endNode = {
 				// 	name: startNode.name+"mid",
