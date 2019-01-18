@@ -218,15 +218,15 @@
 		console.log("construct the dependency graphs");
 
 		var referencedClassUnits = [];
-		var referencedClassUnitsComposite = [];
+		var referencedCompositeClassUnits = [];
 
 		var dicMethodParameters = {};
 
-		var callGraph = constructCallGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-		var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-		var accessGraph = constructAccessGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-		var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-		var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
+		var callGraph = constructCallGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters);
+		var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters);
+		var accessGraph = constructAccessGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters);
+		var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters);
+		var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters);
 
 		//		console.log("dicCompositeSubclasses");
 		//		console.log(dicCompositeSubclasses);
@@ -236,7 +236,7 @@
 		//		debug.writeJson("constructed_call_graph", callGraph);
 
 
-		return {
+		var result =  {
 			dicClassUnits: dicClassUnits,
 			dicMethodUnits: dicMethodUnits,
 			callGraph: callGraph,
@@ -246,10 +246,14 @@
 			extendsGraph: extendsGraph,
 			compositionGraph: compositionGraph,
 			referencedClassUnits: referencedClassUnits,
-			referencedClassUnitsComposite: referencedClassUnitsComposite,
+			referencedCompositeClassUnits: referencedCompositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
 			dicMethodParameters: dicMethodParameters,
 		};
+		
+		debug.writeJson("source_code_analysis_kdm", result);
+		
+		return result;
 	}
 
 	function aggregateClassUnit(subClassUnits, isWithinBoundary, dicClassComposite, dicCompositeSubclasses) {
@@ -309,7 +313,7 @@
 	//
 	//	}
 
-	function constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters) {
+	function constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters) {
 
 		// var edges = [];
 		// var nodes = [];
@@ -381,12 +385,12 @@
 
 				// eliminate the composite classes which are not composite (only containing one original class) and not related to other classes
 				if ((compositeClassUnit != compositeTargetClassUnit) || compositeClassUnit.isComposite) {
-					if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-						referencedClassUnitsComposite.push(compositeClassUnit);
+					if (!referencedCompositeClassUnits.includes(compositeClassUnit)) {
+						referencedCompositeClassUnits.push(compositeClassUnit);
 					}
 
-					if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-						referencedClassUnitsComposite.push(compositeTargetClassUnit);
+					if (!referencedCompositeClassUnits.includes(compositeTargetClassUnit)) {
+						referencedCompositeClassUnits.push(compositeTargetClassUnit);
 					}
 				}
 				else {
@@ -525,12 +529,12 @@
 
 
 						if ((compositeClassUnit != compositeTargetClassUnit) || compositeClassUnit.isComposite) {
-							if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-								referencedClassUnitsComposite.push(compositeClassUnit);
+							if (!referencedCompositeClassUnits.includes(compositeClassUnit)) {
+								referencedCompositeClassUnits.push(compositeClassUnit);
 							}
 
-							if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-								referencedClassUnitsComposite.push(compositeTargetClassUnit);
+							if (!referencedCompositeClassUnits.includes(compositeTargetClassUnit)) {
+								referencedCompositeClassUnits.push(compositeTargetClassUnit);
 							}
 						}
 						else {
@@ -694,12 +698,12 @@
 
 
 					if ((compositeClassUnit != compositeTargetClassUnit) || compositeClassUnit.isComposite) {
-						if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-							referencedClassUnitsComposite.push(compositeClassUnit);
+						if (!referencedCompositeClassUnits.includes(compositeClassUnit)) {
+							referencedCompositeClassUnits.push(compositeClassUnit);
 						}
 
-						if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-							referencedClassUnitsComposite.push(compositeTargetClassUnit);
+						if (!referencedCompositeClassUnits.includes(compositeTargetClassUnit)) {
+							referencedCompositeClassUnits.push(compositeTargetClassUnit);
 						}
 					}
 					else {
@@ -826,7 +830,7 @@
 
 	}
 
-	function constructAccessGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters) {
+	function constructAccessGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters) {
 
 
 		var edges = []; // call relation
@@ -874,17 +878,17 @@
 						var methodReads = methodActionElementIn.Reads;
 						for (var x in methodReads) {
 							var methodRead = methodReads[x];
-							var targetFrom = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodRead.from));
-							var targetTo = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodRead.to));
+							var targetFrom = methodRead.from;
+							var targetTo = methodRead.to;
 
-							if (!targetFrom || !targetTo || targetFrom.length < 1 || targetTo.length < 1) {
+							if (!targetFrom || !targetTo) {
 								continue;
 							}
 
-							if (targetTo[0]['$']['xsi:type'] && targetTo[0]['$']['xsi:type'] == 'code:StorableUnit') {
-								var methodAccessType = targetTo[0]['$']['type'];
+							if (targetTo.xsiType && targetTo.xsiType == 'code:StorableUnit') {
+								var methodAccessType = targetTo.methodAccessType;
 								var methodAccessTypeResult = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodAccessType));
-								var methodAccessUUID = targetTo[0]['$']['UUID'];
+								var methodAccessUUID = targetTo.UUID;
 								var targetClassUnit = null;
 								var targetStorableUnit = null;
 								for (var a in dicClassUnits) {
@@ -930,12 +934,12 @@
 
 
 								if ((compositeClassUnit != compositeTargetClassUnit) || compositeClassUnit.isComposite) {
-									if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-										referencedClassUnitsComposite.push(compositeClassUnit);
+									if (!referencedCompositeClassUnits.includes(compositeClassUnit)) {
+										referencedCompositeClassUnits.push(compositeClassUnit);
 									}
 
-									if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-										referencedClassUnitsComposite.push(compositeTargetClassUnit);
+									if (!referencedCompositeClassUnits.includes(compositeTargetClassUnit)) {
+										referencedCompositeClassUnits.push(compositeTargetClassUnit);
 									}
 								}
 								else {
@@ -1076,7 +1080,7 @@
 		return { nodes: nodes, edges: edges, nodesComposite: nodesComposite, edgesComposite: edgesComposite };
 	}
 
-	function constructCallGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters) {
+	function constructCallGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters) {
 
 		//the edges are now defined between methods...
 
@@ -1197,12 +1201,12 @@
 				console.log("identified composite classes");
 
 				if ((compositeClassUnit != compositeTargetClassUnit) || compositeClassUnit.isComposite) {
-					if (!referencedClassUnitsComposite.includes(compositeClassUnit)) {
-						referencedClassUnitsComposite.push(compositeClassUnit);
+					if (!referencedCompositeClassUnits.includes(compositeClassUnit)) {
+						referencedCompositeClassUnits.push(compositeClassUnit);
 					}
 
-					if (!referencedClassUnitsComposite.includes(compositeTargetClassUnit)) {
-						referencedClassUnitsComposite.push(compositeTargetClassUnit);
+					if (!referencedCompositeClassUnits.includes(compositeTargetClassUnit)) {
+						referencedCompositeClassUnits.push(compositeTargetClassUnit);
 					}
 				}
 				else {
@@ -1387,7 +1391,7 @@
 
 	}
 
-	function constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters) {
+	function constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters) {
 
 		var edges = []; // directed edge to describe "extends"
 		var nodes = []; // classes
@@ -1407,8 +1411,8 @@
 
 			for (var j in extendRelations) {
 				var extendRelation = extendRelations[j];
-				var childXMIClassUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(extendRelation.from))[0];
-				var parentXMIClassUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(extendRelation.to))[0];
+				var childXMIClassUnit = extendRelation.to;
+				var parentXMIClassUnit = extendRelation.from;
 
 				if (!childXMIClassUnit || !parentXMIClassUnit) {
 					continue;
@@ -1431,11 +1435,11 @@
 					continue;
 				}
 
-				if (!referencedClassUnitsComposite.includes(childCompositeClassUnit)) {
-					referencedClassUnitsComposite.push(childCompositeClassUnit);
+				if (!referencedCompositeClassUnits.includes(childCompositeClassUnit)) {
+					referencedCompositeClassUnits.push(childCompositeClassUnit);
 				}
-				if (!referencedClassUnitsComposite.includes(parentCompositeClassUnit)) {
-					referencedClassUnitsComposite.push(parentCompositeClassUnit);
+				if (!referencedCompositeClassUnits.includes(parentCompositeClassUnit)) {
+					referencedCompositeClassUnits.push(parentCompositeClassUnit);
 				}
 
 				// TODO: create a composite graph
@@ -1484,7 +1488,7 @@
 		};
 	}
 
-	function constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters) {
+	function constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters) {
 		
 		var edges = []; // directed edge to describe "extends"
 		var nodes = []; // classes
@@ -1499,12 +1503,16 @@
 			console.log(classUnit);
 
 			// e.g. Car class contains an Engine instance
-			var compositionItems = kdmModelUtils.identifyComposition(xmiClassUnit);
+			var compositionItems = kdmModelUtils.identifyStorableUnits(xmiClassUnit);
 
 			for (var j in compositionItems) {
 				var compositionItem = compositionItems[j];
 
-				var itemClassUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(compositionItem.type))[0];
+				var itemClassUnit = jp.query(xmiString, compositionItem.type)[0];
+				
+				if(!itemClassUnit){
+					continue;
+				}
 
 				// do not consider class outside boundary, e.g. String
 				if (!dicClassUnits[itemClassUnit['$'].UUID] || !dicClassUnits[itemClassUnit['$'].UUID].isWithinBoundary) {
@@ -1528,11 +1536,11 @@
 					continue;
 				}
 
-				if (!referencedClassUnitsComposite.includes(itemCompositeClassUnit)) {
-					referencedClassUnitsComposite.push(itemCompositeClassUnit);
+				if (!referencedCompositeClassUnits.includes(itemCompositeClassUnit)) {
+					referencedCompositeClassUnits.push(itemCompositeClassUnit);
 				}
-				if (!referencedClassUnitsComposite.includes(parentCompositeClassUnit)) {
-					referencedClassUnitsComposite.push(parentCompositeClassUnit);
+				if (!referencedCompositeClassUnits.includes(parentCompositeClassUnit)) {
+					referencedCompositeClassUnits.push(parentCompositeClassUnit);
 				}
 
 

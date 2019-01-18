@@ -67,7 +67,7 @@
 				// notReferenced: true
 			}
 			classArray.push(classU);
-			methods.push(classUnit.methodUnits.length);
+			methods.push(classUnit.methodUnits?classUnit.methodUnits.length:0);
 			classesByName[classUnit.name] = classUnit;
 		}
 
@@ -171,6 +171,9 @@
 				var node = bfs.pop(0);
 				// console.log("node");
 				// console.log(node);
+				if(!node){
+					continue;
+				}
 				if (node.size == 1 && node.hasOwnProperty('value')) {
 					newComponent.push(node.value);
 				}
@@ -439,7 +442,7 @@
 			// }
 			// classArray.push(classU);
 			// methods.push(classUnit.methodUnits.length);
-			attrs.push(classUnit.StorableUnits.length);
+			attrs.push(classUnit.StorableUnits?classUnit.StorableUnits.length:0);
 		}
 
 		var access = zeroArray(classes.length, classes.length);
@@ -451,6 +454,9 @@
 			var edge = accessGraph.edgesComposite[i];
 			var col = classDic[edge.start.component.classUnit];
 			var row = classDic[edge.end.component.classUnit];
+			if(col == null || row == null){
+				continue;
+			}
 			access[col][row]++;
 			// classArray[col] = false;
 			// classArray[row] = false;
@@ -528,8 +534,11 @@
 
 		for (var i in callGraph.edgesComposite) {
 			var edge = callGraph.edgesComposite[i];
-			var col = classDic[edge.start.component.classUnit];
-			var row = classDic[edge.end.component.classUnit];
+			var col = classDic[edge.start.UUID];
+			var row = classDic[edge.end.UUID];
+			if(col == null || row == null){
+				continue;
+			}
 			// classArray[col] = false;
 			// classArray[row] = false;
 			// console.log("checkcheck");
@@ -857,6 +866,9 @@
 				var classes = rowDic[row];
 				var classSelected = classes[classes.length-1];
 				var children = dicCompositeSubclasses[classSelected.uuid];
+				if(!children){
+					return classClusters;
+				}
 				classClusters["size"] = children.length;
 				// var endNode = {
 				// 	name: startNode.name+"mid",

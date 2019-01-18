@@ -83,11 +83,16 @@
 					codeAnalysisResults.typeDependencyGraph, 
 					codeAnalysisResults.extendsGraph,
 					codeAnalysisResults.compositionGraph,
-					codeAnalysisResults.referencedClassUnitsComposite, 
+					codeAnalysisResults.referencedCompositeClassUnits, 
 					codeAnalysisResults.referencedClassUnits, 
 					codeAnalysisResults.dicCompositeSubclasses, 
 					Model.OutputDir
 				);
+				
+//				var componentInfo = {
+//					dicComponents: {},
+//					dicClassComponent: {}
+//				};
 				
 				var componentMappingString = "";
 				
@@ -103,23 +108,38 @@
 
 				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, xmiString, ModelOutputDir);
 
+//				var controlFlowGraph = {nodes: [], edges: []};
+				
 				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
 
+//				var domainModelInfo = {
+//						Elements: [],
+//						Usages: [],
+//						Realization:[],
+//						Assoc: [],
+//						OutputDir : ModelOutputDir+"/domainModel",
+//						AccessDir : ModelAccessDir+"/domainModel",
+//						DiagramType : "class_diagram",
+//					}
+				
 				console.log("domain model Info");
 				console.log(domainModelInfo);
 
 				Model.DomainModel = domainModelInfo.DomainModel;
+				
+//				Model.DomainModel = domainModelInfo;
 
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
 
-				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
+//				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 
+				Model.UseCases = [];
+				
 				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
 
 				if(callbackfunc){
 					callbackfunc(Model);
 				}
-
 	}
 
 	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodParameters){
@@ -166,8 +186,11 @@
 			// console.log(edge)
 			console.log(util.inspect(edge, false, null));
 			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.component.classUnit].replace(/\-/g, "_");
+			var componentUUID = 'c'+startNode.component.name.replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
+			if(!domainElement){
+				continue;
+			}
 			var foundMethod = false;
 			for (var j in domainElement.Operations) {
 				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
@@ -214,8 +237,11 @@
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
 			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.component.classUnit].replace(/\-/g, "_");
+			var componentUUID = 'c'+startNode.component.name.replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
+			if(!domainElement){
+				continue;
+			}
 			var foundMethod = false;
 			for (var j in domainElement.Operations) {
 				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
@@ -255,6 +281,7 @@
 			}
 		}
 
+		if(typeDependencyGraph){
 		for (var i in typeDependencyGraph.edgesAttr) {
 			var edge = typeDependencyGraph.edgesAttr[i];
 			var startNode = edge.start;
@@ -276,7 +303,7 @@
 				domainElement.Attributes.push(attr);
 			}
 		}
-
+		}
 		// console.log("domainElements");
 		// console.log(domainElements);
 		// console.log("domainElementsByID");
@@ -284,7 +311,7 @@
 
 		// console.log("check edgesPara");
 		// console.log(typeDependencyGraph.edgesPara);
-
+		if(typeDependencyGraph){
 		for (var i in typeDependencyGraph.edgesPara) {
 			var edge = typeDependencyGraph.edgesPara[i];
 			// console.log("check edge");
@@ -327,7 +354,7 @@
 			// console.log("check domainElement");
 			// console.log(util.inspect(domainElement, false, null));
 		}
-
+		}
 		// for (var i in typeDependencyGraph.edgesPara) {
 		// 	var edge = typeDependencyGraph.edgesPara[i];
 		// 	// console.log("check edge");

@@ -31,7 +31,7 @@
 //		
 //	}
 	
-	function establishControlFlow(dicComponents, dicClassComponent, dicMethodClass, dicResponseMethodUnits, xmiString, outputDir){
+	function establishControlFlow(dicComponents, dicClassComponent, dicMethodClass, dicResponseMethodUnits, callGraph, outputDir){
 		//the edges are now defined between methods...
 		var edges = [];
 		var nodes = [];
@@ -79,7 +79,7 @@
 				action:"response",
 				methodUnit: responseMethod
 			});
-			var expandedMethods = expandMethod(responseMethod, xmiString);
+			var expandedMethods = expandMethod(responseMethod, callGraph);
 //			console.log("expanded methods");
 //			console.log(expandedMethods);
 			methodSequence = methodSequence.concat(expandedMethods);
@@ -250,7 +250,7 @@
 //	}
 	
 	
-	function expandMethod(methodUnit, xmiString){
+	function expandMethod(methodUnit, callGraph){
 		
 		var methodSequence = [];
 		
@@ -262,10 +262,10 @@
 //			console.log(actionElement);
 //			var calls = actionElement.Calls;
 		
-		console.log("xmi string");
-		console.log(xmiString);
+//			console.log("xmi string");
+//			console.log(xmiString);
 		
-			var calls = findCallsForMethod(methodUnit);
+			var calls = findCallsForMethod(methodUnit, callGraph);
 			
 //			console.log("output calls");
 //			console.log(calls);
@@ -276,34 +276,36 @@
 			console.log("output call");
 			console.log(call);
 			
-			var callXMIActionElement = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.from))[0];
-			var targetXMIMethodUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.to))[0];
-
-			if(!targetXMIMethodUnit || !callXMIActionElement){
-				continue;
-			}
+//			var callXMIActionElement = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.from))[0];
+//			var targetXMIMethodUnit = jp.query(xmiString, kdmModelUtils.convertToJsonPath(call.to))[0];
+//
+//			if(!targetXMIMethodUnit || !callXMIActionElement){
+//				continue;
+//			}
+//			
+//			var callActionElement = kdmModelUtils.identifyActionElement(callXMIActionElement, xmiString);
+//			console.log("call action element");
+//			console.log(callActionElement);
+//			
+//			
+//			var targetMethodUnit = kdmModelUtils.identifyMethodUnit(targetXMIMethodUnit, xmiString);
+//			
+//			console.log("find methods to expand");
+//			console.log(targetMethodUnit);
+//			
+//			if(methodUnit.UUID == targetMethodUnit.UUID){
+//				continue;
+//			}
 			
-			var callActionElement = kdmModelUtils.identifyActionElement(callXMIActionElement, xmiString);
-			console.log("call action element");
-			console.log(callActionElement);
+//			methodSequence.push(
+//					{	
+//						action: callActionElement.UUID,
+//						methodUnit: targetMethodUnit
+//					});
 			
+			methodSequence.push(call);
 			
-			var targetMethodUnit = kdmModelUtils.identifyMethodUnit(targetXMIMethodUnit, xmiString);
-			
-			console.log("find methods to expand");
-			console.log(targetMethodUnit);
-			
-			if(methodUnit.UUID == targetMethodUnit.UUID){
-				continue;
-			}
-			
-			methodSequence.push(
-					{	
-						action: callActionElement.UUID,
-						methodUnit: targetMethodUnit
-					});
-			
-			var result = expandMethod(targetMethodUnit, xmiString);
+			var result = expandMethod(call.methodUnit, callGraph);
 			console.log("expanded methods");
 			console.log(result);
 			methodSequence = methodSequence.concat(result);
@@ -317,31 +319,39 @@
 	/*
 	 * this function will exclude the calls within another function
 	 */
-	function findCallsForMethod(methodUnit){
+	function findCallsForMethod(methodUnit, callGraph){
 		var calls = [];
 		
-		function findCallsFromActionElement(actionElement){
-			var calls = [];
-//			console.log("output action element");
-//			console.log(responseMethod.Signature.name);
-//			console.log(actionElement);
-			calls = calls.concat(actionElement.Calls);
-			
-			for(var i in actionElement.ActionElements){
-				calls = calls.concat(findCallsFromActionElement(actionElement.ActionElements[i]));
-			}
-			
-			return calls;
-		}
+//		function findCallsFromActionElement(actionElement){
+//			var calls = [];
+////			console.log("output action element");
+////			console.log(responseMethod.Signature.name);
+////			console.log(actionElement);
+//			calls = calls.concat(actionElement.Calls);
+//			
+//			for(var i in actionElement.ActionElements){
+//				calls = calls.concat(findCallsFromActionElement(actionElement.ActionElements[i]));
+//			}
+//			
+//			return calls;
+//		}
+//		
+//		for(var i in methodUnit.BlockUnit.ActionElements){
+//
+//			var actionElement = methodUnit.BlockUnit.ActionElements[i];
+//			calls = calls.concat(findCallsFromActionElement(actionElement));
+//		}
 		
-		for(var i in methodUnit.BlockUnit.ActionElements){
-
-			var actionElement = methodUnit.BlockUnit.ActionElements[i];
-			calls = calls.concat(findCallsFromActionElement(actionElement));
+		for(var i in callGraph.edges){
+			var edge = callGraph.edges[i];
+			if(edge.start.uuid === methodUnit.uuid){
+				calls.add({action:edge.start, methodUnit:edge.end});
+			}
 		}
 		
 		return calls;
 	}
+	
 	
 	
 	module.exports = {

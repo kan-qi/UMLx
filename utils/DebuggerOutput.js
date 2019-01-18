@@ -7,7 +7,8 @@
 //	var OutputDir = './debug';
 
 	function writeJson(token, message, callbackfunc){
-		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
+//		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
+		var OutputDir = "./debug";
 //		console.log(token);
 //		console.log(OutputDir);
 		mkdirp(OutputDir, function(err) { 

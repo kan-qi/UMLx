@@ -18,6 +18,11 @@
 	
 	function convertToJsonPath(path){
 //		var toNode = queryByXPath(data, toString);
+		if(!path){
+			return "undefined";
+		}
+		console.log("path to convert:");
+		console.log(path);
 		var toNodes = path.split('/');
 //		controlElement.toNodes = toNodes;
 		console.log(toNodes);
@@ -76,7 +81,7 @@
 
 //		var topClassUnits = [];
 		
-		var XMIPackagedClassUnits = kdmModelUtils.identifyPackagedClassUnits(xmiString);
+		var XMIPackagedClassUnits = identifyPackagedClassUnits(xmiString);
 		
 //		var XMIModels = jp.query(xmiString, '$..model[?(@[\'$\'][\'xsi:type\']==\'code:CodeModel\')]');
 
@@ -90,7 +95,7 @@
 					var subInterfaces = [];
 					//var subActionElements = [];
 
-					var identifiedClassUnit = kdmModelUtils.identifyClassUnit(XMIClass, xmiString, subClassUnits, subInterfaces, subMethodUnits);
+					var identifiedClassUnit = identifyClassUnit(XMIClass, xmiString, subClassUnits, subInterfaces, subMethodUnits);
 					identifiedClassUnit.isWithinBoundary = XMIClass.isWithinBoundary;
 
 					subClassUnits.push(identifiedClassUnit);
@@ -265,8 +270,8 @@
 		for(var i in XMIReads){
 			var XMIRead = XMIReads[i];
 			
-			var XMITargetFrom = jp.query(xmiString, kdmModelUtils.convertToJsonPath(XMIRead['$']['from']));
-			var XMITargetTo = jp.query(xmiString, kdmModelUtils.convertToJsonPath( XMIRead['$']['to']));
+			var XMITargetFrom = jp.query(xmiString, convertToJsonPath(XMIRead['$']['from']));
+			var XMITargetTo = jp.query(xmiString, convertToJsonPath( XMIRead['$']['to']));
 
 //			if (!targetFrom || !targetTo || targetFrom.length < 1 || targetTo.length < 1) {
 //				continue;
@@ -274,19 +279,21 @@
 			
 			var targetTo = null;
 
-			if (XMITargetTo && XMITargetTo.length > 0 || targetTo[0]['$']['xsi:type']) {
+			if (XMITargetTo && XMITargetTo.length > 0 && XMITargetTo[0]['$']['xsi:type']) {
 			targetTo = {
-				UUID: targetTo[0]['$']['UUID'],
-				methodAccessType : targetTo[0]['$']['type']
+				UUID: XMITargetTo[0]['$']['UUID'],
+				methodAccessType : XMITargetTo[0]['$']['type'],
+				xsiType: XMITargetTo[0]['$']['xsi:type']
 			}
 			}
 			
 			var targetFrom = null;
 
-			if (XMITargetFrom && XMITargetFrom.length > 0 || targetFrom[0]['$']['xsi:type']) {
+			if (XMITargetFrom && XMITargetFrom.length > 0 && XMITargetFrom[0]['$']['xsi:type']) {
 			targetFrom = {
-				UUID: targetTo[0]['$']['UUID'],
-				methodAccessType : targetFrom[0]['$']['type']
+				UUID: XMITargetFrom[0]['$']['UUID'],
+				methodAccessType : XMITargetFrom[0]['$']['type'],
+				xsiType: XMITargetFrom[0]['$']['xsi:type']
 			}
 			}
 			
@@ -732,22 +739,36 @@
 		for (var i in XMIExtends) {
 			var XMIExtend = XMIExtends[i];
 			extendInstances.push({
-				to: XMIExtend['$']['to'],
-				from: XMIExtend['$']['from']
+				to: jp.query(xmiString, convertToJsonPath(XMIExtend['$']['to']))[0],
+				from: jp.query(xmiString, convertToJsonPath(XMIExtend['$']['from']))[0]
 			});
 		}
 
 		return extendInstances;
 	}
+	
+//	function identifyComposition(xmiString) {
+//		var compositionInstances = [];
+//		var XMICompositions = jp.query(xmiString, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
+//		for (var i in XMICompositions) {
+//			var XMIComposition = XMICompositions[i];
+//			compositionInstances.push({
+//				name: XMIComposition['$']['name'],
+//				type: convertToJsonPath(XMIComposition['$']['type']) // this is a path to the class
+//			});
+//		}
+//
+//		return compositionInstances;
+//	}
 
-	function identifyStorableUnits(xmiString) {
+	function identifyStorableUnits(xmiClass) {
 		var storableUnits = [];
-		var XMIStorableUnits = jp.query(xmiString, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
+		var XMIStorableUnits = jp.query(xmiClass, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
 		for (var i in XMIStorableUnits) {
 			var XMIStorableUnit = XMIStorableUnits[i];
 			storableUnits.push({
 				name: XMIStorableUnit['$']['name'],
-				type: XMIStorableUnit['$']['type'] // this is a path to the class
+				type:  convertToJsonPath(XMIStorableUnit['$']['type']) // this is a path to the class
 			});
 		}
 
@@ -1103,6 +1124,7 @@
 			identifyExtends: identifyExtends,
 			identifyStorableUnits: identifyStorableUnits,
 			identifyExternalClass: identifyExternalClass,
+//			identifyComposition: identifyComposition,
 			assignUUID: function(object) {
 					if (object instanceof Array) {
 						for (var i in object) {
