@@ -70,12 +70,11 @@
 		
 		for(var i in dicMethodUnits){
 			var methodUnit = dicMethodUnits[i];
-//			
-//
-//			if(methodUnit.name === "main"){
-//				MethodUnit.isResponse = true;
-//			}
-//			
+
+			if(methodUnit.name === "main"){
+				MethodUnit.isResponse = true;
+			}
+	
 			for(var j in methodPatterns){
 				if(methodUnit.Signature.name.match(methodPatterns[j])){
 					methodUnit.isResponse = true;

@@ -60,9 +60,9 @@
 
 		for(var i in classes) {
 			var classUnit = classes[i];
-			classDic[classUnit.uuid] = i;
+			classDic[classUnit.UUID] = i;
 			var classU = {
-				UUID: classUnit.uuid,
+				UUID: classUnit.UUID,
 				name: classUnit.name,
 				// notReferenced: true
 			}
@@ -229,7 +229,7 @@
 		// console.log(clusters);
 
 		var dicComponents = {};
-		var dicClassComponent = {};  // {classUnit.uuid: component.uuid}
+		var dicClassComponent = {};  // {classUnit.UUID: component.UUID}
 
 		for(var i in clusters){
 			var classUnits = clusters[i];
@@ -258,14 +258,14 @@
 
 			var component = {
 					name: classUnits[0].name,
-					uuid: uuidv4(),
+					UUID: uuidv4(),
 					classUnits: classUnits
 			}
 
-			dicComponents[component.uuid] = component;
+			dicComponents[component.UUID] = component;
 
 			for (var j in classUnits) {
-				dicClassComponent[classUnits[j].uuid] = component.uuid;
+				dicClassComponent[classUnits[j].UUID] = component.UUID;
 			}
 		}
 
@@ -362,7 +362,7 @@
 		//
 		// for(var i in classes) {
 		// 	var classUnit = classes[i];
-		// 	classDic[classUnit.uuid] = i;
+		// 	classDic[classUnit.UUID] = i;
 		// 	var classU = {
 		// 		UUID: classUnit.uuid,
 		// 		name: classUnit.name
@@ -378,19 +378,21 @@
 		var paras = zeroArray(classes.length, classes.length);
 		var typeDependencyMetrics = zeroArray(classes.length, classes.length);
 
+		console.log("class dic");
+		console.log(classDic);
 		if (typeDependencyGraph) {
 			for (var i in typeDependencyGraph.edgesAttrComposite) {
 				var edge = typeDependencyGraph.edgesAttrComposite[i];
-				var col = classDic[edge.start.component.classUnit];
-				var row = classDic[edge.end.component.classUnit];
+				var col = classDic[edge.start.UUID];
+				var row = classDic[edge.end.UUID];
 				attrs[col][row]++;
 				// classArray[col] = false;
 				// classArray[row] = false;
 			}
 			for (var i in typeDependencyGraph.edgesPComposite) {
 				var edge = typeDependencyGraph.edgesPComposite[i];
-				var col = classDic[edge.start.component.classUnit];
-				var row = classDic[edge.end.component.classUnit];
+				var col = classDic[edge.start.UUID];
+				var row = classDic[edge.end.UUID];
 				paras[col][row]++;
 				// classArray[col] = false;
 				// classArray[row] = false;
@@ -435,9 +437,9 @@
 
 		for(var i in classes) {
 			var classUnit = classes[i];
-			// classDic[classUnit.uuid] = i;
+			// classDic[classUnit.UUID] = i;
 			// var classU = {
-			// 	UUID: classUnit.uuid,
+			// 	UUID: classUnit.UUID,
 			// 	name: classUnit.name
 			// }
 			// classArray.push(classU);
@@ -452,8 +454,8 @@
 
 		for (var i in accessGraph.edgesComposite) {
 			var edge = accessGraph.edgesComposite[i];
-			var col = classDic[edge.start.component.classUnit];
-			var row = classDic[edge.end.component.classUnit];
+			var col = classDic[edge.start.UUID];
+			var row = classDic[edge.end.UUID];
 			if(col == null || row == null){
 				continue;
 			}
@@ -465,22 +467,22 @@
 				accessors[col] = {}
 			}
 			if (!(row in accessors[col])) {
-				accessors[col][row] = new Set([edge.start.uuid]);
+				accessors[col][row] = new Set([edge.start.UUID]);
 			}
-			// else if (!(callers[col][row].has(edge.start.uuid))) {
+			// else if (!(callers[col][row].has(edge.start.UUID))) {
 			else {
-				accessors[col][row].add(edge.start.uuid);
+				accessors[col][row].add(edge.start.UUID);
 			}
 
 			if (!(col in accessed)) {
 				accessed[col] = {}
 			}
 			if (!(row in accessed[col])) {
-				accessed[col][row] = new Set([edge.end.uuid]);
+				accessed[col][row] = new Set([edge.end.UUID]);
 			}
-			// else if (!(callees[col][row].has(edge.end.uuid))) {
+			// else if (!(callees[col][row].has(edge.end.UUID))) {
 			else {
-				accessed[col][row].add(edge.start.uuid);
+				accessed[col][row].add(edge.start.UUID);
 			}
 		}
 
@@ -514,9 +516,9 @@
 		//
 		// for(var i in classes) {
 		// 	var classUnit = classes[i];
-		// 	classDic[classUnit.uuid] = i;
+		// 	classDic[classUnit.UUID] = i;
 		// 	var classU = {
-		// 		UUID: classUnit.uuid,
+		// 		UUID: classUnit.UUID,
 		// 		name: classUnit.name
 		// 	}
 		// 	classArray.push(classU);
@@ -555,20 +557,20 @@
 				callers[col] = {}
 			}
 			if (!(row in callers[col])) {
-				callers[col][row] = new Set([edge.start.uuid]);
+				callers[col][row] = new Set([edge.start.UUID]);
 			}
-			else if (!(callers[col][row].has(edge.start.uuid))) {
-				callers[col][row].add(edge.start.uuid);
+			else if (!(callers[col][row].has(edge.start.UUID))) {
+				callers[col][row].add(edge.start.UUID);
 			}
 
 			if (!(col in callees)) {
 				callees[col] = {}
 			}
 			if (!(row in callees[col])) {
-				callees[col][row] = new Set([edge.end.uuid]);
+				callees[col][row] = new Set([edge.end.UUID]);
 			}
-			else if (!(callees[col][row].has(edge.end.uuid))) {
-				callees[col][row].add(edge.start.uuid);
+			else if (!(callees[col][row].has(edge.end.UUID))) {
+				callees[col][row].add(edge.start.UUID);
 			}
 		}
 
@@ -610,8 +612,8 @@
 
 		for (var i in extendsGraph.edges) {
 			var edge = extendsGraph.edges[i];
-			var col = classDic[edge.start.component.classUnit];
-			var row = classDic[edge.end.component.classUnit];
+			var col = classDic[edge.start.UUID];
+			var row = classDic[edge.end.UUID];
 			extendsMetrics[col][row]++;
 		}
 
@@ -627,8 +629,11 @@
 
 		for (var i in compositionGraph.edges) {
 			var edge = compositionGraph.edges[i];
-			var col = classDic[edge.start.component.classUnit];
-			var row = classDic[edge.end.component.classUnit];
+			var col = classDic[edge.start.UUID];
+			var row = classDic[edge.end.UUID];
+			if(!col || !row){
+				continue;
+			}
 			compositionMetrics[col][row]++;
 		}
 
@@ -756,7 +761,7 @@
 
 		for (var i in classUnits) {
 			var classUnit = classUnits[i];
-			if (classUUID == classUnit.uuid) {
+			if (classUUID == classUnit.UUID) {
 				return classUnit;
 			}
 		}
@@ -865,7 +870,7 @@
 				var row = cluster["value"].toString();
 				var classes = rowDic[row];
 				var classSelected = classes[classes.length-1];
-				var children = dicCompositeSubclasses[classSelected.uuid];
+				var children = dicCompositeSubclasses[classSelected.UUID];
 				if(!children){
 					return classClusters;
 				}
@@ -880,6 +885,9 @@
 				for (var i in children) {
 					var childClass = {};
 					var child = findClassUnit(children[i], classUnits);
+					if(!child){
+						continue;
+					}
 					childClass['size'] = 1;
 					childClass['value'] = child;
 					childrenClasses.push(childClass);

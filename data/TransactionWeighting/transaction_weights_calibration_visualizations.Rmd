@@ -932,7 +932,7 @@ ggplot(predictedValuesDUCP, aes(x = DUCP, y = Effort)) +
     #for (col in names(marginalData)) {
     means <- apply(marginalData, 2, mean)
     sd <- apply(marginalData, 2, sd)
-    labels <- paste(colnames(marginalData), ": µ~", round(means,2),"; ??~", round(sd,2),sep="")
+    labels <- paste(colnames(marginalData), ": Est.~", round(means,2),"; SD.~", round(sd,2),sep="")
     print(labels)
     
   colnames(marginalData) <- labels
@@ -952,7 +952,7 @@ ggplot(predictedValuesDUCP, aes(x = DUCP, y = Effort)) +
   geom_histogram(aes(y = ..density..), colour="black", fill="white") +
   geom_line(aes(y = density), data = normaldens, colour = "red") +
   facet_wrap(~ level, scales = "free", nrow=4) + xlab("Posterior Estimates of the Parameters") +ylab("Probability Density")+
-      theme_bw(base_size=14)
+      theme_bw(base_size=12)
   #geom_text(
   #data    = dat_text,
   #mapping = aes(x = 0, y = 0, label = label),

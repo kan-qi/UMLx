@@ -87,7 +87,7 @@ public class CodeAnalysis {
 		StringBuilder str = new StringBuilder();
 		str.append("{");
 		str.append("\"name\":\""+name+"\",");
-		str.append("\"uuid\":\""+uuid+"\",");
+		str.append("\"UUID\":\""+uuid+"\",");
 		str.append("\"returnType\":\""+returnType+"\",");
 		str.append("\"parameterTypes\":[");
 		int i = 0;
@@ -229,9 +229,9 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 //			if(i != 1) {
 //				outputS += ",";
 //			}
-//			outputS += "{\"start\":{\"uuid\":\""+compEdge[0].methodUnit.uuid+"\",\"classUnit\":\""+compEdge[0].compositeClassUnit.uuid+"\"},";
+//			outputS += "{\"start\":{\"UUID\":\""+compEdge[0].methodUnit.uuid+"\",\"classUnit\":\""+compEdge[0].compositeClassUnit.uuid+"\"},";
 ////			outputS += "->";
-//			outputS += "\"end\":{\"uuid\":\""+compEdge[0].methodUnit.uuid+"\",\"classUnit\":\""+compEdge[0].compositeClassUnit.uuid+"\"}}";
+//			outputS += "\"end\":{\"UUID\":\""+compEdge[0].methodUnit.uuid+"\",\"classUnit\":\""+compEdge[0].compositeClassUnit.uuid+"\"}}";
 ////			outputS += "\n";
 //		}
 //		outputS += "]";
@@ -295,7 +295,7 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	  
 	  public String toJSONString() {
 		  StringBuilder str = new StringBuilder();
-		  str.append("{\"uuid\":\""+ 
+		  str.append("{\"UUID\":\""+ 
 				  this.uuid+"\","+
 				  "\"name\":\""+
 				  this.name+"\","+
@@ -346,7 +346,7 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		  Iterator<ClassUnit> iterator = classUnits.iterator();
 		  StringBuilder Json = new StringBuilder();
 		  Json.append("{\"name\": \""+name+"\",");
-		  Json.append("\"uuid\": \""+uuid+"\",");
+		  Json.append("\"UUID\": \""+uuid+"\",");
 		  Json.append("\"classUnits\": [");
 		  while(iterator.hasNext()) {
 			  ClassUnit classUnit = iterator.next();
@@ -482,7 +482,7 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	}
 	  
 	public String toJSONString(){
-		return "{\"name\":\""+this.name+"\", \"type\":\""+this.type+"\", \"uuid\":\""+this.uuid+"\"}";
+		return "{\"name\":\""+this.name+"\", \"type\":\""+this.type+"\", \"UUID\":\""+this.uuid+"\"}";
 	}
   }
   

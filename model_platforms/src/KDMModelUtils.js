@@ -307,8 +307,8 @@
 		for(var i in XMICalls){
 			var XMICall = XMICalls[i];
 			ActionElement.Calls.push({
-				to: XMICall['$']['to'],
-				from:XMICall['$']['from']
+				to: convertToJsonPath(XMICall['$']['to']),
+				from:convertToJsonPath(XMICall['$']['from'])
 			})
 		}
 
@@ -316,8 +316,8 @@
 		for(var i in XMICreates){
 			var XMICreate = XMICreates[i];
 			ActionElement.Creates.push({
-				to: XMICreate['$']['to'],
-				from:XMICreate['$']['from']
+				to: convertToJsonPath(XMICreate['$']['to']),
+				from:convertToJsonPath(XMICreate['$']['from'])
 			})
 		}
 
@@ -700,7 +700,7 @@
 
 		return actionElementsByName;
 	}
-
+	
 	function identifyMethodUnits(xmiString){
 		var XMIMethodUnits = jp.query(xmiString, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
 		var methodUnitsByUUID = {};
@@ -716,15 +716,14 @@
 
 	function identifyCalls(xmiString){
 
-    // calls = [{to: , from: }]
 		var calls = [];
 
 		var XMICalls = jp.query(xmiString, '$..actionRelation[?(@[\'$\'][\'xsi:type\']==\'action:Calls\')]');
 		for(var i in XMICalls){
 			var XMICall = XMICalls[i];
 			calls.push({
-				to: XMICall['$']['to'],
-				from:XMICall['$']['from']
+				to: convertToJsonPath(XMICall['$']['to']),
+				from: convertToJsonPath(XMICall['$']['from'])
 			});
 		}
 
@@ -898,34 +897,34 @@
 
 
 
-	//	/*
-	//	 * this function will exclude the calls within another function
-	//	 */
-	//	function findCallsForMethod(methodUnit){
-	//		var calls = [];
-	//
-	//		function findCallsFromActionElement(actionElement){
-	//			var calls = [];
-	////			console.log("output action element");
-	////			console.log(responseMethod.Signature.name);
-	////			console.log(actionElement);
-	//			calls = calls.concat(actionElement.Calls);
-	//
-	//			for(var i in actionElement.ActionElements){
-	//				calls = calls.concat(findCallsFromActionElement(actionElement.ActionElements[i]));
-	//			}
-	//
-	//			return calls;
-	//		}
-	//
-	//		for(var i in methodUnit.BlockUnit.ActionElements){
-	//
-	//			var actionElement = methodUnit.BlockUnit.ActionElements[i];
-	//			calls = calls.concat(findCallsFromActionElement(actionElement));
-	//		}
-	//
-	//		return calls;
-	//	}
+		/*
+		 * this function will exclude the calls within another function
+		 */
+		function findCallsForMethod(methodUnit){
+			var calls = [];
+	
+			function findCallsFromActionElement(actionElement){
+				var calls = [];
+	//			console.log("output action element");
+	//			console.log(responseMethod.Signature.name);
+	//			console.log(actionElement);
+				calls = calls.concat(actionElement.Calls);
+	
+				for(var i in actionElement.ActionElements){
+					calls = calls.concat(findCallsFromActionElement(actionElement.ActionElements[i]));
+				}
+	
+				return calls;
+			}
+	
+			for(var i in methodUnit.BlockUnit.ActionElements){
+	
+				var actionElement = methodUnit.BlockUnit.ActionElements[i];
+				calls = calls.concat(findCallsFromActionElement(actionElement));
+			}
+	
+			return calls;
+		}
 
 	//	function findSubClasses(classUnit){
 	//		function findSubClassesFromActionElement(ActionElement){
@@ -1067,7 +1066,59 @@
 
 
 
-
+//		function locateComponentForMethod(targetMethodUnit, components){
+//		for(var i in components){
+//			var component = components[i];
+//			for(var j in component.classUnits){
+//				var classUnit = component.classUnits[j];
+//				
+//				var MethodUnits = classUnit.MethodUnits;
+//				for(var k in MethodUnits){
+//					var methodUnit = MethodUnits[k];
+//					if(methodUnit.UUID === targetMethodUnit.UUID){
+//						return component;
+//					}
+//				}
+//				
+//			}
+//		}
+//		return null;
+//	}
+	
+//	function findSubMethods(classUnit){
+//		var subMethods = [];
+//		
+//		function findSubMethodsFromActionElement(actionElement){
+//			var subMethods = [];
+//			
+//			for(var i in actionElement.ClassUnits){
+//				var classUnit = actionElement.ClassUnits[i];
+//				var result = findSubMethods(classUnit);
+//				subMethods = subMethods.concat(result);
+//			}
+//			for(var i in actionElement.ActionElements){
+//				var result = findSubMethodsFromActionElement(actionElement.ActionElements[i]);
+//				subMethods = subMethods.concat(result);
+//			}
+//			
+//			return subMethods;
+//		}
+//		
+//		for(var i in classUnit.MethodUnits){
+//				var methodUnit = classUnit.MethodUnits[i];
+//				subMethods.push(methodUnit);
+//				
+//				for(var j in methodUnit.BlockUnit.ActionElements){
+//					var actionElement = methodUnit.BlockUnit.ActionElements[j];
+//					var result = findSubMethodsFromActionElement(actionElement);
+//					subMethods = subMethods.concat(result);
+//				}
+//		}
+//		
+//		return subMethods;
+//	}
+	
+	
 
 	function createMethodUnit(XMIMethodUnit) {
 		return {

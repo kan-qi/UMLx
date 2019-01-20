@@ -53,7 +53,7 @@
 //	var dicCompositeClasses = {};
 //	var dicClassComposite = {}; // {subclass.UUID, compositeClassUnit.UUID}
 //	var dicCompositeSubclasses = {}; // {compositeClassUnit.UUID, [subclass.UUID]}
-//	var dicMethodClass = {};	 // {method.uuid, class.uuid}
+//	var dicMethodClass = {};	 // {method.UUID, class.UUID}
 //	var dicActionElementMethod = {};
 
 	function analyseCode(jsonString, outputDir) {
@@ -71,12 +71,22 @@
 		for(var i in referencedClassUnits){
 			console.log("iterate class");
 			var referencedClassUnit = referencedClassUnits[i];
-			console.log(referencedClassUnits[i].uuid);
-			dicClassUnits[referencedClassUnit.uuid] = referencedClassUnit;
+			
+			console.log(referencedClassUnits[i].UUID);
+			
+			//process the name
+			var packageName = referencedClassUnit.name.substring(0, referencedClassUnit.name.lastIndexOf('.'));
+			var className = referencedClassUnit.name.substring(referencedClassUnit.name.lastIndexOf('.')+1, referencedClassUnit.name.length);
+			
+			referencedClassUnit.name = className;
+			referencedClassUnit.packageName = packageName;
+			
+			dicClassUnits[referencedClassUnit.UUID] = referencedClassUnit;
+			
 			for(var j in referencedClassUnit.methodUnits){
 				var referencedMethodUnit = referencedClassUnit.methodUnits[j];
-				dicMethodUnits[referencedMethodUnit.uuid] = {
-						UUID: referencedMethodUnit.uuid,
+				dicMethodUnits[referencedMethodUnit.UUID] = {
+						UUID: referencedMethodUnit.UUID,
 						Signature:{
 							name:referencedMethodUnit.name,
 							parameterUnits:referencedMethodUnit.parameterUnits
@@ -84,15 +94,15 @@
 				}
 				
 				
-				dicMethodClass[referencedMethodUnit.uuid] = referencedClassUnit.uuid;
+				dicMethodClass[referencedMethodUnit.UUID] = referencedClassUnit.UUID;
 				
 				for(var k in referencedMethodUnit.parameterTypes){
 					var referencedParameter = referencedMethodUnit.parameterTypes[k];
-					if(!dicMethodParameters[referencedMethodUnit.uuid]){
-						dicMethodParameters[referencedMethodUnit.uuid] = [];
+					if(!dicMethodParameters[referencedMethodUnit.UUID]){
+						dicMethodParameters[referencedMethodUnit.UUID] = [];
 					}
-					console.log(dicMethodParameters[referencedMethodUnit.uuid]);
-					dicMethodParameters[referencedMethodUnit.uuid].push({type: referencedParameter});
+					console.log(dicMethodParameters[referencedMethodUnit.UUID]);
+					dicMethodParameters[referencedMethodUnit.UUID].push({type: referencedParameter});
 				}
 				
 			}
@@ -116,15 +126,23 @@
 		var disCompositeClassUnits = {};
 		
 		for(var i in referencedCompositeClassUnits){
-			var referencedCompositeClassUnit = referencedCompositeClassUnits[i]
+			var referencedCompositeClassUnit = referencedCompositeClassUnits[i];
+			
+			//process the name
+			var packageName = referencedCompositeClassUnit.name.substring(0, referencedCompositeClassUnit.name.lastIndexOf('.'));
+			var className = referencedCompositeClassUnit.name.substring(referencedCompositeClassUnit.name.lastIndexOf('.')+1, referencedCompositeClassUnit.name.length);
+			
+			referencedCompositeClassUnit.name = className;
+			referencedCompositeClassUnit.packageName = packageName;
+			
 			for(var j in referencedCompositeClassUnit.classUnits){
 				var subClassUnit = referencedCompositeClassUnit.classUnits[j];
-				if(!dicCompositeSubclasses[referencedCompositeClassUnit.uuid]){
-					dicCompositeSubclasses[referencedCompositeClassUnit.uuid] = [];
+				if(!dicCompositeSubclasses[referencedCompositeClassUnit.UUID]){
+					dicCompositeSubclasses[referencedCompositeClassUnit.UUID] = [];
 				}
-				dicCompositeSubclasses[referencedCompositeClassUnit.uuid].push(subClassUnit);
-				dicClassComposite[subClassUnit] = referencedCompositeClassUnit.uuid;
-				disCompositeClassUnits[referencedCompositeClassUnit.uuid] = referencedCompositeClassUnit;
+				dicCompositeSubclasses[referencedCompositeClassUnit.UUID].push(subClassUnit);
+				dicClassComposite[subClassUnit] = referencedCompositeClassUnit.UUID;
+				disCompositeClassUnits[referencedCompositeClassUnit.UUID] = referencedCompositeClassUnit;
 			}
 		}
 		
@@ -148,17 +166,17 @@
 			}
 			
 			var accessNode = {
-					name: accessClassUnit.name+":"+accessMethodUnit.name,
+					name: accessClassUnit.name+":"+accessMethodUnit.Signature.name,
 					component:accessClassUnit,
-					UUID: accessMethodUnit.uuid,
-					methodName: accessMethodUnit.name
+					UUID: accessMethodUnit.UUID,
+					methodName: accessMethodUnit.Signature.name
 			}
 			accessGraph.nodes.push(accessNode);
 			var accessCompositeNode = {
-					name: accessCompositeClassUnit.name+":"+accessMethodUnit.name,
+					name: accessCompositeClassUnit.name+":"+accessMethodUnit.Signature.name,
 					component:accessCompositeClassUnit,
-					UUID: accessMethodUnit.uuid,
-					methodName: accessMethodUnit.name
+					UUID: accessMethodUnit.UUID,
+					methodName: accessMethodUnit.Signature.name
 			}
 			accessGraph.nodesComposite.push(accessCompositeNode);
 			
@@ -173,7 +191,7 @@
 			var accessedNode = {
 					name: accessedClassUnit.name+":"+accessedAttrUnit.name,
 					component:accessedClassUnit,
-					UUID: accessedAttrUnit.uuid,
+					UUID: accessedAttrUnit.UUID,
 					attrName: accessedAttrUnit.name,
 					attrType: accessedAttrUnit.type
 			}
@@ -183,7 +201,7 @@
 			var accessedCompositeNode = {
 					name: accessedCompositeClassUnit.name+":"+accessedAttrUnit.name,
 					component:accessedCompositeClassUnit,
-					UUID: accessedAttrUnit.uuid,
+					UUID: accessedAttrUnit.UUID,
 					attrName: accessedAttrUnit.name,
 					attrType: accessedAttrUnit.type
 			}
@@ -209,28 +227,28 @@
 				var callClassUnit = dicClassUnits[edge.start.classUnit];
 				var callCompositeClassUnit = disCompositeClassUnits[dicClassComposite[edge.start.classUnit]];
 				
-				console.log("call graph edge");
-				console.log(edge.start.methodUnit);
-				console.log(callMethodUnit);
-				console.log(callClassUnit);
-				console.log(callCompositeClassUnit);
+//				console.log("call graph edge");
+//				console.log(edge.start.methodUnit);
+//				console.log(callMethodUnit);
+//				console.log(callClassUnit);
+//				console.log(callCompositeClassUnit);
 				
 				if(!callMethodUnit || !callClassUnit || !callCompositeClassUnit){
 					continue;
 				}
 				
 				var callNode = {
-						name: callClassUnit.name+":"+callMethodUnit.name,
+						name: callClassUnit.name+":"+callMethodUnit.Signature.name,
 						component:callClassUnit,
-						UUID: callMethodUnit.uuid,
-						methodName: callMethodUnit.name
+						UUID: callMethodUnit.UUID,
+						methodName: callMethodUnit.Signature.name
 				}
 				callGraph.nodes.push(callNode);
 				var callCompositeNode = {
-						name: callCompositeClassUnit.name+":"+callMethodUnit.name,
+						name: callCompositeClassUnit.name+":"+callMethodUnit.Signature.name,
 						component:callCompositeClassUnit,
-						UUID: callMethodUnit.uuid,
-						methodName: callMethodUnit.name
+						UUID: callMethodUnit.UUID,
+						methodName: callMethodUnit.Signature.name
 				}
 				callGraph.nodesComposite.push(callNode);
 				
@@ -238,19 +256,19 @@
 				var calleeClassUnit = dicClassUnits[edge.end.classUnit];
 				var calleeCompositeClassUnit = disCompositeClassUnits[dicClassComposite[edge.end.classUnit]];
 				var calleeNode = {
-						name: calleeClassUnit.name+":"+calleeMethodUnit.name,
+						name: calleeClassUnit.name+":"+calleeMethodUnit.Signature.name,
 						component:calleeClassUnit,
-						UUID: calleeMethodUnit.uuid,
-						methodName: calleeMethodUnit.name
+						UUID: calleeMethodUnit.UUID,
+						methodName: calleeMethodUnit.Signature.name
 				}
 				
 				callGraph.nodes.push(calleeNode);
 				
 				var calleeCompositeNode = {
-						name: calleeCompositeClassUnit.name+":"+calleeMethodUnit.name,
+						name: calleeCompositeClassUnit.name+":"+calleeMethodUnit.Signature.name,
 						component:calleeCompositeClassUnit,
-						UUID: calleeMethodUnit.uuid,
-						methodName: calleeMethodUnit.name
+						UUID: calleeMethodUnit.UUID,
+						methodName: calleeMethodUnit.Signature.name
 				}
 				
 				callGraph.nodesComposite.push(calleeNode);
@@ -285,7 +303,9 @@
 		};
 		
 		
-		debug.writeJson("android-analysis-results", result.dicClassUnits);
+		debug.writeJson2("android-analysis-results", result.dicClassUnits);
+		
+//		process.exit(0);
 		
 		return result;
 	}
