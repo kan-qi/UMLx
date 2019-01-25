@@ -84,19 +84,25 @@ public class AnalysisEntrypoint {
     
     Debug2.v().printf("classes: %s", sb.toString());
 
-//    // Analysis
-//    // TODO: use reflection to allow nice little extensions.
-//    if (Configs.guiAnalysis) {
-//      GUIAnalysis guiAnalysis = GUIAnalysis.v();
-//      guiAnalysis.run();
-//      Date endTime = new Date();
-//      Logger.verb(this.getClass().getSimpleName(),
-//              "Soot stopped on " + endTime);
+    // Analysis
+    // TODO: use reflection to allow nice little extensions.
+    if (Configs.guiAnalysis) {
+      GUIAnalysis guiAnalysis = GUIAnalysis.v();
+      guiAnalysis.run();
+      Date endTime = new Date();
+      Logger.verb(this.getClass().getSimpleName(),
+              "Soot stopped on " + endTime);
+
 //      System.exit(0);
-//    }
+    }
     
+    if(Configs.codeAnalysis) {
     CodeAnalysis codeAnalysis = CodeAnalysis.v();
     codeAnalysis.run();
+//    System.exit(0);
+    }
+    
+
     System.exit(0);
   }
 

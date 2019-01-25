@@ -61,6 +61,8 @@ public class Configs {
   public static boolean verbose = false;
 
   public static boolean guiAnalysis;
+  
+  public static boolean codeAnalysis = false;
 
   public static Set<String> debugCodes = Sets.newHashSet();
 

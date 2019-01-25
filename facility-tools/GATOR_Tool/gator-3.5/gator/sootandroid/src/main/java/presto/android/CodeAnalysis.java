@@ -485,6 +485,17 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	}
   }
   
+public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+	return "";
+}
+
+public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+	return "";
+}
+
+public String constructCompositionGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+	return "";
+}
   
 public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
 
@@ -695,6 +706,10 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 //    return dependencies;
 //}
 
+  private String parseCallbackFunctions(String UIHierarchyXML) {
+	  return "";
+  }
+
   public void run() {
     Logger.stat("#Classes: " + Scene.v().getClasses().size() +
             ", #AppClasses: " + Scene.v().getApplicationClasses().size());
@@ -853,15 +868,16 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
     
   }
   
+  
 /*
  * Derive call graphs from source code.
  */
   
 private CallGraph genCallGraph() {
 
-  String apkPath = Configs.project;
+	String apkPath = Configs.project;
 //  String androidJarPath = Configs.sdkDir + "/platforms/" + Configs.apiLevel;
-  String androidJarPath = Configs.sdkDir + "/platforms/";
+  	String androidJarPath = Configs.sdkDir + "/platforms/";
   
     File apkFile = new File(apkPath);
 	String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
@@ -892,10 +908,10 @@ private CallGraph genCallGraph() {
 		return null;				
 	}
 
-  SetupApplication app = new SetupApplication(androidJarPath, apkPath);
+	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
 	
-  Debug1.v().println("Setup Application...");
-  Debug1.v().println("platforms: "+androidJarPath+" project: "+apkPath);
+	Debug1.v().println("Setup Application...");
+	Debug1.v().println("platforms: "+androidJarPath+" project: "+apkPath);
   
 //  AndroidEntryPointCreator c = app.getEntryPointCreator();
 //  SootMethod entryPoint = c.createDummyMain();
