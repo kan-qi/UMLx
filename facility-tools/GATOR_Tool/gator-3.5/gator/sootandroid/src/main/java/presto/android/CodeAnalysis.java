@@ -20,6 +20,7 @@ import soot.ValueBox;
 import soot.jimple.FieldRef;
 import soot.jimple.InvokeExpr;
 import soot.jimple.Stmt;
+<<<<<<< HEAD
 import soot.jimple.infoflow.android.Debug;
 import soot.jimple.infoflow.android.SetupApplication;
 import soot.jimple.infoflow.android.axml.AXmlAttribute;
@@ -27,13 +28,19 @@ import soot.jimple.infoflow.android.axml.AXmlHandler;
 import soot.jimple.infoflow.android.axml.AXmlNode;
 import soot.jimple.infoflow.android.axml.parsers.AXML20Parser;
 import soot.jimple.infoflow.android.resources.IResourceHandler;
+=======
+import soot.jimple.infoflow.android.SetupApplication;
+>>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
 import soot.jimple.toolkits.callgraph.CallGraph;
 import soot.jimple.toolkits.callgraph.Edge;
 import soot.options.Options;
 
 import java.io.File;
 import java.io.IOException;
+<<<<<<< HEAD
 import java.io.InputStream;
+=======
+>>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -53,8 +60,11 @@ import org.xmlpull.v1.XmlPullParserException;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+<<<<<<< HEAD
 import pxb.android.axml.AxmlVisitor;
 
+=======
+>>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
 /**
  * @author Kan Qi
  *
@@ -865,9 +875,15 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 //    identifyAggregateClassUnits(xmiString);
     
     CallGraph callGraph = genCallGraph();
+<<<<<<< HEAD
 //	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 //	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+=======
+	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
+	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+>>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
 	//	var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 //	var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 
@@ -962,6 +978,7 @@ private CallGraph genCallGraph() {
 	return callGraph;
 }
 
+<<<<<<< HEAD
 /**
  * Parses all layout XML files in the given APK file and loads the IDs of the
  * user controls in it. This method directly executes the analyses witout
@@ -971,9 +988,7 @@ private CallGraph genCallGraph() {
  *            The APK file in which to look for user controls
  */
 public void parseLayoutFileDirect(final String fileName) {
-	handleAndroidResourceFiles(fileName, /* classes, */ null, new IResourceHandler() {
 
-		@Override
 		public void handleResourceFile(final String fileName, Set<String> fileNameFilter, InputStream stream) {
 			// We only process valid layout XML files
 			if (!fileName.startsWith("res/layout"))
@@ -1012,7 +1027,6 @@ public void parseLayoutFileDirect(final String fileName) {
 				logger.error("Could not read binary XML file: " + ex.getMessage(), ex);
 			}
 		}
-	});
 }
 
 /**
@@ -1067,6 +1081,8 @@ private void parseLayoutNode(String layoutFile, AXmlNode rootNode) {
 		parseLayoutNode(layoutFile, childNode);
 }
 
+=======
+>>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
 //output the call graph to JSON formate
 private static String dumpCallGraph(CallGraph cg){
 		Iterator<Edge> itr = cg.iterator();
@@ -1093,9 +1109,12 @@ private static String dumpCallGraph(CallGraph cg){
 
 private String getComponentName(String classPath) {
 	int pos = classPath.lastIndexOf(".");
+<<<<<<< HEAD
 	if(pos < 0) {
 		return classPath;
 	}
+=======
+>>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
 	String packageName = classPath.substring(0, pos);
 	String className = classPath.substring(pos+1, classPath.length());
 	int firstPos = -1;

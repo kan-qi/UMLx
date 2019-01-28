@@ -62,7 +62,11 @@ public class Configs {
 
   public static boolean guiAnalysis;
   
+<<<<<<< HEAD
   public static boolean codeAnalysis = true;
+=======
+  public static boolean codeAnalysis = false;
+>>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
 
   public static Set<String> debugCodes = Sets.newHashSet();
 
