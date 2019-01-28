@@ -1,0 +1,129 @@
+id,element,useCase,type,component
+1,User:Compiling progress bar,Compile,boundary,compileCC
+2,User:Compiling success message,Compile,boundary,compileCC
+3,User:Build button,Compile,boundary,Buildbutton
+4,compile C/C++:WinAVR,Compile,actor,MainWindow
+5,Build button:compile C/C++,Compile,boundary,compileCC
+6,compile C/C++:Compiling progress bar,Compile,boundary,compileCC
+7,compile C/C++:Compiling success message,Compile,boundary,compileCC
+8,stl#User:Compiling progress bar,Compile,Stimulus,undefined
+9,stl#User:Compiling success message,Compile,Stimulus,undefined
+10,stl#User:Build button,Compile,Stimulus,undefined
+11,User:parameter set dialog,Create Navigation Instructions,boundary,changetheparametersoftheelements
+12,User:Program is updated message,Create Navigation Instructions,boundary,ProgramList
+13,User:navigation instruction create panel,Create Navigation Instructions,control,Instruction Panel
+14,save parameters:Program is updated message,Create Navigation Instructions,boundary,ProgramList
+15,change the parameters of the elements:save parameters,Create Navigation Instructions,boundary,changetheparametersoftheelements
+16,parameter set dialog:change the parameters of the elements,Create Navigation Instructions,boundary,changetheparametersoftheelements
+17,display the dragged and dropped navigation instructions:popup parameter change dialog,Create Navigation Instructions,boundary,changetheparametersoftheelements
+18,navigation instruction create panel:display the dragged and dropped navigation instructions,Create Navigation Instructions,control,Instruction Panel
+19,save parameters:instructions,Create Navigation Instructions,control,Instruction
+20,popup parameter change dialog:parameter set dialog,Create Navigation Instructions,boundary,changetheparametersoftheelements
+21,stl#User:parameter set dialog,Create Navigation Instructions,Stimulus,undefined
+22,stl#User:Program is updated message,Create Navigation Instructions,Stimulus,undefined
+23,stl#User:navigation instruction create panel,Create Navigation Instructions,Stimulus,undefined
+24,User:light instruction create panel,Create light instructions,control,Instruction Panel
+25,User:parameter set dialog,Create light instructions,control,Program
+26,User:Program is updated message,Create light instructions,boundary,ProgramList
+27,save parameters:Program is updated message,Create light instructions,boundary,ProgramList
+28,change the parameters of the elements:save parameters,Create light instructions,control,Program
+29,parameter set dialog:change the parameters of the elements,Create light instructions,control,changetheparametersoftheelements
+30,display the dragged and dropped instructions:popup parameter change dialog,Create light instructions,control,changetheparametersoftheelements
+31,light instruction create panel:display the dragged and dropped instructions,Create light instructions,control,Instruction Panel
+32,save parameters:light,Create light instructions,entity,light
+33,popup parameter change dialog:parameter set dialog,Create light instructions,control,changetheparametersoftheelements
+34,stl#User:light instruction create panel,Create light instructions,Stimulus,undefined
+35,stl#User:parameter set dialog,Create light instructions,Stimulus,undefined
+36,stl#User:Program is updated message,Create light instructions,Stimulus,undefined
+37,User:Program is updated message,Create sensor instructions,boundary,ProgramList
+38,User:sensor instruction create panel,Create sensor instructions,control,Instruction Panel
+39,User:parameter set dialog,Create sensor instructions,control,changetheparametersoftheelements
+40,save parameters:Program is updated message,Create sensor instructions,boundary,ProgramList
+41,change the parameters of the elements:save parameters,Create sensor instructions,control,changetheparametersoftheelements
+42,parameter set dialog:change the parameters of the elements,Create sensor instructions,control,changetheparametersoftheelements
+43,display the dragged and dropped instructions:popup parameter change dialog,Create sensor instructions,control,changetheparametersoftheelements
+44,sensor instruction create panel:display the dragged and dropped instructions,Create sensor instructions,control,Instruction Panel
+45,popup parameter change dialog:parameter set dialog,Create sensor instructions,control,changetheparametersoftheelements
+46,save parameters:sensor,Create sensor instructions,entity,Translator
+47,stl#User:Program is updated message,Create sensor instructions,Stimulus,undefined
+48,stl#User:sensor instruction create panel,Create sensor instructions,Stimulus,undefined
+49,stl#User:parameter set dialog,Create sensor instructions,Stimulus,undefined
+50,User:sound instruction create panel,Create sound instructions,control,Instruction Panel
+51,User:Program is updated message,Create sound instructions,boundary,ProgramList
+52,User:parameter set dialog,Create sound instructions,control,changetheparametersoftheelements
+53,save parameters:Program is updated message,Create sound instructions,boundary,ProgramList
+54,change the parameters of the elements:save parameters,Create sound instructions,control,changetheparametersoftheelements
+55,parameter set dialog:change the parameters of the elements,Create sound instructions,control,changetheparametersoftheelements
+56,display the dragged and dropped instructions:popup parameter change dialog,Create sound instructions,control,changetheparametersoftheelements
+57,sound instruction create panel:display the dragged and dropped instructions,Create sound instructions,control,Instruction Panel
+58,popup parameter change dialog:parameter set dialog,Create sound instructions,control,changetheparametersoftheelements
+59,save parameters:sound,Create sound instructions,entity,System Boundary
+60,stl#User:sound instruction create panel,Create sound instructions,Stimulus,undefined
+61,stl#User:Program is updated message,Create sound instructions,Stimulus,undefined
+62,stl#User:parameter set dialog,Create sound instructions,Stimulus,undefined
+63,User:demo instruction create panel,Demo,control,Instruction Panel
+64,User:demo selector,Demo,control,Emulator
+65,User:demo is saved message,Demo,boundary,demoissavedmessage
+66,change the parameters of the elements:save demo instructions,Demo,control,Instruction
+67,demo selector:change the parameters of the elements,Demo,control,changetheparametersoftheelements
+68,save demo instructions:demo,Demo,boundary,demoissavedmessage
+69,demo instruction create panel:display the dragged and dropped demo instructions,Demo,control,Instruction Panel
+70,save demo instructions:demo is saved message,Demo,boundary,demoissavedmessage
+71,demo selector:save demo instructions,Demo,control,Instruction
+72,popup demo change dialog:demo selector,Demo,control,Emulator
+73,display the dragged and dropped demo instructions:popup demo change dialog,Demo,control,changetheparametersoftheelements
+74,stl#User:demo instruction create panel,Demo,Stimulus,undefined
+75,stl#User:demo selector,Demo,Stimulus,undefined
+76,stl#User:demo is saved message,Demo,Stimulus,undefined
+77,User:File selector,Loading the executable file,control,File
+78,User:Compiling success message,Loading the executable file,boundary,Compilingsuccessmessage
+79,User:Load button,Loading the executable file,boundary,Buildbutton
+80,display file selector:WinAVR,Loading the executable file,actor,MainWindow
+81,Display compiling message:Compiling success message,Loading the executable file,boundary,Compilingsuccessmessage
+82,Load program to microcontroller:Display compiling message,Loading the executable file,boundary,Compilingsuccessmessage
+83,File selector:File,Loading the executable file,control,File
+84,File selector:Load program to microcontroller,Loading the executable file,control,Program
+85,display file selector:File selector,Loading the executable file,control,File
+86,Load button:display file selector,Loading the executable file,control,File
+87,stl#User:File selector,Loading the executable file,Stimulus,undefined
+88,stl#User:Compiling success message,Loading the executable file,Stimulus,undefined
+89,stl#User:Load button,Loading the executable file,Stimulus,undefined
+90,User:New file button,New/Open File,boundary,Buildbutton
+91,User:File selector,New/Open File,boundary,openfile
+92,User:open file button,New/Open File,boundary,openfile
+93,File selector:open file,New/Open File,boundary,openfile
+94,display file selector:File selector,New/Open File,boundary,openfile
+95,New file button:create new file,New/Open File,boundary,openfile
+96,create new file:file,New/Open File,boundary,openfile
+97,create new file:popup parameter change dialog,New/Open File,control,changetheparametersoftheelements
+98,open file button:display file selector,New/Open File,control,Emulator
+99,open file:file,New/Open File,boundary,openfile
+100,popup parameter change dialog:open file button,New/Open File,boundary,openfile
+101,stl#User:New file button,New/Open File,Stimulus,undefined
+102,stl#User:File selector,New/Open File,Stimulus,undefined
+103,stl#User:open file button,New/Open File,Stimulus,undefined
+104,User:file information input page,Save File,control,InstructionValidator
+105,User:Save file button,Save File,control,savefile
+106,User:File save success,Save File,control,savefile
+107,validate filename:File save success,Save File,control,savefile
+108,Save file button:popup file information save dialog,Save File,control,savefile
+109,save file:file,Save File,control,savefile
+110,file information input page:validate filename,Save File,control,InstructionValidator
+111,popup file information save dialog:file information input page,Save File,control,InstructionValidator
+112,validate filename:save file,Save File,control,savefile
+113,stl#User:file information input page,Save File,Stimulus,undefined
+114,stl#User:Save file button,Save File,Stimulus,undefined
+115,stl#User:File save success,Save File,Stimulus,undefined
+116,compile with C++:C++ compiler,Translate to C,boundary,Compilingsuccessmessage
+117,User:File save success,Translate to C,control,savefile
+118,User:Build button,Translate to C,boundary,Buildbutton
+119,User:compile success message,Translate to C,boundary,Compilingsuccessmessage
+120,Build button:compile with C++,Translate to C,boundary,Compilingsuccessmessage
+121,validate filename:File save success,Translate to C,control,savefile
+122,compile success message:validate filename,Translate to C,control,InstructionValidator
+123,compile with C++:compile success message,Translate to C,boundary,Compilingsuccessmessage
+124,save file:file,Translate to C,control,savefile
+125,validate filename:save file,Translate to C,control,savefile
+126,stl#User:File save success,Translate to C,Stimulus,undefined
+127,stl#User:Build button,Translate to C,Stimulus,undefined
+128,stl#User:compile success message,Translate to C,Stimulus,undefined

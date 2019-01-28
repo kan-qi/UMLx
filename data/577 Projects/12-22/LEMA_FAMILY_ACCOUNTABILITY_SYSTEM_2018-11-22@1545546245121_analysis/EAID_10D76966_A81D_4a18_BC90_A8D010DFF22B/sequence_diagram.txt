@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Resource page" as 09
+participant "Send Messagepage" as 19
+participant "Resource Controller" as 39
+participant "Resource List with Status" as 49
+participant "Resource Input page" as 59
+
+User -> 09: closeresources()
+activate 09
+
+09 -> 59: Showresourcesinformation()
+activate 59
+
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 09: Choseresources()
+activate 09
+
+09 -> 59: Showresourcesinformation()
+activate 59
+
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+deactivate 09
+
+User -> 39: Accessallresourcesbutton()
+activate 39
+
+39 -> 49: Showlistsofresources()
+activate 49
+
+49 -> 59: Showresourcesinformation()
+activate 59
+
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+deactivate 49
+
+deactivate 39
+
+@enduml

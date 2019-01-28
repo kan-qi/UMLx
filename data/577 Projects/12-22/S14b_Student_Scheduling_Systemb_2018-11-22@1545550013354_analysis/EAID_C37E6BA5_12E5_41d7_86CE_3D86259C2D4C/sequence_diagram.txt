@@ -1,0 +1,59 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "DesiredCoursesSelectionPage" as 09
+participant "Requirement" as 29
+
+User -> 09: updaesuccessmessage()
+activate 09
+
+deactivate 09
+
+User -> 09: incorrectinput()
+activate 09
+
+deactivate 09
+
+User -> 29: chooserequirementtypes()
+activate 29
+
+29 -> 29: showspecifiedrequirementsbyparameters()
+29 -> 09: checkcorrectnewssoftheinput()
+activate 09
+
+09 -> 09: incorrectinput()
+deactivate 09
+
+09 -> 29: showconfirmationthenewrequirementisadded()
+29 -> 09: updaesuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+09 -> 29: courserequirements()
+activate 29
+
+deactivate 29
+
+29 -> 29: courserequirements()
+activate 29
+
+deactivate 29
+
+29 -> 29: requirementslists()
+activate 29
+
+deactivate 29
+
+User -> 29: requirementslists()
+activate 29
+
+deactivate 29
+
+@enduml

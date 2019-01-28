@@ -61,6 +61,8 @@ public class Configs {
   public static boolean verbose = false;
 
   public static boolean guiAnalysis;
+  
+  public static boolean codeAnalysis = true;
 
   public static Set<String> debugCodes = Sets.newHashSet();
 
@@ -156,6 +158,9 @@ public class Configs {
   public static boolean isLibraryClass(String className) {
     if (libraryPackages == null)
       return false;
+    if(className.startsWith("java")) {
+    	return true;
+    }
     for (String pkg : libraryPackages) {
       if (pkg.equals(className) ||
               ((pkg.endsWith(".*") || pkg.endsWith("$*")) &&
@@ -294,4 +299,13 @@ public class Configs {
     All_Special_Async,              // handle all the ops defined in the wtg.xml as part of event handler
     All_EventHandler_Async        // handle all the ops defined in the wtg.xml as special event
   }
+
+public static boolean isGeneratedClass(String name) {
+	// TODO Auto-generated method stub
+	if(name.startsWith("androidx") || name.startsWith("android")) {
+		return true;
+	}
+	
+	return false;
+}
 }

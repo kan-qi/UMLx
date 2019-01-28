@@ -1,0 +1,9 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:incorrect input message->User:incorrect input message,update system user profile,CTRL;EXTCLL;INT,2,0,6,1,12
+2,stl#User:initial page->User:initial page,update system user profile,CTRL;EXTCLL;INT,2,0,2,1,4
+3,stl#User:updae success message->User:updae success message,update system user profile,CTRL;EXTCLL;INT,2,0,6,1,12
+4,stl#User:update page->User:update page->update page:check the correctness of the data->check the correctness of the data:update user to database->update user to database:user info,update system user profile,TRAN_NA,5,2,2.5,4,12.5
+5,stl#User:update page->User:update page->update page:check the correctness of the data->check the correctness of the data:update user to database->update user to database:updae success message,update system user profile,TRAN_NA,5,2,3.5,4,17.5
+6,stl#User:update page->User:update page->update page:check the correctness of the data->check the correctness of the data:update user to database->update user to database:redirect to initial page->redirect to initial page:user info,update system user profile,TRAN_NA,6,2,3.2,5,19.200000000000003
+7,stl#User:update page->User:update page->update page:check the correctness of the data->check the correctness of the data:update user to database->update user to database:redirect to initial page->redirect to initial page:initial page,update system user profile,TRAN_NA,6,2,3.2,5,19.200000000000003
+8,stl#User:update page->User:update page->update page:check the correctness of the data->check the correctness of the data:incorrect input message,update system user profile,TRAN_NA,4,0,4.333333333333333,3,17.333333333333332

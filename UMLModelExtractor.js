@@ -128,8 +128,8 @@
 	
 	function traverseUseCaseForTransactions(useCase){
 		
-		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
-		
+//		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
+	
 		function isCycled(path){
 			var lastNode = path[path.length-1];
 				for(var i=0; i < path.length-1; i++){
@@ -159,10 +159,11 @@
 			var Paths = new Array();
 			var toExpand;
 			
-			var debug = require("./utils/DebuggerOutput.js");
-			debug.writeJson("use_cas_toExpand_"+useCase._id, toExpandCollection);
+//			var debug = require("./utils/DebuggerOutput.js");
+//			debug.writeJson("use_cas_toExpand_"+useCase._id, toExpandCollection);
 			
 			while((toExpand = toExpandCollection.pop()) != null){
+				console.log("path searching...");
 				var node = toExpand.Node;
 				var pathToNode = toExpand.PathToNode;
 

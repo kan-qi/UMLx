@@ -1,0 +1,6 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#user:no order history page->user:no order history page,Track Order,2,1,0,0,0
+2,stl#user:order status->user:order status,Track Order,2,0,0,1,0
+3,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:no order history page,Track Order,4,1,1,1,0
+4,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:order,Track Order,4,0,1,2,0
+5,stl#user:Track order button->user:Track order button->Track order button:retrieve order status->retrieve order status:order status,Track Order,4,0,1,2,0

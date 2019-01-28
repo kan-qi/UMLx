@@ -61,6 +61,8 @@
 								
 									var matchedOperation = domainModelSerchUtil.matchOperation(node.Name, node.Component);
 									
+//									var matchedOperation = "";
+									
 //									console.log("matched oepration");
 									
 									if(matchedOperation){

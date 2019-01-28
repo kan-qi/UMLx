@@ -1,0 +1,98 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "adduserintodb" as 09
+participant "checkconflictsituation" as 19
+participant "MessageManage Page" as 29
+participant "emptyannouncementform" as 59
+participant "ddd" as 89
+participant "MessageController" as 109
+
+User -> 09: listofusers()
+activate 09
+
+09 -> 109: displayconfirmatiomessage()
+activate 109
+
+109 -> 19: confirmationdeletiondialog()
+activate 19
+
+19 -> 59: savetherevisedannouncmentinfo()
+activate 59
+
+59 -> 89: ddd()
+activate 89
+
+deactivate 89
+
+59 -> 29: successmessage()
+activate 29
+
+deactivate 29
+
+deactivate 59
+
+19 -> 09: removetheuser()
+09 -> 09: userinfo()
+deactivate 09
+
+09 -> 29: successmessage()
+activate 29
+
+deactivate 29
+
+deactivate 19
+
+109 -> 09: userinfo()
+activate 09
+
+deactivate 09
+
+deactivate 109
+
+User -> 19: confirmationdeletiondialog()
+activate 19
+
+19 -> 59: savetherevisedannouncmentinfo()
+activate 59
+
+deactivate 59
+
+19 -> 09: removetheuser()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 29: successmessage()
+activate 29
+
+deactivate 29
+
+User -> 29: manageuserbutton()
+activate 29
+
+29 -> 29: redirecttoapageforusermanagementwithcurrentusers()
+29 -> 09: listofusers()
+activate 09
+
+09 -> 109: displayconfirmatiomessage()
+activate 109
+
+deactivate 109
+
+deactivate 09
+
+29 -> 09: userinfo()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+@enduml

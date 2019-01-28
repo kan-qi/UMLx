@@ -1,0 +1,9 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:"Add Case Studies" button->User:"Add Case Studies" button->"Add Case Studies" button:Show "Case Study" form->Show "Case Study" form:"Add Case Studies" button->"Add Case Studies" button:Show "Case Study" form,add case studies,5,0,4,0,0
+2,stl#User:"Add Case Studies" button->User:"Add Case Studies" button->"Add Case Studies" button:Show "Case Study" form->Show "Case Study" form:upload file->upload file:"case study" form,add case studies,5,1,3,0,0
+3,stl#User:"Add Case Studies" button->User:"Add Case Studies" button->"Add Case Studies" button:Show "Case Study" form->Show "Case Study" form:upload file->upload file:Create a new record of case study in db->Create a new record of case study in db:Case study db,add case studies,6,1,4,0,0
+4,stl#User:"Add Case Studies" button->User:"Add Case Studies" button->"Add Case Studies" button:Show "Case Study" form->Show "Case Study" form:upload file->upload file:Create a new record of case study in db->Create a new record of case study in db:Success message,add case studies,6,1,4,0,0
+5,stl#User:"Add Case Studies" button->User:"Add Case Studies" button->"Add Case Studies" button:Show "Case Study" form->Show "Case Study" form:upload file->upload file:upload fail message,add case studies,5,2,2,0,0
+6,stl#User:"case study" form->User:"case study" form,add case studies,2,0,1,0,0
+7,stl#User:upload fail message->User:upload fail message,add case studies,2,0,1,0,0
+8,stl#User:Success message->User:Success message,add case studies,2,0,1,0,0

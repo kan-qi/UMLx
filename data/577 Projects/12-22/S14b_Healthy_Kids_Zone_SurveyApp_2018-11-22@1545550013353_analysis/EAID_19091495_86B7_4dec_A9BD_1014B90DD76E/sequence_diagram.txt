@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "SPSListScreen" as 09
+participant "Survey Management" as 19
+participant "Map" as 29
+participant "SurveyConfigurationPage" as 49
+participant "Association Management" as 59
+
+administrator -> 09: schoollistpage()
+activate 09
+
+09 -> 59: pinthelocationinmap()
+activate 59
+
+59 -> 29: mapview()
+activate 29
+
+29 -> 59: drapstartingpointandtypepathname()
+59 -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+59 -> 49: savepathandlocationinformation()
+activate 49
+
+49 -> 59: pathandlocationinformation()
+deactivate 59
+
+deactivate 49
+
+deactivate 29
+
+deactivate 09
+
+administrator -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+administrator -> 29: mapview()
+activate 29
+
+29 -> 59: drapstartingpointandtypepathname()
+activate 59
+
+deactivate 59
+
+deactivate 29
+
+@enduml

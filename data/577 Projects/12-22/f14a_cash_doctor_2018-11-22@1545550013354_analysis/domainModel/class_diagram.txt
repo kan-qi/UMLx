@@ -1,0 +1,111 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+~ Redirecttosearchpage()
+~ Popupconfirmdiagram()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+~ Forgottenusernameorpasswordlink()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+~ nonmatcheddoctor()
+~ Doctor()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+}
+
+class helpdomainmodelpatternhtm {
+~ helpdomainmodelpatternhtm()
+}
+
+class ConsumerProfile {
+- city:EAJava_char
+- email:EAJava_char
+- Name:EAJava_char
+- password:EAJava_char
+- specialityInterested:EAJava_char
+- state:EAJava_char
+- Username:EAJava_char
+- zipcode:EAJava_int
+- undefined:EAID_2D8A89EC_8E9E_4221_A322_670FAA646E76
+~ ConsumerProfile()
+~ saveudpatedprofile()
+~ Confirmdialog()
+~ EmailProtocol()
+}
+
+class Medicalservicespricinginformation {
+- code:EAJava_char
+- description:EAJava_char
+- file:EAJava_blob
+- medicalInvoice:EAJava_blob
+- picture:EAJava_blob
+- price:EAJava_int
+- ProviderUsername:EAJava_char
+- speciality:EAJava_char
+- undefined:EAID_58EF6445_FBA8_43b1_9DB2_02C672C5035B
+~ Medicalservicespricinginformation()
+~ providerinformationinputpage()
+~ Errormessageforupdatefailure()
+~ verifyinputmessage()
+~ sendemailincludingcredential()
+~ userinfo()
+~ Sharepricethroughpicturecapturebutton()
+~ Price()
+~ pricedetailinputpage()
+}
+
+class NetworkInformation {
+- consumerUsername:EAJava_char
+- notifyByMailFlag:EAJava_int
+- providerUsername:EAJava_char
+- undefined:EAID_E3A9CD90_CE83_4fef_AB57_3192129D90C0
+~ NetworkInformation()
+~ Subscription()
+}
+
+class ProviderProfile {
+- city:EAJava_char
+- email:EAJava_char
+- Lifestyle:EAJava_char
+- Name:EAJava_char
+- Password:EAJava_char
+- speciality:EAJava_char
+- state:EAJava_char
+- Username:EAJava_char
+- zipcode:EAJava_int
+- undefined:EAID_2D8A89EC_8E9E_4221_A322_670FAA646E76
+~ ProviderProfile()
+~ Addproviderbutton()
+~ Providercreatedsuccessmessage()
+~ Searchprovidepage()
+~ Displayallproviderbasedoncriteria()
+}
+
+class Ratingandreviewinformation {
+- date:EAJava_Date
+- rating:EAJava_int
+- review:EAJava_char
+~ Ratingandreviewinformation()
+~ Rating()
+~ Updatesubscriptioninformation()
+~ Displayratinginputpage()
+~ updatetherecognizedinformationintodatabase()
+~ retrievematcheddoctorsfromdb()
+}
+
+class FeatureList {
+~ FeatureList()
+~ redirecttofeaturepage()
+~ updatefeaturedetail()
+}
+
+@enduml

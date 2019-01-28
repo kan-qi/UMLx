@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:username or password is wrong->User:username or password is wrong,Log in,CTRL,2,0,2,1,4
+2,stl#User:homepage->User:homepage,Log in,CTRL;EXTCLL;INT,2,0,3,1,6
+3,stl#User:Login page->User:Login page->Login page:retrieve information associated with username->retrieve information associated with username:username db,Log in,TRAN_NA,4,0,2.3333333333333335,3,9.333333333333334
+4,stl#User:Login page->User:Login page->Login page:retrieve information associated with username->retrieve information associated with username:username or password is wrong,Log in,TRAN_NA,4,1,2.3333333333333335,3,9.333333333333334
+5,stl#User:Login page->User:Login page->Login page:retrieve information associated with username->retrieve information associated with username:homepage,Log in,TRAN_NA,4,1,2.6666666666666665,3,10.666666666666666

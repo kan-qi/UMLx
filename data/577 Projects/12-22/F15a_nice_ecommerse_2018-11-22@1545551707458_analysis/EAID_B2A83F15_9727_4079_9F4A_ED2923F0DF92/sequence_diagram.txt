@@ -1,0 +1,43 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "messagebox" as 09
+participant "Blog" as 29
+participant "Medical Create Form" as 49
+
+User -> 09: messagebox()
+activate 09
+
+deactivate 09
+
+User -> 09: Logouterrormessage()
+activate 09
+
+deactivate 09
+
+User -> 29: Logoutbutton()
+activate 29
+
+29 -> 49: Clearcachedata()
+activate 49
+
+49 -> 09: displayalogoutmessage()
+activate 09
+
+09 -> 09: Logouterrormessage()
+deactivate 09
+
+09 -> 09: messagebox()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,102 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "MicroWebsiteManagementPage" as 09
+participant "createaccountbutton" as 19
+participant "pdfformatisnotvalidmessage" as 39
+participant "PopupConfirmationbox" as 49
+participant "Cancel" as 89
+
+User -> 09: AccountManagementPage()
+activate 09
+
+09 -> 19: REtrievealistofmarketingdirectoraccountrecords()
+activate 19
+
+19 -> 09: AccountManagementPage()
+09 -> 19: REtrievealistofmarketingdirectoraccountrecords()
+19 -> 19: directoraccountsdb()
+deactivate 19
+
+19 -> 19: listofdirectoraccountrecords()
+activate 19
+
+19 -> 49: PopupConfirmationbox()
+activate 49
+
+49 -> 39: Checkuserexistorinvalidusername()
+activate 39
+
+39 -> 39: notexistorinvlideusername()
+deactivate 39
+
+39 -> 19: Redirecttoviewmarketdirectoraccountspage()
+19 -> 19: ViewMarketDirectorAccountsPage()
+deactivate 19
+
+49 -> 49: Confirmationbox()
+49 -> 89: Cancel()
+activate 89
+
+89 -> 19: ViewMarketDirectorAccountsPage()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+49 -> 39: Checkuserexistorinvalidusername()
+activate 39
+
+39 -> 39: notexistorinvlideusername()
+deactivate 39
+
+39 -> 19: Redirecttoviewmarketdirectoraccountspage()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: listofdirectoraccountrecords()
+activate 19
+
+19 -> 49: PopupConfirmationbox()
+activate 49
+
+deactivate 49
+
+deactivate 19
+
+User -> 19: ViewMarketDirectorAccountsPage()
+activate 19
+
+deactivate 19
+
+User -> 39: notexistorinvlideusername()
+activate 39
+
+deactivate 39
+
+User -> 49: Confirmationbox()
+activate 49
+
+49 -> 89: Cancel()
+activate 89
+
+deactivate 89
+
+49 -> 39: Checkuserexistorinvalidusername()
+activate 39
+
+deactivate 39
+
+deactivate 49
+
+@enduml

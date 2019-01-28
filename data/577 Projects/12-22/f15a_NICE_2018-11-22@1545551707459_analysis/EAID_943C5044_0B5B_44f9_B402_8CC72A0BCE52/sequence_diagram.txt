@@ -1,0 +1,80 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Selectatheme" as 19
+participant "ClickUsersalluserstab" as 29
+participant "Redirectadmintonewslettermainpage" as 39
+participant "Vender Registration Form" as 49
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Selectatheme()
+activate 19
+
+19 -> 39: Redirecttodetailpageofcreatinganewsletter()
+activate 39
+
+39 -> 39: Notifytheadminthenewsletterissent()
+39 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+39 -> 39: newsletter()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+User -> 29: Clicknew()
+activate 29
+
+29 -> 39: Redirectadminselectanewthemeofnewsletter()
+activate 39
+
+39 -> 39: Redirecttodetailpageofcreatinganewsletter()
+39 -> 39: Notifytheadminthenewsletterissent()
+deactivate 39
+
+39 -> 39: newsletter()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+User -> 39: ClickNewslettertag()
+activate 39
+
+39 -> 39: Redirectadmintonewslettermainpage()
+39 -> 39: Redirectadminselectanewthemeofnewsletter()
+39 -> 39: Redirecttodetailpageofcreatinganewsletter()
+deactivate 39
+
+User -> 49: Fillallinformationrequiredandclicksendthroughproceedtoedit()
+activate 49
+
+49 -> 39: Notifytheadminthenewsletterissent()
+activate 39
+
+39 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+deactivate 49
+
+@enduml

@@ -38,6 +38,7 @@
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
 	var codeAnalysis = require("./CodeAnalysis.js");
+//	var codeAnalysis = require("./CodeAnalysisSoot.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
@@ -69,24 +70,44 @@
 				var codeAnalysisResults = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
 //				debug.writeJson("constructed_model_by_kdm_result_7_5", codeAnalysisResults);
 				
+				console.log("composition graph");
+				console.log(codeAnalysisResults.compositionGraph);
+				debug.writeJson2("composition_graph_1_19", codeAnalysisResults.compositionGraph);
+				
 				 var responseFilePath = workDir +"/"+responsePatternsFile;
 				 if( !fs.existsSync(responseFilePath) ) {
 					  responseFilePath = "./model_platforms/src/"+responsePatternsFile;
 				 }
 				
+				//need to update for the identification response methods.
 				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
 
+				debug.writeJson2("identified_response", dicResponseMethodUnits);
+				
+				debug.writeJson2("referenced_composite", codeAnalysisResults.referencedCompositeClassUnits);
+				
+				debug.writeJson2("method_class", codeAnalysisResults.dicMethodClass);
+				
 				var componentInfo = componentIdentifier.identifyComponents(
 					codeAnalysisResults.callGraph, 
 					codeAnalysisResults.accessGraph, 
 					codeAnalysisResults.typeDependencyGraph, 
 					codeAnalysisResults.extendsGraph,
 					codeAnalysisResults.compositionGraph,
-					codeAnalysisResults.referencedClassUnitsComposite, 
-					codeAnalysisResults.dicClassUnits, 
+					codeAnalysisResults.referencedCompositeClassUnits, 
+					codeAnalysisResults.referencedClassUnits, 
 					codeAnalysisResults.dicCompositeSubclasses, 
 					Model.OutputDir
 				);
+				
+				debug.writeJson2("clas_component_1_19", componentInfo.dicClassComponent);
+				debug.writeJson3("dic_components_1_19", componentInfo.dicComponents);
+
+				
+//				var componentInfo = {
+//					dicComponents: {},
+//					dicClassComponent: {}
+//				};
 				
 				var componentMappingString = "";
 				
@@ -100,25 +121,52 @@
 				
 				debug.writeTxt("constructed_model_by_kdm_components_7_5", componentMappingString);
 
-				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, xmiString, ModelOutputDir);
+				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, codeAnalysisResults.callGraph, ModelOutputDir);
+				
+				debug.writeJson2("control_flow_graph_7_5", controlFlowGraph);
+				 	
+				debug.writeJson2("call_graph_1_19", codeAnalysisResults.callGraph);
 
+				debug.writeJson2("type_dependency_graph_1_19", codeAnalysisResults.typeDependencyGraph);
+				
+				
+				console.log("method_parameters_19");
+				console.log(codeAnalysisResults.dicMethodParameters);
+				debug.writeJson2("method_parameters_19", codeAnalysisResults.dicMethodParameters);
+				
+//				var controlFlowGraph = {nodes: [], edges: []};
+				
 				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
 
-				console.log("domain model Info");
-				console.log(domainModelInfo);
+//				var domainModelInfo = {
+//						Elements: [],
+//						Usages: [],
+//						Realization:[],
+//						Assoc: [],
+//						OutputDir : ModelOutputDir+"/domainModel",
+//						AccessDir : ModelAccessDir+"/domainModel",
+//						DiagramType : "class_diagram",
+//					}
+				
+//				console.log("domain model Info");
+//				console.log(domainModelInfo);
 
 				Model.DomainModel = domainModelInfo.DomainModel;
+				
+//				Model.DomainModel = domainModelInfo;
 
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
+				
 
 				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 
+//				Model.UseCases = [];
+				
 				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
 
 				if(callbackfunc){
 					callbackfunc(Model);
 				}
-
 	}
 
 	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodParameters){
@@ -147,7 +195,7 @@
 			console.log(component);
 			var domainElement = {
 				Name: component.name,
-				_id: 'c'+component.uuid.replace(/\-/g, "_"),
+				_id: 'c'+component.UUID.replace(/\-/g, "_"),
 				Attributes: [],
 				Operations: [],
 				InheritanceStats: {},
@@ -163,10 +211,14 @@
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
 			// console.log(edge)
-			console.log(util.inspect(edge, false, null));
+//			console.log(util.inspect(edge, false, null));
 			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.component.classUnit].replace(/\-/g, "_");
+			var componentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
+			
+			if(!domainElement){
+				continue;
+			}
 			var foundMethod = false;
 			for (var j in domainElement.Operations) {
 				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
@@ -187,7 +239,7 @@
 				domainElement.Operations.push(method);
 			}
 			var endNode = edge.end;
-			var componentUUID = 'c'+dicClassComponent[endNode.component.classUnit].replace(/\-/g, "_");
+			var componentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			foundMethod = false;
 			for (var j in domainElement.Operations) {
@@ -213,8 +265,11 @@
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
 			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.component.classUnit].replace(/\-/g, "_");
+			var componentUUID = 'c'+startNode.component.name.replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
+			if(!domainElement){
+				continue;
+			}
 			var foundMethod = false;
 			for (var j in domainElement.Operations) {
 				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
@@ -228,14 +283,14 @@
 					parameters = [];
 				}
 				var method = {
-					Name: startNode.methodName,
+					Name: startNode.name,
 					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
 					Parameters: parameters,
 				}
 				domainElement.Operations.push(method);
 			}
 			var endNode = edge.end;
-			var endComponentUUID = 'a'+dicClassComponent[endNode.component.classUnit].replace(/\-/g, "");
+			var endComponentUUID = 'a'+dicClassComponent[endNode.UUID].replace(/\-/g, "");
 			var domainElement = domainElementsByID[componentUUID];
 			var foundAttr = false;
 			for (var j in domainElement.Attributes) {
@@ -254,10 +309,14 @@
 			}
 		}
 
+		if(typeDependencyGraph){
 		for (var i in typeDependencyGraph.edgesAttr) {
 			var edge = typeDependencyGraph.edgesAttr[i];
 			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.component.classUnit].replace(/\-/g, "_");
+			if(!dicClassComponent[startNode.UUID]){
+				continue;
+			}
+			var componentUUID = 'c'+dicClassComponent[startNode.UUID].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			var foundAttr = false;
 			for (var j in domainElement.Attributes) {
@@ -275,7 +334,7 @@
 				domainElement.Attributes.push(attr);
 			}
 		}
-
+		}
 		// console.log("domainElements");
 		// console.log(domainElements);
 		// console.log("domainElementsByID");
@@ -283,13 +342,14 @@
 
 		// console.log("check edgesPara");
 		// console.log(typeDependencyGraph.edgesPara);
-
+		if(typeDependencyGraph){
 		for (var i in typeDependencyGraph.edgesPara) {
 			var edge = typeDependencyGraph.edgesPara[i];
 			// console.log("check edge");
 			// console.log(util.inspect(edge, false, null));
 			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.component.classUnit].replace(/\-/g, "_");
+			console.log(startNode);
+			var componentUUID = 'c'+dicClassComponent[startNode.UUID].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			var foundMethod = false;
 			// var foundParameter = false;
@@ -326,13 +386,13 @@
 			// console.log("check domainElement");
 			// console.log(util.inspect(domainElement, false, null));
 		}
-
+		}
 		// for (var i in typeDependencyGraph.edgesPara) {
 		// 	var edge = typeDependencyGraph.edgesPara[i];
 		// 	// console.log("check edge");
 		// 	// console.log(util.inspect(edge, false, null));
 		// 	var startNode = edge.start;
-		// 	var componentUUID = 'c'+dicClassComponent[startNode.component.classUnit].replace(/\-/g, "_");
+		// 	var componentUUID = 'c'+dicClassComponent[startNode.UUID].replace(/\-/g, "_");
 		// 	var domainElement = domainElementsByID[componentUUID];
 		// 	var foundMethod = false;
 		// 	var foundParameter = false;
@@ -559,12 +619,12 @@
 			var domainElement = null;
 
 			if(node.component){
-				domainElement = domainElementsByID["c"+node.component.uuid.replace(/\-/g, "_")];
+				domainElement = domainElementsByID["c"+node.component.UUID.replace(/\-/g, "_")];
 			}
 
 			var activity = {
 					Name: node['name'],
-					_id: "a"+node['uuid'].replace(/\-/g, "_"),
+					_id: "a"+node['UUID'].replace(/\-/g, "_"),
 					Type: "activity",
 					isResponse: node.isResponse,
 					Stimulus: node.type === "stimulus" ? true: false,
@@ -587,8 +647,8 @@
 			console.log("edge");
 			console.log(edge);
 
-			var startId = "a"+edge.start.uuid.replace(/\-/g, "_");
-			var endId = "a"+edge.end.uuid.replace(/\-/g, "_");
+			var startId = "a"+edge.start.UUID.replace(/\-/g, "_");
+			var endId = "a"+edge.end.UUID.replace(/\-/g, "_");
 
 			var start = activitiesByID[startId];
 			var end = activitiesByID[endId];

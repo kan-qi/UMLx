@@ -1,0 +1,44 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "AppMainPage" as 09
+participant "Picture" as 19
+
+User -> 09: ImageFilterBox()
+activate 09
+
+09 -> 19: FilterPictures()
+activate 19
+
+19 -> 19: Listofpictures()
+deactivate 19
+
+deactivate 09
+
+User -> 19: QueryPictureList()
+activate 19
+
+19 -> 19: retrivethelistofpicture()
+19 -> 09: ImageFilterBox()
+activate 09
+
+09 -> 19: FilterPictures()
+deactivate 19
+
+deactivate 09
+
+19 -> 19: Picture()
+activate 19
+
+deactivate 19
+
+User -> 19: Listofpictures()
+activate 19
+
+deactivate 19
+
+@enduml

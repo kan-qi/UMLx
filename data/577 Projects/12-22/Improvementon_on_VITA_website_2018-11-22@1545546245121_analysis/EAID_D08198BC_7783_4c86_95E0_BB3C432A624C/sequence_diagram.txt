@@ -1,0 +1,36 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Appointment" as 09
+participant "Homepage" as 19
+participant "Chooseoneofavailabletimeslots" as 39
+
+User -> 09: Makenewvolunteerappointmentpage()
+activate 09
+
+09 -> 39: Chooseoneofavailabletimeslots()
+activate 39
+
+39 -> 39: Checkchosentimeslot()
+39 -> 19: Showconfirmationpage()
+activate 19
+
+19 -> 19: Homepage()
+deactivate 19
+
+19 -> 09: Makenewvolunteerappointmentpage()
+09 -> 39: Chooseoneofavailabletimeslots()
+deactivate 39
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

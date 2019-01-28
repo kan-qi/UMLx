@@ -1,0 +1,13 @@
+id,element,useCase,type,component
+1,User:Inputs desired information and selects the update option.,Create New Project,boundary,<<entity>>  Minute  Datastore
+2,User:Selects the create a new project option ,Create New Project,boundary,Project
+3,User:Hompage,Create New Project,boundary,Hompage
+4,invalid information is displayed to the user:Hompage,Create New Project,boundary,Hompage
+5,Inputs desired information and selects the update option.:attempts to verify the inputs,Create New Project,control,Minute EndPoints
+6,Selects the create a new project option :displays the create a project screen.,Create New Project,control,Edit Profile Screen
+7,attempts to verify the inputs:invalid information is displayed to the user,Create New Project,control,<<entity>>  User  Datastore
+8,displays the create a project screen.:attempts to verify the inputs,Create New Project,control,Minute EndPoints
+9,invalid information is displayed to the user:project db,Create New Project,boundary,Project
+10,stl#User:Inputs desired information and selects the update option.,Create New Project,Stimulus,undefined
+11,stl#User:Selects the create a new project option ,Create New Project,Stimulus,undefined
+12,stl#User:Hompage,Create New Project,Stimulus,undefined

@@ -1,0 +1,64 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "declinemessage" as 09
+participant "ReservationController" as 29
+participant "ProxyConnector" as 69
+participant "Reservation" as 129
+
+user -> 09: declinebuttonintherequestlist()
+activate 09
+
+09 -> 69: Promptfordeclinereasoninput()
+activate 69
+
+69 -> 09: declinereasonprompt()
+09 -> 09: Displayadeclinemessage()
+09 -> 09: declinemessage()
+deactivate 09
+
+deactivate 69
+
+user -> 09: declinemessage()
+activate 09
+
+deactivate 09
+
+user -> 29: Emptylistofunconfirmedreservationrequests()
+activate 29
+
+deactivate 29
+
+user -> 29: Viewunconfirmedreservationrequestsbutton()
+activate 29
+
+29 -> 29: retrievealistofunconfirmedreservations()
+29 -> 09: declinebuttonintherequestlist()
+activate 09
+
+09 -> 69: Promptfordeclinereasoninput()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+29 -> 29: Emptylistofunconfirmedreservationrequests()
+deactivate 29
+
+29 -> 129: reservationinfo()
+activate 129
+
+deactivate 129
+
+user -> 09: declinereasonprompt()
+activate 09
+
+09 -> 09: Displayadeclinemessage()
+deactivate 09
+
+@enduml

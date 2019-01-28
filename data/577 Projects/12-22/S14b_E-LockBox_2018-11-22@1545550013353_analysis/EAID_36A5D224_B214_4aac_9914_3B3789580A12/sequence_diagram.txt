@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "User management" as 09
+participant "validatetheentries" as 19
+participant "Use information" as 39
+participant "User" as 69
+
+User -> 09: UseManagementbutton()
+activate 09
+
+09 -> 19: validatetheroleofuser()
+activate 19
+
+19 -> 39: returntotheuserinformationpage()
+activate 39
+
+39 -> 39: userinformationpage()
+39 -> 39: validatetheinformation()
+39 -> 39: edituserinformation()
+39 -> 69: userinfo()
+activate 69
+
+deactivate 69
+
+39 -> 39: validationsuccessinformation()
+deactivate 39
+
+39 -> 19: validationfailedmessage()
+deactivate 19
+
+19 -> 19: rolevalidationfailedmessage()
+activate 19
+
+deactivate 19
+
+19 -> 69: userinfo()
+activate 69
+
+deactivate 69
+
+deactivate 09
+
+User -> 19: validationfailedmessage()
+activate 19
+
+deactivate 19
+
+User -> 19: rolevalidationfailedmessage()
+activate 19
+
+deactivate 19
+
+User -> 39: validationsuccessinformation()
+activate 39
+
+deactivate 39
+
+User -> 39: userinformationpage()
+activate 39
+
+39 -> 39: validatetheinformation()
+deactivate 39
+
+@enduml

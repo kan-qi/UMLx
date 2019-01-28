@@ -1,0 +1,7 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#user:Denied transaction message->user:Denied transaction message,Manage Users,CTRL;EXTCLL;INT,2,0,2,1,4
+2,stl#user:"View Current Users" Button->user:"View Current Users" Button->"View Current Users" Button:Display a list of current users->Display a list of current users:Notify the user denied transaction->Notify the user denied transaction:Denied transaction message,Manage Users,TRAN_NA,5,0,1.25,4,6.25
+3,stl#user:"View Current Users" Button->user:"View Current Users" Button->"View Current Users" Button:Display a list of current users->Display a list of current users:Display a message showing that the payment has been made successfully->Display a message showing that the payment has been made successfully:User Info Page,Manage Users,TRAN_NA,5,1,1.75,4,8.75
+4,stl#user:"View Current Users" Button->user:"View Current Users" Button->"View Current Users" Button:Display a list of current users->Display a list of current users:User Info Page,Manage Users,TRAN_NA,4,1,2,3,8
+5,stl#user:"View Current Users" Button->user:"View Current Users" Button->"View Current Users" Button:Display a list of current users->Display a list of current users:User info,Manage Users,TRAN_NA,4,1,2,3,8
+6,stl#user:User Info Page->user:User Info Page,Manage Users,CTRL;EXTCLL;INT,2,0,4,1,8

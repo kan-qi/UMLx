@@ -1,0 +1,71 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Redirecttomainpagewithalistofproductmatchestheresult" as 09
+participant "Medical Create Form" as 19
+participant "Homepage" as 29
+participant "Buyer Profile" as 109
+
+User -> 09: Entersearchnameandclick��search��inmainpage()
+activate 09
+
+09 -> 09: Redirecttomainpagewithalistofproductmatchestheresult()
+09 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+09 -> 09: Updatethenewinformationinproductpage()
+09 -> 19: andsendadialog��Createsuccess()
+activate 19
+
+19 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+19 -> 109: productdb()
+activate 109
+
+deactivate 109
+
+deactivate 19
+
+deactivate 09
+
+09 -> 19: andsendadialog��Createsuccess()
+activate 19
+
+19 -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+19 -> 109: productdb()
+activate 109
+
+deactivate 109
+
+deactivate 19
+
+User -> 19: InputnewinformationabouttheproductandclickCreate()
+activate 19
+
+19 -> 09: Updatethenewinformationinproductpage()
+activate 09
+
+09 -> 19: andsendadialog��Createsuccess()
+deactivate 19
+
+deactivate 09
+
+User -> 29: Homepage()
+activate 29
+
+deactivate 29
+
+@enduml

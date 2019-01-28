@@ -1,0 +1,72 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Order" as 09
+participant "Homepage" as 19
+participant "Medical Create Form" as 29
+participant "Redirecttomainpagewithalistofproductmatchestheresult" as 59
+participant "Buyer Profile" as 129
+
+User -> 09: Click��unshippedorders��()
+activate 09
+
+09 -> 59: Redirecttomainpagewithalistofunshippedorders()
+activate 59
+
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: InputnewinformationabouttheproductandclickCreate()
+activate 29
+
+29 -> 59: Updatethenewinformationinproductpage()
+activate 59
+
+59 -> 29: andsendadialog��Createsuccess()
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+29 -> 129: productdb()
+activate 129
+
+deactivate 129
+
+deactivate 29
+
+deactivate 59
+
+User -> 29: VendorclickCreatebutton()
+activate 29
+
+29 -> 59: RedirectvendortotheproductCreatepage()
+activate 59
+
+59 -> 59: Updatethenewinformationinproductpage()
+59 -> 29: andsendadialog��Createsuccess()
+deactivate 29
+
+deactivate 59
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

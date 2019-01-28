@@ -1,0 +1,13 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Facebook:query facebook info->Facebook:query facebook info->query facebook info:sign in error message,Sign in social media accounts,3,1,1,0,0
+2,stl#Google plus:query google plus info->Google plus:query google plus info->query google plus info:sign in error message,Sign in social media accounts,3,1,1,0,0
+3,stl#LinkedIn:query linkedin->LinkedIn:query linkedin->query linkedin:sign in error message,Sign in social media accounts,3,1,1,0,0
+4,stl#User:social media login buttons->User:social media login buttons->social media login buttons:display crendential input page->display crendential input page:credential input page->credential input page:query google plus info->query google plus info:Google plus,Sign in social media accounts,6,3,2,0,0
+5,stl#User:social media login buttons->User:social media login buttons->social media login buttons:display crendential input page->display crendential input page:credential input page->credential input page:query facebook info->query facebook info:session,Sign in social media accounts,6,3,1,1,0
+6,stl#User:social media login buttons->User:social media login buttons->social media login buttons:display crendential input page->display crendential input page:credential input page->credential input page:query facebook info->query facebook info:Facebook,Sign in social media accounts,6,3,2,0,0
+7,stl#User:social media login buttons->User:social media login buttons->social media login buttons:display crendential input page->display crendential input page:credential input page->credential input page:query linkedin->query linkedin:LinkedIn,Sign in social media accounts,6,3,2,0,0
+8,stl#User:credential input page->User:credential input page->credential input page:query google plus info->query google plus info:Google plus,Sign in social media accounts,4,1,2,0,0
+9,stl#User:credential input page->User:credential input page->credential input page:query facebook info->query facebook info:session,Sign in social media accounts,4,1,1,1,0
+10,stl#User:credential input page->User:credential input page->credential input page:query facebook info->query facebook info:Facebook,Sign in social media accounts,4,1,2,0,0
+11,stl#User:credential input page->User:credential input page->credential input page:query linkedin->query linkedin:LinkedIn,Sign in social media accounts,4,1,2,0,0
+12,stl#User:sign in error message->User:sign in error message,Sign in social media accounts,2,1,0,0,0

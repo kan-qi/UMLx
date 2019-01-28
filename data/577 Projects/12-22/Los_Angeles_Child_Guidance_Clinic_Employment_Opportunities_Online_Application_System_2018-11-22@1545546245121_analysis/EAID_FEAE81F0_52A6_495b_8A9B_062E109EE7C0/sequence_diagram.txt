@@ -1,0 +1,75 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Job Postings and Accounts Controller" as 09
+participant "Login Page" as 19
+participant "Review application controller" as 29
+participant "Add new job posting page" as 49
+participant "Job Posting Form" as 59
+
+User -> 09: selectstheappropriateposting()
+activate 09
+
+09 -> 59: archivestheposting()
+activate 59
+
+59 -> 49: removesthepostingfromonlineview()
+activate 49
+
+49 -> 59: informsUserofthesuccessfulpostdeletion()
+59 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 59
+
+49 -> 59: postingdb()
+activate 59
+
+deactivate 59
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: clickdeletebutton()
+activate 29
+
+29 -> 59: archivestheposting()
+activate 59
+
+59 -> 49: removesthepostingfromonlineview()
+activate 49
+
+deactivate 49
+
+deactivate 59
+
+29 -> 49: removesthepostingfromonlineview()
+activate 49
+
+49 -> 59: informsUserofthesuccessfulpostdeletion()
+activate 59
+
+deactivate 59
+
+49 -> 59: postingdb()
+activate 59
+
+deactivate 59
+
+deactivate 49
+
+deactivate 29
+
+@enduml

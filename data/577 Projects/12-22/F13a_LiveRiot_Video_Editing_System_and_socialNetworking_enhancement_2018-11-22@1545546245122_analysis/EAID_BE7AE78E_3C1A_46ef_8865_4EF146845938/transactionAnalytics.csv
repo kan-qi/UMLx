@@ -1,0 +1,12 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:shwo success message->User:shwo success message,Subscribe latest news,2,0,1,0,0
+2,stl#User:No record exist message->User:No record exist message,Subscribe latest news,2,0,1,0,0
+3,stl#User:error message->User:error message,Subscribe latest news,2,0,1,0,0
+4,stl#User:the email has already subscribed message->User:the email has already subscribed message,Subscribe latest news,2,1,0,0,0
+5,stl#User:subscribe bar on website->User:subscribe bar on website->subscribe bar on website:check email redundancy->check email redundancy:display error message when no record exists->display error message when no record exists:No record exist message,Subscribe latest news,5,1,3,0,0
+6,stl#User:subscribe bar on website->User:subscribe bar on website->subscribe bar on website:check email redundancy->check email redundancy:display error message when no record exists->display error message when no record exists:add a subscriber recorder into the database->add a subscriber recorder into the database:shwo success message,Subscribe latest news,6,2,3,0,0
+7,stl#User:subscribe bar on website->User:subscribe bar on website->subscribe bar on website:check email redundancy->check email redundancy:display error message when no record exists->display error message when no record exists:add a subscriber recorder into the database->add a subscriber recorder into the database:error message,Subscribe latest news,6,2,3,0,0
+8,stl#User:subscribe bar on website->User:subscribe bar on website->subscribe bar on website:check email redundancy->check email redundancy:display error message when no record exists->display error message when no record exists:add a subscriber recorder into the database->add a subscriber recorder into the database:website content,Subscribe latest news,6,2,2,1,0
+9,stl#User:subscribe bar on website->User:subscribe bar on website->subscribe bar on website:check email redundancy->check email redundancy:display error message when no record exists->display error message when no record exists:error message,Subscribe latest news,5,1,3,0,0
+10,stl#User:subscribe bar on website->User:subscribe bar on website->subscribe bar on website:check email redundancy->check email redundancy:display error message when no record exists->display error message when no record exists:the email has already subscribed message,Subscribe latest news,5,2,2,0,0
+11,stl#User:error message->User:error message,Subscribe latest news,2,0,1,0,0

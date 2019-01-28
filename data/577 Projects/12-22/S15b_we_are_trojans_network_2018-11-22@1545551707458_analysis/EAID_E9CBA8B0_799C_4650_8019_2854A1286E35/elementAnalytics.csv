@@ -1,0 +1,22 @@
+id,element,useCase,type,component
+1,User:redeem success message,Redeem gift items,control,Redemption
+2,User:Redeem gift option,Redeem gift items,control,Redemption
+3,User:Online store page,Redeem gift items,control,Forumpage
+4,User:Point is not enough message,Redeem gift items,boundary,loadcommentinputfield
+5,Online store page:check if the user has enough points,Redeem gift items,entity,User
+6,load store details:Online store page,Redeem gift items,control,Forumpage
+7,check if the user has enough points:Point is not enough message,Redeem gift items,boundary,loadcommentinputfield
+8,Redeem gift option:direct to online store page,Redeem gift items,control,StoreController
+9,check if the user has enough points:user,Redeem gift items,entity,User
+10,check if the user has enough points:decrease the points,Redeem gift items,entity,Thread
+11,decrease the itme num in store:redeem success message,Redeem gift items,control,Redemption
+12,decrease the itme num in store:store,Redeem gift items,control,StoreController
+13,decrease the points:decrease the itme num in store,Redeem gift items,control,StoreController
+14,decrease the points:user,Redeem gift items,entity,User
+15,decrease the points:like,Redeem gift items,entity,like
+16,direct to online store page:load store details,Redeem gift items,control,StoreController
+17,load store details:store,Redeem gift items,control,StoreController
+18,stl#User:redeem success message,Redeem gift items,Stimulus,undefined
+19,stl#User:Redeem gift option,Redeem gift items,Stimulus,undefined
+20,stl#User:Online store page,Redeem gift items,Stimulus,undefined
+21,stl#User:Point is not enough message,Redeem gift items,Stimulus,undefined

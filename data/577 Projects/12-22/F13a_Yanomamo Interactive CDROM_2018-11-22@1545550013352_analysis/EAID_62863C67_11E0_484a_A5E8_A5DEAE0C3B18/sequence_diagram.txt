@@ -1,0 +1,64 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Student
+participant "Statistics" as 09
+participant "videoframe" as 29
+participant "Hideinfobutton" as 39
+
+Student -> 09: genealogystatistics()
+activate 09
+
+deactivate 09
+
+Student -> 09: errormessagefornotstatistics()
+activate 09
+
+deactivate 09
+
+Student -> 29: videoframe()
+activate 29
+
+deactivate 29
+
+Student -> 39: Hideinfobutton()
+activate 39
+
+39 -> 09: hidethegenealogyandstatisticsframes()
+activate 09
+
+09 -> 09: calculategenealogystatisticss()
+09 -> 09: errormessagefornotstatistics()
+deactivate 09
+
+09 -> 09: genealogystatistics()
+activate 09
+
+deactivate 09
+
+09 -> 09: circleidentificationinvideo()
+activate 09
+
+09 -> 29: videoframe()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+09 -> 09: genealogystatistics()
+activate 09
+
+deactivate 09
+
+09 -> 29: videoframe()
+activate 29
+
+deactivate 29
+
+deactivate 39
+
+@enduml
