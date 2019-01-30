@@ -1,0 +1,54 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "ReservationController" as 09
+participant "PaymentController" as 19
+participant "Loginbutton" as 29
+participant "SCController" as 49
+
+user -> 09: roleeditionpage()
+activate 09
+
+09 -> 49: editrole()
+activate 49
+
+49 -> 49: Roleinfo()
+deactivate 49
+
+49 -> 19: displayrolechangedmessage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+user -> 19: displayrolechangedmessage()
+activate 19
+
+deactivate 19
+
+user -> 29: Addnewrolebutton()
+activate 29
+
+29 -> 19: displayroleeditionpage()
+activate 19
+
+19 -> 09: roleeditionpage()
+activate 09
+
+09 -> 49: editrole()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+deactivate 19
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Recommendation Letter" as 09
+participant "Attachment" as 29
+participant "AdditionalInfo" as 39
+participant "Connection" as 49
+participant "ConnectionUpdate" as 89
+
+User -> 09: Removebutton()
+activate 09
+
+deactivate 09
+
+User -> 09: Removebutton()
+activate 09
+
+09 -> 89: showupconfirmationdialog()
+activate 89
+
+89 -> 39: Confirmationdialog()
+activate 39
+
+39 -> 49: removeconnectionbetweenusers()
+activate 49
+
+49 -> 49: connection()
+deactivate 49
+
+39 -> 49: Redirecttoconnectionlist()
+activate 49
+
+49 -> 09: Removebutton()
+deactivate 09
+
+deactivate 49
+
+deactivate 39
+
+deactivate 89
+
+User -> 29: buttonstatechangetoacceptance()
+activate 29
+
+deactivate 29
+
+User -> 39: Confirmationdialog()
+activate 39
+
+39 -> 49: removeconnectionbetweenusers()
+activate 49
+
+deactivate 49
+
+39 -> 49: Redirecttoconnectionlist()
+activate 49
+
+deactivate 49
+
+deactivate 39
+
+@enduml

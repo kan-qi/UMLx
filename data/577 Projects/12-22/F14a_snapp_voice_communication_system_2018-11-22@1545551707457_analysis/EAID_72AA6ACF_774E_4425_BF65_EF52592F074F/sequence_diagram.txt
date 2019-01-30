@@ -1,0 +1,28 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User Agent
+participant "Lead/customer status" as 09
+participant "Lead customer profile" as 29
+
+User Agent -> 09: statusselectordropdownlist()
+activate 09
+
+09 -> 09: savestatusforlead()
+09 -> 29: Lead()
+activate 29
+
+deactivate 29
+
+09 -> 09: changedstatus()
+deactivate 09
+
+User Agent -> 09: changedstatus()
+activate 09
+
+deactivate 09
+
+@enduml

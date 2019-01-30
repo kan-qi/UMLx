@@ -1,0 +1,59 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "SignUp Screen" as 09
+participant "Hompage" as 19
+participant "Commentt EndPoints" as 29
+participant "Status Notification" as 59
+participant "<<entity>>  Comment  Datastore" as 69
+
+User -> 09: Selectsassignedtask()
+activate 09
+
+09 -> 29: openstextboxforusertoinputcomment()
+activate 29
+
+29 -> 59: Sendsnotificationtoadministrator()
+activate 59
+
+59 -> 69: submittedacommentforatask()
+activate 69
+
+69 -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+deactivate 69
+
+deactivate 59
+
+deactivate 29
+
+deactivate 09
+
+User -> 19: Hompage()
+activate 19
+
+deactivate 19
+
+User -> 29: Inputscommentforselectedtask()
+activate 29
+
+29 -> 59: Sendsnotificationtoadministrator()
+activate 59
+
+59 -> 69: submittedacommentforatask()
+activate 69
+
+deactivate 69
+
+deactivate 59
+
+deactivate 29
+
+@enduml

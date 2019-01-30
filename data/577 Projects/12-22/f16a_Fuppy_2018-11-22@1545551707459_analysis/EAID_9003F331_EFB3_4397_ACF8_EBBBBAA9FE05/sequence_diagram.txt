@@ -1,0 +1,68 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "User Authentication" as 19
+participant "User Error Log" as 29
+participant "Shelter Information" as 79
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Receiveverificationandsessiondata()
+activate 19
+
+19 -> 79: showconfirmationpage()
+activate 79
+
+79 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 79
+
+deactivate 19
+
+User -> 29: Enterusernameandpassword()
+activate 29
+
+29 -> 19: SendtheformtoAuthenticationbackendtocheckitsvalid()
+activate 19
+
+19 -> 79: showconfirmationpage()
+activate 79
+
+79 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 79
+
+deactivate 19
+
+deactivate 29
+
+User -> 29: Clicklogin()
+activate 29
+
+29 -> 19: SendtheformtoAuthenticationbackendtocheckitsvalid()
+activate 19
+
+19 -> 79: showconfirmationpage()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+deactivate 29
+
+@enduml

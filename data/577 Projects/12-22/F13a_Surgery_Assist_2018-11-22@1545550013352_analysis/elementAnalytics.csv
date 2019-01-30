@@ -1,0 +1,286 @@
+id,element,useCase,type,component
+1,undefined,BasicSearch,control,ProxyConnector
+2,stl#undefined,BasicSearch,Stimulus,undefined
+3,user:List of all submitted reservations,Cancel submitted reservation,boundary,Reservation
+4,user:"cancel" button,Cancel submitted reservation,control,cancelbutton
+5,user:confirmation message,Cancel submitted reservation,boundary,ReservationController
+6,"cancel" button:cancel message,Cancel submitted reservation,control,cancelbutton
+7,cancel message:List of all submitted reservations,Cancel submitted reservation,boundary,Reservation
+8,cancel message:reservation info,Cancel submitted reservation,boundary,Reservation
+9,cancel message:display a message about cancel reservation,Cancel submitted reservation,boundary,Reservation
+10,display a message about cancel reservation:confirmation message,Cancel submitted reservation,boundary,ReservationController
+11,stl#user:List of all submitted reservations,Cancel submitted reservation,Stimulus,undefined
+12,stl#user:"cancel" button,Cancel submitted reservation,Stimulus,undefined
+13,stl#user:confirmation message,Cancel submitted reservation,Stimulus,undefined
+14,user:Reservation requests list,Confirm Reservation REquest,boundary,Reservation
+15,user:"View unconfirmed reservation requests" button,Confirm Reservation REquest,boundary,ReservationController
+16,user:Confirmation message,Confirm Reservation REquest,boundary,ReservationController
+17,"View unconfirmed reservation requests" button:retrieve a list of unconfirmed reservations,Confirm Reservation REquest,boundary,ReservationController
+18,Displays confirmation message:Confirmation message,Confirm Reservation REquest,boundary,ReservationController
+19,Reservation requests list:Displays confirmation message,Confirm Reservation REquest,boundary,ReservationController
+20,retrieve a list of unconfirmed reservations:Reservation requests list,Confirm Reservation REquest,boundary,Reservation
+21,retrieve a list of unconfirmed reservations:reservation info,Confirm Reservation REquest,boundary,Reservation
+22,stl#user:Reservation requests list,Confirm Reservation REquest,Stimulus,undefined
+23,stl#user:"View unconfirmed reservation requests" button,Confirm Reservation REquest,Stimulus,undefined
+24,stl#user:Confirmation message,Confirm Reservation REquest,Stimulus,undefined
+25,user:"decline" button in the request list,Decline Reservation Request,boundary,declinemessage
+26,user:decline message,Decline Reservation Request,boundary,declinemessage
+27,user:Empty list of unconfirmed reservation requests,Decline Reservation Request,boundary,ReservationController
+28,user:"View unconfirmed reservation requests" button,Decline Reservation Request,boundary,ReservationController
+29,user:decline reason prompt,Decline Reservation Request,boundary,declinemessage
+30,"View unconfirmed reservation requests" button:retrieve a list of unconfirmed reservations,Decline Reservation Request,boundary,ReservationController
+31,"decline" button in the request list:Prompt for decline reason input,Decline Reservation Request,control,ProxyConnector
+32,retrieve a list of unconfirmed reservations:"decline" button in the request list,Decline Reservation Request,boundary,declinemessage
+33,Display a decline message:decline message,Decline Reservation Request,boundary,declinemessage
+34,decline reason prompt:Display a decline message,Decline Reservation Request,boundary,declinemessage
+35,retrieve a list of unconfirmed reservations:Empty list of unconfirmed reservation requests,Decline Reservation Request,boundary,ReservationController
+36,Prompt for decline reason input:decline reason prompt,Decline Reservation Request,boundary,declinemessage
+37,retrieve a list of unconfirmed reservations:reservation info,Decline Reservation Request,boundary,Reservation
+38,stl#user:"decline" button in the request list,Decline Reservation Request,Stimulus,undefined
+39,stl#user:decline message,Decline Reservation Request,Stimulus,undefined
+40,stl#user:Empty list of unconfirmed reservation requests,Decline Reservation Request,Stimulus,undefined
+41,stl#user:"View unconfirmed reservation requests" button,Decline Reservation Request,Stimulus,undefined
+42,stl#user:decline reason prompt,Decline Reservation Request,Stimulus,undefined
+43,user:personal home page,Login,boundary,PaymentController
+44,user:not allowed to login message,Login,control,Notifyadministrator
+45,user:Invalid user information,Login,boundary,Reservation
+46,user:Login button,Login,boundary,Loginbutton
+47,Validate username and password:Invalid user information,Login,boundary,Reservation
+48,Login button:Validate username and password,Login,control,$help://use_case_model_pattern.htm
+49,Login button:disable the user's privilege to login,Login,boundary,Loginbutton
+50,Notify administrator:not allowed to login message,Login,boundary,Loginbutton
+51,Notify administrator:administrator email box,Login,control,Notifyadministrator
+52,disable the user's privilege to login:Notify administrator,Login,control,Notifyadministrator
+53,Validate username and password:User Info,Login,boundary,User
+54,Validate username and password:redirect the user to their personal home page,Login,control,$help://usecasediagram.htm
+55,redirect the user to their personal home page:personal home page,Login,boundary,PaymentController
+56,stl#user:personal home page,Login,Stimulus,undefined
+57,stl#user:not allowed to login message,Login,Stimulus,undefined
+58,stl#user:Invalid user information,Login,Stimulus,undefined
+59,stl#user:Login button,Login,Stimulus,undefined
+60,user:Denied transaction message,Make Payment,boundary,Reservation
+61,user:success message,Make Payment,entity,SurgeryCenter
+62,user:"Make a payment" button,Make Payment,control,Payment
+63,"Make a payment" button:Validate information input,Make Payment,boundary,Reservation
+64,Notify the user denied transaction:Denied transaction message,Make Payment,boundary,Reservation
+65,Display a message showing that the payment has been made successfully:success message,Make Payment,entity,SurgeryCenter
+66,Validate information input:Display a message showing that the payment has been made successfully,Make Payment,control,Payment
+67,Notify the user denied transaction:User notification,Make Payment,boundary,Reservation
+68,Validate information input:Notify the user denied transaction,Make Payment,control,Notifyadministrator
+69,Validate information input:Payment information,Make Payment,control,Payment
+70,stl#user:Denied transaction message,Make Payment,Stimulus,undefined
+71,stl#user:success message,Make Payment,Stimulus,undefined
+72,stl#user:"Make a payment" button,Make Payment,Stimulus,undefined
+73,user:User Info Page,Manage Users,boundary,User
+74,user:"View Current Users" Button,Manage Users,boundary,Loginbutton
+75,user:Denied transaction message,Manage Users,boundary,Reservation
+76,"View Current Users" Button:Display a list of current users,Manage Users,control,Specialists
+77,Notify the user denied transaction:Denied transaction message,Manage Users,boundary,Reservation
+78,Display a list of current users:User info,Manage Users,boundary,User
+79,Display a list of current users:User Info Page,Manage Users,boundary,User
+80,Display a list of current users:Display a message showing that the payment has been made successfully,Manage Users,control,Payment
+81,Display a list of current users:Notify the user denied transaction,Manage Users,control,Notifyadministrator
+82,Display a message showing that the payment has been made successfully:User Info Page,Manage Users,boundary,User
+83,stl#user:User Info Page,Manage Users,Stimulus,undefined
+84,stl#user:"View Current Users" Button,Manage Users,Stimulus,undefined
+85,stl#user:Denied transaction message,Manage Users,Stimulus,undefined
+86,user:role edition page,Mofiy User Role,boundary,ReservationController
+87,user:display role changed message,Mofiy User Role,boundary,PaymentController
+88,user:Add new role button,Mofiy User Role,boundary,Loginbutton
+89,Add new role button:display role edition page,Mofiy User Role,boundary,PaymentController
+90,edit role:Role info,Mofiy User Role,control,SCController
+91,edit role:display role changed message,Mofiy User Role,boundary,PaymentController
+92,display role edition page:role edition page,Mofiy User Role,boundary,ReservationController
+93,role edition page:edit role,Mofiy User Role,control,SCController
+94,stl#user:role edition page,Mofiy User Role,Stimulus,undefined
+95,stl#user:display role changed message,Mofiy User Role,Stimulus,undefined
+96,stl#user:Add new role button,Mofiy User Role,Stimulus,undefined
+97,user:Create a surgical slot posting button,Post Surgical Slot,boundary,Loginbutton
+98,user:Ther requireted information is not complete,Post Surgical Slot,boundary,ReservationController
+99,user:Transaction declined message,Post Surgical Slot,boundary,Reservation
+100,user:new user account is created message,Post Surgical Slot,boundary,ReservationController
+101,user:Surgical slot update message,Post Surgical Slot,entity,SurgeryCenter
+102,Check web page completeness:Display a message about the surgical slot update,Post Surgical Slot,entity,SurgeryCenter
+103,Check web page completeness:Ther requireted information is not complete,Post Surgical Slot,boundary,ReservationController
+104,Create a surgical slot posting button:Check web page completeness,Post Surgical Slot,control,ScheduleController
+105,Display a message about the surgical slot update:show declined requestion message,Post Surgical Slot,boundary,Reservation
+106,Display a message about the surgical slot update:Surgical slot info,Post Surgical Slot,boundary,Slot
+107,Display a message about the surgical slot update:Surgical slot update message,Post Surgical Slot,entity,SurgeryCenter
+108,Display a message about the surgical slot update:Display message about the approved transaction,Post Surgical Slot,boundary,ReservationController
+109,Display message about the approved transaction:new user account is created message,Post Surgical Slot,boundary,ReservationController
+110,show declined requestion message:Transaction declined message,Post Surgical Slot,boundary,Reservation
+111,stl#user:Create a surgical slot posting button,Post Surgical Slot,Stimulus,undefined
+112,stl#user:Ther requireted information is not complete,Post Surgical Slot,Stimulus,undefined
+113,stl#user:Transaction declined message,Post Surgical Slot,Stimulus,undefined
+114,stl#user:new user account is created message,Post Surgical Slot,Stimulus,undefined
+115,stl#user:Surgical slot update message,Post Surgical Slot,Stimulus,undefined
+116,user:Surgery center list,Search Surgical Slot,entity,SurgeryCenter
+117,user:Dropdown for the type of Surgery Center,Search Surgical Slot,entity,SurgeryCenter
+118,user:All available surgical slot,Search Surgical Slot,boundary,Slot
+119,user:Display a message "no surgery slots",Search Surgical Slot,entity,SurgeryCenter
+120,Query all available up to date surgical slot:All available surgical slot,Search Surgical Slot,boundary,Slot
+121,Display a list surgery center by the parameters:Surgery center list,Search Surgical Slot,entity,SurgeryCenter
+122,Display a list surgery center by the parameters:Surgery center info,Search Surgical Slot,entity,SurgeryCenter
+123,Dropdown for the type of Surgery Center:Display a list surgery center by the parameters,Search Surgical Slot,entity,SurgeryCenter
+124,Query all available up to date surgical slot:Display a message "no surgery slots",Search Surgical Slot,entity,SurgeryCenter
+125,Redirect to dropwon for surgery center:Dropdown for the type of Surgery Center,Search Surgical Slot,entity,SurgeryCenter
+126,Query all available up to date surgical slot:Redirect to dropwon for surgery center,Search Surgical Slot,entity,SurgeryCenter
+127,Query all available up to date surgical slot:Surgery center info,Search Surgical Slot,entity,SurgeryCenter
+128,Surgery center list:Query all available up to date surgical slot,Search Surgical Slot,entity,SurgeryCenter
+129,stl#user:Surgery center list,Search Surgical Slot,Stimulus,undefined
+130,stl#user:Dropdown for the type of Surgery Center,Search Surgical Slot,Stimulus,undefined
+131,stl#user:All available surgical slot,Search Surgical Slot,Stimulus,undefined
+132,stl#user:Display a message "no surgery slots",Search Surgical Slot,Stimulus,undefined
+133,user:"Set up a reminder" button,Setup reminder,boundary,Loginbutton
+134,user:success messsage,Setup reminder,control,Displaysuccessmessage
+135,user:Error message,Setup reminder,control,Displaysuccessmessage
+136,"Set up a reminder" button:setup reminder,Setup reminder,boundary,Reservation
+137,Display error message:Error message,Setup reminder,control,Displaysuccessmessage
+138,setup reminder:Display error message,Setup reminder,control,Displaysuccessmessage
+139,Display success message:success messsage,Setup reminder,control,Displaysuccessmessage
+140,setup reminder:Display success message,Setup reminder,control,Displaysuccessmessage
+141,setup reminder:reminder db,Setup reminder,entity,Maintainer
+142,stl#user:"Set up a reminder" button,Setup reminder,Stimulus,undefined
+143,stl#user:success messsage,Setup reminder,Stimulus,undefined
+144,stl#user:Error message,Setup reminder,Stimulus,undefined
+145,user:decline message,Submit Reservation Request,boundary,declinemessage
+146,user:"decline" button in the request list,Submit Reservation Request,boundary,declinemessage
+147,user:required fields missing prompt,Submit Reservation Request,entity,requiredfieldsmissingprompt
+148,user:Surgical slots list and necessary information,Submit Reservation Request,boundary,declinemessage
+149,user:submit success message,Submit Reservation Request,boundary,declinemessage
+150,"decline" button in the request list:save surgical reservation info,Submit Reservation Request,boundary,Reservation
+151,Display a decline message:decline message,Submit Reservation Request,boundary,declinemessage
+152,submit success message:Display a decline message,Submit Reservation Request,boundary,declinemessage
+153,save surgical reservation info:Surgical reservation info,Submit Reservation Request,boundary,Reservation
+154,Surgical slots list and necessary information:check completeness of the form,Submit Reservation Request,control,ScheduleController
+155,check completeness of the form:required fields missing prompt,Submit Reservation Request,entity,requiredfieldsmissingprompt
+156,check completeness of the form:save surgical reservation info,Submit Reservation Request,boundary,Reservation
+157,save surgical reservation info:submit success message,Submit Reservation Request,boundary,declinemessage
+158,stl#user:decline message,Submit Reservation Request,Stimulus,undefined
+159,stl#user:"decline" button in the request list,Submit Reservation Request,Stimulus,undefined
+160,stl#user:required fields missing prompt,Submit Reservation Request,Stimulus,undefined
+161,stl#user:Surgical slots list and necessary information,Submit Reservation Request,Stimulus,undefined
+162,stl#user:submit success message,Submit Reservation Request,Stimulus,undefined
+163,user:"View reservation schedule" button,Sync schedule,boundary,Reservation
+164,user:scheduled reservations,Sync schedule,boundary,Reservation
+165,"View reservation schedule" button:query scheduled reservations,Sync schedule,boundary,Reservation
+166,Display scheduled reservations:scheduled reservations,Sync schedule,boundary,Reservation
+167,query scheduled reservations:Display scheduled reservations,Sync schedule,boundary,Reservation
+168,query scheduled reservations:scheduled reservations,Sync schedule,boundary,Reservation
+169,stl#user:"View reservation schedule" button,Sync schedule,Stimulus,undefined
+170,stl#user:scheduled reservations,Sync schedule,Stimulus,undefined
+171,user:Invalid user information,Update Profie,boundary,Reservation
+172,user:Profile info page,Update Profie,boundary,declinemessage
+173,user:success message,Update Profie,boundary,declinemessage
+174,user:Profile Button,Update Profie,boundary,Loginbutton
+175,Display the profile info:profile info,Update Profie,entity,requiredfieldsmissingprompt
+176,Display the profile info:Profile info page,Update Profie,boundary,declinemessage
+177,Profile Button:Display the profile info,Update Profie,entity,requiredfieldsmissingprompt
+178,Validate information input:Invalid user information,Update Profie,boundary,Reservation
+179,Notify the user that profile has been updated:User notification,Update Profie,boundary,Reservation
+180,Notify the user that profile has been updated:success message,Update Profie,boundary,declinemessage
+181,Validate information input:Notify the user that profile has been updated,Update Profie,boundary,ReservationController
+182,Profile info page:disable the user's privilege to login,Update Profie,boundary,Loginbutton
+183,Profile info page:Validate information input,Update Profie,boundary,Reservation
+184,Validate information input:profile info,Update Profie,entity,requiredfieldsmissingprompt
+185,Validate information input:profile info,Update Profie,entity,requiredfieldsmissingprompt
+186,stl#user:Invalid user information,Update Profie,Stimulus,undefined
+187,stl#user:Profile info page,Update Profie,Stimulus,undefined
+188,stl#user:success message,Update Profie,Stimulus,undefined
+189,stl#user:Profile Button,Update Profie,Stimulus,undefined
+190,user:the fields are not complete message,Update Surgical Slot Posting,entity,requiredfieldsmissingprompt
+191,user:The update request failed message,Update Surgical Slot Posting,boundary,declinemessage
+192,user:updated surgical slot info,Update Surgical Slot Posting,boundary,Slot
+193,user:Update button and required fields,Update Surgical Slot Posting,entity,requiredfieldsmissingprompt
+194,check fields for completeness:Surgical slot info,Update Surgical Slot Posting,boundary,Slot
+195,check fields for completeness:The update request failed message,Update Surgical Slot Posting,boundary,declinemessage
+196,Update button and required fields:check fields for completeness,Update Surgical Slot Posting,entity,requiredfieldsmissingprompt
+197,check fields for completeness:the fields are not complete message,Update Surgical Slot Posting,entity,requiredfieldsmissingprompt
+198,check fields for completeness:display the surgical slot info,Update Surgical Slot Posting,boundary,Slot
+199,display the surgical slot info:updated surgical slot info,Update Surgical Slot Posting,boundary,Slot
+200,stl#user:the fields are not complete message,Update Surgical Slot Posting,Stimulus,undefined
+201,stl#user:The update request failed message,Update Surgical Slot Posting,Stimulus,undefined
+202,stl#user:updated surgical slot info,Update Surgical Slot Posting,Stimulus,undefined
+203,stl#user:Update button and required fields,Update Surgical Slot Posting,Stimulus,undefined
+204,user:new user account is created message,Verify User Idnetification,boundary,declinemessage
+205,user:Transaction declined message,Verify User Idnetification,boundary,declinemessage
+206,user:List of registration requests,Verify User Idnetification,boundary,Reservation
+207,user:View Registration Request Button,Verify User Idnetification,boundary,ReservationController
+208,Display a list of registration requests:List of registration requests,Verify User Idnetification,boundary,Reservation
+209,View Registration Request Button:Display a list of registration requests,Verify User Idnetification,boundary,Reservation
+210,Display message about the approved transaction:new user account is created message,Verify User Idnetification,boundary,declinemessage
+211,approave a request:Display message about the approved transaction,Verify User Idnetification,boundary,declinemessage
+212,List of registration requests:approave a request,Verify User Idnetification,entity,requiredfieldsmissingprompt
+213,approave a request:Request info,Verify User Idnetification,entity,requiredfieldsmissingprompt
+214,show declined requestion message:Transaction declined message,Verify User Idnetification,boundary,declinemessage
+215,approave a request:show declined requestion message,Verify User Idnetification,boundary,declinemessage
+216,stl#user:new user account is created message,Verify User Idnetification,Stimulus,undefined
+217,stl#user:Transaction declined message,Verify User Idnetification,Stimulus,undefined
+218,stl#user:List of registration requests,Verify User Idnetification,Stimulus,undefined
+219,stl#user:View Registration Request Button,Verify User Idnetification,Stimulus,undefined
+220,user:display role changed message,View Activity Report,boundary,declinemessage
+221,user:Reservation report,View Activity Report,boundary,Reservation
+222,user:"View Report" button,View Activity Report,boundary,Loginbutton
+223,"View Report" button:Display A reservation report of selected time period,View Activity Report,boundary,Reservation
+224,Display A reservation report of selected time period:Reservation Records,View Activity Report,boundary,Reservation
+225,Display A reservation report of selected time period:Reservation report,View Activity Report,boundary,Reservation
+226,edit role:Reservation Records,View Activity Report,boundary,Reservation
+227,Reservation report:edit role,View Activity Report,control,SCController
+228,edit role:display role changed message,View Activity Report,boundary,declinemessage
+229,stl#user:display role changed message,View Activity Report,Stimulus,undefined
+230,stl#user:Reservation report,View Activity Report,Stimulus,undefined
+231,stl#user:"View Report" button,View Activity Report,Stimulus,undefined
+232,user:"View Surgical Slot Post" button and choices,View Posted Surgical Slot,boundary,Loginbutton
+233,user:surgical slot info,View Posted Surgical Slot,boundary,Slot
+234,user:No existing surgical slot post message,View Posted Surgical Slot,boundary,declinemessage
+235,"View Surgical Slot Post" button and choices:check the surgical slot by the criteria,View Posted Surgical Slot,entity,SurgeryCenter
+236,check the surgical slot by the criteria:No existing surgical slot post message,View Posted Surgical Slot,boundary,declinemessage
+237,check the surgical slot by the criteria:Surgical slot info,View Posted Surgical Slot,boundary,Slot
+238,check the surgical slot by the criteria:display the surgical slot info,View Posted Surgical Slot,boundary,Slot
+239,display the surgical slot info:surgical slot info,View Posted Surgical Slot,boundary,Slot
+240,stl#user:"View Surgical Slot Post" button and choices,View Posted Surgical Slot,Stimulus,undefined
+241,stl#user:surgical slot info,View Posted Surgical Slot,Stimulus,undefined
+242,stl#user:No existing surgical slot post message,View Posted Surgical Slot,Stimulus,undefined
+243,user:View Profile Button,View Profile,boundary,Loginbutton
+244,user:personal home page,View Profile,boundary,PaymentController
+245,user:Invalid user information,View Profile,boundary,Reservation
+246,user:User profile,View Profile,boundary,User
+247,Validate username and password:Invalid user information,View Profile,boundary,Reservation
+248,Validate username and password:User Info,View Profile,boundary,User
+249,User profile:disable the user's privilege to login,View Profile,boundary,Loginbutton
+250,User profile:Validate username and password,View Profile,control,$help://use_case_model_pattern.htm
+251,display user profile to user:User profile,View Profile,boundary,User
+252,Validate username and password:redirect the user to their personal home page,View Profile,control,$help://usecasediagram.htm
+253,display user profile to user:View Profile Button,View Profile,boundary,Loginbutton
+254,disable the user's privilege to login:display user profile to user,View Profile,entity,userController
+255,display user profile to user:use profile info,View Profile,entity,userController
+256,redirect the user to their personal home page:personal home page,View Profile,boundary,PaymentController
+257,stl#user:View Profile Button,View Profile,Stimulus,undefined
+258,stl#user:personal home page,View Profile,Stimulus,undefined
+259,stl#user:Invalid user information,View Profile,Stimulus,undefined
+260,stl#user:User profile,View Profile,Stimulus,undefined
+261,user:Reservation requests list,View Reservation Request,boundary,Reservation
+262,user:You have not received reservation request message,View Reservation Request,boundary,Reservation
+263,user:"View Reservation Requests" Button,View Reservation Request,boundary,Reservation
+264,user:updated surgical slot info,View Reservation Request,boundary,Slot
+265,"View Reservation Requests" Button:display reservation requests,View Reservation Request,boundary,Reservation
+266,display reservation requests:Reservation requests list,View Reservation Request,boundary,Reservation
+267,display reservation requests:Surgical request Info,View Reservation Request,entity,SurgeryCenter
+268,display reservation requests:You have not received reservation request message,View Reservation Request,boundary,Reservation
+269,display reservation requests:display the surgical slot info,View Reservation Request,boundary,Slot
+270,display the surgical slot info:updated surgical slot info,View Reservation Request,boundary,Slot
+271,stl#user:Reservation requests list,View Reservation Request,Stimulus,undefined
+272,stl#user:You have not received reservation request message,View Reservation Request,Stimulus,undefined
+273,stl#user:"View Reservation Requests" Button,View Reservation Request,Stimulus,undefined
+274,stl#user:updated surgical slot info,View Reservation Request,Stimulus,undefined
+275,user:"view submitted reservation" button,View Submitted Reservation,boundary,Reservation
+276,user:List of all submitted reservations,View Submitted Reservation,boundary,Reservation
+277,user:no submitted rerservation message,View Submitted Reservation,boundary,Reservation
+278,"view submitted reservation" button:Display a list of all submitted reservation,View Submitted Reservation,boundary,Reservation
+279,Display a list of all submitted reservation:Surgical reservation info,View Submitted Reservation,boundary,Reservation
+280,Display a list of all submitted reservation:display a message "no submitted reservation",View Submitted Reservation,boundary,Reservation
+281,Display a list of all submitted reservation:List of all submitted reservations,View Submitted Reservation,boundary,Reservation
+282,display a message "no submitted reservation":no submitted rerservation message,View Submitted Reservation,boundary,Reservation
+283,stl#user:"view submitted reservation" button,View Submitted Reservation,Stimulus,undefined
+284,stl#user:List of all submitted reservations,View Submitted Reservation,Stimulus,undefined
+285,stl#user:no submitted rerservation message,View Submitted Reservation,Stimulus,undefined

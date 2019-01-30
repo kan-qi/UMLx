@@ -1,0 +1,512 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+~ thirdpartpaymentsystem()
+}
+
+class helpdomainmodelpatternhtm {
+~ helpdomainmodelpatternhtm()
+}
+
+class Color {
+- name:EAJava_char
+~ Color()
+}
+
+class Customer {
+- email:EAJava_String
+- firstname:EAJava_String
+- hasStore:EAJava_Boolean
+- isAdmin:EAJava_Boolean
+- joined:EAJava_Date
+- lastname:EAJava_String
+- orders:EAJava_Set_Orders_
+- password:EAJava_String
+- phone:EAJava_String
+- reviews:EAJava_Reviews
+- username:EAJava_String
+~ Customer()
+}
+
+class CustomerController {
+- cs:EAJava_CustomerService
+- ur:EAJava_UserRepository
+~ available():EAJava_int
+~ register(EAJava_CustomerForm customerForm):EAJava_int
+~ signup():EAJava_int
+~ commentandconcernspanel()
+}
+
+class CustomerForm {
+- email:EAJava_String
+- name:EAJava_String
+- password:EAJava_String
+- phone:EAJava_String
+- undefined:EAID_9397469A_18E0_4164_958B_E7F5301D582B
+~ validate():EAJava_int
+~ verifypaymentinformation()
+}
+
+class CustomerProfileController {
+- cart:EAJava_ShoppingCart
+- cus:EAJava_CustomerUserService
+- fs:EAJava_FloristService
+- os:EAJava_OrderService
+- ps:EAJava_ProductService
+- rs:EAJava_ReviewService
+~ fillPlaceOrder(EAJava_Model model):EAJava_int
+~ getOrderDetail(EAJava_Long idEAJava_Model model):EAJava_int
+~ getOrders():EAJava_int
+~ getStrore(EAJava_Principal c):EAJava_int
+~ modifyProfile(EAJava_CustomerModifyRegistrationForm cmfEAJava_BindingResult resultEAJava_Model model):EAJava_int
+~ modifyProfileForm(EAJava_User userEAJava_Model model):EAJava_int
+~ operation():EAJava_int
+~ productDetail(EAJava_Long idEAJava_Long pidEAJava_Model modelEAJava_User user):EAJava_int
+~ productDetail(EAJava_AddReviewForm orformEAJava_BindingResult result):EAJava_int
+~ profile():EAJava_int
+}
+
+class CustomerRepository {
+- findByUsername:EAJava_customer_String
+- undefined:EAID_E0646CBB_167E_4950_953C_4424573CB13F
+~ CustomerRepository()
+}
+
+class CustomerService {
+- customerRepository:EAJava_CustomerRepository
+- pe::EAJava_ShaPasswordEncoder
+~ createNewCustomer(EAJava_CustomerForm customerForm):EAJava_int
+~ getCustomerByUsername(EAJava_String u):EAJava_int
+~ modifyCustomer(EAJava_CustomerForm customerFormEAJava_long id):EAJava_int
+~ populateModifyUserForm(EAJava_CustomerModifyRegistrationForm msfEAJava_String id):EAJava_int
+}
+
+class Florist {
+- Address:EAJava_char
+- BusinessName:EAJava_char
+- Email:EAJava_char
+- Name:EAJava_char
+- Password:EAJava_char
+- Phone:EAJava_char
+- Rankweight:EAJava_int
+- Zipcode:EAJava_int
+~ Florist()
+}
+
+class FloristController {
+- FloristService:EAJava_char
+- UserRepository:EAJava_char
+~ available():EAJava_int
+~ register(EAJava_FloristForm FloristForm):EAJava_int
+~ signup():EAJava_int
+}
+
+class FloristForm {
+- address:EAJava_String
+- attribute:EAJava_String
+- businessName:EAJava_String
+- city:EAJava_String
+- Name:EAJava_String
+- password:EAJava_String
+- paypal:EAJava_String
+- phone:EAJava_String
+- state:EAJava_String
+- storeEmail:EAJava_String
+- storeName:EAJava_String
+- userPhone:EAJava_String
+- zipcode:EAJava_int
+- undefined:EAID_B66863CC_90E0_4265_AB62_FA9F47C266AE
+~ validate():EAJava_int
+~ retrieveorderhistoryforaflorist()
+}
+
+class FloristProfileController {
+- floristService:EAJava_FloristService
+- getStore:EAJava_void
+- productService:EAJava_ProductService
+~ addProduct(EAJava_AddProductForm formEAJava_BindingResult resultEAJava_Model model):EAJava_int
+~ addProductForm(EAJava_Model model):EAJava_int
+~ addProductForm(EAJava_Model model):EAJava_int
+~ batchModifyProducts(EAJava_Store storeEAJava_Model model):EAJava_int
+~ getOrdersForCustomer(EAJava_Store store):EAJava_int
+~ getProducts(EAJava_Store storeEAJava_Model model):EAJava_int
+~ getProfile(EAJava_Store storeEAJava_Model model):EAJava_int
+~ getStore(EAJava_Principal f):EAJava_int
+~ modifyProductForm(EAJava_Long idEAJava_Model model):EAJava_int
+~ productDetail(EAJava_Long idEAJava_Model modelEAJava_Store store):EAJava_int
+~ updateProfile(EAJava_ModifyStoreForm formEAJava_BindingResult result):EAJava_int
+~ existingprofileerrormessage()
+}
+
+class FloristService {
+- HourRepository:EAJava_int
+- LocationRepository:EAJava_char
+- ProductReository:EAJava_char
+- ShaPasswordEncoder:EAJava_int
+- StoreRespository:EAJava_char
+- SubscriptionRepository:EAJava_char
+- UserRepository:EAJava_char
+- ZipcodeRepository:EAJava_int
+~ addStoreDeliveryLocation(EAJava_form AddDeliveryAreaFormEAJava_store Store):EAJava_int
+~ addStoreHour(EAJava_ahf AddHourFormEAJava_store Store):EAJava_int
+~ createNewFlorist(EAJava_FloristForm floristForm):EAJava_int
+~ getFloristByUsername(EAJava_String u):EAJava_int
+~ modifyFlorist(EAJava_FloristForm floristForm):EAJava_int
+~ operation():EAJava_int
+~ populateModifyStoreForm(EAJava_msf ModinfyStoreFormEAJava_Long id):EAJava_int
+~ removeStoreDeliveryArea(EAJava_Long idEAJava_Store store):EAJava_int
+~ setupPaypal(EAJava_String paypal):EAJava_int
+}
+
+class JpaRepository {
+~ delete():EAJava_int
+~ list():EAJava_int
+~ save():EAJava_int
+}
+
+class Order {
+- date:EAJava_Date
+- orderId:EAJava_Int
+- quantity:EAJava_Int
+- receipientZipcode:EAJava_String
+- recipientCity:EAJava_String
+- recipientState:EAJava_String
+- sellerId:EAJava_int
+- status:EAJava_String
+- total:EAJava_Double
+~ Order()
+~ Trackorderbutton()
+}
+
+class OrderController {
+- orderService:EAJava_ReviewService
+~ getOrder():EAJava_int
+~ listOrders():EAJava_int
+~ previewOrder():EAJava_int
+~ registerOrder():EAJava_int
+}
+
+class OrderForm {
+- comment:EAJava_String
+- quantity:EAJava_Int
+- recipientCity:EAJava_String
+- recipientState:EAJava_String
+- recipientZipcode:EAJava_String
+- sellerId:EAJava_int
+- undefined:EAID_AAAD4945_4448_40a8_89F7_7CACCC12858C
+~ OrderForm()
+~ errormessageforemptyinput()
+~ updateorderstatusinformation()
+}
+
+class OrderRepository {
+- undefined:EAID_E0646CBB_167E_4950_953C_4424573CB13F
+~ findOrderAll():EAJava_int
+~ findOrderById(EAJava_int orderId):EAJava_int
+~ registerOrderByCustomer(EAJava_Order order):EAJava_int
+~ exceededlimiterrormessage()
+~ noorderhistorypage()
+}
+
+class OrderService {
+- context:EAJava_ServiceContext
+~ addOrder():EAJava_int
+~ checkout(EAJava_Order order):EAJava_int
+~ getOrderById(EAJava_long id):EAJava_int
+~ getOrdersByCustomer():EAJava_int
+}
+
+class PayPalInstance {
+~ PayPalInstance()
+~ invalidpaymentinforrmation()
+~ displaycommentinputpanel()
+}
+
+class product {
+- added:EAJava_int
+- available:EAJava_int
+- description:EAJava_char
+- id:EAJava_int
+- image:EAJava_char
+- pickup:EAJava_int
+- price:EAJava_float
+- purchased:EAJava_int
+- store_id:EAJava_int
+- tags:EAJava_char
+- tracking:EAJava_int
+- viewed:EAJava_int
+- undefined:EAID_468C1F96_F3AC_49c8_8C21_A77D31DEC7E2
+- undefined:EAID_61ED5B98_D616_4190_B005_0C166C743D2D
+- undefined:EAID_23588653_01E4_4b75_8E46_0288A4F44D27
+- undefined:EAID_0CF958B6_6D0E_44ca_9962_5A248E52543E
+~ product()
+~ queryproductbycriteria()
+}
+
+class ProductForm {
+- description:EAJava_String
+- image:EAJava_String
+- name:EAJava_String
+- occassion:EAJava_List_String_
+- price:EAJava_Double
+- undefined:EAID_79A2DDBB_7ED2_45e1_97A1_FCF72D84666E
+~ ProductForm()
+}
+
+class ProductRepository {
+- undefined:EAID_E0646CBB_167E_4950_953C_4424573CB13F
+~ findByFloristUsernameByPrice(EAJava_String Florist):EAJava_int
+~ findByFloristUsernameOrderByAdress(EAJava_String Florist):EAJava_int
+~ findByFloristUsernameOrderByName(EAJava_String Florist):EAJava_int
+~ findByStoreId(EAJava_Long idEAJava_Pageable page):EAJava_int
+~ setAllPickupForStore(EAJava_Boolean pickupEAJava_Long storeId):EAJava_int
+~ setAllTrackingForStore(EAJava_Boolean trackEAJava_Long storeId):EAJava_int
+}
+
+class ProductService {
+- or:EAJava_OccassionRepository
+- pr:EAJava_ProductRepository
+- sc:EAJava_ServerContext
+- st:EAJava_StoreRepository
+~ AddProduct():EAJava_int
+~ getProduct(EAJava_long id):EAJava_int
+~ modityProduct(EAJava_long id):EAJava_int
+~ populateModifyProductForm(EAJava_ModifyProduct impfEAJava_Long id):EAJava_int
+}
+
+class RestoreRepository {
+- undefined:EAID_E0646CBB_167E_4950_953C_4424573CB13F
+~ findAll(EAJava_Pageable Page):EAJava_int
+~ findByUsername(EAJava_char Floristundefined Page):EAJava_int
+}
+
+class review {
+- comment:EAJava_char
+- date:EAJava_int
+- id:EAJava_int
+- product_id:EAJava_int
+- rank:EAJava_int
+- user_id:EAJava_int
+~ review()
+~ displayreviewpenal()
+}
+
+class ReviewForm {
+- comment:EAJava_String
+- rank:EAJava_int
+- undefined:EAID_0308F0D3_6FDD_42a8_B505_72D8255AA3CC
+~ ReviewForm()
+~ tooshortreviewerrormessage()
+~ storereviewandratinginformation()
+}
+
+class ReviewInfo {
+- comment:EAJava_String
+- customer:EAJava_Customer
+- date:EAJava_Date
+- id:EAJava_Double
+- product:EAJava_Product
+- rank:EAJava_Int
+~ ReviewInfo()
+}
+
+class ReviewRepository {
+- undefined:EAID_E0646CBB_167E_4950_953C_4424573CB13F
+~ findByCustomerUsernameAndProductStoreId(EAJava_String usernameEAJava_Long id):EAJava_int
+~ findByCustomerUsernameAndProductStoreId(EAJava_String usernameEAJava_Long idEAJava_Pageable page):EAJava_int
+~ findByCustomerUsernameAndProductStoreIdOrderByDateDesc(EAJava_String usernameEAJava_Long id):EAJava_int
+~ findByProduct(EAJava_Long idEAJava_Pageable page):EAJava_int
+~ findByProductAndCustomerUsername(EAJava_Long idEAJava_String username):EAJava_int
+~ findByProductIdOrderByDateDesc(EAJava_Long id):EAJava_int
+~ findByProductStoreIdOrderByDateDesc(EAJava_Long id):EAJava_int
+}
+
+class User {
+- email:EAJava_char
+- enabled:EAJava_int
+- firstname:EAJava_char
+- hasStore:EAJava_int
+- isAdmin:EAJava_int
+- joined:EAJava_int
+- lastname:EAJava_char
+- password:EAJava_char
+- phone:EAJava_char
+- username:EAJava_char
+- undefined:EAID_0CF958B6_6D0E_44ca_9962_5A248E52543E
+- undefined:EAID_D0B16B48_254F_461f_8744_67000DC879CF
+- undefined:EAID_7F7BECE2_5F2E_4466_AD8C_744CA24966FC
+~ User()
+}
+
+class Zipcode {
+- city:EAJava_char
+- id:EAJava_int
+- state:EAJava_char
+- zip:EAJava_char
+~ Zipcode()
+}
+
+class deliveryfee {
+- deliveryfee:EAJava_float
+- hour:EAJava_int
+- zip:EAJava_char
+~ deliveryfee()
+}
+
+class hour {
+- day:EAJava_char
+- fromtime:EAJava_char
+- id:EAJava_int
+- store_id:EAJava_int
+- totime:EAJava_char
+~ hour()
+}
+
+class location {
+- address1:EAJava_char
+- address2:EAJava_char
+- city:EAJava_char
+- dfee:EAJava_char
+- id:EAJava_int
+- state:EAJava_char
+- zip:EAJava_char
+~ location()
+~ addtocartbutton()
+~ successfulinformationforcreation()
+~ logoutbutton()
+~ informationisinvalid()
+~ category()
+~ saveuploadedinformationtodb()
+}
+
+class occasion {
+- name:EAJava_char
+~ occasion()
+~ Session()
+}
+
+class orderentry {
+- address:EAJava_char
+- dfee:EAJava_char
+- ename:EAJava_char
+- id:EAJava_int
+- message:EAJava_char
+- order_id:EAJava_int
+- pickup:EAJava_int
+- price:EAJava_float
+- product_id:EAJava_int
+- quantity:EAJava_integer
+- status:EAJava_char
+~ orderentry()
+~ retrieveorderstatus()
+}
+
+class orders {
+- date:EAJava_int
+- groupid:EAJava_char
+- id:EAJava_int
+- instruction:EAJava_char
+- location_id:EAJava_int
+- pickup:EAJava_int
+- status:EAJava_char
+- store_id:EAJava_int
+- total:EAJava_float
+- user_id:EAJava_char
+- undefined:EAID_61ED5B98_D616_4190_B005_0C166C743D2D
+- undefined:EAID_E7C02422_751D_4696_A2D4_935AA142346B
+~ orders()
+}
+
+class productcolor {
+- colors_name:EAJava_char
+- products_id:EAJava_int
+- undefined:EAID_9FB6A1F7_6292_45eb_A3EF_8934823FDC52
+~ productcolor()
+}
+
+class productsoccasion {
+- occasions_name:EAJava_char
+- products_id:EAJava_char
+- undefined:EAID_86B45EE3_3DF9_452d_939F_CF23E0053307
+~ productsoccasion()
+}
+
+class store {
+- email:EAJava_char
+- id:EAJava_int
+- location_id:EAJava_int
+- paypalemail:EAJava_char
+- phone:EAJava_char
+- scripeemail:EAJava_char
+- storename:EAJava_char
+- subscribe:EAJava_int
+- tax:EAJava_char
+- user_id:EAJava_char
+- undefined:EAID_D94F1995_8E86_4e66_9A88_47695E11CFB8
+- undefined:EAID_4C87D82A_10B5_4cdb_825E_384D65132D29
+- undefined:EAID_62645818_7070_431c_B6D6_80229A70DD0C
+~ store()
+}
+
+class storedeliveryfee {
+- deliveryfees_id:EAJava_int
+- store_id:EAJava_int
+~ storedeliveryfee()
+}
+
+class storezipcode {
+- deliversto_id:EAJava_int
+- stores_id:EAJava_int
+~ storezipcode()
+}
+
+class userlocation {
+- locations_id:EAJava_int
+- username:EAJava_char
+~ userlocation()
+~ sendinformationindb()
+~ queryauthenticationinfo()
+}
+
+class precheckrequiredfields {
+~ precheckrequiredfields()
+~ redirecttopaymentpage()
+~ precheckifrequiredinformationisempty()
+~ precheckiflengthofreviewislegal()
+}
+
+class cart {
+~ cart()
+}
+
+class loginpage {
+~ loginpage(EAJava_char emailEAJava_int enabledEAJava_char firstnameEAJava_int hasStoreEAJava_int isAdminEAJava_int joinedEAJava_char lastnameEAJava_char passwordEAJava_char phoneEAJava_char usernameEAID_0CF958B6_6D0E_44ca_9962_5A248E52543E undefinedEAID_D0B16B48_254F_461f_8744_67000DC879CF undefined):EAID_7F7BECE2_5F2E_4466_AD8C_744CA24966FC
+~ invalidinputerrormessage()
+~ catalogmanagepage()
+~ replyinputpanel()
+~ dashboardpage()
+~ Uploadpage()
+}
+
+class successfulchangemessage {
+~ successfulchangemessage(EAJava_char emailEAJava_int enabledEAJava_char firstnameEAJava_int hasStoreEAJava_int isAdminEAJava_int joinedEAJava_char lastnameEAJava_char passwordEAJava_char phoneEAJava_char usernameEAID_0CF958B6_6D0E_44ca_9962_5A248E52543E undefinedEAID_D0B16B48_254F_461f_8744_67000DC879CF undefined):EAID_7F7BECE2_5F2E_4466_AD8C_744CA24966FC
+~ missinginformationforpaymentmessage()
+~ unreadmessage()
+~ exceededlimiterrormessage()
+}
+
+@enduml

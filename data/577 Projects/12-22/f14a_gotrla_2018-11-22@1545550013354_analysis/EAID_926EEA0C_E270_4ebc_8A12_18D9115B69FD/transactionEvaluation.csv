@@ -1,0 +1,7 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:Login success message->User:Login success message,Login/Logout,CTRL;EXTCLL;INT,2,0,4,1,8
+2,stl#User:Log failture message->User:Log failture message,Login/Logout,CTRL;EXTCLL;INT,2,0,4,1,8
+3,stl#User:Logout Button->User:Logout Button->Logout Button:Remove session->Remove session:session,Login/Logout,TRAN_NA,4,8,2,3,8
+4,stl#User:Login Page->User:Login Page->Login Page:check login information->check login information:Login success message,Login/Logout,TRAN_NA,4,2,2.6666666666666665,3,10.666666666666666
+5,stl#User:Login Page->User:Login Page->Login Page:check login information->check login information:Login Info,Login/Logout,TRAN_NA,4,2,2,3,8
+6,stl#User:Login Page->User:Login Page->Login Page:check login information->check login information:Log failture message,Login/Logout,TRAN_NA,4,1,2.6666666666666665,3,10.666666666666666

@@ -1,0 +1,45 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "InstructionValidator" as 09
+participant "savefile" as 19
+
+User -> 09: fileinformationinputpage()
+activate 09
+
+09 -> 09: validatefilename()
+09 -> 19: Filesavesuccess()
+activate 19
+
+deactivate 19
+
+09 -> 19: savefile()
+activate 19
+
+19 -> 19: file()
+deactivate 19
+
+deactivate 09
+
+User -> 19: Savefilebutton()
+activate 19
+
+19 -> 19: popupfileinformationsavedialog()
+19 -> 09: fileinformationinputpage()
+activate 09
+
+09 -> 09: validatefilename()
+deactivate 09
+
+deactivate 19
+
+User -> 19: Filesavesuccess()
+activate 19
+
+deactivate 19
+
+@enduml

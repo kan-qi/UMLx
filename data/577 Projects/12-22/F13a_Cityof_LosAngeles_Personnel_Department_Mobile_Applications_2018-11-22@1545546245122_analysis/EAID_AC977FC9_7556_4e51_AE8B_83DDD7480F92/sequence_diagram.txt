@@ -1,0 +1,111 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Jobseeker
+participant "Invaliddetailinputmessage" as 09
+participant "Localstorage" as 29
+participant "UserProfileServerPage" as 39
+participant "UserProfileController" as 49
+participant "ExistingJobsController" as 69
+participant "SearchJobsServerPage" as 79
+participant "emailNotification" as 89
+participant "displaysuccessmessageandredirecttohomepage" as 99
+participant "$help://use_case_model_pattern.htm" as 129
+participant "Notifications" as 139
+
+Jobseeker -> 09: Invaliddetailinputmessage()
+activate 09
+
+deactivate 09
+
+Jobseeker -> 49: UserProfilebutton()
+activate 49
+
+49 -> 39: redirecttoprofilepage()
+activate 39
+
+39 -> 39: userinformationupdatepage()
+39 -> 89: checkifemailidandnumberarevalid()
+activate 89
+
+89 -> 09: Invaliddetailinputmessage()
+activate 09
+
+deactivate 09
+
+89 -> 79: senddetailsinanencryptedfashiontosearch()
+activate 79
+
+79 -> 69: checkifemailidandmodelnumberareexisting()
+activate 69
+
+69 -> 09: inputthedetailintouserdatabase()
+activate 09
+
+09 -> 129: userdatabase()
+activate 129
+
+deactivate 129
+
+09 -> 139: sendsavingnotification()
+activate 139
+
+139 -> 29: savetheinfotolocalstorage()
+activate 29
+
+29 -> 29: Localstorage()
+deactivate 29
+
+29 -> 99: displaysuccessmessageandredirecttohomepage()
+activate 99
+
+deactivate 99
+
+29 -> 99: homepage()
+activate 99
+
+deactivate 99
+
+139 -> 99: savingsuccessmessage()
+activate 99
+
+deactivate 99
+
+deactivate 139
+
+deactivate 09
+
+deactivate 69
+
+deactivate 79
+
+deactivate 89
+
+deactivate 39
+
+deactivate 49
+
+Jobseeker -> 99: homepage()
+activate 99
+
+deactivate 99
+
+Jobseeker -> 99: savingsuccessmessage()
+activate 99
+
+deactivate 99
+
+Jobseeker -> 39: userinformationupdatepage()
+activate 39
+
+39 -> 89: checkifemailidandnumberarevalid()
+activate 89
+
+deactivate 89
+
+deactivate 39
+
+@enduml

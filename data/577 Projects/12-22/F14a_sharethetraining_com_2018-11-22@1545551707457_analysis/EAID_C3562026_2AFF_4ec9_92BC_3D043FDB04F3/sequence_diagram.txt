@@ -1,0 +1,44 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Sign up trainer page" as 09
+participant "Payment page" as 29
+participant "User" as 49
+
+User -> 09: invalidsignupinformatin()
+activate 09
+
+deactivate 09
+
+User -> 09: Signuppage()
+activate 09
+
+09 -> 09: verifysignupinformation()
+09 -> 09: Savesignupinformation()
+09 -> 29: homepage()
+activate 29
+
+deactivate 29
+
+09 -> 49: user()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+09 -> 09: invalidsignupinformatin()
+activate 09
+
+deactivate 09
+
+User -> 29: homepage()
+activate 29
+
+deactivate 29
+
+@enduml

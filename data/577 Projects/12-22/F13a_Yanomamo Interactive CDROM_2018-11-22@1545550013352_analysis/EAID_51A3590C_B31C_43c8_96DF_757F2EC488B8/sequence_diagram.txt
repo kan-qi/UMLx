@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Student
+participant "Statistics" as 09
+participant "videoframe" as 19
+
+Student -> 09: genealogystatistics()
+activate 09
+
+deactivate 09
+
+Student -> 19: videoframe()
+activate 19
+
+deactivate 19
+
+Student -> 19: playpauseresicebuttonsofvideoplayer()
+activate 19
+
+19 -> 19: controlvideoplayer()
+19 -> 19: Videoplayer()
+deactivate 19
+
+19 -> 09: genealogystatistics()
+activate 09
+
+deactivate 09
+
+19 -> 19: videoframe()
+activate 19
+
+deactivate 19
+
+@enduml

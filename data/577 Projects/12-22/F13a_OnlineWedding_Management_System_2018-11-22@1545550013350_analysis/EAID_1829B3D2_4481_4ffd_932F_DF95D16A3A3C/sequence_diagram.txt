@@ -1,0 +1,72 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor guests
+participant "successmessage" as 09
+participant "invitationlink" as 19
+participant "UserSpecificContent" as 49
+participant "Event" as 69
+participant "Groom" as 79
+participant "System Boundary" as 119
+
+guests -> 09: saveinfosuccessmessage()
+activate 09
+
+deactivate 09
+
+guests -> 19: invitationdesignpage()
+activate 19
+
+19 -> 69: Saveallpoisitionsandcotnent()
+activate 69
+
+69 -> 49: Positionsandcontentinfo()
+activate 49
+
+deactivate 49
+
+69 -> 09: savedesigndetailintodbsuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+deactivate 19
+
+guests -> 19: selectsinvitationbackgroundpage()
+activate 19
+
+19 -> 119: savebackgroundintodb()
+activate 119
+
+119 -> 79: backgroundinfo()
+activate 79
+
+deactivate 79
+
+119 -> 19: redirecttoinvitationdesignpage()
+19 -> 19: invitationdesignpage()
+19 -> 69: Saveallpoisitionsandcotnent()
+activate 69
+
+deactivate 69
+
+deactivate 19
+
+119 -> 09: saveinfosuccessmessage()
+activate 09
+
+deactivate 09
+
+deactivate 119
+
+guests -> 09: savedesigndetailintodbsuccessmessage()
+activate 09
+
+deactivate 09
+
+@enduml

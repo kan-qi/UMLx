@@ -1,0 +1,76 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "SphereModel" as 09
+participant "AnswerView" as 19
+participant "Displaysuccessmessagetouser" as 39
+participant "CreateSphereView" as 49
+
+User -> 09: averagevalueinthesphere()
+activate 09
+
+deactivate 09
+
+User -> 19: answerslistpage()
+activate 19
+
+19 -> 49: displayspheredataforeachuser()
+activate 49
+
+49 -> 09: listofspheredata()
+activate 09
+
+09 -> 39: computeaverageofagivensubsetofuser()
+activate 39
+
+39 -> 39: displayvaluestouser()
+39 -> 09: averagevalueinthesphere()
+deactivate 09
+
+deactivate 39
+
+09 -> 49: computeaverageofallusersinsphere()
+49 -> 39: displayvaluestouser()
+activate 39
+
+39 -> 09: averagevalueinthesphere()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+deactivate 49
+
+49 -> 09: sphere()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+User -> 09: listofspheredata()
+activate 09
+
+09 -> 39: computeaverageofagivensubsetofuser()
+activate 39
+
+deactivate 39
+
+09 -> 49: computeaverageofallusersinsphere()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+User -> 39: successmessage()
+activate 39
+
+deactivate 39
+
+@enduml

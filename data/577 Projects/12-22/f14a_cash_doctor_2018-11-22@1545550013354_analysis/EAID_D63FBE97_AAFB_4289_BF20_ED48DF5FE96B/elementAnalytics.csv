@@ -1,0 +1,17 @@
+id,element,useCase,type,component
+1,send email including credential:Email Protocol,Login,actor,Consumer Profile
+2,User:Forgotten username or password link,Login,boundary,$help://use_case_model_pattern.htm
+3,User:Invalid information error message,Login,boundary,Medical services pricing information
+4,User:My account page,Login,boundary,Myaccountpage
+5,User:Login page,Login,boundary,Myaccountpage
+6,Forgotten username or password link:send email including credential,Login,boundary,Medical services pricing information
+7,Invalid information error message:redirect to login page,Login,boundary,Myaccountpage
+8,verify user information:Invalid information error message,Login,boundary,Medical services pricing information
+9,Login page:verify user information,Login,control,Network Information
+10,redirect to login page:Login page,Login,boundary,Myaccountpage
+11,verify user information:My account page,Login,boundary,Myaccountpage
+12,verify user information:user info,Login,boundary,Medical services pricing information
+13,stl#User:Forgotten username or password link,Login,Stimulus,undefined
+14,stl#User:Invalid information error message,Login,Stimulus,undefined
+15,stl#User:My account page,Login,Stimulus,undefined
+16,stl#User:Login page,Login,Stimulus,undefined

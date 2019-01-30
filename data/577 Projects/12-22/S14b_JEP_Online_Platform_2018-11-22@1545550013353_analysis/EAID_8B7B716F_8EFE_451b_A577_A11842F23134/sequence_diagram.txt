@@ -1,0 +1,145 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "checkconflictsituation" as 09
+participant "downloaddocument" as 19
+participant "HomePage PA" as 29
+participant "MessageManage Page" as 39
+participant "emptyannouncementform" as 59
+participant "adduserintodb" as 69
+participant "MessageController" as 89
+
+User -> 09: addsuccessinformation()
+activate 09
+
+deactivate 09
+
+User -> 19: Documentslink()
+activate 19
+
+19 -> 19: displayapagethatcontentsaformforuploadingdocuments()
+19 -> 19: documentuploadpanel()
+19 -> 19: displaydocumentdetailpage()
+19 -> 39: usermanagement()
+activate 39
+
+deactivate 39
+
+19 -> 89: filedescirptionpage()
+activate 89
+
+89 -> 19: checkformatofdocument()
+19 -> 59: DisplayuscIdemptyerror()
+activate 59
+
+deactivate 59
+
+19 -> 69: USCIDexistingerror()
+activate 69
+
+deactivate 69
+
+19 -> 19: savedocumentintoserver()
+19 -> 19: deletedocument()
+19 -> 29: localstorage()
+activate 29
+
+deactivate 29
+
+deactivate 19
+
+19 -> 39: displaysuccessmessage()
+activate 39
+
+39 -> 29: displaystudentspage()
+activate 29
+
+29 -> 29: studentspage()
+29 -> 69: addstudentinfo()
+activate 69
+
+69 -> 39: usermanagement()
+deactivate 39
+
+69 -> 09: addsuccessinformation()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+deactivate 29
+
+39 -> 39: successmessage()
+activate 39
+
+deactivate 39
+
+19 -> 19: downloaddocument()
+activate 19
+
+deactivate 19
+
+19 -> 29: localstorage()
+activate 29
+
+deactivate 29
+
+19 -> 39: invalidformatdocumentmessage()
+activate 39
+
+deactivate 39
+
+deactivate 89
+
+User -> 29: studentspage()
+activate 29
+
+29 -> 69: addstudentinfo()
+activate 69
+
+deactivate 69
+
+deactivate 29
+
+User -> 39: invalidformatdocumentmessage()
+activate 39
+
+deactivate 39
+
+User -> 39: successmessage()
+activate 39
+
+deactivate 39
+
+User -> 59: DisplayuscIdemptyerror()
+activate 59
+
+deactivate 59
+
+User -> 69: USCIDexistingerror()
+activate 69
+
+deactivate 69
+
+User -> 19: documentuploadpanel()
+activate 19
+
+19 -> 19: displaydocumentdetailpage()
+deactivate 19
+
+User -> 89: filedescirptionpage()
+activate 89
+
+89 -> 19: checkformatofdocument()
+activate 19
+
+deactivate 19
+
+deactivate 89
+
+@enduml

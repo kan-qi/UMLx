@@ -1,0 +1,62 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Admin
+participant "Newslettertag" as 09
+participant "$help://usecasediagram.htm" as 89
+participant "Buyer Registration Form" as 129
+participant "Vender Registration Form" as 139
+
+Admin -> 09: newslettermainpage()
+activate 09
+
+09 -> 89: redirecttoselectthemepage()
+activate 89
+
+89 -> 09: newsletterthempage()
+09 -> 09: redirecttonewslettercreatingpage()
+09 -> 09: newslettercreatingpage()
+09 -> 09: savenewsletterinformation()
+09 -> 09: newsletter()
+deactivate 09
+
+09 -> 139: sendnotification()
+activate 139
+
+139 -> 129: notification()
+activate 129
+
+deactivate 129
+
+deactivate 139
+
+deactivate 89
+
+Admin -> 09: newsletterthempage()
+activate 09
+
+09 -> 09: redirecttonewslettercreatingpage()
+deactivate 09
+
+Admin -> 09: Newslettertag()
+activate 09
+
+09 -> 09: redirecttonewslettermainpage()
+09 -> 09: newslettermainpage()
+09 -> 89: redirecttoselectthemepage()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+Admin -> 09: newslettercreatingpage()
+activate 09
+
+09 -> 09: savenewsletterinformation()
+deactivate 09
+
+@enduml

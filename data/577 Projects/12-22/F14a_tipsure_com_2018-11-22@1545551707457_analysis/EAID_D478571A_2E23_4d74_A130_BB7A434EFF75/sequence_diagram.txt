@@ -1,0 +1,92 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Adminactor Clientactor User
+participant "Response Form" as 09
+participant "Question Form" as 29
+
+Admin -> 09: createaresponsebutton()
+activate 09
+
+09 -> 29: checkifthequestionisalreadyanswered()
+activate 29
+
+29 -> 29: Sendnotification()
+29 -> 29: notification()
+deactivate 29
+
+29 -> 09: response()
+deactivate 09
+
+29 -> 09: displaycreatearesponsepage()
+activate 09
+
+09 -> 09: createaresponsepage()
+09 -> 09: savetheresponsetodb()
+09 -> 09: response()
+deactivate 09
+
+Admin -> 09: createaresponsepage()
+activate 09
+
+09 -> 09: savetheresponsetodb()
+deactivate 09
+
+Admin -> 29: loadquestionsbutton()
+activate 29
+
+29 -> 29: loadquestions()
+29 -> 09: createaresponsebutton()
+activate 09
+
+09 -> 29: checkifthequestionisalreadyanswered()
+deactivate 29
+
+deactivate 09
+
+29 -> 29: questions()
+activate 29
+
+deactivate 29
+
+Client -> 09: createaresponsepage()
+activate 09
+
+09 -> 09: savetheresponsetodb()
+deactivate 09
+
+Client -> 09: createaresponsebutton()
+activate 09
+
+09 -> 29: checkifthequestionisalreadyanswered()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+Client -> 29: loadquestionsbutton()
+activate 29
+
+29 -> 29: loadquestions()
+deactivate 29
+
+User -> 29: questionform()
+activate 29
+
+29 -> 29: savequestions()
+29 -> 29: questions()
+deactivate 29
+
+User -> 29: Askaquestionbutton()
+activate 29
+
+29 -> 29: displayaskaquestionform()
+29 -> 29: questionform()
+29 -> 29: savequestions()
+deactivate 29
+
+@enduml

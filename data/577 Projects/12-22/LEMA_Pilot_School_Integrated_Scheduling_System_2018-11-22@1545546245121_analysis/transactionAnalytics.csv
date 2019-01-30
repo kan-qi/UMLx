@@ -1,0 +1,77 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User: Student course list->User: Student course list-> Student course list:Review course and approve->Review course and approve:Update status in database->Update status in database: Student course list-> Student course list:Review course and approve,approve course preference,6,0,5,0,0
+2,stl#User: Student course list->User: Student course list-> Student course list:Review course and approve->Review course and approve:Update status in database->Update status in database:Database,approve course preference,5,0,3,1,0
+3,stl#User: Student course list->User: Student course list-> Student course list:Review course and approve->Review course and approve:Update status in database->Update status in database:Homepage,approve course preference,5,1,3,0,0
+4,stl#User:Homepage->User:Homepage,approve course preference,2,1,0,0,0
+5,stl#User:assign student->User:assign student,assign counselor,2,0,1,0,0
+6,stl#User:Homepage->User:Homepage,assign counselor,2,1,0,0,0
+7,stl#User:counselor student assignment menu->User:counselor student assignment menu->counselor student assignment menu:Show list of stuedents->Show list of stuedents:Allocate a counselor ->Allocate a counselor :Display updated counselor->Display updated counselor:Homepage,assign counselor,6,1,1,3,0
+8,stl#User:counselor student assignment menu->User:counselor student assignment menu->counselor student assignment menu:Show list of stuedents->Show list of stuedents:Allocate a counselor ->Allocate a counselor :Display updated counselor->Display updated counselor:counselor student assignment menu->counselor student assignment menu:Show list of stuedents,assign counselor,7,0,2,4,0
+9,stl#User:Homepage->User:Homepage,assign teacher to course,2,1,0,0,0
+10,stl#User:Teacher select page->User:Teacher select page->Teacher select page:Save information->Save information:Update database->Update database:Confirmation message->Confirmation message:Homepage,assign teacher to course,6,1,4,0,0
+11,stl#User:Teacher select page->User:Teacher select page->Teacher select page:Save information->Save information:Update database->Update database:Database,assign teacher to course,5,0,3,1,0
+12,stl#User:Homepage->User:Homepage,authenticate,2,1,0,0,0
+13,stl#User:Input user name and password->User:Input user name and password->Input user name and password:Validate usename and password->Validate usename and password:Check if the id exists->Check if the id exists:Database,authenticate,5,1,2,1,0
+14,stl#User:Input user name and password->User:Input user name and password->Input user name and password:Validate usename and password->Validate usename and password:Check if the id exists->Check if the id exists:Display confirmation->Display confirmation:Homepage,authenticate,6,2,3,0,0
+15,stl#User:Input user name and password->User:Input user name and password->Input user name and password:Validate usename and password->Validate usename and password:Check if the id exists->Check if the id exists:Display confirmation->Display confirmation:Input user name and password->Input user name and password:Validate usename and password,authenticate,7,2,4,0,0
+16,stl#User:Homepage->User:Homepage,export activity info,2,1,0,0,0
+17,stl#User:Export button->User:Export button,export activity info,2,0,1,0,0
+18,stl#User:Export button->User:Export button->Export button:Generate Csv file->Generate Csv file:Display confirmation page->Display confirmation page:Database,export activity info,5,0,3,1,0
+19,stl#User:Export button->User:Export button->Export button:Generate Csv file->Generate Csv file:Display confirmation page->Display confirmation page:Homepage,export activity info,5,1,3,0,0
+20,stl#User:Export button->User:Export button->Export button:Generate Csv file->Generate Csv file:Display confirmation page->Display confirmation page:Export button->Export button:Generate Csv file,export activity info,6,0,5,0,0
+21,stl#User:Click button->User:Click button->Click button:Display course list->Display course list:Database,generate course section,4,0,2,1,0
+22,stl#User:Click button->User:Click button->Click button:Display course list->Display course list:Display confirmation page->Display confirmation page:Homepage,generate course section,5,1,3,0,0
+23,stl#User:Homepage->User:Homepage,generate course section,2,1,0,0,0
+24,stl#User:Course list menu->User:Course list menu->Course list menu:Calcuate course data->Calcuate course data:Display course list->Display course list:Database,generate course section,5,1,2,1,0
+25,stl#User:Course list menu->User:Course list menu->Course list menu:Calcuate course data->Calcuate course data:Display course list->Display course list:Display confirmation page->Display confirmation page:Homepage,generate course section,6,2,3,0,0
+26,stl#User:Input course page->User:Input course page->Input course page:Intert all data at database->Intert all data at database:Display comfirm information->Display comfirm information:Homepage,import district course list,5,2,2,0,0
+27,stl#User:Input course page->User:Input course page->Input course page:Intert all data at database->Intert all data at database:Display comfirm information->Display comfirm information:Input course page->Input course page:Intert all data at database,import district course list,6,2,3,0,0
+28,stl#User:Input course page->User:Input course page->Input course page:Intert all data at database->Intert all data at database:database,import district course list,4,1,1,1,0
+29,stl#User:Homepage->User:Homepage,import district course list,2,1,0,0,0
+30,stl#User:Control1->User:Control1,import district course list,2,1,0,0,0
+31,stl#User:Students course menu->User:Students course menu->Students course menu:Request students detail->Request students detail:Display page->Display page:Confirmation page->Confirmation page:Database,input course preference,6,2,2,1,0
+32,stl#User:Students course menu->User:Students course menu->Students course menu:Request students detail->Request students detail:Display page->Display page:Confirmation page->Confirmation page:Homepage,input course preference,6,3,2,0,0
+33,stl#User:Homepage->User:Homepage,input course preference,2,1,0,0,0
+34,stl#User:Select prefer course->User:Select prefer course->Select prefer course:Confirmation page->Confirmation page:Database,input course preference,4,0,2,1,0
+35,stl#User:Select prefer course->User:Select prefer course->Select prefer course:Confirmation page->Confirmation page:Homepage,input course preference,4,1,2,0,0
+36,stl#User:send students detail->User:send students detail->send students detail:Display page->Display page:Confirmation page->Confirmation page:Database,input course preference,5,1,2,1,0
+37,stl#User:send students detail->User:send students detail->send students detail:Display page->Display page:Confirmation page->Confirmation page:Homepage,input course preference,5,2,2,0,0
+38,stl#User:Homepage->User:Homepage,insert course detail,2,1,0,0,0
+39,stl#User:Course detail page->User:Course detail page->Course detail page:course profie page->course profie page:Display comfirmation page->Display comfirmation page:Homepage,insert course detail,5,3,1,0,0
+40,stl#User:Course detail page->User:Course detail page->Course detail page:course profie page->course profie page:database,insert course detail,4,1,1,1,0
+41,stl#User:Make some changes->User:Make some changes->Make some changes:course profie page->course profie page:Display comfirmation page->Display comfirmation page:Homepage,insert course detail,5,4,0,0,0
+42,stl#User:Make some changes->User:Make some changes->Make some changes:course profie page->course profie page:database,insert course detail,4,2,0,1,0
+43,stl#User:Homepage->User:Homepage,set constraints,2,1,0,0,0
+44,stl#User:Constraints management page->User:Constraints management page->Constraints management page:Display constraint details->Display constraint details:Update changed information->Update changed information:Display information->Display information:Homepage,set constraints,6,4,1,0,0
+45,stl#User:Make some changes->User:Make some changes->Make some changes:Confirm button->Confirm button:Update changed information->Update changed information:Display information->Display information:Homepage,set constraints,6,4,1,0,0
+46,stl#User:Lock button->User:Lock button->Lock button:Updae lock status->Updae lock status:Confirmation page->Confirmation page:Homepage,set current semester course,5,2,2,0,0
+47,stl#User:Lock button->User:Lock button->Lock button:Updae lock status->Updae lock status:Database,set current semester course,4,1,1,1,0
+48,stl#User:Homepage->User:Homepage,set current semester course,2,1,0,0,0
+49,stl#User:Save button->User:Save button->Save button:Display message page->Display message page:Save selected course->Save selected course:Database,set current semester course,5,2,1,1,0
+50,stl#User:Save button->User:Save button->Save button:Display message page->Display message page:Save selected course->Save selected course:Updae lock status->Updae lock status:Confirmation page->Confirmation page:Homepage,set current semester course,7,3,3,0,0
+51,stl#User:Save button->User:Save button->Save button:Display message page->Display message page:Save selected course->Save selected course:Updae lock status->Updae lock status:Database,set current semester course,6,2,2,1,0
+52,stl#User:Current semeter page->User:Current semeter page->Current semeter page:Display message page->Display message page:Save selected course->Save selected course:Database,set current semester course,5,2,1,1,0
+53,stl#User:Current semeter page->User:Current semeter page->Current semeter page:Display message page->Display message page:Save selected course->Save selected course:Updae lock status->Updae lock status:Confirmation page->Confirmation page:Homepage,set current semester course,7,3,3,0,0
+54,stl#User:Current semeter page->User:Current semeter page->Current semeter page:Display message page->Display message page:Save selected course->Save selected course:Updae lock status->Updae lock status:Database,set current semester course,6,2,2,1,0
+55,stl#User:Student course page->User:Student course page->Student course page:Request student detail->Request student detail:Display detail->Display detail:Display confirmation ->Display confirmation :Database,update course preference,6,2,2,1,0
+56,stl#User:Student course page->User:Student course page->Student course page:Request student detail->Request student detail:Display detail->Display detail:Display confirmation ->Display confirmation :Homepage,update course preference,6,3,2,0,0
+57,stl#User:Send student detail->User:Send student detail->Send student detail:Display detail->Display detail:Display confirmation ->Display confirmation :Database,update course preference,5,1,2,1,0
+58,stl#User:Send student detail->User:Send student detail->Send student detail:Display detail->Display detail:Display confirmation ->Display confirmation :Homepage,update course preference,5,2,2,0,0
+59,stl#User:Homepage->User:Homepage,update course preference,2,1,0,0,0
+60,stl#User:Confirm information->User:Confirm information->Confirm information:Display confirmation ->Display confirmation :Database,update course preference,4,1,1,1,0
+61,stl#User:Confirm information->User:Confirm information->Confirm information:Display confirmation ->Display confirmation :Homepage,update course preference,4,2,1,0,0
+62,stl#User:Send student detail->User:Send student detail->Send student detail:Display page->Display page:Homepage,view enrolled students,4,2,1,0,0
+63,stl#User:Homepage->User:Homepage,view enrolled students,2,1,0,0,0
+64,stl#User:Course link button->User:Course link button->Course link button:Get  enrolled students list->Get  enrolled students list:Request students data->Request students data:Display page->Display page:Homepage,view enrolled students,6,3,2,0,0
+65,stl#User:Click button->User:Click button->Click button:Request student detail->Request student detail:Display page->Display page:Homepage,view final student schedule,5,3,1,0,0
+66,stl#User:Send student detail->User:Send student detail->Send student detail:Display page->Display page:Homepage,view final student schedule,4,2,1,0,0
+67,stl#User:Homepage->User:Homepage,view final student schedule,2,1,0,0,0
+68,stl#User:Select  year and semester page->User:Select  year and semester page->Select  year and semester page:Request teacher detail->Request teacher detail:Display page->Display page:Homepage,view final teacher schedule,5,3,1,0,0
+69,stl#User:Homepage->User:Homepage,view final teacher schedule,2,1,0,0,0
+70,stl#User:Send teacher detail->User:Send teacher detail->Send teacher detail:Request teacher detail->Request teacher detail:Display page->Display page:Homepage,view final teacher schedule,5,2,2,0,0
+71,stl#User:Send students detail->User:Send students detail->Send students detail:Display page->Display page:Homepage,view registered students,4,2,1,0,0
+72,stl#User:Homepage->User:Homepage,view registered students,2,1,0,0,0
+73,stl#User:Course reigister page->User:Course reigister page->Course reigister page:Section conflicts page->Section conflicts page:Request student detail data->Request student detail data:Display page->Display page:Homepage,view registered students,6,3,2,0,0
+74,stl#User:Student preference menu->User:Student preference menu->Student preference menu:Display progress->Display progress:Homepage,view student progress,4,2,1,0,0
+75,stl#User:Homepage->User:Homepage,view student progress,2,1,0,0,0

@@ -1,0 +1,366 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+~ createacasefortheuser()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+~ redirecttohomepage()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+}
+
+class helpdomainmodelpatternhtm {
+~ helpdomainmodelpatternhtm()
+}
+
+class Account {
+- account_id:EAJava_int
+- description:EAJava_String
+- name:EAJava_String
+~ Account()
+~ unauthorizedaccesserror()
+}
+
+class Activitycode {
+- description:EAJava_String
+- id:EAJava_int
+- name:EAJava_String
+- undefined:EAID_D643561A_2539_4dd3_BE84_3DB9D053855D
+~ Activitycode()
+~ displayactivitydescriptionpage()
+}
+
+class Admin {
+- ID:EAJava_int
+~ Admin()
+~ Administrator()
+~ print()
+}
+
+class CaseManager {
+- ID:EAJava_int
+- undefined:EAID_575447BA_5219_49de_A1C1_F1F76E065C0A
+~ CaseManager()
+~ userinformationpage()
+~ resetpage()
+}
+
+class Caseaccount {
+- undefined:EAID_A42289D1_66FF_4919_98C9_69FDF48724A9
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Caseaccount()
+}
+
+class Caseaddresses {
+- address_id:EAJava_int
+- address1:EAJava_String
+- address2:EAJava_String
+- city:EAJava_String
+- current:EAJava_byte
+- state:EAJava_String
+- zip:EAJava_String
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Caseaddresses()
+~ successmessage()
+~ findemailaddressoftheselectedyouth()
+}
+
+class Caseanswers {
+- date:EAJava_Date
+- value:EAJava_String
+- undefined:EAID_5F50BCD7_8BB4_4ff3_B038_A4929568ACAE
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Caseanswers()
+}
+
+class Casecontacts {
+- address:EAJava_String
+- contact_id:EAJava_int
+- current:EAJava_byte
+- email:EAJava_String
+- first_name:EAJava_String
+- last_name:EAJava_String
+- phone:EAJava_String
+- relationship:EAJava_String
+- type:EAJava_String
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Casecontacts()
+}
+
+class Caseeducationhistory {
+- address:EAJava_String
+- current:EAJava_byte
+- education_id:EAJava_int
+- end_time:EAJava_Date
+- level_id:EAJava_int
+- note:EAJava_String
+- school_name:EAJava_String
+- start_time:EAJava_Date
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Caseeducationhistory()
+~ invalidinputinformationerror()
+~ caseinformation()
+}
+
+class Caseemail {
+- current:EAJava_byte
+- email:EAJava_String
+- email_id:EAJava_int
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Caseemail()
+~ Emailprotocol()
+~ querydetailofacase()
+~ Emailsentsuccessmessage()
+}
+
+class Caseethnicities {
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Caseethnicities()
+}
+
+class Caseworkhistory {
+- current:EAJava_byte
+- end_time:EAJava_Date
+- history_id:EAJava_int
+- industry:EAJava_String
+- name:EAJava_String
+- note:EAJava_String
+- start_time:EAJava_Date
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Caseworkhistory()
+}
+
+class Cases {
+- birthday:EAJava_Date
+- case_id:EAJava_int
+- first_name:EAJava_String
+- gender:EAJava_byte
+- ILP:EAJava_int
+- last_name:EAJava_String
+- manageruser_id:EAJava_int
+- ssn:EAJava_String
+- status:EAJava_byte
+- webpage:EAJava_String
+~ Cases()
+~ Creaenewcasebutton()
+}
+
+class CasesActivities {
+- activity_code:EAJava_int
+- activity_id:EAJava_int
+- description:EAJava_String
+- end_time:EAJava_Timestamp
+- start_time:EAJava_Timestamp
+- subject:EAJava_String
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ CasesActivities()
+~ activationsuccessmessage()
+~ activtatetheuser()
+}
+
+class Document {
+- doc_Id:EAJava_int
+- title:EAJava_String
+- type_id:EAJava_int
+- undefined:EAID_B363B63D_7BBA_4cf7_9BC7_2514F7795A47
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Document()
+}
+
+class Documentversion {
+- date:EAJava_Date
+- description:EAJava_String
+- extension:EAJava_String
+- file_name:EAJava_String
+- last_modified:EAJava_Date
+- user_id:EAJava_int
+- version_id:EAJava_int
+- undefined:EAID_DFA18B8A_07BD_4ae3_84FD_77C060C9D219
+~ Documentversion()
+}
+
+class DocumentationType {
+- attribute:EAJava_int
+- id:EAJava_int
+- name:EAJava_String
+~ DocumentationType()
+~ informationinvalidmessage()
+}
+
+class EducationLevel {
+- id:EAJava_int
+- name:EAJava_String
+- undefined:EAID_8D24D656_599A_4294_A509_CD5F604E3EA6
+~ EducationLevel()
+~ unauthorizedinformationmessage()
+~ validateinputinformation()
+~ validationfailedmessage()
+~ verificationcodeinputfield()
+}
+
+class EmailTemplate {
+- author:EAJava_String
+- closing:EAJava_String
+- content:EAJava_String
+- description:EAJava_String
+- greeting:EAJava_String
+- heading:EAJava_String
+- id:EAJava_int
+- Signature:EAJava_String
+- subject:EAJava_String
+- template_name:EAJava_String
+- type:EAJava_String
+~ EmailTemplate()
+}
+
+class Ethnicities {
+- ethnicity_id:EAJava_int
+- name:EAJava_String
+- undefined:EAID_453505AD_96FB_449f_B4CA_5AF9AEA9D84A
+~ Ethnicities()
+}
+
+class GeneralUser {
+- ID:EAJava_int
+~ GeneralUser()
+~ userisalreadyactivatederror()
+}
+
+class Groups {
+- id:EAJava_int
+- name:EAJava_String
+- Query:EAJava_String
+~ Groups()
+~ role()
+}
+
+class LimitedUser {
+- case_id:EAJava_int
+- ID:EAJava_int
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ LimitedUser()
+~ validateroleofuser()
+~ displayusereditpage()
+~ Printer()
+}
+
+class Manager {
+- start_date:EAJava_Timestamp
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Manager()
+~ unauthorizederrormessage()
+~ LoginPage()
+~ homepage()
+}
+
+class Password {
+- password:EAJava_String
+- updated:EAJava_Timestamp
+- undefined:EAID_575447BA_5219_49de_A1C1_F1F76E065C0A
+~ Password()
+~ usernameandreceivedpasswordinput()
+}
+
+class Questions {
+- order:EAJava_int
+- question_id:EAJava_int
+- title:EAJava_String
+~ Questions()
+}
+
+class SecurityQuestion {
+- id:EAJava_int
+- question:EAJava_String
+~ SecurityQuestion()
+~ unauthorizedrequestmessage()
+~ Validatetheinformationofdescription()
+}
+
+class Services {
+- name:EAJava_String
+- service_id:EAJava_int
+- type:EAJava_String
+- undefined:EAID_62FBA540_17D7_424a_AA06_53207725BAFB
+~ Services()
+}
+
+class TemplateAttachment {
+- Attach_name:EAJava_String
+- Attach_path:EAJava_String
+- id:EAJava_int
+- template_id:EAJava_int
+~ TemplateAttachment()
+}
+
+class UserSecurityQuestion {
+- answer1:EAJava_String
+- answer2:EAJava_String
+- answer3:EAJava_String
+- sq_id1:EAJava_int
+- sq_id2:EAJava_int
+- sq_id3:EAJava_int
+- user_id:EAJava_int
+- undefined:EAID_4B1E88D3_4F8B_4ccc_A9A6_193A2B021904
+~ UserSecurityQuestion()
+~ saveinputuserinformation()
+~ blankdescriptionerror()
+}
+
+class Usertokens {
+- time:EAJava_Timestamp
+- token:EAJava_String
+- undefined:EAID_575447BA_5219_49de_A1C1_F1F76E065C0A
+~ Usertokens()
+}
+
+class Users {
+- active:EAJava_byte
+- address1:EAJava_String
+- address2:EAJava_String
+- city:EAJava_String
+- email:EAJava_String
+- first_name:EAJava_String
+- last_name:EAJava_String
+- level:EAJava_byte
+- phone_number:EAJava_String
+- state:EAJava_String
+- userId:EAJava_int
+- username:EAJava_String
+- zip:EAJava_String
+- undefined:EAID_21D43AEB_2ECB_4ab7_B78E_FD02A13E33B2
+- undefined:EAID_E3833048_C841_4efd_A22C_4A0BA3E43AF8
+- undefined:EAID_DEF8BB56_27BD_4b1a_9730_25959CA34C67
+- undefined:EAID_D643561A_2539_4dd3_BE84_3DB9D053855D
+- undefined:EAID_FFC8F666_08AD_46f4_8279_3A4957B4D224
+- undefined:EAID_87F8AD5A_FAC5_4d9f_A0D7_49636C055AB4
+~ Users()
+~ checkthestatusofuser()
+~ verifytheroleoftheuser()
+~ Createuserbutton()
+~ insertuserinfo()
+}
+
+class Class1 {
+~ Class1()
+}
+
+class db {
+~ db()
+}
+
+class download {
+~ download(EAJava_int id):EAJava_String
+~ Validateprintdownloadrequest()
+}
+
+@enduml

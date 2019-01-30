@@ -1,0 +1,103 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Message" as 09
+participant "Client" as 19
+participant "Language" as 29
+participant "Message Service" as 49
+participant "validateusenameandpassword" as 99
+participant "confirmlogoutbutton" as 129
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Clicksendbutton()
+activate 19
+
+19 -> 09: Systemcheckthatmessageisnotempty()
+activate 09
+
+09 -> 99: Systemsavesmessageintodatabaseandshowsendsuccessfulmessage()
+activate 99
+
+99 -> 129: showconfirmation()
+activate 129
+
+129 -> 09: Homepage()
+deactivate 09
+
+deactivate 129
+
+99 -> 09: messagedb()
+activate 09
+
+deactivate 09
+
+99 -> 29: logsLanguageLearnerintothesystem()
+activate 29
+
+29 -> 129: showconfirmation()
+activate 129
+
+129 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 129
+
+deactivate 29
+
+deactivate 99
+
+deactivate 19
+
+User -> 29: Gototheprofileofotherlanguagelearner()
+activate 29
+
+29 -> 49: bringsLanguageLearnertosendmessagepage()
+activate 49
+
+49 -> 09: Systemcheckthatmessageisnotempty()
+activate 09
+
+09 -> 99: Systemsavesmessageintodatabaseandshowsendsuccessfulmessage()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+deactivate 49
+
+deactivate 29
+
+User -> 09: Typemessagecontent()
+activate 09
+
+09 -> 09: Systemcheckthatmessageisnotempty()
+09 -> 99: Systemsavesmessageintodatabaseandshowsendsuccessfulmessage()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+User -> 49: Clicksendmessagebutton()
+activate 49
+
+49 -> 49: bringsLanguageLearnertosendmessagepage()
+49 -> 09: Systemcheckthatmessageisnotempty()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+@enduml

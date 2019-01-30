@@ -411,7 +411,6 @@ run_metropolis_MCMC <- function(regressionData, N, priorB, varianceMatrix, normF
   chain[1, "sd"] <- 10
   for (i in 1:N){
     proposal = proposalfunction(chain[i,names(priorB)], chain[i,"priorNormFactor"], chain[i, "sd"])
-    
     probab = exp(posterior(proposal, priorB, varianceMatrix, normFactor, var, regressionData[, -c("Effort")], regressionData["Effort"]) - posterior(chain[i,], param, varianceMatrix, normFactor, var, regressionData[, -c("Effort")], regressionData["Effort"]))
     if (runif(1) < probab){
       chain[i+1,] = proposal

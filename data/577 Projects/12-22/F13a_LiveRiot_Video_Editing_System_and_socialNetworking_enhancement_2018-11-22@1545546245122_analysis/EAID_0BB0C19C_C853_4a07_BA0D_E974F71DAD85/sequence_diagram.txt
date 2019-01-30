@@ -1,0 +1,58 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "pdfformatisnotvalidmessage" as 09
+participant "Casestudydb" as 19
+participant "$help://use_case_model_pattern.htm" as 109
+
+User -> 09: errormessage()
+activate 09
+
+deactivate 09
+
+User -> 19: Listofcasestudieis()
+activate 19
+
+deactivate 19
+
+User -> 19: RemoveCaseStudiesbutton()
+activate 19
+
+19 -> 19: Showalistofcasestudies()
+19 -> 19: RemoveCaseStudiesbutton()
+19 -> 19: Showalistofcasestudies()
+19 -> 109: Deletetherecordfromthedatabase()
+activate 109
+
+109 -> 19: Listofcasestudieis()
+deactivate 19
+
+109 -> 19: casestudyrecord()
+activate 19
+
+deactivate 19
+
+109 -> 09: displayrecorddoesntexistmessage()
+activate 09
+
+09 -> 09: errormessage()
+deactivate 09
+
+109 -> 09: showsuccessmessage()
+activate 09
+
+09 -> 09: successmessage()
+deactivate 09
+
+deactivate 109
+
+User -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+@enduml

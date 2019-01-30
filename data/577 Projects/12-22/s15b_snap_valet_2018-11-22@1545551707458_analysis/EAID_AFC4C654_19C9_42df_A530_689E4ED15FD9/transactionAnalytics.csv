@@ -1,0 +1,11 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Customer:payment page->Customer:payment page->payment page:make payment->make payment:Thirdparty payment,Request and Pay,4,3,0,0,0
+2,stl#Customer:successful payment alert->Customer:successful payment alert->successful payment alert:pull advertisement for random venue->pull advertisement for random venue:error when submitting,Request and Pay,4,0,3,0,0
+3,stl#Customer:invalid ticket number->Customer:invalid ticket number,Request and Pay,2,0,0,1,0
+4,stl#Customer:error when submitting->Customer:error when submitting,Request and Pay,2,0,1,0,0
+5,stl#Customer:ticket input page->Customer:ticket input page->ticket input page:vidate ticket->vidate ticket:error when submitting,Request and Pay,4,1,1,1,0
+6,stl#Customer:ticket input page->Customer:ticket input page->ticket input page:vidate ticket->vidate ticket:invalid ticket number,Request and Pay,4,1,0,2,0
+7,stl#Customer:ticket input page->Customer:ticket input page->ticket input page:vidate ticket->vidate ticket:payment page->payment page:make payment->make payment:Thirdparty payment,Request and Pay,6,4,0,1,0
+8,stl#Customer:ticket input page->Customer:ticket input page->ticket input page:vidate ticket->vidate ticket:ticket,Request and Pay,4,1,0,2,0
+9,stl#Thirdparty payment:update request queue->Thirdparty payment:update request queue->update request queue:alert successful in submission->alert successful in submission:successful payment alert->successful payment alert:pull advertisement for random venue->pull advertisement for random venue:error when submitting,Request and Pay,6,0,4,1,0
+10,stl#Thirdparty payment:update request queue->Thirdparty payment:update request queue->update request queue:request queue,Request and Pay,3,0,0,2,0

@@ -309,6 +309,7 @@ var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir+"\\analysis-re
 var transactionFiles = [];
 var filteredTransactionFiles = [];
 var modelEvaluationFiles = [];
+
 for(var i in modelOutputDirs){
   //code here using lines[i] which will give you each line
 	var modelOutputDir = modelOutputDirs[i];

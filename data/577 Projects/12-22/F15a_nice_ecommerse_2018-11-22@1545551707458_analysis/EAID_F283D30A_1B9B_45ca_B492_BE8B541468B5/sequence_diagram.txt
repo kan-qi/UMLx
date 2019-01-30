@@ -1,0 +1,34 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Admin
+participant "Vendor Registration Form" as 09
+participant "sendemailwithuniquecode" as 29
+
+Admin -> 09: Vendorapprovepage()
+activate 09
+
+09 -> 09: addvendorintolist()
+09 -> 09: vendoralreadyexistsmessage()
+deactivate 09
+
+09 -> 09: vendor()
+activate 09
+
+deactivate 09
+
+09 -> 29: sendemailwithuniquecode()
+activate 29
+
+29 -> 29: Emailprotocol()
+deactivate 29
+
+Admin -> 09: vendoralreadyexistsmessage()
+activate 09
+
+deactivate 09
+
+@enduml

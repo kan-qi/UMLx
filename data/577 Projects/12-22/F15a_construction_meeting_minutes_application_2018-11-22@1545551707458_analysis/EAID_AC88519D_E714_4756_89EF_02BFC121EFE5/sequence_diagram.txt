@@ -1,0 +1,55 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "UserInfo" as 09
+participant "Meeting" as 19
+participant "System Boundary" as 89
+
+Administrator -> 09: Informationinvalid()
+activate 09
+
+deactivate 09
+
+Administrator -> 19: Editmeetingoption()
+activate 19
+
+19 -> 19: displaymeetingsscreen()
+19 -> 19: meeting()
+deactivate 19
+
+19 -> 19: meetinginformationscreen()
+activate 19
+
+19 -> 89: verifyattendeelist()
+activate 89
+
+89 -> 09: Informationinvalid()
+activate 09
+
+deactivate 09
+
+89 -> 09: saveuserinfo()
+activate 09
+
+09 -> 19: meetinginfo()
+deactivate 19
+
+deactivate 09
+
+deactivate 89
+
+Administrator -> 19: meetinginformationscreen()
+activate 19
+
+19 -> 89: verifyattendeelist()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+@enduml
