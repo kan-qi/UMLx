@@ -907,14 +907,8 @@ private CallGraph genCallGraph() {
 		Debug1.v().println("android-jar-directory not exists "+ sdkFile.getName());
 		return null;			
 	}
-		
-	Path curDir = Paths.get(System.getProperty("user.dir"));
 	
-	File outputDir = Paths.get(curDir.toString(), "output", sdkFile.getName()).toFile();
-	if(!outputDir.exists() || !outputDir.isDirectory()) {
-		outputDir.mkdir();
-	}
-	Configs.outputDir = outputDir.getAbsolutePath();
+	Path curDir = Paths.get(System.getProperty("user.dir"));
 	
 	
 	Path sourceSinkPath = Paths.get(curDir.toString(), "SourcesAndSinks.txt");
@@ -932,6 +926,7 @@ private CallGraph genCallGraph() {
 	}
 
 	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
+	app.setOutputDir(Configs.outputDir);
 	
 //	Path curDir = Paths.get(System.getProperty("user.dir"));
 	Path gatorFilePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");

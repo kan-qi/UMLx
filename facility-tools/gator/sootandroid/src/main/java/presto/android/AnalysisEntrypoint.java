@@ -13,6 +13,9 @@ import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Date;
 
 public class AnalysisEntrypoint {
@@ -83,6 +86,15 @@ public class AnalysisEntrypoint {
     }
     
     Debug2.v().printf("classes: %s", sb.toString());
+    
+    
+    Path curDir = Paths.get(System.getProperty("user.dir"));
+	
+	File outputDir = Paths.get(curDir.toString(), "output", Configs.benchmarkName).toFile();
+	if(!outputDir.exists() || !outputDir.isDirectory()) {
+		outputDir.mkdir();
+	}
+	Configs.outputDir = outputDir.getAbsolutePath();
 
     // Analysis
     // TODO: use reflection to allow nice little extensions.

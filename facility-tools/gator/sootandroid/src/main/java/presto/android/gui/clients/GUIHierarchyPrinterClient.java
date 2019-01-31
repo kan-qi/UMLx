@@ -46,7 +46,7 @@ public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
     if (out == null) {
       try {
 //    	 Path curDir = Paths.get(System.getProperty("user.dir"));
-    	 Path filePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
+    	Path filePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
     	File file = filePath.toFile();
     	if(!file.exists()) {
     		file.createNewFile();

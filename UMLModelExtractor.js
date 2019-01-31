@@ -20,7 +20,7 @@
 	function extractModelInfo(umlModelInfo, callbackfunc) {
 //		console.log(umlModelInfo);
 		
-		constructModel(modelParser, modelString, umlModelInfo, callbackfunc){
+		var constructModel = function(modelParser, modelString, umlModelInfo, callbackfunc){
 			var path = require('path');
 			console.log(umlModelInfo.umlFilePath);
 			var workDir = path.dirname(umlModelInfo.umlFilePath);

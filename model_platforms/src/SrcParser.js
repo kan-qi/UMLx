@@ -729,7 +729,7 @@
 //	var dom = require('xmldom').DOMParser;
 	
 	var responsePatternsFile = "response-patterns.txt";
-	var isJSONBased = false;
+//	var isJSONBased = true;
 
 	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
 //		fs.readFile(filePath, "utf8", function(err, data) {
@@ -738,7 +738,7 @@
 //			parser.parseString(data, function(err, result) {
 			
 			var codeAnalysis = codeAnalysisXMI;
-			if(isJSONBased){
+			if(this.isJSONBased){
 				codeAnalysis = codeAnalysisSoot;
 			}
 
