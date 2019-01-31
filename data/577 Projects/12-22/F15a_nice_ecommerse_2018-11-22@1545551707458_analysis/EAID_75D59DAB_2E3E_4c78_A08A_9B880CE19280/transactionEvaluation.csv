@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#vendor:invalid info message->vendor:invalid info message,Submit vendor registration,CTRL;EXTCLL;INT,2,0,2,1,4
+2,stl#vendor:main page->vendor:main page,Submit vendor registration,CTRL;EXTCLL;DM;EI,2,0,2,1,4
+3,stl#vendor:registration page->vendor:registration page->registration page:verify user info->verify user info:invalid info message,Submit vendor registration,TRAN_NA,4,1,2,3,8
+4,stl#vendor:registration page->vendor:registration page->registration page:verify user info->verify user info:add user info->add user info:user info,Submit vendor registration,TRAN_NA,5,2,2.5,4,12.5
+5,stl#vendor:registration page->vendor:registration page->registration page:verify user info->verify user info:add user info->add user info:main page,Submit vendor registration,TRAN_NA,5,2,2.25,4,11.25

@@ -1,0 +1,56 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "Survey Management" as 09
+participant "schoolinformaiton" as 39
+participant "Association Management" as 49
+
+administrator -> 09: successmessage()
+activate 09
+
+deactivate 09
+
+administrator -> 09: surveylist()
+activate 09
+
+09 -> 09: updatesurveyindb()
+09 -> 09: successmessage()
+09 -> 49: checkifassociationbetweenpathandsurveyindb()
+activate 49
+
+49 -> 39: pathandlocationinformation()
+activate 39
+
+deactivate 39
+
+49 -> 49: insertanassociationintodb()
+49 -> 09: successmessage()
+deactivate 09
+
+49 -> 39: pathandlocationinformation()
+activate 39
+
+deactivate 39
+
+deactivate 49
+
+09 -> 09: survey()
+activate 09
+
+deactivate 09
+
+administrator -> 09: successmessage()
+activate 09
+
+09 -> 49: checkifassociationbetweenpathandsurveyindb()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+@enduml

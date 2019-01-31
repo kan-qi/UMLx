@@ -1,0 +1,369 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class Class1 {
+~ Class1()
+~ RSS()
+}
+
+class ExistingJobsController {
+- jobID:EAJava_int
+- jobTitle:EAJava_string
+- duties:EAJava_string
+- link:EAJava_string
+- isOpen:EAJava_boolean
+- requirements:EAJava_string
+~ performSearch():EAJava_void
+~ getJobDetails():EAJava_ExistingJobsController
+~ checkifemailidandmodelnumberareexisting()
+~ triggerdownloadthelistofjobstoasubscriber()
+~ joblistingdatabase()
+~ readexistinginformation()
+}
+
+class Notifications {
+- toAddress:EAJava_void
+- fromAddress:EAJava_void
+- subject:EAJava_void
+- body:EAJava_void
+~ createEmail()
+~ sendEmailNotification():EAJava_void
+}
+
+class RSSFeedParser {
+- jobID:EAJava_void
+- jobTitle:EAJava_void
+- description:EAJava_void
+~ getJobID():EAJava_int
+~ checkIfRequested():EAJava_boolean
+~ getJobTitle():EAJava_string
+~ parseRSSfeed()
+}
+
+class RSSFeedRetriever {
+- undefined:EAID_9945257C_85A3_42d4_A896_3BFA33DFB827
+~ fetchAndSaveFeed():EAJava_boolean
+~ onSuccess():EAJava_void
+~ onFailure():EAJava_void
+~ retryrequest()
+~ storeRSSfeedinXMLfile()
+~ retriveRSSfeed()
+}
+
+class SearchJobsServerPage {
+~ forwardDetails():EAJava_void
+~ forwardSearchResults():EAJava_void
+~ onSuccess():EAJava_void
+~ senddetailsinanencryptedfashiontosearch()
+~ displaythejobsearchresultinthejobpage()
+~ searchpage()
+~ searchforjobsbutton()
+~ searchjobsfromjoblistingsdatabase()
+~ validateifsearchtermisnonempty()
+~ sendsearchtermtotheserver()
+~ searchjobdetailrequest()
+~ homepage()
+}
+
+class SubscriptionsController {
+- jobID:EAJava_int
+- userID:EAJava_int
+~ searchByJobID():EAJava_void
+~ forwardSubDetails():EAJava_SubscriptionsController
+~ update():EAJava_boolean
+~ onSuccess():EAJava_void
+~ onFailure():EAJava_void
+~ subscribetoajob()
+~ descriptionpage()
+~ sendjobidsubscriptionmethodanduserdetailstosearchinencryptedfashion()
+}
+
+class UserProfileController {
+- userName:EAJava_string
+- email:EAJava_string
+- mobileNumber:EAJava_string
+- mobileCarrier:EAJava_string
+- useMobile:EAJava_boolean
+- useEmail:EAJava_boolean
+~ update():EAJava_boolean
+~ forwardUserID():EAJava_int
+~ getUserDetails():EAJava_UserProfileController
+~ forwardUserJobIdDetails():EAJava_void
+~ UserProfilebutton()
+~ searchthroughtheuserprofiledatabase()
+}
+
+class UserProfileServerPage {
+~ forwardUserProfile():EAJava_void
+~ forwardUserID():EAJava_void
+~ redirecttoprofilepage()
+~ userinformationupdatepage()
+~ savedetailintouserprofiledatabase()
+~ sendrequesttotheserver()
+}
+
+class ViewJobDescServerPage {
+~ forwardJobDetails():EAJava_void
+~ formatDetails():EAJava_void
+~ formatMessage():EAJava_void
+~ formatError():EAJava_void
+~ redirecttojobdescriptionpage()
+}
+
+class ViewOpenJobsServerPage {
+~ requestOpenJobs():EAJava_void
+~ formatResults():EAJava_void
+~ displayunopenjobs()
+~ viewopenjobsbutton()
+}
+
+class emailNotification {
+~ emailNotification()
+~ checkifemailidandnumberarevalid()
+~ formforinputtinguserinformation()
+}
+
+class mobileNotification {
+- carrier:EAJava_void
+~ mobileNotification()
+~ XMLfile()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+~ userdatabase()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class SystemBoundary {
+~ SystemBoundary()
+}
+
+class XML {
+~ XML()
+}
+
+class Invaliddetailinputmessage {
+~ Invaliddetailinputmessage()
+~ inputthedetailintouserdatabase()
+~ displaysuccessmessage()
+~ timeouterrormessage()
+~ displaydetailsinthejobdescriptionpage()
+}
+
+class Localstorage {
+~ Localstorage()
+}
+
+class redirecttowebsite {
+~ redirecttowebsite()
+}
+
+class Applynoewlink {
+~ Applynoewlink()
+}
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+ExistingJobsController .. ViewJobDescServerPage
+
+emailNotification <|-- Notifications
+
+mobileNotification <|-- Notifications
+
+@enduml

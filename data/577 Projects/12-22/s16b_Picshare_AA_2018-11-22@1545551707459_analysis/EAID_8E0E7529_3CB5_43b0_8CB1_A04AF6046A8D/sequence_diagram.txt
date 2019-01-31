@@ -1,0 +1,52 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Hashtagicon" as 09
+participant "DeleteEventButton" as 19
+participant "Picture" as 39
+participant "Warninginformationofduplicate" as 69
+
+User -> 09: ConfirmBox()
+activate 09
+
+09 -> 19: Closewarninganddeleteevent()
+activate 19
+
+19 -> 19: Event()
+deactivate 19
+
+19 -> 39: DeletePicture()
+activate 39
+
+39 -> 39: Picture()
+deactivate 39
+
+deactivate 09
+
+User -> 19: DeleteEventButton()
+activate 19
+
+19 -> 69: Showwarningofdeletion()
+activate 69
+
+69 -> 09: ConfirmBox()
+activate 09
+
+09 -> 19: Closewarninganddeleteevent()
+deactivate 19
+
+deactivate 09
+
+69 -> 19: DeleteEventButton()
+activate 19
+
+19 -> 69: Showwarningofdeletion()
+deactivate 69
+
+deactivate 19
+
+@enduml

@@ -1,0 +1,8 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#Owner:Error message->Owner:Error message,Authorize tour creator,CTRL,2,3,3,1,6
+2,stl#Owner:users list->Owner:users list->users list:retrieve user profile->retrieve user profile:user info,Authorize tour creator,CTRL,4,0,8,3,32
+3,stl#Owner:users list->Owner:users list->users list:retrieve user profile->retrieve user profile:users list->users list:retrieve user profile,Authorize tour creator,CTRL,5,0,8,4,40
+4,stl#Owner:users list->Owner:users list->users list:retrieve user profile->retrieve user profile:users list->users list:change user file->change user file:user info,Authorize tour creator,CTRL,6,0,8,5,48
+5,stl#Owner:users list->Owner:users list->users list:retrieve user profile->retrieve user profile:users list->users list:change user file->change user file:send error message if not successful->send error message if not successful:Error message,Authorize tour creator,CTRL,7,2,6.333333333333333,6,44.33333333333333
+6,stl#Owner:users list->Owner:users list->users list:change user file->change user file:user info,Authorize tour creator,CTRL,4,0,8,3,32
+7,stl#Owner:users list->Owner:users list->users list:change user file->change user file:send error message if not successful->send error message if not successful:Error message,Authorize tour creator,CTRL,5,2,5.5,4,27.5

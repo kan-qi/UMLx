@@ -1,0 +1,98 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "VizualizationView" as 09
+participant "Sharebutton" as 29
+participant "EditSphereView" as 39
+participant "AuthorizationChecker" as 49
+participant "db" as 59
+participant "Displaysuccessmessagetouser" as 89
+participant "Router" as 109
+participant "EmailSender" as 149
+
+User -> 09: Inappnotification()
+activate 09
+
+09 -> 39: redirecttosphereedit()
+activate 39
+
+39 -> 39: sphereeditpage()
+deactivate 39
+
+09 -> 109: Logoutapp()
+activate 109
+
+109 -> 09: Listofnotifications()
+09 -> 89: displayinappnotificaiton()
+activate 89
+
+89 -> 89: Displaysuccessmessagetouser()
+89 -> 09: Inappnotification()
+09 -> 39: redirecttosphereedit()
+activate 39
+
+deactivate 39
+
+09 -> 109: Logoutapp()
+deactivate 109
+
+deactivate 09
+
+deactivate 89
+
+89 -> 09: Inappnotification()
+activate 09
+
+09 -> 39: redirecttosphereedit()
+activate 39
+
+deactivate 39
+
+09 -> 109: Logoutapp()
+activate 109
+
+deactivate 109
+
+deactivate 09
+
+User -> 09: Listofnotifications()
+activate 09
+
+09 -> 89: displayinappnotificaiton()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+User -> 29: Sharespherebutton()
+activate 29
+
+29 -> 149: sendsemailnotificationtoseconduser()
+activate 149
+
+149 -> 49: AddsnotificationrecordinDB()
+activate 49
+
+49 -> 49: Notificationrecord()
+deactivate 49
+
+49 -> 59: db()
+activate 59
+
+deactivate 59
+
+deactivate 149
+
+deactivate 29
+
+User -> 39: sphereeditpage()
+activate 39
+
+deactivate 39
+
+@enduml

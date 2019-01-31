@@ -1,0 +1,41 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Sensor Data Export File" as 19
+participant "Product Configuration" as 49
+participant "Sensor Product Configuration Form" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: SendDatapage()
+activate 19
+
+19 -> 19: Inputdata()
+19 -> 59: validateauthenticationinformationandchecksthevalidationofthesensor()
+activate 59
+
+59 -> 49: Confirmationpage()
+activate 49
+
+49 -> 19: SendDatapage()
+19 -> 19: Inputdata()
+deactivate 19
+
+49 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 59
+
+@enduml

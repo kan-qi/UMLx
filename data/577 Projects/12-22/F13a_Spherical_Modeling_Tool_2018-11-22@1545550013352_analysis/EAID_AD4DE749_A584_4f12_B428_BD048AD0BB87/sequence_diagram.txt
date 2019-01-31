@@ -1,0 +1,67 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Sharebutton" as 09
+participant "UserModel" as 19
+participant "Displaysuccessmessagetouser" as 29
+participant "AuthorizationChecker" as 79
+participant "QuestionModel" as 89
+participant "SphereModel" as 99
+
+User -> 09: filterdatabutton()
+activate 09
+
+09 -> 89: queriesusersandansweredquestions()
+activate 89
+
+89 -> 29: Displaylistofuserswithcheckbox()
+activate 29
+
+29 -> 19: Listofusers()
+activate 19
+
+19 -> 79: updatesthechartwithonlythedataforcheckedusers()
+activate 79
+
+79 -> 29: Displaysuccessinformationmessage()
+29 -> 29: successinformationmessage()
+deactivate 29
+
+79 -> 99: sphere()
+activate 99
+
+deactivate 99
+
+deactivate 79
+
+deactivate 19
+
+89 -> 99: sphere()
+activate 99
+
+deactivate 99
+
+deactivate 89
+
+deactivate 09
+
+User -> 19: Listofusers()
+activate 19
+
+19 -> 79: updatesthechartwithonlythedataforcheckedusers()
+activate 79
+
+deactivate 79
+
+deactivate 19
+
+User -> 29: successinformationmessage()
+activate 29
+
+deactivate 29
+
+@enduml

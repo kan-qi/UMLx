@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Registration Form" as 09
+participant "Invaliderrormessage" as 19
+
+User -> 19: Invaliderrormessage()
+activate 19
+
+deactivate 19
+
+User -> 09: RegistrationPage()
+activate 09
+
+09 -> 09: Restcalforinsertingregistrationdata()
+09 -> 09: Validateregistrationinformation()
+09 -> 09: NeonCRM()
+deactivate 09
+
+09 -> 19: Displayaninvaliderrormessage()
+activate 19
+
+19 -> 19: Invaliderrormessage()
+deactivate 19
+
+User -> 09: RegisterOnlineButton()
+activate 09
+
+09 -> 09: redirecttoregistrationpage()
+09 -> 09: RegistrationPage()
+09 -> 09: Restcalforinsertingregistrationdata()
+deactivate 09
+
+@enduml

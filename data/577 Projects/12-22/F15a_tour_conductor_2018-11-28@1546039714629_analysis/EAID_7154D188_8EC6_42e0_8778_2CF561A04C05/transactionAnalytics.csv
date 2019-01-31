@@ -1,0 +1,8 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#Taker:stop info->Taker:stop info,View a particular stop,2,1,0,0,0
+2,stl#Taker:empty map view->Taker:empty map view,View a particular stop,2,1,0,0,0
+3,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:check internet connection->check internet connection:tour info,View a particular stop,5,1,1,2,0
+4,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:check internet connection->check internet connection:empty map view,View a particular stop,5,2,1,1,0
+5,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:empty map view,View a particular stop,4,2,0,1,0
+6,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:stop info,View a particular stop,4,2,0,1,0
+7,stl#Taker:list of stops->Taker:list of stops->list of stops:retrieve tour->retrieve tour:tour info,View a particular stop,4,1,0,2,0

@@ -294,12 +294,12 @@ def main():
         for curStr in SootGlobalConfig.pList:
             for curItem in SootGlobalConfig.projListCGO:
                 if (SootGlobalConfig.bExact and curStr == curItem.name) or ((not SootGlobalConfig.bExact) and curStr in curItem.name ):
-                    ret = curItem.execute()
+                    curItem.execute()
                     if (not SootGlobalConfig.bSilent) and (ret == 0):
                         waitForEnter()
             for curItem in SootGlobalConfig.projListCC:
                 if (SootGlobalConfig.bExact and curStr == curItem.name) or ((not SootGlobalConfig.bExact) and curStr in curItem.name ):
-                    ret = curItem.execute()
+                    curItem.execute()
                     if (not SootGlobalConfig.bSilent) and (ret == 0):
                         waitForEnter()
 

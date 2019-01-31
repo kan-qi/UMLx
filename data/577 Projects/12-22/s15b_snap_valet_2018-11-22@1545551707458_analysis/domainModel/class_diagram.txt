@@ -1,0 +1,157 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class helpusecasemodelpatternhtm {
+~ helpusecasemodelpatternhtm()
+}
+
+class helpusecasediagramhtm {
+~ helpusecasediagramhtm()
+}
+
+class helpactorhtm {
+~ helpactorhtm()
+}
+
+class helpdomainmodelpatternhtm {
+~ helpdomainmodelpatternhtm()
+~ mainpage()
+}
+
+class Customer {
+- customer_ID:EAJava_int
+- customer_name:EAJava_char
+- user_name:EAJava_char
+- user_password:EAJava_char
+- undefined:EAID_B8AE5231_486C_4446_8BD8_7E9880866BE3
+~ Customer()
+~ registerbutton()
+}
+
+class Location {
+- current_valet_fee:EAJava_float
+- current_valet_id:EAJava_int
+- location_address:EAJava_char
+- location_ID:EAJava_char
+- location_latitude:EAJava_char
+- location_longitude:EAJava_double
+- location_name:EAJava_char
+- valet_company_id:EAJava_int
+- undefined:EAID_B8AE5231_486C_4446_8BD8_7E9880866BE3
+- undefined:EAID_8500237D_1F8E_41bd_AA05_8679C32A8BAF
+- undefined:EAID_31A16986_A7A7_41ce_A86B_A496B07AD498
+~ Location()
+~ inputinformationinvalid()
+~ matchedresultsforlocations()
+~ confirmationprompt()
+~ duplicateregistrationinformation()
+~ registrationpage()
+~ vidateticket()
+~ notificationofinvalidtransaction()
+}
+
+class Valet {
+- user_name:EAJava_char
+- user_password:EAJava_char
+- valet_company_id:EAJava_int
+- valet_id:EAJava_int
+- valet_name:EAJava_char
+- valet_state:EAJava_int
+- undefined:EAID_B8AE5231_486C_4446_8BD8_7E9880866BE3
+- undefined:EAID_8500237D_1F8E_41bd_AA05_8679C32A8BAF
+~ Valet()
+~ removevaletfromdb()
+}
+
+class ValetCheckIn {
+- Location_Id:EAJava_char
+- timestamp:EAJava_int
+- valet_fee:EAJava_int
+- Valet_Id:EAJava_int
+~ ValetCheckIn()
+~ validatetheform()
+~ checkifvenueischeckedin()
+~ checkifactive()
+~ savevaletinformation()
+~ invalidticketnumber()
+~ ticketinputpage()
+}
+
+class ValetCompany {
+- user_name:EAJava_char
+- user_password:EAJava_char
+- valet_company_id:EAJava_int
+- valet_company_name:EAJava_char
+- undefined:EAID_4A709430_CCB0_4175_9C69_BA816A512B3E
+- undefined:EAID_31A16986_A7A7_41ce_A86B_A496B07AD498
+- undefined:EAID_FC85A43A_D88B_4ef2_BE5E_352057530558
+~ ValetCompany()
+}
+
+class ValetCompanyLocatedIN {
+- location_id:EAJava_char
+- timestamp:EAJava_int
+- valet company_id:EAJava_int
+~ ValetCompanyLocatedIN()
+~ valetinformationinputpage()
+}
+
+class ValetRequest {
+- customer_id:EAJava_int
+- location_id:EAJava_char
+- payment_method:EAJava_int
+- ticket_number:EAJava_char
+- timestamp:EAJava_int
+- tips:EAJava_float
+- valet_company_id:EAJava_int
+- valet_fee:EAJava_float
+- valet_request_id:EAJava_int
+- valet_request_status:EAJava_int
+~ ValetRequest()
+~ validatetheaddressform()
+~ Vehiclerequestscreen()
+~ navigatetoqueuescreen()
+~ Confirmationrequestdialog()
+~ updaterequestqueue()
+~ removerequestbutton()
+}
+
+class displaydropdown {
+~ displaydropdown()
+~ dropdownforretrieveandinvalid()
+}
+
+class systemerrorwhenconnectingserver {
+~ systemerrorwhenconnectingserver(EAJava_char user_nameEAJava_char user_passwordEAJava_int valet_company_idEAJava_int valet_idEAJava_char valet_nameEAJava_int valet_stateEAID_B8AE5231_486C_4446_8BD8_7E9880866BE3 undefined):EAID_8500237D_1F8E_41bd_AA05_8679C32A8BAF
+~ servererror()
+~ inactiveemployee()
+~ Advertisementforrandomvenue()
+~ displayspinnerwhilesavinginformation()
+~ systemerrormessage()
+~ errorwhensubmitting()
+~ sendoutemailwiththetransactionrecord()
+}
+
+class GooglePlacesAPI {
+~ GooglePlacesAPI()
+~ Saveacceptance()
+}
+
+class searchforbestmatch {
+~ searchforbestmatch(EAJava_int customer_idEAJava_char location_idEAJava_int payment_methodEAJava_char ticket_numberEAJava_int timestampEAJava_float tipsEAJava_int valet_company_idEAJava_float valet_feeEAJava_int valet_request_id):EAJava_int
+~ successfullysaveregistrationinformation()
+}
+
+class paymentpage {
+~ paymentpage(EAJava_int customer_IDEAJava_char customer_nameEAJava_char user_nameEAJava_char user_password):EAID_B8AE5231_486C_4446_8BD8_7E9880866BE3
+~ statusofthepayment()
+~ checkpaymentexists()
+~ redirecttopaymentscreen()
+}
+
+class Emailprotocol {
+~ Emailprotocol()
+~ Emailsendconfirmationmessage()
+}
+
+@enduml

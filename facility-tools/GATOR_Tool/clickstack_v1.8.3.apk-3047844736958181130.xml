@@ -1,0 +1,1002 @@
+<GUIHierarchy app="clickstack_v1.8.3.apk">
+  <Activity name="com.github.orangegangsters.lollipin.lib.b">
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityBlackList">
+    <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.support.v7.widget.RecyclerView" id="2131296323" idName="black_list">
+            </View>
+            <View type="android.widget.ProgressBar" id="2131296327" idName="black_list_progress_bar">
+            </View>
+          </Child>
+        </View>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+      </Child>
+    </View>
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.MenuItem" id="2131296276" idName="action_count">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityBlackList: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityEditor">
+    <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.ScrollView" id="2131296495" idName="scroll_view">
+          <Child>
+            <View type="android.widget.EditText" id="2131296379" idName="edit_text">
+              <EventAndHandler event="long_click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor$5: boolean onLongClick(android.view.View)&gt;" />
+              <EventAndHandler event="enter_text" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor$1$1$1: void beforeTextChanged(java.lang.CharSequence,int,int,int)&gt;" />
+              <EventAndHandler event="enter_text" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor$1$1$1: void onTextChanged(java.lang.CharSequence,int,int,int)&gt;" />
+              <EventAndHandler event="enter_text" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor$1$1$1: void afterTextChanged(android.text.Editable)&gt;" />
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.view.View" id="2131296376" idName="divider">
+            </View>
+            <View type="android.widget.TextView" id="2131296537" idName="text_count">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor: void onClickTextCount(android.view.View)&gt;" />
+            </View>
+          </Child>
+        </View>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+        <View type="android.widget.ImageButton" id="2131296418" idName="main_fab">
+          <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor: void saveTextOnClick(android.view.View)&gt;" />
+        </View>
+      </Child>
+    </View>
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.MenuItem" id="2131296296" idName="action_share">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296290" idName="action_mode_switch">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296297" idName="action_star">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.github.orangegangsters.lollipin.lib.a">
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityDonate">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.widget.Button" id="2131296337" idName="btn_donate_2_99">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityDonate: void onDonateGooglePlayClick(android.view.View)&gt;" />
+            </View>
+            <View type="android.widget.Button" id="2131296338" idName="btn_donate_6_99">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityDonate: void onDonateGooglePlayClick(android.view.View)&gt;" />
+            </View>
+            <View type="android.widget.Button" id="2131296336" idName="btn_donate_0_99">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityDonate: void onDonateGooglePlayClick(android.view.View)&gt;" />
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.Button" id="2131296339" idName="btn_hide_donate">
+          <Text>(Hide donate option)</Text>
+          <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityDonate: void onHideDonateClick(android.view.View)&gt;" />
+        </View>
+        <View type="android.widget.TextView" id="-1" idName="NO_ID">
+          <Text>Donate Me ❤</Text>
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.base.MyActivityMainDialog">
+    <View type="android.widget.RelativeLayout" id="2131296420" idName="main_view">
+      <Child>
+        <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.widget.RelativeLayout" id="2131296316" idName="background_view">
+              <Child>
+                <View type="android.widget.ImageView" id="-1" idName="NO_ID">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.LinearLayout" id="2131296478" idName="recycler_layout">
+              <Child>
+                <View type="android.support.v7.widget.RecyclerView" id="2131296342" idName="cardList">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageButton" id="2131296418" idName="main_fab">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: void mFabOnClick(android.view.View)&gt;" />
+            </View>
+          </Child>
+        </View>
+        <View type="android.view.View" id="2131296430" idName="my_toolbar_shadow">
+        </View>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+      </Child>
+    </View>
+    <View type="android.widget.RelativeLayout" id="2131296420" idName="main_view">
+      <Child>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+        <View type="android.view.View" id="2131296430" idName="my_toolbar_shadow">
+        </View>
+        <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.widget.LinearLayout" id="2131296478" idName="recycler_layout">
+              <Child>
+                <View type="android.support.v7.widget.RecyclerView" id="2131296342" idName="cardList">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageButton" id="2131296418" idName="main_fab">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: void mFabOnClick(android.view.View)&gt;" />
+            </View>
+            <View type="android.widget.RelativeLayout" id="2131296316" idName="background_view">
+              <Child>
+                <View type="android.widget.ImageView" id="-1" idName="NO_ID">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.MenuItem" id="2131296286" idName="action_merge">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296277" idName="action_delete">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296297" idName="action_star">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.ViewGroup" id="2131296423" idName="menu_group">
+          <Child>
+            <View type="android.view.MenuItem" id="2131296295" idName="action_settings">
+            </View>
+            <View type="android.view.MenuItem" id="2131296282" idName="action_export">
+            </View>
+            <View type="android.view.MenuItem" id="2131296264" idName="action_about">
+            </View>
+            <View type="android.view.MenuItem" id="2131296280" idName="action_donate">
+            </View>
+            <View type="android.view.MenuItem" id="2131296278" idName="action_delete_all">
+            </View>
+          </Child>
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296296" idName="action_share">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296265" idName="action_backup_selected">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296281" idName="action_edit">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296294" idName="action_search">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityMain">
+    <View type="android.widget.RelativeLayout" id="2131296420" idName="main_view">
+      <Child>
+        <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.widget.LinearLayout" id="2131296478" idName="recycler_layout">
+              <Child>
+                <View type="android.support.v7.widget.RecyclerView" id="2131296342" idName="cardList">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageButton" id="2131296418" idName="main_fab">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: void mFabOnClick(android.view.View)&gt;" />
+            </View>
+            <View type="android.widget.RelativeLayout" id="2131296316" idName="background_view">
+              <Child>
+                <View type="android.widget.ImageView" id="-1" idName="NO_ID">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.view.View" id="2131296430" idName="my_toolbar_shadow">
+        </View>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+      </Child>
+    </View>
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.MenuItem" id="2131296277" idName="action_delete">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296265" idName="action_backup_selected">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296281" idName="action_edit">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296294" idName="action_search">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296297" idName="action_star">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296286" idName="action_merge">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296296" idName="action_share">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.ViewGroup" id="2131296423" idName="menu_group">
+          <Child>
+            <View type="android.view.MenuItem" id="2131296295" idName="action_settings">
+            </View>
+            <View type="android.view.MenuItem" id="2131296264" idName="action_about">
+            </View>
+            <View type="android.view.MenuItem" id="2131296282" idName="action_export">
+            </View>
+            <View type="android.view.MenuItem" id="2131296278" idName="action_delete_all">
+            </View>
+            <View type="android.view.MenuItem" id="2131296280" idName="action_donate">
+            </View>
+          </Child>
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.base.MyPreferenceActivity">
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityMainBottomSheet">
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.MenuItem" id="2131296291" idName="action_open_main">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMainBottomSheet: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityBackupNew">
+    <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.View" id="2131296430" idName="my_toolbar_shadow">
+        </View>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+        <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+                  <Child>
+                    <View type="android.widget.Button" id="2131296388" idName="export_button">
+                      <Text>Export</Text>
+                      <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityBackupNew: void export(android.view.View)&gt;" />
+                    </View>
+                    <View type="android.widget.Switch" id="2131296529" idName="switch_only_starred_items">
+                      <Text>All clipboards</Text>
+                      <EventAndHandler event="select" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityBackupNew$2: void onCheckedChanged(android.widget.CompoundButton,boolean)&gt;" />
+                      <EventAndHandler event="select" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityBackupNew$1: void onCheckedChanged(android.widget.CompoundButton,boolean)&gt;" />
+                    </View>
+                    <View type="android.widget.Switch" id="2131296530" idName="switch_reverse_sort">
+                      <Text>Reverse sort</Text>
+                      <EventAndHandler event="select" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityBackupNew$2: void onCheckedChanged(android.widget.CompoundButton,boolean)&gt;" />
+                      <EventAndHandler event="select" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityBackupNew$1: void onCheckedChanged(android.widget.CompoundButton,boolean)&gt;" />
+                    </View>
+                  </Child>
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ScrollView" id="2131296366" idName="date_pickers_scroll_view">
+              <Child>
+                <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+                  <Child>
+                    <View type="android.widget.DatePicker" id="2131296364" idName="date_picker_from">
+                    </View>
+                    <View type="android.widget.TextView" id="2131296539" idName="text_piker_from">
+                      <Text>From date:</Text>
+                    </View>
+                    <View type="android.widget.TextView" id="2131296540" idName="text_piker_to">
+                      <Text>To date:</Text>
+                    </View>
+                    <View type="android.widget.DatePicker" id="2131296365" idName="date_picker_to">
+                    </View>
+                  </Child>
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityMainDialog2">
+    <View type="android.widget.RelativeLayout" id="2131296420" idName="main_view">
+      <Child>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+        <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.widget.LinearLayout" id="2131296478" idName="recycler_layout">
+              <Child>
+                <View type="android.support.v7.widget.RecyclerView" id="2131296342" idName="cardList">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageButton" id="2131296418" idName="main_fab">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: void mFabOnClick(android.view.View)&gt;" />
+            </View>
+            <View type="android.widget.RelativeLayout" id="2131296316" idName="background_view">
+              <Child>
+                <View type="android.widget.ImageView" id="-1" idName="NO_ID">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.view.View" id="2131296430" idName="my_toolbar_shadow">
+        </View>
+      </Child>
+    </View>
+    <View type="android.widget.RelativeLayout" id="2131296420" idName="main_view">
+      <Child>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+        <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.widget.RelativeLayout" id="2131296316" idName="background_view">
+              <Child>
+                <View type="android.widget.ImageView" id="-1" idName="NO_ID">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageButton" id="2131296418" idName="main_fab">
+              <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: void mFabOnClick(android.view.View)&gt;" />
+            </View>
+            <View type="android.widget.LinearLayout" id="2131296478" idName="recycler_layout">
+              <Child>
+                <View type="android.support.v7.widget.RecyclerView" id="2131296342" idName="cardList">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.view.View" id="2131296430" idName="my_toolbar_shadow">
+        </View>
+      </Child>
+    </View>
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.MenuItem" id="2131296281" idName="action_edit">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296294" idName="action_search">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296286" idName="action_merge">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296265" idName="action_backup_selected">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296277" idName="action_delete">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296296" idName="action_share">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.MenuItem" id="2131296297" idName="action_star">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+        <View type="android.view.ViewGroup" id="2131296423" idName="menu_group">
+          <Child>
+            <View type="android.view.MenuItem" id="2131296282" idName="action_export">
+            </View>
+            <View type="android.view.MenuItem" id="2131296295" idName="action_settings">
+            </View>
+            <View type="android.view.MenuItem" id="2131296278" idName="action_delete_all">
+            </View>
+            <View type="android.view.MenuItem" id="2131296264" idName="action_about">
+            </View>
+            <View type="android.view.MenuItem" id="2131296280" idName="action_donate">
+            </View>
+          </Child>
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityAbout">
+    <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+          <Child>
+            <View type="android.widget.RelativeLayout" id="2131296474" idName="pref_container">
+            </View>
+            <View type="android.widget.Space" id="-1" idName="NO_ID">
+            </View>
+            <View type="android.widget.FrameLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.RelativeLayout" id="2131296300" idName="activity_about_header_icon_frame">
+                  <Child>
+                    <View type="android.widget.ImageView" id="-1" idName="NO_ID">
+                    </View>
+                    <View type="android.widget.TextView" id="2131296313" idName="app_name_text">
+                    </View>
+                    <View type="android.view.View" id="-1" idName="NO_ID">
+                      <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityAbout: void onExcitedClick(android.view.View)&gt;" />
+                    </View>
+                  </Child>
+                </View>
+                <View type="pl.droidsonroids.gif.GifImageView" id="-1" idName="NO_ID">
+                  <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityAbout: void onLiukanshanClick(android.view.View)&gt;" />
+                </View>
+                <View type="android.widget.TextView" id="2131296416" idName="liukanshan_copy_right">
+                  <Text>Liu Kanshan is the mascot of Zhihu.
+Post him here because he is so cute!</Text>
+                </View>
+                <View type="android.widget.VideoView" id="2131296428" idName="my_cat_video">
+                  <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityAbout: void onMyCatClick(android.view.View)&gt;" />
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+        </View>
+        <View type="android.support.design.widget.FloatingActionButton" id="2131296262" idName="about_fab">
+          <EventAndHandler event="click" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityAbout: void onShareAppClick(android.view.View)&gt;" />
+        </View>
+        <View type="android.view.View" id="2131296430" idName="my_toolbar_shadow">
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivitySetPIN">
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivityBackup">
+    <View type="android.widget.RelativeLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.support.design.widget.AppBarLayout" id="2131296317" idName="backup_app_bar">
+          <Child>
+            <View type="android.support.design.widget.TabLayout" id="2131296321" idName="backup_tab_layout">
+            </View>
+            <View type="android.support.v7.widget.Toolbar" id="2131296429" idName="my_toolbar">
+            </View>
+          </Child>
+        </View>
+        <View type="android.support.v4.view.ViewPager" id="2131296320" idName="backup_pager">
+        </View>
+      </Child>
+    </View>
+    <View type="android.view.Menu" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.view.MenuItem" id="2131296292" idName="action_refresh">
+          <EventAndHandler event="item_selected" handler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityBackup: boolean onOptionsItemSelected(android.view.MenuItem)&gt;" />
+        </View>
+      </Child>
+    </View>
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.base.MyActionBarWithoutLockActivity">
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.base.MyActionBarActivity">
+  </Activity>
+  <Activity name="com.catchingnow.tinyclipboardmanager.activity.ActivitySetting">
+  </Activity>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r7 = virtualinvoke $r3.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.fragmnet.GDriveBackupFragment$2: void onClick(android.view.View)&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                </View>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_38: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.fragmnet.GDriveBackupFragment$2$1: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r4 = virtualinvoke $r1.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: void clearAll()&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                </View>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_42: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain$24: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r6 = virtualinvoke $r4.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog show()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: void noticePlayPolice()&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_54: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain$14: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r7 = virtualinvoke $r3.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.fragmnet.LocalBackupFragment$3: void onClick(android.view.View)&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_58: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.fragmnet.LocalBackupFragment$3$1: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                </View>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r6 = virtualinvoke $r2.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.fragmnet.GDriveBackupFragment$3: void onClick(android.view.View)&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_72: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.fragmnet.GDriveBackupFragment$3$1: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                </View>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r6 = virtualinvoke $r2.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.fragmnet.LocalBackupFragment$5: void onClick(android.view.View)&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                </View>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_76: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.fragmnet.LocalBackupFragment$5$1: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r15 = virtualinvoke $r5.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.uitools.DialogFragmentMainMerge: android.app.Dialog onCreateDialog(android.os.Bundle)&gt;">
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r6 = virtualinvoke $r1.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivitySetting$3: void run()&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                  <EventAndHandler event="click" handler="&lt;FakeName_50: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivitySetting$3$1: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_46: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivitySetting$3$2: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r7 = virtualinvoke $r1.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain: void deleteSelected()&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_80: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityMain$15: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+  <Dialog name="android.app.AlertDialog" allocLineNumber="-1" allocStmt="$r6 = virtualinvoke $r3.&lt;android.app.AlertDialog$Builder: android.app.AlertDialog create()&gt;()" allocMethod="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor: void onBackPressed()&gt;">
+    <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+      <Child>
+        <View type="android.widget.LinearLayout" id="16908886" idName="topPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="16908887" idName="title_template">
+              <Child>
+                <View type="com.android.internal.widget.DialogTitle" id="16908888" idName="alertTitle">
+                </View>
+                <View type="android.widget.ImageView" id="16908294" idName="icon">
+                </View>
+              </Child>
+            </View>
+            <View type="android.widget.ImageView" id="16908889" idName="titleDivider">
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908893" idName="contentPanel">
+          <Child>
+            <View type="android.widget.ScrollView" id="16908894" idName="scrollView">
+              <Child>
+                <View type="android.widget.TextView" id="16908299" idName="message">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.LinearLayout" id="16908890" idName="buttonPanel">
+          <Child>
+            <View type="android.widget.LinearLayout" id="-1" idName="NO_ID">
+              <Child>
+                <View type="android.widget.LinearLayout" id="16908891" idName="leftSpacer">
+                </View>
+                <View type="android.widget.Button" id="16908314" idName="button2">
+                  <EventAndHandler event="click" handler="&lt;FakeName_84: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor$2: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.Button" id="16908315" idName="button3">
+                </View>
+                <View type="android.widget.Button" id="16908313" idName="button1">
+                  <EventAndHandler event="click" handler="&lt;FakeName_88: void onClick(android.view.View)&gt;" realHandler="&lt;com.catchingnow.tinyclipboardmanager.activity.ActivityEditor$3: void onClick(android.content.DialogInterface,int)&gt;" />
+                </View>
+                <View type="android.widget.LinearLayout" id="16908892" idName="rightSpacer">
+                </View>
+              </Child>
+            </View>
+          </Child>
+        </View>
+        <View type="android.widget.FrameLayout" id="16908895" idName="customPanel">
+          <Child>
+            <View type="android.widget.FrameLayout" id="16908331" idName="custom">
+            </View>
+          </Child>
+        </View>
+      </Child>
+    </View>
+  </Dialog>
+</GUIHierarchy>

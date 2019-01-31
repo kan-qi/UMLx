@@ -1,0 +1,137 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Transport Coordinator
+participant "categoryspage" as 09
+participant "Volunteer" as 19
+participant "Victim" as 59
+participant "returnsaddEMTfrompage" as 69
+participant "Redirectstorespirationperfusionmetalstatuspage" as 89
+participant "ValidatesInput" as 169
+participant "Building" as 199
+participant "db" as 239
+
+Transport Coordinator -> 09: categoryspage()
+activate 09
+
+deactivate 09
+
+Transport Coordinator -> 19: volunteerhomepage()
+activate 19
+
+deactivate 19
+
+Transport Coordinator -> 09: ishebreathingpage()
+activate 09
+
+09 -> 89: Redirectstorespirationperfusionmetalstatuspage()
+activate 89
+
+89 -> 89: Hospitalinformation()
+deactivate 89
+
+89 -> 89: Respirationperfusionmetalstatuspage()
+activate 89
+
+89 -> 59: Categorizesthevictim()
+activate 59
+
+59 -> 09: Categorypage()
+deactivate 09
+
+59 -> 09: Redirectstocategoryspage()
+activate 09
+
+09 -> 169: Vaidatestheinput()
+activate 169
+
+169 -> 09: Errormessage()
+deactivate 09
+
+169 -> 59: addnewvictimrecordtodb()
+59 -> 19: VlunteerDiasterHomepage()
+activate 19
+
+deactivate 19
+
+59 -> 19: volunteerhomepage()
+activate 19
+
+deactivate 19
+
+59 -> 239: db()
+activate 239
+
+deactivate 239
+
+deactivate 59
+
+deactivate 169
+
+09 -> 09: categoryspage()
+activate 09
+
+deactivate 09
+
+deactivate 89
+
+89 -> 199: Updatesthedatabaseforbuildinginformation()
+activate 199
+
+199 -> 59: Categorizesthevictim()
+activate 59
+
+59 -> 09: Categorypage()
+activate 09
+
+deactivate 09
+
+59 -> 09: Redirectstocategoryspage()
+activate 09
+
+deactivate 09
+
+deactivate 59
+
+deactivate 199
+
+Transport Coordinator -> 09: Errormessage()
+activate 09
+
+deactivate 09
+
+Transport Coordinator -> 19: VlunteerDiasterHomepage()
+activate 19
+
+deactivate 19
+
+Transport Coordinator -> 59: addvictimbutton()
+activate 59
+
+59 -> 09: Redirectstotheishebreathingpage()
+activate 09
+
+09 -> 09: ishebreathingpage()
+09 -> 89: Redirectstorespirationperfusionmetalstatuspage()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+deactivate 59
+
+Transport Coordinator -> 69: Respirationperfusionmetalstatuspage()
+activate 69
+
+69 -> 59: Categorizesthevictim()
+activate 59
+
+deactivate 59
+
+deactivate 69
+
+@enduml

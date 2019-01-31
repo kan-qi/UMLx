@@ -1,0 +1,121 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+~ User()
+}
+
+class photolist {
+~ photolist()
+~ selectphotos()
+~ popupphotoconnectionerror()
+~ DisplaySelectedPhotoonProfilePhotoScreen()
+~ DismissDeletePhotoModel()
+~ Preparephotos()
+~ DownloadphototoDevice()
+~ Userlist()
+~ PhotoSearchResultListView()
+~ ListMutator()
+~ PhotoDatabase()
+~ UserDirectedtoViewPhotoUseCase()
+~ takethephotosuccessfully()
+~ Cantaccesslocalphotos()
+}
+
+class canceldeletion {
+~ canceldeletion()
+~ confirmdeletephotos()
+~ deleteexpiredlocationphotosautomatically()
+~ UserCollection()
+~ ToggleDeleteMode()
+~ Delete()
+~ HandleCreationError()
+~ getlocationsuccessfully()
+}
+
+class Searchbox {
+~ Searchbox()
+~ SearchEventHomepage()
+~ displaysearchscreen()
+~ PerformDefaultSearch()
+~ entersearchitemandsearch()
+~ Searchbackend()
+}
+
+class Adminpage {
+~ Adminpage()
+~ Confirmpage()
+~ isuserloggedin()
+~ ValidInputText()
+}
+
+class Account {
+~ Account()
+}
+
+class event {
+~ event()
+~ CreateEventScreen()
+~ EventCollection()
+~ Createneweventwithhashtag()
+~ Photosintheevent()
+~ displaymyevents()
+~ Determineifuseriseventowner()
+}
+
+class SignupScreen {
+~ SignupScreen()
+~ DisplaypopupinvalidUseernameorUsernameisalreadyinuseonSignUpScreen()
+~ ProfilePhotoScreen()
+~ SetPasswordScreen()
+~ LocationScreen()
+~ NavigatetoPhotoSelectedScreen()
+}
+
+class Profile {
+~ Profile()
+}
+
+class Result {
+~ Result()
+~ ShowEmptyResultPage()
+~ processrequest()
+}
+
+class myupload {
+~ myupload()
+~ Handledownloadsuccess()
+~ uploadtocurrentlocation()
+}
+
+class DisplaypoppAuthenticationFailedonLogInScreen {
+~ DisplaypoppAuthenticationFailedonLogInScreen()
+~ Deleteexpiredeventsautomatically()
+~ currentlocation()
+~ displayloginscreen()
+~ DisplayRemainingEventTime()
+}
+
+class confirm {
+~ confirm()
+}
+
+class RangeButtonsDefaultmyhome {
+~ RangeButtonsDefaultmyhome()
+~ HideEditButton()
+}
+
+class cameraroll {
+~ cameraroll()
+~ PopupdaabaseErrorMessage()
+~ cantaccesscamera()
+}
+
+class HandlePasswordError {
+~ HandlePasswordError()
+~ Validatesnonblockpassword()
+~ SetPasswordScreen()
+~ Handlephotoretrievalerror()
+}
+
+@enduml

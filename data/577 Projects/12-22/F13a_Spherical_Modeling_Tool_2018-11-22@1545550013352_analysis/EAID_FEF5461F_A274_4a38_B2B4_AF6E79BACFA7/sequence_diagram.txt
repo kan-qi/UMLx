@@ -1,0 +1,60 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "EditSphereView" as 09
+participant "QuestionModel" as 19
+participant "2dView" as 29
+participant "CreateSphereView" as 39
+participant "DatabaseAdapter" as 49
+participant "SphereModel" as 79
+
+User -> 09: 3Dsphereviewpage()
+activate 09
+
+09 -> 49: updatequestionsintodatabase()
+activate 49
+
+49 -> 19: sectorlabelofthequestionsisupdated()
+activate 19
+
+deactivate 19
+
+49 -> 79: sphere()
+activate 79
+
+deactivate 79
+
+deactivate 49
+
+deactivate 09
+
+User -> 19: sectorlabelofthequestionsisupdated()
+activate 19
+
+deactivate 19
+
+User -> 29: 2DChartViewpage()
+activate 29
+
+29 -> 39: queryspheredatafromdbanddisplay3dsphereviewpage()
+activate 39
+
+39 -> 09: 3Dsphereviewpage()
+activate 09
+
+09 -> 49: updatequestionsintodatabase()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+deactivate 39
+
+deactivate 29
+
+@enduml

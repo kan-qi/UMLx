@@ -1,0 +1,14 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:send "create success" dialog,Create product,TRAN_NA,4,1,5,3,20
+2,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:product,Create product,TRAN_NA,4,1,6,3,24
+3,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:invalid information error,Create product,TRAN_NA,4,1,4.666666666666667,3,18.666666666666668
+4,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:display "create success" dialog,Create product,TRAN_NA,4,1,5,3,20
+5,stl#Vendor:product create page->Vendor:product create page->product create page:update product->update product:change unsaved dialog,Create product,TRAN_NA,4,1,4.666666666666667,3,18.666666666666668
+6,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:send "create success" dialog,Create product,TRAN_NA,6,2,4.4,5,26.400000000000002
+7,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:product,Create product,TRAN_NA,6,2,5,5,30
+8,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:invalid information error,Create product,TRAN_NA,6,2,4.2,5,25.200000000000003
+9,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:display "create success" dialog,Create product,TRAN_NA,6,2,4.4,5,26.400000000000002
+10,stl#Vendor:Create product button->Vendor:Create product button->Create product button:redirect vendor->redirect vendor:product create page->product create page:update product->update product:change unsaved dialog,Create product,TRAN_NA,6,2,4.2,5,25.200000000000003
+11,stl#Vendor:display "create success" dialog->Vendor:display "create success" dialog,Create product,CTRL;EXTCLL;INT,2,0,3,1,6
+12,stl#Vendor:change unsaved dialog->Vendor:change unsaved dialog,Create product,CTRL;EXTCLL;INT,2,0,2,1,4
+13,stl#Vendor:invalid information error->Vendor:invalid information error,Create product,CTRL;EXTCLL;INT,2,0,2,1,4

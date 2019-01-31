@@ -1,0 +1,152 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administratoractor Case Manageractor General staff
+participant "savereporttodb" as 09
+participant "Manager" as 19
+participant "Documentation Type" as 39
+participant "Limited_User" as 139
+participant "Cases" as 159
+participant "Document" as 189
+participant "Admin" as 209
+participant "Groups" as 239
+participant "Users" as 249
+
+Administrator -> 09: Reportbutton()
+activate 09
+
+09 -> 139: validateroleofuser()
+activate 139
+
+139 -> 09: displayreportgenerationpage()
+09 -> 09: reportgenerationpage()
+09 -> 09: validateinputinformationforthereport()
+09 -> 39: inputinformationinvalidmessage()
+activate 39
+
+deactivate 39
+
+09 -> 09: savereporttodb()
+09 -> 159: case()
+activate 159
+
+deactivate 159
+
+09 -> 189: document()
+activate 189
+
+deactivate 189
+
+09 -> 09: reportdetailpage()
+09 -> 209: print()
+activate 209
+
+209 -> 139: Printer()
+deactivate 139
+
+deactivate 209
+
+deactivate 09
+
+09 -> 249: user()
+activate 249
+
+deactivate 249
+
+139 -> 239: role()
+activate 239
+
+deactivate 239
+
+139 -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+Administrator -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+Administrator -> 09: reportdetailpage()
+activate 09
+
+09 -> 209: print()
+activate 209
+
+deactivate 209
+
+deactivate 09
+
+Administrator -> 39: inputinformationinvalidmessage()
+activate 39
+
+deactivate 39
+
+Administrator -> 09: reportgenerationpage()
+activate 09
+
+09 -> 09: validateinputinformationforthereport()
+deactivate 09
+
+Case Manager -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+Case Manager -> 39: inputinformationinvalidmessage()
+activate 39
+
+deactivate 39
+
+Case Manager -> 09: reportgenerationpage()
+activate 09
+
+09 -> 09: validateinputinformationforthereport()
+deactivate 09
+
+Case Manager -> 09: reportdetailpage()
+activate 09
+
+09 -> 209: print()
+activate 209
+
+deactivate 209
+
+deactivate 09
+
+Case Manager -> 09: Reportbutton()
+activate 09
+
+09 -> 139: validateroleofuser()
+activate 139
+
+deactivate 139
+
+deactivate 09
+
+General staff -> 09: reportgenerationpage()
+activate 09
+
+09 -> 09: validateinputinformationforthereport()
+deactivate 09
+
+General staff -> 09: Reportbutton()
+activate 09
+
+09 -> 139: validateroleofuser()
+activate 139
+
+deactivate 139
+
+deactivate 09
+
+General staff -> 19: unauthorizederrormessage()
+activate 19
+
+deactivate 19
+
+@enduml

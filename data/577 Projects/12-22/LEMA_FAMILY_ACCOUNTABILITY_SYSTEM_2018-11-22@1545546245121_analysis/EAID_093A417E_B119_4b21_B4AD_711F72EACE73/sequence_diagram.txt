@@ -1,0 +1,96 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "User Info Input Page" as 09
+participant "Send Messagepage" as 19
+participant "Cass Attendance Info" as 29
+participant "Resource page" as 59
+participant "Administrator Info" as 129
+
+User -> 09: Inputinformation()
+activate 09
+
+09 -> 29: Updateinformationindatabase()
+activate 29
+
+29 -> 29: Database()
+deactivate 29
+
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: Chooseoneuserandupdate()
+activate 29
+
+29 -> 29: Updateinformationindatabase()
+29 -> 29: Database()
+deactivate 29
+
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 29: Chooseoneuserandupdate()
+activate 29
+
+29 -> 29: Updateinformationindatabase()
+29 -> 29: Database()
+deactivate 29
+
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+User -> 09: Inputinformation()
+activate 09
+
+09 -> 29: Updateinformationindatabase()
+activate 29
+
+29 -> 29: Database()
+deactivate 29
+
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 59: Manageresourcebutton()
+activate 59
+
+59 -> 129: Showlistofinformation()
+activate 129
+
+129 -> 29: Updateinformationindatabase()
+activate 29
+
+29 -> 29: Database()
+deactivate 29
+
+29 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 129
+
+deactivate 59
+
+@enduml

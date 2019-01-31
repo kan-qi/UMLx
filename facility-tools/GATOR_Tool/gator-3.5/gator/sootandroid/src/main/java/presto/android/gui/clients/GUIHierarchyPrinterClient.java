@@ -17,6 +17,8 @@ import presto.android.gui.rep.StaticGUIHierarchy;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
   private String TAG = GUIHierarchyPrinterClient.class.getSimpleName();
@@ -41,7 +43,15 @@ public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
     }
     if (out == null) {
       try {
-        File file = File.createTempFile(Configs.benchmarkName + "-", ".xml");
+    	 Path curDir = Paths.get(System.getProperty("user.dir"));
+    	 Path filePath = Paths.get(curDir.toString(), Configs.benchmarkName + ".xml");
+    	File file = filePath.toFile();
+    	if(!file.exists()) {
+    		file.createNewFile();
+    	}
+//    	File file = new File("");
+//       File file = File.createTempFile(Configs.benchmarkName + "-", ".xml");
+    	 System.out.println("analysis output file: "+filePath.toString());
         Logger.verb(TAG, "XML file: " + file.getAbsolutePath());
         out = new PrintStream(file);
       } catch (Exception e) {

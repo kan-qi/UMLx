@@ -1,0 +1,66 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Actoractor User
+participant "SignupScreen" as 09
+participant "DisplaypoppAuthenticationFailedonLogInScreen" as 29
+participant "VerifyUsername" as 49
+
+Actor -> 09: LogInScreen()
+activate 09
+
+09 -> 29: DisplaypoppAuthenticationFailedonLogInScreen()
+activate 29
+
+29 -> 09: LogInScreen()
+09 -> 29: DisplaypoppAuthenticationFailedonLogInScreen()
+deactivate 29
+
+09 -> 49: VerifyUsername()
+activate 49
+
+49 -> 29: DisplaypoppAuthenticationFailedonLogInScreen()
+activate 29
+
+29 -> 09: LogInScreen()
+deactivate 09
+
+deactivate 29
+
+49 -> 09: LogInScreen()
+activate 09
+
+09 -> 29: DisplaypoppAuthenticationFailedonLogInScreen()
+activate 29
+
+deactivate 29
+
+09 -> 49: VerifyUsername()
+deactivate 49
+
+deactivate 09
+
+09 -> 49: VerifyUsername()
+activate 49
+
+deactivate 49
+
+User -> 09: LogInScreen()
+activate 09
+
+09 -> 29: DisplaypoppAuthenticationFailedonLogInScreen()
+activate 29
+
+deactivate 29
+
+09 -> 49: VerifyUsername()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+@enduml

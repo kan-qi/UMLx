@@ -1,0 +1,81 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Buyeractor third party payment
+participant "Order" as 09
+participant "Comment" as 19
+participant "receivereceipt" as 39
+participant "System Boundary" as 69
+participant "Medical Create Form" as 149
+
+Buyer -> 09: orderdetail()
+activate 09
+
+deactivate 09
+
+Buyer -> 19: paymentmethodpage()
+activate 19
+
+19 -> 149: redirecttothirdpartypaymentpage()
+activate 149
+
+149 -> 19: paymentinfopage()
+19 -> 19: finishpayment()
+19 -> 19: thirdpartypayment()
+19 -> 39: receivereceipt()
+activate 39
+
+39 -> 09: generateorders()
+activate 09
+
+09 -> 69: clearcartitem()
+activate 69
+
+69 -> 69: cartitem()
+deactivate 69
+
+09 -> 09: order()
+deactivate 09
+
+09 -> 09: orderdetail()
+activate 09
+
+deactivate 09
+
+deactivate 39
+
+19 -> 39: receivereceipt()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+19 -> 19: paymentinfopage()
+activate 19
+
+19 -> 19: finishpayment()
+deactivate 19
+
+deactivate 149
+
+Buyer -> 19: paymentinfopage()
+activate 19
+
+19 -> 19: finishpayment()
+deactivate 19
+
+third party payment -> 39: receivereceipt()
+activate 39
+
+deactivate 39
+
+third party payment -> 39: receivereceipt()
+activate 39
+
+deactivate 39
+
+@enduml

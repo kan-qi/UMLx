@@ -1,0 +1,69 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Searchcrieteriainputpage" as 09
+participant "$help://actor.htm" as 29
+participant "Medical services pricing information" as 59
+participant "Rating and review information" as 89
+
+User -> 09: Invalidinputmessage()
+activate 09
+
+09 -> 59: OCRreadthemedicalinformation()
+activate 59
+
+59 -> 29: nonmatcheddoctor()
+activate 29
+
+deactivate 29
+
+59 -> 89: updatetherecognizedinformationintodatabase()
+activate 89
+
+89 -> 29: Doctor()
+activate 29
+
+deactivate 29
+
+deactivate 89
+
+deactivate 59
+
+deactivate 09
+
+User -> 09: Searchcrieteriainputpage()
+activate 09
+
+09 -> 89: retrievematcheddoctorsfromdb()
+activate 89
+
+89 -> 29: Doctor()
+activate 29
+
+deactivate 29
+
+89 -> 09: Invalidinputmessage()
+09 -> 59: OCRreadthemedicalinformation()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+89 -> 29: nonmatcheddoctor()
+activate 29
+
+deactivate 29
+
+deactivate 89
+
+User -> 29: nonmatcheddoctor()
+activate 29
+
+deactivate 29
+
+@enduml

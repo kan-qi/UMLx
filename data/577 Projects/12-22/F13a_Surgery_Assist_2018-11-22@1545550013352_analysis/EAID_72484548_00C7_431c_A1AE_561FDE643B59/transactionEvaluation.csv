@@ -1,0 +1,6 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#user:Error message->user:Error message,Setup reminder,CTRL,2,0,6,1,12
+2,stl#user:success messsage->user:success messsage,Setup reminder,CTRL,2,0,6,1,12
+3,stl#user:"Set up a reminder" button->user:"Set up a reminder" button->"Set up a reminder" button:setup reminder->setup reminder:reminder db,Setup reminder,TRAN_NA,4,0,1,3,4
+4,stl#user:"Set up a reminder" button->user:"Set up a reminder" button->"Set up a reminder" button:setup reminder->setup reminder:Display success message->Display success message:success messsage,Setup reminder,TRAN_NA,5,0,3.5,4,17.5
+5,stl#user:"Set up a reminder" button->user:"Set up a reminder" button->"Set up a reminder" button:setup reminder->setup reminder:Display error message->Display error message:Error message,Setup reminder,TRAN_NA,5,1,3.5,4,17.5

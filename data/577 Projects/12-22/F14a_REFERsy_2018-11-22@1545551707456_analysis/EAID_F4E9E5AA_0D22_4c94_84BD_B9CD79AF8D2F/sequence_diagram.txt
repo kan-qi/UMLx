@@ -1,0 +1,107 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Facebookactor Google plusactor LinkedInactor User
+participant "facebook data" as 09
+participant "google date" as 29
+participant "linkin data" as 49
+participant "User social media information" as 69
+participant "email message requesting referral" as 79
+participant "search result" as 159
+
+Facebook -> 09: queryfacebookinfo()
+activate 09
+
+09 -> 79: signinerrormessage()
+activate 79
+
+deactivate 79
+
+deactivate 09
+
+Google plus -> 29: querygoogleplusinfo()
+activate 29
+
+29 -> 79: signinerrormessage()
+activate 79
+
+deactivate 79
+
+deactivate 29
+
+LinkedIn -> 49: querylinkedin()
+activate 49
+
+49 -> 79: signinerrormessage()
+activate 79
+
+deactivate 79
+
+deactivate 49
+
+User -> 69: socialmedialoginbuttons()
+activate 69
+
+69 -> 79: displaycrendentialinputpage()
+activate 79
+
+79 -> 79: credentialinputpage()
+79 -> 29: querygoogleplusinfo()
+activate 29
+
+29 -> 29: Googleplus()
+29 -> 29: querygoogleplusinfo()
+deactivate 29
+
+79 -> 09: queryfacebookinfo()
+activate 09
+
+09 -> 09: Facebook()
+09 -> 09: queryfacebookinfo()
+deactivate 09
+
+09 -> 159: session()
+activate 159
+
+deactivate 159
+
+79 -> 49: querylinkedin()
+activate 49
+
+49 -> 49: LinkedIn()
+49 -> 49: querylinkedin()
+deactivate 49
+
+deactivate 79
+
+deactivate 69
+
+User -> 79: credentialinputpage()
+activate 79
+
+79 -> 29: querygoogleplusinfo()
+activate 29
+
+deactivate 29
+
+79 -> 09: queryfacebookinfo()
+activate 09
+
+deactivate 09
+
+79 -> 49: querylinkedin()
+activate 49
+
+deactivate 49
+
+deactivate 79
+
+User -> 79: signinerrormessage()
+activate 79
+
+deactivate 79
+
+@enduml

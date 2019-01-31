@@ -1,0 +1,25 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Blog" as 09
+
+User -> 09: postblogbutton()
+activate 09
+
+09 -> 09: redirecttoblogpage()
+09 -> 09: blogpage()
+09 -> 09: saveblogindb()
+09 -> 09: blog()
+deactivate 09
+
+User -> 09: blogpage()
+activate 09
+
+09 -> 09: saveblogindb()
+deactivate 09
+
+@enduml

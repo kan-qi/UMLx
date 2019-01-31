@@ -1,0 +1,65 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "declinemessage" as 09
+participant "requiredfieldsmissingprompt" as 29
+participant "Reservation" as 59
+participant "ScheduleController" as 99
+
+user -> 09: declinemessage()
+activate 09
+
+deactivate 09
+
+user -> 09: declinebuttonintherequestlist()
+activate 09
+
+09 -> 59: savesurgicalreservationinfo()
+activate 59
+
+59 -> 59: Surgicalreservationinfo()
+deactivate 59
+
+59 -> 09: submitsuccessmessage()
+09 -> 09: Displayadeclinemessage()
+09 -> 09: declinemessage()
+deactivate 09
+
+user -> 29: requiredfieldsmissingprompt()
+activate 29
+
+deactivate 29
+
+user -> 09: Surgicalslotslistandnecessaryinformation()
+activate 09
+
+09 -> 99: checkcompletenessoftheform()
+activate 99
+
+99 -> 29: requiredfieldsmissingprompt()
+activate 29
+
+deactivate 29
+
+99 -> 59: savesurgicalreservationinfo()
+activate 59
+
+59 -> 59: Surgicalreservationinfo()
+deactivate 59
+
+59 -> 09: submitsuccessmessage()
+deactivate 09
+
+deactivate 99
+
+user -> 09: submitsuccessmessage()
+activate 09
+
+09 -> 09: Displayadeclinemessage()
+deactivate 09
+
+@enduml

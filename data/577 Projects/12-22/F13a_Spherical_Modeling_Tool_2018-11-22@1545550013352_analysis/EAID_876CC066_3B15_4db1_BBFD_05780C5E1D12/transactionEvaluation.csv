@@ -1,0 +1,9 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:textual message->User:textual message,view 2D chat,CTRL,2,1,5,1,10
+2,stl#User:success message->User:success message,view 2D chat,CTRL,2,0,5,1,10
+3,stl#User:List of usrs with specific sphere->User:List of usrs with specific sphere->List of usrs with specific sphere:render 2D polar chat->render 2D polar chat:2D polar chart,view 2D chat,TRAN_NA,4,1,2,3,8
+4,stl#User:List of usrs with specific sphere->User:List of usrs with specific sphere->List of usrs with specific sphere:add association in db->add association in db:sends notification to second user->sends notification to second user:success message,view 2D chat,TRAN_NA,5,0,2,4,10
+5,stl#User:2D polar chart->User:2D polar chart,view 2D chat,CTRL;EXTCLL;INT,2,0,3,1,6
+6,stl#User:a list of accessible spheres->User:a list of accessible spheres->a list of accessible spheres:query for the latest sphere data->query for the latest sphere data:textual message,view 2D chat,CTRL,4,1,3.6666666666666665,3,14.666666666666666
+7,stl#User:a list of accessible spheres->User:a list of accessible spheres->a list of accessible spheres:query for the latest sphere data->query for the latest sphere data:render 2D polar chat->render 2D polar chat:2D polar chart,view 2D chat,CTRL;EXTCLL;INT,5,1,2.75,4,13.75
+8,stl#User:a list of accessible spheres->User:a list of accessible spheres->a list of accessible spheres:query for the latest sphere data->query for the latest sphere data:sphere data,view 2D chat,CTRL;EXTCLL;DM;EI,4,1,2.3333333333333335,3,9.333333333333334

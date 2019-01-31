@@ -1,0 +1,120 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Valet
+participant "systemerrorwhenconnectingserver" as 09
+participant "searchforbestmatch" as 29
+participant "employee" as 39
+participant "Location" as 49
+participant "Customer" as 89
+participant "Valet Check In" as 229
+
+Valet -> 09: displayspinnerwhilesavinginformation()
+activate 09
+
+deactivate 09
+
+Valet -> 09: systemerrorwhensavingregistrationinformation()
+activate 09
+
+deactivate 09
+
+Valet -> 29: registrationinformationinvalidmessage()
+activate 29
+
+deactivate 29
+
+Valet -> 39: managementempolyeepage()
+activate 39
+
+deactivate 39
+
+Valet -> 49: registrationpage()
+activate 49
+
+49 -> 49: validateregistrationinformation()
+49 -> 09: displayspinnerwhilesavinginformation()
+activate 09
+
+deactivate 09
+
+49 -> 49: duplicateregistrationinformation()
+deactivate 49
+
+49 -> 39: employee()
+activate 39
+
+deactivate 39
+
+49 -> 29: registrationinformationinvalidmessage()
+activate 29
+
+deactivate 29
+
+49 -> 229: savevaletinformation()
+activate 229
+
+229 -> 39: employee()
+activate 39
+
+deactivate 39
+
+229 -> 09: systemerrormessage()
+activate 09
+
+deactivate 09
+
+229 -> 29: successfullysaveregistrationinformation()
+activate 29
+
+29 -> 39: navigatetomanageemployeepage()
+activate 39
+
+39 -> 39: managementempolyeepage()
+deactivate 39
+
+deactivate 29
+
+229 -> 09: systemerrorwhensavingregistrationinformation()
+activate 09
+
+deactivate 09
+
+deactivate 229
+
+Valet -> 49: duplicateregistrationinformation()
+activate 49
+
+deactivate 49
+
+Valet -> 29: successfullysaveregistrationinformation()
+activate 29
+
+29 -> 39: navigatetomanageemployeepage()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+Valet -> 09: systemerrormessage()
+activate 09
+
+deactivate 09
+
+Valet -> 89: registerbutton()
+activate 89
+
+89 -> 49: displaysregistrationpage()
+activate 49
+
+49 -> 49: registrationpage()
+49 -> 49: validateregistrationinformation()
+deactivate 49
+
+deactivate 89
+
+@enduml

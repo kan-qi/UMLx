@@ -1,0 +1,85 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Admin
+participant "Medical Create Form" as 09
+participant "Vender Registration Form" as 19
+participant "Vendor Registration Form" as 39
+participant "notifyuser" as 69
+
+Admin -> 09: Userinfoupdatedmessage()
+activate 09
+
+deactivate 09
+
+Admin -> 19: userlistwitheditandremovebuttons()
+activate 19
+
+19 -> 19: redirecttovendordetailspage()
+19 -> 19: queryvendordetail()
+19 -> 39: vendor()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+19 -> 19: vendordetailpage()
+activate 19
+
+19 -> 39: updatevendorinfo()
+activate 39
+
+39 -> 69: notifyamdin()
+activate 69
+
+69 -> 09: Userinfoupdatedmessage()
+activate 09
+
+deactivate 09
+
+deactivate 69
+
+39 -> 39: vendor()
+deactivate 39
+
+deactivate 19
+
+19 -> 39: removevendor()
+activate 39
+
+39 -> 39: vendor()
+deactivate 39
+
+Admin -> 19: vendordetailpage()
+activate 19
+
+19 -> 39: updatevendorinfo()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+Admin -> 39: Allvendorstab()
+activate 39
+
+39 -> 39: redirectvendorspage()
+39 -> 39: vendor()
+deactivate 39
+
+39 -> 19: userlistwitheditandremovebuttons()
+activate 19
+
+19 -> 19: redirecttovendordetailspage()
+deactivate 19
+
+19 -> 39: removevendor()
+activate 39
+
+deactivate 39
+
+@enduml
