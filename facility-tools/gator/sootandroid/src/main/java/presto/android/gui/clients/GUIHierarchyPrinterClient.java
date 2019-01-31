@@ -19,11 +19,14 @@ import java.io.File;
 import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+<<<<<<< HEAD:facility-tools/gator/sootandroid/src/main/java/presto/android/gui/clients/GUIHierarchyPrinterClient.java
 <<<<<<< HEAD:facility-tools/GATOR_Tool/gator-3.5/gator/sootandroid/src/main/java/presto/android/gui/clients/GUIHierarchyPrinterClient.java
 =======
 
 import javax.security.auth.login.ConfigurationSpi;
 >>>>>>> 2cef7ae5c6bdcf138f58202c8145b4fa32e15cbc:facility-tools/gator/sootandroid/src/main/java/presto/android/gui/clients/GUIHierarchyPrinterClient.java
+=======
+>>>>>>> 610b74761a6a222815314fbdde6f2a2c7c451c90:facility-tools/gator/sootandroid/src/main/java/presto/android/gui/clients/GUIHierarchyPrinterClient.java
 
 public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
   private String TAG = GUIHierarchyPrinterClient.class.getSimpleName();
@@ -48,6 +51,7 @@ public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
     }
     if (out == null) {
       try {
+<<<<<<< HEAD:facility-tools/gator/sootandroid/src/main/java/presto/android/gui/clients/GUIHierarchyPrinterClient.java
 <<<<<<< HEAD:facility-tools/GATOR_Tool/gator-3.5/gator/sootandroid/src/main/java/presto/android/gui/clients/GUIHierarchyPrinterClient.java
     	 Path curDir = Paths.get(System.getProperty("user.dir"));
     	 Path filePath = Paths.get(curDir.toString(), Configs.benchmarkName + ".xml");
@@ -55,6 +59,10 @@ public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
 //    	 Path curDir = Paths.get(System.getProperty("user.dir"));
     	Path filePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
 >>>>>>> 2cef7ae5c6bdcf138f58202c8145b4fa32e15cbc:facility-tools/gator/sootandroid/src/main/java/presto/android/gui/clients/GUIHierarchyPrinterClient.java
+=======
+    	 Path curDir = Paths.get(System.getProperty("user.dir"));
+    	 Path filePath = Paths.get(curDir.toString()+"/output/", Configs.benchmarkName + ".xml");
+>>>>>>> 610b74761a6a222815314fbdde6f2a2c7c451c90:facility-tools/gator/sootandroid/src/main/java/presto/android/gui/clients/GUIHierarchyPrinterClient.java
     	File file = filePath.toFile();
     	if(!file.exists()) {
     		file.createNewFile();
