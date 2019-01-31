@@ -20,6 +20,9 @@ import java.io.PrintStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.security.auth.login.ConfigurationSpi;
+
+
 public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
   private String TAG = GUIHierarchyPrinterClient.class.getSimpleName();
   GUIAnalysisOutput output;
@@ -43,8 +46,9 @@ public class GUIHierarchyPrinterClient implements GUIAnalysisClient {
     }
     if (out == null) {
       try {
-    	 Path curDir = Paths.get(System.getProperty("user.dir"));
-    	 Path filePath = Paths.get(curDir.toString()+"/output/", Configs.benchmarkName + ".xml");
+
+//    	 Path curDir = Paths.get(System.getProperty("user.dir"));
+    	Path filePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
     	File file = filePath.toFile();
     	if(!file.exists()) {
     		file.createNewFile();
