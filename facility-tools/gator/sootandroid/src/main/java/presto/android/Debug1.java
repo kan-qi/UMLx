@@ -50,13 +50,9 @@ public class Debug1 {
   private long startTime;
 
   private Debug1() throws Exception {
-<<<<<<< HEAD
 	  debugFileName = Configs.outputDir+"/commands.txt";
 //    debugFileName = "/mnt/h/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/output/commands.txt";
     
-=======
-    debugFileName = "/mnt/h/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/output/commands.txt";
->>>>>>> 610b74761a6a222815314fbdde6f2a2c7c451c90
     if (debugFileName == null) {
       debugFile = File.createTempFile(Configs.benchmarkName + "-DEBUG-", ".txt");
       debugFileName = debugFile.getAbsolutePath();

@@ -86,7 +86,6 @@ public class AnalysisEntrypoint {
     }
     
     Debug2.v().printf("classes: %s", sb.toString());
-<<<<<<< HEAD:facility-tools/gator/sootandroid/src/main/java/presto/android/AnalysisEntrypoint.java
     
     
     Path curDir = Paths.get(System.getProperty("user.dir"));
@@ -96,8 +95,6 @@ public class AnalysisEntrypoint {
 		outputDir.mkdir();
 	}
 	Configs.outputDir = outputDir.getAbsolutePath();
-=======
->>>>>>> 610b74761a6a222815314fbdde6f2a2c7c451c90:facility-tools/gator/sootandroid/src/main/java/presto/android/AnalysisEntrypoint.java
 
     // Analysis
     // TODO: use reflection to allow nice little extensions.

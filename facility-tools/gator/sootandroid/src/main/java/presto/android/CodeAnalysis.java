@@ -50,11 +50,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-<<<<<<< HEAD
-import javax.security.auth.login.ConfigurationSpi;
-
-=======
->>>>>>> 610b74761a6a222815314fbdde6f2a2c7c451c90
 import org.xmlpull.v1.XmlPullParserException;
 
 import com.google.gson.Gson;
@@ -910,16 +905,9 @@ private CallGraph genCallGraph() {
 		Debug1.v().println("android-jar-directory not exists "+ sdkFile.getName());
 		return null;			
 	}
-<<<<<<< HEAD
-	
-	Path curDir = Paths.get(System.getProperty("user.dir"));
-	
-	
-=======
 		
 	Path curDir = Paths.get(System.getProperty("user.dir"));
 	
->>>>>>> 610b74761a6a222815314fbdde6f2a2c7c451c90
 	Path sourceSinkPath = Paths.get(curDir.toString(), "SourcesAndSinks.txt");
 	File sourceSinkFile = sourceSinkPath.toFile();
 	if (!sourceSinkFile.exists()){
@@ -935,16 +923,10 @@ private CallGraph genCallGraph() {
 	}
 
 	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
-<<<<<<< HEAD
 	app.setOutputDir(Configs.outputDir);
 	
 //	Path curDir = Paths.get(System.getProperty("user.dir"));
 	Path gatorFilePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
-=======
-	
-//	Path curDir = Paths.get(System.getProperty("user.dir"));
-	Path gatorFilePath = Paths.get(curDir.toString(), Configs.benchmarkName + ".xml");
->>>>>>> 610b74761a6a222815314fbdde6f2a2c7c451c90
 	File gatorFile = gatorFilePath.toFile();
 	if(!gatorFile.exists()) {
 		Debug1.v().println("Gator file doesn't exist...");
