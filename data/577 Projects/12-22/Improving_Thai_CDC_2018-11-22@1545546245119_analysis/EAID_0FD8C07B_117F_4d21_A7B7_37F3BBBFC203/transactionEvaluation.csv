@@ -1,0 +1,8 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#User:click "delete" button->User:click "delete" button->click "delete" button:Pop a confirm information->Pop a confirm information:check staff��s authority->check staff��s authority:project  db,delete project,TRAN_NA,5,2,4,4,20
+2,stl#User:click "delete" button->User:click "delete" button->click "delete" button:Pop a confirm information->Pop a confirm information:check staff��s authority->check staff��s authority:staff��s authority approved->staff��s authority approved:delete project from Salesforce->delete project from Salesforce:Homepage,delete project,TRAN_NA,7,3,4,6,28
+3,stl#User:confirm request->User:confirm request->confirm request:check staff��s authority->check staff��s authority:project  db,delete project,TRAN_NA,4,1,4,3,16
+4,stl#User:confirm request->User:confirm request->confirm request:check staff��s authority->check staff��s authority:staff��s authority approved->staff��s authority approved:delete project from Salesforce->delete project from Salesforce:Homepage,delete project,TRAN_NA,6,2,4,5,24
+5,stl#User:Homepage->User:Homepage,delete project,CTRL;EXTCLL;INT,2,0,3,1,6
+6,stl#User:select a project->User:select a project->select a project:Pop a confirm information->Pop a confirm information:check staff��s authority->check staff��s authority:project  db,delete project,TRAN_NA,5,2,5.25,4,26.25
+7,stl#User:select a project->User:select a project->select a project:Pop a confirm information->Pop a confirm information:check staff��s authority->check staff��s authority:staff��s authority approved->staff��s authority approved:delete project from Salesforce->delete project from Salesforce:Homepage,delete project,TRAN_NA,7,3,4.833333333333333,6,33.83333333333333

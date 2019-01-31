@@ -1,0 +1,40 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "checkdbifavailable" as 09
+participant "location" as 19
+participant "cart" as 29
+participant "product" as 59
+
+User -> 09: notavailableerrormessage()
+activate 09
+
+deactivate 09
+
+User -> 19: addtocartbutton()
+activate 19
+
+19 -> 09: checkdbifavailable()
+activate 09
+
+09 -> 29: addtocart()
+activate 29
+
+29 -> 29: cart()
+deactivate 29
+
+09 -> 59: product()
+activate 59
+
+deactivate 59
+
+09 -> 09: notavailableerrormessage()
+deactivate 09
+
+deactivate 19
+
+@enduml

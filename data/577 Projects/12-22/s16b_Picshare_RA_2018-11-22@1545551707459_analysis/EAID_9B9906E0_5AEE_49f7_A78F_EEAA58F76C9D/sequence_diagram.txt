@@ -1,0 +1,126 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Actoractor User
+participant "Result" as 09
+participant "Searchbox" as 29
+participant "cameraroll" as 39
+participant "event" as 59
+participant "Adminpage" as 129
+
+Actor -> 09: SearchResultPage()
+activate 09
+
+09 -> 29: SearchAPI()
+activate 29
+
+29 -> 59: EventCollection()
+activate 59
+
+59 -> 39: PopupdaabaseErrorMessage()
+activate 39
+
+39 -> 29: PerformDefaultSearch()
+29 -> 29: SearchEventHomepage()
+29 -> 129: ValidInputText()
+activate 129
+
+129 -> 29: PerformDefaultSearch()
+29 -> 29: SearchEventHomepage()
+deactivate 29
+
+deactivate 129
+
+deactivate 39
+
+59 -> 09: SearchResultPage()
+09 -> 29: SearchAPI()
+activate 29
+
+29 -> 39: PopupServerErrorMessage()
+activate 39
+
+39 -> 29: SearchEventHomepage()
+29 -> 129: ValidInputText()
+activate 129
+
+deactivate 129
+
+deactivate 29
+
+deactivate 39
+
+29 -> 129: ValidInputText()
+activate 129
+
+129 -> 29: PerformDefaultSearch()
+activate 29
+
+deactivate 29
+
+deactivate 129
+
+deactivate 09
+
+deactivate 59
+
+Actor -> 09: ShowEmptyResultPage()
+activate 09
+
+09 -> 59: EventCollection()
+activate 59
+
+59 -> 39: PopupdaabaseErrorMessage()
+activate 39
+
+deactivate 39
+
+59 -> 09: SearchResultPage()
+deactivate 09
+
+deactivate 59
+
+Actor -> 29: SearchEventHomepage()
+activate 29
+
+29 -> 129: ValidInputText()
+activate 129
+
+deactivate 129
+
+deactivate 29
+
+User -> 29: SearchEventHomepage()
+activate 29
+
+29 -> 129: ValidInputText()
+activate 129
+
+deactivate 129
+
+deactivate 29
+
+User -> 09: SearchResultPage()
+activate 09
+
+09 -> 29: SearchAPI()
+activate 29
+
+deactivate 29
+
+deactivate 09
+
+User -> 09: ShowEmptyResultPage()
+activate 09
+
+09 -> 59: EventCollection()
+activate 59
+
+deactivate 59
+
+deactivate 09
+
+@enduml

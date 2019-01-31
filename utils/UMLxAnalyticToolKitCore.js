@@ -13,9 +13,11 @@
     
     var UMLEvaluator = require('../UMLEvaluator.js');
     var UMLModelExtractor = require("../UMLModelExtractor.js");
-    var EffortPredictor = require("../EffortPredictor.js");
+    var EffortPredictor = require("../UMLxEffortPredictor.js");
     
 	var path = require('path');
+
+	// var isForPackage = false;
 
     function analyseUML(inputFilePath, outputDir, projectName, callbackfunc) {
 
@@ -81,19 +83,20 @@
     }
 
     function readUsecaseJson(model, callback) {
-        let html_table = `<div style='height:6%'>&nbsp;</div>
-						<table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'>
-							<tr>
-								<th>Usecase ID</th>
-								<th>Column Name</th>
-								<th>Mean</th>
-								<th>Variance</th>
-								<th>First Quartile</th>
-								<th>Median</th>
-								<th>Third Quartile</th>
-								<th>Kurtosis</th>
-							</tr>
-						`;
+      //   let html_table = `<div style='height:6%'>&nbsp;</div>
+						// <table class='table table-hover table-bordered'; id='usecase_table2'; style='width:100%'>
+						// 	<tr>
+						// 		<th>Usecase ID</th>
+						// 		<th>Column Name</th>
+						// 		<th>Mean</th>
+						// 		<th>Variance</th>
+						// 		<th>First Quartile</th>
+						// 		<th>Median</th>
+						// 		<th>Third Quartile</th>
+						// 		<th>Kurtosis</th>
+						// 	</tr>
+						// `;
+		let html_table = "";
 
         let count = 0;
         //error
@@ -108,7 +111,7 @@
                         count ++;
                         if (err) throw err;
                         let obj = JSON.parse(data);
-                        console.log(obj);
+                        //console.log(obj);
 
                         for(let i = 0;i < obj.length;i++){
                             let element = obj[i];
@@ -241,31 +244,6 @@
         var location_transfer = "public/";
         //var test_loca = "./abc/analysisresults";
 
-        let model_analysis_button =
-            `
-		<div class='model-analytics-ops pull-right'>
-			<div class="dropdown">
-				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Dump Repo<span class="caret"></span></button>
-				<ul class="dropdown-menu">
-					<li><a href="./modelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Models</a></li>
-					<li><a href="./modelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Models (simulation)</a></li>
-					<li><a href="./useCaseEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Use Cases</a></li>
-					<li><a href="./domainModelEvaluation.csv" class="dumpEvaluationData dropdown-item">Evaluation For Domain Models</a></li>
-					<li><a href="./transactionAnalytics.csv" class="dumpEvaluationData dropdown-item">Evaluation For Transactions</a></li>
-					<li><a href="./entityAnalytics.csv.csv" class="dumpEvaluationData dropdown-item">Evaluation For Classes</a></li>
-					<li><a href="./elementAnalytics.csv" class="dumpEvaluationData dropdown-item">Evaluation For Elements</a></li>
-				</ul>
-			</div>
-			
-			<div class='dropdown'>
-				<button data-toggle="dropdown" type="button" aria-haspopup="true" aria-expanded="false" class="btn btn-secondary dropdown-toggle btn-default">Load<span class="caret"></span></button>
-				<ul class="dropdown-menu">
-					<li><a id="update-model" onclick="" href="javaScript:void(0);" class="dropdown-item">Model Version</a></li>
-				</ul>
-			</div>
-		</div>
-		`;
-
         let cards_selection =
             `
 		<div class="col-sm-12 status-row">
@@ -318,25 +296,224 @@
 		<div id="result_chart">here should be distributions</div>
 		`;
 
+		let usecase_list = '';
+		let detail_list = '';
+
+		if (model) {
+			for (var key in model.UseCases) {
+				usecase_list += 
+				`
+					<li>
+						<a class="use-case-title" data-toggle="tab" href="#${model.UseCases[key]._id}">
+							${model.UseCases[key].Name}
+						</a>
+					</li>
+				`
+
+				let model_elements_table_content = '';
+
+				let model_elements_folder = '';
+				// if (isForPackage) {
+					// model_elements_folder = './public/output/repo' + model.repo_id + '/' + model.fileId + '/' + model.UseCases[key]._id;
+				// } else {
+					// model_elements_folder = './data/StandAloneToolKit/output/' + model.UseCases[key]._id;
+				// }				
+
+				model_elements_folder = model.OutputDir+"/"+ model.UseCases[key]._id;
+
+				fs.readdirSync(model_elements_folder).forEach((file, index) => {
+					let stats = fs.statSync(model_elements_folder + '/' + file);
+					let fileSizeInBytes = stats["size"];
+					let fileTime = stats["birthtime"].toISOString();
+					fileTime = fileTime.slice(0, -5);
+					fileTime = fileTime.replace('T', ' ');
+				  	model_elements_table_content += 
+				  		`
+				  			<tr class="estimation-table">
+				  				<td>
+				  					${index + 1}
+				  				</td>
+					  			<td>
+									<a href="./${model.UseCases[key]._id}/${file}" target="_blank">${file}</a>
+								</td>
+								<td>
+									${fileSizeInBytes} B
+								</td>
+								<td>
+									${fileTime}
+								</td>								
+							</tr>
+				  		`
+				})				
+
+				detail_list +=
+				`
+					<div class="tab-pane fade" id="${model.UseCases[key]._id}">
+						<ul class="nav nav-tabs">
+							<li class="active">
+								<a data-toggle='tab' href='#${model.UseCases[key]._id}_use-case-info-pane'>UseCase Info</a>
+							</li>
+							<li>
+								<a data-toggle='tab' href='#${model.UseCases[key]._id}_use-case-analytics'>Analytics</a>
+							</li>
+						</ul>
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="${model.UseCases[key]._id}_use-case-info-pane">
+								<a href="./${model.UseCases[key]._id}/robustness_diagram.svg" target="_blank">SVG Diagram</a>
+							</div>
+							<div class="tab-pane fade" id="${model.UseCases[key]._id}_use-case-analytics">
+								<a href="./${model.UseCases[key]._id}/elementAnalytics.csv" target="_blank">Analytics CVS</a>
+								<table class="table-bordered" style="margin: 10px auto">
+									<tr class="estimation-table">
+										<th>ID</th>
+										<th>File Name</th>
+										<th>Size</th>
+										<th>Creation Time</th>
+									</tr>
+									${model_elements_table_content}
+								</table>
+							</div>
+						</div>
+					</div>
+				`
+			}			
+
+		let EUCP_content = generateEstimationReshltPane(model.eucp_lm, model);
+		let EXUCP_content = generateEstimationReshltPane(model.exucp_lm, model);
+		let DUCP_content = generateEstimationReshltPane(model.ducp_lm, model);
+
+		let model_analytics_table_content = '';
+
+		let testFolder = '';
+		// if (isForPackage) {
+		// 	testFolder = './public/output/repo' + model.repo_id + '/' + model.fileId;
+		// } else {
+		// 	testFolder = './data/StandAloneToolKit/output';
+		// }		
+
+		testFolder = model.OutputDir;
+
+		fs.readdirSync(testFolder).forEach((file, index) => {
+			let stats = fs.statSync(testFolder + '/' + file);
+			let fileSizeInBytes = stats["size"];
+			let fileTime = stats["birthtime"].toISOString();
+			fileTime = fileTime.slice(0, -5);
+			fileTime = fileTime.replace('T', ' ');
+		  	model_analytics_table_content += 
+		  		`
+		  			<tr class="estimation-table">
+		  				<td>
+		  					${index + 1}
+		  				</td>
+			  			<td>
+							<a href="./${file}" target="_blank">${file}</a>
+						</td>
+						<td>
+							${fileSizeInBytes} B
+						</td>
+						<td>
+							${fileTime}
+						</td>
+					</tr>
+		  		`
+		});		
+
         let model_analysis_chart =
             `
 		<div class="model-info-content">
 			<ul class="nav nav-tabs">
 				<li class="active">
-					<a data-toggle="tab" href="#model-analytics">Overview</a>
+					<a data-toggle="tab" href="#overview">Overview</a>
 				</li>
 				<li>
 					<a data-toggle="tab" href="#usecase-analysis" onclick="">Model Elements</a>
 				</li>
+				<li>
+					<a data-toggle="tab" href="#model-evaluation" id="model-evaluation-tab">Model Info</a>
+				</li>
+				<li>
+					<a data-toggle="tab" href="#model-analytics">Model Analytics</a>
+				</li>
 			</ul>
 			<div class="tab-content">
-				<div id="model-analytics" class="tab-pane fade in active">
+				<div id="overview" class="tab-pane fade in active">
 					${cards_selection}
 				</div>
 				<div id="usecase-analysis" class="tab-pane fade">
 					<div id="model-usecase-analysis">
-						<h3>loading...</h3>
+						<div class="col-md-3 no-padding-margin">
+							<div class="panel panel-default" id="model-use-cases-panel">
+								<div class="block-title panel-heading ">
+									<h3 class="panel-title analytics-title pull-left">
+										Use Cases
+									</h3>
+								</div>
+								<div class="panel-body">
+									<ul class="nav">
+										${usecase_list}
+									</ul>
+								</div>
+							</div>
+						</div>	
+						<div class="col-md-9">
+							<div class="panel panel-default">
+								<div class="block-title panel-heading">
+									Use Case Detail
+								</div>
+								<div class="panel-body" id="use-case-detail-panel">
+									<div class="tab-content">
+										${detail_list}
+									</div>
+								</div>
+							</div>
+						</div>			
 					</div>
+				</div>
+				<div id="model-evaluation" class="tab-pane fade">
+					<div class="model-evaluation">
+						<ul class="nav nav-pills">
+							<li class="nav-item active">
+								<a class="nav-links" data-toggle="pill" href="#pills-EUCP">EUCP</a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-links" data-toggle="pill" href="#pills-EXUCP">EXUCP</a>
+							</li>	
+							<li class="nav-item">
+								<a class="nav-links" data-toggle="pill" href="#pills-DUCP">DUCP</a>
+							</li>													
+						</ul>
+					</div>
+					<div class="tab-content">
+						<div class="tab-pane fade in active" id="pills-EUCP">
+							<div class="eucp-evaluation">
+								<h4>EUCP</h4>
+								${EUCP_content}
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-EXUCP">
+							<div class="excup-evaluation">
+								<h4>EXUCP</h4>
+								${EXUCP_content}
+							</div>
+						</div>
+						<div class="tab-pane fade" id="pills-DUCP">
+							<div class="ducp-evaluation">
+								<h4>DUCP</h4>
+								${DUCP_content}
+							</div>
+						</div>												
+					</div>
+				</div> 
+				<div id="model-analytics" class="tab-pane fade">
+					<table class="table-bordered" style="margin: 10px auto">
+						<tr class="estimation-table">
+							<th>ID</th>
+							<th>File Name</th>
+							<th>Size</th>
+							<th>Creation Time</th>
+						</tr>
+						${model_analytics_table_content}						
+					</table>
 				</div>
 				<div id="repo-analysis-detail" class="panel-body">
 					<div class="repo-metrics table-responsive">
@@ -357,6 +534,11 @@
 				<link href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet'>
 				<link href='${location_transfer}css/style.css', rel='stylesheet'>
 				<link href="${location_transfer}css/lightgallery.css" rel="stylesheet">
+				<style>
+					table td {
+						padding: 5px;
+					}
+				</style>
 			</head>
 			
 			<body>
@@ -371,11 +553,7 @@
 				<div id='main-panel'>
 					<div id='display-panel'>
 						<div class='block panel panel-default'>
-							<div id='panel-heading'>
-								${model_analysis_button}
-							</div>
-	
-							<div id="model-stats-chart" class="panel-body">
+							<div id="model-stats-chart" class="panel-body" style="min-height: 90vh">
 								${model_analysis_chart}
 							</div>
 						</div>
@@ -453,6 +631,108 @@
         if (callback) {
             callback(htmlBody);
         }
+
+		}
+		else{
+			if(callback){
+				callback(false);
+			}
+		}
+    }
+
+    function generateEstimationReshltPane(estimationResults, modelInfo) {
+    	if (estimationResults) {
+    		let estimationResults_table = "";
+	        for (var i = 0; i < estimationResults.UseCases.length; i++) {
+	        	estimationResults_table += `
+	        	<tr class="estimation-table">
+					<td>${i}</td>
+					<td>${estimationResults.UseCases[i].Name}</td>
+					<td>${estimationResults.UseCases[i].Effort}</td>
+					<td>${estimationResults.UseCases[i].useCasePMEffort}</td>
+					<td>${estimationResults.UseCases[i].useCaseDEVEffort}</td>
+					<td>${estimationResults.UseCases[i].synthesizedEffort}</td>
+					<td>${estimationResults.UseCases[i].BusinessValue}</td>
+					<td>${estimationResults.UseCases[i].EffortBVRatio}</td>
+					<td>${estimationResults.UseCases[i].SizeMeasurement}</td>
+					<td>${estimationResults.UseCases[i].Duration}</td>
+					<td>${estimationResults.UseCases[i].Personnel}</td>
+					<td>${estimationResults.UseCases[i].Personnel_UI}</td>
+					<td>${estimationResults.UseCases[i].Personnel_FS}</td>
+					<td>${estimationResults.UseCases[i].Personnel_DB}</td>
+	        	</tr>
+	        	`;
+	        }
+    		let content = `
+    			<div id="estimation-results-tables" data-estimation-model="${estimationResults.EstimationModel}">
+    				<div class="model-predictions">
+    					<table class="class table-bordered">
+    						<thead>
+    							<tr>
+    								<th>Model</th>
+						            <th>Effort (PH)</th>
+						            <th>Schedule (Months)</th>
+						            <th>${estimationResults.SizeMetric}</th>
+						            <th>Personnel (FT Developers)</th>
+						            <th>UI Developer</th>
+						            <th>Full Stack</th>
+						            <th>Database Developer</th>
+						            <th>Model</th>
+						            <th>View</th>
+						            <th>Control</th>
+    							</tr>
+    						</thead>
+    						<tbody>
+    							<tr class="estimation-table">
+    								<td>${estimationResults.EstimationModel}</td>
+						            <td>${estimationResults.Effort}</td>
+						            <td>${estimationResults.Duration}</td>
+						            <td>${estimationResults.SizeMeasurement}</td>
+						            <td>${estimationResults.Personnel}</td>
+						            <td>${estimationResults.Personnel_UI}</td>
+						            <td>${estimationResults.Personnel_FS}</td>
+						            <td>${estimationResults.Personnel_DB}</td>
+						            <td>${estimationResults.DomainModel.MVCEstimates.ModelEffort}</td>
+						            <td>${estimationResults.DomainModel.MVCEstimates.ViewEffort}</td>
+						            <td>${estimationResults.DomainModel.MVCEstimates.ControlEffort}</td>						            
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    			<div>
+    				<a href="./${estimationResults.EstimationResultsFile}" target="_blank"> Diagram Json</a>
+    			</div>
+    			<div class="use-case-predictions table-responsive">
+    				<table class="table table-bordered">
+    					<thead>
+    						<tr>
+    							<th id="number_column">Number</th>
+								<th id="Use_Case">Use Case</th>
+								<th id="EffortPH">Effort (PH)</th>
+								<th id="EffortPM">Effort PM</th>
+								<th id="EffortDev">Effort Dev</th>
+								<th id="EffortSyn">Effort Syn</th>
+								<th id="Business">Business Value</th>
+								<th id="EffortBV">Effort/BV</th>
+								<th id="SizeMeasurement">${estimationResults.SizeMetric}</th>
+								<th id="Duration">Schedule (Months)</th>
+								<th id="Personnel">Personnel (FT Developers)</th>
+								<th id="Personnel_UI">UI Developer</th>
+								<th id="Personnel_FS">Full Stack</th>
+								<th id="Personnel_DB">Database Developer</th>
+    						</tr>
+    					</thead>
+    					<tbody>
+    						${estimationResults_table}
+    					<tbody>
+    				</table>
+    			</div>
+    		`;
+    		return content;
+    	} else {
+    		return "";
+    	}
     }
 
     function writeHTML(model, htmlBody){
@@ -462,7 +742,35 @@
         });
     }
 
+	function generateReport(model, callbackfunc) {
+		// isForPackage = true;
+	    readUsecaseJson(model, function (html_table) {
+	        console.log("generate use cases");
+	        createStream(model, function (rt_object) {
+	            const yswi = rt_object.swtI;
+	            const yswtii = rt_object.swtII;
+	            const yswtiii = rt_object.swtIII;
+	            const xcategories = rt_object.category;
+	            console.log("xcategories"+xcategories);
+	            console.log("yswi"+yswi);
+	            console.log("yswii"+yswtii);
+	            console.log("yswiii"+yswtiii);
+	            getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
+	                writeHTML(model, data);
+	                console.log(`result : [${xcategories}]`);
+	                copyAuxiliaryFiles(model, function(message){
+	                    console.log(message);
+	                    if(callbackfunc){
+	                        callbackfunc(model);
+	                    }
+	                });
+	            });
+	        });
+	    });    	
+	}    
+
     module.exports = {
+    	generateReport: generateReport,
         analyseSrc: function(inputFilePath, outputDir, projectName, callbackfunc){
             console.log("analysi src");
             analyseUML(inputFilePath, outputDir, projectName, function (model) {
@@ -480,15 +788,17 @@
                         const yswtii = rt_object.swtII;
                         const yswtiii = rt_object.swtIII;
                         const xcategories = rt_object.category;
-                        console.log("xcategories"+xcategories);
-                        console.log("yswi"+yswi);
-                        console.log("yswii"+yswtii);
-                        console.log("yswiii"+yswtiii);
+
+                        // console.log("xcategories"+xcategories);
+                        // console.log("yswi"+yswi);
+                        // console.log("yswii"+yswtii);
+                        // console.log("yswiii"+yswtiii);
+
                         getHTML(xcategories,yswi,yswtii,yswtiii,html_table, model, function (data) {
                             writeHTML(model, data);
-                            console.log(`result : [${xcategories}]`);
+                            //console.log(`result : [${xcategories}]`);
                             copyAuxiliaryFiles(model, function(message){
-                                console.log(message);
+                                //console.log(message);
                                 if(callbackfunc){
                                     callbackfunc(model);
                                 }
@@ -500,6 +810,4 @@
             });
         }
     }
-
-
 }())

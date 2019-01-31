@@ -1,0 +1,12 @@
+id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num
+1,stl#User:invalid input warning message->User:invalid input warning message,Send Message,2,0,1,0,0
+2,stl#User:Message edit page->User:Message edit page->Message edit page:close new message page->close new message page:Message page,Send Message,4,0,3,0,0
+3,stl#User:Message edit page->User:Message edit page->Message edit page:check input message->check input message:invalid input warning message,Send Message,4,0,3,0,0
+4,stl#User:Message edit page->User:Message edit page->Message edit page:check input message->check input message:send message->send message:message,Send Message,5,0,4,0,0
+5,stl#User:Message edit page->User:Message edit page->Message edit page:check input message->check input message:send message->send message:redirect to message page->redirect to message page:Message page,Send Message,6,0,5,0,0
+6,stl#User:New message button->User:New message button->New message button:display new message page->display new message page:retrive connections of a user->retrive connections of a user:Connection,Send Message,5,2,2,0,0
+7,stl#User:New message button->User:New message button->New message button:display new message page->display new message page:retrive connections of a user->retrive connections of a user:Message edit page->Message edit page:close new message page->close new message page:Message page,Send Message,7,1,5,0,0
+8,stl#User:New message button->User:New message button->New message button:display new message page->display new message page:retrive connections of a user->retrive connections of a user:Message edit page->Message edit page:check input message->check input message:invalid input warning message,Send Message,7,1,5,0,0
+9,stl#User:New message button->User:New message button->New message button:display new message page->display new message page:retrive connections of a user->retrive connections of a user:Message edit page->Message edit page:check input message->check input message:send message->send message:message,Send Message,8,1,6,0,0
+10,stl#User:New message button->User:New message button->New message button:display new message page->display new message page:retrive connections of a user->retrive connections of a user:Message edit page->Message edit page:check input message->check input message:send message->send message:redirect to message page->redirect to message page:Message page,Send Message,9,1,7,0,0
+11,stl#User:Message page->User:Message page,Send Message,2,0,1,0,0

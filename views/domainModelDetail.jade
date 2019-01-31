@@ -1,73 +1,60 @@
 if domainModel
  div.domain-model-detail-content
-  ul.nav.nav-tabs
-   li.active
-    a(data-toggle='tab', href='#domain-model-info-pane') Domain Model Info
-   li
-    a(data-toggle='tab', href='#domain-model-analytics',onclick='populate_domainAnalysis_data();') Analysis
-   //li
-    //a(data-toggle='tab', href='#domain-model-distributions') Distributions
-   //li
-    //a(data-toggle='tab', href='#domain-model-evaluation') Evaluation
+  div.domain-model-analytics(id="show_Domain_JsonData")
+  button(onclick="open_new_page_for_diagram_display('domain');") Open UseCase Info
+  div(id="domain-model-info-pane").hidden
+    div.domain-model-info
+      button(onclick="openList()", class="big-button") Open List 
+      button(onclick="toggleDomainModelDiagram('#{domainModel.DiagramType}')", class="big-button") Toggle Diagram
+      button(onclick="toggleZoom()", class="big-button") Enable Zoom
+      button(id="zoom-in", class="big-button" style="display: none;") +
+      button(id="zoom-out", class="big-button" style="display: none;") -
+      button(id="reset", class="big-button" style="display: none;") Reset
+      object.use-case(data=domainModel.AccessDir+"/domainModel.svg")
 
-div.tab-content
- div.tab-pane.fade.in.active(id="domain-model-info-pane")
-  div.domain-model-info
-    button(onclick="openList()", class="big-button") Open List 
-    button(onclick="toggleDomainModelDiagram('#{domainModel.DiagramType}')", class="big-button") Toggle Diagram
-    button(onclick="toggleZoom()", class="big-button") Enable Zoom
-    button(id="zoom-in", class="big-button" style="display: none;") +
-    button(id="zoom-out", class="big-button" style="display: none;") -
-    button(id="reset", class="big-button" style="display: none;") Reset
-    object.use-case(data=domainModel.AccessDir+"/domainModel.svg")
+      //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
 
-    
-    //- img.domain-model(style="display: none;", id="domain-model-diagram", src=domainModel.AccessDir+"/domainModel.svg")
-
-    
-    div(id="mySidenav",class="sidenav")
-      a(href="javascript:void(0)",class="closebtn",onclick="closeList()") &times
-        div.use-case-info-content
-          div.domain-model-info-content
-            ul.nav.nav-tabs
-             li.active
-              a(data-toggle='tab', href='#domain-model-attributes') Attributes
-             li
-              a(data-toggle='tab', href='#domain-model-operations') Operations
-          div.tab-content
-           div.tab-pane.fade.in.active(id="domain-model-attributes")
-            table.table.table-striped.domain-model-info-tab
-             thead
-              tr
-               th ID
-               th Attribute
-               th TYPE
-             tbody
-              each element in domainModel.Elements
-                if element.Attributes
-                 each attribute,key in element.Attributes
-                  tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
-                   th #{key}
-                   th
-                    span.domain-model-attribute #{attribute.Name}
-                   th
-                    span.domain-model-attribute-type #{attribute.Type}
-           div.tab-pane.fade(id="domain-model-operations")
-            table.table.table-striped.domain-model-info-tab
-             thead
-              tr
-               th ID
-               th OPERATION
-               th TYPE
-             tbody
-               each element in domainModel.Elements
-                if element.Operations
-                 each operation,key in element.Operations
-                  tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
-                   th #{key}
-                   th
-                     span.domain-model-operation #{operation.Name}
-                   th operation
- div.tab-pane.fade(id="domain-model-analytics")
-     div.domain-model-analytics(id="show_Domain_JsonData")
- div.clear
+      div(id="mySidenav",class="sidenav")
+        a(href="javascript:void(0)",class="closebtn",onclick="closeList()") &times
+          div.use-case-info-content
+            div.domain-model-info-content
+              ul.nav.nav-tabs
+               li.active
+                a(data-toggle='tab', href='#domain-model-attributes') Attributes
+               li
+                a(data-toggle='tab', href='#domain-model-operations') Operations
+            div.tab-content
+             div.tab-pane.fade.in.active(id="domain-model-attributes")
+              table.table.table-striped.domain-model-info-tab
+               thead
+                tr
+                 th ID
+                 th Attribute
+                 th TYPE
+               tbody
+                each element in domainModel.Elements
+                  if element.Attributes
+                   each attribute,key in element.Attributes
+                    tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
+                     th #{key}
+                     th
+                      span.domain-model-attribute #{attribute.Name}
+                     th
+                      span.domain-model-attribute-type #{attribute.Type}
+             div.tab-pane.fade(id="domain-model-operations")
+              table.table.table-striped.domain-model-info-tab
+               thead
+                tr
+                 th ID
+                 th OPERATION
+                 th TYPE
+               tbody
+                 each element in domainModel.Elements
+                  if element.Operations
+                   each operation,key in element.Operations
+                    tr(onclick="highlight_diagram_element('#{element._id}', 'element', '#{domainModel.DiagramType}')", class="domainmodel-tr")
+                     th #{key}
+                     th
+                       span.domain-model-operation #{operation.Name}
+                     th operation  
+  div.clear

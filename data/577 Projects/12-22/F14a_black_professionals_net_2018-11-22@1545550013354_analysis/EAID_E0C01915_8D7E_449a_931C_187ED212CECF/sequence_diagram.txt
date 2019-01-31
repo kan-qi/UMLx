@@ -1,0 +1,43 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Message" as 09
+participant "Attachment" as 29
+
+User -> 09: nosentmessages()
+activate 09
+
+deactivate 09
+
+User -> 09: Listofsentmessages()
+activate 09
+
+deactivate 09
+
+User -> 29: Sentbutton()
+activate 29
+
+29 -> 09: retrievessentmessages()
+activate 09
+
+09 -> 09: displaylistofsentmessages()
+09 -> 09: Listofsentmessages()
+deactivate 09
+
+09 -> 09: nosentmessages()
+activate 09
+
+deactivate 09
+
+09 -> 09: message()
+activate 09
+
+deactivate 09
+
+deactivate 29
+
+@enduml

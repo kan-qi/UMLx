@@ -1,0 +1,40 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Homepage" as 09
+participant "Displayconfirmation" as 49
+participant "Database" as 59
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 09: Loginpage()
+activate 09
+
+09 -> 59: Validateusernameandpassword()
+activate 59
+
+59 -> 09: Redirecttohomepage()
+09 -> 49: Displayerror()
+activate 49
+
+49 -> 09: Homepage()
+deactivate 09
+
+49 -> 09: Loginpage()
+activate 09
+
+09 -> 59: Validateusernameandpassword()
+deactivate 59
+
+deactivate 09
+
+deactivate 49
+
+@enduml

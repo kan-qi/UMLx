@@ -1,0 +1,36 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Product" as 09
+participant "Showconfirmationpage" as 19
+participant "Updatesocialmedia" as 59
+
+User -> 09: Productwebpage()
+activate 09
+
+09 -> 09: Purchaseaproduct()
+09 -> 59: Socialmediadb()
+activate 59
+
+deactivate 59
+
+09 -> 19: Showconfirmationpage()
+activate 19
+
+19 -> 19: Homepage()
+deactivate 19
+
+19 -> 09: Productwebpage()
+09 -> 09: Purchaseaproduct()
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

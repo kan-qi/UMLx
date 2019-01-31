@@ -1,0 +1,113 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class helpdomainmodelpatternhtm {
+~ helpdomainmodelpatternhtm()
+}
+
+class Desire {
+- desired_level:EAJava_int
+- language_id:EAJava_int
+- user_id:EAJava_int
+~ show_user_desire(EAJava_int user_id):EAJava_int
+~ update_user_desire(EAJava_int user_idEAJava_List desire):EAJava_int
+}
+
+class Language {
+- language_abbreviation:EAJava_char
+- language_id:EAJava_int
+- language_name:EAJava_char
+- undefined:EAID_F72D7237_3DF6_4591_AC09_443678ACCDA4
+- undefined:EAID_9BAAEA17_F46B_4acd_8AD6_6A9D0EFC811B
+~ get_country_abbreviation(EAJava_integer id):EAJava_int
+~ get_language_id(EAJava_char abbreviation):EAJava_int
+~ get_language_list():EAJava_int
+~ Langugagechoosepage()
+~ systemchecklanguagepreferences()
+~ profilepageofotherlanguagelarner()
+~ Updatelanguagelearnerinformation()
+}
+
+class MatchService {
+~ match(EAJava_string targetEAJava_string origin):EAJava_int
+~ checkusernameemailexist()
+}
+
+class Message {
+- date:EAJava_long
+- delete_receiver:EAJava_int
+- delete_sender:EAJava_int
+- message_body:EAJava_char
+- message_id:EAJava_int
+- receiver_name:EAJava_char
+- sender_name:EAJava_char
+- status:EAJava_int
+- undefined:EAID_A7E9A450_0D8D_4546_B646_DC656FD8E1DC
+~ Message()
+~ Homepage()
+~ savemessageintodatabase()
+~ displaysendmessagepage()
+}
+
+class MessageService {
+~ delete(EAJava_int user_idEAJava_int message_id):EAJava_int
+~ delete_by_group(EAJava_int user_idEAJava_int uname):EAJava_int
+~ get_control_list(EAJava_int id):EAJava_int
+~ get_message(EAJava_int idEAJava_string uname):EAJava_int
+~ send(EAJava_int idEAJava_string messageEAJava_string receiver):EAJava_int
+~ Loginsuccessfulmessage()
+}
+
+class Skill {
+- language_id:EAJava_int
+- skill_level:EAJava_int
+- user_id:EAJava_int
+~ show_user_skill(EAJava_int user_id):EAJava_int
+~ update_user_skill(EAJava_int user_idEAJava_list skill):EAJava_int
+}
+
+class User {
+- email:EAJava_char
+- password:EAJava_int
+- user_id:EAJava_int
+- user_name:EAJava_char
+- undefined:EAID_A7E9A450_0D8D_4546_B646_DC656FD8E1DC
+- undefined:EAID_9BAAEA17_F46B_4acd_8AD6_6A9D0EFC811B
+- undefined:EAID_9EFA3F7B_9F7D_4a1d_ADAF_B05906822B01
+- undefined:EAID_F72D7237_3DF6_4591_AC09_443678ACCDA4
+~ get_user(EAJava_char unameEAJava_char email):EAJava_int
+~ insert_user(EAJava_string unameEAJava_string emailEAJava_string password):EAJava_int
+~ register(EAJava_int user):EAJava_int
+~ show(EAJava_string uname):EAJava_int
+~ show_user_email(EAJava_int id):EAJava_int
+~ update_user_password(EAJava_int idEAJava_int password):EAJava_int
+~ validate_user_name(EAJava_int uname):EAJava_int
+~ Clearusersession()
+~ Loginuser()
+}
+
+class LoginButton {
+~ LoginButton(EAJava_char language_abbreviationEAJava_int language_idEAJava_char language_nameEAID_F72D7237_3DF6_4591_AC09_443678ACCDA4 undefined):EAID_9BAAEA17_F46B_4acd_8AD6_6A9D0EFC811B
+~ Submitbutton()
+}
+
+class CheckPassword {
+~ CheckPassword()
+~ checksrequiredfields()
+}
+
+class AuthorizationAPI 
+
+class Signupform {
+~ Signupform(EAJava_char language_abbreviationEAJava_int language_idEAJava_char language_nameEAID_F72D7237_3DF6_4591_AC09_443678ACCDA4 undefined):EAID_9BAAEA17_F46B_4acd_8AD6_6A9D0EFC811B
+}
+
+class Account {
+~ Account()
+}
+
+class ProfileAPI {
+~ Profileupdateform()
+}
+
+@enduml

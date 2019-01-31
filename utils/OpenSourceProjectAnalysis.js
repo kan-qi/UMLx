@@ -18,19 +18,22 @@ var exec = require('child_process').exec;
 var EclipseUtil = require("./EclipseUtil.js");
 var FileManagerUtil = require("./FileManagerUtil.js");
 var RScriptExec = require('./RScriptUtil.js');
+var config = require("../config.js");
 
 var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 
 function recoverKDMModel(projectList){
 	
-	var currentWorkSpace = "C:\\Users\\flyqk\\workspace\\.metadata"
+	if(config.defaultEclipseWorkSpace){
+	var currentWorkSpace = config.defaultEclipseWorkSpace;
 	FileManagerUtil.deleteFolderRecursive(currentWorkSpace);
+	}
 
 	  //use promise to construct the repo objects
     function recoverModel(projectPath, modelFile, override){
         return new Promise((resolve, reject) => {
         		
-        	var modelFile = projectPath + "\\"+modelFile;
+        	modelFile = projectPath + "\\"+modelFile;
         	
         	console.log(modelFile);
         	
@@ -74,9 +77,8 @@ function recoverKDMModel(projectList){
 }
 
 function analyseXMIModel(projectList, reportDir){
-	
-
 	var reportPath = reportDir+"\\analysis-results-folders.txt";
+	global.debugCache = new Object();
 //	FileManagerUtil.deleteFileSync(reportPath);
 	
 	  //use promise to construct the repo objects
@@ -135,11 +137,22 @@ function analyseXMIModel(projectList, reportDir){
         return analyseModel(project.path+"\\"+project.modelFile, project.tag, reportDir);
     })).then(
         function(){
+			console.log("=============Cache==============");
+			var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
+			for (var key in global.debugCache) {
+				mkdirp(OutputDir, function(err) { 
+					fs.writeFile(key, global.debugCache[key], function(err){
+						if(err){
+							console.log(err);
+						}
+					});
+					});
+				}
+			console.log("Finish write debug cache in files");
             return new Promise((resolve, reject) => {
                 setTimeout(function(){
                 	console.log("analysis finished");
                     resolve();
-
                 }, 0);
             });
         }
@@ -152,7 +165,9 @@ function analyseXMIModel(projectList, reportDir){
 
 function scanRepo(repoListPath, repoRecordPath){
 		  //to generate svg file.
-			var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+//			var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+			var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+			
 		    var command = 'java -classpath '+classPath+' repo.AnalysisKit "scan-repo" "'+repoListPath+'" "'+repoRecordPath+'"';
 		  	console.log(command);
 		  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -171,7 +186,9 @@ function scanRepo(repoListPath, repoRecordPath){
 
 function selectFiles(repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+//	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+
     var command = 'java -classpath '+classPath+' repo.AnalysisKit "select-files" "'+repoRecordPath+'"';
   	console.log(command);
   	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -189,7 +206,10 @@ function selectFiles(repoRecordPath){
 
 function analyseSloc(repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+
+//	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+
    var command = 'java -classpath '+classPath+' repo.AnalysisKit "analyse-sloc" "'+repoRecordPath+'"';
  	console.log(command);
  	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -205,10 +225,12 @@ function analyseSloc(repoRecordPath){
  	});
 }
 
-function generateSlocReport(repoRecordPath){
+function generateSlocReport(repoListPath, repoRecordPath){
 	 //to generate svg file.
-	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
-  var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoRecordPath+'"';
+//	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+
+  var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoListPath+'" "'+repoRecordPath+'"';
 	console.log(command);
 	var child = exec(command, {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
 		if (error !== null) {
@@ -247,27 +269,36 @@ if(functionSelection === "--scan-repo"){
 }
 else if(functionSelection === "--select-files"){
 //3. open repo browser to select the files that should be include in the list
-var repoListDir= repo.reportDir+"\\temp";
-var repoRecordPath = repoListDir+"\\sloc";
+//var repoListDir= repo.reportDir+"\\temp";
+var repoRecordPath = repo.reportDir+"\\sloc";
 selectFiles(repoRecordPath);
 }
 else if(functionSelection === "--analyse-sloc"){
 //4. calculate sloc for each repo
-var repoListDir= repo.reportDir+"\\temp";
-var repoRecordPath = repoListDir+"\\sloc";
+//var repoListDir= repo.reportDir+"\\temp";
+var repoRecordPath = repo.reportDir+"\\sloc";
 analyseSloc(repoRecordPath);
 }
 else if(functionSelection === "--generate-sloc-report"){
 	//4. calculate sloc for each repo
-var repoListDir= repo.repoDir+"\\temp";
-var repoRecordPath = repoListDir+"\\sloc";
-generateSlocReport(repoRecordPath);
+//var repoListDir= repo.reportDir+"\\temp";
+var repoRecordPath = repo.reportDir+"\\sloc";
+var repoListPath = repoRecordPath+"\\fileList.txt";
+generateSlocReport(repoListPath, repoRecordPath);
 }
-
 else if(functionSelection === "--recover-kdm"){
-	
 recoverKDMModel(repo.projectList)
-
+}
+else if(functionSelection === "--calculate-cocomo-estimation-result"){
+	var cocomoDataPath = repo.repoDir+"\\COCOMORatings1.csv";
+	var cocomoCalculator = require("../effort_estimators/COCOMOCalculator.js");
+	cocomoCalculator.loadCOCOMOData(cocomoDataPath, function(cocomoDataList){
+		for(var i in cocomoDataList){
+		var cocomoData = cocomoCalculator.estimateProjectEffort(cocomoDataList[i]);
+		console.log(cocomoData);
+		}
+	});
+	
 }
 else if(functionSelection === "--analyse-xmi-model"){
 analyseXMIModel(repo.projectList, repo.reportDir);
@@ -278,6 +309,7 @@ var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir+"\\analysis-re
 var transactionFiles = [];
 var filteredTransactionFiles = [];
 var modelEvaluationFiles = [];
+
 for(var i in modelOutputDirs){
   //code here using lines[i] which will give you each line
 	var modelOutputDir = modelOutputDirs[i];

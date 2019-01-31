@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Administrator
+participant "Meeting" as 09
+participant "Administrator" as 29
+participant "System Boundary" as 89
+
+Administrator -> 09: emptypublishmeetingscreen()
+activate 09
+
+deactivate 09
+
+Administrator -> 09: meetinglistandpushlishoptions()
+activate 09
+
+09 -> 09: Updatemeetingsstatus()
+09 -> 09: Meetings()
+deactivate 09
+
+09 -> 09: emptypublishmeetingscreen()
+activate 09
+
+deactivate 09
+
+09 -> 29: sendmessagestoattendeeslist()
+activate 29
+
+29 -> 89: attendeelist()
+activate 89
+
+deactivate 89
+
+deactivate 29
+
+09 -> 89: attendeelist()
+activate 89
+
+deactivate 89
+
+Administrator -> 29: Administratorsdashboard()
+activate 29
+
+29 -> 09: displaypublishmeetingsscreen()
+activate 09
+
+09 -> 09: Meetings()
+deactivate 09
+
+09 -> 09: meetinglistandpushlishoptions()
+activate 09
+
+09 -> 09: Updatemeetingsstatus()
+deactivate 09
+
+deactivate 29
+
+@enduml

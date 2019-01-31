@@ -1,0 +1,46 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Rest password" as 09
+participant "Case Manager" as 19
+participant "Case information" as 29
+participant "Use information" as 89
+
+User -> 09: correspondingrolesmainpage()
+activate 09
+
+deactivate 09
+
+User -> 19: caselist()
+activate 19
+
+19 -> 09: Sendrequesttocasedatabase()
+activate 09
+
+09 -> 29: returntothecaseinformationpage()
+activate 29
+
+29 -> 29: caseinformationpage()
+deactivate 29
+
+29 -> 89: redirecttheusertothecorrespondingrolesmainpage()
+activate 89
+
+89 -> 09: correspondingrolesmainpage()
+deactivate 09
+
+deactivate 89
+
+09 -> 19: case()
+deactivate 19
+
+User -> 29: caseinformationpage()
+activate 29
+
+deactivate 29
+
+@enduml

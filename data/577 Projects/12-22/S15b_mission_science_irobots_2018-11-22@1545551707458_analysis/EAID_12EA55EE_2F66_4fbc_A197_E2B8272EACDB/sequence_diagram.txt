@@ -1,0 +1,48 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "changetheparametersoftheelements" as 09
+participant "ProgramList" as 19
+participant "Instruction Panel" as 29
+participant "Instruction" as 89
+
+User -> 09: parametersetdialog()
+activate 09
+
+09 -> 09: changetheparametersoftheelements()
+09 -> 09: saveparameters()
+09 -> 19: Programisupdatedmessage()
+activate 19
+
+deactivate 19
+
+09 -> 89: instructions()
+activate 89
+
+deactivate 89
+
+deactivate 09
+
+User -> 19: Programisupdatedmessage()
+activate 19
+
+deactivate 19
+
+User -> 29: navigationinstructioncreatepanel()
+activate 29
+
+29 -> 29: displaythedraggedanddroppednavigationinstructions()
+29 -> 09: popupparameterchangedialog()
+activate 09
+
+09 -> 09: parametersetdialog()
+09 -> 09: changetheparametersoftheelements()
+deactivate 09
+
+deactivate 29
+
+@enduml

@@ -1,0 +1,28 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor user
+participant "Reservation" as 09
+
+user -> 09: Viewreservationschedulebutton()
+activate 09
+
+09 -> 09: queryscheduledreservations()
+09 -> 09: Displayscheduledreservations()
+09 -> 09: scheduledreservations()
+deactivate 09
+
+09 -> 09: scheduledreservations()
+activate 09
+
+deactivate 09
+
+user -> 09: scheduledreservations()
+activate 09
+
+deactivate 09
+
+@enduml

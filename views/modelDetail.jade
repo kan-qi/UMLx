@@ -5,7 +5,7 @@
 -var loadsPath = upLoadsPath
 input(type='hidden', value=model_id)#mymodelId
 input(type='hidden', value=repoID)#myrepoId
-input(type='hidden', value=loadsPath)#myupLoadsPath
+//input(type='hidden', value=loadsPath)#myupLoadsPath	
 div.block.panel.panel-default
   div.panel-heading
    div.panel-title.analytics-title.pull-left
@@ -57,50 +57,14 @@ div.block.panel.panel-default
      li
       a(data-toggle='tab', href='#project-properties') Project Info
      li
-      a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', data-type='archive', onclick="walkDir(this);") Archive
+      a(data-toggle='tab', id='modelArchive' href='#repo_archive', data-url='#{filePath}', data-type='archive', onclick="createDir(this);") Archive
      li
-      a(data-toggle='tab', id='modelUploads' href='#loadsPath', data-url='#{loadsPath}', data-type='upload', onclick="walkDir(this);") Uploads
+      a(data-toggle='tab', id='modelUploads' href='#loadsPath', data-url='#{loadsPath}', data-type='upload', onclick="createDir(this);") Uploads
 
      //li
       //a(data-toggle='tab', href='#model-representation') Representation
     div.tab-content
      div.tab-pane.fade.in.active(id="model-analytics")
-      if modelInfo
-        div.col-sm-12.status-row
-          div.col-sm-3
-            div.blue-card.analytics-card
-              .col-sm-4.image-box
-                img(src="img/project.png", alt="")
-              .col-sm-8.text-box
-                h2 #{modelInfo.ComponentAnalytics.UseCaseNum}
-                span Use Cases
-          div.col-sm-3
-            div.red-card.analytics-card
-              .col-sm-4.image-box
-                img(src="img/project.png", alt="")
-              .col-sm-8.text-box
-                h2 #{modelInfo.TransactionAnalytics.INT + modelInfo.TransactionAnalytics.DM + modelInfo.TransactionAnalytics.CTRL + modelInfo.TransactionAnalytics.TRAN_NA}
-                span Transactions
-          div.col-sm-3
-            div.green-card.analytics-card
-              .col-sm-4.image-box
-                img(src="img/project.png", alt="")
-              .col-sm-8.text-box
-                h2 #{modelInfo.ComponentAnalytics.EntityNum}
-                span Classes
-          div.col-sm-3
-            div.purple-card.analytics-card
-              .col-sm-4.image-box
-                img(src="img/project.png", alt="")
-              .col-sm-8.text-box
-                h2 #{modelInfo.Actors.length}
-                span Actors
-        //div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{modelInfo.AccessDir}/modelVersionInfo.csv")
-        div(id="model-analysis" data-expandedPathURL="./#{modelInfo.AccessDir}/expandedPathAnalytics.csv", data-pathAnalyticsURL="./#{modelInfo.AccessDir}/pathAnalytics.csv", data-usecaseAnalyticsURL="./#{modelInfo.AccessDir}/useCaseAnalytics.csv")
-         //div.stats-chart.col-md-12(id="chart-1") here should be distributions.
-        //div.col-sm-12.chart-row
-        // div.col-sm-6(id="chart-1") here should be distributions.
-        div.stats-chart.col-md-12(id="chart-1") here should be distributions.
         //div.col-sm-12.chart-row
          //div.col-sm-6(id="chart-1") here should be distributions.
         div.col-sm-12.chart-row
@@ -114,20 +78,52 @@ div.block.panel.panel-default
      div.tab-pane.fade(id="usecase-analysis")
       div(id="model-usecase-analysis")
        h3 loading...
+     //origin
+     //div.tab-pane.fade(id="model-evaluation")
+     // div.model-evaluation
+     //  div.eucp-evaluation
+     //   h4 EUCP
+     //   -var estimationResults = modelInfo['eucp_lm']
+     //   include estimationResultPane
+     //  div.excup-evaluation
+     //   h4 EXUCP
+     //   -var estimationResults = modelInfo['exucp_lm']
+     //   include estimationResultPane
+     //  div.ducp-evaluation
+     //   h4 DUCP
+     //   -var estimationResults = modelInfo['ducp_lm']
+     //   include estimationResultPane
+     //end of origin
+     // modified version issue #397, separate the model info page into three tabs
      div.tab-pane.fade(id="model-evaluation")
-      div.model-evaluation
-       div.eucp-evaluation
-        h4 EUCP
-        -var estimationResults = modelInfo['eucp_lm']
-        include estimationResultPane
-       div.excup-evaluation
-        h4 EXUCP
-        -var estimationResults = modelInfo['exucp_lm']
-        include estimationResultPane
-       div.ducp-evaluation
-        h4 DUCP
-        -var estimationResults = modelInfo['ducp_lm']
-        include estimationResultPane
+        div.model-evaluation
+         ul.nav.nav-pills
+             li.nav-item.active
+                a.nav-link(data-toggle="pill", href="#pills-EUCP")
+                 | EUCP
+             li.nav-item
+                a.nav-link(data-toggle="pill", href="#pills-EXUCP")
+                 | EXUCP
+             li.nav-link
+                a.nav-link(data-toggle="pill", href="#pills-DUCP")
+                 | DUCP
+         div.tab-content
+             div.tab-pane.fade.in.active(id="pills-EUCP")
+                 div.eucp-evaluation
+                     h4 EUCP
+                     -var estimationResults = modelInfo['eucp_lm']
+                     include estimationResultPane
+             div.tab-pane.fade(id="pills-EXUCP")
+                 div.excup-evaluation
+                     h4 EXUCP
+                     -var estimationResults = modelInfo['exucp_lm']
+                     include estimationResultPane
+             div.tab-pane.fade(id="pills-DUCP")
+                 div.ducp-evaluation
+                     h4 DUCP
+                     -var estimationResults = modelInfo['ducp_lm']
+                     include estimationResultPane
+        // end of modified version
      div.tab-pane.fade(id="project-properties")
        div.project-properties
         div
@@ -195,7 +191,7 @@ div.block.panel.panel-default
                     td Complex internal processing
                     td
                         select(disabled='true').form-control#editNumber4
-                          - var temp = modelInfo.formInfo["alert alert-infoternal-processing"];                            
+                          - var temp = modelInfo.formInfo["complex-internal-processing"];
                             option(value =temp, selected='') #{temp}                                                  
                             if temp!=1 
                               option 1
@@ -211,7 +207,7 @@ div.block.panel.panel-default
                     td Code must be reusable
                     td
                         select(disabled='true').form-control#editNumber5
-                          - var temp = modelInfo.formInfo["code-must-be-resuable"];                            
+                          - var temp = modelInfo.formInfo["code-must-be-reusable"];
                             option(value =temp, selected='') #{temp}                                                  
                             if temp!=1 
                               option 1
@@ -339,18 +335,18 @@ div.block.panel.panel-default
                     td Special user training facilities are required
                     td
                         select(disabled='true').form-control#editNumber13
-                          - var temp = modelInfo.formInfo["special-user-training-facilities-are-required"];                            
-                            option(value =temp, selected='') #{temp}                                                  
-                            if temp!=1 
-                              option 1
-                            if temp!=2
-                              option 2
-                            if temp!=3 
-                              option 3
-                            if temp!=4
-                              option 4
-                            if temp!=5
-                              option 5
+                            - var temp = modelInfo.formInfo["provides-direct-access-for-third-parties"];
+                                option(value =temp, selected='') #{temp}
+                                if temp != 1
+                                    option 1
+                                if temp != 2
+                                    option 2
+                                if temp != 3
+                                    option 3
+                                if temp != 4
+                                    option 4
+                                if temp != 5
+                                    option 5
                 tr
                     td
                      h4 Environmental Complexity Factors
@@ -359,18 +355,18 @@ div.block.panel.panel-default
                     td Familiar with the project model that is used
                     td
                         select(disabled='true').form-control#editNumber14
-                          - var temp = modelInfo.formInfo["familiar-with-the-project-model-that-is-used"];                            
-                            option(value =temp, selected='') #{temp}                                                  
-                            if temp!=1 
-                              option 1
-                            if temp!=2
-                              option 2
-                            if temp!=3 
-                              option 3
-                            if temp!=4
-                              option 4
-                            if temp!=5
-                              option 5
+                            - var temp = modelInfo.formInfo["familiar-with-the-project-model-that-is-used"];
+                                option(value =temp, selected='') #{temp}
+                                if temp != 1
+                                    option 1
+                                if temp != 2
+                                    option 2
+                                if temp != 3
+                                    option 3
+                                if temp != 4
+                                    option 4
+                                if temp != 5
+                                    option 5
                 tr
                     td Application experience
                     td

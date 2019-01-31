@@ -422,7 +422,7 @@ function processCombinedFragment(XMICombinedFragment, XMILifelinesByID, XMIMessa
 		
 	}
 	
-	function drawSequenceDiagram(UseCase, graphFilePath, callbackfunc) {
+	function drawSequenceDiagram(UseCase, DomainModel, graphFilePath, callbackfunc) {
 		UseCase.DiagramType = "sequence_diagram";
 	}
 	

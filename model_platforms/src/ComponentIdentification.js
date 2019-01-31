@@ -6,6 +6,7 @@
  * This script relies on KDM and Java model
  *
  * The goal is the establish the control flow between the modules:
+ * 
  * Identify the boundary (via KDM).
  * Identify the system components.
  * Establish the control flow between the components
@@ -21,7 +22,6 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var codeAnalysis = require("./CodeAnalysis.js");
 	var util = require('util');
     const uuidv4 = require('uuid/v4');
 
@@ -29,8 +29,17 @@
 //	var dom = require('xmldom').DOMParser;
 
 
-  function identifyComponents(callGraph, accessGraph, typeDependencyGraph, classes, classUnits, dicCompositeSubclasses, outputDir) {
-
+	function identifyComponents(
+		callGraph, 
+		accessGraph, 
+		typeDependencyGraph, 
+		extendsGraph,
+		compositionGraph,
+		classes, 
+		classUnits, 
+		dicCompositeSubclasses, 
+		outputDir
+	) {
 		// console.log("!!!!!!!!!!!");
 		// console.log(dicCompositeSubclasses);
 
@@ -57,22 +66,15 @@
 				// notReferenced: true
 			}
 			classArray.push(classU);
-			methods.push(classUnit.MethodUnits.length);
+			methods.push(classUnit.methodUnits?classUnit.methodUnits.length:0);
 			classesByName[classUnit.name] = classUnit;
 		}
-
-    // console.log("classesAll");
-		// console.log(classesAll);
-		// console.log("classes");
-		// console.log(classes);
-		// console.log("classDic");
-		// console.log(classDic);
-		// console.log("classArray");
-		// console.log(classArray);
 
 		var callMetric = calculateCallMetric(callGraph, classes, classDic, methods);
 		var accessMetric = calculateAccessMetric(accessGraph, classes, classDic, methods);
 		var typeDependencyMetric = calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods);
+		var extendsMetric = calculateExtendsMetric(extendsGraph, classes, classDic, methods);
+		var compositionMetric = calculateCompositionMetric(compositionGraph, classes, classDic, methods);
 
 		var metric = zeroArray(classes.length, classes.length);
 		var maxMetric = 0;
@@ -80,8 +82,8 @@
 
 		for (var i = 0; i < classes.length; i++) {
 			for (var j = 0; j < classes.length; j++) {
-				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j];
-				maxMetric = metric[i][j] > maxMetric ? metric[i][j] : maxMetric;
+				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j] + extendsMetric[i][j] + compositionMetric[i][j];
+				maxMetric = Math.max(maxMetric, metric[i][j]);
 			}
 		}
 
@@ -158,11 +160,6 @@
 			currentLevelDepth++;
 		}
 
-		// console.log("currentLevel");
-		// console.log(currentLevel);
-		//
-		//
-
 
 		for (var i in currentLevel) {
 			var newComponent = [];
@@ -173,6 +170,9 @@
 				var node = bfs.pop(0);
 				// console.log("node");
 				// console.log(node);
+				if(!node){
+					continue;
+				}
 				if (node.size == 1 && node.hasOwnProperty('value')) {
 					newComponent.push(node.value);
 				}
@@ -228,7 +228,7 @@
 		// console.log(clusters);
 
 		var dicComponents = {};
-		var dicClassComponent = {};  // {classUnit.uuid: component.uuid}
+		var dicClassComponent = {};  // {classUnit.UUID: component.UUID}
 
 		for(var i in clusters){
 			var classUnits = clusters[i];
@@ -257,19 +257,16 @@
 
 			var component = {
 					name: classUnits[0].name,
-					uuid: uuidv4(),
+					UUID: uuidv4(),
 					classUnits: classUnits
 			}
 
-			dicComponents[component.uuid] = component;
+			dicComponents[component.UUID] = component;
 
 			for (var j in classUnits) {
-				dicClassComponent[classUnits[j].UUID] = component.uuid;
+				dicClassComponent[classUnits[j].UUID] = component.UUID;
 			}
 		}
-
-//		console.log("components");
-//		console.log(components);
 
 		return {
 			dicComponents: dicComponents,
@@ -334,7 +331,7 @@
 
 	}
 
-  function zeroArray(column, row) {
+	function zeroArray(column, row) {
 		var array = [];
 		for (var i = 0; i < column; i++) {
 			var tmp = [];
@@ -352,7 +349,7 @@
 	}
 
 	function calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods) {
-		console.log("type dependency metric");
+		  console.log("type dependency metric");
 
 		  console.log("typeDependencyGraph");
 		  console.log(typeDependencyGraph);
@@ -361,16 +358,16 @@
 		// var classDic = {};
 		// var classArray = [];
 		// var methods = [];
-    //
+		//
 		// for(var i in classes) {
 		// 	var classUnit = classes[i];
 		// 	classDic[classUnit.UUID] = i;
 		// 	var classU = {
-		// 		UUID: classUnit.UUID,
+		// 		UUID: classUnit.uuid,
 		// 		name: classUnit.name
 		// 	}
 		// 	classArray.push(classU);
-		// 	methods.push(classUnit.MethodUnits.length);
+		// 	methods.push(classUnit.methodUnits.length);
 		// }
 
 		var attrs = zeroArray(classes.length, classes.length); //  the number of attributes of class Cli whose type is class Clj.
@@ -380,20 +377,22 @@
 		var paras = zeroArray(classes.length, classes.length);
 		var typeDependencyMetrics = zeroArray(classes.length, classes.length);
 
+		console.log("class dic");
+		console.log(classDic);
 		if (typeDependencyGraph) {
 			for (var i in typeDependencyGraph.edgesAttrComposite) {
-	      var edge = typeDependencyGraph.edgesAttrComposite[i];
-				var col = classDic[edge.start.component.classUnit];
-				var row = classDic[edge.end.component.classUnit];
+				var edge = typeDependencyGraph.edgesAttrComposite[i];
+				var col = classDic[edge.start.UUID];
+				var row = classDic[edge.end.UUID];
 				attrs[col][row]++;
 				// classArray[col] = false;
 				// classArray[row] = false;
 			}
 			for (var i in typeDependencyGraph.edgesPComposite) {
 				var edge = typeDependencyGraph.edgesPComposite[i];
-				var col = classDic[edge.start.component.classUnit];
-				var row = classDic[edge.end.component.classUnit];
-	      paras[col][row]++;
+				var col = classDic[edge.start.UUID];
+				var row = classDic[edge.end.UUID];
+				paras[col][row]++;
 				// classArray[col] = false;
 				// classArray[row] = false;
 			}
@@ -423,7 +422,7 @@
 
     // console.log(classArray);
 		console.log(typeDependencyMetrics);
-    return typeDependencyMetrics;
+		return typeDependencyMetrics;
 	}
 
 	function calculateAccessMetric(accessGraph, classes, classDic, methods) {
@@ -443,19 +442,22 @@
 			// 	name: classUnit.name
 			// }
 			// classArray.push(classU);
-			// methods.push(classUnit.MethodUnits.length);
-			attrs.push(classUnit.StorableUnits.length);
+			// methods.push(classUnit.methodUnits.length);
+			attrs.push(classUnit.StorableUnits?classUnit.StorableUnits.length:0);
 		}
 
-    var access = zeroArray(classes.length, classes.length);
+		var access = zeroArray(classes.length, classes.length);
 		var accessors = {};
 		var accessed = {};
 		var accessMetrics = zeroArray(classes.length, classes.length);
 
 		for (var i in accessGraph.edgesComposite) {
-      var edge = accessGraph.edgesComposite[i];
-			var col = classDic[edge.start.component.classUnit];
-			var row = classDic[edge.end.component.classUnit];
+			var edge = accessGraph.edgesComposite[i];
+			var col = classDic[edge.start.UUID];
+			var row = classDic[edge.end.UUID];
+			if(col == null || row == null){
+				continue;
+			}
 			access[col][row]++;
 			// classArray[col] = false;
 			// classArray[row] = false;
@@ -495,7 +497,7 @@
 			}
 		}
 
-    // console.log(classArray);
+		// console.log(classArray);
 		console.log(accessMetrics);
 		return accessMetrics;
 
@@ -510,7 +512,7 @@
 		// var classDic = {};
 		// var classArray = [];
 		// var methods = []; // store the number of methods in each class
-    //
+		//
 		// for(var i in classes) {
 		// 	var classUnit = classes[i];
 		// 	classDic[classUnit.UUID] = i;
@@ -519,7 +521,7 @@
 		// 		name: classUnit.name
 		// 	}
 		// 	classArray.push(classU);
-		// 	methods.push(classUnit.MethodUnits.length);
+		// 	methods.push(classUnit.methodUnits.length);
 		// }
 
 		var calls = zeroArray(classes.length, classes.length);
@@ -529,12 +531,15 @@
 		var callees = {};
 		var callMetrics = zeroArray(classes.length, classes.length);
 
-    // console.log(calls);
+		// console.log(calls);
 
 		for (var i in callGraph.edgesComposite) {
-      var edge = callGraph.edgesComposite[i];
-			var col = classDic[edge.start.component.classUnit];
-			var row = classDic[edge.end.component.classUnit];
+			var edge = callGraph.edgesComposite[i];
+			var col = classDic[edge.start.UUID];
+			var row = classDic[edge.end.UUID];
+			if(col == null || row == null){
+				continue;
+			}
 			// classArray[col] = false;
 			// classArray[row] = false;
 			// console.log("checkcheck");
@@ -580,7 +585,7 @@
 			}
 		}
 
-    // console.log(classArray);
+		// console.log(classArray);
 		console.log(callMetrics);
 		return callMetrics;
 
@@ -595,6 +600,43 @@
 		// }
 		// console.log(classDic);
 		// console.log(classArray);
+	}
+
+	function calculateExtendsMetric(extendsGraph, classes, classDic, methods) {
+		var extendsMetrics = zeroArray(classes.length, classes.length);
+
+		if (!extendsGraph) {
+			return extendsMetrics;
+		}
+
+		for (var i in extendsGraph.edges) {
+			var edge = extendsGraph.edges[i];
+			var col = classDic[edge.start.UUID];
+			var row = classDic[edge.end.UUID];
+			extendsMetrics[col][row]++;
+		}
+
+		return extendsMetrics;
+	}
+
+	function calculateCompositionMetric(compositionGraph, classes, classDic, methods) {
+		var compositionMetrics = zeroArray(classes.length, classes.length);
+
+		if (!compositionGraph) {
+			return compositionMetrics;
+		}
+
+		for (var i in compositionGraph.edges) {
+			var edge = compositionGraph.edges[i];
+			var col = classDic[edge.start.UUID];
+			var row = classDic[edge.end.UUID];
+			if(!col || !row){
+				continue;
+			}
+			compositionMetrics[col][row]++;
+		}
+
+		return compositionMetrics;
 	}
 
 // mode => 0: SINGLE_LINKAGE; 1: CONPLETE_LINKAGE; 2: AVERAGE_LINKAGE
@@ -828,6 +870,9 @@
 				var classes = rowDic[row];
 				var classSelected = classes[classes.length-1];
 				var children = dicCompositeSubclasses[classSelected.UUID];
+				if(!children){
+					return classClusters;
+				}
 				classClusters["size"] = children.length;
 				// var endNode = {
 				// 	name: startNode.name+"mid",
@@ -839,6 +884,9 @@
 				for (var i in children) {
 					var childClass = {};
 					var child = findClassUnit(children[i], classUnits);
+					if(!child){
+						continue;
+					}
 					childClass['size'] = 1;
 					childClass['value'] = child;
 					childrenClasses.push(childClass);

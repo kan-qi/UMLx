@@ -1,0 +1,61 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "SurveyConfigurationPage" as 09
+participant "schoolinformaiton" as 19
+participant "SurveyDeploymentPage" as 29
+participant "answer" as 49
+participant "System Boundary" as 99
+
+administrator -> 09: confirmationdialog()
+activate 09
+
+09 -> 49: deleteanswers()
+activate 49
+
+49 -> 49: answerstorage()
+deactivate 49
+
+49 -> 29: deletesuccessmessage()
+activate 29
+
+deactivate 29
+
+49 -> 99: tempraryfile()
+activate 99
+
+deactivate 99
+
+deactivate 09
+
+administrator -> 19: quitwithoutsavingbutton()
+activate 19
+
+19 -> 09: Displayaconfirmationdialog()
+activate 09
+
+09 -> 09: confirmationdialog()
+09 -> 49: deleteanswers()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+09 -> 49: answerstorage()
+activate 49
+
+deactivate 49
+
+deactivate 19
+
+administrator -> 29: deletesuccessmessage()
+activate 29
+
+deactivate 29
+
+@enduml

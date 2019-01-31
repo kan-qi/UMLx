@@ -1,0 +1,91 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "Question Category Screen" as 09
+participant "Question Screen" as 19
+participant "answer" as 39
+participant "Association Management" as 109
+participant "System Boundary" as 159
+
+administrator -> 09: quetioncategorylist()
+activate 09
+
+deactivate 09
+
+administrator -> 19: questionlist()
+activate 19
+
+19 -> 159: updatetheanswerinthetemporarystoragefile()
+activate 159
+
+159 -> 19: displaynextquestion()
+19 -> 39: answer()
+activate 39
+
+deactivate 39
+
+19 -> 19: displayacommentquestion()
+19 -> 19: questionlist()
+19 -> 159: updatetheanswerinthetemporarystoragefile()
+159 -> 159: temporarystoragefile()
+deactivate 159
+
+deactivate 19
+
+19 -> 19: displaytallyquestion()
+activate 19
+
+19 -> 109: displayafunctionmenu()
+activate 109
+
+109 -> 19: questionlist()
+19 -> 159: updatetheanswerinthetemporarystoragefile()
+activate 159
+
+deactivate 159
+
+deactivate 19
+
+109 -> 09: executefeaturenaanddisplaycategories()
+activate 09
+
+09 -> 09: categorybutton()
+deactivate 09
+
+09 -> 09: quetioncategorylist()
+activate 09
+
+deactivate 09
+
+deactivate 109
+
+19 -> 19: questionlist()
+activate 19
+
+19 -> 159: updatetheanswerinthetemporarystoragefile()
+activate 159
+
+deactivate 159
+
+deactivate 19
+
+19 -> 19: questionlist()
+activate 19
+
+19 -> 159: updatetheanswerinthetemporarystoragefile()
+activate 159
+
+deactivate 159
+
+deactivate 19
+
+administrator -> 09: categorybutton()
+activate 09
+
+deactivate 09
+
+@enduml

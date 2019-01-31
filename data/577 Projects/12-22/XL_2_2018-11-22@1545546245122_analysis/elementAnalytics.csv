@@ -1,0 +1,80 @@
+id,element,useCase,type,component
+1,User:Homepage,Adjust the Costs Distribution,boundary,Budget Report
+2,User:Adjust the Costs Distribution page,Adjust the Costs Distribution,entity,AdjusttheCostsDistributionpage
+3,Adjust the Costs Distribution page:Enters the amount of the cost ,Adjust the Costs Distribution,control,Inverstment Information
+4,Show confirmation:Adjust the Costs Distribution page,Adjust the Costs Distribution,entity,AdjusttheCostsDistributionpage
+5,Enters the amount of the cost :Cost distributions db,Adjust the Costs Distribution,entity,AdjusttheCostsDistributionpage
+6,Enters the amount of the cost :Show confirmation,Adjust the Costs Distribution,control,Inverstment Information
+7,Homepage:Show confirmation,Adjust the Costs Distribution,control,Inverstment Information
+8,stl#User:Homepage,Adjust the Costs Distribution,Stimulus,undefined
+9,stl#User:Adjust the Costs Distribution page,Adjust the Costs Distribution,Stimulus,undefined
+10,User:Homepage,Allocate Sources of Funding,boundary,Budget Report
+11,User:Allocate sources of funding  page,Allocate Sources of Funding,entity,Specifiesthesourcesoffundingandtheamount
+12,User:Exceptional phases page,Allocate Sources of Funding,boundary,Revenue assumptions
+13,User:Homepage,Allocate Sources of Funding,boundary,Budget Report
+14,Allocate sources of funding  page:Specifies the sources of funding and the amount ,Allocate Sources of Funding,entity,Specifiesthesourcesoffundingandtheamount
+15,Show confirmation:Allocate sources of funding  page,Allocate Sources of Funding,entity,Specifiesthesourcesoffundingandtheamount
+16,Enters exceptional phases  into the GUI:Show confirmation,Allocate Sources of Funding,control,Inverstment Information
+17,Exceptional phases page:Enters exceptional phases  into the GUI,Allocate Sources of Funding,control,Interaction
+18,Show confirmation:Exceptional phases page,Allocate Sources of Funding,boundary,Revenue assumptions
+19,Homepage:Show confirmation,Allocate Sources of Funding,control,Inverstment Information
+20,Homepage:Show confirmation,Allocate Sources of Funding,control,Inverstment Information
+21,Specifies the sources of funding and the amount :Show confirmation,Allocate Sources of Funding,control,Inverstment Information
+22,Specifies the sources of funding and the amount :sources of funding db,Allocate Sources of Funding,entity,Specifiesthesourcesoffundingandtheamount
+23,stl#User:Homepage,Allocate Sources of Funding,Stimulus,undefined
+24,stl#User:Allocate sources of funding  page,Allocate Sources of Funding,Stimulus,undefined
+25,stl#User:Exceptional phases page,Allocate Sources of Funding,Stimulus,undefined
+26,stl#User:Homepage,Allocate Sources of Funding,Stimulus,undefined
+27,User:Enter Revenue Assumptions page,Enter Revenue Assumptions,boundary,Revenue assumptions
+28,User:Homepage,Enter Revenue Assumptions,boundary,Budget Report
+29,Enter Revenue Assumptions page:Enters Revenue Assumptions into the GUI,Enter Revenue Assumptions,boundary,Revenue assumptions
+30,Show confirmation:Enter Revenue Assumptions page,Enter Revenue Assumptions,boundary,Revenue assumptions
+31,Enters Revenue Assumptions into the GUI:Show confirmation,Enter Revenue Assumptions,control,Inverstment Information
+32,Homepage:Show confirmation,Enter Revenue Assumptions,control,Inverstment Information
+33,stl#User:Enter Revenue Assumptions page,Enter Revenue Assumptions,Stimulus,undefined
+34,stl#User:Homepage,Enter Revenue Assumptions,Stimulus,undefined
+35,User:Generate budget reports  page,Generate Budget Reports,boundary,Budget Report
+36,User:Homepage,Generate Budget Reports,boundary,Budget Report
+37,requests a budget report for a newly populated model:Budget Report db,Generate Budget Reports,boundary,Budget Report
+38,Generate budget reports  page:requests a budget report for a newly populated model,Generate Budget Reports,boundary,Budget Report
+39,Show confirmation:Generate budget reports  page,Generate Budget Reports,boundary,Budget Report
+40,Homepage:Show confirmation,Generate Budget Reports,control,Inverstment Information
+41,requests a budget report for a newly populated model:Show confirmation,Generate Budget Reports,control,Inverstment Information
+42,stl#User:Generate budget reports  page,Generate Budget Reports,Stimulus,undefined
+43,stl#User:Homepage,Generate Budget Reports,Stimulus,undefined
+44,User:Homepage,Generate Cash Flow Report,boundary,Budget Report
+45,User:Generate cash flow report  page,Generate Cash Flow Report,entity,Cash Flow Report
+46,Generate cash flow report  page:populates the model and  Requests a cash flow analysis report,Generate Cash Flow Report,entity,Cash Flow Report
+47,Show confirmation:Generate cash flow report  page,Generate Cash Flow Report,entity,Cash Flow Report
+48,Homepage:Show confirmation,Generate Cash Flow Report,control,Inverstment Information
+49,populates the model and  Requests a cash flow analysis report:Show confirmation,Generate Cash Flow Report,control,Inverstment Information
+50,populates the model and  Requests a cash flow analysis report:cash flow report  db,Generate Cash Flow Report,entity,Cash Flow Report
+51,stl#User:Homepage,Generate Cash Flow Report,Stimulus,undefined
+52,stl#User:Generate cash flow report  page,Generate Cash Flow Report,Stimulus,undefined
+53,User:Homepage,Save Populated Model,boundary,Budget Report
+54,User:Save Populated Model page,Save Populated Model,boundary,XL2 Model
+55,Homepage:Show confirmation,Save Populated Model,control,Inverstment Information
+56,Save  the completed model:Model db,Save Populated Model,boundary,XL2 Model
+57,Save  the completed model:Show confirmation,Save Populated Model,control,Inverstment Information
+58,Save Populated Model page:Save  the completed model,Save Populated Model,boundary,XL2 Model
+59,Show confirmation:Save Populated Model page,Save Populated Model,boundary,XL2 Model
+60,stl#User:Homepage,Save Populated Model,Stimulus,undefined
+61,stl#User:Save Populated Model page,Save Populated Model,Stimulus,undefined
+62,User:Exceptional phases page,Set Development Phases,boundary,Revenue assumptions
+63,User:Homepage,Set Development Phases,boundary,Budget Report
+64,Enters exceptional phases  into the GUI:Phase db,Set Development Phases,entity,User
+65,Enters exceptional phases  into the GUI:Show confirmation,Set Development Phases,control,Inverstment Information
+66,Exceptional phases page:Enters exceptional phases  into the GUI,Set Development Phases,control,Interaction
+67,Show confirmation:Exceptional phases page,Set Development Phases,boundary,Revenue assumptions
+68,Homepage:Show confirmation,Set Development Phases,control,Inverstment Information
+69,stl#User:Exceptional phases page,Set Development Phases,Stimulus,undefined
+70,stl#User:Homepage,Set Development Phases,Stimulus,undefined
+71,User:Update a model  page,Update a Model,boundary,XL2 Model
+72,User:Homepage,Update a Model,boundary,Budget Report
+73,Homepage:Show confirmation,Update a Model,control,Inverstment Information
+74,opens the already existing file and updates it :Model db,Update a Model,boundary,XL2 Model
+75,Show confirmation:Update a model  page,Update a Model,boundary,XL2 Model
+76,opens the already existing file and updates it :Show confirmation,Update a Model,control,Inverstment Information
+77,Update a model  page:opens the already existing file and updates it ,Update a Model,control,opensthealreadyexistingfileandupdatesit
+78,stl#User:Update a model  page,Update a Model,Stimulus,undefined
+79,stl#User:Homepage,Update a Model,Stimulus,undefined

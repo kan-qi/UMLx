@@ -14,55 +14,56 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
+	var RScriptExec = require('../../utils/RScriptUtil.js');
 	var cocomoCalculator = require('../COCOMOEvaluator/COCOMOCalculator.js');
 	
 	// this json object should be copied from the trained model from transaction analysis
 	var transactionWeightingSchema = {
 			  "EUCP": {
-				    "normFactor": 6.5385,
+					// "effortAdj": [1.2161, 4.8481],
+					"effortAdj": [7.0161, 4.8481],
+				    "sigma": [324.5969, 1060.5522],
 				    "cuts": [],
 				    "levels": {
-				      "l1": [1.0067, 0.0556]
+				      "l1": [1.0148, 0.1974]
 				    }
 				  },
 				  "EXUCP": {
-				    "normFactor": 0.9938,
+				    "effortAdj": [1.2916, 0.0177],
+				    "sigma": [364.0211, 322.5817],
 				    "cuts": {
-				      "TL": ["-Inf", 4.1256, 5.6526, 7.1796, "Inf"],
-				      "TD": ["-Inf", 3.466, 5.714, 7.9619, "Inf"]
+				      "TL": ["-Inf", 4.0428, 5.332, 6.8714, "Inf"],
+				      "TD": ["-Inf", 3.2188, 4.7554, 6.7221, "Inf"]
 				    },
 				    "levels": {
-				      "l1": [1.1589, 1.0102],
-				      "l2": [1.3385, 1.0156],
-				      "l3": [2.2486, 0.9932],
-				      "l4": [3.2167, 1.073],
-				      "l5": [5.1356, 1.8595],
-				      "l6": [7.8923, 2.8829],
-				      "l7": [12.2764, 4.7942]
+				      "l1": [1.074, 0.2151],
+				      "l2": [1.1757, 0.1954],
+				      "l3": [2.0107, 0.1138],
+				      "l4": [3.0116, 0.1272],
+				      "l5": [5.0584, 0.4764],
+				      "l6": [7.5272, 1.0731],
+				      "l7": [7.9949, 1.3001]
 				    }
 				  },
 				  "DUCP": {
-				    "normFactor": 0.9535,
+				    "effortAdj": [1.328, 0.0155],
+				    "sigma": [349.2104, 579.8986],
 				    "cuts": {
-				      "TL": ["-Inf", 4.6775, 6.6278, "Inf"],
-				      "TD": ["-Inf", 4.2785, 7.1495, "Inf"],
-				      "DETs": ["-Inf", 6.5641, 15.0865, "Inf"]
+				      "TL": ["-Inf", 4.481, 6.2851, "Inf"],
+				      "TD": ["-Inf", 3.7272, 5.9592, "Inf"],
+				      "DETs": ["-Inf", 5.4098, 11.2135, "Inf"]
 				    },
 				    "levels": {
-				      "l1": [1.2291, 0.955],
-				      "l2": [1.448, 0.9917],
-				      "l3": [2.3152, 0.9518],
-				      "l4": [3.2419, 1.002],
-				      "l5": [5.2473, 2.1658],
-				      "l6": [7.8886, 2.8567],
-				      "l7": [12.1638, 5.0031]
+				      "l1": [1.1668, 0.3195],
+				      "l2": [1.2143, 0.2107],
+				      "l3": [2.0123, 0.1127],
+				      "l4": [3.0138, 0.1112],
+				      "l5": [5.0833, 0.4605],
+				      "l6": [7.8413, 1.066],
+				      "l7": [7.6141, 1.1582]
 				    }
 				  }
 				}
-
-
-
-
 
 	
 	var transactionWeightingJsonFile = "./transaction_weighting_schema.json";
@@ -153,7 +154,10 @@
 		
 //		console.log(level);
 //		console.log(levels);
-		return Number(levels["l"+level][0]);
+		return {
+			level:level,
+			weight:Number(levels["l"+level][0])
+		}
 	}
 	
 	/*
@@ -198,6 +202,9 @@
 				SWTIII : 0,
 		}
 		
+
+		var debug = require("../../utils/DebuggerOutput.js");
+		
 		// those measurements should be take by specific evaluators.
 		for(var i in useCaseInfo.Transactions){
 		var transaction = useCaseInfo.Transactions[i];
@@ -212,9 +219,11 @@
 		var swtii =  determineTransactionWeight({TD: TD, TL:TL}, "EXUCP")
 		var swtiii =  determineTransactionWeight({DETs: DETs, TD: TD, TL:TL}, "DUCP");
 				
-		useCaseInfo['ExtendedUseCasePointData'].SWTI += swti;
-		useCaseInfo['ExtendedUseCasePointData'].SWTII += swtii;
-		useCaseInfo['ExtendedUseCasePointData'].SWTIII += swtiii;
+		useCaseInfo['ExtendedUseCasePointData'].SWTI += swti.weight;
+		useCaseInfo['ExtendedUseCasePointData'].SWTII += swtii.weight;
+		useCaseInfo['ExtendedUseCasePointData'].SWTIII += swtiii.weight;
+		
+		debug.appendFile("use_case_rated_transactions_"+useCaseInfo._id, transaction.TransactionStr+",EUCP,"+swti.level+","+swti.weight+",EXUCP,"+swtii.level+","+swtii.weight+",DUCP,"+swtiii.level+","+swtiii.weight+"\n");
 		}
 		
 				
@@ -275,21 +284,22 @@
 					console.log(err);
 			        return;
 			    }
-						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/LinearRegressionForUseCasePoints.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['ExtendedUseCasePointData'].repoUseCasePointEvaluationResultsPath+'"';
-							console.log(command);
-							var child = exec(command, function(error, stdout, stderr) {
-
-								if (error !== null) {
+						 var command1 = './Rscript/LinearRegressionForUseCasePoints.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['ExtendedUseCasePointData'].repoUseCasePointEvaluationResultsPath+'"';
+						 RScriptExec.runRScript(command1,function(result){
+								if (!result) {
 //									console.log('exec error: ' + error);
 									console.log('exec error: repo id=' + repoInfo._id);
-								} 
+									return;
+								}
+								
+							
 								console.log("Repo Evaluation were saved!");
 							});
 			});
 	}
 	
 	function estimateProjectEffort(modelInfo, sizeMetric){
-		return Number(modelInfo['ExtendedUseCasePointData'][sizeMetric])*Number(transactionWeightingSchema[sizeMetric].normFactor);
+		return Number(modelInfo['ExtendedUseCasePointData'][sizeMetric])*Number(transactionWeightingSchema[sizeMetric].effortAdj[0]);
 	}
 	
 

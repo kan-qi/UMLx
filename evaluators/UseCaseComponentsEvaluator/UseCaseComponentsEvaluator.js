@@ -9,7 +9,7 @@
  * Number of Attributes (NOA)
  * Number of external methods (NEM)
  * Number of actors (NOA)
- * Number of use cases.(NUC)
+ * Number of use cases (NUC)
  * Number of roles (NOR)
  * Average number of actors per use case (ANA_UC)
  * Average number of roles per use case (ANR_UC)
@@ -35,7 +35,7 @@
  * FTRs
  * Number of use cases/scenario scripts
  * Weighted methods per class (WMC)
- * Methods per class
+ * Methods per class (MPC)
  * Number of children (NOC)
  * Depth in Inheritance tree (DIT)
  * Method size (LOC)
@@ -44,7 +44,7 @@
  * Number of unique messages sent (NUM)
  * Number of classes inherited (derived classes)
  * Number of classes inherited from (base classes)
- * reuse ration. (RR)
+ * reuse ration (RR)
  * Number of Top Level Classes (TLC)
  * Average number of weighted methods per classes(WMC)
  * Average Depth of Inheritance Tree (DIT)
@@ -253,7 +253,7 @@
 		domainModelInfo["ComponentAnalytics"] = {
 				AttributeNum :0,
 				OperationNum :0,
-				EntityNum :0,
+				// EntityNum :0,
 				ClassNum: 0,
                 TopLevelClasses :0,
                 AverageDepthInheritanceTree :0,
@@ -277,7 +277,6 @@
 				WeightedOperNum: 0,
 				MethodSize: 0,
 				InstanceVarNum: 0,
-				
 				EntityAnalyticsFileName : 'entityAnalytics.csv',
 				AttributeAnalyticsFileName :  'attributeAnalytics.csv',
 				OperationAnalyticsFileName : 'operationAnalytics.csv'
@@ -285,7 +284,7 @@
 
 			var attributeNum = 0;
 			var operationNum = 0;
-			var entityNum = 0;
+			// var entityNum = 0;
 			var classNum = 0;
             var topLevelClasses = 0;
             var averageDepthInheritanceTree = 0;
@@ -304,7 +303,7 @@
 
 			for ( var i in domainModelInfo.Elements) {
                             var element = domainModelInfo.Elements[i];
-                            entityNum++;
+                            // entityNum++;
                             classNum++;
                             
                             var attributeNum_cls = 0;
@@ -352,38 +351,41 @@
                             
                // determine the inheritance relationships
                             
-               var derivedClasses = useCaseComponentsProcessor.identifyChildren(element, domainModelInfo.Generalizations);
+               var derivedClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);
                element.numberOfDerivedClasses = derivedClasses.length;
                element.numberOfChildren = element.numberOfDerivedClasses;
                
                console.log("derivedClasses");
                console.log(derivedClasses);
                
-               var inheritedClasses = useCaseComponentsProcessor.identifyOffSprings(element, domainModelInfo.Generalizations);
+               var inheritedClasses = useCaseComponentsProcessor.identifyAncestors(element, domainModelInfo.Generalizations);
                element.numberOfClassesInherited = inheritedClasses.elements.length;
                element.depthInheritanceTree = inheritedClasses.depth;
                
                console.log("inheritedClasses");
                console.log(inheritedClasses);
                
+               averageDepthInheritanceTree += element.depthInheritanceTree;
                if(depthInheritanceTree < element.depthInheritanceTree){
             	   depthInheritanceTree = element.depthInheritanceTree;
                }
                
-               var derivingClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);
+               var derivingClasses = useCaseComponentsProcessor.identifyChildren(element, domainModelInfo.Generalizations);
                element.numberOfDerivingClasses = derivingClasses.length;
                if(element.numberOfDerivingClasses == 0){
             	   element.isTopLevelClass = true;
+            	   totalNumberOfChildrenOfTopLevelClasses += element.numberOfDerivedClasses;
             	   topLevelClasses++;
                }
                else{
             	   element.isTopLevelClass = false;
                }
                
-               var ancestors = useCaseComponentsProcessor.identifyAncestors(element, domainModelInfo.Generalizations);
+               var ancestors = useCaseComponentsProcessor.identifyOffSprings(element, domainModelInfo.Generalizations);
                element.numberOfClassesInheritedFrom = ancestors.elements.length;
                
                element.numberOfInheritanceRelationships = element.numberOfDerivedClasses+element.numberOfClassesInherited;
+               numberOfInheritanceRelationships += element.numberOfInheritanceRelationships;
                
             // determine the associations relationships
                
@@ -401,7 +403,7 @@
                var usedClasses = useCaseComponentsProcessor.identifyChildren(element, domainModelInfo.Usages);
                element.numberOfUsedClasses = usedClasses.length;
                
-               var usingClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Generalizations);
+               var usingClasses = useCaseComponentsProcessor.identifyParents(element, domainModelInfo.Usages);
                element.numberOfUsingClasses = usingClasses.length;
                
                element.numberOfUsageRelationships = element.numberOfUsedClasses+element.numberOfUsingClasses;
@@ -415,6 +417,9 @@
                
                element.couplingBetweenObjects = element.numberOfInheritanceRelationships+element.numberOfAssociationRelationships+element.numberOfUsageRelationships;
 		 }
+			
+			averageDepthInheritanceTree = classNum === 0? 0: averageDepthInheritanceTree/classNum;
+			 numberOfInheritanceRelationships =  numberOfInheritanceRelationships/2;
 			
 			var usageNum = 0;
 			var realNum = 0;
@@ -443,7 +448,7 @@
 			domainModelInfo["ComponentAnalytics"].AttributeNum = attributeNum;
 			domainModelInfo["ComponentAnalytics"].InstanceVarNum = instanceVarNum;
 			domainModelInfo["ComponentAnalytics"].OperationNum = operationNum;
-			domainModelInfo["ComponentAnalytics"].EntityNum = entityNum;
+			// domainModelInfo["ComponentAnalytics"].ClassNum = entityNum;
 			domainModelInfo["ComponentAnalytics"].ClassNum = classNum;
             domainModelInfo["ComponentAnalytics"].TopLevelClasses = topLevelClasses;
             domainModelInfo["ComponentAnalytics"].AverageDepthInheritanceTree = averageDepthInheritanceTree;
@@ -455,17 +460,17 @@
             domainModelInfo["ComponentAnalytics"].ObjectDataNum = objectdataNum;
 			domainModelInfo["ComponentAnalytics"].ParameterNum = parameterNum;
 			domainModelInfo["ComponentAnalytics"].ExternalOperNum = externalOperNum;
-			domainModelInfo["ComponentAnalytics"].AvgInstVar = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : instanceVarNum / domainModelInfo["ComponentAnalytics"].EntityNum;
+			domainModelInfo["ComponentAnalytics"].AvgInstVar = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : instanceVarNum / domainModelInfo["ComponentAnalytics"].ClassNum;
 			domainModelInfo["ComponentAnalytics"].UsageNum = usageNum;
 			domainModelInfo["ComponentAnalytics"].RealNum = realNum;
 			domainModelInfo["ComponentAnalytics"].AssocNum = assocNum;
 			domainModelInfo["ComponentAnalytics"].GeneralNum = generalNum;
-			domainModelInfo["ComponentAnalytics"].AvgOperation = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].OperationNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgAttribute = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AttributeNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgParameter = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].ParameterNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgUsage = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].UsageNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgReal = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].RealNum / domainModelInfo["ComponentAnalytics"].EntityNum;
-			domainModelInfo["ComponentAnalytics"].AvgAssoc = domainModelInfo["ComponentAnalytics"].EntityNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AssocNum / domainModelInfo["ComponentAnalytics"].EntityNum;
+			domainModelInfo["ComponentAnalytics"].AvgOperation = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].OperationNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgAttribute = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AttributeNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgParameter = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].ParameterNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgUsage = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].UsageNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgReal = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].RealNum / domainModelInfo["ComponentAnalytics"].ClassNum;
+			domainModelInfo["ComponentAnalytics"].AvgAssoc = domainModelInfo["ComponentAnalytics"].ClassNum == 0 ? 0 : domainModelInfo["ComponentAnalytics"].AssocNum / domainModelInfo["ComponentAnalytics"].ClassNum;
 
 
 		if (callbackfunc) {
@@ -604,7 +609,7 @@
 //				DiagramNum : 0,
 				AttributeNum : 0,
 				OperationNum : 0,
-				EntityNum : 0,
+				// EntityNum : 0,
 				ActivityNum : 0,
 				TranNum : 0,
 				UseCaseNum : 0,
@@ -680,7 +685,7 @@
 		if(domainModelInfo && domainModelInfo["ComponentAnalytics"]){
 		modelInfo["ComponentAnalytics"].AttributeNum = domainModelInfo["ComponentAnalytics"].AttributeNum;
 		modelInfo["ComponentAnalytics"].OperationNum = domainModelInfo["ComponentAnalytics"].OperationNum;
-		modelInfo["ComponentAnalytics"].EntityNum = domainModelInfo["ComponentAnalytics"].EntityNum;
+		// modelInfo["ComponentAnalytics"].EntityNum = domainModelInfo["ComponentAnalytics"].ClassNum;
 		modelInfo["ComponentAnalytics"].AttributeNum = domainModelInfo["ComponentAnalytics"].AttributeNum;
 		modelInfo["ComponentAnalytics"].OperationNum = domainModelInfo["ComponentAnalytics"].OperationNum
 		modelInfo["ComponentAnalytics"].ClassNum  = domainModelInfo["ComponentAnalytics"].ClassNum;
@@ -883,13 +888,22 @@
 		elementNum = !elementNum ? 0 : elementNum;
 		transactionNum = !transactionNum ? 0 : transactionNum;
 
-		var elementAnalyticsStr = elementNum == 0 ? "id,element,useCase,type,outboundDegree,inboundDegree\n" : "";
+		var elementAnalyticsStr = elementNum == 0 ? "id,element,useCase,type,component\n" : "";
 		var transactionAnalyticsStr = transactionNum == 0 ? "id,transaction,useCase,transaction_length, boundry_num, control_num, entity_num, actor_num\n" : "";
 
-			for ( var i in useCase.Transactions) {
+			var i = useCase.Transactions.length;
+			
+			while (i--) {
+
 				var transaction = useCase.Transactions[i];
 				console.log(transaction);
-				useCaseComponentsProcessor.processTransaction(transaction, useCase);
+
+				if(!useCaseComponentsProcessor.processTransaction(transaction, useCase)){
+					useCase.Transactions.splice(i, 1);
+					continue;
+				}
+
+				// useCaseComponentsProcessor.processTransaction(transaction, useCase);
 				transactionNum++;
 				transactionAnalyticsStr += transactionNum + ","
 						+ transaction.TransactionStr.replace(/,/gi, "") + ","
@@ -905,21 +919,13 @@
 
 			for ( var i in useCase.Activities) {
 				var element = useCase.Activities[i];
-				var elementName = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
-				var elementType = "";
-//				var components = diagram.allocate(Element);
-				if(element.target){
-					var component = element.target;
-					elementType = component.Type;
-				}
+				useCaseComponentsProcessor.processElement(element, useCase);
 				elementNum++;
 				elementAnalyticsStr += elementNum + ","
-						+ elementName + ","
-//						+ diagram.Name + ","
-						+ useCase.Name + "," +
-						+ elementType+ ","
-						+ element.OutboundNumber + ","
-						+ element.InboundNumber+"\n";
+						+ element.Name + ","
+						+ useCase.Name + ","
+						+ element.Type + ","
+						+ element.ComponentName +"\n";
 			}
 
 

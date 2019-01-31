@@ -1,0 +1,81 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Project" as 09
+participant "<<block>>    <<system>>   Meeting minutes Android" as 19
+participant "Hompage" as 39
+participant "<<entity>>  User  Datastore" as 49
+participant "Edit Profile Screen" as 59
+participant "Meeting Minute Content" as 69
+
+User -> 09: Choosesproject()
+activate 09
+
+09 -> 49: invalidinformationisdisplayedtotheuser()
+activate 49
+
+49 -> 39: Hompage()
+activate 39
+
+deactivate 39
+
+49 -> 09: projectdb()
+deactivate 09
+
+deactivate 49
+
+User -> 19: SelectssettingsbuttonfromtheAndroidtoolbar()
+activate 19
+
+19 -> 69: Dropdownsettingsmenuisdisplayed()
+activate 69
+
+69 -> 59: displaystheselectaprojectscreen()
+activate 59
+
+59 -> 49: invalidinformationisdisplayedtotheuser()
+activate 49
+
+49 -> 39: Hompage()
+activate 39
+
+deactivate 39
+
+49 -> 09: projectdb()
+activate 09
+
+deactivate 09
+
+deactivate 49
+
+deactivate 59
+
+deactivate 69
+
+deactivate 19
+
+User -> 09: Selectschangeprojectoption()
+activate 09
+
+09 -> 59: displaystheselectaprojectscreen()
+activate 59
+
+59 -> 49: invalidinformationisdisplayedtotheuser()
+activate 49
+
+deactivate 49
+
+deactivate 59
+
+deactivate 09
+
+User -> 39: Hompage()
+activate 39
+
+deactivate 39
+
+@enduml

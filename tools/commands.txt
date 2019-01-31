@@ -1,0 +1,23 @@
+java -jar plantuml.jar sequence_diagram.txt
+
+java -jar plantuml.jar class_diagram.txt
+
+java -jar plantuml.jar class_diagram.txt -xmi
+
+Please use one of the following:
+
+
+java mojo.MoJo a.rsf b.rsf
+  calculates the one-way MoJo distance from a.rsf to b.rsf
+
+java mojo.MoJo a.rsf b.rsf -fm
+  calculates the MoJoFM distance from a.rsf to b.rsf
+
+java mojo.MoJo a.rsf b.rsf -b
+  calculates the two-way MoJo distance between a.rsf and b.rsf
+
+java mojo.MoJo a.rsf b.rsf -e r.rsf
+  calculates the EdgeMoJo distance between a.rsf and b.rsf
+
+java mojo.MoJo a.rsf b.rsf -m+
+  calculates

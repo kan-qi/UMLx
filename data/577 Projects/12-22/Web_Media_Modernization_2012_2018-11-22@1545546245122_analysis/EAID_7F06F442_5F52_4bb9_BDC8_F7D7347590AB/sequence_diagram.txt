@@ -1,0 +1,30 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Event Image" as 09
+participant "Job Application Form " as 19
+
+User -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+User -> 19: Donatingmoneypage()
+activate 19
+
+19 -> 19: choosemethodfordonation()
+19 -> 19: Showconfirmationpage()
+19 -> 19: Donatingmoneypage()
+19 -> 19: choosemethodfordonation()
+deactivate 19
+
+19 -> 09: Homepage()
+activate 09
+
+deactivate 09
+
+@enduml

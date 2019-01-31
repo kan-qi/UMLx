@@ -1,0 +1,5 @@
+id,transaction,useCase,transactional,TL, DETs, TD, TC, Arch_Diff
+1,stl#user:Confirmation message->user:Confirmation message,Confirm Reservation REquest,CTRL;EXTCLL;INT,2,0,6,1,12
+2,stl#user:"View unconfirmed reservation requests" button->user:"View unconfirmed reservation requests" button->"View unconfirmed reservation requests" button:retrieve a list of unconfirmed reservations->retrieve a list of unconfirmed reservations:reservation info,Confirm Reservation REquest,TRAN_NA,4,1,5,3,20
+3,stl#user:"View unconfirmed reservation requests" button->user:"View unconfirmed reservation requests" button->"View unconfirmed reservation requests" button:retrieve a list of unconfirmed reservations->retrieve a list of unconfirmed reservations:Reservation requests list->Reservation requests list:Displays confirmation message->Displays confirmation message:Confirmation message,Confirm Reservation REquest,TRAN_NA,6,1,5.4,5,32.400000000000006
+4,stl#user:Reservation requests list->user:Reservation requests list->Reservation requests list:Displays confirmation message->Displays confirmation message:Confirmation message,Confirm Reservation REquest,TRAN_NA,4,0,5,3,20

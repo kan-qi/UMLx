@@ -1,0 +1,18 @@
+id,element,useCase,type,component
+1,User:payment information page,Place Order,control,location
+2,User:missing information for payment message,Place Order,boundary,successfulchangemessage
+3,thirdpart payment system:send error message for invalid payment information,Place Order,control,user_location
+4,thirdpart payment system:approve transaction and display successful message,Place Order,boundary,successfulchangemessage
+5,verify payment information:thirdpart payment system,Place Order,actor,System Boundary
+6,approve transaction and display successful message:payment successful message,Place Order,boundary,successfulchangemessage
+7,invalid payment inforrmation:redirect to payment page,Place Order,control,precheckrequiredfields
+8,send error message for invalid payment information:invalid payment inforrmation,Place Order,control,PayPalInstance
+9,redirect to payment page:missing information for payment message,Place Order,boundary,successfulchangemessage
+10,pre-check if required information is empty:missing information for payment message,Place Order,boundary,successfulchangemessage
+11,payment information page:pre-check if required information is empty,Place Order,control,precheckrequiredfields
+12,payment successful message:redirect to payment page,Place Order,control,precheckrequiredfields
+13,pre-check if required information is empty:verify payment information,Place Order,control,CustomerForm
+14,stl#User:payment information page,Place Order,Stimulus,undefined
+15,stl#User:missing information for payment message,Place Order,Stimulus,undefined
+16,stl#thirdpart payment system:send error message for invalid payment information,Place Order,Stimulus,undefined
+17,stl#thirdpart payment system:approve transaction and display successful message,Place Order,Stimulus,undefined

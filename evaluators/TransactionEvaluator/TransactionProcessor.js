@@ -21,35 +21,6 @@
 		 ['control[+]', 'boundary','pattern#8', 'EXTCLL,INT', 'transactional', 'Invocation of services provided by external system'],
 		 ['control[+]', 'pattern#9', 'CTRL', 'transactional','Control flow without operating on any entities or interfaces'],
 	];
-	 
-	function matchCategories(categories, characteristic){
-			var categoriesToReturn = [];
-			for(var category in categories){
-				var results = ((function(category, categories){
-				if(category === characteristic){
-						return [category];
-				}
-				else if(categories[category] === "#"){
-						return [];
-				}
-				else {
-					var matchedCategories = matchCategories(categories[category], characteristic);
-					if(matchedCategories.length > 0){
-						matchedCategories.unshift(category);
-					}
-					return matchedCategories;
-				}
-			})(category, categories));
-			
-			for(var i in results){
-				if(categoriesToReturn.indexOf(results[i]) == -1){
-					categoriesToReturn.push(results[i]);
-				}
-			}
-			}
-			
-			return categoriesToReturn;
-	}
 
 	var transactionalPatternTreeRoot = transactionPatternMatchUtil.establishPatternParseTree(transactionalPatterns);
 	
@@ -58,8 +29,16 @@
 				
 				//the total degree should be determined differently. If an element has a component, then the degree is the number of components associated with the current component, and if not, it is the number of messages, associated with the current messages.
 				var totalDegree = 0;
-				var totalComponents = 0;
+				// var totalComponents = 0;
 				var dataElementTypes = 0;
+
+				var componentNum = 0;
+				var boundaryNum = 0;
+				var controlNum = 0;
+				var entityNum = 0;
+				var actorNum = 0;
+
+				var components = {};
 				
 				for(var i in transaction.Nodes)
 				{	
@@ -67,10 +46,9 @@
 
 						if(node.Component){
 							
-							console.log("associating component");
-							console.log(node.Component);
+//							console.log("associating component");
+//							console.log(node.Component);
 						
-							totalComponents ++;
 								var edges = usecase.PrecedenceRelations;
 								for(var j in edges){
 									var edge = edges[j];
@@ -81,16 +59,15 @@
 									}
 								}
 								
-							
-							
 									var matchedOperation = domainModelSerchUtil.matchOperation(node.Name, node.Component);
 									
-									console.log("matched oepration");
+//									var matchedOperation = "";
+									
+//									console.log("matched oepration");
 									
 									if(matchedOperation){
-										var debug = require("../../utils/DebuggerOutput.js");
-										debug.appendFile("matchedOperation", matchedOperation.Name);
-										
+//										var debug = require("../../utils/DebuggerOutput.js");
+//										debug.appendFile("matchedOperation", matchedOperation.Name);
 										for(var j in matchedOperation.Parameters){
 											dataElementTypes++;
 										}
@@ -98,9 +75,28 @@
 									else{
 										dataElementTypes++;
 									}
+									
+									components[node.Component["_id"]] = node.Component;
+
+					    var type = node.Component.Type;
+						if (type === "actor") {
+							actorNum++;
+						} else if (type === "boundary") {
+							boundaryNum++;
+						} else if (type === "control") {
+							controlNum++;
+						} else if (type === "entity") {
+							entityNum++;
+						}
+						
+						componentNum++;
+									
 						}
 						
 				}
+				
+
+				// totalComponents = Object.keys(components).length;
 				
 				transaction['TransactionAnalytics'] = {};
 				
@@ -128,6 +124,35 @@
 								
 						}
 						
+						function matchCategories(categories, characteristic){
+							var categoriesToReturn = [];
+							for(var category in categories){
+								var results = ((function(category, categories){
+								if(category === characteristic){
+										return [category];
+								}
+								else if(categories[category] === "#"){
+										return [];
+								}
+								else {
+									var matchedCategories = matchCategories(categories[category], characteristic);
+									if(matchedCategories.length > 0){
+										matchedCategories.unshift(category);
+									}
+									return matchedCategories;
+								}
+							})(category, categories));
+							
+							for(var i in results){
+								if(categoriesToReturn.indexOf(results[i]) == -1){
+									categoriesToReturn.push(results[i]);
+								}
+							}
+							}
+							
+							return categoriesToReturn;
+					}
+						
 						var matchedCategories = [];
 						for(var j in operationalCharacteristics){
 							var returnedCategories = matchCategories(categories, operationalCharacteristics[j]);
@@ -151,11 +176,17 @@
 				transaction['TransactionAnalytics'].TL = transaction.Nodes.length;
 				//The transaction length is defined as the number of operations of a transaction, which can be the number of activities, messages, interactions.
 				
-				transaction['TransactionAnalytics'].TC = totalComponents;
+				transaction['TransactionAnalytics'].TC = componentNum;
 				
-				transaction['TransactionAnalytics'].TD = totalComponents == 0? 0 : totalDegree/totalComponents;
+				transaction['TransactionAnalytics'].TD = componentNum == 0? 0 : totalDegree/componentNum;
 				
 				transaction['TransactionAnalytics'].DETs = dataElementTypes;
+
+				transaction['TransactionAnalytics'].ComponentNum = componentNum;
+				transaction['TransactionAnalytics'].BoundaryNum = boundaryNum;
+				transaction['TransactionAnalytics'].ControlNum = controlNum;
+				transaction['TransactionAnalytics'].EntityNum = entityNum;
+				transaction['TransactionAnalytics'].ActorNum = actorNum;
 				
 				transaction['TransactionAnalytics'].Arch_Diff = transaction['TransactionAnalytics'].TL*transaction['TransactionAnalytics'].TD;
 				

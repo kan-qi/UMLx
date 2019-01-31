@@ -1,0 +1,136 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Attendeeactor EventBrite
+participant "Course Review Page" as 09
+participant "Payment page" as 19
+participant "Course detail page" as 29
+participant "Dashboard process request page" as 39
+participant "Sign up course attendee page" as 49
+participant "Trainer profile page" as 59
+participant "Course" as 129
+participant "Order records page" as 179
+participant "Course attendeee profile page" as 209
+
+Attendee -> 09: Reviewpage()
+activate 09
+
+09 -> 179: Redirecttohomepage()
+activate 179
+
+179 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 179
+
+09 -> 49: Updatecoursinformationindb()
+activate 49
+
+49 -> 49: Coursinformationupdatesuccessmessage()
+49 -> 19: makepayment()
+activate 19
+
+19 -> 19: EventBrite()
+19 -> 49: Updatecoursinformationindb()
+49 -> 49: Coursinformationupdatesuccessmessage()
+deactivate 49
+
+49 -> 129: Course()
+activate 129
+
+deactivate 129
+
+19 -> 19: receivepaymentresult()
+19 -> 209: Sendoutconfirmationemail()
+activate 209
+
+209 -> 59: Emailprotocol()
+activate 59
+
+deactivate 59
+
+209 -> 39: registrationsuccess()
+activate 39
+
+deactivate 39
+
+deactivate 209
+
+deactivate 19
+
+49 -> 129: Course()
+activate 129
+
+deactivate 129
+
+deactivate 09
+
+Attendee -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+Attendee -> 29: Coursedetailpage()
+activate 29
+
+29 -> 19: setupPayment()
+activate 19
+
+19 -> 19: EventBrite()
+19 -> 49: Updatecoursinformationindb()
+activate 49
+
+deactivate 49
+
+19 -> 19: receivepaymentresult()
+deactivate 19
+
+29 -> 09: Displayreviewpage()
+activate 09
+
+09 -> 09: Reviewpage()
+09 -> 179: Redirecttohomepage()
+activate 179
+
+deactivate 179
+
+09 -> 49: Updatecoursinformationindb()
+activate 49
+
+deactivate 49
+
+deactivate 09
+
+deactivate 29
+
+Attendee -> 39: registrationsuccess()
+activate 39
+
+deactivate 39
+
+Attendee -> 49: Coursinformationupdatesuccessmessage()
+activate 49
+
+49 -> 19: makepayment()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+EventBrite -> 49: Updatecoursinformationindb()
+activate 49
+
+deactivate 49
+
+EventBrite -> 19: receivepaymentresult()
+activate 19
+
+deactivate 19
+
+@enduml

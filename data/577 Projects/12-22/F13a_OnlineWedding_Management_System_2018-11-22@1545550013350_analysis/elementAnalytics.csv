@@ -1,0 +1,180 @@
+id,element,useCase,type,component
+1,guests:Requirements page,Changing wedding details dynamically,boundary,Event
+2,guests:empty list message,Changing wedding details dynamically,control,Guest
+3,guests:success message,Changing wedding details dynamically,boundary,successmessage
+4,Requirements page:Save invitation design,Changing wedding details dynamically,entity,Saveinvitationdesign
+5,Save invitation design:success message,Changing wedding details dynamically,boundary,successmessage
+6,Save invitation design:invitation design info,Changing wedding details dynamically,entity,Saveinvitationdesign
+7,Save invitation design:empty list message,Changing wedding details dynamically,boundary,successmessage
+8,stl#guests:Requirements page,Changing wedding details dynamically,Stimulus,undefined
+9,stl#guests:empty list message,Changing wedding details dynamically,Stimulus,undefined
+10,stl#guests:success message,Changing wedding details dynamically,Stimulus,undefined
+11,guests:invitation link,Create account,entity,invitationlink
+12,guests:registration form,Create account,boundary,validateform
+13,guests:validate form fail message,Create account,boundary,validateform
+14,guests:account already exists message,Create account,boundary,successmessage
+15,guests:save design detail into db success message,Create account,boundary,successmessage
+16,redirect to form page:Positions and content info,Create account,boundary,UserSpecificContent
+17,validate form:account already exists message,Create account,boundary,successmessage
+18,validate form:background info,Create account,entity,Groom
+19,send registration link to user:invitation link,Create account,entity,invitationlink
+20,redirect to form page:registration form,Create account,boundary,validateform
+21,validate form fail message:redirect to form page,Create account,boundary,validateform
+22,registration form:validate form,Create account,boundary,validateform
+23,validate form:send registration link to user,Create account,entity,invitationlink
+24,validate form:validate form fail message,Create account,boundary,validateform
+25,stl#guests:invitation link,Create account,Stimulus,undefined
+26,stl#guests:registration form,Create account,Stimulus,undefined
+27,stl#guests:validate form fail message,Create account,Stimulus,undefined
+28,stl#guests:account already exists message,Create account,Stimulus,undefined
+29,stl#guests:save design detail into db success message,Create account,Stimulus,undefined
+30,guests:save info success message,Design invitation card,boundary,successmessage
+31,guests:invitation design page,Design invitation card,entity,invitationlink
+32,guests:selects invitation background page,Design invitation card,entity,invitationlink
+33,guests:save design detail into db success message,Design invitation card,boundary,successmessage
+34,Save all poisitions and cotnent:Positions and content info,Design invitation card,boundary,UserSpecificContent
+35,Save all poisitions and cotnent:save design detail into db success message,Design invitation card,boundary,successmessage
+36,invitation design page:Save all poisitions and cotnent,Design invitation card,boundary,Event
+37,save background into db:background info,Design invitation card,entity,Groom
+38,redirect to invitation design page:invitation design page,Design invitation card,entity,invitationlink
+39,save background into db:redirect to invitation design page,Design invitation card,entity,invitationlink
+40,save background into db:save info success message,Design invitation card,boundary,successmessage
+41,selects invitation background page:save background into db,Design invitation card,control,System Boundary
+42,stl#guests:save info success message,Design invitation card,Stimulus,undefined
+43,stl#guests:invitation design page,Design invitation card,Stimulus,undefined
+44,stl#guests:selects invitation background page,Design invitation card,Stimulus,undefined
+45,stl#guests:save design detail into db success message,Design invitation card,Stimulus,undefined
+46,User:Error message for wrong credentials,Disallow user to login for wrong credentials,boundary,successmessage
+47,User:enter credentials page,Disallow user to login for wrong credentials,boundary,UserSpecificContent
+48,User:Login screen,Disallow user to login for wrong credentials,boundary,Loginscreen
+49,check credentials:Error message for wrong credentials,Disallow user to login for wrong credentials,boundary,successmessage
+50,check credentials:redirect to login screen,Disallow user to login for wrong credentials,boundary,Loginscreen
+51,check credentials:credential info,Disallow user to login for wrong credentials,boundary,Loginscreen
+52,enter credentials page:check credentials,Disallow user to login for wrong credentials,boundary,Loginscreen
+53,redirect to login screen:enter credentials page,Disallow user to login for wrong credentials,boundary,UserSpecificContent
+54,stl#User:Error message for wrong credentials,Disallow user to login for wrong credentials,Stimulus,undefined
+55,stl#User:enter credentials page,Disallow user to login for wrong credentials,Stimulus,undefined
+56,stl#User:Login screen,Disallow user to login for wrong credentials,Stimulus,undefined
+57,User:enter credentials page,Login,boundary,UserSpecificContent
+58,User:confirmation page,Login,entity,invitationlink
+59,User:home screen,Login,boundary,Loginscreen
+60,check credentials:confirmation page,Login,entity,invitationlink
+61,check credentials:redirect to login screen,Login,boundary,Loginscreen
+62,check credentials:credential info,Login,boundary,Loginscreen
+63,enter credentials page:check credentials,Login,boundary,Loginscreen
+64,confirmation page:redirect to home screen,Login,boundary,Loginscreen
+65,redirect to login screen:enter credentials page,Login,boundary,UserSpecificContent
+66,redirect to home screen:home screen,Login,boundary,Loginscreen
+67,stl#User:enter credentials page,Login,Stimulus,undefined
+68,stl#User:confirmation page,Login,Stimulus,undefined
+69,stl#User:home screen,Login,Stimulus,undefined
+70,guests:send invites button,Send E-invitations to guest,entity,invitationlink
+71,guests:invitation send success message,Send E-invitations to guest,boundary,successmessage
+72,guests:error messageno invites send messaage,Send E-invitations to guest,boundary,successmessage
+73,guests:invitation page,Send E-invitations to guest,entity,invitationlink
+74,error messageno invites send messaage:redirect to invitation page,Send E-invitations to guest,entity,invitationlink
+75,send emails with invitation links:error messageno invites send messaage,Send E-invitations to guest,boundary,successmessage
+76,send emails with invitation links:invitation link info,Send E-invitations to guest,entity,invitationlink
+77,redirect to invitation page:invitation page,Send E-invitations to guest,entity,invitationlink
+78,send emails with invitation links:invitation send success message,Send E-invitations to guest,boundary,successmessage
+79,send invites button:send emails with invitation links,Send E-invitations to guest,entity,invitationlink
+80,stl#guests:send invites button,Send E-invitations to guest,Stimulus,undefined
+81,stl#guests:invitation send success message,Send E-invitations to guest,Stimulus,undefined
+82,stl#guests:error messageno invites send messaage,Send E-invitations to guest,Stimulus,undefined
+83,stl#guests:invitation page,Send E-invitations to guest,Stimulus,undefined
+84,guests:survey form page,Take the survey,control,savesurveyinfotodb
+85,guests:confirmation message,Take the survey,boundary,successmessage
+86,guests:delete error message,Take the survey,boundary,successmessage
+87,save survey info to db:confirmation message,Take the survey,boundary,successmessage
+88,delete error message:redirect to survey form page,Take the survey,control,savesurveyinfotodb
+89,save survey info to db:delete error message,Take the survey,boundary,successmessage
+90,redirect to survey form page:survey form page,Take the survey,control,savesurveyinfotodb
+91,save survey info to db:survey info db,Take the survey,control,savesurveyinfotodb
+92,survey form page:save survey info to db,Take the survey,control,savesurveyinfotodb
+93,stl#guests:survey form page,Take the survey,Stimulus,undefined
+94,stl#guests:confirmation message,Take the survey,Stimulus,undefined
+95,stl#guests:delete error message,Take the survey,Stimulus,undefined
+96,User:credentials page,Validate User Credentials,boundary,redirecttologinscreen
+97,User:Error message for wrong credentials,Validate User Credentials,boundary,successmessage
+98,check credentials:Error message for wrong credentials,Validate User Credentials,boundary,successmessage
+99,check credentials:redirect to login screen,Validate User Credentials,boundary,redirecttologinscreen
+100,check credentials:credential info,Validate User Credentials,boundary,redirecttologinscreen
+101,credentials page:check credentials,Validate User Credentials,boundary,redirecttologinscreen
+102,redirect to login screen:credentials page,Validate User Credentials,boundary,redirecttologinscreen
+103,stl#User:credentials page,Validate User Credentials,Stimulus,undefined
+104,stl#User:Error message for wrong credentials,Validate User Credentials,Stimulus,undefined
+105,guests:guest list page,delete guest list,control,Guest
+106,guests:confirmation message,delete guest list,boundary,successmessage
+107,guests:delete error message,delete guest list,boundary,successmessage
+108,delete the list:confirmation message,delete guest list,boundary,successmessage
+109,delete the list:delete error message,delete guest list,boundary,successmessage
+110,delete the list:guest info,delete guest list,control,Guest
+111,guest list page:delete the list,delete guest list,control,deletethelist
+112,stl#guests:guest list page,delete guest list,Stimulus,undefined
+113,stl#guests:confirmation message,delete guest list,Stimulus,undefined
+114,stl#guests:delete error message,delete guest list,Stimulus,undefined
+115,guests:RSVP link,reply to invitation,control,RSVPformpage
+116,guests:error message,reply to invitation,boundary,successmessage
+117,guests:RSVP form page,reply to invitation,control,RSVPformpage
+118,Redirect to RSVP form page:RSVP form page,reply to invitation,control,RSVPformpage
+119,RSVP link:Redirect to RSVP form page,reply to invitation,control,RSVPformpage
+120,Redirect to RSVP form page:Save RSVP into db,reply to invitation,boundary,Event
+121,Save RSVP into db:error message,reply to invitation,boundary,successmessage
+122,Save RSVP into db:invitation info,reply to invitation,entity,invitationlink
+123,stl#guests:RSVP link,reply to invitation,Stimulus,undefined
+124,stl#guests:error message,reply to invitation,Stimulus,undefined
+125,stl#guests:RSVP form page,reply to invitation,Stimulus,undefined
+126,User:confirmation info shown,update website,entity,invitationlink
+127,User:Survey link page,update website,control,surveyinfodb
+128,User:information not saved message,update website,boundary,successmessage
+129,Survey link page:save information into database,update website,entity,invitationlink
+130,redirect to survey page:Survey link page,update website,control,surveyinfodb
+131,save information into database:confirmation info shown,update website,entity,invitationlink
+132,information not saved message:redirect to survey page,update website,control,surveyinfodb
+133,save information into database:information not saved message,update website,boundary,successmessage
+134,save information into database:survey info db,update website,control,surveyinfodb
+135,stl#User:confirmation info shown,update website,Stimulus,undefined
+136,stl#User:Survey link page,update website,Stimulus,undefined
+137,stl#User:information not saved message,update website,Stimulus,undefined
+138,User:Save confirmation message,upload list of guests,boundary,successmessage
+139,User:Error message,upload list of guests,boundary,successmessage
+140,User:invitation page,upload list of guests,entity,invitationlink
+141,User:downloadable template page for filling data,upload list of guests,entity,invitationlink
+142,Error message:redirect to invitation page,upload list of guests,entity,invitationlink
+143,save file into db:Error message,upload list of guests,boundary,successmessage
+144,save file into db:Save confirmation message,upload list of guests,boundary,successmessage
+145,downloadable template page for filling data:parse uploaded file,upload list of guests,control,Couple
+146,save file into db:file db,upload list of guests,control,Couple
+147,redirect to invitation page:invitation page,upload list of guests,entity,invitationlink
+148,parse uploaded file:save file into db,upload list of guests,boundary,Event
+149,stl#User:Save confirmation message,upload list of guests,Stimulus,undefined
+150,stl#User:Error message,upload list of guests,Stimulus,undefined
+151,stl#User:invitation page,upload list of guests,Stimulus,undefined
+152,stl#User:downloadable template page for filling data,upload list of guests,Stimulus,undefined
+153,guests:guest list page,view guest list,control,Guest
+154,guests:empty list message,view guest list,boundary,successmessage
+155,guests:guest list,view guest list,control,Guest
+156,empty list message:redirect to survey form page,view guest list,control,surveyinfodb
+157,query guest list:empty list message,view guest list,boundary,successmessage
+158,query guest list:guest list,view guest list,control,Guest
+159,query guest list:guest list info,view guest list,control,Guest
+160,guest list page:query guest list,view guest list,control,Guest
+161,stl#guests:guest list page,view guest list,Stimulus,undefined
+162,stl#guests:empty list message,view guest list,Stimulus,undefined
+163,stl#guests:guest list,view guest list,Stimulus,undefined
+164,guests:error message,view invitation,boundary,successmessage
+165,guests:Invitation link,view invitation,entity,invitationlink
+166,guests:event details and RSVP,view invitation,boundary,Event
+167,Invitation link:Redirect to couple's website with event details and RSVP form,view invitation,control,Couple
+168,Redirect to couple's website with event details and RSVP form:error message,view invitation,boundary,successmessage
+169,Redirect to couple's website with event details and RSVP form:invitation link info,view invitation,entity,invitationlink
+170,Redirect to couple's website with event details and RSVP form:event details and RSVP,view invitation,boundary,Event
+171,stl#guests:error message,view invitation,Stimulus,undefined
+172,stl#guests:Invitation link,view invitation,Stimulus,undefined
+173,stl#guests:event details and RSVP,view invitation,Stimulus,undefined
+174,guests:"website link" in email,view website,boundary,weddingwebsiteisdisplayed
+175,guests:wedding website is displayed,view website,boundary,weddingwebsiteisdisplayed
+176,"website link" in email:redirect to weddting website,view website,boundary,weddingwebsiteisdisplayed
+177,redirect to weddting website:wedding website is displayed,view website,boundary,weddingwebsiteisdisplayed
+178,stl#guests:"website link" in email,view website,Stimulus,undefined
+179,stl#guests:wedding website is displayed,view website,Stimulus,undefined

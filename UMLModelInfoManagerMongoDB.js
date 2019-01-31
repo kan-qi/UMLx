@@ -449,8 +449,7 @@ function deleteRepo(repoId, callbackfunc) {
     		MongoClient.connect(url, function(err, db)
     				   	            {
     			   if (err) throw err;
-      	            
-    			   db.collection('modelInfo').update( { "_id" : characteristicsInfo.modelID },
+    			   db.collection('modelInfo').updateOne( { "_id" : characteristicsInfo.modelID },
        	        		{$set: {  
        	        			"projectInfo.distributedSystem" : characteristicsInfo['distributed_system'],
        	        			"projectInfo.responseTime" : characteristicsInfo['response_time'],
@@ -472,11 +471,33 @@ function deleteRepo(repoId, callbackfunc) {
        	        			"projectInfo.motivation" : characteristicsInfo['motivation'],
        	        			"projectInfo.stableRequirements" : characteristicsInfo['stable_requirements'],
        	        			"projectInfo.partTimeStaff" : characteristicsInfo['part_time_staff'],
-       	        			"projectInfo.difficultProgrammingLanguage" : characteristicsInfo['difficult_programming_language']     	        	
-       	        	   		  }},
+       	        			"projectInfo.difficultProgrammingLanguage" : characteristicsInfo['difficult_programming_language'],
+                            "formInfo.distributed-system" : characteristicsInfo['distributed_system'],
+                            "formInfo.response-time" : characteristicsInfo['response_time'],
+                            "formInfo.end-user-efficiency" : characteristicsInfo['end_user_efficiency'],
+                            "formInfo.complex-internal-processing" : characteristicsInfo['complex_internal_processing'],
+                            "formInfo.code-must-be-reusable" : characteristicsInfo['code_must_be_reusable'],
+                            "formInfo.easy-to-install" : characteristicsInfo['easy_to_install'],
+                            "formInfo.easy-to-use" : characteristicsInfo['easy_to_use'],
+                            "formInfo.portable" : characteristicsInfo['portable'],
+                            "formInfo.easy-to-change" : characteristicsInfo['easy_to_change'],
+                            "formInfo.concurrent" : characteristicsInfo['concurrent'],
+                            "formInfo.includes-special-security-objectives" : characteristicsInfo['includes_special_security_objectives'],
+                            "formInfo.provides-direct-access-for-third-parties" : characteristicsInfo['provides_direct_access_for_third_parties'],
+                            "formInfo.special-user-training-facilities-are-required" : characteristicsInfo['special_user_training_facilities_are_required'],
+                            "formInfo.familiar-with-the-project-model-that-is-used" : characteristicsInfo['familiar_with_the_form_model_that_is_used'],
+                            "formInfo.application-experience" : characteristicsInfo['application_experience'],
+                            "formInfo.object-oriented-experience" : characteristicsInfo['object_oriented_experience'],
+                            "formInfo.lead-analyst-capability" : characteristicsInfo['lead_analyst_capability'],
+                            "formInfo.motivation" : characteristicsInfo['motivation'],
+                            "formInfo.stable-requirements" : characteristicsInfo['stable_requirements'],
+                            "formInfo.part-time-staff" : characteristicsInfo['part_time_staff'],
+                            "formInfo.difficult-programming-language" : characteristicsInfo['difficult_programming_language']
+                            }},
        	        		   { upsert: true }, function(err, res){
        	        			if (err) {
-       	    	                console.log(err);   	                   	                
+       	        			    console.log("update info error");
+       	    	                console.log(err);
        	    	              }
        	        				db.close();
     	                      if(callbackfunc !== null)
@@ -568,8 +589,13 @@ function deleteRepo(repoId, callbackfunc) {
                     if (modelInfo.DomainModels) {
                         var domainModel = modelInfo.DomainModels[0];
                         delete modelInfo.DomainModels;
+                        if(domainModel){
                         delete domainModel._id;
                         modelInfo.DomainModel = domainModel;
+                        }
+                        else{
+                        modelInfo.DomainModel = {};
+                        }
                     }
                     console.log("---------------modelInfo----------------");
                     //console.log(modelInfo);
@@ -610,11 +636,12 @@ function deleteRepo(repoId, callbackfunc) {
 	
     function queryRepoInfo(repoId, callbackfunc)
     {
+        console.log("inside queryRepoInfo");
         MongoClient.connect(url, function(err, db)
         {
 			
             if (err) throw err;
-           
+            console.log("queryRepoInfo: start collect");
             db.collection("repos").aggregate([{
 				"$match":
 				{
@@ -635,7 +662,8 @@ function deleteRepo(repoId, callbackfunc) {
                 db.close();
 
             	if (err){
-            	   console.log(err)
+            	    console.log("spot error in queryRepoInfo");
+            	   console.log(err);
             	   if(callbackfunc){
             		   callbackfunc(false);
             	   }
@@ -717,10 +745,13 @@ function deleteRepo(repoId, callbackfunc) {
 
                             if (modelInfo.DomainModels) {
                                 var domainModel = modelInfo.DomainModels[0];
-                                if(domainModel){
                                 delete modelInfo.DomainModels;
+                                if(domainModel){
                                 delete domainModel._id;
                                 modelInfo.DomainModel = domainModel;
+                                }
+                                else{
+                                modelInfo.DomainModel = {};
                                 }
                             }
 
@@ -830,6 +861,10 @@ function deleteRepo(repoId, callbackfunc) {
                     resultForRepoInfo.UseCaseNum += element['ComponentAnalytics']['UseCaseNum'];
                     resultForRepoInfo.EntityNum += element['ComponentAnalytics']['EntityNum'];
                 }
+                var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+                for (let i = 0, len = newKeys.length; i < len; ++i) {
+                    resultForRepoInfo[newKeys[i]] = 0;
+                }
                 callbackfunc(resultForRepoInfo);
 	            db.close();
             });
@@ -905,19 +940,30 @@ function deleteRepo(repoId, callbackfunc) {
 					   UseCaseNum: 0,
 					   EntityNum: 0,
 					   timestamp: "0000/00/00",
-                       projectNum: 0
+                       projectNum: 0,
+                       SLOC: 0,
+                       schedule: 0,
+                       personnel: 0,
+                       EUCP: 0,
+                       EXUCP: 0,
+                       DUCP: 0,
+                       effort: 0,
+                       estimatedEffort: 0,
 				   });
 			   }
 			   else
 			   {
+                    var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+
+                    console.log(result);
 				    var dt = new Date();
 					var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
-				   
-				   
-				   
-				   db.collection('noOfTransactions').findOne({'timestamp':today})
-					.then(function(doc) 
+                   
+				   db.collection('noOfTransactions').findOne({'repo_id':repoid,'timestamp':today})
+					.then(function(doc)
 					{
+                        console.log(repoid);
+                        console.log(doc);
 						if(doc)
 						{
 						    db.collection('noOfTransactions').find(
@@ -925,9 +971,10 @@ function deleteRepo(repoId, callbackfunc) {
                                     repo_id:repoid
                                 },
                                 {
-                                    NT:1,UseCaseNum:1,EntityNum:1,timestamp:1,projectNum:1,_id:0
+                                    NT:1,UseCaseNum:1,EntityNum:1,timestamp:1,projectNum:1,_id:1
                                 }
                             ).toArray(function (err, result) {
+                                console.log(result);
                                 if (err) throw err;
                                 var response = {NT:[], UseCaseNum:[], EntityNum:[], timestamp:[],projectNum:[]};
 
@@ -942,8 +989,25 @@ function deleteRepo(repoId, callbackfunc) {
                                     else {
                                         response.projectNum.push(element.projectNum);
                                     }
-                                });
+                                    for (var i = 0, len = newKeys.length; i < len; ++i) {
+                                        if (!response[newKeys[i]]) {
+                                            response[newKeys[i]] = [];
+                                        }
+                                        if (!element[newKeys[i]]) {
+                                            var whereStr = {'_id': mongo.ObjectID(`${element._id}`)};
+                                            var updateStr = {"$set":{[`${newKeys[i]}`]:0}};
+                                            //console.log(updateStr);
 
+                                            db.collection('noOfTransactions').updateOne(whereStr, updateStr, function(err, res) {
+                                                if (err) throw err;
+                                            });
+                                            response[newKeys[i]].push(0);
+                                        }
+                                        else{
+                                            response[newKeys[i]].push(element[newKeys[i]]);
+                                        }
+                                    }
+                                });
                                 console.log("Record exists");
                                 console.log(response);
                                 console.log('=============');
@@ -956,7 +1020,6 @@ function deleteRepo(repoId, callbackfunc) {
 							console.log("Record does not exist");
 							for(i=0;i<result.length;i++)
 						   {
-							   
 							   var sum_nt=0;
 							   var sum_useCase=0;
 							   var sum_entityNum=0;
@@ -970,20 +1033,24 @@ function deleteRepo(repoId, callbackfunc) {
 						  
 							  var dt = new Date();
 							  var today=dt.getFullYear() + '/' + (((dt.getMonth() + 1) < 10) ? '0' : '') + (dt.getMonth() + 1) + '/' + ((dt.getDate() < 10) ? '0' : '') + dt.getDate();
-							  
-							  
+							  	  
 							  //record={repo_id:repoid,NT:sum_nt,timestamp:today.getDate()}
 							  
-							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum,
-                                  timestamp:today,projectNum:result.length};
-							  db.collection("noOfTransactions").insertOne(record, function(err, res) 
+							  record={repo_id:repoid,NT:sum_nt,UseCaseNum:sum_useCase,EntityNum:sum_entityNum, timestamp:today,projectNum:result.length,      SLOC: 0,
+                                schedule: 0,
+                                personnel: 0,
+                                EUCP: 0,
+                                EXUCP: 0,
+                                DUCP: 0,
+                                effort: 0,
+                                estimatedEffort: 0};
+							  db.collection("noOfTransactions").insertOne(record, function(err, res)
 							  {
 									if (err) throw err;
 									//console.log("*******Shown result for ModelInfo*******");
 									db.close();
 									callbackfunc(record);
-									console.log("1 document inserted");
-									
+									console.log("1 document inserted");								
 							  });
 							}	
 						}
@@ -996,8 +1063,6 @@ function deleteRepo(repoId, callbackfunc) {
 	
 	
     function getGitData(userId, callbackfunc){      
-                    
-                    
              MongoClient.connect(url, function(err, db) {       
                  if (err) throw err;        
                         
@@ -1108,12 +1173,13 @@ function deleteRepo(repoId, callbackfunc) {
                         db.collection("domainModelInfo").save(domainModelInfo, function(err, res) 
                         {
                             if (err) throw err;
+                            db.close();
+                            console.log("saveModelInfo");
+                            callbackfunc(modelInfo);
                         });
                         }
                         
-                        db.close();
-						console.log("saveModelInfo");
-                        callbackfunc(modelInfo);
+
 						
                 });
                 
@@ -1235,10 +1301,10 @@ function deleteRepo(repoId, callbackfunc) {
 
   				    var o_id = new mongo.ObjectID(repoId);
 
-                        db.collection("repos").update({_id:o_id}, repoInfo, function(){
-
-                          
-
+                        db.collection("repos").update({_id:o_id}, repoInfo, function(err, result){
+                            if (err) throw err;
+                            db.close();
+                            callbackfunc(repoInfo);
                         });
 
                     });
@@ -1285,10 +1351,10 @@ function deleteRepo(repoId, callbackfunc) {
                     var userInfo = {"username" : username , "email" :email , "password" :pwd, "isEnterprise" : isEnterprise , "isActive" : true}
                     if(enterpriseUserId!=''){
                         userInfo.enterpriseUserId=  new mongo.ObjectID(enterpriseUserId);
-                    }db.collection("users").insertOne(userInfo, function(err, result) {
+                    }
+                    db.collection("users").insertOne(userInfo, function(err, result) {
                         if (err) throw err;
-                        db.close();
-
+                        
                         // since the user successfully signed up create a repo for this user
 
                         createRepo(username,pwd,function(repo){
@@ -1311,7 +1377,21 @@ function deleteRepo(repoId, callbackfunc) {
                                 message: 'Successfully signed up',
                                 token: token
                             };
-                            callback(result);});
+
+                            // var userInfoWithRepoID = {
+                            //     ...userInfo,
+                            //     repoId: repo._id,
+                            // };
+                            var userInfoWithRepoID = userInfo;
+                            userInfoWithRepoID.repoId = repo._id;
+
+                            db.collection("users").update({_id:userInfo._id}, userInfoWithRepoID, function(err, res){
+                                if (err) throw err;
+                                db.close();
+                                callback(result);
+                            });
+
+                        });
                     });
 
                 }
@@ -1427,6 +1507,24 @@ function deleteRepo(repoId, callbackfunc) {
                
                if(callbackfunc){
             	   callbackfunc(users);
+               }
+
+                db.close();
+              });
+
+        });
+
+    }
+    
+    function queryEstimationRequests(callbackfunc){
+        MongoClient.connect(url, function(err, db) {
+            if (err) throw err;
+            
+            db.collection("estimates").find().toArray(function(err, estimates) {
+               if(err) throw err;
+               
+               if(callbackfunc){
+            	   callbackfunc(estimates);
                }
 
                 db.close();
@@ -1761,7 +1859,8 @@ function deleteRepo(repoId, callbackfunc) {
         requestRepoBrief: requestRepoBrief,
         queryAllModelBrief: queryAllModelBrief,
         queryAllModelNames: queryAllModelNames,
-        queryTempRepoInfo: queryTempRepoInfo
+        queryTempRepoInfo: queryTempRepoInfo,
+        queryEstimationRequests: queryEstimationRequests
     }
 	
 }());

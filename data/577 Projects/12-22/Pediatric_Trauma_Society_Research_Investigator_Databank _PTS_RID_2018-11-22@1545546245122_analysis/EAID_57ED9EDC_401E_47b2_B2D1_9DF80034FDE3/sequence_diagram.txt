@@ -1,0 +1,40 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Search By Keyword SubComponent" as 09
+participant "Message Context" as 19
+participant "Collaboration Graph" as 49
+participant "Inputaword" as 59
+
+User -> 09: Searchkeywordpage()
+activate 09
+
+09 -> 59: Inputakeyword()
+activate 59
+
+59 -> 49: Confirmationpage()
+activate 49
+
+49 -> 09: Searchkeywordpage()
+09 -> 59: Inputakeyword()
+deactivate 59
+
+deactivate 09
+
+49 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 49
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

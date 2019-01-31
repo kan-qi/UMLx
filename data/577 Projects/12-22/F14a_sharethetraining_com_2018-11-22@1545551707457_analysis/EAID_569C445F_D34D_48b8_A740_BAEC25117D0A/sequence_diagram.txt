@@ -1,0 +1,62 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Trainer profile page" as 09
+participant "Payment page" as 19
+participant "Login Page" as 29
+participant "Course request page" as 39
+participant "cache" as 49
+participant "Course review records" as 89
+
+User -> 19: homepage()
+activate 19
+
+19 -> 89: savecourseinformationforreview()
+activate 89
+
+89 -> 39: courseinformationisnotvalidmessage()
+activate 39
+
+deactivate 39
+
+89 -> 09: sendemailtotrianer()
+activate 09
+
+09 -> 09: Emailprotocol()
+deactivate 09
+
+deactivate 89
+
+deactivate 19
+
+User -> 29: Logoutbutton()
+activate 29
+
+29 -> 49: clearlocalcache()
+activate 49
+
+49 -> 49: cache()
+deactivate 49
+
+49 -> 19: homepage()
+activate 19
+
+19 -> 89: savecourseinformationforreview()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+deactivate 29
+
+User -> 39: courseinformationisnotvalidmessage()
+activate 39
+
+deactivate 39
+
+@enduml

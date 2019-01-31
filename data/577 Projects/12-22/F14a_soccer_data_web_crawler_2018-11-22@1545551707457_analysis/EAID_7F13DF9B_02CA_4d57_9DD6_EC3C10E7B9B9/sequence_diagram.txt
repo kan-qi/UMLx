@@ -1,0 +1,49 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Contractor
+participant "websites" as 09
+participant "verifyinputinformation" as 79
+
+Contractor -> 09: Websitedetailinputpage()
+activate 09
+
+09 -> 79: verifyinputinformation()
+activate 79
+
+79 -> 09: Invalidwebsiteinformation()
+09 -> 09: queryattributesofwebbiste()
+09 -> 09: Attributelistofwebsite()
+09 -> 09: addattributes()
+09 -> 09: websites()
+deactivate 09
+
+09 -> 09: websites()
+activate 09
+
+deactivate 09
+
+79 -> 09: savewebsiteinfo()
+activate 09
+
+09 -> 09: websites()
+deactivate 09
+
+deactivate 79
+
+Contractor -> 09: Invalidwebsiteinformation()
+activate 09
+
+09 -> 09: queryattributesofwebbiste()
+deactivate 09
+
+Contractor -> 09: Attributelistofwebsite()
+activate 09
+
+09 -> 09: addattributes()
+deactivate 09
+
+@enduml

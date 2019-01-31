@@ -12,7 +12,7 @@ if estimationResults
             th Schedule (Months)
             th PH/Month
             th #{estimationResults.SizeMetric}
-            th Personnel (FT Developers)
+            th Personnel (Developers)
         tbody
           tr.estimation-table
             td #{estimationResults.EstimationModel}
@@ -32,7 +32,7 @@ if estimationResults
           th#EffortPH Effort (PH)
           th#SizeMeasurement #{estimationResults.SizeMetric}
           th#Duration Schedule (Months)
-          th#Personnel Personnel (FT Developers)
+          th#Personnel Personnel (Developers)
       tbody
         - for (var i = 0; i < estimationResults.UseCases.length; i++) {
             tr.estimation-table
@@ -43,4 +43,3 @@ if estimationResults
               td #{estimationResults.UseCases[i].Duration}
               td #{estimationResults.UseCases[i].Personnel}
         - }
-

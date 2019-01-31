@@ -1,0 +1,38 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Go Grrrls App" as 09
+participant "clicksonreadbutton" as 19
+participant "Home" as 29
+participant "Questions" as 39
+
+User -> 09: opensGoGrrrlsApp()
+activate 09
+
+09 -> 29: Showthehomepageoftheapp()
+activate 29
+
+29 -> 39: Displayallthehintsbasedonquestion()
+activate 39
+
+deactivate 39
+
+deactivate 29
+
+deactivate 09
+
+User -> 19: Clickonviewcontent()
+activate 19
+
+19 -> 39: Displayallthehintsbasedonquestion()
+activate 39
+
+deactivate 39
+
+deactivate 19
+
+@enduml

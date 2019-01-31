@@ -1,0 +1,27 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor User
+participant "Assignauniquecodevendor��semailaddressandClick��addvendor��" as 09
+participant "Homepage" as 19
+
+User -> 09: Assignauniquecodevendor��semailaddressandClick��addvendor��()
+activate 09
+
+09 -> 09: Vendor��semailwillgettheuniquecodeforregistrationandthevendorwillbeaddedinvendorlist()
+09 -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+User -> 19: Homepage()
+activate 19
+
+deactivate 19
+
+@enduml

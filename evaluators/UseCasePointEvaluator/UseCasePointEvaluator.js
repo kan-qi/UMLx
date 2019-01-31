@@ -14,7 +14,7 @@
 	var fs = require('fs');
 	var exec = require('child_process').exec;
 	var mkdirp = require('mkdirp');
-	
+	var RScriptExec = require('../../utils/RScriptUtil.js');
 	
 	
 	function loadModelEmpirics(modelLoad, modelInfo, modelId){
@@ -141,6 +141,8 @@
 		TFactor += Number(modelInfo.projectInfo.userTrainingFacilitiesRequired)*1.0;
 		modelInfo['UseCasePointData'].TCF = 0.6 + (0.01 * TFactor);
 		}
+		// //change this later
+		// modelInfo['UseCasePointData'].TCF = 1;
 		
 		modelInfo['UseCasePointData'].EF = 1;
 		var EFactor = 0;
@@ -155,6 +157,8 @@
 		EFactor += Number(modelInfo.projectInfo.difficultProgrammingLanguage) * -1.0;
 		modelInfo['UseCasePointData'].EF = 1.4+(-0.03 * EFactor);
 		}
+		// //change this later
+		// modelInfo['UseCasePointData'].EF = 1;
 		
 		
 		var simpleUC = 0;
@@ -193,14 +197,17 @@
 					console.log(err);
 			        return;
 			    }
-						 var command = '"C:/Program Files/R/R-3.2.2/bin/Rscript" ./Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['UseCasePointData'].repoUseCaseEvaluationResultsPath+'"';	
-						 console.log(command);
-							var child = exec(command, function(error, stdout, stderr) {
+						 var command1 = './Rscript/UseCasePointWeightsCalibration.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo['UseCasePointData'].repoUseCaseEvaluationResultsPath+'"';	
+						 RScriptExec.runRScript(command1,function(result){
+								if (!result) {
+									return;
+								
 
-								if (error !== null) {
 //									console.log('exec error: ' + error);
 									console.log('exec error: repo id=' + repoInfo._id);
-								} 
+								}
+								
+							
 								console.log("Repo Evaluation were saved!");
 							});
 			});

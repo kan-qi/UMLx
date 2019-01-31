@@ -1,13 +1,13 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
-var path = require('path')
+var path = require('path');
 var admZip = require('adm-zip');
 var umlModelExtractor = require("./UMLModelExtractor.js");
 var umlFileManager = require("./UMLFileManager.js");
 var umlEvaluator = require("./UMLEvaluator.js");
 var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
-var effortPredictor = require("./EffortPredictor.js");
+var effortPredictor = require("./UMLxEffortPredictor.js");
 var multer = require('multer');
 var jade = require('jade');
 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
@@ -23,25 +23,32 @@ var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
 var download = require('download');
+const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
 
+var currentModel = null;
+// global variable to map appToken -> endpoint location
+var endpoints = {};
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
-	var date = new Date();
-    var uploadDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
-    var fileDestination = 'public/uploads/'+uploadDate+"@"+Date.now()+"/";
-    var stat = null;
-    try {
-	        stat = fs.statSync(fileDestination);
-	    } catch (err) {
-	        fs.mkdirSync(fileDestination);
-	    }
-	    if (stat && !stat.isDirectory()) {
-	        throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
-	    }
+        var date = new Date();
+        var uploadDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+        var fileDestination = 'public/uploads/'+uploadDate+"@"+Date.now()+"/";
+        var stat = null;
+        try {
+            stat = fs.statSync(fileDestination);
+        } catch (err) {
+            fs.mkdirSync(fileDestination);
+        }
+        if (stat && !stat.isDirectory()) {
+            throw new Error('Directory cannot be created because an inode of a different type exists at "' + dest + '"');
+        }
         cb(null, fileDestination);
     }
 })
+
+console.l = console.log;
+//console.log = function() {};
 
 var fileDestination = null;
 umlSurveyFiles = [];
@@ -82,10 +89,502 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set('views', './views');
 app.set('view engine', 'jade');
 
+app.get('/codeAnalysisPage',function(req,res){
+	res.render('codeAnalysisPage');
+});
+
+app.post('/analyseSrc',function(req,res){
+	console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+			console.log(config);
+			config.configFilePath = configFilePath;
+			 res.send(config);
+	});
+
+});
+
+app.post('/genRepoReport',function(req,res){
+	console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+			console.log(config);
+			config.configFilePath = configFilePath;
+			
+			
+var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir+"\\analysis-results-folders.txt").split(/\r?\n/g);
+var transactionFiles = [];
+var filteredTransactionFiles = [];
+var modelEvaluationFiles = [];
+for(var i in modelOutputDirs){
+  //code here using lines[i] which will give you each line
+	var modelOutputDir = modelOutputDirs[i];
+
+	if(modelOutputDir === ""){
+		continue;
+	}
+	
+	filteredTransactionFiles.push(modelOutputDir+"\\"+"filteredTransactionEvaluation.csv");
+	transactionFiles.push(modelOutputDir+"\\"+"transactionEvaluation.csv");
+	modelEvaluationFiles.push(modelOutputDir+"\\"+"modelEvaluation.csv");
+}
+
+
+var modelEvaluationContents = FileManagerUtil.readFilesSync(modelEvaluationFiles);
+var modelEvaluationConsolidation = "";
+for(var i in modelEvaluationContents){
+	  var modelEvaluationLines = modelEvaluationContents[i].split(/\r?\n/g);
+	  if(i == 0){
+		  modelEvaluationConsolidation += modelEvaluationLines[0]+","+"transaction_file";
+	  }
+		  for(var j = 1; j < modelEvaluationLines.length; j++){
+		  if(modelEvaluationLines[j] === ""){
+			  continue;
+		  }
+
+		  modelEvaluationConsolidation += "\n"+modelEvaluationLines[j]+","+filteredTransactionFiles[i];
+		  
+		  }
+}
+	  
+FileManagerUtil.writeFileSync(repo.reportDir+"\\modelEvaluations.csv", modelEvaluationConsolidation);
+
+var transactionEvaluationContents = FileManagerUtil.readFilesSync(transactionFiles);
+var transactionEvaluationConsolidation = "";
+
+//console.log(transactionEvaluationContents);
+
+function filter(transaction){
+	var invalidTerms = ["message", "Message", "undefined", "error", "information", "Information"]
+	for(var i in invalidTerms){
+		if(transaction.indexOf(invalidTerms[i])>-1 && transaction.split("->").length < 3){
+			return true;
+		}
+	}
+	
+	return false;
+}
+
+for(var i in transactionEvaluationContents){
+	var identifiedTransactions = {};
+	//remove duplicate transactions and write back.
+	 var transactionEvaluationLines = transactionEvaluationContents[i].split(/\r?\n/g);
+	 var filteredTransactionEvaluationStr = transactionEvaluationLines[0];
+	  if(i == 0){
+		  transactionEvaluationConsolidation += transactionEvaluationLines[0];
+	  }
+		  for(var j = 1; j < transactionEvaluationLines.length; j++){
+		 var transactionEvaluationFields = transactionEvaluationLines[j].split(/,/g);
+		  if(transactionEvaluationLines[j] === "" || filter(transactionEvaluationFields[1]) || identifiedTransactions[transactionEvaluationFields[1].replace(/\s/g, "").toLowerCase()]){
+			  	  console.log("duplicates");
+			  	  console.log(transactionEvaluationFields[1]);
+				  continue;
+		  }
+		  identifiedTransactions[transactionEvaluationFields[1].replace(/\s+/g, "").toLowerCase()] = 1;
+		  filteredTransactionEvaluationStr += "\n"+transactionEvaluationLines[j];
+		  transactionEvaluationConsolidation += "\n"+transactionEvaluationLines[j]+","+i;
+		  
+		  }
+	  
+	  var transactionFilePath = transactionFiles[i];
+	  FileManagerUtil.writeFileSync(filteredTransactionFiles[i],  filteredTransactionEvaluationStr);
+}
+
+	   FileManagerUtil.writeFileSync(repo.repoDir+"\\transactionEvaluations.csv", transactionEvaluationConsolidation);
+
+	});
+
+});
+
+app.post('/analyseRepo',function(req,res){
+	console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+			console.log(config);
+			config.configFilePath = configFilePath;
+			 res.send(config);
+	});
+
+});
+
+app.post('/analyseRepo',function(req,res){
+	console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+		var reportDir = config.reportDir;
+
+			var reportPath = reportDir+"\\analysis-results-folders.txt";
+	global.debugCache = new Object();
+//	FileManagerUtil.deleteFileSync(reportPath);
+	
+	  //use promise to construct the repo objects
+    function analyseModel(projectXMI, projectName, reportDir){
+        return new Promise((resolve, reject) => {
+//        	config.setDebugOutputDir(projectPath+"/debug");
+        	
+
+        if(!projectName){
+        		projectName = ""
+        }
+        	
+   		 let date = new Date();
+   	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+   	     analysisDate = analysisDate+"@"+Date.now();
+   	   
+   	     projectName = projectName + "_"+analysisDate;
+        	
+        	var outputDir = reportDir +"\\"+projectName+"_analysis";
+        	global.debugOutputDir = outputDir + "/debug";
+        	var inputFile = projectXMI;
+        	
+        	console.log(inputFile);
+        	
+        	mkdirp(outputDir, function(err) { 
+        	fs.exists(inputFile, (exists) => {
+        	if(!exists){
+        		console.log(inputFile+" doesn't exist.");
+        		resolve();
+        	}
+        	else{
+            //to generate svg file.
+        	UMLxAnalyticToolKit.analyseSrc(inputFile, outputDir, projectName, function(model){
+        		if(!model){
+        			console.log('analysis error!');
+            		resolve();
+            		return;
+        		}
+        		console.log("finished sr analysis");
+        		FileManagerUtil.appendFile(reportPath, model.OutputDir+"\n", function(message){
+            		console.log('analysis finished!');
+            		console.log(message);
+            		resolve();
+        		})
+        		  
+        	});
+        	
+        	}
+      	  });
+        	});
+        	
+        });
+    }
+    
+    return Promise.all(projectList.map(project=>{
+        return analyseModel(project.path+"\\"+project.modelFile, project.tag, reportDir);
+    })).then(
+        function(){
+			console.log("=============Cache==============");
+			var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
+			for (var key in global.debugCache) {
+				mkdirp(OutputDir, function(err) { 
+					fs.writeFile(key, global.debugCache[key], function(err){
+						if(err){
+							console.log(err);
+						}
+					});
+					});
+				}
+			console.log("Finish write debug cache in files");
+            return new Promise((resolve, reject) => {
+                setTimeout(function(){
+                	console.log("analysis finished");
+                    resolve();
+                }, 0);
+            });
+        }
+
+    ).catch(function(err){
+        console.log(err);
+    });
+	
+	});
+
+});
+
+app.post('/genCOCOMOReport',function(req,res){
+	// console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = req.body['configFile'];
+
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+
+		var fileList = config.reportDir+"/fileList.txt";
+
+		if(!fileManagerUtil.existsSync(fileList)){
+		    var paths = "";
+			 var projectList = config.projectList;
+            for(var i = 0; i < projectList.length; i++){
+                var project = projectList[i];
+				paths += project.path;
+				if(i != projectList.length - 1){
+				paths += "\n";
+				}
+			}
+
+			fileManagerUtil.writeFileSync(fileList, paths);
+		}
+
+		var slocReport = config.reportDir+"/slocReport.csv";
+		if(!fileManagerUtil.existsSync(slocReport)){
+			var generateSlocReport = require('./utils/RepoAnalyzerUtil').generateSlocReport;
+
+		generateSlocReport(fileList, slocReport);
+		}
+
+		
+		var cocomoCalculator = require("./effort_estimators/COCOMOCalculator.js");
+		var cocomoDataPath = config.repoDir+"\\COCOMORatings.csv";
+
+		if(!fileManagerUtil.existsSync(cocomoDataPath)){
+			var slocReport = fileManagerUtil.loadCSVFileSync(slocReport, true);
+			var cocomoValues = cocomoCalculator.genDefaultValues();
+			var rows = "PROJ,KSLOC";
+			for(var i in cocomoValues){
+				rows += ","+i;				
+			}
+			rows += "\n";
+
+			console.log(rows);
+
+			for(var i = 0; i < slocReport.length; i++){
+				var slocReportItem = slocReport[i];
+				// console.log(slocReportItem);
+				rows += slocReportItem.project;
+			 	rows += ","+Number(slocReportItem.code)*0.001;
+				for(var j in cocomoValues){
+					rows += ","+cocomoValues[j];
+				}
+
+				if(i != slocReport.length - 1){
+					rows += "\n";
+				}
+			}
+
+			// console.log(rows);
+
+			fileManagerUtil.writeFileSync(cocomoDataPath, rows);
+		}
+
+		var cocomoDataResults= config.repoDir+"\\COCOMOResults.csv";
+		cocomoCalculator.loadCOCOMOData(cocomoDataPath, function(cocomoDataList){
+
+		// console.log(cocomoDataList);
+
+		var rows = "";
+
+		for(var i = 0; i < cocomoDataList.length; i++){
+	
+		var cocomoData = cocomoCalculator.estimateProjectEffort(cocomoDataList[i]);
+
+		console.log(cocomoData);
+				
+		if(i == 0){
+			rows += "PROJ, KSLOC, Effort";
+			for(var j in cocomoData.SF){
+				rows += ","+j;
+			}
+
+			for(var j in cocomoData.EM){
+				for(var k in cocomoData.EM[j]){
+				rows += ","+k;
+				}
+			}
+		}
+
+		rows += "\n";
+
+		rows += cocomoData.PROJ;
+		rows += ","+cocomoData.KSLOC;
+		rows += ","+cocomoData.PH_most_likely;
+		for(var j in cocomoData.SF){
+				rows += ","+cocomoData.SF[j];
+			}
+
+			for(var j in cocomoData.EM){
+				for(var k in cocomoData.EM[j]){
+				rows += ","+cocomoData.EM[j][k];
+				}
+			}
+			
+			
+		}
+		fileManagerUtil.writeFileSync(cocomoDataResults, rows);
+
+
+	});
+	});
+});
+
+app.post('/genSrcReport',function(req,res){
+	// console.log(req);
+	
+	// var configFilePath = req.files['config-file'][0].path;
+	configFilePath = req.body['configFile'];
+
+	configFilePath = "D:\\Research Projects\\UMLx\\data\\Android_Projects\\repo_12_5.json";
+
+	fileManagerUtil = require("./utils/FileManagerUtil.js");
+
+	fileManagerUtil.readJSON(configFilePath, function(config){
+
+		    var paths = "";
+			 var projectList = config.projectList;
+            for(var i = 0; i < projectList.length; i++){
+                var project = projectList[i];
+				paths += project.path;
+				if(i != projectList.length - 1){
+				paths += "\n";
+				}
+			}
+
+			var fileList = config.reportDir+"/fileList.txt";
+
+			fileManagerUtil.writeFileSync(fileList, paths);
+		
+			var generateSlocReport = require('./utils/RepoAnalyzerUtil').generateSlocReport;
+
+			generateSlocReport(fileList, config.reportDir+"/slocReport.csv");
+	});
+});
+
+app.get('/kdmModelRecoverPage',function(req,res){
+	res.render('kdmModelRecoverPage');
+});
+
+app.post('/genKDM', upload.fields([{ name: 'workingDir', maxCount: 1 }]), function(req,res){
+	console.log(req);
+	
+	var workingDir = "public/"+req.body['workingDir'];
+
+	console.log(workingDir);
+			
+			var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel4;
+			// var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel2;
+
+			// var workingDir = path.dirname(projectZipFilePath);
+
+			fs.readdir(workingDir, function(err, files) {
+
+				if (files.indexOf(".project") === -1) {
+								return;
+				}
+
+				// files.forEach(function(filename) {
+					
+			        // console.log(workingDir + "/" + filename);
+
+					// fs.lstat(workingDir + "/" + filename, function(err, stats) {
+					// 	if(err) {
+					// 		return console.log(err);
+					// 	}
+
+						// if (!stats.isDirectory()) {
+						// 	return;
+						// }
+
+
+						// fs.readdir(workingDir + "/" + filename, function(err, files) {
+						// 	if (err) {
+						// 		return console.log(err);
+						// 	}
+
+							// the directory must contain ".project" file to proceed
+							
+
+							generateKDMModel4(workingDir, function(err, resultPath) {
+								if (err) {
+									return console.log(err);
+								}
+
+								console.log("KDM Complete:", resultPath);
+								res.end("success");
+							});
+						// });
+					// });
+				// });
+});
+});
+
+app.post('/genkdmModel', upload.fields([{ name: 'project-zip-file', maxCount: 1 }]), function(req,res){
+	console.log(req);
+	
+	var projectZipFilePath = req.files['project-zip-file'][0].path;
+
+	// extract zip file, put at the same directory
+	fs.createReadStream(projectZipFilePath)
+		.pipe(unzip.Extract({ 
+			path: projectZipFilePath.substring(0, projectZipFilePath.lastIndexOf("\\")) 
+		}))
+		.on('close', function () {
+			
+			var generateKDMModel4 = require('./utils/EclipseUtil').generateKDMModel4;
+			var workingDir = path.dirname(projectZipFilePath);
+
+			fs.readdir(workingDir, function(err, files) {
+				files.forEach(function(filename) {
+					fs.lstat(workingDir + "/" + filename, function(err, stats) {
+						if(err) {
+							return console.log(err);
+						}
+
+						if (!stats.isDirectory()) {
+							return;
+						}
+
+						fs.readdir(workingDir + "/" + filename, function(err, files) {
+							if (err) {
+								return console.log(err);
+							}
+
+							// the directory must contain ".project" file to proceed
+							if (files.indexOf(".project") === -1) {
+								return;
+							}
+
+							generateKDMModel4(workingDir + "/" + filename, function(err, resultPath) {
+								if (err) {
+									return console.log(err);
+								}
+
+								console.log("KDM Complete:", resultPath);
+								res.download(resultPath, "result.xmi");
+							});
+						});
+					});
+				});
+			});
+		});
+});
+
 
 // END OF TEST GIT API
 app.get('/estimationPage',function(req,res){
-	res.render('estimationPage');
+	res.render('estimationPage', {cookieName: "EstimationPageOptions"});
 });
 
 app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
@@ -127,6 +626,9 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 	if(req.body['hours-per-month']){
 		projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
 	}
+	
+	projectInfo.hoursPerMonth = 40;
+	
 	var umlFilePath = req.files['uml_file'][0].path;
 	
 	var estimationModel = req.body['model'];
@@ -141,11 +643,11 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 			return;
 		}
 		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
 		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
 		modelInfo.projectInfo = projectInfo;
-		console.log('updated model info');
-		console.log(modelInfo);
+//		console.log('updated model info');
+//		console.log(modelInfo);
 		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
 			//update model analytics.
 			if(!modelInfo){
@@ -170,7 +672,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 
                     umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 
-
+                    	currentModel = modelInfo;
                         res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
 
                     });
@@ -180,6 +682,9 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 		});
 	});
 });
+
+// console.l = console.log;
+// console.log = function() {};
 
 app.get('/signup',function(req,res){
 
@@ -343,6 +848,8 @@ app.post('/uploadSurveyData', surveyUploads.fields([{name: 'project_plans', maxC
 });
 
 
+
+
 app.get('/thankYou', function(req, res){
 	res.render('thankYou');
 });
@@ -354,7 +861,6 @@ app.use(function(req, res, next) {
 	if(req.cookies){
 		token = req.cookies.appToken;
 	}
-
 	if (token) {
 	 // verifies secret and checks exp
 		 jwt.verify(token, config.secret, function(err, user) {
@@ -484,137 +990,190 @@ app.get('/surveyAnalytics', function (req, res){
 
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
     { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
-	
-	var umlFilePath = null;
-	var umlOtherPath = null;
-	//need to implement unzipped xml file data-analysis, for now only process single xml file!!
-	if(req.files['uml-file'] != null && req.files['uml-other'] != null){
-		// console.log("================================path===================");
+    const worker = fork('./UMLxAnalyzeWorker.js',
+		[],
+        {
+            execArgv: []
+        });
+    let token = req.cookies.appToken;
+    console.l("token: " + token);
+    let subscription = endpoints[token];
+    console.l("subscription: " + subscription);
+    worker.on('message', (text) => {
+        console.l("killing child process");
+        sendPush(subscription, 'Evaluation finished');
+        worker.kill();
+    });
+    let obj = encapsulateReq(req);
+    let objJson = JSON.stringify(obj);
+    worker.send(objJson);
+    console.l("DEBUGGGG: inside uploadUMLFile");
+    sendPush(subscription, 'Project Analyzing');
+    res.redirect('/');
+    console.l("DEBUGGGG: before evaluate project");
+    // setTimeout(() => evaluateUploadedProject(req), 2000);
+});
 
-		umlFilePath = req.files['uml-file'][0].path;
-		umlOtherPath = req.files['uml-other'][0].path;
+function encapsulateReq(req) {
+    let obj = {};
+    obj.files = req.files;
+    obj.body = req.body;
+    obj.userInfo = req.userInfo;
+    obj.sub = endpoints[req.cookies.appToken];
+    return obj;
+}
+
+function sendPush(subscription, push_title) {
+    const payload = JSON.stringify({title: push_title});
+    console.log("DEBUGGGG: ready to send notification");
+    if(subscription) {
+        webpush.sendNotification(subscription, payload).catch(error => {
+            console.error(error.stack);
+        });
+    } else {
+        console.l("sendPush(): subscription endpoint not find, printing endpoints");
+        console.l(endpoints);
+    }
+}
+
+function evaluateUploadedProject(req) {
+
+    console.log("DEBUGGGG: start evaluating project");
+    var umlFilePath = null;
+    var umlOtherPath = null;
+    //need to implement unzipped xml file data-analysis, for now only process single xml file!!
+    if(req.files['uml-file'] != null && req.files['uml-other'] != null){
+        // console.log("================================path===================");
+
+        umlFilePath = req.files['uml-file'][0].path;
+        umlOtherPath = req.files['uml-other'][0].path;
 
         // console.log(umlFilePath);
         // console.log(umlOtherPath);
 
-		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
-		//remove directory of zip file and the contents in the directory 
-		rimraf(umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")),function(err) {
-			if (err) {
-				console.log(err);
-			}
-		});
-	}
-	else if (req.files['uml-file'] != null) {
-		umlFilePath = req.files['uml-file'][0].path;
-	}
-	//same problem as above comment
-	else if (req.files['uml-other'] != null) {
-		umlOtherPath = req.files['uml-other'][0].path;
+        fs.createReadStream(umlOtherPath).pipe(unzip.Extract({ path: umlFilePath.substring(0, umlFilePath.lastIndexOf("\\")) }));
+        //remove directory of zip file and the contents in the directory
+        rimraf(umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")),function(err) {
+            if (err) {
+                console.log(err);
+            }
+        });
+    }
+    else if (req.files['uml-file'] != null) {
+        umlFilePath = req.files['uml-file'][0].path;
+    }
+    //same problem as above comment
+    else if (req.files['uml-other'] != null) {
+        umlOtherPath = req.files['uml-other'][0].path;
 
         console.log("================================path===================");
         console.log(umlOtherPath);
 
-		fs.createReadStream(umlOtherPath).pipe(unzip.Extract({path: umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")) }));
+        fs.createReadStream(umlOtherPath).pipe(unzip.Extract({path: umlOtherPath.substring(0, umlOtherPath.lastIndexOf("\\")) }));
 
-        res.redirect('/');
+        // res.redirect('/');
 
-	} else {
-		return false;
-	}
-	
-	var projectInfo = {};
-	projectInfo.distributedSystem = req.body['distributed-system'];
-	projectInfo.responseTime = req.body['response-time'];
-	projectInfo.endUserEfficiency = req.body['end-user-efficiency'];
-	projectInfo.complexInternalProcessing = req.body['complex-internal-processing'];
-	projectInfo.codeReusable = req.body['code-must-be-reusable'];
-	projectInfo.easyInstall = req.body['easy-to-install'];
-	projectInfo.easyUse = req.body['easy-to-use'];
-	projectInfo.portable = req.body['portable'];
-	projectInfo.easyToChange = req.body['easy-to-change'];
-	projectInfo.concurrent = req.body['concurrent'];
-	projectInfo.specialSecurityObjectives = req.body['includes-special-security-objectives'];
-	projectInfo.directAccessForThirdParties = req.body['provides-direct-access-for-third-parties'];
-	projectInfo.userTrainingFacilitiesRequired = req.body['special-user-training-facilities-are-required'];
-	projectInfo.familiarWithProjectModel = req.body['familiar-with-the-project-model-that-is-used'];
-	projectInfo.applicationExperience = req.body['application-experience'];
-	projectInfo.objectOrientedExperience = req.body['object-oriented-experience'];
-	projectInfo.leadAnalystCapability = req.body['lead-analyst-capability'];
-	projectInfo.motivation = req.body['motivation'];
-	projectInfo.stableRequirements = req.body['stable-requirements'];
-	projectInfo.partTimeStaff = req.body['part-time-staff'];
-	projectInfo.difficultProgrammingLanguage = req.body['difficult-programming-language'];
-	
-	// e.g.
-	//  req.files['avatar'][0] -> File
-	//  req.files['gallery'] -> Array
-	//
-	// req.body will contain the text fields, if there were any
-	var umlModelName = req.body['uml-model-name'];
-	var umlModelType = req.body['uml-model-type'];
-	var repoId = req.userInfo.repoId;
-	var uuidVal = req.body['uuid'];
-	var formInfo = req.body;
+    } else {
+        return false;
+    }
 
-	if(umlFilePath != null){
-		umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
-			var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-			console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
-			var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
-			modelInfo.projectInfo = projectInfo;
-			console.log('updated model info');
-			console.log(modelInfo);
-			umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
-				//update model analytics.
-				console.log("model is extracted");
-				if(!modelInfo){
-					res.end("error");
-					return;
-				}
-				umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
-					console.log("model analysis complete");
-					
-					console.log(modelInfo2);
-					
-					if(!modelInfo2){
-						 res.redirect('/');
-						 return;
-					}
-					
-					effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
-						if(!modelInfo3){
-							console.log("effort prediction failed");
-						}
-					
-					
-					var debug = require("./utils/DebuggerOutput.js");
-					debug.writeJson("evaluated_model_example"+modelInfo2._id, modelInfo2);
+    var projectInfo = {};
+    projectInfo.distributedSystem = req.body['distributed-system'];
+    projectInfo.responseTime = req.body['response-time'];
+    projectInfo.endUserEfficiency = req.body['end-user-efficiency'];
+    projectInfo.complexInternalProcessing = req.body['complex-internal-processing'];
+    projectInfo.codeReusable = req.body['code-must-be-reusable'];
+    projectInfo.easyInstall = req.body['easy-to-install'];
+    projectInfo.easyUse = req.body['easy-to-use'];
+    projectInfo.portable = req.body['portable'];
+    projectInfo.easyToChange = req.body['easy-to-change'];
+    projectInfo.concurrent = req.body['concurrent'];
+    projectInfo.specialSecurityObjectives = req.body['includes-special-security-objectives'];
+    projectInfo.directAccessForThirdParties = req.body['provides-direct-access-for-third-parties'];
+    projectInfo.userTrainingFacilitiesRequired = req.body['special-user-training-facilities-are-required'];
+    projectInfo.familiarWithProjectModel = req.body['familiar-with-the-project-model-that-is-used'];
+    projectInfo.applicationExperience = req.body['application-experience'];
+    projectInfo.objectOrientedExperience = req.body['object-oriented-experience'];
+    projectInfo.leadAnalystCapability = req.body['lead-analyst-capability'];
+    projectInfo.motivation = req.body['motivation'];
+    projectInfo.stableRequirements = req.body['stable-requirements'];
+    projectInfo.partTimeStaff = req.body['part-time-staff'];
+    projectInfo.difficultProgrammingLanguage = req.body['difficult-programming-language'];
 
-                    umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
-                        //				console.log(modelInfo);
-                        umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo2){
-                            console.log("=============repoInfo==========");
-                            console.log(repoInfo2);
-                            console.log("=============repoInfoNumber==========");
-                            //var totalRec = repoInfo2.Models.length;
-                            //console.log(totalRec);
-                            console.log("=============render==========");
-                            //res.render('mainPanel', {repoInfo:repoInfo2, totalRec: totalRec});
-                            // setTimeout(function(){
-                            // 	console.log("=============refresh=============");
-							 res.redirect('/');
-                            // }, 1000);
-                            //window.location.reload(true);
+    // e.g.
+    //  req.files['avatar'][0] -> File
+    //  req.files['gallery'] -> Array
+    //
+    // req.body will contain the text fields, if there were any
+    var umlModelName = req.body['uml-model-name'];
+    var umlModelType = req.body['uml-model-type'];
+    var repoId = req.userInfo.repoId;
+    var uuidVal = req.body['uuid'];
+    var formInfo = req.body;
+
+    if(umlFilePath != null){
+        umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
+            var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
+            console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+            var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
+            modelInfo.projectInfo = projectInfo;
+            console.log('updated model info');
+            console.log(modelInfo);
+            umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+                //update model analytics.
+                console.log("model is extracted");
+                if(!modelInfo){
+                    // res.end("error");
+                    return;
+                }
+                umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
+                    console.log("model analysis complete");
+
+                    console.log(modelInfo2);
+
+                    if(!modelInfo2){
+                        // res.redirect('/');
+                        return;
+                    }
+
+                    effortPredictor.predictEffort(modelInfo2, function(modelInfo3){
+                        if(!modelInfo3){
+                            console.log("effort prediction failed");
+                        }
+
+
+                        var debug = require("./utils/DebuggerOutput.js");
+                        debug.writeJson("evaluated_model_example"+modelInfo2._id, modelInfo2);
+
+                        umlModelInfoManager.saveModelInfo(modelInfo2, repoId, function(modelInfo){
+                            //				console.log(modelInfo);
+                            umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo2){
+                                console.log("=============repoInfo==========");
+                                console.log(repoInfo2);
+                                console.log("=============repoInfoNumber==========");
+                                //var totalRec = repoInfo2.Models.length;
+                                //console.log(totalRec);
+                                console.log("=============render==========");
+                                //res.render('mainPanel', {repoInfo:repoInfo2, totalRec: totalRec});
+                                // setTimeout(function(){
+                                // 	console.log("=============refresh=============");
+
+                                var token = req.cookies.appToken;
+                                var subscription = endpoints[token];
+                                const payload = JSON.stringify({title: 'test'});
+                                console.log("DEBUGGGG: ready to send notification");
+                                webpush.sendNotification(subscription, payload).catch(error => {
+                                    console.error(error.stack);
+                                });
+                            });
                         });
                     });
-				});
-				});
-			});
-		});
-	}
+                });
+            });
+        });
+    }
 
-});
+}
 
 app.get('/uploadUMLFileCompany', function(req, res){
 	console.log('============gettoweb============');
@@ -698,7 +1257,7 @@ app.get('/deleteModel', function (req, res){
 				});
 		      umlModelInfoManager.updateRepoInfo(repoInfo, function(){
 
-					res.redirect('/');
+					c
 
 				});
 			});
@@ -709,322 +1268,47 @@ app.get('/deleteModel', function (req, res){
 	});
 })
 
-// let counter = true;
-let median_value;
 
 app.get('/reanalyseRepo', function (req, res){
 
 	var repoId = req.userInfo.repoId;
 
+	/* multiprocess sequence start */
+    const worker = fork('./UMLxReanalyseWorker.js');
+    let token = req.cookies.appToken;
+    console.l("token: " + token);
+    let subscription = endpoints[token];
+    console.l("subscription: " + subscription);
+    worker.on('message', (text) => {
+        if(text.isEqual('ok')) {
+            sendPush(subscription, 'Reanalyse finished');
+        } else {
+            sendPush(subscription, 'Reanalyse Failed');
+            console.l("Reanalyse Failed");
+            console.l(text);
+        }
+        console.l("killing child process");
+        worker.kill();
+    });
+    worker.send(repoId);
+    console.l("DEBUGGGG: Reanalyse task sent to worker");
+    sendPush(subscription, 'Project Reanalysing');
+    res.redirect('/');
+    /* multiprocess sequence end */
+
 	//		console.log(refresh);
 	umlModelInfoManager.queryFullRepoInfo(repoId, function(repoInfo){
-		console.log("==================SURPRISE================");
+	console.log("==================SURPRISE================");
 
-        median_value = repoInfo;
-        res.redirect('/');
-
-		// umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
-        //
-		// 	umlModelInfoManager.updateRepoInfo(repoInfo, function(){
-		// 		// counter = true;
-		// 		res.redirect('/');
-		// 	});
-
-		// var object = repoInfo;
-		//
-		// var worker = new Worker(function(){
-		//
-		// 	postMessage("place1");
-
-		//                 var mongo = require('mongodb');
-		//                 var MongoClient = mongo.MongoClient;
-		//                 var umlModelExtractor = require("./UMLModelExtractor.js");
-		//                 var umlEvaluator = require("./UMLEvaluator.js");
-		//                 var url = "mongodb://127.0.0.1:27017/repo_info_schema";
-		//                 var umlFileManager = require("./UMLFileManager.js");
-		//                 var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
-		//                 var config = require('./config'); // get our config file
-		//
-		//                 var umlFileManager = require("./UMLFileManager.js");
-		//                 var fs = require('fs');
-		//                 var mkdirp = require('mkdirp');
-		// //	var umlFileManager = require('./UMLFileManager');
-		//
-		//                 var RScriptExec = require('./utils/RScriptUtil.js');
-		//
-		//                 var umlModelInfoManager = require("./UMLModelInfoManagerMongoDB.js");
-		//
-		// // current available evaluators
-		//                 var useCaseComponentsEvaluator = require('./evaluators/UseCaseComponentsEvaluator/UseCaseComponentsEvaluator.js');
-		// //	var functionPointEvaluator = require('./evaluators/FunctionPointEvaluator/FunctionPointEvaluator.js');
-		//                 var transactionEvaluator = require('./evaluators/TransactionEvaluator/TransactionEvaluator.js');
-		//                 var modelVersionEvaluator = require('./evaluators/ModelVersionEvaluator/UMLModelVersionEvaluator.js');
-		//                 var cocomoCalculator = require('./evaluators/COCOMOEvaluator/COCOMOCalculator.js');
-		//                 var useCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/UseCasePointEvaluator.js');
-		//                 var extendedUseCasePointEvaluator = require('./evaluators/UseCasePointEvaluator/ExtendedUseCasePointEvaluator.js');
-		//                 var projectTypeEvaluator = require('./evaluators/ProjectTypeEvaluator.js');
-		//                 var UMLSizeMetricEvaluator = require('./evaluators/UMLModelSizeMetricEvaluator/UMLModelSizeMetricEvaluator.js');
-		//
-		//                 var userStoryEvaluator = require('./evaluators/UserStoryEvaluator/UserStoryEvaluator.js');
-		//
-		// //	var evaluators = [cocomoCalculator, useCasePointCalculator, umlDiagramEvaluator,functionPointCalculator, projectEvaluator, useCasePointWeightEvaluator];
-		//                 var evaluators = [
-		//                     useCaseComponentsEvaluator,
-		//                     transactionEvaluator,
-		//                     modelVersionEvaluator,
-		//                     projectTypeEvaluator,
-		//                     cocomoCalculator,
-		//                     useCasePointEvaluator,
-		//                     extendedUseCasePointEvaluator,
-		//                     UMLSizeMetricEvaluator,
-		//                     userStoryEvaluator
-		//                 ];
-		//
-		//
-		//                 postMessage("place2");
-		//
-		//
-		//                 function evaluateRepo(repoInfo, callbackfunc){
-		// //		var modelEmpirics = "PROJ,UC,CCSS,UEUCW,IT,UEXUCW,UAW,TCF,EF,EUCP,EXUCP,ILF,ELF,EI,EO,EQ,ADD,CFP,DFP,VAF,AFPC\n";
-		// //		var repoEvaluationStr = "NUM,PROJ,UEUCW,UEXUCW,UAW,TCF,EF,EUCP,EXUCP,AFP,VAF,AFPC,Effort\n";
-		//                     var modelEvaluationStr = "";
-		// //		var repoEvaluationsForUseCase = [];
-		//                     var modelNum = 1;
-		//
-		//
-		//                     var useCaseNum = 1;
-		// //		var useCaseEmpiricss = [];
-		//                     var useCaseEvaluationStr = "";
-		//
-		//                     var domainModelNum = 1;
-		//                     var domainModelEvaluationStr = "";
-		//
-		// //		if(index !== undefined){
-		// //			useCaseNum = index;
-		// //		}
-		//
-		// //		console.log("hello3");
-		// //		console.log(repoInfo);
-		//                     console.log("model analysis complete1");
-		//
-		//
-		// //	var debug = require("./utils/DebuggerOutput.js");
-		// //	debug.writeJson("new_new_repo_info_"+repoInfo._id, repoInfo);
-		//
-		//
-		//                     if(callbackfunc){
-		//                         // iterate the hierarchy of the repo
-		//                         for(var i in repoInfo.Models){
-		// //				if(modelNum > 1){
-		// //					break;
-		// //				}
-		//                             var model = repoInfo.Models[i];
-		//                             evaluateModel(model, function(){
-		//                                 console.log('model analysis is complete!!!!!!!!!!');
-		//                             })
-		//
-		// //				var useCaseEmpirics = evaluateUseCase(useCase, model.umlModelName);
-		//                             modelEvaluationStr += toModelEvaluationStr(model, modelNum);
-		// //				console.log(useCaseEvaluationStr);
-		//                             modelNum ++;
-		//
-		//
-		//                             for(var i in model.UseCases){
-		//                                 var useCase = model.UseCases[i];
-		// //					evaluateUseCase(useCase, model, function(){
-		// //							console.log('use case analysis is complete');
-		// //						});
-		// //
-		//                                 useCaseEvaluationStr += toUseCaseEvaluationStr(useCase, useCaseNum);
-		// //					useCaseEmpiricss.push(useCaseEmpirics);
-		//                                 useCaseNum ++;
-		//                             }
-		//
-		//                             var domainModel = model.DomainModel;
-		// //				console.log("output model");
-		// //				console.log(model);
-		//
-		//                             if(domainModel){
-		// //				evaluateDomainModel(domainModel, function(){
-		// //				console.log('doamin model analysis is complete');
-		// ////				useCaseEmpiricss.push(useCaseEmpirics);
-		// //
-		// //				});
-		// //
-		//
-		//                                 domainModelEvaluationStr += toDomainModelEvaluationStr(domainModel, domainModelNum);
-		//
-		//                                 domainModelNum ++;
-		//                             }
-		//                         }
-		//                         console.log("DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-		//                         // iterate the evaluators, which will do analysis on at the repo level and populate repo analytics
-		//                         for(var i in evaluators){
-		//                             var evaluator = evaluators[i];
-		//                             if(evaluator.evaluateRepo){
-		//                                 evaluator.evaluateRepo(repoInfo, function(){
-		//                                     console.log('repo evaluation finishes');
-		//                                 });
-		//                             }
-		//                         }
-		//
-		//
-		//                         repoInfo.ModelEvaluationFileName = "modelEvaluation.csv";
-		//                         repoInfo.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
-		//                         repoInfo.DomainModelEvaluationFileName = "domainModelEvaluation.csv";
-		//                         repoInfo.ModelStatisticsOutputDir = repoInfo.OutputDir+"/model_evaluation_statistics";
-		//
-		//                         var files = [{fileName : repoInfo.ModelEvaluationFileName , content : modelEvaluationStr},
-		//                             {fileName : model.DomainModelEvaluationFileName , content : domainModelEvaluationStr},
-		//                             {fileName : model.ModelEvaluationFileName , content : modelEvaluationStr}];
-		//
-		//                         console.log("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
-		//
-		//                         umlFileManager.writeFiles(repoInfo.OutputDir, files, function(err){
-		//                             if(err) {
-		//                                 console.log(err);
-		//                                 if(callbackfunc){
-		//                                     callbackfunc("false umlFileManager.writeFiles");
-		//                                 }
-		//                             }
-		//                             else {
-		//
-		//                                 for(var i in evaluators){
-		//                                     var evaluator = evaluators[i];
-		//                                     if(evaluator.analyseRepoEvaluation){
-		//                                         evaluator.analyseRepoEvaluation(repoInfo);
-		//                                     }
-		//                                 }
-		//
-		//                                 console.log("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
-		//
-		//                                 umlFileManager.makeDir(repoInfo.ModelStatisticsOutputDir, function(result){
-		//                                     if(result){
-		//                                         //Needs to be upgraded soon
-		//                                         console.log("apply statistical analysis on the repo output evaluation");
-		//                                         var command = './Rscript/OutputStatistics.R "'+repoInfo.OutputDir+"/"+repoInfo.ModelEvaluationFileName+'" "'+repoInfo.ModelStatisticsOutputDir+'" "."';
-		//                                         console.log(command);
-		//
-		//                                         RScriptExec.runRScript(command,function(result){
-		//                                             if (!result) {
-		//                                                 if(callbackfunc){
-		//                                                     callbackfunc("false umlFileManager.makeDir");
-		//                                                 }
-		//                                                 return;
-		//                                             }
-		//                                             if(callbackfunc){
-		//                                                 callbackfunc(repoInfo);
-		//                                             }
-		//                                         });
-		//
-		//                                     }
-		//                                     else {
-		//                                         if(callbackfunc){
-		//                                             callbackfunc("false umlFileManager.makeDir else");
-		//                                         }
-		//                                     }
-		//
-		//                                 });
-		//
-		// //				 if(callbackfunc){
-		// ////						console.log(repoEvaluationsForUseCaseStr);
-		// //				    	callbackfunc(repoInfo);
-		// //				}
-		//                             }
-		//
-		//                         });
-		//
-		//                     }
-		//                     else {
-		//                         return repoInfo;
-		//                     }
-		//                 }
-		//
-		//                 postMessage("place3");
-		//
-		//                 function updateRepoInfo(repo, callbackfunc){
-		//                     console.log(repo);
-		//                     console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-		//                     MongoClient.connect(url, function(err, db) {
-		//                         if (err) throw err;
-		//
-		//                         var modelArray = repo.Models;
-		//                         repo._id = mongo.ObjectId(repo._id);
-		//
-		//                         delete repo.Models;
-		//                         //delete repo.DomainModel;
-		//                         //delete repo.UseCases;
-		//
-		//                         db.collection("repos").update({_id: repo._id}, repo, function(err, updateCount){
-		//                             if(err) throw err;
-		//                             db.close();
-		//                             if(callbackfunc){
-		//                                 callbackfunc("updating repoInfo");
-		//                             }
-		//                         });
-		//
-		//                         for(var i in modelArray){
-		//                             updateModelInfo(modelArray[i],repo._id , function(){
-		//                                 console.log("Update Model Info Finished");
-		//                             });
-		//                         }
-		//
-		//                     });
-		//                 }
-		//
-		//                 postMessage("place4");
-		//
-		//                 this.onmessage = function(event) {
-		//                     let repoInfo = event.data;
-		//                     postMessage("start beginning");
-		//                     evaluateRepo(repoInfo, function(repoInfo){
-		//                         postMessage("Finish evaluateRepo!");
-		//                         //				this repofo information only has repo structure but no actual data.
-		//                         updateRepoInfo(repoInfo, function(){
-		//                             //					umlFileManager.deleteDir(function(result){
-		//                             //					});
-		//
-		//                             //					res.render('repoDetail', {modelInfo:modelInfo, repo_id: repoId});
-		//                             postMessage("Finish all analyze!");
-		//                         });
-		//                     });
-
-		//     this.onmessage = function(event) {
-		//         self.close();
-		//     };
-		//     //};
-		// });
-		//
-		// worker.onmessage = function(event) {
-		//     console.log(event.data);
-		// };
-		//
-		// worker.onerror = function(error) {
-		//     console.log('Worker error: ' + error.message + '\n');
-		//     throw error;
-		// };
-
-		// console.log("==================SURPRISE================");
-		//
-		// worker.postMessage(repoInfo);
-		// console.log("Please wait for results!");
-		// res.redirect('/');
-
-		// });
-	});
-})
-
-
-app.get('/reanalyseRepocontinue', function (req, res){
-
-    umlEvaluator.evaluateRepo(median_value, function(repoInfo){
+    umlEvaluator.evaluateRepo(repoInfo, function(repoInfo){
 
         umlModelInfoManager.updateRepoInfo(repoInfo, function(){
             // counter = true;
 			console.log("Finish All Calculation!");
-            res.end("true");
+			res.redirect('/');
         });
     });
+});
 })
 
 
@@ -1038,10 +1322,13 @@ app.get('/requestRepoBrief', function (req, res){
             repoInfoBrief.projectNum[repoInfoBrief.projectNum.length] = totalRec;
             repoInfoBrief.NT[repoInfoBrief.NT.length] = totalNT;
             repoInfoBrief.UseCaseNum[repoInfoBrief.UseCaseNum.length] = totalUseCaseNum;
-            repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length] = totalEntityNum;
-
-				res.end(JSON.stringify(repoInfoBrief));
-			});
+			repoInfoBrief.EntityNum[repoInfoBrief.EntityNum.length] = totalEntityNum;
+			var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+			for (var i=0, len=newKeys.length; i<len; ++i){
+				repoInfoBrief[newKeys[i]][repoInfoBrief[newKeys[i]].length] = totalVal[newKeys[i]];
+			}
+			res.end(JSON.stringify(repoInfoBrief));
+		});
 })
 
 app.get('/queryAllModelNames', function (req, res){
@@ -1286,30 +1573,47 @@ app.get('/queryRepoInfo', function(req, res){
 })
 
 app.get('/reloadRepo', function(req, res){
-	//temporary analysis
-	var repoId = req.userInfo.repoId;
+	let repoId = req.userInfo.repoId;
+	/* Multiprocess sequence start */
+    // const worker = fork('./UMLxReloadWorker.js');
+    // let token = req.cookies.appToken;
+    // console.l("token: " + token);
+    // let subscription = endpoints[token];
+    // console.l("subscription: " + subscription);
+    // worker.on('message', (text) => {
+    //     if(text.isEqual('ok')) {
+    //         sendPush(subscription, 'Reload finished');
+    //     } else {
+    //         sendPush(subscription, 'Reload Failed');
+    //         console.l("Reload Failed");
+    //         console.l(text);
+    //     }
+    //     console.l("killing child process");
+    //     worker.kill();
+    // });
+    // worker.send(repoId);
+    // console.l("DEBUGGGG: reload task sent to worker");
+    // sendPush(subscription, 'Project Reloading');
+    // res.redirect('/');
+    /* multiprocess sequence end */
 
-//	console.log(refresh);
 	umlModelInfoManager.queryRepoInfo(repoId, function(repoInfo){
 		umlModelInfoManager.reloadRepo(repoInfo, function(repoInfo){
 			if(!repoInfo){
-				res.end("error");
+				res.end("repoInfo error");
 				return;
 			}
-			
 			effortPredictor.predictEffortRepo(repoInfo, function(repoInfo2){
 				if(!repoInfo2){
 					console.log("effort prediction failed at repo level");
 				}
-			
-			
-			umlModelInfoManager.updateRepoInfo(repoInfo2, function(repoInfo3){
-				res.redirect('/');
-			});
+                umlModelInfoManager.updateRepoInfo(repoInfo2, function(repoInfo3){
+                    res.redirect('/');
+                });
 			});
 		});
 	});
-})
+});
 
 
 app.get('/uploadProject', function(req, res){
@@ -1346,7 +1650,7 @@ var pageSize = 10;
 var pageCount = 0;
 var start = 0;
 var currentPage = 1;
-
+var totalVal = {"SLOC": 0, "schedule": 0,"personnel": 0, "EUCP": 0, "EXUCP": 0, "DUCP": 0, "effort": 0, "estimatedEffort": 0};
 app.get('/pager',function(req,res){
    
     //var index = req.param('index');
@@ -1423,18 +1727,22 @@ app.get('/', function(req, res){
   umlModelInfoManager.queryRepoInfoByPage(repoId, pageSize, start, function(repoInfo, message){
 
   	console.log("==========================sfsdfsdfs==============");
-  	console.log(repoInfo);
+  	//console.log(repoInfo);
 
   	umlModelInfoManager.queryAllModelBrief(repoId, function(resultForRepoInfo){
-
   	    repoInfo.UseCaseNum = resultForRepoInfo.UseCaseNum;
         repoInfo.NT = resultForRepoInfo.NT;
         repoInfo.EntityNum = resultForRepoInfo.EntityNum;
+		var newKeys = ["SLOC", "schedule","personnel", "EUCP", "EXUCP", "DUCP", "effort", "estimatedEffort"];
+		for (let i = 0, len = newKeys.length; i < len; ++i) {
+			repoInfo[newKeys[i]] = resultForRepoInfo[newKeys[i]];
+			totalVal[newKeys[i]] = resultForRepoInfo[newKeys[i]];
+		}
 
         totalUseCaseNum = resultForRepoInfo.UseCaseNum;
         totalNT = resultForRepoInfo.NT;
         totalEntityNum =  resultForRepoInfo.EntityNum;
-	  
+		
 	  umlModelInfoManager.requestRepoBrief(repoId, function(repoInfoBrief){
       
         totalRec = modelNum;
@@ -1460,16 +1768,14 @@ app.get('/', function(req, res){
 							for(var j in model ){
 							repoInfo.Models.push(model[j]);
 							}
-
 						}
-				        
+						
 						repoInfo.requestUUID = requestUUID;
 						res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models,
 							repoInfo:repoInfo, message:message,isEnterprise : req.userInfo.isEnterprise, modelAllNum:modelNum,
 							pageSize: pageSize, pageCount: pageCount, currentPage: currentPage, repoInfoBrief: repoInfoBrief});
-                	});
+					});
 				});
-
 			} else {
                 repoInfo.requestUUID = requestUUID;
 				res.render('index', {totalRec: totalRec, reppID: repoId, repoPageInfo: repoInfo.Models, modelAllNum:modelNum,
@@ -1487,11 +1793,9 @@ app.get('/', function(req, res){
 });
 
 
-app.post('/saveModelInfoCharacteristics', upload.fields([{name:'distributed_system',maxCount:1},{name:'response_time', maxCount:1},{name:'end_user_efficiency', maxCount:1},{name:'complex_internal_processing', maxCount:1},{name:'code_must_be_reusable', maxCount:1}
-,{name:'easy_to_install', maxCount:1},{name:'easy_to_use', maxCount:1},{name:'portable', maxCount:1},{name:'easy_to_change', maxCount:1},{name:'concurrent', maxCount:1}
-,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
-,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
-,{name:'difficult_programming_language', maxCount:1},{name:'modelID', maxCount:1}]), function(req,res){
+app.post('/saveModelInfoCharacteristics', upload.fields([]), function(req,res){
+    // console.log("/saveModelInfoCharacteristics");
+	// console.log(req.body);
 	
 	umlModelInfoManager.saveModelInfoCharacteristics(req.body, function(result,message){		
 		res.json(result);
@@ -1529,6 +1833,12 @@ app.get('/queryUsers', function(req,res){
 app.get('/listFileUnderDir', function(req, res) {
 	var filePath = req.query.fileFolder;
 
+	var isAbsolute = false;
+	if(filePath.includes(":")){
+		isAbsolute = true;
+		filePath = filePath.replace(/public\//g, "");
+	}
+	
     function recurDir(filePath, done) {
         var results = [];
         fs.readdir(filePath, function(err, list){
@@ -1548,7 +1858,8 @@ app.get('/listFileUnderDir', function(req, res) {
 							entry.url = file;
 							entry.size = stat.size;
 							entry.date = stat.birthtime;
-							entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							// entry.parent = filePath.substring(filePath.lastIndexOf("public/uploads/")-1);
+							entry.parent = filePath;
 							results.push(entry);
 							if (!--pending) {
 								done(null, results);
@@ -1570,6 +1881,10 @@ app.get('/listFileUnderDir', function(req, res) {
 app.get('/fetchDocument', function (req, res) {
 
     var docPath = req.query.DocFolder;
+
+	if(!docPath.includes(":")){
+		docPath = "public/"+docPath;
+	}
 
     fs.readFile(docPath, function (err, data) {
         if (err) {
@@ -1651,10 +1966,155 @@ app.get('/deactivateUser', function(req,res){
 //  console.log('Express started on port 8081');
 //}
 
-//==================== local machine code for development ==========================
 
+// =====================push notification module=======================
+// push notification module
+const webpush = require('web-push');
+
+const publicVapidKey = "BM2EKwsY9E_5r5ewHVlZ1hSwpSfRpvqQm0DPT3C60WQ3md98O0_Tb7c56yFfzFlFyaKqNVfYe1Vv2sul6m4Myt0";
+const privateVapidKey = "zi84jsmnux1jffj4Kt0XnSNWeKVYmQpmRd-lMZkqU-k";
+
+// Replace with your email
+webpush.setVapidDetails('mailto:val@karpov.io', publicVapidKey, privateVapidKey);
+
+
+app.use(require('body-parser').json());
+
+
+
+app.post('/subscribe', (req, res) => {
+    const token = req.cookies.appToken;
+    const subscription = req.body;
+    if(subscription) {
+        endpoints[token] = subscription;
+        console.l('server received subsription endpoint');
+    } else {
+        console.l("server didn't receive corrent endpoint");
+    }
+    res.status(201).json({});
+    // const payload = JSON.stringify({title: 'test'});
+    console.l(subscription);
+    // webpush.sendNotification(subscription, payload).catch(error => {
+    //     console.error(error.stack);
+    // });
+});
+
+app.get('/getZipPackage', function (req, res){
+	var UMLxAnalyticToolKitCore = require("./utils/UMLxAnalyticToolKitCore.js");
+	var zipFolder = require('zip-folder');
+
+	var repoId = '/repo' + currentModel.repo_id;
+	var modelId = '/' + currentModel.fileId;
+	currentModel.OutputDir = __dirname + '/public/output' + repoId + modelId;
+	
+	var folderPath = __dirname + '/public/output' + repoId + modelId;
+	var zipPath = __dirname + '/public/output/package.zip';
+
+	UMLxAnalyticToolKitCore.generateReport(currentModel, function () {
+		console.log("generateReport success");
+		zipFolder(folderPath, zipPath, function(err) {
+		    if(err) {
+		        console.log(err);
+		    } else {
+	 			res.download(zipPath, function(err) {
+	 				if (err) {
+	 					console.log(err);
+	 				} else {
+	 					fs.unlink(zipPath, function(err) {
+	 						if (err) {
+	 							console.log(err);
+	 						}
+	 					});
+	 				}
+	 			});
+		    }
+		});			
+	});	
+});
+
+app.post('/analyseSLOC', function (req, res) {
+	var archives = req.body.archives;
+	archives = JSON.parse(archives);
+
+	console.log(req.body.workingDir);
+
+	var workingDir = "public/"+req.body.workingDir;
+
+	if(workingDir.includes(":")){
+		workingDir = workingDir.replace(/public\//g, "");
+	}
+
+	var analyseSLOC = require('./utils/RepoAnalyzerUtil').analyseSLOC;
+
+	var filePaths = "";
+	var appRoot = path.dirname(require.main.filename)+"/public";
+
+	console.log("Submitted archives: ");
+	for (var i = 0; i < archives.length; i++) {
+		console.log(archives[i]);
+
+		if(archives[i].includes(":")){
+			filePaths += archives[i];
+		}
+		else{
+			filePaths += appRoot+"/"+archives[i];
+		}
+
+		if(i != archives.legnth - 1){
+			filePaths += "\n";
+		}
+	}
+
+	var writeFile = require('./utils/FileManagerUtil').writeFileSync;
+	
+	var outputFilePath = workingDir+"/fileList.txt";
+	
+	writeFile(outputFilePath, filePaths);
+	
+	console.log("hello");
+	analyseSLOC(outputFilePath, workingDir, function(result){
+        if(result){
+			console.log(result);
+		}
+		else{
+			console.log("error in analysing SLOC");
+		}
+	});
+
+});
+
+//
+//==================== local machine code for development ==========================
 var server = app.listen(8081,'0.0.0.0', function () {
   var host = server.address().address
   var port = server.address().port
   console.log("Example app listening at http://%s:%s", host, port)
+
+});
+
+app.get('/getZipPackage', function (req, res){
+	var repoId = '/repo' + req.query.repo_id;
+	var modelId = '/' + req.query.model_id;
+
+	var zipFolder = require('zip-folder');
+	var folderPath = __dirname + '/public/output' + repoId + modelId;
+	var zipPath = __dirname + '/public/output/package.zip';
+	 
+	zipFolder(folderPath, zipPath, function(err) {
+	    if(err) {
+	        console.log(err);
+	    } else {
+ 			res.download(zipPath, function(err) {
+ 				if (err) {
+ 					console.log(err);
+ 				} else {
+ 					fs.unlink(zipPath, function(err) {
+ 						if (err) {
+ 							console.log(err);
+ 						}
+ 					});
+ 				}
+ 			});
+	    }
+	});		
 });

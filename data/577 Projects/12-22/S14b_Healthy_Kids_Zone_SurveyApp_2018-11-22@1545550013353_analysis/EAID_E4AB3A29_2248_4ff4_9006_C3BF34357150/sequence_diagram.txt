@@ -1,0 +1,49 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "Question Screen" as 09
+participant "schoolinformaiton" as 19
+participant "answer" as 29
+
+administrator -> 09: unsweredquestionsfoundmessage()
+activate 09
+
+deactivate 09
+
+administrator -> 19: submitbutton()
+activate 19
+
+19 -> 29: checkcompleteanswers()
+activate 29
+
+29 -> 29: answerstorage()
+deactivate 29
+
+29 -> 29: insertanswertostorage()
+activate 29
+
+29 -> 29: answerstorage()
+deactivate 29
+
+29 -> 29: answerstoredsucceeded()
+activate 29
+
+deactivate 29
+
+29 -> 09: unsweredquestionsfoundmessage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+administrator -> 29: answerstoredsucceeded()
+activate 29
+
+deactivate 29
+
+@enduml

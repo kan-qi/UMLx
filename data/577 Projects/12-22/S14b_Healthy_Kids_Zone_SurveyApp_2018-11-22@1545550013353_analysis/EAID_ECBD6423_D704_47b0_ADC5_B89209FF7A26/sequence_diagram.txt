@@ -1,0 +1,115 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor administrator
+participant "SPSListScreen" as 09
+participant "SurveyConfigurationPage" as 19
+participant "pathdb" as 29
+participant "Association Management" as 39
+participant "Survey Management" as 49
+participant "schoolinformaiton" as 69
+participant "$help://use_case_model_pattern.htm" as 89
+
+administrator -> 09: schoollistpage()
+activate 09
+
+09 -> 29: loadpathlistformdb()
+activate 29
+
+29 -> 39: displayerrormessageforsamenameandaddress()
+activate 39
+
+39 -> 29: pathlist()
+29 -> 89: checkrelatedanswersunderpaths()
+activate 89
+
+89 -> 19: promptconfirmationpage()
+activate 19
+
+19 -> 19: confirmationpage()
+19 -> 89: deletethepathandanswers()
+89 -> 69: pathandlocationinformation()
+activate 69
+
+deactivate 69
+
+89 -> 39: noanswerunderpathmessage()
+deactivate 39
+
+89 -> 49: successmessage()
+activate 49
+
+deactivate 49
+
+deactivate 89
+
+deactivate 19
+
+89 -> 69: schoolinformaiton()
+activate 69
+
+deactivate 69
+
+89 -> 69: pathandlocationinformation()
+activate 69
+
+deactivate 69
+
+deactivate 29
+
+29 -> 69: schoolinformaiton()
+activate 69
+
+deactivate 69
+
+29 -> 29: pathdb()
+activate 29
+
+deactivate 29
+
+29 -> 29: pathlist()
+activate 29
+
+29 -> 89: checkrelatedanswersunderpaths()
+activate 89
+
+deactivate 89
+
+deactivate 29
+
+deactivate 09
+
+administrator -> 19: confirmationpage()
+activate 19
+
+19 -> 89: deletethepathandanswers()
+activate 89
+
+deactivate 89
+
+deactivate 19
+
+administrator -> 29: pathlist()
+activate 29
+
+29 -> 89: checkrelatedanswersunderpaths()
+activate 89
+
+deactivate 89
+
+deactivate 29
+
+administrator -> 39: noanswerunderpathmessage()
+activate 39
+
+deactivate 39
+
+administrator -> 49: successmessage()
+activate 49
+
+deactivate 49
+
+@enduml

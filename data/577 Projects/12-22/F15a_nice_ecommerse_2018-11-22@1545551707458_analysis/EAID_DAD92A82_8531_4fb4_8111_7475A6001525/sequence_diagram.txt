@@ -1,0 +1,68 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Vendor
+participant "Buyer Registration Form" as 09
+participant "Medical Profile" as 19
+participant "Medical Create Form" as 29
+participant "updateproduct" as 39
+participant "Vendor Registration Form" as 59
+
+Vendor -> 09: invalidinformationerror()
+activate 09
+
+deactivate 09
+
+Vendor -> 19: changeunsaveddialog()
+activate 19
+
+deactivate 19
+
+Vendor -> 29: displaycreatesuccessdialog()
+activate 29
+
+deactivate 29
+
+Vendor -> 39: Createproductbutton()
+activate 39
+
+39 -> 59: redirectvendor()
+activate 59
+
+59 -> 39: productcreatepage()
+39 -> 39: updateproduct()
+39 -> 19: changeunsaveddialog()
+activate 19
+
+deactivate 19
+
+39 -> 29: displaycreatesuccessdialog()
+activate 29
+
+deactivate 29
+
+39 -> 09: invalidinformationerror()
+activate 09
+
+deactivate 09
+
+39 -> 39: product()
+deactivate 39
+
+39 -> 29: sendcreatesuccessdialog()
+activate 29
+
+deactivate 29
+
+deactivate 59
+
+Vendor -> 39: productcreatepage()
+activate 39
+
+39 -> 39: updateproduct()
+deactivate 39
+
+@enduml

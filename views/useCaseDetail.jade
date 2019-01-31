@@ -2,18 +2,23 @@ if useCaseInfo
  -var useCase_id = useCaseInfo._id
 div.use-case-detail-content(data-use-case-title="#{useCaseInfo.Name}")
   input(type='hidden', value=useCase_id)#UseCaseId
-  ul.nav.nav-tabs
-   li.active
-    a(data-toggle='tab', href='#use-case-info-pane') UseCase Info
-   li
-    a(data-toggle='tab', href='#use-case-analytics',onclick='populate_usecase_data();') Analytics
-   //li
-    //a(data-toggle='tab', href='#use-case-distributions') Distributions
-   //li
-    //a(data-toggle='tab', href='#use-case-evaluation') Evaluation
- div.tab-content
-  div.tab-pane.fade.in.active(id="use-case-info-pane")
-   include diagramDisplay
-  div.tab-pane.fade(id="use-case-analytics")
-     div.use-case-analytics(id="analysis-data")
+  div.use-case-analytics(id="analysis-data")
+  button(onclick="open_new_page_for_diagram_display('useCase');") Open UseCase Info
+  div(id="use-case-info-pane").hidden
+    include diagramDisplay
   div.clear
+//  ul.nav.nav-tabs
+//   li.active
+//    a(data-toggle='tab', href='#use-case-info-pane') UseCase Info
+//   li
+//    a(data-toggle='tab', href='#use-case-analytics',onclick='populate_usecase_data();') Analytics
+//   //li
+//    //a(data-toggle='tab', href='#use-case-distributions') Distributions
+//   //li
+//    //a(data-toggle='tab', href='#use-case-evaluation') Evaluation
+// div.tab-content
+//  div.tab-pane.fade.in.active(id="use-case-info-pane")
+//   include diagramDisplay
+//  div.tab-pane.fade(id="use-case-analytics")
+//     div.use-case-analytics(id="analysis-data")
+//  div.clear

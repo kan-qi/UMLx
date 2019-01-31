@@ -95,7 +95,7 @@
 		console.log("project effort");
 		console.log(projectEffortInPM);
 		
-		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91));
+		var projectDuration = 3.67*Math.pow(projectEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
 		
 		if(availableSchedule && projectDuration > availableSchedule){
 			projectDuration = availableSchedule;
@@ -133,33 +133,53 @@
 		console.log("transaction data");
 		console.log(modelInfo['TransactionAnalytics']);
 		
-		var personnel_UI_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
-		var personnel_DB_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
-		var personnel_FS_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
-		
-		personnel_UI = Math.round(personnel_UI_estimated);
-		personnel_DB = Math.round(personnel_DB_estimated);
-		personnel_FS = Math.round(personnel_FS_estimated);
-		
-		if(personnel_UI == 0 && personnel_UI_estimated != 0){
-			personnel_UI = 1;
-		}
-		
-		if(personnel_DB == 0 && personnel_DB_estimated != 0){
-			personnel_DB = 1;
-		}
-		
-		if(personnel_FS == 0 && personnel_FS_estimated != 0){
-			personnel_FS = 1;
-		}
+//		var personnel_UI_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].INT/modelInfo['TransactionAnalytics'].NT;
+//		var personnel_DB_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].DM/modelInfo['TransactionAnalytics'].NT;
+//		var personnel_FS_estimated = modelInfo['TransactionAnalytics'].NT == 0 ? 0 : personnel*modelInfo['TransactionAnalytics'].CTRL/modelInfo['TransactionAnalytics'].NT;
+//		
+//		personnel_UI = Math.round(personnel_UI_estimated);
+//		personnel_DB = Math.round(personnel_DB_estimated);
+//		personnel_FS = Math.round(personnel_FS_estimated);
+//		
+//		if(personnel_UI == 0 && personnel_UI_estimated != 0){
+//			personnel_UI = 1;
+//		}
+//		
+//		if(personnel_DB == 0 && personnel_DB_estimated != 0){
+//			personnel_DB = 1;
+//		}
+//		
+//		if(personnel_FS == 0 && personnel_FS_estimated != 0){
+//			personnel_FS = 1;
+//		}
 		
 //		personnel = personnel_UI + personnel_DB + personnel_FS;
 		
-		estimationResults.Personnel_UI = personnel_UI;
-		estimationResults.Personnel_DB = personnel_DB;
-		estimationResults.Personnel_FS = personnel_FS;
+//		estimationResults.Personnel_UI = personnel_UI;
+//		estimationResults.Personnel_DB = personnel_DB;
+//		estimationResults.Personnel_FS = personnel_FS;
 		
-		estimationResults.Personnel = Math.round(personnel);
+//		var totalTransactions = modelInfo['TransactionAnalytics'].INT+modelInfo['TransactionAnalytics'].DM+modelInfo['TransactionAnalytics'].CTRL;
+//		var personnel_UI_estimated = totalTransactions == 0 ? 0 : modelInfo['TransactionAnalytics'].INT/totalTransactions;
+//		var personnel_DB_estimated = totalTransactions == 0 ? 0 : modelInfo['TransactionAnalytics'].DM/totalTransactions;
+//		var personnel_FS_estimated = totalTransactions == 0 ? 0 : modelInfo['TransactionAnalytics'].CTRL/totalTransactions;
+//		
+		
+
+		// var boundaryNum =  modelInfo["ComponentAnalytics"].BoundaryNum;
+		// var controlNum = modelInfo["ComponentAnalytics"].ControlNum;
+		// var entityNum = modelInfo["ComponentAnalytics"].EntityNum;
+		// var totalNum = boundaryNum + controlNum + entityNum;
+		
+	    // var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
+	    // var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
+	    // var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
+	    
+		// estimationResults.Personnel_UI = parseFloat(personnel_UI_estimated*100).toFixed(2)+"%";
+		// estimationResults.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
+		// estimationResults.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
+		
+		estimationResults.Personnel = Math.ceil(personnel);
 		
 //		projectDuration = projectEffortInPM/personnel;
 		
@@ -173,7 +193,10 @@
 			useCaseEstimatesById[estimationResults.UseCases[i]._id] = estimationResults.UseCases[i];
 		}
 		
-		
+		var viewEffortWeight = 0;
+		var controlEffortWeight = 0;
+		var modelEffortWeight = 0;
+
 		//calculate distributions
 
 		//distribute project effort
@@ -191,14 +214,16 @@
 
 			useCaseEstimates.SizeMeasurement = Number(useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric]).toFixed(2);
 			
-			var useCaseEffort = (useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0 || modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric] == 0) ? 0 : projectEffort/modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric]*useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+			var useCaseMetric = useCase['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+			var modelMetric = modelInfo['ExtendedUseCasePointData'][modelConfig.transactionMetric];
+			var useCaseEffort = (modelMetric == 0) ? 0 : projectEffort/modelMetric*useCaseMetric;
 			
 //			useCase.effort_dis_2 = projectEffort/modelInfo.UEXUCW*useCase.UEXUCW;
 //			useCase.effort_dis_3 = projectEffort/modelInfo.UDUCW*useCase.UDUCW;
 			
 			var useCaseEffortInPMCOCOMO = useCaseEffort/152;
 			
-			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91));
+			var useCaseDuration = 3.67*Math.pow(useCaseEffortInPMCOCOMO, 0.28+0.2*(1.15-0.91))*0.75;
 
 //			var personnel = projectEffort/12;
 			
@@ -247,36 +272,60 @@
 //				useCase.personnel_dist_2 = personnel/modelInfo.UEXUCW*useCase.UEXUCW;
 //				useCase.personnel_dist_3 = personnel/modelInfo.UDUCW*useCase.UDUCW;
 			
-				
-				
-				var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
-				var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
-				var personnel_FS_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+//				var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
+//				var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
+//				var personnel_FS_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
 
-				personnel_UI = Math.round(personnel_UI_estimated);
-				personnel_DB = Math.round(personnel_DB_estimated);
-				personnel_FS = Math.round(personnel_FS_estimated);
+//				personnel_UI = Math.round(personnel_UI_estimated);
+//				personnel_DB = Math.round(personnel_DB_estimated);
+//				personnel_FS = Math.round(personnel_FS_estimated);
+//				
+//				if(personnel_UI == 0 && personnel_UI_estimated != 0){
+//					personnel_UI = 1;
+//				}
+//				
+//				if(personnel_DB == 0 && personnel_DB_estimated != 0){
+//					personnel_DB = 1;
+//				}
+//				
+//				if(personnel_FS == 0 && personnel_FS_estimated != 0){
+//					personnel_FS = 1;
+//				}
 				
-				if(personnel_UI == 0 && personnel_UI_estimated != 0){
-					personnel_UI = 1;
-				}
-				
-				if(personnel_DB == 0 && personnel_DB_estimated != 0){
-					personnel_DB = 1;
-				}
-				
-				if(personnel_FS == 0 && personnel_FS_estimated != 0){
-					personnel_FS = 1;
-				}
-				
-				useCasePersonnel = personnel_UI + personnel_DB + personnel_FS;
-				
-				useCaseEstimates.Personnel = Math.round(useCasePersonnel);
-				
-				useCaseEstimates.Personnel_UI = personnel_UI;
-				useCaseEstimates.Personnel_DB = personnel_DB;
-				useCaseEstimates.Personnel_FS = personnel_FS;
+//				useCasePersonnel = personnel_UI + personnel_DB + personnel_FS;
+			
 
+				var boundaryNum =  useCase["ComponentAnalytics"].BoundaryNum > 0 ? useCase["ComponentAnalytics"].BoundaryNum : 2;
+				var controlNum = useCase["ComponentAnalytics"].ControlNum > 0 ? useCase["ComponentAnalytics"].ControlNum : 1;
+				var entityNum = useCase["ComponentAnalytics"].EntityNum > 0 ? useCase["ComponentAnalytics"].EntityNum : 1;
+				var totalNum = boundaryNum + controlNum + entityNum;
+				
+			    var personnel_UI_estimated = totalNum == 0 ? 0 : boundaryNum/totalNum;
+			    var personnel_DB_estimated = totalNum == 0 ? 0 : entityNum/totalNum;
+				var personnel_FS_estimated = totalNum == 0 ? 0 : controlNum/totalNum;
+				
+				viewEffortWeight += personnel_UI_estimated;
+				controlEffortWeight += personnel_FS_estimated;
+				modelEffortWeight += personnel_DB_estimated;
+
+//			    var personnel_UI_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].INT/useCase['TransactionAnalytics'].NT;
+//			    var personnel_DB_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].DM/useCase['TransactionAnalytics'].NT;
+//			    var personnel_FS_estimated = useCase['TransactionAnalytics'].NT == 0 ? 0 : useCasePersonnel*useCase['TransactionAnalytics'].CTRL/useCase['TransactionAnalytics'].NT;
+
+			    
+				useCaseEstimates.Personnel_UI = parseFloat(personnel_UI_estimated*100).toFixed(2)+"%";
+				useCaseEstimates.Personnel_DB = parseFloat(personnel_DB_estimated*100).toFixed(2)+"%";
+				useCaseEstimates.Personnel_FS = parseFloat(personnel_FS_estimated*100).toFixed(2)+"%";
+				
+//				personnel_UI = Math.round(personnel_UI_estimated);
+//				personnel_DB = Math.round(personnel_DB_estimated);
+//				personnel_FS = Math.round(personnel_FS_estimated);
+				
+				
+//				estimationResults.Personnel = Math.ceil(personnel);
+
+
+				useCaseEstimates.Personnel = Math.ceil(useCasePersonnel);
 				
 //				useCaseDuration = useCaseEffortInPM / personnel;
 				useCaseEstimates.Duration = useCaseDuration.toFixed(2);
@@ -285,6 +334,11 @@
 				
 				estimationResults.UseCases.push(useCaseEstimates);
 		}
+
+		var totalWeight = viewEffortWeight+controlEffortWeight+modelEffortWeight;
+		estimationResults.Personnel_UI = parseFloat(viewEffortWeight/totalWeight*100).toFixed(2)+"%";
+		estimationResults.Personnel_DB = parseFloat(modelEffortWeight/totalWeight*100).toFixed(2)+"%";
+		estimationResults.Personnel_FS = parseFloat(controlEffortWeight/totalWeight*100).toFixed(2)+"%";
 		
 
 		console.log("estimation result");
@@ -292,6 +346,7 @@
 		
 		
 	}
+	
 	// distribute the effort to different types of components.
 	function estimateMVCEffort(modelInfo, estimationResults, projectEffort, modelConfig){
 		
@@ -305,6 +360,7 @@
 		var viewWeight = 0;
 		var entityWeight = 0;
 		var controlWeight = 0;
+
 		for(var i in domainModelInfo.Elements){
 			var element = domainModelInfo.Elements[i];
 //			console.log("domain elements");
@@ -363,8 +419,8 @@
 			}
 			
 			useCaseEstimates.BusinessValue = useCase.BusinessValue ? useCase.BusinessValue : 0;
-			useCaseEstimates.EffortBVRatio = useCaseEstimates.BusinessValue == 0? 0 : useCaseEstimates.Effort / useCaseEstimates.BusinessValue;
-			useCaseEstimates.EffortBVRatio = useCaseEstimates.EffortBVRatio.toFixed(2);
+			useCaseEstimates.BVEffortRatio = useCaseEstimates.Effort == 0? 0 : useCaseEstimates.BusinessValue / useCaseEstimates.Effort;
+			useCaseEstimates.BVEffortRatio = useCaseEstimates.BVEffortRatio.toFixed(2);
 		}
 		
 	}
@@ -413,7 +469,7 @@
 
 			
 			var synthesizedEffort = 0;
-			var totalWeight = 1;
+			var totalWeight = 0;
 			for(var i in differentEstimates){
 				var differentEstimate = differentEstimates[i];
 				if(differentEstimate.estimate != -1){
@@ -423,7 +479,7 @@
 				}
 			}
 			
-			synthesizedEffort = synthesizedEffort/totalWeight;
+			synthesizedEffort = totalWeight == 0 ? 0 : synthesizedEffort/totalWeight;
 			
 			
 			useCaseEstimates.useCasePMEffort = useCasePMEffort.toFixed(2);
@@ -448,9 +504,9 @@
 //		var model = umlEstimationInfo.model;
 		
 //		var predictionModel = model.replace(" ", "_")+"_"+estimator.replace(" ", "_")+"_model.rds";
-		
-		console.log("model info");
-		console.log(modelInfo);
+//		
+//		console.log("model info");
+//		console.log(modelInfo);
 //	
 //		var command = './Rscript/EffortEstimation.R "'+modelConfig.predictionModel+'" "'+modelInfo.OutputDir+'/modelEvaluation.csv" "'+modelInfo.OutputDir+'" "'+modelConfig.label+'"';
 //		
@@ -479,7 +535,7 @@
 					   
 					   var estimationResults = {
 							   	EstimationModel: key,
-							    PredictionModel : modelConfig.predictionModel,
+							    //PredictionModel : modelConfig.predictionModel,
 								SizeMetric : modelConfig.sizeMetric,
 								TransactionMetric : modelConfig.transactionMetric,
 								Effort: projectEffort.toFixed(2),

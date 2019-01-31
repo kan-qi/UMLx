@@ -1,0 +1,44 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Jobseeker
+participant "job" as 09
+participant "SearchJobsServerPage" as 19
+participant "ExistingJobsController" as 39
+
+Jobseeker -> 09: joblistpage()
+activate 09
+
+deactivate 09
+
+Jobseeker -> 19: searchforjobsbutton()
+activate 19
+
+19 -> 19: redicttosearchpage()
+19 -> 19: searchpage()
+19 -> 19: validateifsearchtermisnonempty()
+19 -> 19: sendsearchtermtotheserver()
+19 -> 19: searchjobsfromjoblistingsdatabase()
+19 -> 19: displaythejobsearchresultinthejobpage()
+19 -> 09: joblistpage()
+activate 09
+
+deactivate 09
+
+deactivate 19
+
+19 -> 39: joblistingdatabase()
+activate 39
+
+deactivate 39
+
+Jobseeker -> 19: searchpage()
+activate 19
+
+19 -> 19: validateifsearchtermisnonempty()
+deactivate 19
+
+@enduml

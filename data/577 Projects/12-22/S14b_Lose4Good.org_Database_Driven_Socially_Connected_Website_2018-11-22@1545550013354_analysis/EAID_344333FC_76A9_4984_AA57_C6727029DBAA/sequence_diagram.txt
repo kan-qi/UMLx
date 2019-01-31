@@ -1,0 +1,102 @@
+@startuml 
+skinparam sequenceArrowThickness 2 
+skinparam roundcorner 20 
+skinparam maxmessagesize 60 
+skinparam sequenceParticipant underline
+
+actor Financial officer
+participant "TransactionDetailView" as 09
+participant "TransactionResultPage" as 19
+participant "DonationPage" as 29
+participant "Transaction" as 39
+participant "ResetFormPage" as 49
+participant "Charity" as 59
+participant "Sponsor" as 69
+participant "Goal" as 129
+participant "TrackGoal" as 149
+
+Financial officer -> 09: goaldetaildisplaywithtransactions()
+activate 09
+
+deactivate 09
+
+Financial officer -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+Financial officer -> 29: Paymentinformationpage()
+activate 29
+
+deactivate 29
+
+Financial officer -> 39: Invalidtransactionmessage()
+activate 39
+
+deactivate 39
+
+Financial officer -> 49: reportpage()
+activate 49
+
+49 -> 149: checkedachivedandfailedgoals()
+activate 149
+
+149 -> 129: goalinfo()
+activate 129
+
+deactivate 129
+
+149 -> 39: generatethereportofthetransactions()
+activate 39
+
+39 -> 09: goaldetaildisplaywithtransactions()
+activate 09
+
+deactivate 09
+
+39 -> 39: updatethetransactionstatuscompleted()
+39 -> 59: showmessagethemoneyhasbeensenttocharity()
+activate 59
+
+59 -> 59: externalcharity()
+deactivate 59
+
+59 -> 29: Paymentinformationpage()
+activate 29
+
+deactivate 29
+
+59 -> 39: approvethetransaction()
+39 -> 39: Invalidtransactionmessage()
+deactivate 39
+
+39 -> 09: sendsdetailtransactionstosponsorsviaemail()
+activate 09
+
+09 -> 69: sponsors()
+activate 69
+
+deactivate 69
+
+09 -> 19: successmessage()
+activate 19
+
+deactivate 19
+
+deactivate 09
+
+39 -> 39: transaction()
+activate 39
+
+deactivate 39
+
+39 -> 39: transaction()
+activate 39
+
+deactivate 39
+
+deactivate 149
+
+deactivate 49
+
+@enduml

@@ -11,37 +11,25 @@ compareBetweenSizeMetrics <- function(TNModelData, SWTIIModelData, SWTIIIModelDa
   #Randomly shuffle the data
   #useCaseData<-useCaseData[sample(nrow(useCaseData)),]
   #Create 10 equally size folds
+
   nfold = 5
   folds <- cut(seq(1,nrow(TNModelData)),breaks=nfold,labels=FALSE)
-  
-#add cocomo and original use case points into the comparison
-
-#otherSizeMetricsData=data[c("Effort", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP")];
-#DataFrame=data.frame(Effort,UCP)
-#Effort
-#UCP
-#OriginalUseCaseModel=lm(Effort~UCP,data=otherSizeMetricsData)
-
-#summary(OriginalUseCaseModel)
-
-#w=coef(OriginalUseCaseModel)["UCP"]
-
-#otherSizeMetricsData$UCPEffort=w*otherSizeMetricsData$UCP
-
-#otherSizeMetricsData<-otherSizeMetricsData[sample(nrow(otherSizeMetricsData)),]
 
 #data structure to hold the data for 10 fold cross validation
-foldResults <- matrix(nrow=nfold,ncol=24)
+foldResults <- matrix(nrow=nfold,ncol=36)
 colnames(foldResults) <- c(
 		'eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50', 
 		'exucp_mmre','exucp_pred15','exucp_pred25','exucp_pred50',
 		'ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50',
 		'ucp_mmre','ucp_pred15','ucp_pred25','ucp_pred50',
 		'cocomo_mmre','cocomo_pred15','cocomo_pred25','cocomo_pred50',
-		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50'
+		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50',
+		'IFPUG_mmre','IFPUG_pred15','IFPUG_pred25','IFPUG_pred50',
+		'MKII_mmre','MKII_pred15','MKII_pred25','MKII_pred50',
+		'COSMIC_mmre','COSMIC_pred15','COSMIC_pred25','COSMIC_pred50'
 		)
 
-foldResults1 <- array(0,dim=c(50,6,nfold))
+foldResults1 <- array(0,dim=c(50,9,nfold))
 
 #Perform 10 fold cross validation
 for(i in 1:nfold){
@@ -196,6 +184,25 @@ for(i in 1:nfold){
 		cocomo.pred <- c(cocomo.pred, length(cocomo.mre[cocomo.mre<=0.01*j])/length(cocomo.mre))
 	}
 	
+	print('fp testing set predication')
+	IFPUG.m = lm(Effort~IFPUG, data=otherTrainData)
+	IFPUG.predict = cbind(predicted=predict(IFPUG.m, otherTestData), actual=otherTestData$Effort)
+	print(IFPUG.predict)
+	IFPUG.mre = apply(IFPUG.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	IFPUG.mmre = mean(IFPUG.mre)
+	print("IFPUG.mmre")
+	print(IFPUG.mmre)
+	#IFPUG.preds = sapply(IFPUG.mre, function(x) calculatePreds(x))
+	IFPUG.pred15 = length(IFPUG.mre[IFPUG.mre<=0.15])/length(IFPUG.mre)
+	IFPUG.pred25 = length(IFPUG.mre[IFPUG.mre<=0.25])/length(IFPUG.mre)
+	IFPUG.pred50 = length(IFPUG.mre[IFPUG.mre<=0.50])/length(IFPUG.mre)
+	print(c(IFPUG.pred15, IFPUG.pred25, IFPUG.pred50))
+	
+	IFPUG.pred <- c()
+	for(j in 1:50){
+	  IFPUG.pred <- c(IFPUG.pred, length(IFPUG.mre[IFPUG.mre<=0.01*j])/length(IFPUG.mre))
+	}
+	
 	#print("other test data");
 	#print(otherTestData);
 	print('cocomo apriori testing set predication')
@@ -205,7 +212,7 @@ for(i in 1:nfold){
 	#print(cocomo_apriori.predict)
 	cocomo_apriori.mre = apply(cocomo_apriori.predict, 1, function(x) abs(x[1] - x[2])/x[2])
 	cocomo_apriori.mmre = mean(cocomo_apriori.mre)
-	#print(cocomo_apriori.mmre)
+	print(cocomo_apriori.mmre)
 	#cocomo_apriori.preds = sapply(cocomo_apriori.mre, function(x) calculatePreds(x))
 	cocomo_apriori.pred15 = length(cocomo_apriori.mre[cocomo_apriori.mre<=0.15])/length(cocomo_apriori.mre)
 	cocomo_apriori.pred25 = length(cocomo_apriori.mre[cocomo_apriori.mre<=0.25])/length(cocomo_apriori.mre)
@@ -217,17 +224,61 @@ for(i in 1:nfold){
 		cocomo_apriori.pred <- c(cocomo_apriori.pred, length(cocomo_apriori.mre[cocomo_apriori.mre<=0.01*j])/length(cocomo_apriori.mre))
 	}
 	
+	print('fp testing set predication')
+	COSMIC.m = lm(Effort~COSMIC, data=otherTrainData)
+	COSMIC.predict = cbind(predicted=predict(COSMIC.m, otherTestData), actual=otherTestData$Effort)
+	print(COSMIC.predict)
+	COSMIC.mre = apply(COSMIC.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	COSMIC.mmre = mean(COSMIC.mre)
+	print("COSMIC.mmre")
+	print(COSMIC.mmre)
+	#COSMIC.preds = sapply(COSMIC.mre, function(x) calculatePreds(x))
+	COSMIC.pred15 = length(COSMIC.mre[COSMIC.mre<=0.15])/length(COSMIC.mre)
+	COSMIC.pred25 = length(COSMIC.mre[COSMIC.mre<=0.25])/length(COSMIC.mre)
+	COSMIC.pred50 = length(COSMIC.mre[COSMIC.mre<=0.50])/length(COSMIC.mre)
+	print(c(COSMIC.pred15, COSMIC.pred25, COSMIC.pred50))
+	
+	COSMIC.pred <- c()
+	for(j in 1:50){
+	  COSMIC.pred <- c(COSMIC.pred, length(COSMIC.mre[COSMIC.mre<=0.01*j])/length(COSMIC.mre))
+	}
+	
+	print('fp testing set predication')
+	MKII.m = lm(Effort~MKII, data=otherTrainData)
+	MKII.predict = cbind(predicted=predict(MKII.m, otherTestData), actual=otherTestData$Effort)
+	print(MKII.predict)
+	MKII.mre = apply(MKII.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	MKII.mmre = mean(MKII.mre)
+	print("MKII.mmre")
+	print(MKII.mmre)
+	#MKII.preds = sapply(MKII.mre, function(x) calculatePreds(x))
+	MKII.pred15 = length(MKII.mre[MKII.mre<=0.15])/length(MKII.mre)
+	MKII.pred25 = length(MKII.mre[MKII.mre<=0.25])/length(MKII.mre)
+	MKII.pred50 = length(MKII.mre[MKII.mre<=0.50])/length(MKII.mre)
+	print(c(MKII.pred15, MKII.pred25, MKII.pred50))
+	
+	MKII.pred <- c()
+	for(j in 1:50){
+	  MKII.pred <- c(MKII.pred, length(MKII.mre[MKII.mre<=0.01*j])/length(MKII.mre))
+	}
+	
+	
 	foldResults[i,] = c(
 			eucp.mmre,eucp.pred15,eucp.pred25,eucp.pred50,
 			exucp.mmre,exucp.pred15,exucp.pred25,exucp.pred50,
 			ducp.mmre,ducp.pred15,ducp.pred25,ducp.pred50,
 			ucp.mmre,ucp.pred15,ucp.pred25,ucp.pred50,
 			cocomo.mmre,cocomo.pred15,cocomo.pred25,cocomo.pred50,
-			cocomo_apriori.mmre,cocomo_apriori.pred15,cocomo_apriori.pred25,cocomo_apriori.pred50
+			cocomo_apriori.mmre,cocomo_apriori.pred15,cocomo_apriori.pred25,cocomo_apriori.pred50,
+			IFPUG.mmre,IFPUG.pred15,IFPUG.pred25,IFPUG.pred50,
+			MKII.mmre,MKII.pred15,MKII.pred25,MKII.pred50,
+			COSMIC.mmre,COSMIC.pred15,COSMIC.pred25,COSMIC.pred50
 			)
 	
-	foldResults1[,,i] = array(c(eucp.pred,exucp.pred,ducp.pred,ucp.pred,cocomo.pred,cocomo_apriori.pred),c(50,6))
+	foldResults1[,,i] = array(c(eucp.pred,exucp.pred,ducp.pred,ucp.pred,cocomo.pred,cocomo_apriori.pred,IFPUG.pred,MKII.pred,COSMIC.pred),c(50,9))
 }
+
+#print(foldResults)
 
 #average out the folds.
 cvResults <- c(
@@ -254,8 +305,22 @@ cvResults <- c(
 		mean(foldResults[, 'cocomo_apriori_mmre']),
 		mean(foldResults[, 'cocomo_apriori_pred15']),
 		mean(foldResults[, 'cocomo_apriori_pred25']),
-		mean(foldResults[, 'cocomo_apriori_pred50'])
+		mean(foldResults[, 'cocomo_apriori_pred50']),
+		mean(foldResults[, 'IFPUG_mmre']),
+		mean(foldResults[, 'IFPUG_pred15']),
+		mean(foldResults[, 'IFPUG_pred25']),
+		mean(foldResults[, 'IFPUG_pred50']),
+		mean(foldResults[, 'MKII_mmre']),
+		mean(foldResults[, 'MKII_pred15']),
+		mean(foldResults[, 'MKII_pred25']),
+		mean(foldResults[, 'MKII_pred50']),
+		mean(foldResults[, 'COSMIC_mmre']),
+		mean(foldResults[, 'COSMIC_pred15']),
+		mean(foldResults[, 'COSMIC_pred25']),
+		mean(foldResults[, 'COSMIC_pred50'])
 		);
+
+
 
 names(cvResults) <- c(
 		'eucp_mmre','eucp_pred15','eucp_pred25','eucp_pred50',
@@ -263,11 +328,14 @@ names(cvResults) <- c(
 		'ducp_mmre','ducp_pred15','ducp_pred25','ducp_pred50',
 		'ucp_mmre','ucp_pred15','ucp_pred25','ucp_pred50',
 		'cocomo_mmre','cocomo_pred15','cocomo_pred25','cocomo_pred50',
-		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50'
+		'cocomo_apriori_mmre','cocomo_apriori_pred15','cocomo_apriori_pred25','cocomo_apriori_pred50',
+		'IFPUG_mmre','IFPUG_pred15','IFPUG_pred25','IFPUG_pred50',
+		'MKII_mmre','MKII_pred15','MKII_pred25','MKII_pred50',
+		'COSMIC_mmre','COSMIC_pred15','COSMIC_pred25','COSMIC_pred50'
 		)
 
-avgPreds <- matrix(nrow=50,ncol=7)
-colnames(avgPreds) <- c("Pred","EUCP","EXUCP","DUCP", "UCP", "COCOMO", "COCOMO Apriori")
+avgPreds <- matrix(nrow=50,ncol=10)
+colnames(avgPreds) <- c("Pred","EUCP","EXUCP","DUCP", "UCP", "COCOMO", "COCOMO Apriori", "IFPUG", "MKII", "COSMIC")
 for(i in 1:50){
 	eucp_fold_mean = mean(foldResults1[i,1,]);
 	exucp_fold_mean = mean(foldResults1[i,2,]);
@@ -275,7 +343,10 @@ for(i in 1:50){
 	ucp_fold_mean = mean(foldResults1[i,4,]);
 	cocomo_fold_mean = mean(foldResults1[i,5,]);
 	cocomo_apriori_fold_mean = mean(foldResults1[i,6,]);
-	avgPreds[i,] <- c(i,eucp_fold_mean,exucp_fold_mean,ducp_fold_mean,ucp_fold_mean,cocomo_fold_mean,cocomo_apriori_fold_mean)
+	IFPUG_fold_mean = mean(foldResults1[i,7,]);
+	MKII_fold_mean = mean(foldResults1[i,8,]);
+	COSMIC_fold_mean = mean(foldResults1[i,9,]);
+	avgPreds[i,] <- c(i,eucp_fold_mean,exucp_fold_mean,ducp_fold_mean,ucp_fold_mean,cocomo_fold_mean,cocomo_apriori_fold_mean,IFPUG_fold_mean,MKII_fold_mean,COSMIC_fold_mean)
 	#print(i)
 	#print(avgPreds[i,])
 }
