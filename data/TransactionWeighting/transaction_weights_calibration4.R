@@ -813,8 +813,11 @@ run_metropolis_MCMC1 <- function(regressionData, N, priorB, varianceMatrix, norm
     
     probab = exp(update - postP)
     
+<<<<<<< HEAD
+=======
     
     
+>>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
     if (runif(1) < probab){
       chain[i+1,] = proposal
       #print("accept")
