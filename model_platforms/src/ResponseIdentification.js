@@ -14,7 +14,6 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
-	var codeAnalysis = require("./CodeAnalysis.js");
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;

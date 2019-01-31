@@ -19,41 +19,12 @@
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
 //		console.log(umlModelInfo);
-		mkdirp(umlModelInfo.OutputDir, function(err) {
-			console.log("create dir");
-			if(err) {
-				callbackfunc(false);
-				console.log(err);
-				return;
-			}
-
-			fs.readFile(umlModelInfo.umlFilePath, "utf8", function(err, data) {
-			
-			parser.parseString(data, function(err, xmiString) {
-			// determine what type xmi file it is.
-			var xmiParser = null;
-			if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
-				xmiParser = eaParser;
-			}
-			else if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0]) {
-				xmiParser = vpParser;
-			}
-			else if(jp.query(xmiString, '$..["kdm:Segment"]')[0]){
-				xmiParser = srcParser;
-			}
-			
-			if(xmiParser == null){
-				if(callbackfunc){
-					callbackfunc(false);
-				}
-				console.log("parser not found");
-				return;
-			}
-
+		
+		var constructModel = function(modelParser, modelString, umlModelInfo, callbackfunc){
 			var path = require('path');
 			console.log(umlModelInfo.umlFilePath);
 			var workDir = path.dirname(umlModelInfo.umlFilePath);
-			xmiParser.extractUserSystermInteractionModel(xmiString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
+			modelParser.extractUserSystermInteractionModel(modelString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
 				console.log("extract model");
 				
 //				var debug = require("./utils/DebuggerOutput.js");
@@ -121,9 +92,56 @@
 				}
 
 			});
+		}
+		
+		mkdirp(umlModelInfo.OutputDir, function(err) {
+			console.log("create dir");
+			if(err) {
+				callbackfunc(false);
+				console.log(err);
+				return;
+			}
+
+			fs.readFile(umlModelInfo.umlFilePath, "utf8", function(err, data) {
+			
+			if(umlModelInfo.umlFilePath.endsWith(".json")){
+				var modelJson = JSON.parse(data);
+				modelParser = srcParser;
+				modelParser.isJSONBased = true;
+				constructModel(modelParser, modelJson, umlModelInfo, callbackfunc);
+			}
+			else {
+			
+			parser.parseString(data, function(err, xmiString) {
+			// determine what type xmi file it is.
+			var xmiParser = null;
+			if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
+				xmiParser = eaParser;
+			}
+			else if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0]) {
+				xmiParser = vpParser;
+			}
+			else if(jp.query(xmiString, '$..["kdm:Segment"]')[0]){
+				xmiParser = srcParser;
+			}
+			
+			if(xmiParser == null){
+				if(callbackfunc){
+					callbackfunc(false);
+				}
+				console.log("parser not found");
+				return;
+			}
+			
+			constructModel(xmiParser, xmiString, umlModelInfo, callbackfunc);
+			
 			});
-			});
+			
+			}
+			
+			
 		});
+	});
 	}
 	
 	function traverseUseCaseForTransactions(useCase){
