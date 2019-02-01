@@ -34,10 +34,8 @@ html
       //      //     }
       //      //     return true;
       //      // }
-
-
   body#upload-body
-    include banner
+    include bannerUploadProject
     .container
       h2  Project Details 
       form#model-file-submit-form.form-horizontal(novalidate='', method='post', action='/uploadUMLFile', enctype='multipart/form-data')
