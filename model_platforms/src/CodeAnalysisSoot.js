@@ -59,8 +59,10 @@
 	function analyseCode(jsonString, outputDir) {
 		
 //		var androidAnalysisResults = FileManagerUtils.readJSONSync("H:\\ResearchSpace\\ResearchProjects\\UMLx\\facility-tools\\GATOR_Tool\\gator-3.5\\output\\android-analysis-output.json");
-		var androidAnalysisResults = FileManagerUtils.readJSONSync("H:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\OpenSource\\android-analysis-output.json");
+//		var androidAnalysisResults = FileManagerUtils.readJSONSync("H:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\OpenSource\\android-analysis-output.json");
 
+		var androidAnalysisResults = jsonString;
+		
 		var referencedClassUnits = androidAnalysisResults.classUnits;
 		
 		var dicClassUnits = {};
