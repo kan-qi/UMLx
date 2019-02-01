@@ -923,9 +923,10 @@ private CallGraph genCallGraph() {
 	}
 
 	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
+	app.setOutputDir(Configs.outputDir);
 	
 //	Path curDir = Paths.get(System.getProperty("user.dir"));
-	Path gatorFilePath = Paths.get(curDir.toString(), Configs.benchmarkName + ".xml");
+	Path gatorFilePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
 	File gatorFile = gatorFilePath.toFile();
 	if(!gatorFile.exists()) {
 		Debug1.v().println("Gator file doesn't exist...");

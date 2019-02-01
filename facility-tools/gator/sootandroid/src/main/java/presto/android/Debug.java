@@ -88,6 +88,11 @@ public class Debug {
   public void printf(String format, Object... args) {
     out.printf(format, args);
   }
+  
+//Put this in another thread if calling it frequently hurts performance.
+ public void println(String outputS) {
+   out.println(outputS);
+ }
 
   public static void setConditionalBreakpoint(boolean condition) {
     if (condition) {

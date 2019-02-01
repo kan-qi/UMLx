@@ -50,7 +50,7 @@ public class Debug5 {
   private long startTime;
 
   private Debug5() throws Exception {
-    debugFileName = "/mnt/h/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/output/callgraph.json";
+    debugFileName = Configs.outputDir+"/callgraph.json";
     if (debugFileName == null) {
       debugFile = File.createTempFile(Configs.benchmarkName + "-DEBUG-", ".txt");
       debugFileName = debugFile.getAbsolutePath();
