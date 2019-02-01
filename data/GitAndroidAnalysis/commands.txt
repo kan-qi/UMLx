@@ -9,3 +9,15 @@ node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --recover
 node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --analyse-xmi-model "C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\data\\GitAndroidAnalysis\\repo.json"
 
 node --max_old_space_size=10240 ".\utils\OpenSourceProjectAnalysis.js" --analyse-xmi-model "D:\\Research Projects\\UMLx\\data\\GitAndroidAnalysis\\repo.json"
+
+node -e 'require("./utils/AndroidLogUtil.js").parseAndroidLog("./data/GitAndroidAnalysis/android-demo-log.txt")'
+
+node -e 'require("./utils/AndroidLogUtil.js").identifyTransactions("./data/GitAndroidAnalysis/android-demo-log.txt", "./data/GitAndroidAnalysis/evaluated_model_example_demo-release-unsigned.json")'
+
+export ANDROID_SDK=/mnt/d/Android_SDK
+
+export GatorRoot=/mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator
+
+./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/demo-release-unsigned.apk -client GUIHierarchyPrinterClient
+
+node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/demo-release-unsigned/android-analysis-output.json" "./data/GitAndroidAnalysis/demo-release-unsigned/codeAnalysis" "demo-release-unsigned"
