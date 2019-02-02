@@ -9,28 +9,17 @@
  * Establish the control flow between the components
  * Identify the stimuli.
  *
- * those elements store all the same type of elements in the sub classes.
-	var ClassUnit = {
-			name: XMIClassUnit['$']['name'],
-			isAbstract: XMIClassUnit['$']['isAbstract'],
-			Source: null,
-			MethodUnits : [],
-			StorableUnits: [],
-//			Calls : [],
-//			ClassUnits: [],
-			InterfaceUnits : [],
-			Imports : [],
-			ClassUnits: [],
-//			BlockUnits : [],
-//			Addresses: [],
-//			Reads:[],
-//			Calls:[],
-//			Creates:[],
-//			ActionElements:[],
-//			isResponse: false,
-			attachment: XMIClassUnit
-	}
+ * Three levels of class clustering:
+ * 
+ * The set of classes.
+ * The set of composite classes.
+ * The set of components.
+ * The set of domain elements.
+ * 
+ * Establish the control graph and the call graph.
+ *
  */
+
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
@@ -44,17 +33,9 @@
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
 
-//	var xpath = require('xpath');
-//	var dom = require('xmldom').DOMParser;
-	
 	var responsePatternsFile = "response-patterns.txt";
-//	var isJSONBased = true;
 
 	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
-//		fs.readFile(filePath, "utf8", function(err, data) {
-			console.log("file content");
-//			console.log(data);
-//			parser.parseString(data, function(err, result) {
 			
 			var codeAnalysis = codeAnalysisXMI;
 			if(this.isJSONBased){
@@ -72,18 +53,16 @@
 
 				var debug = require("../../utils/DebuggerOutput.js");
 
-//				xmiString = result;
 				var codeAnalysisResults = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
-//				debug.writeJson("constructed_model_by_kdm_result_7_5", codeAnalysisResults);
 				
 				console.log("composition graph");
 				console.log(codeAnalysisResults.compositionGraph);
 				debug.writeJson2("composition_graph_1_19", codeAnalysisResults.compositionGraph);
 				
-				 var responseFilePath = workDir +"/"+responsePatternsFile;
-				 if( !fs.existsSync(responseFilePath) ) {
-					  responseFilePath = "./model_platforms/src/"+responsePatternsFile;
-				 }
+				var responseFilePath = workDir +"/"+responsePatternsFile;
+				if( !fs.existsSync(responseFilePath) ) {
+					responseFilePath = "./model_platforms/src/"+responsePatternsFile;
+				}
 				
 				//need to update for the identification response methods.
 				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
@@ -102,18 +81,15 @@
 					codeAnalysisResults.compositionGraph,
 					codeAnalysisResults.referencedCompositeClassUnits, 
 					codeAnalysisResults.referencedClassUnits, 
-					codeAnalysisResults.dicCompositeSubclasses, 
+					codeAnalysisResults.dicCompositeSubclasses,
+					codeAnalysisResults.dicCompositeClassUnits,
+					codeAnalysisResults.dicClassUnits,
+					codeAnalysisResults.dicClassComposite,
 					Model.OutputDir
 				);
 				
-				debug.writeJson2("clas_component_1_19", componentInfo.dicClassComponent);
+				debug.writeJson2("class_component_1_19", componentInfo.dicClassComponent);
 				debug.writeJson3("dic_components_1_19", componentInfo.dicComponents);
-
-				
-//				var componentInfo = {
-//					dicComponents: {},
-//					dicClassComponent: {}
-//				};
 				
 				var componentMappingString = "";
 				
@@ -125,7 +101,7 @@
 					}
 				}
 				
-				debug.writeTxt("constructed_model_by_kdm_components_7_5", componentMappingString);
+				debug.writeTxt("clustered_classes_7_5", componentMappingString);
 
 				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, codeAnalysisResults.callGraph, ModelOutputDir);
 				
@@ -140,34 +116,15 @@
 				console.log(codeAnalysisResults.dicMethodParameters);
 				debug.writeJson2("method_parameters_19", codeAnalysisResults.dicMethodParameters);
 				
-//				var controlFlowGraph = {nodes: [], edges: []};
-				
 				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
-
-//				var domainModelInfo = {
-//						Elements: [],
-//						Usages: [],
-//						Realization:[],
-//						Assoc: [],
-//						OutputDir : ModelOutputDir+"/domainModel",
-//						AccessDir : ModelAccessDir+"/domainModel",
-//						DiagramType : "class_diagram",
-//					}
-				
-//				console.log("domain model Info");
-//				console.log(domainModelInfo);
 
 				Model.DomainModel = domainModelInfo.DomainModel;
 				
-//				Model.DomainModel = domainModelInfo;
-
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
 				
 
 				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 
-//				Model.UseCases = [];
-				
 				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
 
 				if(callbackfunc){
@@ -179,6 +136,7 @@
 
 		var dicComponents = componentInfo.dicComponents;
 		var dicClassComponent = componentInfo.dicClassComponent;
+		
 		console.log("dicClassComponent");
 		console.log(dicClassComponent);
 
@@ -197,8 +155,10 @@
 
 		for(var i in dicComponents){
 			var component = dicComponents[i];
+			
 			console.log('exam component');
 			console.log(component);
+			
 			var domainElement = {
 				Name: component.name,
 				_id: 'c'+component.UUID.replace(/\-/g, "_"),
@@ -206,18 +166,17 @@
 				Operations: [],
 				InheritanceStats: {},
 				Associations: [],
-				// Attachment: XMIClass
 			};
+			
 			domainElements.push(domainElement);
-			// var domainElement = createDomainElement(component);
-			// DomainModel.Elements.push(domainElement);
 			domainElementsByID[domainElement._id] = domainElement;
 		}
 
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
 			// console.log(edge)
-//			console.log(util.inspect(edge, false, null));
+			//console.log(util.inspect(edge, false, null));
+			
 			var startNode = edge.start;
 			var componentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
@@ -225,13 +184,16 @@
 			if(!domainElement){
 				continue;
 			}
+			
 			var foundMethod = false;
 			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
+				if (domainElement.Operations[j]._id === 'a'+startNode.UUID.replace(/\-/g, "")) {
 					var method = domainElement.Operations[j];
 					foundMethod = true;
+					break;
 				}
 			}
+			
 			if (!foundMethod) {
 				var parameters = dicMethodParameters[startNode.UUID];
 				if (parameters == null) {
@@ -244,6 +206,7 @@
 				}
 				domainElement.Operations.push(method);
 			}
+			
 			var endNode = edge.end;
 			var componentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
@@ -271,7 +234,7 @@
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
 			var startNode = edge.start;
-			var componentUUID = 'c'+startNode.component.name.replace(/\-/g, "_");
+			var componentUUID = 'c'+startNode.component.UUID.replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
 			if(!domainElement){
 				continue;
@@ -341,13 +304,7 @@
 			}
 		}
 		}
-		// console.log("domainElements");
-		// console.log(domainElements);
-		// console.log("domainElementsByID");
-		// console.log(domainElementsByID);
-
-		// console.log("check edgesPara");
-		// console.log(typeDependencyGraph.edgesPara);
+		
 		if(typeDependencyGraph){
 		for (var i in typeDependencyGraph.edgesPara) {
 			var edge = typeDependencyGraph.edgesPara[i];
@@ -451,25 +408,14 @@
 //		console.log(util.inspect(domainElementsByID, false, null));
 
 		DomainModel.Elements = domainElements;
-
-
-		// for(var i in classUnits){
-		// 	var classUnit = classUnits[i];
-		// 	console.log('exam class');
-		// 	console.log(classUnit);
-		// 	var domainElement = createDomainElement(classUnit);
-		// 	DomainModel.Elements.push(domainElement);
-		// 	domainElementsByID[domainElement._id] = domainElement;
-		// }
-
-
-		DomainModel.DiagramType = "class_diagram";
+		
+		DomainModel.DiagramType = "domain_model";
 
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("constructed_domain_model_kdm", DomainModel);
 
-		createClassDiagramFunc(DomainModel.Elements, DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
-		   console.log("class diagram is output: "+DomainModel.OutputDir+"/"+"class_diagram.dotty");
+		createDomainModelDiagram(DomainModel.Elements, DomainModel.OutputDir+"/"+"domain_model.dotty", function(){
+		   console.log("class diagram is output: "+DomainModel.OutputDir+"/"+"domain_model.dotty");
 	   });
 
 
@@ -480,65 +426,25 @@
 
 	}
 
-	// draw the class diagram of the model
-	function createClassDiagramFunc(classElements, graphFilePath, callbackfunc){
+	// draw the domain model of the model
+	function createDomainModelDiagram(domainModelElements, graphFilePath, callbackfunc){
 
 		      console.log("run the create class dia");
-              console.log("class diagram model is"+classElements);
-              console.log("class diagram model is"+JSON.stringify(classElements));
-		//           var json_obj = {
-//           	   "allClass" :[
-//				   {"className": "bookTicketMangement",
-//			        "attributes": [
-//					   	{"attributeName": "ticketName",
-//				         "attributeType": "String"
-//						},
-//						 {"attributeName": "ticketId",
-//						 "attributeType": "int"
-//                         }
-//                      ],
-//					"operations": [
-//						 {"operationName":"bookTicketsManagement(int)",
-//						  "operationReturn":"void"
-//						 }
-//					   ],
-//					"kids": ["BookTickets","bookTicketInterface"]
-//				   },
-//
-//				   {"className": "BookTickets",
-//					"attributes": [
-//						{"attributeName": "BookTicketName",
-//						 "attributeType": "int"
-//                           }
-//                       ],
-//					 "operations": [],
-//					 "kids": []
-//                   },
-//
-//                   {"className": "bookTicketInterface",
-//                    "attributes": [
-//                       {"attributeName": "BookTicketInput",
-//                        "attributeType": "int"
-//					   }
-//					 ],
-//                     "operations": [],
-//                      "kids": []
-//                   }
-//			   ]
-//		   }
-
+              console.log("class diagram model is"+domainModelElements);
+              console.log("class diagram model is"+JSON.stringify(domainModelElements));
+              
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
              graph += ' edge [arrowhead = "ediamond"]'
-             for(i = 0;  i < classElements.length; i++){
-                 var curClass = classElements[i];
+             for(i = 0;  i < domainModelElements.length; i++){
+                 var curClass = domainModelElements[i];
                  graph += curClass["_id"];
                  graph += '[ id = ' + curClass["_id"];
                  graph += ' label = "{';
                  graph += curClass["Name"];
 
 
-                 var classAttributes = classElements[i]["Attributes"];
+                 var classAttributes = domainModelElements[i]["Attributes"];
                  if (classAttributes.length != 0){
                      graph += '|';
                      for(j = 0; j < classAttributes.length; j++) {
@@ -549,33 +455,26 @@
                      }
                  }
 
-                 // graph += '|';
 
-                 var classOperations = classElements[i]["Operations"];
+                 var classOperations = domainModelElements[i]["Operations"];
                  if (classOperations.length != 0){
                      graph += '|';
                      for(j = 0; j < classOperations.length;j++) {
 
                     	 graph += '+   ' ;
                          graph += classOperations[j]["Name"] + '(';
-												 // console.log(util.inspect(dicMethodParameters, false, null));
-												 // console.log(util.inspect(classOperations, false, null));
-												 // console.log(util.inspect(classOperations[j], false, null));
                          var para_len = classOperations[j]["Parameters"].length;
                          for (k = 0; k < classOperations[j]["Parameters"].length - 1; k++) {
                         	 graph += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
                          }
                          graph += ')';
-//                         graph += ':'+classOperations[j]["Parameters"][para_len - 1]["Type"];
                          graph += "\\l";
                      }
                  }
 
-
-
                  graph += '}"]';
 
-                 var classAss = classElements[i]["Associations"];
+                 var classAss = domainModelElements[i]["Associations"];
                  for(j = 0; j < classAss.length;j++) {
                      graph += curClass["_id"] ;
                      graph += '->';
@@ -583,9 +482,6 @@
 
                  }
 			 }
-
-
-
 
             graph += 'imagepath = \"./public\"}';
 
@@ -658,10 +554,7 @@
 
 			var start = activitiesByID[startId];
 			var end = activitiesByID[endId];
-//
-//			var start = edge.start;
-//			var end = edge.end;
-//
+			
 			if(!start || !end){
 				continue;
 			}
