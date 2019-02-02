@@ -29,6 +29,23 @@ const { fork } = require('child_process');
 var currentModel = null;
 // global variable to map appToken -> endpoint location
 var endpoints = {};
+
+/* output/ and uploads/ folders auto-creation */
+var checkDirExist = (folderpath) => {
+	const pathArr = folderpath.split('/');
+	let _path = '';
+	for (let i = 0; i < pathArr.length; i++) {
+    	if (pathArr[i]) {
+    		_path += pathArr[i] + '/';
+      		if (!fs.existsSync(_path)) {
+        		fs.mkdirSync(_path);
+      		}
+    	}
+  	}
+}
+checkDirExist('public/output');
+checkDirExist('public/uploads');
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         var date = new Date();
