@@ -59,7 +59,6 @@
 	function analyseCode(jsonString, outputDir) {
 		
 //		var androidAnalysisResults = FileManagerUtils.readJSONSync("H:\\ResearchSpace\\ResearchProjects\\UMLx\\facility-tools\\GATOR_Tool\\gator-3.5\\output\\android-analysis-output.json");
-//		var androidAnalysisResults = FileManagerUtils.readJSONSync("H:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\OpenSource\\android-analysis-output.json");
 
 		var androidAnalysisResults = jsonString;
 		
@@ -125,7 +124,7 @@
 		var dicCompositeSubclasses = {};
 		var dicClassComposite = {};
 		var referencedCompositeClassUnits = androidAnalysisResults.compositeClassUnits;
-		var disCompositeClassUnits = {};
+		var dicCompositeClassUnits = {};
 		
 		for(var i in referencedCompositeClassUnits){
 			var referencedCompositeClassUnit = referencedCompositeClassUnits[i];
@@ -144,7 +143,7 @@
 				}
 				dicCompositeSubclasses[referencedCompositeClassUnit.UUID].push(subClassUnit);
 				dicClassComposite[subClassUnit] = referencedCompositeClassUnit.UUID;
-				disCompositeClassUnits[referencedCompositeClassUnit.UUID] = referencedCompositeClassUnit;
+				dicCompositeClassUnits[referencedCompositeClassUnit.UUID] = referencedCompositeClassUnit;
 			}
 		}
 		
@@ -161,7 +160,7 @@
 			
 			var accessMethodUnit = dicMethodUnits[edge.start.methodUnit];
 			var accessClassUnit = dicClassUnits[edge.start.classUnit];
-			var accessCompositeClassUnit = disCompositeClassUnits[dicClassComposite[edge.start.classUnit]];
+			var accessCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[edge.start.classUnit]];
 			
 			if(!accessMethodUnit || ! accessClassUnit){
 				continue;
@@ -184,7 +183,7 @@
 			
 			var accessedAttrUnit = edge.end.attrUnit;
 			var accessedClassUnit = dicClassUnits[edge.end.classUnit];
-			var accessedCompositeClassUnit = disCompositeClassUnits[dicClassComposite[edge.end.classUnit]];
+			var accessedCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[edge.end.classUnit]];
 			
 			if(!accessedAttrUnit || !accessedClassUnit || !accessedCompositeClassUnit){
 				continue;
@@ -227,13 +226,7 @@
 				var edge = androidAnalysisResults.callGraph.edges[i];
 				var callMethodUnit = dicMethodUnits[edge.start.methodUnit];
 				var callClassUnit = dicClassUnits[edge.start.classUnit];
-				var callCompositeClassUnit = disCompositeClassUnits[dicClassComposite[edge.start.classUnit]];
-				
-//				console.log("call graph edge");
-//				console.log(edge.start.methodUnit);
-//				console.log(callMethodUnit);
-//				console.log(callClassUnit);
-//				console.log(callCompositeClassUnit);
+				var callCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[edge.start.classUnit]];
 				
 				if(!callMethodUnit || !callClassUnit || !callCompositeClassUnit){
 					continue;
@@ -256,7 +249,7 @@
 				
 				var calleeMethodUnit = dicMethodUnits[edge.end.methodUnit];
 				var calleeClassUnit = dicClassUnits[edge.end.classUnit];
-				var calleeCompositeClassUnit = disCompositeClassUnits[dicClassComposite[edge.end.classUnit]];
+				var calleeCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[edge.end.classUnit]];
 				var calleeNode = {
 						name: calleeClassUnit.name+":"+calleeMethodUnit.Signature.name,
 						component:calleeClassUnit,
@@ -291,6 +284,8 @@
 
 		var result = {
 			dicClassUnits: dicClassUnits,
+			dicCompositeClassUnit: dicCompositeClassUnits,
+			dicClassComposite: dicClassComposite,
 			dicMethodUnits: dicMethodUnits,
 			dicMethodClass: dicMethodClass,
 			callGraph: callGraph,
@@ -305,9 +300,7 @@
 		};
 		
 		
-		debug.writeJson2("android-analysis-results", result.dicClassUnits);
-		
-//		process.exit(0);
+//		debug.writeJson2("android-analysis-results", result);
 		
 		return result;
 	}
