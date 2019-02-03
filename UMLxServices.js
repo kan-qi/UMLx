@@ -192,6 +192,8 @@ function filter(transaction){
 	return false;
 }
 
+
+
 for(var i in transactionEvaluationContents){
 	var identifiedTransactions = {};
 	//remove duplicate transactions and write back.
@@ -674,6 +676,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
+
                 effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
                     if(!estimationResults){
                         console.log("error");
@@ -695,7 +698,9 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
                     });
 
                 });
+
 			});
+
 		});
 	});
 });
@@ -1016,17 +1021,19 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     console.l("token: " + token);
     let subscription = endpoints[token];
     console.l("subscription: " + subscription);
+    
     worker.on('message', (text) => {
         console.l("killing child process");
         sendPush(subscription, 'Evaluation finished');
         worker.kill();
+        res.redirect('/');
     });
     let obj = encapsulateReq(req);
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
     console.l("DEBUGGGG: inside uploadUMLFile");
     sendPush(subscription, 'Project Analyzing');
-    res.redirect('/');
+    
     console.l("DEBUGGGG: before evaluate project");
     // setTimeout(() => evaluateUploadedProject(req), 2000);
 });
@@ -1296,6 +1303,8 @@ app.get('/reanalyseRepo', function (req, res){
     console.l("token: " + token);
     let subscription = endpoints[token];
     console.l("subscription: " + subscription);
+    console.l("test1");
+
     worker.on('message', (text) => {
         if(text.isEqual('ok')) {
             sendPush(subscription, 'Reanalyse finished');
@@ -1307,6 +1316,8 @@ app.get('/reanalyseRepo', function (req, res){
         console.l("killing child process");
         worker.kill();
     });
+    console.l("test2");
+
     worker.send(repoId);
     console.l("DEBUGGGG: Reanalyse task sent to worker");
     sendPush(subscription, 'Project Reanalysing');
