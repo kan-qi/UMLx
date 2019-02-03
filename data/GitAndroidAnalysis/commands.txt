@@ -21,3 +21,5 @@ export GatorRoot=/mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator
 ./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/demo-release-unsigned.apk -client GUIHierarchyPrinterClient
 
 node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/demo-release-unsigned/android-analysis-output.json" "./data/GitAndroidAnalysis/demo-release-unsigned/codeAnalysis" "demo-release-unsigned"
+
+node -e 'require("./utils/AndroidLogUtil.js").identifyTransactionsFile("./data/GitAndroidAnalysis/android-demo-log.txt", "./data/GitAndroidAnalysis/dic_components_1_19.json")'

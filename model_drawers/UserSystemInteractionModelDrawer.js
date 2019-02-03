@@ -3,12 +3,12 @@
  */
 
 (function(){
-//  var Viz = require('viz.js');
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
 	
 	var dottyUtil = require("../utils/DottyUtil.js");
+	var codeAnalysisUtil = require("../utils/CodeAnalysisUtil.js");
 	
 	function processLabel(label){
 		if(!label){
@@ -55,8 +55,6 @@
 			<TR><TD><IMG SRC="img/out_of_scope_activity_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
 		</TABLE>>];';
-		
-//		 <TR><TD><FONT POINT-SIZE="20">'+label+'</FONT></TD></TR>\
 	}
 
 	function drawFragmentNode(id, label){
@@ -118,22 +116,10 @@
 		
 		for (var i in component.Operations){
 			var operation = component.Operations[i];
-//			dotty += '"'+operation.Name+'"->"'+component.Name+'";';
-			var functionSignature = filterName(operation.Name)+"(";
-			console.log("test parameters");
-			console.log(operation.Parameters);
-			for(var j in operation.Parameters){
-				var parameter = operation.Parameters[j];
-				if(parameter.Name === 'return'){
-					functionSignature = parameter.Type + " "+functionSignature;
-//					functionSignature = parameter.Type.substring(7).replace("__", "[]") + " "+functionSignature;
-				}
-				else {
-//					functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
-				}
-			}
-			functionSignature += ")";
-			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+functionSignature+"</B></TD></TR>";
+			
+			var operationSign = codeAnalysisUtil.genMethodSignSimple(operation);
+			
+			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+filterName(operationSign)+"</B></TD></TR>";
 			componentInternalIndex++;
 		}
 

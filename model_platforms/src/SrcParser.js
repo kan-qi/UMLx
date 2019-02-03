@@ -32,6 +32,7 @@
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
+	var androidLogUtil = require("../../utils/AndroidLogUtil.js");
 
 	var responsePatternsFile = "response-patterns.txt";
 
@@ -111,7 +112,6 @@
 
 				debug.writeJson2("type_dependency_graph_1_19", codeAnalysisResults.typeDependencyGraph);
 				
-				
 				console.log("method_parameters_19");
 				console.log(codeAnalysisResults.dicMethodParameters);
 				debug.writeJson2("method_parameters_19", codeAnalysisResults.dicMethodParameters);
@@ -125,6 +125,8 @@
 
 				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 
+//				Model.UseCases = createUseCasesbyAndroidLog(componentInfo.dicComponents, Model.OutputDir, Model.OutputDir);
+				
 				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
 
 				if(callbackfunc){
@@ -497,6 +499,59 @@
 
              return graph;
 		}
+	
+	
+	function createUseCasesbyAndroidLog(dicComponent, ModelOutputDir, ModelAccessDir){
+		
+		var androidLogPath = "./data/GitAndroidAnalysis/android-demo-log.txt"	;
+		
+		var UseCases = [];
+
+		var UseCase = {
+				_id: "src",
+				Name: "src",
+				PrecedenceRelations : [],
+				Activities : [],
+				OutputDir : ModelOutputDir+"/src",
+				AccessDir : ModelAccessDir+"/src",
+				DiagramType : "none"
+		}
+
+		var activities = [];
+		var activitiesByID = {}
+		var precedenceRelations = [];
+
+		
+		var transactions = androidLogUtil.identifyTransactions(androidLogPath, dicComponent);
+		
+		console.log("dicComponent");
+		console.log(dicComponent);
+		console.log(transactions);
+//		process.exit(0);
+
+		for(var i in transactions){
+			var transaction = transactions[i];
+		var prevNode = null;
+		for(var j in transaction.Nodes){
+			var node = transaction.Nodes[j];
+
+			activities.push(node);
+			activitiesByID[node._id] = node;
+			if(prevNode){
+				precedenceRelations.push({start: prevNode, end: node});
+			}
+			prevNode = node;
+		}
+		}
+
+		UseCase.Activities = UseCase.Activities.concat(activities);
+		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
+
+		UseCases.push(UseCase);
+
+		return UseCases;
+
+	}
 
 	function createUseCasesbyCFG(cfgGraph, ModelOutputDir, ModelAccessDir, domainElementsByID){
 

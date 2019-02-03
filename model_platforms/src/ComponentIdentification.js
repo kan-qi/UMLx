@@ -120,11 +120,7 @@
 			var newComponent = [];
 			var bfs = [currentLevel[i]];
 			while (bfs.length > 0) {
-				// console.log("bfs");
-				// console.log(bfs);
 				var node = bfs.pop(0);
-				// console.log("node");
-				// console.log(node);
 				if(!node){
 					continue;
 				}
@@ -137,9 +133,6 @@
 			}
 			clusters.push(newComponent)
 		}
-		
-//		console.log("clusters");
-//		console.log(clusters);
 		
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson2("clusters", clusters);
