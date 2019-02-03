@@ -23,7 +23,6 @@
 	var util = require('util');
     const uuidv4 = require('uuid/v4');
 
-
 	function identifyComponents(
 		callGraph, 
 		accessGraph, 
@@ -81,20 +80,6 @@
 			}
 		}
 
-		for (var i = 0; i < classes.length; i++) {
-			var row = [];
-			for (var j = 0; j < classes.length; j++) {
-				if (metric[i][j] > 0) {
-				// if (metric[i][j] >= maxMetric/100) {
-					row.push(true);
-				}
-				else {
-					row.push(false);
-				}
-			}
-			relations.push(row);
-		}
-
 		var nodesNullAll = [];
 		var nodesClassAll = [];
 		var edgesAll = [];
@@ -103,18 +88,15 @@
 		var nodesClassAllTree = [];
 		var edgesAllTree = [];
 
-		var clusterTree = findClusters(classes, relations, nodesNullAllTree, nodesClassAllTree, edgesAllTree, dicCompositeSubclasses, classUnits, dicClassUnits, 0, 1.5);
-		var clusteredClasses = findClusters(classes, relations, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, dicClassUnits, 0, 0.6);
+		var clusterTree = findClusters(classes, metric, nodesNullAllTree, nodesClassAllTree, edgesAllTree, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, 1, 1.5);
+		var clusteredClasses = findClusters(classes, metric, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, 1, 1.5);
 
 		drawGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "componentsComposite.dotty");
 		drawGraph(nodesNullAllTree, nodesClassAllTree, edgesAllTree, outputDir, "componentsTree.dotty");
-
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("clusteredClasses", clusteredClasses);
-
-		var cutoffDepth = 0; //there might be multiple criterion to determining the cutoff tree
-
+		
 		var clusters = []; // [[component1], [component2], ...]
+
+		var cutoffDepth = 2; //there might be multiple criterion to determining the cutoff tree
 
 		var currentLevel = [];
 		var currentLevelDepth = 0;
@@ -122,11 +104,7 @@
 		while(currentLevelDepth < cutoffDepth){
 			var nextLevel = [];
 			var nodeToExpand = null;
-			// console.log("currentLevel");
-			// console.log(currentLevel);
 			while ((nodeToExpand = currentLevel.shift())){
-				// console.log("nodeToExpand");
-				// console.log(nodeToExpand);
 				if (nodeToExpand.size == 1 && nodeToExpand.hasOwnProperty('value')) {
 					clusters.push([nodeToExpand.value]);
 				}
@@ -137,8 +115,7 @@
 			currentLevel = nextLevel;
 			currentLevelDepth++;
 		}
-
-
+		
 		for (var i in currentLevel) {
 			var newComponent = [];
 			var bfs = [currentLevel[i]];
@@ -160,6 +137,12 @@
 			}
 			clusters.push(newComponent)
 		}
+		
+//		console.log("clusters");
+//		console.log(clusters);
+		
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson2("clusters", clusters);
 
 		var dicComponents = {};
 		var dicClassComponent = {};  // {classUnit.UUID: component.UUID}
@@ -186,6 +169,8 @@
 				dicClassComponent[classUnits[j].UUID] = component.UUID;
 			}
 		}
+		
+//		process.exit(0);
 
 		return {
 			dicComponents: dicComponents,
@@ -245,7 +230,7 @@
 		dottyUtil.drawDottyGraph(graph, path, function(){
 			console.log("drawing is down");
 		});
-
+		
 		return graph;
 
 	}
@@ -526,24 +511,9 @@
 	}
 
 // mode => 0: SINGLE_LINKAGE; 1: CONPLETE_LINKAGE; 2: AVERAGE_LINKAGE
-	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, dicClassUnits, mode, threshold) {
+	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, mode, threshold) {
 
 		var clusterfck = require("clusterfck");
-
-		var rowDic = {}
-		for (var i in metrics) {
-			var metric = metrics[i].toString();
-			if (metric in rowDic) {
-				rowDic[metric].push(classArray[i]);
-			}
-			else {
-				var classes = new Array(classArray[i]);
-				rowDic[metric] = classes;
-			}
-		}
-		
-		console.log("row dic");
-		console.log(rowDic);
 
 		// coupling metric table for class c1 to c5
 		//	   c1  c2  c3  c4  c5
@@ -560,28 +530,22 @@
 		//     [false, true, false, false, false],
 		//     [false, true, true, false, false]
 		// ];
-
-		function distance(a, b) {
-		  var d = 0;
-		  var inter = 0
-		  var union = 0
-		  for (var i = 0; i < a.length; i++) {
-		    if (a[i] && b[i]) {
-		      inter++;
-		    }
-		    if (a[i] || b[i]) {
-		      union++;
-		    }
-		  }
-		  var JaccSimi;
-		  if (union == 0) {
-		    JaccSimi = 0
-		  }
-		  else {
-		    JaccSimi = inter/union;
-		  }
-		  d = 1 - JaccSimi;
-		  return d;
+		
+		
+		console.log("input metric");
+		console.log(metrics);
+		
+		//apply index
+		var indMetrics = [];
+		for(var i in metrics){
+			var metric = metrics[i];
+			
+			var indMetric = [];
+			indMetric[0] = Number(i);
+			for(var j in metric){
+				indMetric.push(metric[j]);
+			}
+			indMetrics.push(indMetric);
 		}
 
 		// var threshold = 0.6;
@@ -596,13 +560,44 @@
 			linkage = clusterfck.AVERAGE_LINKAGE;
 		}
 
-		var clusters = clusterfck.hcluster(metrics, distance, linkage, threshold);
+		var clusters = clusterfck.hcluster(indMetrics, distance, linkage, threshold);
+		
+		console.log("computation mode");
+		console.log(mode);
 		
 		console.log("clusterfck");
 		console.log(clusters);
+		
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson2("clusterfck", clusters);
+		
+		console.log("metrics");
+		console.log(indMetrics.length);
+		console.log(indMetrics);
+//		console.log(classArray.length);
+//		for(var i in classArray){
+//			console.log(classArray[i].name);
+//		}
+//		console.log(metrics);
+		
+//		var rowDic = {}
+//		for (var i in metrics) {
+//			var metric = metrics[i].toString();
+//			if (metric in rowDic) {
+//				rowDic[metric].push(classArray[i]);
+//			}
+//			else {
+//				var classes = new Array(classArray[i]);
+//				rowDic[metric] = classes;
+//			}
+//		}
+		
+//		console.log("row dic");
+//		console.log(Object.keys(rowDic).length);
+//		console.log(rowDic);
 
 		// console.log("check");
-    // var classClusters = convertTree(clusters, rowDic);
+//     var classClusters = convertTree(clusters, rowDic);
 		var classClusters = [];
 		// var nodesNullAll = [];
 		// var nodesClassAll = [];
@@ -610,11 +605,16 @@
 		var ind = 0
 		for (var i in clusters) {
 			var cluster = clusters[i];
-			// console.log(cluster);
+			
+			console.log("examine cluster");
+			console.log(cluster);
+			 
 			nodesNull = [];
 			nodesClass = [];
 			edges = [];
 			var dis = calculateDis(cluster, mode);
+			console.log("dis");
+			console.log(dis);
 			// var distance = 0;
 			// if (count != 0) {
 			// 	distance = sum/count;
@@ -624,7 +624,7 @@
 				distance: dis
 			}
 			ind++;
-			var classCluster = convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, mode);
+			var classCluster = convertTree(cluster, classArray, nodesNull, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, mode);
 //			console.log("classcluster")
 //			console.log(util.inspect(classCluster, false, null))
 			nodesClassAll.push(nodesClass);
@@ -632,12 +632,11 @@
 			edgesAll.push(edges);
 			classClusters.push(classCluster);
 		}
-		// console.log("check");
-    // console.log(classClusters);
-
+		
+//		 console.log("check");
+//		 console.log(classClusters);
 
 		return classClusters;
-
 	}
 
 	// function convertSingle(cluster, rowDic) {
@@ -669,6 +668,30 @@
 			return res;
 		}
 	}
+	
+
+	function distance(a, b) {
+		  var d = 0;
+		  var inter = 0
+		  var union = 0
+		  for (var i = 1; i < a.length; i++) {
+		    if (a[i] && b[i]) {
+		      inter++;
+		    }
+		    if (a[i] || b[i]) {
+		      union++;
+		    }
+		  }
+		  var JaccSimi;
+		  if (union == 0) {
+		    JaccSimi = 0
+		  }
+		  else {
+		    JaccSimi = inter/union;
+		  }
+		  d = 1 - JaccSimi;
+		  return d;
+	}
 
 	function calculateDis(node, mode) {
 
@@ -688,24 +711,28 @@
 				var a = left[i];
 				for (var j in right) {
 					var b = right[j];
-					var inter = 0;
-					var union = 0;
-					for (var i = 0; i < a.length; i++) {
-						if (a[i] && b[i]) {
-							inter++;
-						}
-						if (a[i] || b[i]) {
-							union++;
-						}
-					}
-					var JaccSimi;
-					if (union == 0) {
-						JaccSimi = 0
-					}
-					else {
-						JaccSimi = inter/union;
-					}
-					d = 1 - JaccSimi;
+					
+//					var inter = 0;
+//					var union = 0;
+//					for (var i = 0; i < a.length; i++) {
+//						if (a[i] && b[i]) {
+//							inter++;
+//						}
+//						if (a[i] || b[i]) {
+//							union++;
+//						}
+//					}
+//					var JaccSimi;
+//					if (union == 0) {
+//						JaccSimi = 0
+//					}
+//					else {
+//						JaccSimi = inter/union;
+//					}
+//					d = 1 - JaccSimi;
+					
+					var d = distance(a, b);
+					
 					// sum += d;
 					// count++;
 					if (mode == 0) {
@@ -748,22 +775,25 @@
 
 	}
 
-	function convertTree(cluster, rowDic, nodesNull, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, dicClassUnits, mode) {
+	function convertTree(cluster, classes, nodesNull, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, mode) {
 		  var classClusters = {};
-			// console.log("check!!!!!!!!!!");
-			// console.log("mode");
-			// console.log(mode);
-			// console.log(cluster);
-			// console.log("?????????????");
-			// console.log(dicCompositeSubclasses);
+		  
 			if (cluster.size == 1) {
-				var row = cluster["value"].toString();
-				var classes = rowDic[row];
-				var classSelected = classes[classes.length-1];
-				var children = dicCompositeSubclasses[classSelected.UUID];
+				var clsIndex = cluster["value"][0];
+				var selectedClass = classes[clsIndex];
+				
+				
+//				var row = cluster["value"].toString();
+//				var classes = rowDic[row];
+//				var classSelected = classes[classes.length-1];
+//				console.log("selected classess")
+//				console.log(classes);
+				
+				var children = dicCompositeSubclasses[selectedClass.UUID];
 				if(!children){
 					return classClusters;
 				}
+				
 				classClusters["size"] = children.length;
 				// var endNode = {
 				// 	name: startNode.name+"mid",
@@ -775,6 +805,8 @@
 				for (var i in children) {
 					var childClass = {};
 					var child = dicClassUnits[children[i]];
+					console.log('find child');
+					console.log(child);
 					if(!child){
 						continue;
 					}
@@ -785,7 +817,7 @@
 					edges.push({start: startNode, end: {name: 'a'+child['UUID'].replace(/-/g, ''), distance: null}});
 				}
 				classClusters["children"] = childrenClasses;
-				classes.pop();
+//				classes.pop();
 				// classClusters["size"] = 1;
 				// classClusters["value"] = classSelected;
 				// classes.pop();
@@ -799,90 +831,6 @@
 					if (property == "left" || property == "right") {
 						var dis = calculateDis(cluster[property], mode);
 
-						// if (!("value" in cluster[property])) {
-						// 	var left = findAllClass(cluster[property].left);
-						// 	var right = findAllClass(cluster[property].right);
-						// 	var sum = 0;
-						// 	var count = 0;
-						// 	var dis = null;
-						// 	if (mode == 0) {
-						// 		dis = Number.MAX_VALUE;
-						// 		console.log("check!!!!!!!!!!");
-						// 	}
-						// 	else if (mode == 1) {
-						// 		dis = Number.MIN_VALUE;
-						// 	}
-						// 	// var min = Number.MAX_VALUE;
-						// 	// var sum = 0;
-						// 	// var count = 0;
-						// 	for (var i in left) {
-						// 		var a = left[i];
-						// 		for (var j in right) {
-						// 			var b = right[j];
-						// 			var inter = 0;
-						// 			var union = 0;
-						// 			for (var i = 0; i < a.length; i++) {
-						// 		    if (a[i] && b[i]) {
-						// 		      inter++;
-						// 		    }
-						// 		    if (a[i] || b[i]) {
-						// 		      union++;
-						// 		    }
-						// 		  }
-						// 		  var JaccSimi;
-						// 		  if (union == 0) {
-						// 		    JaccSimi = 0
-						// 		  }
-						// 		  else {
-						// 		    JaccSimi = inter/union;
-						// 		  }
-						// 		  d = 1 - JaccSimi;
-						// 			if (mode == 0) {
-						// 				if (d < dis) {
-						// 					dis = d;
-						// 					console.log("check!!!!!!!!!!");
-						// 					console.log(dis);
-						// 				}
-						// 			}
-						// 			else if (mode == 1) {
-						// 				if (d > dis) {
-						// 					dis = d;
-						// 				}
-						// 			}
-						// 			else if (mode == 2) {
-						// 				sum += d;
-						// 				count++;
-						// 			}
-						// 			// if (d < min) {
-						// 			// 	min = d;
-						// 			// }
-						// 			// sum += d;
-						// 			// count++;
-						// 		}
-						// 	}
-						// }
-						// if (mode == 0 && dis == Number.MAX_VALUE) {
-						// 	dis = null;
-						// 	// console.log("check????");
-						// }
-						// else if (mode == 1 && dis == Number.MIN_VALUE) {
-						// 	dis = null;
-						// }
-						// else if (mode == 2) {
-						//   if (count == 0) {
-						// 		dis = 0;
-						// 	}
-						// 	else {
-						// 		dis = sum/count;
-						// 	}
-						// }
-						// if (min == Number.MAX_VALUE) {
-						// 	min = null;
-						// }
-						// var distance = 0;
-						// if (count != 0) {
-						// 	distance = sum/count;
-						// }
 						var nodeF = null;
 						if (cluster[property]["size"] != 1) {
 							var endNode = {
@@ -897,7 +845,7 @@
 							nodeF = startNode;
 						}
 
-						var child = convertTree(cluster[property], rowDic, nodesNull, nodesClass, edges, nodeF, dicCompositeSubclasses, classUnits, dicClassUnits, mode);
+						var child = convertTree(cluster[property], classes, nodesNull, nodesClass, edges, nodeF, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, mode);
 						children.push(child);
 						// nodesNull.push(rootName+property);
 

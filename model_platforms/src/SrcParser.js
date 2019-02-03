@@ -117,7 +117,7 @@
 				debug.writeJson2("method_parameters_19", codeAnalysisResults.dicMethodParameters);
 				
 				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
-
+				
 				Model.DomainModel = domainModelInfo.DomainModel;
 				
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
@@ -136,9 +136,6 @@
 
 		var dicComponents = componentInfo.dicComponents;
 		var dicClassComponent = componentInfo.dicClassComponent;
-		
-		console.log("dicClassComponent");
-		console.log(dicClassComponent);
 
 		var DomainModel = {
 			Elements: [],
@@ -156,8 +153,8 @@
 		for(var i in dicComponents){
 			var component = dicComponents[i];
 			
-			console.log('exam component');
-			console.log(component);
+//			console.log('exam component');
+//			console.log(component);
 			
 			var domainElement = {
 				Name: component.name,
@@ -174,12 +171,13 @@
 
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
-			// console.log(edge)
-			//console.log(util.inspect(edge, false, null));
 			
 			var startNode = edge.start;
 			var componentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
+			
+			console.log("found domain element");
+			console.log(domainElement);
 			
 			if(!domainElement){
 				continue;
@@ -187,7 +185,8 @@
 			
 			var foundMethod = false;
 			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id === 'a'+startNode.UUID.replace(/\-/g, "")) {
+				if (domainElement.Operations[j]._id === 'a'+startNode.UUID.replace(/\-/g, "") ||
+						domainElement.Operations[j].Name === startNode.methodName) {
 					var method = domainElement.Operations[j];
 					foundMethod = true;
 					break;
@@ -204,15 +203,18 @@
 					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
 					Parameters: parameters,
 				}
+				
 				domainElement.Operations.push(method);
 			}
 			
 			var endNode = edge.end;
 			var componentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
 			var domainElement = domainElementsByID[componentUUID];
+			
 			foundMethod = false;
 			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
+				if (domainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") ||
+						domainElement.Operations[j].Name === endNode.methodName) {
 					var method = domainElement.Operations[j];
 					foundMethod = true;
 				}
@@ -227,6 +229,7 @@
 					_id: 'a'+endNode.UUID.replace(/\-/g, ""),
 					Parameters: parameters,
 				}
+				
 				domainElement.Operations.push(method);
 			}
 		}

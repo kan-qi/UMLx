@@ -87,16 +87,22 @@
 		
 		return "label = <<B>"+Group+"</B>>;style=\"bold\";";
 	}
+	
+	function filterName(name){
+		return name.replace(/[\$|\<|\>]/g,"");
+	}
 
 	function drawDomainObjectNode(component){
 		//temporarily eliminate some unnecessary nodes
 		console.log("domain objects");
 		console.log(component);
+		
+		component.Name = filterName(component.Name);
+		
 		if(!component || !component.Name || component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
 			return null;
 		}
 		
-//    
 		var componentInternal = "<TABLE BORDER=\"1\" CELLBORDER=\"1\" CELLSPACING=\"0\">";
 		var componentInternalIndex = 0;
 		componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+component.Name+"</B></TD></TR>";
@@ -105,7 +111,7 @@
 			var attribute = component.Attributes[i];
 //			componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
 //			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name+"</B></TD></TR>";
-			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type+" "+attribute.Name+"</B></TD></TR>";
+			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type+" "+filterName(attribute.Name)+"</B></TD></TR>";
 			
 			componentInternalIndex++;
 		}
@@ -113,7 +119,7 @@
 		for (var i in component.Operations){
 			var operation = component.Operations[i];
 //			dotty += '"'+operation.Name+'"->"'+component.Name+'";';
-			var functionSignature = operation.Name+"(";
+			var functionSignature = filterName(operation.Name)+"(";
 			console.log("test parameters");
 			console.log(operation.Parameters);
 			for(var j in operation.Parameters){
@@ -243,15 +249,15 @@
 				
 //				var label = activity.Name;
 //				var node = drawExternalNode(activity._id, activity.Name);
-				var node = drawNode(activity._id, activity.Name);
+				var node = drawNode(activity._id, filterName(activity.Name));
 				
 				if(activity.Stimulus){
-					node = drawStimulusNode(activity._id, activity.Name);
+					node = drawStimulusNode(activity._id, filterName(activity.Name));
 				} else if(activity.OutScope){
-					node = drawOutOfScopeNode(activity._id, activity.Name);
+					node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
 				} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 					console.log("drawing fragment node");
-					node = drawFragmentNode(activity._id, activity.Name);
+					node = drawFragmentNode(activity._id, filterName(activity.Name));
 					console.log(node);
 				}
 				
@@ -270,15 +276,15 @@
 		
 		for(var j in others){
 			var activity = others[j];
-			var node = drawNode(activity._id, activity.Name);
+			var node = drawNode(activity._id, filterName(activity.Name));
 			
 			if(activity.Stimulus){
-				node = drawStimulusNode(activity._id, activity.Name);
+				node = drawStimulusNode(activity._id, filterName(activity.Name));
 			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity._id, activity.Name);
+				node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
 			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 				console.log("drawing fragment node");
-				node = drawFragmentNode(activity._id, activity.Name);
+				node = drawFragmentNode(activity._id, filterName(activity.Name));
 				console.log(node);
 			}
 			
@@ -376,16 +382,14 @@
 		for(var i in activities){
 			var activity = activities[i];
 			
-			var node = drawNode(activity._id, activity.Name);
+			var node = drawNode(activity._id, filterName(activity.Name));
 			
 			if(activity.Stimulus){
-				node = drawStimulusNode(activity._id, activity.Name);
+				node = drawStimulusNode(activity._id, filterName(activity.Name));
 			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity._id, activity.Name);
+				node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
 			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
-				console.log("drawing fragment node");
-				node = drawFragmentNode(activity._id, activity.Name);
-				console.log(node);
+				node = drawFragmentNode(activity._id, filterName(activity.Name));
 			}
 			
 				graph += dottyDraw.draw(node);
