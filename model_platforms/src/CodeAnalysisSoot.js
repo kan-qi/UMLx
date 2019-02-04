@@ -105,7 +105,6 @@
 					console.log(dicMethodParameters[referencedMethodUnit.UUID]);
 					dicMethodParameters[referencedMethodUnit.UUID].push({type: referencedParameter});
 				}
-				
 			}
 			
 			referencedClassUnit.StorableUnits = [];
@@ -300,7 +299,7 @@
 		};
 		
 		
-//		debug.writeJson2("android-analysis-results", result);
+		debug.writeJson2("converted-android-analysis-results", result);
 		
 		return result;
 	}

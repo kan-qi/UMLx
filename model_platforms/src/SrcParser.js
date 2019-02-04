@@ -29,6 +29,7 @@
 	var codeAnalysisXMI = require("./CodeAnalysisXMI.js");
 	var codeAnalysisSoot = require("./CodeAnalysisSoot.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
+	var componentIdentifierACDC = require("./ComponentIdentificationACDC.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
@@ -74,19 +75,34 @@
 				
 				debug.writeJson2("method_class", codeAnalysisResults.dicMethodClass);
 				
-				var componentInfo = componentIdentifier.identifyComponents(
-					codeAnalysisResults.callGraph, 
-					codeAnalysisResults.accessGraph, 
-					codeAnalysisResults.typeDependencyGraph, 
-					codeAnalysisResults.extendsGraph,
-					codeAnalysisResults.compositionGraph,
-					codeAnalysisResults.referencedCompositeClassUnits, 
-					codeAnalysisResults.referencedClassUnits, 
-					codeAnalysisResults.dicCompositeSubclasses,
-					codeAnalysisResults.dicCompositeClassUnits,
-					codeAnalysisResults.dicClassUnits,
-					codeAnalysisResults.dicClassComposite,
-					Model.OutputDir
+//				var componentInfo = componentIdentifier.identifyComponents(
+//					codeAnalysisResults.callGraph, 
+//					codeAnalysisResults.accessGraph, 
+//					codeAnalysisResults.typeDependencyGraph, 
+//					codeAnalysisResults.extendsGraph,
+//					codeAnalysisResults.compositionGraph,
+//					codeAnalysisResults.referencedCompositeClassUnits, 
+//					codeAnalysisResults.referencedClassUnits, 
+//					codeAnalysisResults.dicCompositeSubclasses,
+//					codeAnalysisResults.dicCompositeClassUnits,
+//					codeAnalysisResults.dicClassUnits,
+//					codeAnalysisResults.dicClassComposite,
+//					Model.OutputDir
+//				);
+				
+				var componentInfo = componentIdentifierACDC.identifyComponents(
+						codeAnalysisResults.callGraph, 
+						codeAnalysisResults.accessGraph, 
+						codeAnalysisResults.typeDependencyGraph, 
+						codeAnalysisResults.extendsGraph,
+						codeAnalysisResults.compositionGraph,
+						codeAnalysisResults.referencedCompositeClassUnits, 
+						codeAnalysisResults.referencedClassUnits, 
+						codeAnalysisResults.dicCompositeSubclasses,
+						codeAnalysisResults.dicCompositeClassUnits,
+						codeAnalysisResults.dicClassUnits,
+						codeAnalysisResults.dicClassComposite,
+						Model.OutputDir
 				);
 				
 				debug.writeJson2("class_component_1_19", componentInfo.dicClassComponent);
@@ -155,9 +171,6 @@
 		for(var i in dicComponents){
 			var component = dicComponents[i];
 			
-//			console.log('exam component');
-//			console.log(component);
-			
 			var domainElement = {
 				Name: component.name,
 				_id: 'c'+component.UUID.replace(/\-/g, "_"),
@@ -175,49 +188,53 @@
 			var edge = callGraph.edges[i];
 			
 			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
-			var domainElement = domainElementsByID[componentUUID];
+			var callComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
+			var callDomainElement = domainElementsByID[callComponentUUID];
 			
-			console.log("found domain element");
-			console.log(domainElement);
+//			console.log("found domain element");
+//			console.log(domainElement);
 			
-			if(!domainElement){
+			if(!callDomainElement){
 				continue;
 			}
 			
-			var foundMethod = false;
-			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id === 'a'+startNode.UUID.replace(/\-/g, "") ||
-						domainElement.Operations[j].Name === startNode.methodName) {
-					var method = domainElement.Operations[j];
-					foundMethod = true;
-					break;
-				}
-			}
-			
-			if (!foundMethod) {
-				var parameters = dicMethodParameters[startNode.UUID];
-				if (parameters == null) {
-					parameters = [];
-				}
-				var method = {
-					Name: startNode.methodName,
-					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
-					Parameters: parameters,
-				}
-				
-				domainElement.Operations.push(method);
-			}
+//			var foundMethod = false;
+//			for (var j in domainElement.Operations) {
+//				if (domainElement.Operations[j]._id === 'a'+startNode.UUID.replace(/\-/g, "") ||
+//						domainElement.Operations[j].Name === startNode.methodName) {
+//					var method = domainElement.Operations[j];
+//					foundMethod = true;
+//					break;
+//				}
+//			}
+//			
+//			if (!foundMethod) {
+//				var parameters = dicMethodParameters[startNode.UUID];
+//				if (parameters == null) {
+//					parameters = [];
+//				}
+//				var method = {
+//					Name: startNode.methodName,
+//					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
+//					Parameters: parameters,
+//				}
+//				
+//				domainElement.Operations.push(method);
+//			}
 			
 			var endNode = edge.end;
-			var componentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
-			var domainElement = domainElementsByID[componentUUID];
+			var calleeComponentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
+			var calleeDomainElement = domainElementsByID[calleeComponentUUID];
+			
+			if(callDomainElement == calleeDomainElement){
+				continue;
+			}
 			
 			foundMethod = false;
-			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") ||
-						domainElement.Operations[j].Name === endNode.methodName) {
-					var method = domainElement.Operations[j];
+			for (var j in calleeDomainElement.Operations) {
+				if (calleeDomainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") ||
+						calleeDomainElement.Operations[j].Name === endNode.methodName) {
+					var method = calleeDomainElement.Operations[j];
 					foundMethod = true;
 				}
 			}
@@ -232,54 +249,63 @@
 					Parameters: parameters,
 				}
 				
-				domainElement.Operations.push(method);
+				calleeDomainElement.Operations.push(method);
 			}
 		}
 
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
 			var startNode = edge.start;
-			var componentUUID = 'c'+startNode.component.UUID.replace(/\-/g, "_");
-			var domainElement = domainElementsByID[componentUUID];
-			if(!domainElement){
+			var accessComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
+			var accessDomainElement = domainElementsByID[accessComponentUUID];
+			if(!accessDomainElement){
 				continue;
 			}
-			var foundMethod = false;
-			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
-					var method = domainElement.Operations[j];
-					foundMethod = true;
-				}
-			}
-			if (!foundMethod) {
-				var parameters = dicMethodParameters[startNode.UUID];
-				if (parameters == null) {
-					parameters = [];
-				}
-				var method = {
-					Name: startNode.name,
-					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
-					Parameters: parameters,
-				}
-				domainElement.Operations.push(method);
-			}
+			
+//			var foundMethod = false;
+//			for (var j in domainElement.Operations) {
+//				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
+//					var method = domainElement.Operations[j];
+//					foundMethod = true;
+//				}
+//			}
+//			if (!foundMethod) {
+//				var parameters = dicMethodParameters[startNode.UUID];
+//				if (parameters == null) {
+//					parameters = [];
+//				}
+//				var method = {
+//					Name: startNode.name,
+//					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
+//					Parameters: parameters,
+//				}
+//				domainElement.Operations.push(method);
+//			}
+			
 			var endNode = edge.end;
-			var endComponentUUID = 'a'+dicClassComponent[endNode.UUID].replace(/\-/g, "");
-			var domainElement = domainElementsByID[componentUUID];
+//			var endComponentUUID = 'a'+dicClassComponent[endNode.UUID].replace(/\-/g, "");
+			var accesseeComponentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
+			var accesseeDomainElement = domainElementsByID[accesseeComponentUUID];
+			
+			if(accessDomainElement == accesseeDomainElement){
+				continue;
+			}
+			
 			var foundAttr = false;
-			for (var j in domainElement.Attributes) {
-				if (domainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
+			for (var j in accesseeDomainElement.Attributes) {
+				if (accesseeDomainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
 					foundAttr = true;
 				}
 			}
+			
 			if (!foundAttr) {
 				var attr = {
-					Name: endNode.attributeName,
+					Name: endNode.attrName,
 					_id: 'a'+endNode.UUID.replace(/\-/g, ""),
-					Type: endNode.attributeType,
-					TypeUUID: 'a'+endNode.attributeTypeUUID.replace(/\-/g, "")
+					Type: endNode.attrType,
+					TypeUUID: 'a'+endNode.UUID.replace(/\-/g, "")
 				};
-				domainElement.Attributes.push(attr);
+				accesseeDomainElement.Attributes.push(attr);
 			}
 		}
 

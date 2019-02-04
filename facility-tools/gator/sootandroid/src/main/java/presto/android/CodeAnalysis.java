@@ -113,30 +113,6 @@ public class CodeAnalysis {
 	}
   }
   
-//  private static void visit(CallGraph cg, SootMethod method) {
-//	  String identifier = method.getSignature();
-//	  visited.put(method.getSignature(), true);
-//	  dot.drawNode(identifier);
-//	  // iterate over unvisited parents
-//	  Iterator<MethodOrMethodContext> ptargets = new Targets(cg.edgesInto(method));
-//	  if (ptargets != null) {
-//	    while (ptargets.hasNext()) {
-//	        SootMethod parent = (SootMethod) ptargets.next();
-//	        if (!visited.containsKey(parent.getSignature())) visit(cg, parent);
-//	    }
-//	  }
-//	    // iterate over unvisited children
-//	    Iterator<MethodOrMethodContext> ctargets = new Targets(cg.edgesOutOf(method));
-//	  if (ctargets != null) {
-//	    while (ctargets.hasNext()) {
-//	       SootMethod child = (SootMethod) ctargets.next();
-//	       dot.drawEdge(identifier, child.getSignature());
-//	       Debug1.v().println(method + " may call " + child);
-//	       if (!visited.containsKey(child.getSignature())) visit(cg, child);
-//	    }
-//	  }
-//	}
-  
   
 private class CallGraphNode{
 	MethodUnit methodUnit;
@@ -149,18 +125,6 @@ private class CallGraphNode{
 	}
 	
 }
-
-//private class CallGraphCompositeNode{
-//	MethodUnit methodUnit;
-//	CompositeClassUnit compositeClassUnit;
-//	
-//	CallGraphCompositeNode(MethodUnit methodUnit, CompositeClassUnit compositeClassUnit) {
-//		super();
-//		this.methodUnit = methodUnit;
-//		this.compositeClassUnit = compositeClassUnit;
-//	}
-//	
-//}
   
 //output the call graph to JSON format
 private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, MethodUnit> methodBySig, Map<String, String> methodToClass, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic){
@@ -827,7 +791,6 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	int i = 0;
 	for(String uuid: compositeClassUnitByUUID.keySet()) {
 		CompositeClassUnit compCU = compositeClassUnitByUUID.get(uuid);
-//		outputS += compCU.uuid;
 		outputS += compCU.toJSONString();
 		if(i != compositeClassUnitByUUID.keySet().size()-1) {
 		outputS += ",";
@@ -835,36 +798,11 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 		i++;
 	}
 	outputS += "]";
-	
-//	//output methodBySig
-//	outputS += ",methodBySig:[";
-//	i = 0;
-//	for(String methodSig: methodBySig.keySet()) {
-//		String classUUID = methodBySig.get(methodSig);
-////		outputS += compCU.uuid;
-//		outputS += "{\""+methodSig+"\":"+"\""+classUUID+"\"}";
-//		if(i != methodBySig.keySet().size()-1) {
-//		outputS += ",";
-//		}
-//		i++;
-//	}
-//	outputS += "]";
-	
-	//output classUnitByUUID
-	//output compositeClassUnitByUUID
-	//output classUnitToCompositeClassDic
 
     for(String m : classUnitToCompositeClassDic.keySet()) {
     	Debug2.v().printf("class id: %s; composite id: %s\n", m, classUnitToCompositeClassDic.get(m));
 //    	Debug1.v().printf("class id: %s; composite id: %s\n", m, classUnitToCompositeClassDic.get(m));
     }
-    
-    //create the hierarchy of the class units for the composite class units.
-    
-    // Analysis
-    // TODO: use reflection to allow nice little extensions.
-    
-//    identifyAggregateClassUnits(xmiString);
     
     CallGraph callGraph = genCallGraph();
 //	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
@@ -890,7 +828,6 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 private CallGraph genCallGraph() {
 
 	String apkPath = Configs.project;
-//  String androidJarPath = Configs.sdkDir + "/platforms/" + Configs.apiLevel;
   	String androidJarPath = Configs.sdkDir + "/platforms/";
   
     File apkFile = new File(apkPath);
@@ -925,7 +862,6 @@ private CallGraph genCallGraph() {
 	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
 	app.setOutputDir(Configs.outputDir);
 	
-//	Path curDir = Paths.get(System.getProperty("user.dir"));
 	Path gatorFilePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
 	File gatorFile = gatorFilePath.toFile();
 	if(!gatorFile.exists()) {
@@ -938,13 +874,6 @@ private CallGraph genCallGraph() {
 	Debug1.v().println("Setup Application...");
 	Debug1.v().println("platforms: "+androidJarPath+" project: "+apkPath);
   
-//  AndroidEntryPointCreator c = app.getEntryPointCreator();
-//  SootMethod entryPoint = c.createDummyMain();
-//  Options.v().set_main_class(entryPoint.getSignature());
-//  Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
-  
-//  Debug1.v().println(entryPoint.getActiveBody());
-  
   	soot.G.reset();
   	Options.v().set_src_prec(Options.src_prec_apk);
 	Options.v().set_process_dir(Collections.singletonList(apkPath));
@@ -955,17 +884,13 @@ private CallGraph genCallGraph() {
 	Options.v().setPhaseOption("cg.spark", "on");
 	Scene.v().loadNecessaryClasses(); 
 	
-//	app.setCallbackFile("./AndroidCallbacks.txt");
-
 	app.setCallbackFile(callbackPath.toAbsolutePath().toString());
 	
 	try {
 		app.runInfoflow(sourceSinkPath.toAbsolutePath().toString());
 	} catch (IOException e1) {
-		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	} catch (XmlPullParserException e1) {
-		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
 	
