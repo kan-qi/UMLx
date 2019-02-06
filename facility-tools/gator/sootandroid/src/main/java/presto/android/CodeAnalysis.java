@@ -463,7 +463,7 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
   }
   
   
-  private class AccessGraphNode{
+  private class AccessGraphNode {
 		MethodUnit methodUnit;
 		AttrUnit attrUnit;
 		ClassUnit classUnit;
@@ -476,6 +476,55 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		}
 		
 	}
+  
+  
+  private class TypeDependencyGraphNode {
+	  String className;
+	  String uuid;
+	  List<String> methods;
+	  Map<String, TypeDependencyUnit> typeDependencies;
+	  
+	  public TypeDependencyUnit(className) {
+		  this.className = className;
+		  this.uuid = UUID.randomUUID().toString();
+		  this.methods = new List<String>();
+		  this.typeDependencies = new HashMap<String, TypeDependencyUnit>();
+	  }
+	  
+	  public void addReturnTypeDependency(String methodName) {
+		  MethodDependencyUnit returnTypeDependency = new MethodDependencyUnit("", this.tgtClassName, methodName, "Return");
+		  this.returnTypeDepencies.add(returnTypeDependency);
+	  }
+	  
+	  public void addParameterTypeDependency(String methodName) {
+		  MethodDependencyUnit parameterTypeDependency = new MethodDependencyUnit("", this.tgtClassName, methodName, "Parameter");
+		  this.parameterDependencies.add(parameterTypeDependency);
+	  }
+	  
+	  public void addLocalVariableTypeDependency(String name, String methodName) {
+		  MethodDependencyUnit localVariableTypeDependency = new MethodDependencyUnit(name, this.tgtClassName, methodName, "LocalVar");
+	  }
+  }
+  
+  
+  private class TypeDependencyUnit {
+	  TypeDependencyGraphNode typeDependency;
+	  List<String> returnDependencies;
+	  Map<String, int> parameterDependencies;
+	  Map<String, int> localVarDependencies;
+	  List<String> attributeDependencies
+	  String uuid;
+	  
+	  public MethodDependencyUnit(TypeDependencyUnit typeDependency) {
+		  this.typeDependency = typeDependency;
+		  this.uuid = UUID.randomUUID().toString();
+		  
+		  this.returnDependencies = new List<String>();
+		  this.parameterDependencies = new HashMap<String, int>();
+		  this.localVarDependencies = new HashMap<String, int>();
+		  this.attributeDependencies = new List<String>();
+	  }
+  }
   
 //  private class AccessGraphCompositeNode{
 //		MethodUnit methodUnit;
@@ -491,7 +540,6 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 //		
 //	}
 
-  
   private class AttrUnit {
 	  String name;
 	  String type;
@@ -503,20 +551,71 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		this.uuid = UUID.randomUUID().toString();
 	}
 	  
-	public String toJSONString(){
+	public String toJSONString() {
 		return "{\"name\":\""+this.name+"\", \"type\":\""+this.type+"\", \"UUID\":\""+this.uuid+"\"}";
 	}
   }
   
+  
 public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
-	// Create HashSet of TypeDependencyGraphNode[]
-	// Loop through all ClassUnit nodes (represent each class we are building a graph for
-	//	 Check attributes e.g. classUnit.getAttributes(), check type of each attribute and create relationships
-	//   Look at the class methods e.g. classUnit.getMethods()
-	//     Look at the return type for each method
-	//	   Look at the parameter types of each method
-	//     TODO: Look at the local var types within each method
-	// Write to JSON format
+	Map mappings = new HashMap<String, TypeDependencyGraphNode>();
+	
+	for (ClassUnit classUnit : classUnits) {
+		// Loop through attributes of the class
+		List<AttrUnit> attributes = classUnit.getAttributes();
+		for (AttrUnit attribute : attributes) {
+			
+		}
+		
+		// Loop through methods of the class
+		List<MethodUnit> methods = classUnit.getMethods();
+		for (MethodUnit method : methods) {
+			// Document the method return type
+			String returnType = method.getReturnType();
+			if (!mappings.containsKey(classUnit.name + "_" + returnType)) {
+				TypeDependencyGraphNode node = new TypeDependencyGraphNode(classUnit.name, returnType);
+				mappings.put(classUnit.name + "_" + returnType, node);
+			}
+			((TypeDependencyGraphNode)mappings.get(classUnit.name + "_" + returnType)).addReturnTypeDependency(method.name);
+			
+			// Loop through parameter types of the method
+			List<String> parameterTypes = method.getParameterTypes();
+			for (String parameterType : parameterTypes) {
+				if (!mappings.containsKey(classUnit.name + "_" + parameterType)) {
+					TypeDependencyGraphNode node = new TypeDependencyGraphNode(classUnit.name, parameterType);
+					mappings.put(classUnit.name + "_" + parameterType, node);
+				}
+				mappings[classUnit.name + "_" + parameterType].addParameterTypeDependency(method.name);
+			}
+			
+			// Loop through method code lines to find local variables
+			Body methodBlockUnit = null;
+			
+			try {
+				methodBlockUnit = methodUnit.attachment.retrieveActiveBody();
+			} catch(Exception e) {
+				e.printStackTrace();
+				continue;
+			}
+			
+			for (Unit u : methodBlockUnit.getUnits()) {
+				Stmt s = (Stmt) u;
+				if(s.containsFieldRef()) {
+					FieldRef fieldRef = s.getFieldRef();
+			        SootClass targetClassUnitType = fieldRef.getFieldRef().declaringClass();
+					ClassUnit targetClassUnit = classUnitByName.get(targetClassUnitType.getName());
+					if(targetClassUnit == null) {
+						continue;
+					}
+					
+					if (!mapping.containsKey(classUnit.name + "_" + targetClassUnit.name)) {
+						TypeDependencyGraphNode node = new TypeDependencyGraphNode(classUnit.name, targetClassUnit.name);
+						mappings.put(classUnit.name + "_" + targetClassUnit.name, node);
+					}
+					mappings[classUnit.name + "_" + targetClassUnit.name].addLocalVariableDependency(fieldRef.getField().getName(), fieldRef.getField().getType().toString());
+				}
+			}
+		}
 	
 	return "";
 }
