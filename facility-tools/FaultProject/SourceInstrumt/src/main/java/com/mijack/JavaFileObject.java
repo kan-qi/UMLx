@@ -29,7 +29,7 @@ public class JavaFileObject {
         this.fileAbsolutePath = fileAbsolutePath;
         this.document = document;
         Element root = document.getRootElement();
-        //æŸ¥æ‰¾package name
+        //查找package name
         List<Node> list = document.selectNodes("//*");
         Iterator<Node> iterator = list.iterator();
         while (iterator.hasNext()) {
@@ -50,10 +50,10 @@ public class JavaFileObject {
             importClasses.add(Utils.elementToString(name));
         }
         classMetas = new ArrayList();
-        //èŽ·å�–æ‰€æœ‰çš„class
+        //获取所有的class
         findAllClasses(root, classMetas, packageName);
-        //çŸ¥é�“æ‰€æœ‰çš„classä¸ºnullçš„
-        //èŽ·å�–æ¯�ä¸ªclassä¸‹çš„æ‰€æœ‰function
+        //知道所有的class为null的
+        //获取每个class下的所有function
         functionMetas = new ArrayList();
         for (ClassMeta classMeta : classMetas) {
             findAllFunctions(classMeta.getRoot(), classMeta, functionMetas);
@@ -100,13 +100,12 @@ public class JavaFileObject {
     }
 
     public void processFunction() {
-        //æ�’æ¡©
+        //插桩
         Iterator<FunctionMeta> iterator = functionMetas.iterator();
         while (iterator.hasNext()) {
             FunctionMeta function = iterator.next();
             System.out.println(function.getJvmFunctionSign());
-            System.out.println("hello");
-            //è€ƒè™‘æ¯”è¾ƒç®€å�•çš„ifè¯­å�¥
+            //考虑比较简单的if语句
 //            if () {        ---->               log if () { log
 //            } else {       ---->               log } else { log
 //            }              ---->               log } log
@@ -131,7 +130,7 @@ public class JavaFileObject {
 
     public synchronized void addAnonymousClass(ClassMeta classMeta) {
 //        System.out.println("#################################################################################");
-// æŸ¥æ‰¾çˆ¶èŠ‚ç‚¹
+// 查找父节点
         Element element = classMeta.getRoot();
         String className = "";
         List<Element> parents = new ArrayList<>();
@@ -143,7 +142,7 @@ public class JavaFileObject {
             element = element.getParent();
         }
 //        System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
-        for (int i = 0; i < parents.size(); i++) {
+        for (int i = 1; i < parents.size(); i++) {
             Element parent = parents.get(i);
             String current = Utils.elementToString(Utils.selectElement(parent, "name"));
             if (Utils.isEmpty(current)) {
@@ -187,13 +186,13 @@ public class JavaFileObject {
     }
 
     public void collectIfUnit() {
-        //æ�’æ¡©
+        //插桩
         Iterator<FunctionMeta> iterator = functionMetas.iterator();
         while (iterator.hasNext()) {
             FunctionMeta function = iterator.next();
             function.collectIfUnit();
 //            System.out.println(function.getJvmFunctionSign());
-//            //è€ƒè™‘æ¯”è¾ƒç®€å�•çš„ifè¯­å�¥
+//            //考虑比较简单的if语句
 ////            if () {        ---->               log if () { log
 ////            } else {       ---->               log } else { log
 ////            }              ---->               log } log

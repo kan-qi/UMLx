@@ -16,16 +16,16 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * å¯¹Androidçš„Javaæº�æ–‡ä»¶è¿›è¡Œæ�’æ¡©ï¼Œæ��ä¾›ä»¥ä¸‹ä¸¤ä¸ªåŠŸèƒ½<br/>
+ * 对Android的Java源文件进行插桩，提供以下两个功能<br/>
  * <ll>
- * <li>é’ˆå¯¹ifè¯­å�¥çš„æ�’æ¡©</li>
- * <li>é’ˆå¯¹æ–¹æ³•æ•´ä½“çš„aopæ‹¦æˆª</li>
+ * <li>针对if语句的插桩</li>
+ * <li>针对方法整体的aop拦截</li>
  * </ll>
  * <br/>
- * è¾“å…¥<br/>
- * -i:å¾…å¤„ç�†æº�æ–‡ä»¶æ‰€åœ¨çš„æ–‡ä»¶å¤¹<br/>
- * -o:è¾“å‡ºçš„ç›®æ ‡æ–‡ä»¶å¤¹<br/>
- * -f:æ˜¯å�¦è¦†ç›–åŽŸæ�¥æ–‡ä»¶<br/> [å�¯é€‰]
+ * 输入<br/>
+ * -i:待处理源文件所在的文件夹<br/>
+ * -o:输出的目标文件夹<br/>
+ * -f:是否覆盖原来文件<br/> [可选]
  *
  * @author Mr.Yuan
  * @since 2017/1/19.
@@ -43,7 +43,6 @@ public class SourceChanger {
      * @throws Exception
      */
     public static void main(String[] args) throws Exception {
-    	System.out.println("main function");
         logger.traceEntry();
         Config config = Config.getInstance();
         for (int i = 0; args != null && i < args.length; i++) {
@@ -99,7 +98,7 @@ public class SourceChanger {
         xmlFiles.stream().forEach(System.out::println);
 
         SourceChanger sourceChanger = new SourceChanger();
-        //è¯»å�–å¯¹åº”æ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰xmlæ–‡ä»¶
+        //读取对应文件夹下的所有xml文件
         sourceChanger.prepare(xmlFiles);
         sourceChanger.loadFileToObject();
         sourceChanger.resolveFunctionSigns();
@@ -107,7 +106,7 @@ public class SourceChanger {
                 .flatMap(o -> o.getClassMetas().stream())
                 .flatMap(c -> c.getFunctionMetas().stream())
                 .forEach(f -> System.out.println("--------------------------------------------------\n" + f.getJvmFunctionSign() + "\n" + f.functionSign()));
-        //æ”¶é›†classç›¸å…³ä¿¡æ�¯
+        //收集class相关信息
 //        System.out.println("#################################################################################################################################");
 //        System.out.println("#                                                                                                                               #");
 //        System.out.println("#                                            collect if unit                                                                    #");
@@ -146,15 +145,15 @@ public class SourceChanger {
 
     private void resolveFunctionSigns() {
         javaFileObjectMap.values().stream()
-                //é��åŽ†æ‰€æœ‰çš„ç±»
+                //遍历所有的类
                 .flatMap((o) -> o.getClassMetas().stream())
-                //é��åŽ†æ‰€æœ‰çš„æ–¹æ³•
+                //遍历所有的方法
                 .flatMap((c) -> c.getFunctionMetas().stream())
-                // è¡¥å…¨æ‰€æœ‰çš„class ç­¾å��
+                // 补全所有的class 签名
                 .forEach((f) -> {
-                    //èŽ·å�–æ–¹æ³•ä¸­çš„æ³›åž‹å�‚æ•°
+                    //获取方法中的泛型参数
                     Element functionRoot = f.getFunctionRoot();
-                    //todo æŠ½è±¡æ–¹æ³•
+                    //todo 抽象方法
                     Iterator<Node> iterator = functionRoot.nodeIterator();
                     Element generic;
                     while (iterator.hasNext()) {
@@ -173,27 +172,27 @@ public class SourceChanger {
                             logger.error("find the second parameter_list of generic");
                             throw new IllegalStateException("find the second parameter_list of generic");
                         }
-                        //åˆ—ä¸¾æ‰€æœ‰çš„parameters
+                        //列举所有的parameters
                         Iterator<Element> genericIterator = generic.elementIterator();
                         while (genericIterator.hasNext()) {
                             Element element = genericIterator.next();
                             f.addGenericIterator(Utils.elementToString(element));
                         }
                     }
-                    //ç”±äºŽjavaåœ¨ç¼–è¯‘å�Žå�Žä¼šæŠ¹åŽ»æ³›åž‹çš„ç±»åž‹
-                    //å®˜æ–¹æ–‡æ¡£ï¼šhttps://docs.oracle.com/javase/tutorial/java/generics/erasure.html
+                    //由于java在编译后后会抹去泛型的类型
+                    //官方文档：https://docs.oracle.com/javase/tutorial/java/generics/erasure.html
                     if (f.getType() == null) {
                         System.out.println("null");
                     }
                     if (!f.isConstructor()) {
                         f.setFullNameReturnType(SourceManager.v().queryFullTypeName(f.getType(), f));
                     }
-                    //é��åŽ†æ‰€æœ‰çš„raw type
-                    //æ³¨æ„�åŒºåˆ†... å’Œ[]ï¼ŒåŽ»é™¤ final
+                    //遍历所有的raw type
+                    //注意区分... 和[]，去除 final
                     List<String> result = new ArrayList<>();
                     for (int i = 0; i < f.getRawParameterList().size(); i++) {
                         Element element = f.getRawParameterList().get(i);
-                        //å¯¹äºŽæ¯�ä¸€ä¸ªparameterï¼Œæ��å�–elementä¸‹çš„ç¬¬ä¸€ä¸ªname
+                        //对于每一个parameter，提取element下的第一个name
                         Element typeElement = Utils.selectElement(element, "decl", "^(type|objectType)$");
                         String type = Utils.elementToString(typeElement, (node) -> {
                             if (node instanceof Element) {
@@ -204,7 +203,7 @@ public class SourceChanger {
                             }
                             return true;
                         }).trim();
-                        // æŸ¥æ‰¾å®Œæ•´ç±»å��
+                        // 查找完整类名
                         result.add(SourceManager.v().queryFullTypeName(type, f));
                     }
                     f.setFullNameParameterList(result);
@@ -229,7 +228,7 @@ public class SourceChanger {
                 Document document =
                         reader.read(new InputStreamReader(new FileInputStream(file), Charset.forName("UTF-8")));
                 JavaFileObject javaFileObject = JavaFileObject.create(file.getAbsolutePath(), document);
-                //å°†åŒ…å��å’Œç±»å��çš„ä¿¡æ�¯æ”¾å…¥åˆ°SourceManagerä¸­
+                //将包名和类名的信息放入到SourceManager中
                 SourceManager.v().addClass(javaFileObject.getPackageName(), javaFileObject.getClassMetas());
                 javaFileObjectMap.put(file.getAbsolutePath(), javaFileObject);
             } catch (FileNotFoundException | DocumentException e) {
@@ -300,7 +299,7 @@ public class SourceChanger {
 
     public void printFiles() {
         Config config = Config.getInstance();
-        //æ¸…ç©ºoutput dir
+        //清空output dir
         File outPutDir = new File(config.getJavaOutput());
         if (!outPutDir.exists()) {
             outPutDir.mkdirs();
@@ -319,6 +318,10 @@ public class SourceChanger {
             String key = entry.getKey();
             // get target file path
             String outPutFilePath = config.getJavaOutput() + (key.substring(Config.getWorkspacePath().length(), key.length() - ".xml".length()));
+            System.out.println("output file path");
+            System.out.println(Config.getWorkspacePath());
+            System.out.println(key.substring(Config.getWorkspacePath().length(), key.length() - ".xml".length()));
+            System.out.println(key);
             Writer fileWriter = null;
             try {
                 File file = new File(outPutFilePath);
