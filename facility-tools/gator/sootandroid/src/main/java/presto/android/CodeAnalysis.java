@@ -74,7 +74,7 @@ public class CodeAnalysis {
     return theInstance;
   }
   
-  class MethodUnit{
+  class MethodUnit {
 	  public MethodUnit(SootMethod method) {
 		  this.uuid = UUID.randomUUID().toString();
 		  this.name = method.getName();
@@ -92,6 +92,14 @@ public class CodeAnalysis {
 	String uuid;
 	SootMethod attachment;
 	String signature;
+	
+	public String getReturnType() {
+		return this.returnType;
+	}
+	
+	public List<String> getParameterTypes() {
+		return this.parameterTypes;
+	}
 	
 	public String toJSONString() {
 		StringBuilder str = new StringBuilder();
@@ -303,6 +311,10 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		 return this.methodUnits;
 	  }
 	  
+	  public List<AttrUnit> getAttributes() {
+		  return this.attrUnits;
+	  }
+	  
 	  public String toJSONString() {
 		  StringBuilder str = new StringBuilder();
 		  str.append("{\"UUID\":\""+ 
@@ -480,7 +492,7 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 //	}
 
   
-  private class AttrUnit{
+  private class AttrUnit {
 	  String name;
 	  String type;
 	  String uuid;
@@ -497,6 +509,15 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
   }
   
 public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+	// Create HashSet of TypeDependencyGraphNode[]
+	// Loop through all ClassUnit nodes (represent each class we are building a graph for
+	//	 Check attributes e.g. classUnit.getAttributes(), check type of each attribute and create relationships
+	//   Look at the class methods e.g. classUnit.getMethods()
+	//     Look at the return type for each method
+	//	   Look at the parameter types of each method
+	//     TODO: Look at the local var types within each method
+	// Write to JSON format
+	
 	return "";
 }
 
