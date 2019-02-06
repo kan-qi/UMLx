@@ -8,19 +8,15 @@
 	var fileManagerUtil = require("./FileManagerUtils.js");
 	
 	function parseAndroidLog(logPath){
-//		fs.readFile(logPath, 'utf-8', (err, str) => {
-//			  if (err) throw err;
 		
 				var str = fileManagerUtil.readFileSync(logPath);
 
-//				console.log("str data");
-//				console.log(str);
-		
 			  	var data = [];
 			    var lines = str.split(/\r?\n/g);
-//			    console.log(lines);
 			    var cols = [];
 			    var lastMethodSign = "";
+			    
+			    var methods = [];
 			    
 			    for(var i = 0;i < lines.length;i++){
 			        //code here using lines[i] which will give you each line
@@ -41,27 +37,23 @@
 //			    	console.log(dataElement);
 			    	
 			    	if(dataElement.methodSign !== lastMethodSign){
-			    		console.log(dataElement.methodSign);
+//			    		console.log(dataElement.methodSign);
+			    		methods.push(dataElement.methodSign);
 			    		data.push(dataElement);
 			    	}
 			    	
 			    	lastMethodSign = dataElement.methodSign;
 			    }
 			    
-			    console.log("log data");
-			    console.log(lines);
-			    
+
+				var debug = require("./DebuggerOutput.js");
+				debug.writeJson("android_transaction_data", methods);
+		
 			    return data;
-			    
-//			   if(callback){
-//				   callback(data);
-//			   }
-//		});
 	}
 	
 	function identifyTransactions(logPath, dicComponent){
 		var data = parseAndroidLog(logPath);
-		
 //				
 //				for(var i in domainModel.Elements){
 //					var element = domainModel.Elements[i];

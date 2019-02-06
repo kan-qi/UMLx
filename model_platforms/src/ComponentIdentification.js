@@ -177,12 +177,58 @@
 			}
 		}
 		
-//		process.exit(0);
+		drawComponentGraph(dicComponents, outputDir, "agglomerative_clustering.dotty");
 
 		return {
 			dicComponents: dicComponents,
 			dicClassComponent: dicClassComponent
 		};
+
+	}
+	
+	
+	function drawComponentGraph(disComponents, outputDir, fileName) {
+
+		if(!fileName){
+			fileName = "agglomerative_kdm_clusters.dotty";
+		}
+		var path = outputDir+"/"+fileName;
+		let graph = 'digraph g {\
+			fontsize=26\
+			rankdir="LR"';
+
+		graph += 'node [fontsize=24 shape=ellipse]';
+		for (var i in disComponents) {
+			var component = disComponents[i];
+			graph += '"a'+component['UUID'].replace(/-/g, '')+'" [label="'+component['name'].replace(/[\$|\s+]/g, '')+'"]';
+		}
+
+		// graph += 'node [fontsize=24 shape=point]';
+		graph += 'node [fontsize=24 shape=rectangle]';
+		for (var i in disComponents) {
+			var component = disComponents[i];
+			for (var j in component.classUnits) {
+				var classUnit = component.classUnits[j];
+				graph += '"a'+classUnit['UUID'].replace(/-/g, '')+'" [label="'+classUnit['name'].replace(/[\$|\s+]/g, '')+'"]';
+			}
+		}
+		
+		for (var i in disComponents) {
+			var component = disComponents[i];
+			for (var j in component.classUnits) {
+				var classUnit = component.classUnits[j];
+//				graph += component['name'].replace(/[\.|\$|\s+]/g, '')+' -> {'+classUnit['name'].replace(/[\.|\$|\s+]/g, '')+'}';
+				graph += '"a'+component['UUID'].replace(/-/g, '')+'"->"a'+classUnit['UUID'].replace(/-/g, '')+'"';
+			}
+		}
+
+		graph += 'imagepath = \"./\"}';
+		dottyUtil = require("../../utils/DottyUtil.js");
+		dottyUtil.drawDottyGraph(graph, path, function(){
+			console.log("drawing is down");
+		});
+
+		return graph;
 
 	}
 

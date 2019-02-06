@@ -75,35 +75,35 @@
 				
 				debug.writeJson2("method_class", codeAnalysisResults.dicMethodClass);
 				
-//				var componentInfo = componentIdentifier.identifyComponents(
-//					codeAnalysisResults.callGraph, 
-//					codeAnalysisResults.accessGraph, 
-//					codeAnalysisResults.typeDependencyGraph, 
-//					codeAnalysisResults.extendsGraph,
-//					codeAnalysisResults.compositionGraph,
-//					codeAnalysisResults.referencedCompositeClassUnits, 
-//					codeAnalysisResults.referencedClassUnits, 
-//					codeAnalysisResults.dicCompositeSubclasses,
-//					codeAnalysisResults.dicCompositeClassUnits,
-//					codeAnalysisResults.dicClassUnits,
-//					codeAnalysisResults.dicClassComposite,
-//					Model.OutputDir
-//				);
-				
-				var componentInfo = componentIdentifierACDC.identifyComponents(
-						codeAnalysisResults.callGraph, 
-						codeAnalysisResults.accessGraph, 
-						codeAnalysisResults.typeDependencyGraph, 
-						codeAnalysisResults.extendsGraph,
-						codeAnalysisResults.compositionGraph,
-						codeAnalysisResults.referencedCompositeClassUnits, 
-						codeAnalysisResults.referencedClassUnits, 
-						codeAnalysisResults.dicCompositeSubclasses,
-						codeAnalysisResults.dicCompositeClassUnits,
-						codeAnalysisResults.dicClassUnits,
-						codeAnalysisResults.dicClassComposite,
-						Model.OutputDir
+				var componentInfo = componentIdentifier.identifyComponents(
+					codeAnalysisResults.callGraph, 
+					codeAnalysisResults.accessGraph, 
+					codeAnalysisResults.typeDependencyGraph, 
+					codeAnalysisResults.extendsGraph,
+					codeAnalysisResults.compositionGraph,
+					codeAnalysisResults.referencedCompositeClassUnits, 
+					codeAnalysisResults.referencedClassUnits, 
+					codeAnalysisResults.dicCompositeSubclasses,
+					codeAnalysisResults.dicCompositeClassUnits,
+					codeAnalysisResults.dicClassUnits,
+					codeAnalysisResults.dicClassComposite,
+					Model.OutputDir
 				);
+				
+//				var componentInfo = componentIdentifierACDC.identifyComponents(
+//						codeAnalysisResults.callGraph, 
+//						codeAnalysisResults.accessGraph, 
+//						codeAnalysisResults.typeDependencyGraph, 
+//						codeAnalysisResults.extendsGraph,
+//						codeAnalysisResults.compositionGraph,
+//						codeAnalysisResults.referencedCompositeClassUnits, 
+//						codeAnalysisResults.referencedClassUnits, 
+//						codeAnalysisResults.dicCompositeSubclasses,
+//						codeAnalysisResults.dicCompositeClassUnits,
+//						codeAnalysisResults.dicClassUnits,
+//						codeAnalysisResults.dicClassComposite,
+//						Model.OutputDir
+//				);
 				
 				debug.writeJson2("class_component_1_19", componentInfo.dicClassComponent);
 				debug.writeJson3("dic_components_1_19", componentInfo.dicComponents);

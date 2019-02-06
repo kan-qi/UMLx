@@ -45,7 +45,8 @@
 		var dicClassComponentByName = {};
 		var classNames = [];
 		
-		var acdc = fileManager.readFileSync("./data/GitAndroidAnalysis/alltheapps_ACDC_java/bin_acdc_clustered.rsf");
+//		var acdc = fileManager.readFileSync("./data/GitAndroidAnalysis/alltheapps_ACDC_java/bin_acdc_clustered.rsf");
+		var acdc = fileManager.readFileSync("./data/GitAndroidAnalysis/AnotherMonitor__ACDC_java/bin_acdc_clustered.rsf");
 		var lines = acdc.split("\n");
 		for(var i in lines){
 			var line = lines[i];
@@ -99,7 +100,7 @@
 		
 		}
 		
-		drawClusteringGraph(dicComponents, outputDir, "acdc_clustering.dotty");
+		drawComponentGraph(dicComponents, outputDir, "acdc_clustering.dotty");
 
 		return {
 			dicComponents: dicComponents,
@@ -108,7 +109,7 @@
 
 	}
 
-	function drawClusteringGraph(disComponents, outputDir, fileName) {
+	function drawComponentGraph(disComponents, outputDir, fileName) {
 
 		if(!fileName){
 			fileName = "acdc_kdm_clusters.dotty";
@@ -118,19 +119,19 @@
 			fontsize=26\
 			rankdir="LR"';
 
-		graph += 'node [fontsize=24 shape=rectangle]';
+		graph += 'node [fontsize=24 shape=ellipse]';
 		for (var i in disComponents) {
 			var component = disComponents[i];
-			graph += '"a'+component['UUID'].replace(/-/g, '')+'" [label="'+component['name'].replace(/[\.|\$|\s+]/g, '')+'"]';
+			graph += '"a'+component['UUID'].replace(/-/g, '')+'" [label="'+component['name'].replace(/[\$|\s+]/g, '')+'"]';
 		}
 
 		// graph += 'node [fontsize=24 shape=point]';
-		graph += 'node [fontsize=24 shape=ellipse]';
+		graph += 'node [fontsize=24 shape=rectangle]';
 		for (var i in disComponents) {
 			var component = disComponents[i];
 			for (var j in component.classUnits) {
 				var classUnit = component.classUnits[j];
-				graph += '"a'+classUnit['UUID'].replace(/-/g, '')+'" [label="'+classUnit['name'].replace(/[\.|\$|\s+]/g, '')+'"]';
+				graph += '"a'+classUnit['UUID'].replace(/-/g, '')+'" [label="'+classUnit['name'].replace(/[\$|\s+]/g, '')+'"]';
 			}
 		}
 		
@@ -138,7 +139,8 @@
 			var component = disComponents[i];
 			for (var j in component.classUnits) {
 				var classUnit = component.classUnits[j];
-				graph += component['name'].replace(/[\.|\$|\s+]/g, '')+' -> {'+classUnit['name'].replace(/[\.|\$|\s+]/g, '')+'}';
+//				graph += component['name'].replace(/[\.|\$|\s+]/g, '')+' -> {'+classUnit['name'].replace(/[\.|\$|\s+]/g, '')+'}';
+				graph += '"a'+component['UUID'].replace(/-/g, '')+'"->"a'+classUnit['UUID'].replace(/-/g, '')+'"';
 			}
 		}
 
