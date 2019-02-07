@@ -75,7 +75,7 @@
 				if(!node){
 					node = {
 							name: targetComponent.name+"_"+targetMethodUnit.Signature.name,
-							isResponse: targetMethodUnit.isResponse,
+							isResponse: action === "response" ? true : false,
 							component: {
 								UUID: targetComponent.UUID
 							},

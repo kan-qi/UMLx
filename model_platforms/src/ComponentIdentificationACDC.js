@@ -46,7 +46,8 @@
 		var classNames = [];
 		
 //		var acdc = fileManager.readFileSync("./data/GitAndroidAnalysis/alltheapps_ACDC_java/bin_acdc_clustered.rsf");
-		var acdc = fileManager.readFileSync("./data/GitAndroidAnalysis/AnotherMonitor__ACDC_java/bin_acdc_clustered.rsf");
+//		var acdc = fileManager.readFileSync("./data/GitAndroidAnalysis/AnotherMonitor__ACDC_java/bin_acdc_clustered.rsf");
+		var acdc = fileManager.readFileSync("./data/GitAndroidAnalysis/AnotherMonitor__ACDC_java/clustered_classes_7_5.txt");
 		var lines = acdc.split("\n");
 		for(var i in lines){
 			var line = lines[i];

@@ -45,6 +45,28 @@
 			
 			return functionSignature;
 		},
+		genMethodSignType: function(method){
+			
+			var functionSignature = method.name+"(";
+			
+			if(method.returnType){
+				functionSignature = method.returnType + " " + functionSignature;
+			}
+			
+			console.log(method);
+			
+			for(var i = 0; i < method.parameterTypes.length; i++){
+					var parameterType = method.parameterTypes[i];
+					if(i != 0){
+						functionSignature += ",";
+					}
+					functionSignature = functionSignature + parameterType
+//					functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
+			}
+			functionSignature += ")";
+			
+			return functionSignature;
+		},
 		genMethodUnitSignFull: function(methodUnit, cls, pkg){
 			
 			var functionSignature = pkg+"."+cls+"."+methodUnit.name+"(";

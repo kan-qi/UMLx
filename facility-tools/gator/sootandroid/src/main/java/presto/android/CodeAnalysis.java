@@ -731,7 +731,7 @@ private CallGraph genCallGraph() {
 		return null;
 	}
 	
-	app.setGatorFile(gatorFile.getAbsolutePath());
+//	app.setGatorFile(gatorFile.getAbsolutePath());
 	
 	Debug1.v().println("Setup Application...");
 	Debug1.v().println("platforms: "+androidJarPath+" project: "+apkPath);

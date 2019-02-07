@@ -299,7 +299,8 @@
 		};
 		
 		
-		debug.writeJson2("converted-android-analysis-results", result);
+		debug.writeJson2("converted-android-analysis-results-dicClassUnits", dicClassUnits);
+		debug.writeJson2("converted-android-analysis-results-dicMethodUnits", dicMethodUnits);
 		
 		return result;
 	}

@@ -67,7 +67,7 @@
 				}
 				
 				//need to update for the identification response methods.
-				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
+				var dicResponseMethodUnits = responseIdentifier.identifyResponseGator(codeAnalysisResults, responseFilePath);
 
 				debug.writeJson2("identified_response", dicResponseMethodUnits);
 				
@@ -75,46 +75,48 @@
 				
 				debug.writeJson2("method_class", codeAnalysisResults.dicMethodClass);
 				
-				var componentInfo = componentIdentifier.identifyComponents(
-					codeAnalysisResults.callGraph, 
-					codeAnalysisResults.accessGraph, 
-					codeAnalysisResults.typeDependencyGraph, 
-					codeAnalysisResults.extendsGraph,
-					codeAnalysisResults.compositionGraph,
-					codeAnalysisResults.referencedCompositeClassUnits, 
-					codeAnalysisResults.referencedClassUnits, 
-					codeAnalysisResults.dicCompositeSubclasses,
-					codeAnalysisResults.dicCompositeClassUnits,
-					codeAnalysisResults.dicClassUnits,
-					codeAnalysisResults.dicClassComposite,
-					Model.OutputDir
-				);
-				
-//				var componentInfo = componentIdentifierACDC.identifyComponents(
-//						codeAnalysisResults.callGraph, 
-//						codeAnalysisResults.accessGraph, 
-//						codeAnalysisResults.typeDependencyGraph, 
-//						codeAnalysisResults.extendsGraph,
-//						codeAnalysisResults.compositionGraph,
-//						codeAnalysisResults.referencedCompositeClassUnits, 
-//						codeAnalysisResults.referencedClassUnits, 
-//						codeAnalysisResults.dicCompositeSubclasses,
-//						codeAnalysisResults.dicCompositeClassUnits,
-//						codeAnalysisResults.dicClassUnits,
-//						codeAnalysisResults.dicClassComposite,
-//						Model.OutputDir
+//				var componentInfo = componentIdentifier.identifyComponents(
+//					codeAnalysisResults.callGraph, 
+//					codeAnalysisResults.accessGraph, 
+//					codeAnalysisResults.typeDependencyGraph, 
+//					codeAnalysisResults.extendsGraph,
+//					codeAnalysisResults.compositionGraph,
+//					codeAnalysisResults.referencedCompositeClassUnits, 
+//					codeAnalysisResults.referencedClassUnits, 
+//					codeAnalysisResults.dicCompositeSubclasses,
+//					codeAnalysisResults.dicCompositeClassUnits,
+//					codeAnalysisResults.dicClassUnits,
+//					codeAnalysisResults.dicClassComposite,
+//					Model.OutputDir
 //				);
+				
+				var componentInfo = componentIdentifierACDC.identifyComponents(
+						codeAnalysisResults.callGraph, 
+						codeAnalysisResults.accessGraph, 
+						codeAnalysisResults.typeDependencyGraph, 
+						codeAnalysisResults.extendsGraph,
+						codeAnalysisResults.compositionGraph,
+						codeAnalysisResults.referencedCompositeClassUnits, 
+						codeAnalysisResults.referencedClassUnits, 
+						codeAnalysisResults.dicCompositeSubclasses,
+						codeAnalysisResults.dicCompositeClassUnits,
+						codeAnalysisResults.dicClassUnits,
+						codeAnalysisResults.dicClassComposite,
+						Model.OutputDir
+				);
 				
 				debug.writeJson2("class_component_1_19", componentInfo.dicClassComponent);
 				debug.writeJson3("dic_components_1_19", componentInfo.dicComponents);
 				
 				var componentMappingString = "";
 				
+				var ind = 0;
 				for(var i in componentInfo.dicComponents){
 					var component = componentInfo.dicComponents[i];
 					for(var j in component.classUnits){
+					ind += 1;
 					var classUnit = component.classUnits[j];
-					componentMappingString += "contain "+component.name+".ss "+classUnit.name.replace(/\s/g, "")+"\n";
+					componentMappingString += "contain "+component.name+ind+".ss "+classUnit.name.replace(/\s/g, "")+"\n";
 					}
 				}
 				
