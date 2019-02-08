@@ -21,3 +21,26 @@ export GatorRoot=/mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator
 ./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/demo-release-unsigned.apk -client GUIHierarchyPrinterClient
 
 node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/demo-release-unsigned/android-analysis-output.json" "./data/GitAndroidAnalysis/demo-release-unsigned/codeAnalysis" "demo-release-unsigned"
+
+node -e 'require("./utils/AndroidLogUtil.js").identifyTransactionsFile("./data/GitAndroidnAnalysis/android-demo-log.txt", "./data/GitAndroidAnalysis/dic_components_1_19.json")'
+
+./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/alltheapps.apk -client GUIHierarchyPrinterClient
+
+node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/alltheapps/android-analysis-output.json" "./data/GitAndroidAnalysis/alltheapps/codeAnalysis" "alltheapps"
+
+//run gator
+
+export ANDROID_SDK=/mnt/d/Android_SDK
+
+export GatorRoot=/mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator
+
+./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-debug.apk -client GUIHierarchyPrinterClient
+
+./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -client GUIHierarchyPrinterClient
+
+java -Xmx12G -cp /mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir /mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid -sdkDir /mnt/d/Android_SDK -listenerSpecFile /mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile /mnt/d/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /tmp/gator-awg1muop/res -manifestFile /tmp/gator-awg1muop/AndroidManifest.xml -project /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -apiLevel android-26 -guiAnalysis -benchmarkName AnotherMonitor-release.apk -android /mnt/d/Android_SDK/platforms/android-26/android.jar -client GUIHierarchyPrinterClient
+
+//run android analysis
+node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/AnotherMonitor-debug/android-analysis-output.json" "./data/GitAndroidAnalysis/AnotherMonitor-debug/codeAnalysis" "AnotherMonitor-debug"
+
+node ./UMLxAnalyticToolKit.js "./data/GitAndroidAnalysis/AnotherMonitor-release/android-analysis-output.json" "./data/GitAndroidAnalysis/AnotherMonitor-release/codeAnalysis" "AnotherMonitor-release"

@@ -483,7 +483,6 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 	private void calculateCallbacks(ISourceSinkDefinitionProvider sourcesAndSinks, SootClass entryPoint)
 			throws IOException, XmlPullParserException {
 		Debug.v().println("calculateCallbacks");
-		Debug.v().println("calculateCallbacks-1-25");
 		// Add the callback methods
 		LayoutFileParser lfp = null;
 		if (this.gatorFile != null) {
@@ -1600,6 +1599,7 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 
 		this.outputDir = outputDir;
 		Debug.outputDir = outputDir;
+		Debug2.outputDir = outputDir;
 	}
 
 	/**
@@ -1638,8 +1638,6 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		// http://stackoverflow.com/questions/13786607/normalization-in-dom-parsing-with-java-how-does-it-work
 		doc.getDocumentElement().normalize();
 
-		// AXmlHandler handler = new AXmlHandler(targetStream, new AXML20Parser());
-
 		// get the first element
 		Element element = doc.getDocumentElement();
 
@@ -1648,8 +1646,6 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			Node childNode = element.getChildNodes().item(i);
 			parseGatorNode(gatorFile, childNode, eventHandlers);
 		}
-
-		// parseGatorNode(gatorFile, element, eventHandlers);
 
 		return eventHandlers;
 
@@ -1664,8 +1660,8 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 	 *            The root node from where to start parsing
 	 */
 	private void parseGatorNode(String gatorFile, Node rootNode, List<String[]> eventHandlers) {
-		Debug.v().println("parseGatorNode-1-29");
-		Debug.v().println(rootNode.getNodeName());
+		// Debug.v().println("parseGatorNode");
+		// Debug.v().println(rootNode.getNodeName());
 
 		if (rootNode.getNodeName() == null || rootNode.getNodeName().isEmpty()) {
 			// logger.warn("Encountered a null or empty node name in file %s, skipping
@@ -1680,19 +1676,12 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			String[] handlerElements = handler.split(":");
 			Debug.v().println(handler);
 			if (handlerElements.length == 2) {
-				// String className = handlerElements[0].trim().replaceAll("[\\&lt;|\\&gt;]",
-				// "");
-				// String methodName = handlerElements[1].replaceAll("[\\&lt;|\\&gt;]", "");
 				String className = handlerElements[0].trim().replaceAll("[<|>]", "");
 				String methodName = handlerElements[1].trim().replaceAll("[<|>]", "");
-				Debug.v().println("class name");
-				Debug.v().println(className);
-				Debug.v().println("method name");
-				Debug.v().println(methodName);
+				Debug2.v().println(className + "." + methodName);
 				String[] eventHandler = new String[] { className, methodName };
 				eventHandlers.add(eventHandler);
 			}
-
 		}
 
 		// Parse the child nodes
@@ -1718,8 +1707,6 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 	protected void processEntryPoint(ISourceSinkDefinitionProvider sourcesAndSinks,
 			MultiRunResultAggregator resultAggregator, int numEntryPoints, SootClass entrypoint) {
 		long beforeEntryPoint = System.nanoTime();
-		Debug.v().println("processEntryPoint");
-		Debug.v().println("processEntryPoint-1-26");
 		// Get rid of leftovers from the last entry point
 		resultAggregator.clearLastResults();
 

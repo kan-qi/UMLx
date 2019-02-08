@@ -111,7 +111,7 @@
 				constructModel(modelParser, modelJson, umlModelInfo, callbackfunc);
 			}
 			else {
-			
+			console.log("xml parser");
 			parser.parseString(data, function(err, xmiString) {
 			// determine what type xmi file it is.
 			var xmiParser = null;

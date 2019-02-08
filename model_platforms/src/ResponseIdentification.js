@@ -14,6 +14,8 @@
 	var parser = new xml2js.Parser();
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
+	var codeAnalysisUtil = require("../../utils/CodeAnalysisUtil.js");
+	var stringSimilarity = require('string-similarity');
 
 //	var xpath = require('xpath');
 //	var dom = require('xmldom').DOMParser;
@@ -69,6 +71,7 @@
 		
 		for(var i in dicMethodUnits){
 			var methodUnit = dicMethodUnits[i];
+			var isResponse = false;
 
 			if(methodUnit.name === "main"){
 				MethodUnit.isResponse = true;
@@ -122,15 +125,64 @@
 			}
 		}
 		
+		return dicResponseMethodUnits;
+	}
+	
+	
+	function identifyResponseGator(codeAnalysisResults, responsePatternsFilePath){
+		responsePatternsFilePath = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release/gator-handlers.txt";
 		
-//		for(var i in dicMethodUnits){
-//			var methodUnit = dicMethodUnits[i];
-//			scannedMethods.push({method: methodUnit.Signature.name, isResponse: methodUnit.isResponse});
-//			
-//		}
+		var dicClassUnits = codeAnalysisResults.dicClassUnits;
+		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
 		
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("identifiedMethods", scannedMethods);
+		var scannedMethods = [];
+		
+		if (responsePatternsFilePath && fs.existsSync(responsePatternsFilePath)) {
+		 
+		var contents = fs.readFileSync(responsePatternsFilePath, 'utf8');
+		
+//		console.log(contents);
+		
+		var dicMethodSign = {};
+		var methodSigns = [];
+		for(var i in dicClassUnits){
+			var classUnit = dicClassUnits[i];
+			
+			for(var j in classUnit.methodUnits){
+				
+				var methodUnit = classUnit.methodUnits[j];
+				
+				var methodSign = classUnit.packageName+"."+classUnit.name+"."+codeAnalysisUtil.genMethodSignType(methodUnit);
+			
+				dicMethodSign[methodSign] = methodUnit.UUID;
+				methodSigns.push(methodSign);
+			}
+		}
+		
+
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson2("method_signs", methodSigns);
+		
+		var dicResponseMethodUnits = {};
+		
+		if(contents){
+		var lines = contents.split(/\r?\n/g);
+		
+		console.log("methods");
+		 
+	    for(var i = 0;i < lines.length;i++){
+	        //code here using lines[i] which will give you each line
+	    	var line = lines[i];
+	    	console.log(line);
+	    	var matches = stringSimilarity.findBestMatch(line, methodSigns);
+//			if(matches.bestMatch.rating > 0.8){
+			var matchedMethodUnit = dicMethodUnits[dicMethodSign[matches.bestMatch.target]];
+			dicResponseMethodUnits[matchedMethodUnit.UUID] = matchedMethodUnit;
+	    	}
+		}
+		}
+		
+//		process.exit(0);
 		
 		return dicResponseMethodUnits;
 	}
@@ -138,5 +190,6 @@
 	
 	module.exports = {
 			identifyResponse : identifyResponse,
+			identifyResponseGator: identifyResponseGator,
 	}
 }());
