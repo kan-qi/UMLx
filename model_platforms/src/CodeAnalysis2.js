@@ -9,7 +9,6 @@
  * Establish the control flow between the components
  * Identify the stimuli.
  * 
- * /*
 	 * There are three layers:
 	 * codeElement-code:ClassUnit
 	 * 		-source
