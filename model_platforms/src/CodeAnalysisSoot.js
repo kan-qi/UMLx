@@ -283,7 +283,7 @@
 
 		var result = {
 			dicClassUnits: dicClassUnits,
-			dicCompositeClassUnit: dicCompositeClassUnits,
+			dicCompositeClassUnits: dicCompositeClassUnits,
 			dicClassComposite: dicClassComposite,
 			dicMethodUnits: dicMethodUnits,
 			dicMethodClass: dicMethodClass,

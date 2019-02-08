@@ -330,7 +330,7 @@
 		graph += 'imagepath = \"./public\"}';
 		
 		
-		dottyUtil = require("../utils/DottyUtil.js");
+//		dottyUtil = require("../utils/DottyUtil.js");
 		console.log("test graph");
 		console.log(graph);
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
@@ -401,7 +401,7 @@
 		graph += 'imagepath = \"./public\"}';
 		
 		
-		dottyUtil = require("../utils/DottyUtil.js");
+//		dottyUtil = require("../utils/DottyUtil.js");
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
@@ -457,7 +457,7 @@
 		
 		graph += 'imagepath = \"./public\"}';
 		
-		dottyUtil = require("../utils/DottyUtil.js");
+//		dottyUtil = require("../utils/DottyUtil.js");
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
@@ -466,9 +466,98 @@
 		
 	}
 	
+	// draw the domain model of the model
+	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
+		var  domainModelElements = domainModel.Elements;
+		      console.log("run the create class dia");
+              console.log("class diagram model is"+domainModelElements);
+              console.log("class diagram model is"+JSON.stringify(domainModelElements));
+              
+			var graph = 'digraph class_diagram {';
+             graph += 'node [fontsize = 8 shape = "record"]';
+             graph += ' edge [arrowhead = "ediamond"]'
+             for(i = 0;  i < domainModelElements.length; i++){
+                 var curClass = domainModelElements[i];
+                 graph += curClass["_id"];
+                 graph += '[ id = ' + curClass["_id"];
+                 graph += ' label = "{';
+                 graph += curClass["Name"];
+
+
+                 var classAttributes = domainModelElements[i]["Attributes"];
+                 if (classAttributes.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classAttributes.length; j++) {
+                         graph += '-   ' ;
+                         graph += classAttributes[j]["Name"];
+                         graph += ':'+classAttributes[j]["Type"];
+                         graph += '\\l';
+                     }
+                 }
+
+
+                 var classOperations = domainModelElements[i]["Operations"];
+                 if (classOperations.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classOperations.length;j++) {
+
+                    	 graph += '+   ' ;
+                         graph += classOperations[j]["Name"] + '(';
+                         var para_len = classOperations[j]["Parameters"].length;
+                         for (k = 0; k < classOperations[j]["Parameters"].length - 1; k++) {
+                        	 graph += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
+                         }
+                         graph += ')';
+                         graph += "\\l";
+                     }
+                 }
+
+                 graph += '}"]';
+
+                 var classAss = domainModelElements[i]["Associations"];
+                 for(j = 0; j < classAss.length;j++) {
+                     graph += curClass["_id"] ;
+                     graph += '->';
+                     graph += classAss[j]["id"] + ' ';
+
+                 }
+			 }
+
+            graph += 'imagepath = \"./public\"}';
+
+     		console.log("graph is:"+graph);
+//     		dottyUtil = require("../utils/DottyUtil.js");
+     		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+     			console.log("class Diagram is done");
+     		});
+
+            return graph;
+		}
+	
+	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
+
+		var debug = require("../utils/DebuggerOutput.js");
+		debug.writeJson2("component_graph_7_5", dicComponent);
+	}
+	
+	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
+
+		var debug = require("../utils/DebuggerOutput.js");
+		debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
+	}
+	
+	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
+
+		var debug = require("../utils/DebuggerOutput.js");
+		debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
+	}
+	
 	module.exports = {
 			drawSimplePrecedenceDiagram:drawSimplePrecedenceDiagramFunc,
 			drawPrecedenceDiagram: drawPrecedenceDiagramFunc,
-			drawDomainModel: drawDomainModelFunc
+			drawDomainModel: createDomainModelDiagram,
+			drawComponentDiagram: drawComponentDiagram,
+			drawClassDiagram: drawClassDiagram,
+			drawCompositeClassDiagram: drawCompositeClassDiagram
 	}
 }())

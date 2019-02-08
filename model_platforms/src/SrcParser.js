@@ -36,6 +36,8 @@
 	var androidLogUtil = require("../../utils/AndroidLogUtil.js");
 
 	var responsePatternsFile = "response-patterns.txt";
+	
+	var modelDrawer = require("../../model_drawers/UserSystemInteractionModelDrawer.js");
 
 	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
 			
@@ -57,9 +59,9 @@
 
 				var codeAnalysisResults = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
 				
-				console.log("composition graph");
-				console.log(codeAnalysisResults.compositionGraph);
-				debug.writeJson2("composition_graph_1_19", codeAnalysisResults.compositionGraph);
+//				console.log("composition graph");
+//				console.log(codeAnalysisResults.compositionGraph);
+//				debug.writeJson2("composition_graph_1_19", codeAnalysisResults.compositionGraph);
 				
 				var responseFilePath = workDir +"/"+responsePatternsFile;
 				if( !fs.existsSync(responseFilePath) ) {
@@ -67,7 +69,9 @@
 				}
 				
 				//need to update for the identification response methods.
-				var dicResponseMethodUnits = responseIdentifier.identifyResponseGator(codeAnalysisResults, responseFilePath);
+				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
+
+//				var dicResponseMethodUnits = responseIdentifier.identifyResponseGator(codeAnalysisResults, responseFilePath);
 
 				debug.writeJson2("identified_response", dicResponseMethodUnits);
 				
@@ -75,39 +79,39 @@
 				
 				debug.writeJson2("method_class", codeAnalysisResults.dicMethodClass);
 				
-//				var componentInfo = componentIdentifier.identifyComponents(
-//					codeAnalysisResults.callGraph, 
-//					codeAnalysisResults.accessGraph, 
-//					codeAnalysisResults.typeDependencyGraph, 
-//					codeAnalysisResults.extendsGraph,
-//					codeAnalysisResults.compositionGraph,
-//					codeAnalysisResults.referencedCompositeClassUnits, 
-//					codeAnalysisResults.referencedClassUnits, 
-//					codeAnalysisResults.dicCompositeSubclasses,
-//					codeAnalysisResults.dicCompositeClassUnits,
-//					codeAnalysisResults.dicClassUnits,
-//					codeAnalysisResults.dicClassComposite,
-//					Model.OutputDir
-//				);
-				
-				var componentInfo = componentIdentifierACDC.identifyComponents(
-						codeAnalysisResults.callGraph, 
-						codeAnalysisResults.accessGraph, 
-						codeAnalysisResults.typeDependencyGraph, 
-						codeAnalysisResults.extendsGraph,
-						codeAnalysisResults.compositionGraph,
-						codeAnalysisResults.referencedCompositeClassUnits, 
-						codeAnalysisResults.referencedClassUnits, 
-						codeAnalysisResults.dicCompositeSubclasses,
-						codeAnalysisResults.dicCompositeClassUnits,
-						codeAnalysisResults.dicClassUnits,
-						codeAnalysisResults.dicClassComposite,
-						Model.OutputDir
+				var componentInfo = componentIdentifier.identifyComponents(
+					codeAnalysisResults.callGraph, 
+					codeAnalysisResults.accessGraph, 
+					codeAnalysisResults.typeDependencyGraph, 
+					codeAnalysisResults.extendsGraph,
+					codeAnalysisResults.compositionGraph,
+					codeAnalysisResults.referencedCompositeClassUnits, 
+					codeAnalysisResults.referencedClassUnits, 
+					codeAnalysisResults.dicCompositeSubclasses,
+					codeAnalysisResults.dicCompositeClassUnits,
+					codeAnalysisResults.dicClassUnits,
+					codeAnalysisResults.dicClassComposite,
+					Model.OutputDir
 				);
+				
+//				var componentInfo = componentIdentifierACDC.identifyComponents(
+//						codeAnalysisResults.callGraph, 
+//						codeAnalysisResults.accessGraph, 
+//						codeAnalysisResults.typeDependencyGraph, 
+//						codeAnalysisResults.extendsGraph,
+//						codeAnalysisResults.compositionGraph,
+//						codeAnalysisResults.referencedCompositeClassUnits, 
+//						codeAnalysisResults.referencedClassUnits, 
+//						codeAnalysisResults.dicCompositeSubclasses,
+//						codeAnalysisResults.dicCompositeClassUnits,
+//						codeAnalysisResults.dicClassUnits,
+//						codeAnalysisResults.dicClassComposite,
+//						Model.OutputDir
+//				);
 				
 				debug.writeJson2("class_component_1_19", componentInfo.dicClassComponent);
 				debug.writeJson3("dic_components_1_19", componentInfo.dicComponents);
-				
+			
 				var componentMappingString = "";
 				
 				var ind = 0;
@@ -144,6 +148,13 @@
 				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 
 //				Model.UseCases = createUseCasesbyAndroidLog(componentInfo.dicComponents, Model.OutputDir, Model.OutputDir);
+				
+
+				modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
+				
+				modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnit, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+				
+				modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
 				
 				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
 
@@ -447,9 +458,9 @@
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("constructed_domain_model_kdm", DomainModel);
 
-		createDomainModelDiagram(DomainModel.Elements, DomainModel.OutputDir+"/"+"domain_model.dotty", function(){
-		   console.log("class diagram is output: "+DomainModel.OutputDir+"/"+"domain_model.dotty");
-	   });
+//		createDomainModelDiagram(DomainModel.Elements, DomainModel.OutputDir+"/"+"domain_model.dotty", function(){
+//		   console.log("class diagram is output: "+DomainModel.OutputDir+"/"+"domain_model.dotty");
+//	   });
 
 
 		return {
@@ -458,75 +469,6 @@
 		}
 
 	}
-
-	// draw the domain model of the model
-	function createDomainModelDiagram(domainModelElements, graphFilePath, callbackfunc){
-
-		      console.log("run the create class dia");
-              console.log("class diagram model is"+domainModelElements);
-              console.log("class diagram model is"+JSON.stringify(domainModelElements));
-              
-			var graph = 'digraph class_diagram {';
-             graph += 'node [fontsize = 8 shape = "record"]';
-             graph += ' edge [arrowhead = "ediamond"]'
-             for(i = 0;  i < domainModelElements.length; i++){
-                 var curClass = domainModelElements[i];
-                 graph += curClass["_id"];
-                 graph += '[ id = ' + curClass["_id"];
-                 graph += ' label = "{';
-                 graph += curClass["Name"];
-
-
-                 var classAttributes = domainModelElements[i]["Attributes"];
-                 if (classAttributes.length != 0){
-                     graph += '|';
-                     for(j = 0; j < classAttributes.length; j++) {
-                         graph += '-   ' ;
-                         graph += classAttributes[j]["Name"];
-                         graph += ':'+classAttributes[j]["Type"];
-                         graph += '\\l';
-                     }
-                 }
-
-
-                 var classOperations = domainModelElements[i]["Operations"];
-                 if (classOperations.length != 0){
-                     graph += '|';
-                     for(j = 0; j < classOperations.length;j++) {
-
-                    	 graph += '+   ' ;
-                         graph += classOperations[j]["Name"] + '(';
-                         var para_len = classOperations[j]["Parameters"].length;
-                         for (k = 0; k < classOperations[j]["Parameters"].length - 1; k++) {
-                        	 graph += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
-                         }
-                         graph += ')';
-                         graph += "\\l";
-                     }
-                 }
-
-                 graph += '}"]';
-
-                 var classAss = domainModelElements[i]["Associations"];
-                 for(j = 0; j < classAss.length;j++) {
-                     graph += curClass["_id"] ;
-                     graph += '->';
-                     graph += classAss[j]["id"] + ' ';
-
-                 }
-			 }
-
-            graph += 'imagepath = \"./public\"}';
-
-     		console.log("graph is:"+graph);
-     		dottyUtil = require("../../utils/DottyUtil.js");
-     		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-     			console.log("class Diagram is done");
-     		});
-
-
-             return graph;
-		}
 	
 	
 	function createUseCasesbyAndroidLog(dicComponent, ModelOutputDir, ModelAccessDir){
