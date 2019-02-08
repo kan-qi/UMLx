@@ -4,18 +4,25 @@ html
     link(href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', rel='stylesheet')
     link(href='css/style.css', rel='stylesheet')
     link(href="css/lightgallery.css" rel="stylesheet")
-
-    //script(type='text/javascript')
-        //var filesystem = require("fs")
-        //_getAllFilesFromFolder(ealing/ + "Desktop")
-
   body
    include banner
    if message
-    div.message-box
-     p.message-text message:#{message}
-   div.clear
-   div(id='main-panel')
+    //- div.message-box
+    //-  p.message-text message:#{message}
+   div.clear.form
+    ul
+        li.inline
+            input#uml-file.custom-file-input.select(type='file', name='uml-file', accept='text/xml', role = "button")
+            //label.custom-file-label(for="uml-file")  ddd
+        li.inline
+            button.btn.btn-dark.btn-submit.btn-lg(type='submit', onclick='showLoading()') Submit
+    #loadingScreen.hidden
+        div.full-page-model
+        div.full-page-model-content
+        div(style='padding: 30px')
+            img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+            p Processing...
+   //div(id='main-panel')
     include mainPanel
     // Modal
     #overlay-frame.modal.fade(role='dialog')
@@ -51,3 +58,5 @@ script(type='text/javascript', src="http://d3js.org/d3.v3.min.js")
 script(type='text/javascript', src="js/charts.js")
 script(type='text/javascript', src="js/scripts.js")
 script(type='text/javascript', src="http://requirejs.org/docs/release/2.2.0/minified/require.js")
+
+

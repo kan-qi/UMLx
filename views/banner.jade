@@ -2,75 +2,19 @@ div.banner
      div.content-flex
         div.col-md-10.banner-title
             a.home-button(href='/') UMLx
-        ul.nav.nav-tabs.no-border
-            li.active
-                a(data-toggle='tab', href='#repo_analytics') Overview
-            li
-                a(data-toggle='tab', href='#repo_estimation') Estimation
-            li
-                a(data-toggle='tab', href='#repo_trending') Trending
-            li
-                a(data-toggle='tab', href='#project_list') Projects 
-                    span(class="badge") #{modelAllNum}
-            li
-                a(data-toggle='tab', id='modelArchive', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives       
-        if repoInfo
-         div.repo-analytics-ops.pull-right
-            div.dropdown
-                button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Repo
+          ul.nav.nav-tabs.no-border.dropdown-style
+            li.dropdown
+                button.btn.btn-secondary.dropdown-toggle.menu-font.menu.btn-default(data-toggle='dropdown',role='button',aria-haspopup="true",aria-expanded="false") Menu
                     span.caret
-                ul.dropdown-menu
-                    li
-                        a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models
-                    li
-                        a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models (simulation)
-                    li
-                        a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
-                    li
-                        a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
-                    li
-                        a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
-                    li
-                        a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
-                    li
-                        a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
-                    //li
-                    //a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
-            div.dropdown
-                button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
-                    span.caret
-                ul.dropdown-menu
-                    li
-                        a.dropdown-item(id="open_btn" onclick="openDialogueBox('#{repoInfo._id}', '1');" href="javaScript:void(0);") Empirical Data For Use Cases
-                    li
-                        a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '2');" href="javaScript:void(0);") Empirical Data For Models
-                //li
-                    a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '3');" href="javaScript:void(0);") COCOMO Data
-            div.dropdown
-                button.btn.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
-                    span.caret
-                ul.dropdown-menu
-                    li
-                        a.request-repo-analytics.dropdown-item(id="reanalyse_repo", href="#", data-my="#{repoInfo._id}") Reanalyse Repo
-                    li
-                        a.dropdown-item(href='reloadRepo?repo_id=#{repoInfo._id}') Reload Repo
-        
-        div.col-md-2.banner-operations
-            if isEnterprise
-             div.user-invite
-                a(href="javascript:void();",data-toggle="popover", data-content="<a href='./inviteUser'>Invite User</a>"
-                data-placement="bottom", data-trigger="focus")
-                    span(class="glyphicon glyphicon-envelope")
-            div.add-button
-                span(class="glyphicon glyphicon-plus")
-                a(href='./uploadProject', role='button')  Upload Project
-                //a(href="javascript:void();",data-toggle="popover", data-content="<a href='./uploadProject'>Upload Project</a>"
-                //data-placement="bottom", data-trigger="focus")
-                //    span(class="glyphicon glyphicon-plus")
-                //    span.caret
-            div.user-operation
-                a(href="javascript:void();",data-toggle="popover", data-content="<a href='./login'>Login</a> <hr> <a href='./profile'>View Profile</a> <hr> <a href='./logout'>Logout</a>"
-                data-placement="bottom", data-trigger="focus")
-                    span(class="glyphicon glyphicon-user")
-            
-        
+                ul.dropdown-menu.dropdown-menu-right(style = "margin-top : 2px; width: 100px; border-radius : 5px;")
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#repo_analytics') Overview
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#repo_estimation') Estimation
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#repo_trending') Trending
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#project_list') Projects 
+                            span(class="badge") #{modelAllNum}
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", id='modelArchive', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives       
