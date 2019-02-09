@@ -129,17 +129,17 @@
 	}
 	
 	
-	function identifyResponseGator(codeAnalysisResults, responsePatternsFilePath){
-		responsePatternsFilePath = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release/gator-handlers.txt";
+	function identifyResponseGator(codeAnalysisResults, gatorFilePath){
+//		gatorFilePath = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release/gator-handlers.txt";
 		
 		var dicClassUnits = codeAnalysisResults.dicClassUnits;
 		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
 		
 		var scannedMethods = [];
 		
-		if (responsePatternsFilePath && fs.existsSync(responsePatternsFilePath)) {
+		if (gatorFilePath && fs.existsSync(gatorFilePath)) {
 		 
-		var contents = fs.readFileSync(responsePatternsFilePath, 'utf8');
+		var contents = fs.readFileSync(gatorFilePath, 'utf8');
 		
 //		console.log(contents);
 		

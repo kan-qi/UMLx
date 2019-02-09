@@ -19,7 +19,7 @@
 
 	// var isForPackage = false;
 
-    function analyseUML(inputFilePath, outputDir, projectName, callbackfunc) {
+    function analyseUML(inputFilePath, outputDir, projectName, callbackfunc, properties) {
 
 //        let date = new Date();
 //        let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
@@ -32,6 +32,12 @@
     		OutputDir: outputDir,
     		AccessDir: outputDir,
     		_id: uuidV1()
+    	}
+    	
+    	if(properties){
+    		for(var i in properties){
+    			xmiModel[i] = properties;
+    		}
     	}
     	
     	UMLModelExtractor.extractModelInfo(xmiModel, function(modelInfo){

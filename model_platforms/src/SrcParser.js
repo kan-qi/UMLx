@@ -29,8 +29,9 @@
 	var codeAnalysisXMI = require("./CodeAnalysisXMI.js");
 	var codeAnalysisSoot = require("./CodeAnalysisSoot.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
-	var componentIdentifierACDC = require("./ComponentIdentificationACDC.js");
+//	var componentIdentifierACDC = require("./ComponentIdentificationACDC.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
+	var useCaseIdentifier = require("./UseCaseIdentification.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
 	var androidLogUtil = require("../../utils/AndroidLogUtil.js");
@@ -69,17 +70,43 @@
 				}
 				
 				//need to update for the identification response methods.
-				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
-
-//				var dicResponseMethodUnits = responseIdentifier.identifyResponseGator(codeAnalysisResults, responseFilePath);
-
+				var dicResponseMethodUnits = null;
+				
+				if(Model.stimulusFile){
+				dicResponseMethodUnits = responseIdentifier.identifyResponseGator(codeAnalysisResults, Model.stimulusFile);
+				}
+				else{
+				dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
+				}
+				
 				debug.writeJson2("identified_response", dicResponseMethodUnits);
 				
 				debug.writeJson2("referenced_composite", codeAnalysisResults.referencedCompositeClassUnits);
 				
 				debug.writeJson2("method_class", codeAnalysisResults.dicMethodClass);
 				
-				var componentInfo = componentIdentifier.identifyComponents(
+
+				var componentInfo = null;
+				
+				if(Model.clusterFile){
+				componentInfo = componentIdentifier.identifyComponentsACDC(
+						codeAnalysisResults.callGraph, 
+						codeAnalysisResults.accessGraph, 
+						codeAnalysisResults.typeDependencyGraph, 
+						codeAnalysisResults.extendsGraph,
+						codeAnalysisResults.compositionGraph,
+						codeAnalysisResults.referencedCompositeClassUnits, 
+						codeAnalysisResults.referencedClassUnits, 
+						codeAnalysisResults.dicCompositeSubclasses,
+						codeAnalysisResults.dicCompositeClassUnits,
+						codeAnalysisResults.dicClassUnits,
+						codeAnalysisResults.dicClassComposite,
+						Model.OutputDir,
+						Model.clusterFile
+				);
+				}
+				else{
+				componentInfo = componentIdentifier.identifyComponents(
 					codeAnalysisResults.callGraph, 
 					codeAnalysisResults.accessGraph, 
 					codeAnalysisResults.typeDependencyGraph, 
@@ -93,21 +120,7 @@
 					codeAnalysisResults.dicClassComposite,
 					Model.OutputDir
 				);
-				
-//				var componentInfo = componentIdentifierACDC.identifyComponents(
-//						codeAnalysisResults.callGraph, 
-//						codeAnalysisResults.accessGraph, 
-//						codeAnalysisResults.typeDependencyGraph, 
-//						codeAnalysisResults.extendsGraph,
-//						codeAnalysisResults.compositionGraph,
-//						codeAnalysisResults.referencedCompositeClassUnits, 
-//						codeAnalysisResults.referencedClassUnits, 
-//						codeAnalysisResults.dicCompositeSubclasses,
-//						codeAnalysisResults.dicCompositeClassUnits,
-//						codeAnalysisResults.dicClassUnits,
-//						codeAnalysisResults.dicClassComposite,
-//						Model.OutputDir
-//				);
+				}
 				
 				debug.writeJson2("class_component_1_19", componentInfo.dicClassComponent);
 				debug.writeJson3("dic_components_1_19", componentInfo.dicComponents);
@@ -144,11 +157,12 @@
 				
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
 				
-
-				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
-
-//				Model.UseCases = createUseCasesbyAndroidLog(componentInfo.dicComponents, Model.OutputDir, Model.OutputDir);
-				
+				if(Model.logFile){
+					Model.UseCases = useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, Model.OutputDir, Model.OutputDir, Model.logFile);
+				}
+				else{
+					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
+				}
 
 				modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 				
@@ -469,137 +483,6 @@
 		}
 
 	}
-	
-	
-	function createUseCasesbyAndroidLog(dicComponent, ModelOutputDir, ModelAccessDir){
-		
-		var androidLogPath = "./data/GitAndroidAnalysis/android-demo-log.txt"	;
-		
-		var UseCases = [];
-
-		var UseCase = {
-				_id: "src",
-				Name: "src",
-				PrecedenceRelations : [],
-				Activities : [],
-				OutputDir : ModelOutputDir+"/src",
-				AccessDir : ModelAccessDir+"/src",
-				DiagramType : "none"
-		}
-
-		var activities = [];
-		var activitiesByID = {}
-		var precedenceRelations = [];
-
-		
-		var transactions = androidLogUtil.identifyTransactions(androidLogPath, dicComponent);
-		
-		console.log("dicComponent");
-		console.log(dicComponent);
-		console.log(transactions);
-//		process.exit(0);
-
-		for(var i in transactions){
-			var transaction = transactions[i];
-		var prevNode = null;
-		for(var j in transaction.Nodes){
-			var node = transaction.Nodes[j];
-
-			activities.push(node);
-			activitiesByID[node._id] = node;
-			if(prevNode){
-				precedenceRelations.push({start: prevNode, end: node});
-			}
-			prevNode = node;
-		}
-		}
-
-		UseCase.Activities = UseCase.Activities.concat(activities);
-		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
-
-		UseCases.push(UseCase);
-
-		return UseCases;
-
-	}
-
-	function createUseCasesbyCFG(cfgGraph, ModelOutputDir, ModelAccessDir, domainElementsByID){
-
-		var UseCases = [];
-
-		var UseCase = {
-				_id: "src",
-				Name: "src",
-				PrecedenceRelations : [],
-				Activities : [],
-				OutputDir : ModelOutputDir+"/src",
-				AccessDir : ModelAccessDir+"/src",
-				DiagramType : "none"
-		}
-
-		var nodes = cfgGraph.nodes;
-		var edges = cfgGraph.edges;
-
-		var activities = [];
-		var activitiesByID = {}
-
-		for(var i in nodes){
-			var node = nodes[i];
-
-			var domainElement = null;
-
-			if(node.component){
-				domainElement = domainElementsByID["c"+node.component.UUID.replace(/\-/g, "_")];
-			}
-
-			var activity = {
-					Name: node['name'],
-					_id: "a"+node['UUID'].replace(/\-/g, "_"),
-					Type: "activity",
-					isResponse: node.isResponse,
-					Stimulus: node.type === "stimulus" ? true: false,
-					OutScope: false,
-					Group: "System",
-					Component: domainElement
-			}
-
-
-			activities.push(activity);
-			activitiesByID[activity._id] = activity;
-		}
-
-
-		var precedenceRelations = [];
-
-		for(var i in edges){
-			var edge = edges[i];
-
-			console.log("edge");
-			console.log(edge);
-
-			var startId = "a"+edge.start.UUID.replace(/\-/g, "_");
-			var endId = "a"+edge.end.UUID.replace(/\-/g, "_");
-
-			var start = activitiesByID[startId];
-			var end = activitiesByID[endId];
-			
-			if(!start || !end){
-				continue;
-			}
-
-			console.log("push edge");
-			precedenceRelations.push({start: start, end: end});
-		}
-
-		UseCase.Activities = UseCase.Activities.concat(activities);
-		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
-
-		UseCases.push(UseCase);
-
-		return UseCases;
-
-	}
-
 
 	module.exports = {
 			extractUserSystermInteractionModel : extractUserSystermInteractionModel,
