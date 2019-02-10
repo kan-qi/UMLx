@@ -36,7 +36,7 @@
     	
     	if(properties){
     		for(var i in properties){
-    			xmiModel[i] = properties;
+    			xmiModel[i] = properties[i];
     		}
     	}
     	
@@ -777,7 +777,7 @@
 
     module.exports = {
     	generateReport: generateReport,
-        analyseSrc: function(inputFilePath, outputDir, projectName, callbackfunc){
+        analyseSrc: function(inputFilePath, outputDir, projectName, callbackfunc, properties){
             console.log("analysi src");
             analyseUML(inputFilePath, outputDir, projectName, function (model) {
                 console.log("analyse UML finishes");
@@ -813,7 +813,7 @@
                     });
                 });
 
-            });
+            }, properties);
         }
     }
 }())

@@ -40,7 +40,7 @@
 	
 	var modelDrawer = require("../../model_drawers/UserSystemInteractionModelDrawer.js");
 
-	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
+	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc, modelInfo) {
 			
 			var codeAnalysis = codeAnalysisXMI;
 			if(this.isJSONBased){
@@ -72,8 +72,8 @@
 				//need to update for the identification response methods.
 				var dicResponseMethodUnits = null;
 				
-				if(Model.stimulusFile){
-				dicResponseMethodUnits = responseIdentifier.identifyResponseGator(codeAnalysisResults, Model.stimulusFile);
+				if(modelInfo.stimulusFile){
+				dicResponseMethodUnits = responseIdentifier.identifyResponseGator(codeAnalysisResults, modelInfo.path+"/"+modelInfo.stimulusFile);
 				}
 				else{
 				dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
@@ -88,7 +88,7 @@
 
 				var componentInfo = null;
 				
-				if(Model.clusterFile){
+				if(modelInfo.clusterFile){
 				componentInfo = componentIdentifier.identifyComponentsACDC(
 						codeAnalysisResults.callGraph, 
 						codeAnalysisResults.accessGraph, 
@@ -102,7 +102,7 @@
 						codeAnalysisResults.dicClassUnits,
 						codeAnalysisResults.dicClassComposite,
 						Model.OutputDir,
-						Model.clusterFile
+						modelInfo.path+"/"+modelInfo.clusterFile
 				);
 				}
 				else{
@@ -157,8 +157,8 @@
 				
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
 				
-				if(Model.logFile){
-					Model.UseCases = useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, Model.OutputDir, Model.OutputDir, Model.logFile);
+				if(modelInfo.logFile){
+					Model.UseCases = useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, Model.OutputDir, Model.OutputDir, modelInfo.path+"/"+modelInfo.logFile);
 				}
 				else{
 					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);

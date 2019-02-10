@@ -11,10 +11,8 @@
 package soot.jimple.infoflow.android;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -1625,7 +1623,7 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			return eventHandlers;
 		}
 
-		InputStream targetStream = new FileInputStream(new File(gatorFile));
+		// InputStream targetStream = new FileInputStream(new File(gatorFile));
 
 		Debug.v().println(gatorFile);
 
@@ -1745,25 +1743,27 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			constructCallgraphInternal();
 		}
 
-		// Create and run the data flow tracker
-		infoflow = createInfoflow();
-		infoflow.addResultsAvailableHandler(resultAggregator);
-		infoflow.runAnalysis(sourceSinkManager, entryPointCreator.getGeneratedMainMethod());
-
-		// Update the statistics
-		if (config.getLogSourcesAndSinks() && infoflow.getCollectedSources() != null)
-			this.collectedSources.addAll(infoflow.getCollectedSources());
-		if (config.getLogSourcesAndSinks() && infoflow.getCollectedSinks() != null)
-			this.collectedSinks.addAll(infoflow.getCollectedSinks());
-
-		// Print out the found results
-		{
-			int resCount = resultAggregator.getLastResults() == null ? 0 : resultAggregator.getLastResults().size();
-			if (config.getOneComponentAtATime())
-				logger.info("Found {} leaks for component {}", resCount, entrypoint);
-			else
-				logger.info("Found {} leaks", resCount);
-		}
+		// // Create and run the data flow tracker
+		// infoflow = createInfoflow();
+		// infoflow.addResultsAvailableHandler(resultAggregator);
+		// infoflow.runAnalysis(sourceSinkManager,
+		// entryPointCreator.getGeneratedMainMethod());
+		//
+		// // Update the statistics
+		// if (config.getLogSourcesAndSinks() && infoflow.getCollectedSources() != null)
+		// this.collectedSources.addAll(infoflow.getCollectedSources());
+		// if (config.getLogSourcesAndSinks() && infoflow.getCollectedSinks() != null)
+		// this.collectedSinks.addAll(infoflow.getCollectedSinks());
+		//
+		// // Print out the found results
+		// {
+		// int resCount = resultAggregator.getLastResults() == null ? 0 :
+		// resultAggregator.getLastResults().size();
+		// if (config.getOneComponentAtATime())
+		// logger.info("Found {} leaks for component {}", resCount, entrypoint);
+		// else
+		// logger.info("Found {} leaks", resCount);
+		// }
 
 		// Update the performance object with the real data
 		{
