@@ -87,7 +87,7 @@ public class AnalysisEntrypoint {
     
     Debug2.v().printf("classes: %s", sb.toString());
     
-    
+    if(Configs.outputDir == null) {
     Path curDir = Paths.get(System.getProperty("user.dir"));
 	
 	File outputDir = Paths.get(curDir.toString(), "output", Configs.benchmarkName).toFile();
@@ -95,6 +95,8 @@ public class AnalysisEntrypoint {
 		outputDir.mkdir();
 	}
 	Configs.outputDir = outputDir.getAbsolutePath();
+    }
+	
 	
 	System.out.println("enter GUI analysis");
 

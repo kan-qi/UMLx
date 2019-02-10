@@ -472,7 +472,7 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
 //				         Debug1.v().printf("field:%s\n", fieldRef.toString());
 				        Debug2.v().printf("field:%s\n", fieldRef.toString());
 //				          FieldRef fieldRef = (FieldRef) val;
-				          SootClass targetClassUnitType = fieldRef.getFieldRef().declaringClass();
+				        SootClass targetClassUnitType = fieldRef.getFieldRef().declaringClass();
 //				          Debug1.v().printf("target class:%s\n", targetClassUnitType.getName());
 					        
 						ClassUnit targetClassUnit = classUnitByName.get(targetClassUnitType.getName());
@@ -500,9 +500,10 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
 				edges.add(new AccessGraphNode[] {srcAccessGraphNode, accessGraphNode});
 			}
 			
-
 		}
 		}
+		
+		System.out.println("construct of access graph finishes");
 		
 		return convertAccessGraphToJSON(edges);
 		
@@ -731,7 +732,7 @@ private CallGraph genCallGraph() {
 		return null;
 	}
 	
-//	app.setGatorFile(gatorFile.getAbsolutePath());
+	app.setGatorFile(gatorFile.getAbsolutePath());
 	
 	Debug1.v().println("Setup Application...");
 	Debug1.v().println("platforms: "+androidJarPath+" project: "+apkPath);

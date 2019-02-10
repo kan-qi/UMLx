@@ -136,6 +136,12 @@ public class Main {
       } else if ("-enableSetTextAnalysis".equals(s)
               || "-st".equals(s)) {
         Configs.enableSetTextAnalysis = true;
+      } else if ("-outputDir".equals(s)){
+    	  File outputDir = Paths.get(args[++i]).toFile();
+    		if(!outputDir.exists() || !outputDir.isDirectory()) {
+    			outputDir.mkdir();
+    		}
+    		Configs.outputDir = outputDir.getAbsolutePath();
       } else {
         throw new RuntimeException("Unknown option: " + s);
       }
