@@ -484,10 +484,10 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	  List<String> methods;
 	  Map<String, TypeDependencyUnit> typeDependencies;	// Other classes that this class has relationships with
 	  
-	  public TypeDependencyGraphNode(className) {
+	  public TypeDependencyGraphNode(String className) {
 		  this.className = className;
 		  this.uuid = UUID.randomUUID().toString();
-		  this.methods = new List<String>();
+		  this.methods = new ArrayList<String>();
 		  this.typeDependencies = new HashMap<String, TypeDependencyUnit>();
 	  }
 	  
@@ -525,34 +525,34 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
   private class TypeDependencyUnit {
 	  TypeDependencyGraphNode typeDependency;	// The class that the parent node has a dependency on
 	  List<String> returnDependencies;	// Keep track of the method names returning this type
-	  Map<String, int> parameterDependencies;	// Keep track of method names and how many parameters
-	  Map<String, int> localVarDependencies;	// Keep track of method names and how many within it
-	  List<String> attributeDependencies	// Keep track of attribute names
+	  Map<String, Integer> parameterDependencies;	// Keep track of method names and how many parameters
+	  Map<String, Integer> localVarDependencies;	// Keep track of method names and how many within it
+	  List<String> attributeDependencies;	// Keep track of attribute names
 	  String uuid;
 	  
 	  public TypeDependencyUnit(TypeDependencyGraphNode typeDependency) {
 		  this.typeDependency = typeDependency;
 		  this.uuid = UUID.randomUUID().toString();
 		  
-		  this.returnDependencies = new List<String>();
-		  this.parameterDependencies = new HashMap<String, int>();
-		  this.localVarDependencies = new HashMap<String, int>();
-		  this.attributeDependencies = new List<String>();
+		  this.returnDependencies = new ArrayList<String>();
+		  this.parameterDependencies = new HashMap<String, Integer>();
+		  this.localVarDependencies = new HashMap<String, Integer>();
+		  this.attributeDependencies = new ArrayList<String>();
 	  }
 	  
 	  public void addAttributeDependency(String attrName) {
-		  this.attributeDependencies.put(attrName);
+		  this.attributeDependencies.add(attrName);
 	  }
 	  
 	  public void addReturnDependency(String methodName) {
-		  this.returnDependencies.put(methodName);
+		  this.returnDependencies.add(methodName);
 	  }
 	  
 	  public void addParameterDependency(String methodName) {
 		  if (!this.parameterDependencies.containsKey(methodName)) {
 			  this.parameterDependencies.put(methodName, 1);
 		  } else {
-			  ((int)this.parameterDependencies.get(methodName))++;
+			  this.parameterDependencies.put(methodName, this.parameterDependencies.get(methodName) + 1);
 		  }
 	  }
 	  
@@ -560,7 +560,7 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		  if (!this.localVarDependencies.containsKey(methodName)) {
 			  this.localVarDependencies.put(methodName, 1);
 		  } else {
-			  ((int)this.localVarDependencies.get(methodName))++;
+			  this.localVarDependencies.put(methodName, this.localVarDependencies.get(methodName) + 1);
 		  }		  
 	  }
   }
@@ -639,7 +639,7 @@ public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<Comp
 			// Loop through parameter types of the method
 			List<String> parameterTypes = method.getParameterTypes();
 			for (String parameterType : parameterTypes) {
-				if (!mappings.containsKey(parameterTyp)) {
+				if (!mappings.containsKey(parameterType)) {
 					TypeDependencyGraphNode node = new TypeDependencyGraphNode(parameterType);
 					mappings.put(parameterType, node);
 				}
@@ -653,7 +653,7 @@ public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<Comp
 			Body methodBlockUnit = null;
 			
 			try {
-				methodBlockUnit = methodUnit.attachment.retrieveActiveBody();
+				methodBlockUnit = method.attachment.retrieveActiveBody();
 			} catch(Exception e) {
 				e.printStackTrace();
 				continue;
@@ -670,14 +670,18 @@ public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<Comp
 						continue;
 					}
 					
-					if (!mapping.containsKey(classUnit.name + "_" + targetClassUnit.name)) {
-						TypeDependencyGraphNode node = new TypeDependencyGraphNode(classUnit.name, targetClassUnit.name);
-						mappings.put(classUnit.name + "_" + targetClassUnit.name, node);
+					if (!mappings.containsKey(targetClassUnit.name)) {
+						TypeDependencyGraphNode node = new TypeDependencyGraphNode(targetClassUnit.name);
+						mappings.put(targetClassUnit.name, node);
 					}
-					mappings[classUnit.name + "_" + targetClassUnit.name].addLocalVariableDependency(fieldRef.getField().getName(), fieldRef.getField().getType().toString());
+					
+					// Add the local variable dependency
+					TypeDependencyGraphNode localVarNode = (TypeDependencyGraphNode)mappings.get(targetClassUnit.name);
+					currentClassNode.addLocalVariableTypeDependency(localVarNode, method.name);
 				}
 			}
 		}
+	}
 	
 	return "";
 }
