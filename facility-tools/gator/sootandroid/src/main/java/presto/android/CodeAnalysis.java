@@ -597,7 +597,7 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
   
   
 public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
-	Map mappings = new HashMap<String, TypeDependencyGraphNode>();
+	HashMap mappings = new HashMap<String, TypeDependencyGraphNode>();
 	
 	for (ClassUnit classUnit : classUnits) {
 		// Create a TypeDependencyGraphNode for the class if it doesn't exist yet
@@ -683,7 +683,22 @@ public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<Comp
 		}
 	}
 	
-	return "";
+	return convertTypeDependencyGraphToJSON(mappings);
+}
+
+String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode> typeDepGraph) {
+	String output = "{\"nodes\":[";
+	
+	// Loop through each class node
+	for (TypeDependencyGraphNode node : typeDepGraph.values()) {
+	    output += "{\"class\":\"" + node.className + "\",\"uuid\":\"" + node.uuid + "\",\"dependencies\":[";
+	    
+	    output += "]}";
+	}
+	
+	output += "]}";
+			
+	return output;
 }
 
 public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
@@ -912,6 +927,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
             ", #AppClasses: " + Scene.v().getApplicationClasses().size());
     Logger.trace("TIMECOST", "Start at " + System.currentTimeMillis());
     
+	Debug2.v().printf("\n\nallenkim-test-start\n\n");
 //  Logger.stat("#Stmt: " + numStmt[0] + " (not correct)");
 //  Debug2.v().printf("classes: %s", sb.toString());
     
@@ -1054,7 +1070,8 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
     
     CallGraph callGraph = genCallGraph();
 //	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
-	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
+	String typeDependencyGraph = constructTypeDependencyGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	Debug2.v().printf("\n\nallenkim-test: %s\n\n", typeDependencyGraph);
 //	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
