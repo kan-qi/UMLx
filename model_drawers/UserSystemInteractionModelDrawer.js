@@ -33,7 +33,7 @@
 	}
 
 	function drawStimulusNode(id, label){
-		return id+'[label=<\
+		return '"'+id+'"[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/stimulus_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
@@ -42,7 +42,7 @@
 
 	function drawNode(id, label){
 		
-		return id+'[label=<\
+		return '"'+id+'"[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
@@ -50,7 +50,7 @@
 	}
 
 	function drawOutOfScopeNode(id, label){
-		return id+'[label=<\
+		return '"'+id+'"[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/out_of_scope_activity_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
@@ -58,7 +58,7 @@
 	}
 
 	function drawFragmentNode(id, label){
-		return id+'[label=<\
+		return '"'+id+'"[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/fragment_node_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\

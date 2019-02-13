@@ -11,7 +11,21 @@
  * Identify the system components.
  * Establish the control flow between the components
  * Identify the stimuli.
- *
+ * 
+ * The component identification algorithm should be parameterized.
+ * The linkage method
+ * The similarity function
+ * The weighting schema
+ * 
+ * Size:75%
+ * S2W3L3
+ * Unbiased Ellenberg Relative Complete
+ * Cohesion:  75%-80%
+ * S1W1L1
+ * S1W1L1 Euclidean Binary Single
+ * Coupline: 50%
+ * S1W3L1
+ * S1W3L1 Euclidean Relative Single
  */
 
 (function() {
@@ -22,6 +36,8 @@
 	var jp = require('jsonpath');
 	var util = require('util');
     const uuidv4 = require('uuid/v4');
+    var FileManagerUtil = require("../../utils/FileManagerUtils.js");
+    var stringSimilarity = require('string-similarity');
 
 	function identifyComponents(
 		callGraph, 
@@ -911,7 +927,7 @@
 		
 //		var acdcClusterFile = "./data/GitAndroidAnalysis/AnotherMonitor__ACDC_java/clustered_classes_7_5.txt";
 		
-		var acdc = fileManager.readFileSync(acdcClusterFile);
+		var acdc = FileManagerUtil.readFileSync(acdcClusterFile);
 		
 		var lines = acdc.split("\n");
 		for(var i in lines){

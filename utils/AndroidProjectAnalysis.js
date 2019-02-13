@@ -82,7 +82,7 @@ function analyseAndroidProject(projectList, reportDir){
 //	FileManagerUtil.deleteFileSync(reportPath);
 	
 	  //use promise to construct the repo objects
-    function analyseProject(projectXMI, clusterFile, stimulusFile, logFile, projectName, path, reportDir){
+    function analyseProject(projectXMI, clusterFile, stimulusFile, logFile, projectName, path, useCaseRec, reportDir){
         return new Promise((resolve, reject) => {
 //        	config.setDebugOutputDir(projectPath+"/debug");
         	
@@ -124,7 +124,7 @@ function analyseAndroidProject(projectList, reportDir){
             		resolve();
         		})
         		  
-        	}, {clusterFile: clusterFile, stimulusFile: stimulusFile, logFile: logFile, path: path});
+        	}, {clusterFile: clusterFile, stimulusFile: stimulusFile, logFile: logFile, path: path, useCaseRec: useCaseRec});
         	
         	}
       	  });
@@ -134,7 +134,7 @@ function analyseAndroidProject(projectList, reportDir){
     }
     
     return Promise.all(projectList.map(project=>{
-        return analyseProject(project.path+"\\"+project.modelFile, project.clusterFile, project.stimulusFile, project.logFile, project.tag, project.path, reportDir);
+        return analyseProject(project.path+"\\"+project.modelFile, project.clusterFile, project.stimulusFile, project.logFile, project.tag, project.path, project.useCaseRec, reportDir);
     })).then(
         function(){
 			console.log("=============Cache==============");

@@ -157,24 +157,49 @@
 				
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
 				
-				if(modelInfo.logFile){
-					Model.UseCases = useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, Model.OutputDir, Model.OutputDir, modelInfo.path+"/"+modelInfo.logFile);
+//				var dicDomainElement = {};
+				
+//				for(var i in Model.DomainModel.Elements){
+//					var domainElement = Model.DomainModel.Elements[i];
+//					dicDomainElement[domainElement["_id"]] = domainElement; 
+//				}
+				
+				if(modelInfo.logFile && modelInfo.useCaseRec){
+					useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, domainModelInfo.dicComponentDomainElement, dicResponseMethodUnits, Model.OutputDir, Model.OutputDir, modelInfo.path+"/"+modelInfo.logFile,  modelInfo.path+"/"+modelInfo.useCaseRec, function(useCases){
+						Model.UseCases = useCases;
+						
+						modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
+						
+						modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnit, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+						
+						modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
+						
+						debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
+
+						if(callbackfunc){
+							callbackfunc(Model);
+						}
+						
+					});
 				}
 				else{
 					Model.UseCases = useCaseIdentifier.identifyUseCasesfromCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
+					
+					modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
+					
+					modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnit, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+					
+					modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
+					
+					debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
+
+					if(callbackfunc){
+						callbackfunc(Model);
+					}
+					
 				}
 
-				modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 				
-				modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnit, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
-				
-				modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
-				
-				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
-
-				if(callbackfunc){
-					callbackfunc(Model);
-				}
 	}
 
 	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodParameters){
@@ -194,6 +219,7 @@
 
 		var domainElementsByID = [];
 		var domainElements = [];
+		var dicComponentDomainElement = {};
 
 		for(var i in dicComponents){
 			var component = dicComponents[i];
@@ -209,6 +235,7 @@
 			
 			domainElements.push(domainElement);
 			domainElementsByID[domainElement._id] = domainElement;
+			dicComponentDomainElement[component.UUID] = domainElement;
 		}
 
 		for (var i in callGraph.edges) {
@@ -479,7 +506,8 @@
 
 		return {
 			DomainModel:DomainModel,
-			DomainElementsByID: domainElementsByID
+			DomainElementsByID: domainElementsByID,
+			dicComponentDomainElement: dicComponentDomainElement
 		}
 
 	}

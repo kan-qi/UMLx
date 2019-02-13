@@ -521,6 +521,8 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			constructCallgraphInternal();
 		}
 
+		// output the callbacks for the two methods.
+
 		logger.info("Entry point calculation done.");
 
 		if (this.sourceSinkProvider != null) {
@@ -534,6 +536,10 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			// Create the SourceSinkManager
 			sourceSinkManager = createSourceSinkManager(lfp, callbacks);
 		}
+	}
+
+	private void dumpIdentifiedCallbacks() {
+
 	}
 
 	/**

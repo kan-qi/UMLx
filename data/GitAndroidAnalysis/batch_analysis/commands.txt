@@ -1,3 +1,13 @@
 node --max_old_space_size=10240 ".\utils\AndroidProjectAnalysis.js" --analyse-android-projects "D:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\GitAndroidAnalysis\\batch_analysis\\repo_example.json"
 
 node --max_old_space_size=10240 ".\utils\AndroidProjectAnalysis.js" --analyse-android-projects "D:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\GitAndroidAnalysis\\batch_analysis\\repo_example-2.json"
+
+node --max_old_space_size=10240 ".\utils\AndroidProjectAnalysis.js" --analyse-android-projects "D:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\GitAndroidAnalysis\\batch_analysis\\repo_example-3.json"
+
+node -e 'require("./utils/AndroidLogUtil.js").filterAndroidLog("./data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release/another_monitor_log.file")'
+
+node -e 'require("./utils/AndroidLogUtil.js").filterAndroidLog()'
+
+node "./utils/AndroidLogFilter.js"
+
+node --max_old_space_size=10240 ".\utils\AndroidProjectAnalysis.js" --analyse-android-projects "D:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\GitAndroidAnalysis\\batch_analysis\\repo_example-4.json"
