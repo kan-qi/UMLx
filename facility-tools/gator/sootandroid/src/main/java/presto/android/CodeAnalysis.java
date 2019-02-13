@@ -690,10 +690,80 @@ String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode>
 	String output = "{\"nodes\":[";
 	
 	// Loop through each class node
+	int classIter = 0;
+	int classCount = typeDepGraph.size();
 	for (TypeDependencyGraphNode node : typeDepGraph.values()) {
 	    output += "{\"class\":\"" + node.className + "\",\"uuid\":\"" + node.uuid + "\",\"dependencies\":[";
 	    
+	    // Loop through each class it depends on
+	    int typeDepIter = 0;
+	    int typeDepCount = node.typeDependencies.size();
+	    for (TypeDependencyUnit dependency : node.typeDependencies.values()) {
+	    	output += "{\"class\":\"" + dependency.typeDependency.className + "\",\"uuid\":\"" + dependency.typeDependency.uuid + "\"";
+	    	
+	    	int depCount;
+	    	int iterCount = 0;
+	    			
+	    	output += ",\"returnDependencies\":[";
+	    	depCount = dependency.returnDependencies.size();
+	    	for (String returnDep : dependency.returnDependencies) {
+	    		output += "\"" + returnDep + "\"";
+	    		iterCount++;
+	    		if (iterCount < depCount) {
+	    			output += ",";
+	    		}
+	    	}
+	    	output += "]";
+	    	
+	    	output += ",\"paramDependencies\":{";
+	    	depCount = dependency.parameterDependencies.size();
+	    	iterCount = 0;
+	    	for (Map.Entry<String, Integer> paramDep : dependency.parameterDependencies.entrySet()){
+	    		output += "\"" + paramDep.getKey() + "\":\"" + paramDep.getValue() + "\"";
+	    	    iterCount++;
+	    	    if (iterCount < depCount) {
+	    	    	output += ",";
+	    	    }
+	    	}
+	    	output += "}";
+	    	
+	    	output += ",\"localVarDependencies\":{";
+	    	depCount = dependency.localVarDependencies.size();
+	    	iterCount = 0;
+	    	for (Map.Entry<String, Integer> localVarDep : dependency.localVarDependencies.entrySet()){
+	    		output += "\"" + localVarDep.getKey() + "\":\"" + localVarDep.getValue() + "\"";
+	    	    iterCount++;
+	    	    if (iterCount < depCount) {
+	    	    	output += ",";
+	    	    }
+	    	}
+	    	output += "}";	    	
+	    	
+	    	output += ",\"attrDependencies\":[";
+	    	depCount = dependency.attributeDependencies.size();
+	    	iterCount = 0;
+	    	for (String attrDep : dependency.attributeDependencies) {
+	    		output += "\"" + attrDep + "\"";
+	    		iterCount++;
+	    		if (iterCount < depCount) {
+	    			output += ",";
+	    		}
+	    	}
+	    	output += "]";	    	
+    	
+	    	output += "}";
+	    	typeDepIter++;
+	    	if (typeDepIter < typeDepCount) {
+	    		output += ",";
+	    	}
+	    }
+	    
 	    output += "]}";
+	    
+	    classIter++;
+	    if (classIter < classCount) {
+	    	output += ",";
+	    }
 	}
 	
 	output += "]}";
