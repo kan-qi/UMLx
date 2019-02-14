@@ -88,7 +88,7 @@
 
 				var componentInfo = null;
 				
-				//clustering configs for agglomerative clustering
+				 // clustering configs for agglomerative clustering
 				 // Unbiased Ellenberg Relative Complete Cohesion:  75%-80%
 				 var S2W3L3 = {
 						 s: 2,

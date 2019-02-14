@@ -105,6 +105,7 @@
 		//composite classes are used for metrics claculation and clustering
 
 		var callMetric = calculateCallMetric(callGraph, classes, classDic, methods);
+		
 		var accessMetric = calculateAccessMetric(accessGraph, classes, classDic, methods, attrs);
 		var typeDependencyMetric = calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods);
 		var extendsMetric = calculateExtendsMetric(extendsGraph, classes, classDic, methods);
@@ -140,33 +141,40 @@
 			for (var j = 0; j < classes.length; j++) {
 				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j] + extendsMetric[i][j] + compositionMetric[i][j];
 //				maxMetric = Math.max(maxMetric, metric[i][j]);
+				
 			}
 		}
 		}
 		else if(clusteringConfig.w == 3){
 		//relative weighting schema
 		//need to evaluate the number of classes a class is connected with
-		var frequencyTab = zeroList(classes.length);
+		var frequencyTabCall = zeroList(classes.length);
+		var frequencyTabAccess = zeroList(classes.length);
+		var frequencyTabTypeDependency = zeroList(classes.length);
+		var frequencyTabExtends = zeroList(classes.length);
+		var frequencyTabComposition = zeroList(classes.length);
+		var NumC= classes.length;
+		
 		for(var i = 0; i < classes.length; i++){
 			for (var j = 0; j < classes.length; j++) {
 				if(callMetric[i][j]){
-					frequencyTab[i]++;
+					frequencyTabCall[i]++;
 					continue;
 				}
 				if(accessMetric[i][j]){
-					frequencyTab[i]++;
+					frequencyTabAccess[i]++;
 					continue;
 				}
 				if(typeDependencyMetric[i][j]){
-					frequencyTab[i]++;
+					frequencyTabTypeDependency[i]++;
 					continue;
 				}
 				if(extendsMetric[i][j]){
-					frequencyTab[i]++;
+					frequencyTabExtends[i]++;
 					continue;
 				}
 				if(compositionMetric[i][j]){
-					frequencyTab[i]++;
+					frequencyTabComposition[i]++;
 					continue;
 				}
 //				maxMetric = Math.max(maxMetric, metric[i][j]);
@@ -175,7 +183,7 @@
 		//evaluate the normalized weight.
 		for (var i = 0; i < classes.length; i++) {
 			for (var j = 0; j < classes.length; j++) {
-				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j] + extendsMetric[i][j] + compositionMetric[i][j];
+				metric[i][j] = callMetric[i][j]*NumC/frequenceyTabCall[j] + accessMetric[i][j]*NumC/frequenceyTabAccess[j] + typeDependencyMetric[i][j]*NumC/frequenceyTabTypeDependency[j] + extendsMetric[i][j]*NumC/frequenceyTabExtends[j] + compositionMetric[i][j]*NumC/frequenceyTabComposition[j];
 //				maxMetric = Math.max(maxMetric, metric[i][j]);
 			}
 		}
@@ -499,6 +507,8 @@
 		console.log("access metric")
 		
 		var access = zeroArray(classes.length, classes.length);
+		var accessedTotal = zeroList(classes.length);
+		
 		var accessors = {};
 		var accessed = {};
 		var accessMetrics = zeroArray(classes.length, classes.length);
@@ -511,6 +521,7 @@
 				continue;
 			}
 			access[col][row]++;
+			accessedTotal[row]++;
 
 			if (!(col in accessors)) {
 				accessors[col] = {}
@@ -539,7 +550,8 @@
 					if (accessors[key1].hasOwnProperty(key2)) {
 						// callersNumber[parseInt(key1)][parseInt(key2)] = callers[key1][key2].size;
 						// calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
-						accessMetrics[parseInt(key1)][parseInt(key2)] = access[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(accessors[key1][key2].size+accessed[key1][key2].size)/(methods[parseInt(key1)]+attrs[parseInt(key2)]);
+//						accessMetrics[parseInt(key1)][parseInt(key2)] = access[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(accessors[key1][key2].size+accessed[key1][key2].size)/(methods[parseInt(key1)]+attrs[parseInt(key2)]);
+						accessMetrics[parseInt(key1)][parseInt(key2)] = access[parseInt(key1)][parseInt(key2)]/accessedTotal[parseInt(key2)] + access[parseInt(key2)][parseInt(key1)]/accessedTotal[parseInt(key1)];
 					}
 				}
 			}
@@ -556,6 +568,7 @@
 		var callers = {};
 		var callees = {};
 		var callMetrics = zeroArray(classes.length, classes.length);
+		var calledTotal = zeroList(classes.length);
 
 		for (var i in callGraph.edgesComposite) {
 			var edge = callGraph.edgesComposite[i];
@@ -566,6 +579,8 @@
 			}
 
 			calls[col][row]++;
+			
+			calledTotal[row]++;
 
 			if (!(col in callers)) {
 				callers[col] = {}
@@ -594,8 +609,8 @@
 					if (callers[key1].hasOwnProperty(key2)) {
 						// callersNumber[parseInt(key1)][parseInt(key2)] = callers[key1][key2].size;
 						// calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
-						callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(callers[key1][key2].size+callees[key1][key2].size)/(methods[parseInt(key1)]+methods[parseInt(key2)]);
-					}
+//						callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(callers[key1][key2].size+callees[key1][key2].size)/(methods[parseInt(key1)]+methods[parseInt(key2)]);
+						callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/calledTotal[parseInt(key2)] + calls[parseInt(key2)][parseInt(key1)]/calledTotal[parseInt(key1)]
 				}
 			}
 		}
