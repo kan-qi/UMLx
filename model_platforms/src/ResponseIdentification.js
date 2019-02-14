@@ -78,7 +78,7 @@
 			}
 	
 			for(var j in methodPatterns){
-				if(methodUnit.Signature.name.match(methodPatterns[j])){
+				if(methodUnit.signature.name.match(methodPatterns[j])){
 					methodUnit.isResponse = true;
 					break;
 				}	

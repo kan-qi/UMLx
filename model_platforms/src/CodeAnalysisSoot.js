@@ -88,7 +88,7 @@
 				var referencedMethodUnit = referencedClassUnit.methodUnits[j];
 				dicMethodUnits[referencedMethodUnit.UUID] = {
 						UUID: referencedMethodUnit.UUID,
-						Signature:{
+						signature:{
 							name:referencedMethodUnit.name,
 							parameterUnits:referencedMethodUnit.parameterUnits
 						}
@@ -166,17 +166,17 @@
 			}
 			
 			var accessNode = {
-					name: accessClassUnit.name+":"+accessMethodUnit.Signature.name,
+					name: accessClassUnit.name+":"+accessMethodUnit.signature.name,
 					component:accessClassUnit,
 					UUID: accessMethodUnit.UUID,
-					methodName: accessMethodUnit.Signature.name
+					methodName: accessMethodUnit.signature.name
 			}
 			accessGraph.nodes.push(accessNode);
 			var accessCompositeNode = {
-					name: accessCompositeClassUnit.name+":"+accessMethodUnit.Signature.name,
+					name: accessCompositeClassUnit.name+":"+accessMethodUnit.signature.name,
 					component:accessCompositeClassUnit,
 					UUID: accessMethodUnit.UUID,
-					methodName: accessMethodUnit.Signature.name
+					methodName: accessMethodUnit.signature.name
 			}
 			accessGraph.nodesComposite.push(accessCompositeNode);
 			
@@ -232,17 +232,17 @@
 				}
 				
 				var callNode = {
-						name: callClassUnit.name+":"+callMethodUnit.Signature.name,
+						name: callClassUnit.name+":"+callMethodUnit.signature.name,
 						component:callClassUnit,
 						UUID: callMethodUnit.UUID,
-						methodName: callMethodUnit.Signature.name
+						methodName: callMethodUnit.signature.name
 				}
 				callGraph.nodes.push(callNode);
 				var callCompositeNode = {
-						name: callCompositeClassUnit.name+":"+callMethodUnit.Signature.name,
+						name: callCompositeClassUnit.name+":"+callMethodUnit.signature.name,
 						component:callCompositeClassUnit,
 						UUID: callMethodUnit.UUID,
-						methodName: callMethodUnit.Signature.name
+						methodName: callMethodUnit.signature.name
 				}
 				callGraph.nodesComposite.push(callNode);
 				
@@ -250,19 +250,19 @@
 				var calleeClassUnit = dicClassUnits[edge.end.classUnit];
 				var calleeCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[edge.end.classUnit]];
 				var calleeNode = {
-						name: calleeClassUnit.name+":"+calleeMethodUnit.Signature.name,
+						name: calleeClassUnit.name+":"+calleeMethodUnit.signature.name,
 						component:calleeClassUnit,
 						UUID: calleeMethodUnit.UUID,
-						methodName: calleeMethodUnit.Signature.name
+						methodName: calleeMethodUnit.signature.name
 				}
 				
 				callGraph.nodes.push(calleeNode);
 				
 				var calleeCompositeNode = {
-						name: calleeCompositeClassUnit.name+":"+calleeMethodUnit.Signature.name,
+						name: calleeCompositeClassUnit.name+":"+calleeMethodUnit.signature.name,
 						component:calleeCompositeClassUnit,
 						UUID: calleeMethodUnit.UUID,
-						methodName: calleeMethodUnit.Signature.name
+						methodName: calleeMethodUnit.signature.name
 				}
 				
 				callGraph.nodesComposite.push(calleeNode);

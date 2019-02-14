@@ -128,25 +128,25 @@
 					//						classUnits.push(identifiedClassUnit);
 					//						dicClassUnits[identifiedClassUnit.UUID] = identifiedClassUnit;
 
-					//						for(var l in identifiedClassUnit.MethodUnits){
-					//							dicMethodUnits[identifiedClassUnit.MethodUnits[l].UUID] = identifiedClassUnit.MethodUnits[l];
-					//							dicMethodClass[identifiedClassUnit.MethodUnits[l].UUID] = identifiedClassUnit.UUID;
+					//						for(var l in identifiedClassUnit.methodUnits){
+					//							dicMethodUnits[identifiedClassUnit.methodUnits[l].UUID] = identifiedClassUnit.methodUnits[l];
+					//							dicMethodClass[identifiedClassUnit.methodUnits[l].UUID] = identifiedClassUnit.UUID;
 					//						}
-					//						classUnits = classUnits.concat(identifiedClassUnit.ClassUnits);
+					//						classUnits = classUnits.concat(identifiedClassUnit.classUnits);
 					for (l in subClassUnits) {
 						subClassUnits[l].isWithinBoundary = isWithinBoundary;
 						//							classUnits.push(subClassUnits[l]);
 						dicClassUnits[subClassUnits[l].UUID] = subClassUnits[l];
 
-						for (var m in subClassUnits[l].MethodUnits) {
-							//								dicMethodUnits[subClassUnits[l].MethodUnits[m].UUID] = subClassUnits[l].MethodUnits[m];
-							dicMethodClass[subClassUnits[l].MethodUnits[m].UUID] = subClassUnits[l].UUID;
+						for (var m in subClassUnits[l].methodUnits) {
+							//								dicMethodUnits[subClassUnits[l].methodUnits[m].UUID] = subClassUnits[l].methodUnits[m];
+							dicMethodClass[subClassUnits[l].methodUnits[m].UUID] = subClassUnits[l].UUID;
 						}
 					}
 					// compositeClassUnit = aggregateClassUnit(identifiedClassUnit);
 					//
-					// console.log("subClassUnits");
-					// console.log(subClassUnits);
+//					 console.log("subClassUnits");
+//					 console.log(subClassUnits);
 
 					compositeClassUnit = aggregateClassUnit(subClassUnits, isWithinBoundary, dicClassComposite, dicCompositeSubclasses);
 					dicCompositeClasses[compositeClassUnit.UUID] = compositeClassUnit;
@@ -155,8 +155,8 @@
 
 					function findActionElementsFromActionElement(actionElement) {
 						var actionElements = [];
-						for (var i in actionElement.ActionElements) {
-							var containedActionElement = actionElement.ActionElements[i];
+						for (var i in actionElement.actionElements) {
+							var containedActionElement = actionElement.actionElements[i];
 							actionElements.push(containedActionElement);
 							actionElements = actionElements.concat(findActionElementsFromActionElement(containedActionElement));
 						}
@@ -169,8 +169,8 @@
 						var subMethodUnit = subMethodUnits[l];
 						//							dicMethodClass[subMethodUnit.UUID] = identifiedClassUnit.UUID;
 						dicMethodUnits[subMethodUnit.UUID] = subMethodUnit;
-						for (var m in subMethodUnit.BlockUnit.ActionElements) {
-							var actionElement = subMethodUnit.BlockUnit.ActionElements[m];
+						for (var m in subMethodUnit.blockUnit.actionElements) {
+							var actionElement = subMethodUnit.blockUnit.actionElements[m];
 							var containedActionElements = findActionElementsFromActionElement(actionElement);
 							containedActionElements.push(actionElement);
 							for (var m in containedActionElements) {
@@ -245,13 +245,13 @@
 			accessGraph: accessGraph,
 			extendsGraph: extendsGraph,
 			compositionGraph: compositionGraph,
-			referencedClassUnits: referencedClassUnits,
+			referencedclassUnits: referencedClassUnits,
 			referencedCompositeClassUnits: referencedCompositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
 			dicMethodParameters: dicMethodParameters,
 		};
 		
-		debug.writeJson("source_code_analysis_kdm", result);
+		debug.writeJson2("source_code_analysis_kdm", result);
 		
 		return result;
 	}
@@ -261,17 +261,17 @@
 
 		var compositeClassUnit = {
 			// name: XMIClassUnit['$']['name'],
-			MethodUnits: [],
-			StorableUnits: [],
-			//				Calls : [],
-			//				ClassUnits: [],
-			ClassUnits: subClassUnits,
-			//				BlockUnits : [],
-			//				Addresses: [],
-			//				Reads:[],
-			//				Calls:[],
-			//				Creates:[],
-			//				ActionElements:[],
+			methodUnits: [],
+			attrUnits: [],
+			//				calls : [],
+			//				classUnits: [],
+			classUnits: [],
+			//				blockUnits : [],
+			//				addresses: [],
+			//				reads:[],
+			//				calls:[],
+			//				creates:[],
+			//				actionElements:[],
 			//				isResponse: false,
 			// UUID: XMIClassUnit['$']['UUID'],
 			UUID: uuidV1(),
@@ -286,16 +286,20 @@
 		for (var i in subClassUnits) {
 			var subClassUnit = subClassUnits[i];
 			// console.log("found!!!");
-			// console.log(subClassUnit.MethodUnits);
-			// console.log(subClassUnit.StorableUnits);
-			compositeClassUnit.MethodUnits = compositeClassUnit.MethodUnits.concat(subClassUnit.MethodUnits);
-			compositeClassUnit.StorableUnits = compositeClassUnit.StorableUnits.concat(subClassUnit.StorableUnits);
+			// console.log(subClassUnit.methodUnits);
+			// console.log(subClassUnit.attrUnits);
+			compositeClassUnit.methodUnits = compositeClassUnit.methodUnits.concat(subClassUnit.methodUnits);
+			compositeClassUnit.attrUnits = compositeClassUnit.attrUnits.concat(subClassUnit.attrUnits);
 			dicClassComposite[subClassUnit.UUID] = compositeClassUnit.UUID;
 			childrenClasses.push(subClassUnit.UUID);
+			compositeClassUnit.classUnits.push(subClassUnit.UUID);
 			// console.log(compositeClassUnit);
 		}
 
 		dicCompositeSubclasses[compositeClassUnit.UUID] = childrenClasses;
+		
+//		console.log(compositeClassUnit);
+//		process.exit(0);
 
 		return compositeClassUnit;
 	}
@@ -351,24 +355,24 @@
 			//			console.log('test');
 			//			console.log(classUnit);
 			// var xmiClassUnit = classUnit.attachment;
-			var XMIClassStorableUnits = classUnit.StorableUnits
-			for (var q in XMIClassStorableUnits) {
-				var XMIClassStorableUnit = XMIClassStorableUnits[q];
-				if (XMIClassStorableUnit.type == undefined) {
+			var XMIClassAttrUnits = classUnit.attrUnits
+			for (var q in XMIClassAttrUnits) {
+				var XMIClassAttrUnit = XMIClassAttrUnits[q];
+				if (XMIClassAttrUnit.type == undefined) {
 					continue;
 				}
-				var XMIClassStorableUnitType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(XMIClassStorableUnit.type));
+				var XMIClassAttrUnitType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(XMIClassAttrUnit.type));
 				var targetClassUnit = null;
-				// console.log('StorableUnit');
-				// console.log(XMIClassStorableUnitType[0]['$']['UUID']);
+				// console.log('AttrUnit');
+				// console.log(XMIClassAttrUnitType[0]['$']['UUID']);
 
-				if (!XMIClassStorableUnitType || XMIClassStorableUnitType.length < 1) {
+				if (!XMIClassAttrUnitType || XMIClassAttrUnitType.length < 1) {
 					continue;
 				}
 
 				for (var j in dicClassUnits) {
 					var classUnitCandidate = dicClassUnits[j];
-					if (classUnitCandidate.UUID == XMIClassStorableUnitType[0]['$']['UUID']) {
+					if (classUnitCandidate.UUID == XMIClassAttrUnitType[0]['$']['UUID']) {
 						targetClassUnit = classUnitCandidate;
 					}
 				}
@@ -449,14 +453,14 @@
 				var startNode = nodesByNameAttr[classUnit.UUID];
 				if (!startNode) {
 					startNode = {
-						name: classUnit.name + ":" + XMIClassStorableUnit.name,
+						name: classUnit.name + ":" + XMIClassAttrUnit.name,
 						// isResponse: methodUnit.isResponse,
 						component: {
 							name: classUnit.name,
 							UUID: classUnit.UUID
 						},
-						UUID: XMIClassStorableUnit.UUID,
-						attributeName: XMIClassStorableUnit.name
+						UUID: XMIClassAttrUnit.UUID,
+						attributeName: XMIClassAttrUnit.name
 						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodesAttr.push(startNode);
@@ -487,12 +491,12 @@
 			}
 			// var calls = kdmModelUtils.identifyCalls(xmiClassUnit);
 			// var XMIMethodUnits = jp.query(xmiClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
-			var methodUnits = classUnit.MethodUnits;
+			var methodUnits = classUnit.methodUnits;
 			for (var i in methodUnits) {
 				// var XMIMethodUnit = XMIMethodUnits[i];
 				// var methodUnit = kdmModelUtils.identifyMethodUnit(XMIMethodUnit, xmiString);
 				var methodUnit = methodUnits[i];
-				var methodParameters = methodUnit.Signature.parameterUnits; // the parameters of the method, including input and return
+				var methodParameters = methodUnit.signature.parameterUnits; // the parameters of the method, including input and return
 				// var methodClassUnit = locateClassUnitForMethod(methodUnit, topClassUnits); // the class which owns the method
 				var methodClassUnit = classUnit;
 
@@ -501,10 +505,10 @@
 				}
 
 				// To find the local variable
-				var methodActionElements = methodUnit.BlockUnit.ActionElements;
+				var methodActionElements = methodUnit.blockUnit.actionElements;
 				for (var k in methodActionElements) {
 					var methodActionElement = methodActionElements[k];
-					var methodLocalVariables = methodActionElement.StorableUnits;
+					var methodLocalVariables = methodActionElement.attrUnits;
 					for (var p in methodLocalVariables) {
 						var methodLocalVariable = methodLocalVariables[p];
 						var localVariableType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodLocalVariable.type));
@@ -544,7 +548,7 @@
 						var startNodeComposite = nodesByNamePComposite[methodUnit.UUID];
 						if (!startNodeComposite) {
 							startNodeComposite = {
-								name: compositeClassUnit.name + ":" + methodUnit.Signature.name + ":" + methodLocalVariable.name,
+								name: compositeClassUnit.name + ":" + methodUnit.signature.name + ":" + methodLocalVariable.name,
 								// isResponse: methodUnit.isResponse,
 								component: {
 									name: compositeClassUnit.name,
@@ -589,7 +593,7 @@
 						}
 
 						if (!(dicMethodParameters.hasOwnProperty(methodUnit.UUID))) {
-							var methodParameters = methodUnit.Signature.parameterUnits;
+							var methodParameters = methodUnit.signature.parameterUnits;
 							var name = null;
 							var dicParameters = [];
 							for (var l in methodParameters) {
@@ -622,7 +626,7 @@
 						var startNode = nodesByNameLocal[methodUnit.UUID];
 						if (!startNode) {
 							startNode = {
-								name: methodClassUnit.name + ":" + methodUnit.Signature.name + ":" + methodLocalVariable.name,
+								name: methodClassUnit.name + ":" + methodUnit.signature.name + ":" + methodLocalVariable.name,
 								// isResponse: methodUnit.isResponse,
 								component: {
 									name: methodClassUnit.name,
@@ -713,7 +717,7 @@
 					var startNodeComposite = nodesByNamePComposite[methodUnit.UUID];
 					if (!startNodeComposite) {
 						startNodeComposite = {
-							name: compositeClassUnit.name + ":" + methodUnit.Signature.name + ":" + methodParameter.name,
+							name: compositeClassUnit.name + ":" + methodUnit.signature.name + ":" + methodParameter.name,
 							// isResponse: methodUnit.isResponse,
 							component: {
 								name: compositeClassUnit.name,
@@ -760,14 +764,14 @@
 					var startNode = nodesByNamePara[methodUnit.UUID];
 					if (!startNode) {
 						startNode = {
-							name: methodClassUnit.name + ":" + methodUnit.Signature.name + ":" + methodParameter.name,
+							name: methodClassUnit.name + ":" + methodUnit.signature.name + ":" + methodParameter.name,
 							// isResponse: methodUnit.isResponse,
 							component: {
 								name: methodClassUnit.name,
 								UUID: methodClassUnit.UUID
 							},
 							method: {
-								name: methodUnit.Signature.name,
+								name: methodUnit.signature.name,
 								UUID: methodUnit.UUID,
 								parameter: {
 									name: methodParameter.name,
@@ -849,7 +853,7 @@
 			// console.log('test');
 			// console.log(classUnit);
 			var xmiClassUnit = classUnit.attachment;
-			var methodUnits = classUnit.MethodUnits;
+			var methodUnits = classUnit.methodUnits;
 			// var XMIMethodUnits = jp.query(xmiClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
 			for (var q in methodUnits) {
 				// var XMIMethodUnit = XMIMethodUnits[q];
@@ -864,18 +868,18 @@
 				// console.log("Reads!!!!");
 				// console.log(methodUnit);
 				// console.log("methodUnitAbove");
-				var methodBlockUnit = methodUnit.BlockUnit;
+				var methodBlockUnit = methodUnit.blockUnit;
 				// console.log(methodBlockUnit);
 				// if (methodBlockUnit.length > 0) {
-				var methodActionElementsOut = methodUnit.BlockUnit.ActionElements;
+				var methodActionElementsOut = methodUnit.blockUnit.actionElements;
 				for (var z in methodActionElementsOut) {
 					console.log("actionelementout");
 					var methodActionElementOut = methodActionElementsOut[z];
 					console.log(methodActionElementOut);
-					var methodActionElementsIn = methodActionElementOut.ActionElements;
+					var methodActionElementsIn = methodActionElementOut.actionElements;
 					for (var y in methodActionElementsIn) {
 						var methodActionElementIn = methodActionElementsIn[y];
-						var methodReads = methodActionElementIn.Reads;
+						var methodReads = methodActionElementIn.reads;
 						for (var x in methodReads) {
 							var methodRead = methodReads[x];
 							var targetFrom = methodRead.from;
@@ -890,34 +894,33 @@
 								var methodAccessTypeResult = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodAccessType));
 								var methodAccessUUID = targetTo.UUID;
 								var targetClassUnit = null;
-								var targetStorableUnit = null;
+								var targetAttrUnit = null;
 								for (var a in dicClassUnits) {
 									var classUnitCandidate = dicClassUnits[a];
-									var classStorableUnits = classUnitCandidate.StorableUnits;
-									for (var b in classStorableUnits) {
-										var StorableUnitCandidate = classStorableUnits[b];
-										if (StorableUnitCandidate.UUID == methodAccessUUID) {
+									var classAttrUnits = classUnitCandidate.attrUnits;
+									for (var b in classAttrUnits) {
+										var storableUnitCandidate = classAttrUnits[b];
+										if (storableUnitCandidate.UUID == methodAccessUUID) {
 											targetClassUnit = classUnitCandidate;
-											targetStorableUnit = StorableUnitCandidate;
+											targetAttrUnit = storableUnitCandidate;
 										}
 									}
-
 								}
 
 								if (!targetClassUnit || !targetClassUnit.isWithinBoundary) {
 									continue;
 								}
 
-								if (targetStorableUnit.type == undefined) {
+								if (targetAttrUnit.type == undefined) {
 									continue;
 								}
-								var XMIClassStorableUnitType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(targetStorableUnit.type));
+								var XMIClassAttrUnitType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(targetAttrUnit.type));
 								var targetStorableType = null;
-								// console.log('StorableUnit');
-								// console.log(XMIClassStorableUnitType[0]['$']['UUID']);
+								// console.log('storableUnit');
+								// console.log(XMIClassAttrUnitType[0]['$']['UUID']);
 								for (var j in dicClassUnits) {
 									var classUnitCandidate = dicClassUnits[j];
-									if (classUnitCandidate.UUID == XMIClassStorableUnitType[0]['$']['UUID']) {
+									if (classUnitCandidate.UUID == XMIClassAttrUnitType[0]['$']['UUID']) {
 										targetStorableType = classUnitCandidate;
 										break;
 									}
@@ -949,7 +952,7 @@
 								var startNodeComposite = nodesByNameComposite[methodUnit.UUID];
 								if (!startNodeComposite) {
 									startNodeComposite = {
-										name: compositeClassUnit.name + ":" + methodUnit.Signature.name,
+										name: compositeClassUnit.name + ":" + methodUnit.signature.name,
 										// isResponse: methodUnit.isResponse,
 										component: {
 											name: compositeClassUnit.name,
@@ -963,7 +966,7 @@
 									nodesByNameComposite[methodUnit.UUID] = startNodeComposite;
 								}
 
-								var endNodeComposite = nodesByNameComposite[targetStorableUnit.UUID];
+								var endNodeComposite = nodesByNameComposite[targetAttrUnit.UUID];
 								if (!endNodeComposite) {
 									endNodeComposite = {
 										name: compositeTargetClassUnit.name,
@@ -972,11 +975,11 @@
 											name: compositeTargetClassUnit.name,
 											UUID: compositeTargetClassUnit.UUID,
 										},
-										UUID: targetStorableUnit.UUID
+										UUID: targetAttrUnit.UUID
 										//							isWithinBoundary: targetClassUnit.isWithinBoundary
 									};
 									nodesComposite.push(endNodeComposite);
-									nodesByNameComposite[targetStorableUnit.UUID] = endNodeComposite;
+									nodesByNameComposite[targetAttrUnit.UUID] = endNodeComposite;
 								}
 								//				var end = targetClassUnit.name;
 								edgesComposite.push({ start: startNodeComposite, end: endNodeComposite });
@@ -996,7 +999,7 @@
 								}
 
 								if (!(dicMethodParameters.hasOwnProperty(methodUnit.UUID))) {
-									var methodParameters = methodUnit.Signature.parameterUnits;
+									var methodParameters = methodUnit.signature.parameterUnits;
 									var name = null;
 									var dicParameters = [];
 									for (var l in methodParameters) {
@@ -1031,37 +1034,37 @@
 								var startNode = nodesByName[methodUnit.UUID];
 								if (!startNode) {
 									startNode = {
-										name: classUnit.name + ":" + methodUnit.Signature.name,
+										name: classUnit.name + ":" + methodUnit.signature.name,
 										// isResponse: methodUnit.isResponse,
 										component: {
 											name: classUnit.name,
 											UUID: classUnit.UUID
 										},
 										UUID: methodUnit.UUID,
-										methodName: methodUnit.Signature.name,
+										methodName: methodUnit.signature.name,
 										//							isWithinBoundary: targetClassUnit.isWithinBoundary
 									};
 									nodes.push(startNode);
 									nodesByName[methodUnit.UUID] = startNode;
 								}
 
-								var endNode = nodesByName[targetStorableUnit.UUID];
+								var endNode = nodesByName[targetAttrUnit.UUID];
 								if (!endNode) {
 									endNode = {
-										name: targetClassUnit.name + ":" + targetStorableUnit.name,
+										name: targetClassUnit.name + ":" + targetAttrUnit.name,
 										// isResponse: targetMethodUnit.isResponse,
 										component: {
 											name: targetClassUnit.name,
 											UUID: targetClassUnit.UUID,
 										},
-										UUID: targetStorableUnit.UUID,
-										attributeName: targetStorableUnit.name,
+										UUID: targetAttrUnit.UUID,
+										attributeName: targetAttrUnit.name,
 										attributeType: targetStorableType.name,
 										attributeTypeUUID: targetStorableType.UUID,
 										//							isWithinBoundary: targetClassUnit.isWithinBoundary
 									};
 									nodes.push(endNode);
-									nodesByName[targetStorableUnit.UUID] = endNode;
+									nodesByName[targetAttrUnit.UUID] = endNode;
 								}
 								//				var end = targetClassUnit.name;
 								edges.push({ start: startNode, end: endNode });
@@ -1158,7 +1161,7 @@
 				var startNodeComposite = nodesByNameComposite[callMethodUnit.UUID];
 				if (!startNodeComposite) {
 					startNodeComposite = {
-						name: compositeClassUnit.name + ":" + callMethodUnit.Signature.name,
+						name: compositeClassUnit.name + ":" + callMethodUnit.signature.name,
 						// isResponse: methodUnit.isResponse,
 						component: {
 							name: compositeClassUnit.name,
@@ -1175,7 +1178,7 @@
 				var endNodeComposite = nodesByNameComposite[targetMethodUnit.UUID];
 				if (!endNodeComposite) {
 					endNodeComposite = {
-						name: compositeTargetClassUnit.name + ":" + targetMethodUnit.Signature.name,
+						name: compositeTargetClassUnit.name + ":" + targetMethodUnit.signature.name,
 						// isResponse: targetMethodUnit.isResponse,
 						component: {
 							name: compositeTargetClassUnit.name,
@@ -1205,7 +1208,7 @@
 //				}
 
 				if (!(dicMethodParameters.hasOwnProperty(callMethodUnit.UUID))) {
-					var methodParameters = callMethodUnit.Signature.parameterUnits;
+					var methodParameters = callMethodUnit.signature.parameterUnits;
 					var name = null;
 					var parameters = [];
 					for (var l in methodParameters) {
@@ -1237,15 +1240,15 @@
 				var startNode = nodesByName[callMethodUnit.UUID];
 				if (!startNode) {
 					startNode = {
-						name: callClassUnit.name + ":" + callMethodUnit.Signature.name,
+						name: callClassUnit.name + ":" + callMethodUnit.signature.name,
 						isResponse: callMethodUnit.isResponse,
 						component: {
 							name: callClassUnit.name,
 							UUID: callClassUnit.UUID,
-							// methodNumber: callClassUnit.MethodUnits.length
+							// methodNumber: callClassUnit.methodUnits.length
 						},
 						UUID: callMethodUnit.UUID,
-						methodName: callMethodUnit.Signature.name,
+						methodName: callMethodUnit.signature.name,
 
 						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
@@ -1256,15 +1259,15 @@
 				var endNode = nodesByName[targetMethodUnit.UUID];
 				if (!endNode) {
 					endNode = {
-						name: targetClassUnit.name + ":" + targetMethodUnit.Signature.name,
+						name: targetClassUnit.name + ":" + targetMethodUnit.signature.name,
 						isResponse: targetMethodUnit.isResponse,
 						component: {
 							name: targetClassUnit.name,
 							UUID: targetClassUnit.UUID,
-							// methodNumber: callClassUnit.MethodUnits.length
+							// methodNumber: callClassUnit.methodUnits.length
 						},
 						UUID: targetMethodUnit.UUID,
-						methodName: targetMethodUnit.Signature.name,
+						methodName: targetMethodUnit.signature.name,
 
 						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
@@ -1398,7 +1401,7 @@
 			console.log(classUnit);
 
 			// e.g. Car class contains an Engine instance
-			var compositionItems = kdmModelUtils.identifyStorableUnits(xmiClassUnit);
+			var compositionItems = kdmModelUtils.identifyAttrUnits(xmiClassUnit);
 
 			for (var j in compositionItems) {
 				var compositionItem = compositionItems[j];
@@ -1490,20 +1493,20 @@
 	//		function findCallsFromActionElement(actionElement){
 	//			var calls = [];
 	////			console.log("output action element");
-	////			console.log(responseMethod.Signature.name);
+	////			console.log(responseMethod.signature.name);
 	////			console.log(actionElement);
-	//			calls = calls.concat(actionElement.Calls);
+	//			calls = calls.concat(actionElement.calls);
 	//
-	//			for(var i in actionElement.ActionElements){
-	//				calls = calls.concat(findCallsFromActionElement(actionElement.ActionElements[i]));
+	//			for(var i in actionElement.actionElements){
+	//				calls = calls.concat(findCallsFromActionElement(actionElement.actionElements[i]));
 	//			}
 	//
 	//			return calls;
 	//		}
 	//
-	//		for(var i in methodUnit.BlockUnit.ActionElements){
+	//		for(var i in methodUnit.blockUnit.actionElements){
 	//
-	//			var actionElement = methodUnit.BlockUnit.ActionElements[i];
+	//			var actionElement = methodUnit.blockUnit.actionElements[i];
 	//			calls = calls.concat(findCallsFromActionElement(actionElement));
 	//		}
 	//
@@ -1511,23 +1514,23 @@
 	//	}
 
 	//	function findSubClasses(classUnit){
-	//		function findSubClassesFromActionElement(ActionElement){
+	//		function findSubClassesFromActionElement(actionElement){
 	//			var classUnits = [];
-	//			for(var k in ActionElement.ClassUnits){
-	//				classUnits.push(ActionElement.ClassUnits[k]);
-	//				var subClassUnits = findSubClasses(ActionElement.ClassUnits[k]);
+	//			for(var k in ActionElement.classUnits){
+	//				classUnits.push(actionElement.classUnits[k]);
+	//				var subClassUnits = findSubClasses(actionElement.classUnits[k]);
 	//				classUnits = classUnits.concat(subClassUnits);
 	//			}
 	//			return classUnits;
 	//		}
 	//		var classUnits = [];
-	//		for(var i in classUnit.MethodUnits){
-	//			var ActionElements = classUnit.MethodUnits[i].BlockUnit.ActionElements;
+	//		for(var i in classUnit.methodUnits){
+	//			var ActionElements = classUnit.methodUnits[i].blockUnit.actionElements;
 	//			for(var j in ActionElements){
 	//				var ActionElement = ActionElements[j];
-	//				classUnits = classUnits.concat(findSubClassesFromActionElement(ActionElement));
-	//				for(var k in ActionElement.ActionElements){
-	//					classUnits = classUnits.concat(findSubClassesFromActionElement(ActionElement.ActionElements[k]));
+	//				classUnits = classUnits.concat(findSubClassesFromActionElement(actionElement));
+	//				for(var k in ActionElement.actionElements){
+	//					classUnits = classUnits.concat(findSubClassesFromActionElement(actionElement.actionElements[k]));
 	//				}
 	//			}
 	//		}
@@ -1535,20 +1538,20 @@
 	//		return classUnits;
 	//	}
 
-	//	function locateClassUnitForMethod(methodUnitToCompare, ClassUnits){
+	//	function locateClassUnitForMethod(methodUnitToCompare, classUnits){
 	//		console.log("UUID");
 	//		console.log(methodUnitToCompare.UUID);
 	//
 	//		function identifyFromActionElement(targetActionElement, methodUnitToCompare){
 	//
-	//			for(var i in targetActionElement.ClassUnits){
-	//			var result = locateClassUnitForMethod(methodUnitToCompare, targetActionElement.ClassUnits[i]);
+	//			for(var i in targetActionElement.classUnits){
+	//			var result = locateClassUnitForMethod(methodUnitToCompare, targetActionElement.classUnits[i]);
 	//			if(result){
 	//				return result;
 	//			}
 	//			}
-	//			for(var i in targetActionElement.ActionElements){
-	//				var result = identifyFromActionElement(targetActionElement.ActionElements, methodUnitToCompare);
+	//			for(var i in targetActionElement.actionElements){
+	//				var result = identifyFromActionElement(targetActionElement.actionElements, methodUnitToCompare);
 	//				if(result){
 	//					return result;
 	//				}
@@ -1557,21 +1560,21 @@
 	//			return false;
 	//		}
 	////		var classUnitToSelect = null;
-	//		for(var i in ClassUnits){
-	//			var classUnit = ClassUnits[i];
+	//		for(var i in classUnits){
+	//			var classUnit = classUnits[i];
 	//			if(!classUnit){
 	//				continue;
 	//			}
 	//			console.log(classUnit);
-	//			var MethodUnits = classUnit.MethodUnits;
-	//			for(var j in MethodUnits){
-	//				var methodUnit = MethodUnits[j];
+	//			var methodUnits = classUnit.methodUnits;
+	//			for(var j in methodUnits){
+	//				var methodUnit = methodUnits[j];
 	//				if(methodUnit.UUID === methodUnitToCompare.UUID){
 	//					return classUnit;
 	//				}
 	//				else{
-	//					for(var k in methodUnit.BlockUnit.ActionElements){
-	//						var actionElement = methodUnit.BlockUnit.ActionElements[k];
+	//					for(var k in methodUnit.blockUnit.actionElements){
+	//						var actionElement = methodUnit.blockUnit.actionElements[k];
 	//						var result = identifyFromActionElement(actionElement, methodUnitToCompare);
 	//						if(result){
 	//							return result;
@@ -1584,7 +1587,7 @@
 	//		return false;
 	//	}
 	//
-	//	function locateMethodUnitForActionElement(actionElementToCompare, ClassUnits){
+	//	function locateMethodUnitForActionElement(actionElementToCompare, classUnits){
 	//		console.log("UUID");
 	//		console.log(actionElementToCompare.UUID);
 	////		var classUnitToSelect = null;
@@ -1600,8 +1603,8 @@
 	//				}
 	//				else{
 	//
-	//					for(var i in targetActionElement.ActionElements){
-	//						var includedActionElement = targetActionElement.ActionElements[i];
+	//					for(var i in targetActionElement.actionElements){
+	//						var includedActionElement = targetActionElement.actionElements[i];
 	//						var result = IdentifyFromActionElement(includedActionElement, associatedMethod, actionElementToCompare);
 	//						if(result){
 	//							return result;
@@ -1609,7 +1612,7 @@
 	//					}
 	//
 	//
-	//					var result = locateMethodUnitForActionElement(actionElementToCompare, targetActionElement.ClassUnits);
+	//					var result = locateMethodUnitForActionElement(actionElementToCompare, targetActionElement.classUnits);
 	//					if(result){
 	//						return false;
 	//					}
@@ -1618,13 +1621,13 @@
 	//			return false;
 	//		}
 	//
-	//		for(var i in ClassUnits){
-	//			var classUnit = ClassUnits[i];
-	//			var MethodUnits = classUnit.MethodUnits;
-	//			for(var j in MethodUnits){
-	//				var methodUnit = MethodUnits[j];
-	//				for(var k in methodUnit.BlockUnit.ActionElements){
-	//					var actionElement = methodUnit.BlockUnit.ActionElements[k];
+	//		for(var i in classUnits){
+	//			var classUnit = classUnits[i];
+	//			var methodUnits = classUnit.methodUnits;
+	//			for(var j in methodUnits){
+	//				var methodUnit = methodUnits[j];
+	//				for(var k in methodUnit.blockUnit.actionElements){
+	//					var actionElement = methodUnit.blockUnit.actionElements[k];
 	//					console.log("to compare action element");
 	//					console.log(actionElement.UUID);
 	//					var result = IdentifyFromActionElement(actionElement, methodUnit, actionElementToCompare);
@@ -1639,9 +1642,9 @@
 	//	}
 
 
-	//	function isResponseClass(ClassUnit){
-	//		for(var i in ClassUnit.MethodUnits){
-	//			if(ClassUnit.MethodUnits[i].isResponse){
+	//	function isResponseClass(classUnit){
+	//		for(var i in classUnit.methodUnits){
+	//			if(classUnit.methodUnits[i].isResponse){
 	//				return true;
 	//			}
 	//		}

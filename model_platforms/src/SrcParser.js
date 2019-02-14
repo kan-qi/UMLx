@@ -88,6 +88,35 @@
 
 				var componentInfo = null;
 				
+				//clustering configs for agglomerative clustering
+				 // Unbiased Ellenberg Relative Complete Cohesion:  75%-80%
+				 var S2W3L3 = {
+						 s: 2,
+						 w: 3,
+						 l: 3,
+						 cut: 0.8,
+						 tag:"S2W3L3"
+				 }
+		
+				 // S1W1L1 Euclidean Binary Single Coupling: 50%
+				 var S1W1L1 = {
+						 s: 1,
+						 w: 1,
+						 l: 1,
+						 cut: 0.5,
+						 tag:"S1W1L1"
+				 }
+		
+				 // S1W3L1 Euclidean Relative Single ?
+				 var S1W3L1 = {
+						 s: 1,
+						 w: 3,
+						 l: 1,
+						 cut: 0.7,
+						 tag:"S1W3L1"
+				 }
+				
+				modelInfo.clusterFile = null;
 				if(modelInfo.clusterFile){
 				componentInfo = componentIdentifier.identifyComponentsACDC(
 						codeAnalysisResults.callGraph, 
@@ -118,6 +147,9 @@
 					codeAnalysisResults.dicCompositeClassUnits,
 					codeAnalysisResults.dicClassUnits,
 					codeAnalysisResults.dicClassComposite,
+//					S2W3L3,
+//					S1W3L1,
+					S1W1L1,
 					Model.OutputDir
 				);
 				}
@@ -242,6 +274,8 @@
 			var edge = callGraph.edges[i];
 			
 			var startNode = edge.start;
+			console.log("domain model element")
+			console.log(startNode);
 			var callComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var callDomainElement = domainElementsByID[callComponentUUID];
 			
