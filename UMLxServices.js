@@ -1010,6 +1010,8 @@ app.get('/surveyAnalytics', function (req, res){
 });
 
 
+
+
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
     { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
     const worker = fork('./UMLxAnalyzeWorker.js',
@@ -1026,8 +1028,9 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
         console.l("killing child process");
         sendPush(subscription, 'Evaluation finished');
         worker.kill();
-        res.redirect('/');
+        res.redirect('/'); // 第二次redirect 
     });
+
     let obj = encapsulateReq(req);
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
@@ -1035,8 +1038,13 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     sendPush(subscription, 'Project Analyzing');
     
     console.l("DEBUGGGG: before evaluate project");
+
+    
     // setTimeout(() => evaluateUploadedProject(req), 2000);
 });
+
+
+
 
 function encapsulateReq(req) {
     let obj = {};

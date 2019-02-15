@@ -23,6 +23,7 @@ process.on("message", (req) => {
     console.l(req);
     req = JSON.parse(req);
     let text = evaluateUploadedProject(req);
+    
     //process.send('ok');
 });
 
