@@ -30,10 +30,10 @@ colnames(foldResults) <- c(
 		'MKII_mmre','MKII_pred15','MKII_pred25','MKII_pred50',
 		'COSMIC_mmre','COSMIC_pred15','COSMIC_pred25','COSMIC_pred50',
 		'SLOC_mmre','SLOC_pred15','SLOC_pred25','SLOC_pred50',
-		'SLOC_ln_mmre','SLOC_ln_pred15','SLOC_ln_pred25','SLOC_ln_pred50'
+		'SLOC_LN_mmre','SLOC_LN_pred15','SLOC_LN_pred25','SLOC_LN_pred50'
 )
 
-foldResults1 <- array(0,dim=c(50,9,nfold))
+foldResults1 <- array(0,dim=c(50,11,nfold))
 
 #Perform 10 fold cross validation
 for(i in 1:nfold){
@@ -70,9 +70,15 @@ for(i in 1:nfold){
 	#bayesianModel1 <- model1
 	
 	#eucp.mre = apply(testData, 1, function(x))
-	eucp.predict = cbind(predicted=predict.blm(bayesianModel1, newdata = testTNModelData), actual=testTNModelData$Effort)
-	#print(eucp.predict)
-	eucp.mre = apply(eucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	
+	#eucp.predict = cbind(predicted=predict.blm(bayesianModel1, newdata = testTNModelData), actual=testTNModelData$Effort)
+
+  #print(eucp.predict)
+	
+	#eucp.mre = apply(eucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	
+	#eucp.mre = c(0,0,0,0)
+	
 	eucp.mmre = mean(eucp.mre)
 	#print(eucp.mmre)
 	#eucp.preds = sapply(eucp.mre, function(x) calculatePreds(x))
@@ -102,12 +108,19 @@ for(i in 1:nfold){
 	
 	#bayesianModel2 <- model2
 	
-	exucp.predict = cbind(predicted=predict.blm(bayesianModel2, newdata = testSWTIIModelData), actual=testSWTIIModelData$Effort)
-	print(exucp.predict)
-	exucp.mre = apply(exucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	#exucp.predict = cbind(predicted=predict.blm(bayesianModel2, newdata = testSWTIIModelData), actual=testSWTIIModelData$Effort)
+	
+	#print(exucp.predict)
+	
+	#exucp.mre = apply(exucp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	
+	#exucp.mre = c(0,0,0,0)
+	
 	exucp.mmre = mean(exucp.mre)
+	
 	print(exucp.mmre)
-	#exucp.preds = sapply(exucp.mre, function(x) calculatePreds(x))
+
+		#exucp.preds = sapply(exucp.mre, function(x) calculatePreds(x))
 	exucp.pred15 = length(exucp.mre[exucp.mre<=0.15])/length(exucp.mre)
 	exucp.pred25 = length(exucp.mre[exucp.mre<=0.25])/length(exucp.mre)
 	exucp.pred50 = length(exucp.mre[exucp.mre<=0.50])/length(exucp.mre)
@@ -134,11 +147,16 @@ for(i in 1:nfold){
 	
 	#bayesianModel3 <- model3
 
-	
 	#ducp.m = lm(Effort~DUCP, data=trainSWTIIIModelData)
-	ducp.predict = cbind(predicted=predict.blm(bayesianModel3, newdata = testSWTIIIModelData), actual=testSWTIIIModelData$Effort)
+	
+	#ducp.predict = cbind(predicted=predict.blm(bayesianModel3, newdata = testSWTIIIModelData), actual=testSWTIIIModelData$Effort)
+	
 	#print(ducp.predict)
-	ducp.mre = apply(ducp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	
+	#ducp.mre = apply(ducp.predict, 1, function(x) abs(x[1] - x[2])/x[2])
+	
+	#ducp.mre = c(0,0,0,0)
+	
 	ducp.mmre = mean(ducp.mre)
 	#print(ducp.mmre)
 	#ducp.preds = sapply(ducp.mre, function(x) calculatePreds(x))
@@ -267,7 +285,7 @@ for(i in 1:nfold){
 	}
 	
 	print('sloc testing set predication')
-	SLOC.m = lm(Effort~Sloc, data=otherTrainData)
+	SLOC.m = lm(Effort~KSLOC, data=otherTrainData)
 	SLOC.predict = cbind(predicted=predict(SLOC.m, otherTestData), actual=otherTestData$Effort)
 	print(SLOC.predict)
 	SLOC.mre = apply(SLOC.predict, 1, function(x) abs(x[1] - x[2])/x[2])
@@ -287,25 +305,6 @@ for(i in 1:nfold){
 	
 	print('ln sloc testing set predication')
 	otherTrainData$log_effort = log(otherTrainData$Effort)
-	otherTrainData$log_sloc = log(otherTrainData$SLOC)
-	SLOC_LN.m = lm(log_effort~log_sloc, data=otherTrainData)
-	a = SLOC_LN.m$coefficients
-	b = SLOC_LN.m$coefficients
-	SLOC_LN.predict = cbind(predicted=otherTestData^b+exp(a), actual=otherTestData$Effort)
-	print(SLOC_LN.predict)
-	SLOC_LN.mre = apply(SLOC_LN.predict, 1, function(x) abs(x[1] - x[2])/x[2])
-	SLOC_LN.mmre = mean(SLOC_LN.mre)
-	print("SLOC_LN.mmre")
-	print(SLOC_LN.mmre)
-	#SLOC_LN.preds = sapply(SLOC_LN.mre, function(x) calculatePreds(x))
-	SLOC_LN.pred15 = length(SLOC_LN.mre[SLOC_LN.mre<=0.15])/length(SLOC_LN.mre)
-	SLOC_LN.pred25 = length(SLOC_LN.mre[SLOC_LN.mre<=0.25])/length(SLOC_LN.mre)
-	SLOC_LN.pred50 = length(SLOC_LN.mre[SLOC_LN.mre<=0.50])/length(SLOC_LN.mre)
-	print(c(SLOC_LN.pred15, SLOC_LN.pred25, SLOC_LN.pred50))
-	
-	
-	print('ln sloc testing set predication')
-	otherTrainData$log_effort = log(otherTrainData$Effort)
 	otherTrainData$log_sloc = log(otherTrainData$KSLOC)
 	SLOC_LN.m = lm(log_effort~log_sloc, data=otherTrainData)
 	a = summary(SLOC_LN.m)$coefficients[1,1]
@@ -315,6 +314,12 @@ for(i in 1:nfold){
 	SLOC_LN.mre <- SLOC_LN.mre[!is.na(SLOC_LN.mre)]
 	SLOC_LN.mmre = mean(SLOC_LN.mre)
 	print(SLOC_LN.mmre)
+	#SLOC_LN.preds = sapply(SLOC_LN.mre, function(x) calculatePreds(x))
+	SLOC_LN.pred15 = length(SLOC_LN.mre[SLOC_LN.mre<=0.15])/length(SLOC_LN.mre)
+	SLOC_LN.pred25 = length(SLOC_LN.mre[SLOC_LN.mre<=0.25])/length(SLOC_LN.mre)
+	SLOC_LN.pred50 = length(SLOC_LN.mre[SLOC_LN.mre<=0.50])/length(SLOC_LN.mre)
+	print(c(SLOC_LN.pred15, SLOC_LN.pred25, SLOC_LN.pred50))
+	
 	
 	SLOC_LN.pred <- c()
 	for(j in 1:50){
