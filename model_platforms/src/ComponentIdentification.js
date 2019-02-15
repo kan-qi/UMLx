@@ -610,9 +610,10 @@
 						// callersNumber[parseInt(key1)][parseInt(key2)] = callers[key1][key2].size;
 						// calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
 //						callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(callers[key1][key2].size+callees[key1][key2].size)/(methods[parseInt(key1)]+methods[parseInt(key2)]);
-						callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/calledTotal[parseInt(key2)] + calls[parseInt(key2)][parseInt(key1)]/calledTotal[parseInt(key1)]
+						callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/calledTotal[parseInt(key2)] + calls[parseInt(key2)][parseInt(key1)]/calledTotal[parseInt(key1)];
 				}
 			}
+		}
 		}
 		
 		return callMetrics;
