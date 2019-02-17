@@ -133,8 +133,10 @@ private class CallGraphNode{
 //output the call graph to JSON format
 private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, MethodUnit> methodBySig, Map<String, String> methodToClass, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic){
 		
+		
 		Set<CallGraphNode[]> edges = new HashSet<CallGraphNode[]>();
 		
+		if(cg != null) {
 		Iterator<Edge> itr = cg.iterator();
 
 		while(itr.hasNext()){
@@ -165,6 +167,7 @@ private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List
 			
 			CompositeClassUnit srcCompositeClass = compositeClassUnitByUUID.get(srcCompositeClassUUID);
 			CompositeClassUnit targetCompositeClass = compositeClassUnitByUUID.get(targetCompositeClassUUID);
+		}
 		}
 		
 		return convertCallGraphToJSON(edges);

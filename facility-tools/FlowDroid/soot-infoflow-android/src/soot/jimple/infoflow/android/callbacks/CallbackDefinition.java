@@ -9,7 +9,7 @@ import soot.SootMethod;
  *
  */
 public class CallbackDefinition {
-	
+
 	/**
 	 * Enumeration containing the possible types of callbacks
 	 * 
@@ -21,50 +21,57 @@ public class CallbackDefinition {
 		 * The callback is on a UI control, e.g., a button click handler
 		 */
 		Widget,
-		
+
 		/**
 		 * The callback is a normal method without special properties
 		 */
 		Default
 	}
-	
+
 	private final SootMethod targetMethod;
 	private final SootMethod parentMethod;
 	private final CallbackType callbackType;
-	
+
 	/**
 	 * Creates a new instance of the {@link CallbackDefinition} class
-	 * @param targetMethod The callback method
-	 * @param parentMethod The parent method in the Android framework, e.g.,
-	 * in the callback interface method
-	 * @param callbackType The type of callback, e.g., UI callback
+	 * 
+	 * @param targetMethod
+	 *            The callback method
+	 * @param parentMethod
+	 *            The parent method in the Android framework, e.g., in the callback
+	 *            interface method
+	 * @param callbackType
+	 *            The type of callback, e.g., UI callback
 	 */
 	public CallbackDefinition(SootMethod targetMethod, SootMethod parentMethod, CallbackType callbackType) {
 		this.targetMethod = targetMethod;
 		this.parentMethod = parentMethod;
 		this.callbackType = callbackType;
 	}
-	
+
 	/**
 	 * Gets the callback method represented by this data object
+	 * 
 	 * @return The callback method represented by this data object
 	 */
 	public SootMethod getTargetMethod() {
 		return this.targetMethod;
 	}
-	
+
 	/**
-	 * Gets the parent method in the Android framework that causes the target
-	 * method to be a callback. The parent is usually the method in the
-	 * framework's callback interface.
+	 * Gets the parent method in the Android framework that causes the target method
+	 * to be a callback. The parent is usually the method in the framework's
+	 * callback interface.
+	 * 
 	 * @return The parent method in the Android framework
 	 */
 	public SootMethod getParentMethod() {
 		return this.parentMethod;
 	}
-	
+
 	/**
 	 * Gets the type of callback, e.g., UI callback
+	 * 
 	 * @return The type of callback, e.g., UI callback
 	 */
 	public CallbackType getCallbackType() {
@@ -104,10 +111,15 @@ public class CallbackDefinition {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return targetMethod.toString();
 	}
-	
+
+	public String profile() {
+		return "targetMethod: " + targetMethod.toString() + "\n" + "parentMethod:" + parentMethod.toString() + "\n"
+				+ "callbackType:" + callbackType;
+	}
+
 }

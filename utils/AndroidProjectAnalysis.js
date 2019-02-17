@@ -15,57 +15,60 @@ var path = require('path');
 var mkdirp = require('mkdirp');
 var fs = require('fs');
 var exec = require('child_process').exec;
-var EclipseUtil = require("./EclipseUtil.js");
+var AndroidLogUtil = require("./AndroidLogUtil.js");
 var FileManagerUtil = require("./FileManagerUtils.js");
 var RScriptExec = require('./RScriptUtil.js');
 var config = require("../config.js");
 
 var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 
-function runGatorAnalysis(projectList){
-	
-	if(config.defaultEclipseWorkSpace){
-	var currentWorkSpace = config.defaultEclipseWorkSpace;
-	FileManagerUtil.deleteFolderRecursive(currentWorkSpace);
-	}
 
+function analyseAndroidApks(projectList, reportDir){
+	var reportPath = reportDir+"\\analysis-results-folders.txt";
+//	global.debugCache = new Object();
+//	FileManagerUtil.deleteFileSync(reportPath);
+	
 	  //use promise to construct the repo objects
-    function recoverModel(projectPath, modelFile, override){
+    function analyseApk(apkFileName, reportDir){
         return new Promise((resolve, reject) => {
-        		
-        	modelFile = projectPath + "\\"+modelFile;
+//        	config.setDebugOutputDir(projectPath+"/debug");
         	
-        	console.log(modelFile);
-        	
-        	fs.exists(modelFile, (exists) => {
-        	if(exists && !override){
-        		console.log(modelFile +" already exist.");
+        if(!apkFileName){
+        		return;
+        }
+        
+        var apkName = apkFileName.replace(/\.apk/g, "");
+        
+        var outputDir = reportDir + "\\" + apkName;
+        
+        if(config.defaultEclipseWorkSpace){
+        	var currentWorkSpace = config.defaultEclipseWorkSpace;
+        	FileManagerUtil.deleteFolderRecursive(outputDir);
+       }
+
+        	mkdirp(outputDir, function(err) {
+            //to generate svg file.
+        		AndroidLogUtil.generateAndroidAnalysis(apkFileName, function(outputFile){
+        		if(!outputFile){
+        			console.log('analysis error!');
+        		}
+
         		resolve();
-        	}
-        	else{
-            //to recover kdm model
-        		
-        		EclipseUtil.generateKDMModel2(projectPath, function(filePath){
-        			console.log("finished recovering kdm model");
-        			console.log(filePath);
-            		resolve();
-        		});
-        		
-        	}
-      	  });
+        		  
+        	});
         	
-        });
+        	});
+      	  });
     }
     
     return Promise.all(projectList.map(project=>{
-        return recoverModel(project.path, project.modelFile, false);
+        return analyseApk(project.apkFileName, reportDir);
     })).then(
         function(){
             return new Promise((resolve, reject) => {
                 setTimeout(function(){
-                	console.log("recoverFinished");
+                	console.log("analysis finished");
                     resolve();
-
                 }, 0);
             });
         }
@@ -73,7 +76,7 @@ function runGatorAnalysis(projectList){
     ).catch(function(err){
         console.log(err);
     });
-
+	
 }
 
 function analyseAndroidProject(projectList, reportDir){
@@ -285,9 +288,6 @@ var repoRecordPath = repo.reportDir+"\\sloc";
 var repoListPath = repoRecordPath+"\\repositories.txt";
 generateSlocReport(repoListPath, repoRecordPath);
 }
-else if(functionSelection === "--gator-analysis"){
-runGatorAnalysis(repo.projectList)
-}
 else if(functionSelection === "--calculate-cocomo-estimation-result"){
 	var cocomoDataPath = repo.repoDir+"\\COCOMORatings1.csv";
 	var cocomoCalculator = require("../effort_estimators/COCOMOCalculator.js");
@@ -298,6 +298,11 @@ else if(functionSelection === "--calculate-cocomo-estimation-result"){
 		}
 	});
 	
+}
+else if(functionSelection === "--analyse-android-apks"){
+	
+	analyseAndroidApks(repo.projectList, repo.reportDir);
+
 }
 else if(functionSelection === "--analyse-android-projects"){
 	

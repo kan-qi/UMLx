@@ -38,6 +38,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import heros.solver.Pair;
 import soot.G;
+import soot.Hierarchy;
 import soot.Main;
 import soot.PackManager;
 import soot.Scene;
@@ -107,6 +108,7 @@ import soot.jimple.infoflow.taintWrappers.ITaintWrapperDataFlowAnalysis;
 import soot.jimple.infoflow.util.SystemClassHandler;
 import soot.jimple.infoflow.values.IValueProvider;
 import soot.options.Options;
+import soot.util.Chain;
 import soot.util.HashMultiMap;
 import soot.util.MultiMap;
 
@@ -480,20 +482,34 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 	 */
 	private void calculateCallbacks(ISourceSinkDefinitionProvider sourcesAndSinks, SootClass entryPoint)
 			throws IOException, XmlPullParserException {
-		Debug.v().println("calculateCallbacks");
+		Debug.v().println("calculateCallbacks-2-16");
 		// Add the callback methods
 		LayoutFileParser lfp = null;
-		if (this.gatorFile != null) {
-			List<String[]> eventHandlers = new ArrayList<String[]>();
-			try {
-				eventHandlers = parseGatorFile();
-			} catch (SAXException e) {
-				e.printStackTrace();
-			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
-			}
-			calculateCallbackMethodsGator(entryPoint, eventHandlers);
-		} else if (config.getCallbackConfig().getEnableCallbacks()) {
+		// this.gatorFile = null;
+		// adding the listeners identified from the gather tool.
+		// if (this.gatorFile != null) {
+		// List<String[]> eventHandlers = new ArrayList<String[]>();
+		// try {
+		// eventHandlers = parseGatorFile();
+		// } catch (SAXException e) {
+		// e.printStackTrace();
+		// } catch (ParserConfigurationException e) {
+		// e.printStackTrace();
+		// }
+		// calculateCallbackMethodsGator(entryPoint, eventHandlers);
+		//
+		// Debug3.v().println("profile call back method gator");
+		// for (SootClass callbackClass : callbackMethods.keySet()) {
+		// Debug3.v().println("callbackClass:" + callbackClass.getName());
+		// Set<CallbackDefinition> callbackDefinitions =
+		// callbackMethods.get(callbackClass);
+		// for (CallbackDefinition callbackDef : callbackDefinitions) {
+		// Debug3.v().println(callbackDef.profile());
+		// }
+		// }
+		// }
+
+		if (config.getCallbackConfig().getEnableCallbacks()) {
 			if (callbackClasses != null && callbackClasses.isEmpty()) {
 				logger.warn("Callback definition file is empty, disabling callbacks");
 			} else {
@@ -515,6 +531,17 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 					throw new RuntimeException("Unknown callback analyzer");
 				}
 			}
+
+			Debug4.v().println("profile call back method");
+			for (SootClass callbackClass : callbackMethods.keySet()) {
+				Debug4.v().println("callbackClass:" + callbackClass.getName());
+				Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
+				for (CallbackDefinition callbackDef : callbackDefinitions) {
+					Debug4.v().println(callbackDef.profile());
+				}
+
+			}
+
 		} else if (config.getSootIntegrationMode().needsToBuildCallgraph()) {
 			// Create the new iteration of the main method
 			createMainMethod(null);
@@ -536,10 +563,6 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			// Create the SourceSinkManager
 			sourceSinkManager = createSourceSinkManager(lfp, callbacks);
 		}
-	}
-
-	private void dumpIdentifiedCallbacks() {
-
 	}
 
 	/**
@@ -792,6 +815,28 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 				memoryWatcher.close();
 		}
 
+		if (this.gatorFile != null) {
+			List<String[]> eventHandlers = new ArrayList<String[]>();
+			try {
+				eventHandlers = parseGatorFile();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			}
+
+			this.callbackMethods.putAll(calculateCallbackMethodsGator(entryPointClasses, eventHandlers));
+
+			Debug3.v().println("profile call back method gator");
+			for (SootClass callbackClass : callbackMethods.keySet()) {
+				Debug3.v().println("callbackClass:" + callbackClass.getName());
+				Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
+				for (CallbackDefinition callbackDef : callbackDefinitions) {
+					Debug3.v().println(callbackDef.profile());
+				}
+			}
+		}
+
 		// Filter out callbacks that belong to fragments that are not used by
 		// the host activity
 		AlienFragmentFilter fragmentFilter = new AlienFragmentFilter(invertMap(fragmentClasses));
@@ -1006,6 +1051,28 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		this.callbackMethods.putAll(jimpleClass.getCallbackMethods());
 		this.entrypoints.addAll(jimpleClass.getDynamicManifestComponents());
 
+		if (this.gatorFile != null) {
+			List<String[]> eventHandlers = new ArrayList<String[]>();
+			try {
+				eventHandlers = parseGatorFile();
+			} catch (SAXException e) {
+				e.printStackTrace();
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+			}
+
+			this.callbackMethods.putAll(calculateCallbackMethodsGator(entryPointClasses, eventHandlers));
+
+			Debug3.v().println("profile call back method gator");
+			for (SootClass callbackClass : callbackMethods.keySet()) {
+				Debug3.v().println("callbackClass:" + callbackClass.getName());
+				Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
+				for (CallbackDefinition callbackDef : callbackDefinitions) {
+					Debug3.v().println(callbackDef.profile());
+				}
+			}
+		}
+
 		// Find the user-defined sources in the layout XML files. This
 		// only needs to be done once, but is a Soot phase.
 		lfp.parseLayoutFileDirect(config.getAnalysisFileConfig().getTargetAPKFile());
@@ -1030,7 +1097,8 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 	 * @throws IOException
 	 *             Thrown if a required configuration cannot be read
 	 */
-	private void calculateCallbackMethodsGator(SootClass component, List<String[]> eventHandlers) throws IOException {
+	private MultiMap calculateCallbackMethodsGator(Set<SootClass> components, List<String[]> eventHandlers)
+			throws IOException {
 		Debug.v().println("calculateCallbackMethodsGator");
 
 		// SootMethod smViewOnClick = Scene.v()
@@ -1038,9 +1106,10 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		// onClick(android.view.View)>");
 
 		// Construct the current callgraph
-		releaseCallgraph();
-		createMainMethod(component);
-		constructCallgraphInternal();
+
+		// releaseCallgraph();
+		// createMainMethod(component);
+		// constructCallgraphInternal();
 
 		// Get the classes for which to find callbacks
 
@@ -1089,8 +1158,19 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 
 		this.callbackClasses = new HashSet<String>();
 
+		MultiMap<SootClass, CallbackDefinition> callbackMethods = new HashMultiMap<>();
+
 		for (String[] eventHandler : eventHandlers) {
 			String className = eventHandler[0];
+			String methodName = eventHandler[1];
+			String viewName = eventHandler[2];
+			String activityName = eventHandler[3];
+
+			SootClass activityClass = Scene.v().getSootClass(activityName);
+			if (activityClass == null) {
+				continue;
+			}
+
 			Debug.v().println(className);
 			SootClass callbackClass = Scene.v().getSootClass(className);
 			if (callbackClass == null) {
@@ -1098,19 +1178,54 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			}
 			Debug.v().println(callbackClass.getName());
 			this.callbackClasses.add(className);
-			String methodName = eventHandler[1];
 			SootMethod callbackMethod = callbackClass.getMethodUnsafe(methodName);
 			Debug.v().println(methodName);
 			if (callbackMethod == null) {
 				continue;
 			}
+
+			// get the parent classes
+			Hierarchy hierarchy = Scene.v().getActiveHierarchy();
+			List<SootClass> superClasses = new ArrayList<SootClass>();
+			superClasses.addAll(hierarchy.getSuperclassesOf(callbackClass));
+
+			// get the interfaces
+			Chain<SootClass> callbackInterfaces = callbackClass.getInterfaces();
+			superClasses.addAll(callbackInterfaces);
+
+			for (SootClass callbackInterface : callbackInterfaces) {
+				superClasses.addAll(hierarchy.getSuperinterfacesOf(callbackInterface));
+			}
+
+			// List<SootClass> superinterfaces =
+			// hierarchy.getSuperinterfacesOf(callbackClass);
+
+			// superClasses.addAll(hierarchy.getSuperinterfacesOf(callbackClass));
+
 			// SootMethod smViewOnClick = Scene.v().getMethod(methodName);
-			SootMethod smViewOnClick = callbackClass.getMethodUnsafe(methodName);
+			// SootMethod smViewOnClick = callbackClass.getMethodUnsafe(methodName).getPa;
 			// Debug.v().println(smViewOnClick.getName());
+			// if (smViewOnClick == null) {
+			// continue;
+			// }
+
+			SootMethod smViewOnClick = null;
+
+			for (SootClass superClass : superClasses) {
+				// smViewOnClick = superClass.getMethod(callbackMethod.getSubSignature());
+				for (SootMethod sootMethod : superClass.getMethods()) {
+					if (sootMethod.getSubSignature().equals(callbackMethod.getSubSignature())) {
+						smViewOnClick = sootMethod;
+						break;
+					}
+				}
+			}
+
 			if (smViewOnClick == null) {
 				continue;
 			}
-			this.callbackMethods.put(callbackClass,
+
+			callbackMethods.put(activityClass,
 					new CallbackDefinition(callbackMethod, smViewOnClick, CallbackType.Widget));
 		}
 
@@ -1146,9 +1261,12 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		// }
 
 		// Construct the final callgraph
-		releaseCallgraph();
-		createMainMethod(component);
-		constructCallgraphInternal();
+		// releaseCallgraph();
+		//
+		// createMainMethod(component);
+		// constructCallgraphInternal();
+
+		return callbackMethods;
 	}
 
 	/**
@@ -1604,6 +1722,8 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		this.outputDir = outputDir;
 		Debug.outputDir = outputDir;
 		Debug2.outputDir = outputDir;
+		Debug3.outputDir = outputDir;
+		Debug4.outputDir = outputDir;
 	}
 
 	/**
@@ -1648,7 +1768,7 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		// Parse the child nodes
 		for (int i = 0; i < element.getChildNodes().getLength(); i++) {
 			Node childNode = element.getChildNodes().item(i);
-			parseGatorNode(gatorFile, childNode, eventHandlers);
+			parseGatorNode(gatorFile, childNode, element, null, eventHandlers);
 		}
 
 		return eventHandlers;
@@ -1663,35 +1783,45 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 	 * @param rootNode
 	 *            The root node from where to start parsing
 	 */
-	private void parseGatorNode(String gatorFile, Node rootNode, List<String[]> eventHandlers) {
+	private void parseGatorNode(String gatorFile, Node node, Node parent, Node activityNode,
+			List<String[]> eventHandlers) {
 		// Debug.v().println("parseGatorNode");
-		// Debug.v().println(rootNode.getNodeName());
+		// Debug.v().println(node.getNodeName());
 
-		if (rootNode.getNodeName() == null || rootNode.getNodeName().isEmpty()) {
+		if (node.getNodeName() == null || node.getNodeName().isEmpty()) {
 			// logger.warn("Encountered a null or empty node name in file %s, skipping
 			// node...", layoutFile);
 			return;
 		}
 
-		String tname = rootNode.getNodeName().trim();
-		if (tname.equals("EventAndHandler")) {
-			String handler = rootNode.getAttributes().getNamedItem("handler").getNodeValue();
+		String tname = node.getNodeName().trim();
+		if (tname.equals("Activity")) {
+			// String activityName =
+			// node.getAttributes().getNamedItem("name").getNodeValue();
+			activityNode = node;
+
+		} else if (tname.equals("EventAndHandler")) {
+			String handler = node.getAttributes().getNamedItem("handler").getNodeValue();
 			Debug.v().println("parseGatorNode");
 			String[] handlerElements = handler.split(":");
 			Debug.v().println(handler);
 			if (handlerElements.length == 2) {
 				String className = handlerElements[0].trim().replaceAll("[<|>]", "");
 				String methodName = handlerElements[1].trim().replaceAll("[<|>]", "");
+				String viewName = parent != null ? parent.getAttributes().getNamedItem("type").getNodeValue() : "";
+				String activityName = activityNode != null
+						? activityNode.getAttributes().getNamedItem("name").getNodeValue()
+						: "";
 				Debug2.v().println(className + "." + methodName);
-				String[] eventHandler = new String[] { className, methodName };
+				String[] eventHandler = new String[] { className, methodName, viewName, activityName };
 				eventHandlers.add(eventHandler);
 			}
 		}
 
 		// Parse the child nodes
-		for (int i = 0; i < rootNode.getChildNodes().getLength(); i++) {
-			Node childNode = rootNode.getChildNodes().item(i);
-			parseGatorNode(gatorFile, childNode, eventHandlers);
+		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+			Node childNode = node.getChildNodes().item(i);
+			parseGatorNode(gatorFile, childNode, node, activityNode, eventHandlers);
 		}
 	}
 

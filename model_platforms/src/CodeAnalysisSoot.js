@@ -338,6 +338,9 @@
 			var node = androidAnalysisResults.typeDependencyGraph.nodes[i];
 			var dependencies = node.dependencies[i];
 			var classUnit = dicClassUnits[node.uuid];
+			if(!classUnit){
+				continue;
+			}
 			console.log("class unit");
 			console.log(node.uuid);
 			console.log(dicClassUnits);
