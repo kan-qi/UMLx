@@ -712,7 +712,7 @@ String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode>
 	int classIter = 0;
 	int classCount = typeDepGraph.size();
 	for (TypeDependencyGraphNode node : typeDepGraph.values()) {
-	    output += "{\"class\":\"" + node.className + "\",\"uuid\":\"" + node.uuid + "\",\"dependencies\":[";
+	    output += "{\"class\":\"" + node.className + "\",\"uuid\":\"" + node.uuid + "\",\"methodCount\":" + node.methods.size() + ",\"dependencies\":[";
 	    
 	    // Loop through each class it depends on
 	    int typeDepIter = 0;
@@ -726,7 +726,8 @@ String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode>
 	    	output += ",\"returnDependencies\":[";
 	    	depCount = dependency.returnDependencies.size();
 	    	for (String returnDep : dependency.returnDependencies) {
-	    		output += "\"" + returnDep + "\"";
+	    		String returnDepUuid = node.methods.get(returnDep);
+	    		output += "{\"methodName\":\"" + returnDep + "\",\"methodUuid\":\"" + returnDepUuid + "\"}";
 	    		iterCount++;
 	    		if (iterCount < depCount) {
 	    			output += ",";
@@ -734,35 +735,38 @@ String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode>
 	    	}
 	    	output += "]";
 	    	
-	    	output += ",\"paramDependencies\":{";
+	    	output += ",\"paramDependencies\":[";
 	    	depCount = dependency.parameterDependencies.size();
 	    	iterCount = 0;
 	    	for (Map.Entry<String, Integer> paramDep : dependency.parameterDependencies.entrySet()){
-	    		output += "\"" + paramDep.getKey() + "\":\"" + paramDep.getValue() + "\"";
+	    		String paramDepUuid = node.methods.get(paramDep.getKey());
+	    		output += "{\"methodName\":\"" + paramDep.getKey() + "\",\"methodUuid\":\"" + paramDepUuid + "\",\"count\":" + paramDep.getValue() + "}";
 	    	    iterCount++;
 	    	    if (iterCount < depCount) {
 	    	    	output += ",";
 	    	    }
 	    	}
-	    	output += "}";
+	    	output += "]";
 	    	
-	    	output += ",\"localVarDependencies\":{";
+	    	output += ",\"localVarDependencies\":[";
 	    	depCount = dependency.localVarDependencies.size();
 	    	iterCount = 0;
 	    	for (Map.Entry<String, Integer> localVarDep : dependency.localVarDependencies.entrySet()){
-	    		output += "\"" + localVarDep.getKey() + "\":\"" + localVarDep.getValue() + "\"";
+	    		String localVarUuid = node.methods.get(localVarDep.getKey());
+	    		output += "{\"methodName\":\"" + localVarDep.getKey() + "\",\"methodUuid\":\"" + localVarUuid + "\",\"count\":" + localVarDep.getValue() + "}";
 	    	    iterCount++;
 	    	    if (iterCount < depCount) {
 	    	    	output += ",";
 	    	    }
 	    	}
-	    	output += "}";	    	
+	    	output += "]";	    	
 	    	
 	    	output += ",\"attrDependencies\":[";
 	    	depCount = dependency.attributeDependencies.size();
 	    	iterCount = 0;
 	    	for (String attrDep : dependency.attributeDependencies) {
-	    		output += "\"" + attrDep + "\"";
+	    		String attrUuid = node.attributes.get(attrDep);
+	    		output += "{\"attributeName\":\"" + attrDep + "\",\"attributeUuid\":\"" + attrUuid + "\"}";
 	    		iterCount++;
 	    		if (iterCount < depCount) {
 	    			output += ",";
