@@ -24,7 +24,8 @@ var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 
 
 function analyseAndroidApks(projectList, reportDir){
-	var reportPath = reportDir+"\\analysis-results-folders.txt";
+	console.log("analyse android apks");
+//	var reportPath = reportDir+"\\analysis-results-folders.txt";
 //	global.debugCache = new Object();
 //	FileManagerUtil.deleteFileSync(reportPath);
 	
@@ -41,10 +42,7 @@ function analyseAndroidApks(projectList, reportDir){
         
         var outputDir = reportDir + "\\" + apkName;
         
-        if(config.defaultEclipseWorkSpace){
-        	var currentWorkSpace = config.defaultEclipseWorkSpace;
-        	FileManagerUtil.deleteFolderRecursive(outputDir);
-       }
+//        FileManagerUtil.deleteFolderRecursive(outputDir);
 
         	mkdirp(outputDir, function(err) {
             //to generate svg file.

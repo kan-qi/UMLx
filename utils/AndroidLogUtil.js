@@ -12,6 +12,102 @@
 	//the log file might be very large, specical stream reader is required.
 	
 	var es = require('event-stream');
+	
+	
+	function parseAndroidLogs(logPaths, startTime, endTime, callback){
+//		var directory = path.join(__dirname, 'css');
+		// can also use this function as a filter of the file.
+		var lineNr = 0;
+
+	    var lastMethodSign = "";
+	    
+	    var data = [];
+	    
+	    var methods = [];
+	
+		  async.eachSeries(logPaths, function (file, callback) {
+		    if (!endsWith(file, '.json')) { return callback(false); } // (1)
+
+		    fs.stat(file, function (err, stats) {
+		      if (stats.isDirectory()) { return callback(); } // (2)
+
+		      var stream = fs.createReadStream(file).on('end', function () {
+//		        callback(); // (3)
+		    	  console.log("end file");
+		    	  
+		      }).on('data', function (data) {
+//		    	  concatenated += data.toString('utf8'); 
+		    	  
+		    	// pause the readstream
+					s.pause();
+
+					lineNr += 1;
+
+					 //code here using lines[i] which will give you each line
+//			    	var line = lines[i];
+
+			    	if(line === ""){
+			    		s.resume();
+			    		return;
+			    	}
+			    	
+//			    	var tagPos = line.indexOf("V/Xlog:");
+			    	var tagPos = line.indexOf("Xlog : ");
+			    	
+			    	if(tagPos == -1){
+			    		s.resume();
+			    		return;
+			    	}
+			    	
+//			    	console.log(line.substring(tagPos+7, line.length));
+			    	
+			    	var dataElement = JSON.parse(line.substring(tagPos+7, line.length));
+//			    	var dataElement = JSON.parse(line.substring(tagPos+8, line.length));
+			    	
+			    	
+					var timeStamp = Number(dataElement.time);
+					
+					if(timeStamp < startTime || timeStamp > endTime){
+						s.resume();
+			    		return;
+					}
+					
+//			    	console.log(dataElement);
+			    	
+			    	if(dataElement.methodSign !== lastMethodSign){
+//			    		console.log(dataElement.methodSign);
+			    		methods.push(dataElement.methodSign);
+			    		data.push(dataElement);
+//			    		data[dataElement.time] = dataElement;
+			    	}
+			    	
+			    	lastMethodSign = dataElement.methodSign;
+			    	
+					// resume the readstream, possibly from a callback
+					s.resume();
+					
+		      });
+//		      stream.pipe(res, { end: false }); // (4)
+		    });
+		  }, function () {
+//		    res.end(); // (5)
+			  
+			  console.log('Read entire file.')
+				if(callback){
+					callback(data);
+				}
+			  
+		  });
+	}
+	
+	function parseAndroidLogFolder(logFolder, startTime, endTime, callback){
+//		var directory = path.join(__dirname, 'css');
+		fs.readdir(directory, function (err, files) {
+			
+			parseAndroidLogs(files, startTime, endtime, callback);
+		  
+		});
+	}
 
 	function parseAndroidLog(logPath, startTime, endTime, callback){
 		// can also use this function as a filter of the file.
@@ -343,87 +439,163 @@
 //		var appRoot = path.dirname(require.main.filename);
 		var apkName = apkFileName.replace(/\.apk/g, "");
 		
-		var command = "wsl.exe java -Xmx12G " +
-				"-cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main " +
-				"-sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid " +
-				"-sdkDir /mnt/c/Android_SDK " +
-				"-listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml " +
-				"-wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml " +
-				"-resourcePath /tmp/gator-awg1muop/res " +
-				"-manifestFile /tmp/gator-awg1muop/AndroidManifest.xml " +
-				"-project /mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+" "+
-				"-apiLevel android-26 " +
-				"-guiAnalysis " +
-				"-benchmarkName "+apkName+" "+
-				"-android /mnt/c/Android_SDK/platforms/android-26/android.jar " +
-				"-client GUIHierarchyPrinterClient " +
-				"-outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+//		var command = "wsl.exe java -Xmx12G " +
+//				"-cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main " +
+//				"-sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid " +
+//				"-sdkDir /mnt/c/Android_SDK " +
+//				"-listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml " +
+//				"-wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml " +
+//				"-resourcePath /tmp/gator-awg1muop/res " +
+//				"-manifestFile /tmp/gator-awg1muop/AndroidManifest.xml " +
+//				"-project \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
+//				"-apiLevel android-26 " +
+//				"-guiAnalysis " +
+//				"-benchmarkName \""+apkName+"\" "+
+//				"-android /mnt/c/Android_SDK/platforms/android-26/android.jar " +
+//				"-client GUIHierarchyPrinterClient " +
+//				"-outputDir \"/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"\"";
 
-	   console.log(command);
+	   var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
+	   		"-p \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
+	   		"-client GUIHierarchyPrinterClient " +
+	   		"-outputDir \"/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"\"";
 	   
+	   console.log(command);
 
 		var outputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
 
 		var child = exec(command, function(error, stdout, stderr) {
-			if (error != null) {
+			if (error !== null) {
 				// On Windows, closing the eclipse window will trigger this error
 				// callbackfunc(new Error("Error generating KDM."));
-				console.log("error in generating apk analysis.")
-				if(callbackfunc){
-					callbackfunc(false);
-				}
+				console.log("error in generating apk analysis.");
+//				console.log(error);
+//				if(callbackfunc){
+//					callbackfunc(false);
+//				}
 				return;
 			}
 			
-			if(callbackfunc){
-				callbackfunc(outputDir)
-			}
+//			if(callbackfunc){
+//				callbackfunc(outputDir)
+//			}
 		});
 
-//		var outputFile = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"/android-analysis-output.json";
-//		checkExistsWithTimeout(outputFile)
-//			.then(function(res) {
-//
-////				child.kill();
-//
-//				callbackfunc(outputFile);
-//
-//				console.log("android analysis is finished.")
-//			})
-//			.catch(function(err) {
-//				callbackfunc(err);
-//			});
+		var outputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+//		var outputFile1 = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"/android-analysis-output.json";
+		
+		var outputFiles = ["gator-handlers.txt", "android-analysis-output.json"];
+		
+		
+		checkExistsWithTimeout(outputFiles, outputDir)
+			.then(function(res) {
+
+				child.kill();
+
+				callbackfunc(outputFile1);
+
+				console.log("android analysis is finished.")
+			})
+			.catch(function(err) {
+				callbackfunc(err);
+			});
 	}
+	
+//	// helper to wait for KDM output file to exist, and have content
+//	// modified from source:
+//	// https://stackoverflow.com/a/47764403
+//	function checkExistsWithTimeout(filePath, timeout = 100 * 1000) {
+//		return new Promise(function (resolve, reject) {
+//			var watcher = null;
+//			var timer = setTimeout(function () {
+//				if(watcher != null){
+//				watcher.close();
+//				}
+//				reject(new Error('File did not exists and was not created during the timeout.'));
+//			}, timeout);
+//	
+//			fs.access(filePath, fs.constants.R_OK, function (err) {
+//				if (!err) {
+//					clearTimeout(timer);
+//					if(watcher){
+//					watcher.close();
+//					}
+//					resolve();
+//				}
+//			});
+//	
+//			var dir = path.dirname(filePath);
+//			var basename = path.basename(filePath);
+//			watch = fs.watch(dir, function (eventType, filename) {
+//				if (eventType === 'change' && filename === basename) {
+//					clearTimeout(timer);
+//					watcher.close();
+//					resolve();
+//				}
+//			});
+//		});
+//	}
+	
 	
 	// helper to wait for KDM output file to exist, and have content
 	// modified from source:
 	// https://stackoverflow.com/a/47764403
-	function checkExistsWithTimeout(filePath, timeout = 100 * 1000) {
+	function checkExistsWithTimeout(fileNames, dir, timeout = 100 * 1000) {
 		return new Promise(function (resolve, reject) {
-	
+			var watcher = null;
 			var timer = setTimeout(function () {
+				if(watcher != null){
 				watcher.close();
+				}
 				reject(new Error('File did not exists and was not created during the timeout.'));
 			}, timeout);
-	
-			fs.access(filePath, fs.constants.R_OK, function (err) {
-				if (!err) {
-					clearTimeout(timer);
-					watcher.close();
-					resolve();
+			
+			try{
+				for(var i in filePaths){
+				   require('fs').accessSync(filePaths[i], fs.R_OK | fs.W_OK)
+				   //code to action if file exists
 				}
-			});
-	
-			var dir = path.dirname(filePath);
-			var basename = path.basename(filePath);
-			var watcher = fs.watch(dir, function (eventType, filename) {
-				if (eventType === 'change' && filename === basename) {
-					clearTimeout(timer);
-					watcher.close();
-					resolve();
+
+			}catch(e){
+				   //code to action if file does not exist
+//				var dir = path.dirname(filePath);
+//				var basename = path.basename(filePath);
+				var checkExists = {};
+				for(var i in fileNames){
+					checkExists[fileNames[i]] = 0;
 				}
+				watch = fs.watch(dir, function (eventType, filename) {
+					if (eventType === 'change') {
+						checkExists[filename] = 1;
+						var allExists = true;
+						
+						for(var i in fileNames){
+							if(checkExists[fileNames[i]] == 0){
+								allExists = false;
+								break;
+							}
+						}
+						
+						if(allExists){
+						clearTimeout(timer);
+						watcher.close();
+						resolve();
+						}
+					}
+				});
+			}
+		
+		// files exist, just return
+		setTimeout(function () {
+			clearTimeout(timer);
+			if(watcher){
+			watcher.close();
+			}
+			resolve();
+		}, 10);
+
 			});
-		});
+			
 	}
 	
 	module.exports = {

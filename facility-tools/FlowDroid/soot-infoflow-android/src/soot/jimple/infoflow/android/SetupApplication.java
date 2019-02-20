@@ -482,7 +482,7 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 	 */
 	private void calculateCallbacks(ISourceSinkDefinitionProvider sourcesAndSinks, SootClass entryPoint)
 			throws IOException, XmlPullParserException {
-		Debug.v().println("calculateCallbacks-2-16");
+		Debug.v().println("calculateCallbacks-2-17");
 		// Add the callback methods
 		LayoutFileParser lfp = null;
 		// this.gatorFile = null;
@@ -877,19 +877,28 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			logger.info("Callback analysis terminated normally");
 
 		Debug.v().println("output callback methods start");
-		if (this.callbackMethods != null) {
-			for (SootClass sootClass : this.callbackMethods.keySet()) {
-				Set<CallbackDefinition> callbackDefs = this.callbackMethods.get(sootClass);
-				Debug.v().println("output callback class");
-				Debug.v().println(sootClass.getName());
-				for (CallbackDefinition callbackDef : callbackDefs) {
-					Debug.v().println("output target method");
-					Debug.v().println(callbackDef.getTargetMethod().getName());
-					Debug.v().println("output parent method");
-					Debug.v().println(callbackDef.getParentMethod().getName());
-				}
+		// if (this.callbackMethods != null) {
+		// for (SootClass sootClass : this.callbackMethods.keySet()) {
+		// Set<CallbackDefinition> callbackDefs = this.callbackMethods.get(sootClass);
+		// Debug.v().println("output callback class");
+		// Debug.v().println(sootClass.getName());
+		// for (CallbackDefinition callbackDef : callbackDefs) {
+		// Debug.v().println("output target method");
+		// Debug.v().println(callbackDef.getTargetMethod().getName());
+		// Debug.v().println("output parent method");
+		// Debug.v().println(callbackDef.getParentMethod().getName());
+		// }
+		// }
+		// }
+
+		for (SootClass callbackClass : callbackMethods.keySet()) {
+			// Output callback methods
+			Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
+			for (CallbackDefinition callbackDef : callbackDefinitions) {
+				Debug2.v().println(callbackDef.toString());
 			}
 		}
+
 		Debug.v().println("output callback methods end");
 	}
 
@@ -1079,6 +1088,14 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 
 		// Collect the XML-based callback methods
 		collectXmlBasedCallbackMethods(lfp, jimpleClass);
+
+		for (SootClass callbackClass : callbackMethods.keySet()) {
+			// Output callback methods
+			Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
+			for (CallbackDefinition callbackDef : callbackDefinitions) {
+				Debug2.v().println(callbackDef.toString());
+			}
+		}
 
 		// Construct the final callgraph
 		releaseCallgraph();
@@ -1713,7 +1730,8 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 
 	String outputDir = System.getProperty("user.dir");
 
-	public void setOutputDir(String outputDir) {
+	public String setOutputDir(String outputDir) {
+
 		File outputDirFile = new File(outputDir);
 		if (!outputDirFile.exists() || !outputDirFile.isDirectory()) {
 			outputDirFile.mkdir();
@@ -1724,6 +1742,8 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		Debug2.outputDir = outputDir;
 		Debug3.outputDir = outputDir;
 		Debug4.outputDir = outputDir;
+
+		return "for testing 2-19";
 	}
 
 	/**
@@ -1812,7 +1832,6 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 				String activityName = activityNode != null
 						? activityNode.getAttributes().getNamedItem("name").getNodeValue()
 						: "";
-				Debug2.v().println(className + "." + methodName);
 				String[] eventHandler = new String[] { className, methodName, viewName, activityName };
 				eventHandlers.add(eventHandler);
 			}

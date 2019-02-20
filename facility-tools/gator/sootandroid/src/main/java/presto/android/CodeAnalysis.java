@@ -999,7 +999,9 @@ private CallGraph genCallGraph() {
 		return null;			
 	}
 		
-	Path curDir = Paths.get(System.getProperty("user.dir"));
+//	Path curDir = Paths.get(System.getProperty("user.dir"));
+	
+	Path curDir = Paths.get(System.getenv("GatorRoot")); 
 	
 	Path sourceSinkPath = Paths.get(curDir.toString(), "SourcesAndSinks.txt");
 	File sourceSinkFile = sourceSinkPath.toFile();
@@ -1016,7 +1018,9 @@ private CallGraph genCallGraph() {
 	}
 
 	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
-	app.setOutputDir(Configs.outputDir);
+	String testingMsg = app.setOutputDir(Configs.outputDir);
+	Debug1.v().println("testing...");
+	Debug1.v().println(testingMsg);
 	
 	Path gatorFilePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
 	File gatorFile = gatorFilePath.toFile();
