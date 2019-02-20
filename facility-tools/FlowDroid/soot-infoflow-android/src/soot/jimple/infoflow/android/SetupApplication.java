@@ -1183,6 +1183,9 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			String viewName = eventHandler[2];
 			String activityName = eventHandler[3];
 
+			Debug.v().println("className: " + className + " methodName: " + methodName + " viewName: " + viewName
+					+ " activityName: " + activityName);
+
 			SootClass activityClass = Scene.v().getSootClass(activityName);
 			if (activityClass == null) {
 				continue;
