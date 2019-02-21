@@ -3,12 +3,12 @@
  */
 
 (function(){
-//  var Viz = require('viz.js');
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var exec = require('child_process').exec;
 	
 	var dottyUtil = require("../utils/DottyUtil.js");
+	var codeAnalysisUtil = require("../utils/CodeAnalysisUtil.js");
 	
 	function processLabel(label){
 		if(!label){
@@ -55,8 +55,6 @@
 			<TR><TD><IMG SRC="img/out_of_scope_activity_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
 		</TABLE>>];';
-		
-//		 <TR><TD><FONT POINT-SIZE="20">'+label+'</FONT></TD></TR>\
 	}
 
 	function drawFragmentNode(id, label){
@@ -87,16 +85,25 @@
 		
 		return "label = <<B>"+Group+"</B>>;style=\"bold\";";
 	}
+	
+	function filterName(name){
+		if(name == null){
+			return null;
+		}
+		return name.replace(/[\$|\<|\>]/g,"");
+	}
 
 	function drawDomainObjectNode(component){
 		//temporarily eliminate some unnecessary nodes
 		console.log("domain objects");
 		console.log(component);
+		
+		component.Name = filterName(component.Name);
+		
 		if(!component || !component.Name || component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
 			return null;
 		}
 		
-//    
 		var componentInternal = "<TABLE BORDER=\"1\" CELLBORDER=\"1\" CELLSPACING=\"0\">";
 		var componentInternalIndex = 0;
 		componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+component.Name+"</B></TD></TR>";
@@ -105,29 +112,17 @@
 			var attribute = component.Attributes[i];
 //			componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
 //			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name+"</B></TD></TR>";
-			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type+" "+attribute.Name+"</B></TD></TR>";
+			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type+" "+filterName(attribute.Name)+"</B></TD></TR>";
 			
 			componentInternalIndex++;
 		}
 		
 		for (var i in component.Operations){
 			var operation = component.Operations[i];
-//			dotty += '"'+operation.Name+'"->"'+component.Name+'";';
-			var functionSignature = operation.Name+"(";
-			console.log("test parameters");
-			console.log(operation.Parameters);
-			for(var j in operation.Parameters){
-				var parameter = operation.Parameters[j];
-				if(parameter.Name === 'return'){
-					functionSignature = parameter.Type + " "+functionSignature;
-//					functionSignature = parameter.Type.substring(7).replace("__", "[]") + " "+functionSignature;
-				}
-				else {
-//					functionSignature = functionSignature + parameter.Type.substring(7).replace("__", "[]") + " " + parameter.Name;
-				}
-			}
-			functionSignature += ")";
-			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+functionSignature+"</B></TD></TR>";
+			
+			var operationSign = codeAnalysisUtil.genMethodSignSimple(operation);
+			
+			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+filterName(operationSign)+"</B></TD></TR>";
 			componentInternalIndex++;
 		}
 
@@ -243,15 +238,15 @@
 				
 //				var label = activity.Name;
 //				var node = drawExternalNode(activity._id, activity.Name);
-				var node = drawNode(activity._id, activity.Name);
+				var node = drawNode(activity._id, filterName(activity.Name));
 				
 				if(activity.Stimulus){
-					node = drawStimulusNode(activity._id, activity.Name);
+					node = drawStimulusNode(activity._id, filterName(activity.Name));
 				} else if(activity.OutScope){
-					node = drawOutOfScopeNode(activity._id, activity.Name);
+					node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
 				} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 					console.log("drawing fragment node");
-					node = drawFragmentNode(activity._id, activity.Name);
+					node = drawFragmentNode(activity._id, filterName(activity.Name));
 					console.log(node);
 				}
 				
@@ -270,15 +265,15 @@
 		
 		for(var j in others){
 			var activity = others[j];
-			var node = drawNode(activity._id, activity.Name);
+			var node = drawNode(activity._id, filterName(activity.Name));
 			
 			if(activity.Stimulus){
-				node = drawStimulusNode(activity._id, activity.Name);
+				node = drawStimulusNode(activity._id, filterName(activity.Name));
 			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity._id, activity.Name);
+				node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
 			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 				console.log("drawing fragment node");
-				node = drawFragmentNode(activity._id, activity.Name);
+				node = drawFragmentNode(activity._id, filterName(activity.Name));
 				console.log(node);
 			}
 			
@@ -338,7 +333,7 @@
 		graph += 'imagepath = \"./public\"}';
 		
 		
-		dottyUtil = require("../utils/DottyUtil.js");
+//		dottyUtil = require("../utils/DottyUtil.js");
 		console.log("test graph");
 		console.log(graph);
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
@@ -376,16 +371,14 @@
 		for(var i in activities){
 			var activity = activities[i];
 			
-			var node = drawNode(activity._id, activity.Name);
+			var node = drawNode(activity._id, filterName(activity.Name));
 			
 			if(activity.Stimulus){
-				node = drawStimulusNode(activity._id, activity.Name);
+				node = drawStimulusNode(activity._id, filterName(activity.Name));
 			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity._id, activity.Name);
+				node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
 			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
-				console.log("drawing fragment node");
-				node = drawFragmentNode(activity._id, activity.Name);
-				console.log(node);
+				node = drawFragmentNode(activity._id, filterName(activity.Name));
 			}
 			
 				graph += dottyDraw.draw(node);
@@ -411,7 +404,7 @@
 		graph += 'imagepath = \"./public\"}';
 		
 		
-		dottyUtil = require("../utils/DottyUtil.js");
+//		dottyUtil = require("../utils/DottyUtil.js");
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
@@ -467,7 +460,7 @@
 		
 		graph += 'imagepath = \"./public\"}';
 		
-		dottyUtil = require("../utils/DottyUtil.js");
+//		dottyUtil = require("../utils/DottyUtil.js");
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
@@ -475,10 +468,306 @@
 		return graph;
 		
 	}
+
+	
+	// draw the domain model of the model
+
+
+
+	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
+
+		console.log("the whole class diagram model is" + domainModel);
+		console.log("the whole class diagram model is"+JSON.stringify(domainModel));
+		var  domainModelElements = domainModel.Elements;
+		      console.log("run the create class dia");
+              console.log("class diagram model is"+domainModelElements);
+              console.log("class diagram model is"+JSON.stringify(domainModelElements));
+              
+			var graph = 'digraph class_diagram {';
+             graph += 'node [fontsize = 8 shape = "record"]';
+             graph += ' edge [arrowhead = "ediamond"]'
+             for(i = 0;  i < domainModelElements.length; i++){
+                 var curClass = domainModelElements[i];
+                 graph += curClass["_id"];
+                 graph += '[ id = ' + curClass["_id"];
+                 graph += ' label = "{';
+                 graph += curClass["Name"];
+
+
+                 var classAttributes = domainModelElements[i]["Attributes"];
+                 if (classAttributes.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classAttributes.length; j++) {
+                         graph += '-   ' ;
+                         graph += classAttributes[j]["Name"];
+                         graph += ':'+classAttributes[j]["Type"];
+                         graph += '\\l';
+                     }
+                 }
+
+
+                 var classOperations = domainModelElements[i]["Operations"];
+                 if (classOperations.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classOperations.length;j++) {
+
+                    	 graph += '+   ' ;
+                         graph += classOperations[j]["Name"] + '(';
+                         var para_len = classOperations[j]["Parameters"].length;
+                         for (k = 0; k < classOperations[j]["Parameters"].length; k++) {
+                        	 graph += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
+                         }
+
+                         graph += ')';
+                         graph += "\\l";
+                     }
+                 }
+
+                 graph += '}"]';
+
+                 var classAss = domainModelElements[i]["Associations"];
+                 if(classAss != null){
+                 	for(j = 0; j < classAss.length;j++) {
+	                     graph += curClass["_id"] ;
+	                     graph += '->';
+	                     graph += classAss[j]["id"] + ' ';
+
+	                 }
+                 }
+                 
+			 }
+
+            graph += 'imagepath = \"./public\"}';
+
+     		console.log("the diagram model graph is:"+graph);
+//     		dottyUtil = require("../utils/DottyUtil.js");
+			console.log("the graphFilePath is:"+ graphFilePath);
+     		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+     			console.log("class Diagram is done");
+     		});
+
+            return graph;
+		}
+	
+	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
+		
+     
+
+     	if(typeof dicComponent === 'undefined'){
+     		return;
+     	}
+
+        console.log("dicComponent is "+ dicComponent[Object.keys(dicComponent)[0]]);
+        var  dicComponentElements = dicComponent[Object.keys(dicComponent)[0]]["classUnits"];  
+  //       fs.writeFile('Output.txt', JSON.stringify(dicComponentElements ), (err) => {  
+		//     if (err) throw err; 
+		// }) 
+
+
+		var graph = 'digraph class_diagram {';
+            graph += 'node [fontsize = 8 shape = "record"]';
+            graph += ' edge [arrowhead = "ediamond"]';
+
+        	 for(i = 0;  i < dicComponentElements.length; i++){
+        	   
+                 var curClass = dicComponentElements[i];
+                 
+                 graph += i;
+                 graph += '[ id = ' + i;
+                 graph += ' label = "{';
+                 graph += curClass["name"];
+
+
+                 var classStorableUnits = dicComponentElements[i]["StorableUnits"];
+
+                 if ( classStorableUnits.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classStorableUnits.length; j++) {
+                         graph += '-   ' ;
+                         graph += classStorableUnits[j]["name"];
+                         // graph += ': '+classStorableUnits[j]["type"];
+                         graph += '\\l';
+                     }
+                 }
+
+
+                 var classMethodUnits = dicComponentElements[i]["MethodUnits"];
+                 if (classMethodUnits.length != 0){
+                     graph += '|';
+
+
+                     
+
+                     var tempStr = "";
+                     for(j = 0; j < classMethodUnits.length;j++) {
+
+                    	 tempStr += '+   ';
+                         tempStr += classMethodUnits[j]["Signature"]["name"] + '(';
+                         var para_len = classMethodUnits[j]["Signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["Signature"]["parameterUnits"].length; k++) {
+                        	 tempStr += classMethodUnits[j]["Signature"]["parameterUnits"][k]["type"]["name"]+" "+ classMethodUnits[j]["Signature"]["parameterUnits"][k]["kind"];
+                         }
+                         tempStr += ')';
+                         tempStr += "\\l";
+                     }
+
+                     tempStr = tempStr.replace(/</g, "\u02C2");
+                     tempStr = tempStr.replace(/>/g, "\u02C3");
+
+                     graph += tempStr;
+
+                 }
+
+                 
+
+                 var classInterfaceUnits = dicComponentElements[i]["InterfaceUnits"];
+                 if(classInterfaceUnits.length != 0){
+                 	graph += '|';
+                 }
+                 
+                 for(j = 0; j < classInterfaceUnits.length;j++) {
+                     // graph += classInterfaceUnits["_id"] ;
+                     graph += '*   ';
+                     graph += classInterfaceUnits[j]["name"] + ' ';
+                 		graph += "\\l";
+                 }
+
+                
+                 graph += '}"]';
+			}
+        	
+        	
+             
+            
+
+            graph += 'imagepath = \"./public\"}';
+
+     		console.log("the dicComponent graph is:"+graph);
+     		console.log("the dicComponent graphFilePath is:"+ graphFilePath);
+//     		dottyUtil = require("../utils/DottyUtil.js");
+     		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+     			console.log("class Diagram is done");
+     		});
+
+            return graph;
+
+	}
+	
+	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
+
+		// var debug = require("../utils/DebuggerOutput.js");
+		// debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
+
+		fs.writeFile('Output_2.txt', JSON.stringify(dicClassUnits), (err) => {  
+		    if (err) throw err; 
+		}) 
+
+		var keys = Object.keys(dicClassUnits);
+
+		var graph = 'digraph class_diagram {';
+            graph += 'node [fontsize = 8 shape = "record"]';
+            graph += ' edge [arrowhead = "ediamond"]';
+
+
+        	 for(i = 0;  i < keys.length; i++){
+        	   
+                 var curClass = dicClassUnits[keys[i]];
+
+                 graph += i;
+                 
+                 graph += '[ id = ' + i;
+                 graph += ' label = "{';
+                 graph += curClass["name"];
+
+
+                 var classStorableUnits = curClass["StorableUnits"];
+
+                 if ( classStorableUnits.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classStorableUnits.length; j++) {
+                         graph += '-   ' ;
+                         graph += classStorableUnits[j]["name"];
+                         // graph += ': '+classStorableUnits[j]["type"];
+                         graph += '\\l';
+                     }
+                 }
+
+
+                 var classMethodUnits = curClass["MethodUnits"];
+                 if (classMethodUnits.length != 0){
+                     graph += '|';
+                     var tempStr = "";
+                     for(j = 0; j < classMethodUnits.length;j++) {
+
+                    	 tempStr += '+   ';
+                         tempStr += classMethodUnits[j]["Signature"]["name"] + '(';
+                         var para_len = classMethodUnits[j]["Signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["Signature"]["parameterUnits"].length; k++) {
+                        	 tempStr += classMethodUnits[j]["Signature"]["parameterUnits"][k]["type"]["name"]+" "+ classMethodUnits[j]["Signature"]["parameterUnits"][k]["kind"];
+                         }
+                         tempStr += ')';
+                         tempStr += "\\l";
+                     }
+
+                     tempStr = tempStr.replace(/</g, "\u02C2");
+                     tempStr = tempStr.replace(/>/g, "\u02C3");
+
+                     graph += tempStr;
+
+                 }
+
+                 
+
+                 var classInterfaceUnits = curClass["InterfaceUnits"];
+                 if(classInterfaceUnits.length != 0){
+                 	graph += '|';
+                 }
+                 
+                 for(j = 0; j < classInterfaceUnits.length;j++) {
+                     // graph += classInterfaceUnits["_id"] ;
+                     graph += '*   ';
+                     graph += classInterfaceUnits[j]["name"] + ' ';
+                 		graph += "\\l";
+                 }
+                 graph += '}"]';
+
+			}
+        	
+     
+            graph += 'imagepath = \"./public\"}';
+
+     		console.log("the dicClassUnits graph is:"+graph);
+
+     		console.log("the dicClassUnits is:"+ graphFilePath);
+
+     		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+     			console.log("class Diagram is done");
+     		});
+
+            return graph;
+
+	}
+	
+	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
+
+		// var debug = require("../utils/DebuggerOutput.js");
+		// debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
+
+
+		// node ./UMLxAnalyticToolKit.js "./data/OpenSource/alltheapps_kdm.xml" "./data/OpenSource/debug" "kess"
+
+		console.log("run the create dicCompositeClassUnits dia");
+        console.log("dicCompositeClassUnits is "+dicCompositeClassUnits);
+        console.log("dicCompositeClassUnits is "+JSON.stringify(dicCompositeClassUnits));
+
+	}
 	
 	module.exports = {
 			drawSimplePrecedenceDiagram:drawSimplePrecedenceDiagramFunc,
 			drawPrecedenceDiagram: drawPrecedenceDiagramFunc,
-			drawDomainModel: drawDomainModelFunc
+			drawDomainModel: createDomainModelDiagram,
+			drawComponentDiagram: drawComponentDiagram,
+			drawClassDiagram: drawClassDiagram,
+			drawCompositeClassDiagram: drawCompositeClassDiagram
 	}
 }())

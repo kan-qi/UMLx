@@ -1,3 +1,18 @@
+$(document).ready(function() {
+    $('.nav-tabs').on('shown.bs.tab', 'a', function(e) {
+        console.log(e.relatedTarget);
+        if (e.relatedTarget) {
+            $(e.relatedTarget).removeClass('active');
+        }
+    });    
+});
+
+
+function showLoading() {
+    var classList = document.getElementById("loadingScreen").classList;
+    classList.remove("hidden");
+  }
+
 function setCookie(cname, cvalue, exdays) {
     var expires = "";
     if (exdays > 0) {

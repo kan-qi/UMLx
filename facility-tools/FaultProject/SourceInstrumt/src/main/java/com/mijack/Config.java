@@ -32,7 +32,7 @@ public class Config {
     }
 
     public void setXmlOutput(String xmlOutput) {
-        this.xmlOutput = xmlOutput;
+        this.xmlOutput = new File(xmlOutput).getAbsolutePath();
     }
 
     public String getJavaOutput() {
@@ -40,11 +40,11 @@ public class Config {
     }
 
     public void setInput(String input) {
-        this.input = input;
+        this.input = new File(input).getAbsolutePath();
     }
 
     public void setJavaOutput(String javaOutput) {
-        this.javaOutput = javaOutput;
+        this.javaOutput = new File(javaOutput).getAbsolutePath();
     }
 
     public void setForceWrite(boolean forceWrite) {

@@ -917,11 +917,7 @@ ggplot(predictedValuesDUCP, aes(x = DUCP, y = Effort)) +
   geom_histogram(aes(y = ..density..), colour="black", fill="white") +
   geom_line(aes(y = density), data = normaldens, colour = "red") +
   facet_wrap(~ level, scales = "free", nrow=4) + xlab("Posterior Estimates") +ylab("Density")+
-<<<<<<< HEAD
       theme_bw(base_size=12)
-=======
-      theme_bw(base_size=10)
->>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
   #geom_text(
   #data    = dat_text,
   #mapping = aes(x = 0, y = 0, label = label),

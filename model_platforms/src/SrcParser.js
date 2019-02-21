@@ -9,28 +9,17 @@
  * Establish the control flow between the components
  * Identify the stimuli.
  *
- * those elements store all the same type of elements in the sub classes.
-	var ClassUnit = {
-			name: XMIClassUnit['$']['name'],
-			isAbstract: XMIClassUnit['$']['isAbstract'],
-			Source: null,
-			MethodUnits : [],
-			StorableUnits: [],
-//			Calls : [],
-//			ClassUnits: [],
-			InterfaceUnits : [],
-			Imports : [],
-			ClassUnits: [],
-//			BlockUnits : [],
-//			Addresses: [],
-//			Reads:[],
-//			Calls:[],
-//			Creates:[],
-//			ActionElements:[],
-//			isResponse: false,
-			attachment: XMIClassUnit
-	}
+ * Three levels of class clustering:
+ * 
+ * The set of classes.
+ * The set of composite classes.
+ * The set of components.
+ * The set of domain elements.
+ * 
+ * Establish the control graph and the call graph.
+ *
  */
+
 (function() {
 	var fs = require('fs');
 	var xml2js = require('xml2js');
@@ -40,21 +29,17 @@
 	var codeAnalysisXMI = require("./CodeAnalysisXMI.js");
 	var codeAnalysisSoot = require("./CodeAnalysisSoot.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
+	var componentIdentifierACDC = require("./ComponentIdentificationACDC.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
+	var androidLogUtil = require("../../utils/AndroidLogUtil.js");
 
-//	var xpath = require('xpath');
-//	var dom = require('xmldom').DOMParser;
-	
 	var responsePatternsFile = "response-patterns.txt";
-//	var isJSONBased = true;
+	
+	var modelDrawer = require("../../model_drawers/UserSystemInteractionModelDrawer.js");
 
 	function extractUserSystermInteractionModel(xmiString, workDir, ModelOutputDir, ModelAccessDir, callbackfunc) {
-//		fs.readFile(filePath, "utf8", function(err, data) {
-			console.log("file content");
-//			console.log(data);
-//			parser.parseString(data, function(err, result) {
 			
 			var codeAnalysis = codeAnalysisXMI;
 			if(this.isJSONBased){
@@ -72,21 +57,21 @@
 
 				var debug = require("../../utils/DebuggerOutput.js");
 
-//				xmiString = result;
 				var codeAnalysisResults = codeAnalysis.analyseCode(xmiString, Model.OutputDir);
-//				debug.writeJson("constructed_model_by_kdm_result_7_5", codeAnalysisResults);
 				
-				console.log("composition graph");
-				console.log(codeAnalysisResults.compositionGraph);
-				debug.writeJson2("composition_graph_1_19", codeAnalysisResults.compositionGraph);
+//				console.log("composition graph");
+//				console.log(codeAnalysisResults.compositionGraph);
+//				debug.writeJson2("composition_graph_1_19", codeAnalysisResults.compositionGraph);
 				
-				 var responseFilePath = workDir +"/"+responsePatternsFile;
-				 if( !fs.existsSync(responseFilePath) ) {
-					  responseFilePath = "./model_platforms/src/"+responsePatternsFile;
-				 }
+				var responseFilePath = workDir +"/"+responsePatternsFile;
+				if( !fs.existsSync(responseFilePath) ) {
+					responseFilePath = "./model_platforms/src/"+responsePatternsFile;
+				}
 				
 				//need to update for the identification response methods.
 				var dicResponseMethodUnits = responseIdentifier.identifyResponse(codeAnalysisResults, responseFilePath);
+
+//				var dicResponseMethodUnits = responseIdentifier.identifyResponseGator(codeAnalysisResults, responseFilePath);
 
 				debug.writeJson2("identified_response", dicResponseMethodUnits);
 				
@@ -102,30 +87,44 @@
 					codeAnalysisResults.compositionGraph,
 					codeAnalysisResults.referencedCompositeClassUnits, 
 					codeAnalysisResults.referencedClassUnits, 
-					codeAnalysisResults.dicCompositeSubclasses, 
+					codeAnalysisResults.dicCompositeSubclasses,
+					codeAnalysisResults.dicCompositeClassUnits,
+					codeAnalysisResults.dicClassUnits,
+					codeAnalysisResults.dicClassComposite,
 					Model.OutputDir
 				);
 				
-				debug.writeJson2("clas_component_1_19", componentInfo.dicClassComponent);
+//				var componentInfo = componentIdentifierACDC.identifyComponents(
+//						codeAnalysisResults.callGraph, 
+//						codeAnalysisResults.accessGraph, 
+//						codeAnalysisResults.typeDependencyGraph, 
+//						codeAnalysisResults.extendsGraph,
+//						codeAnalysisResults.compositionGraph,
+//						codeAnalysisResults.referencedCompositeClassUnits, 
+//						codeAnalysisResults.referencedClassUnits, 
+//						codeAnalysisResults.dicCompositeSubclasses,
+//						codeAnalysisResults.dicCompositeClassUnits,
+//						codeAnalysisResults.dicClassUnits,
+//						codeAnalysisResults.dicClassComposite,
+//						Model.OutputDir
+//				);
+				
+				debug.writeJson2("class_component_1_19", componentInfo.dicClassComponent);
 				debug.writeJson3("dic_components_1_19", componentInfo.dicComponents);
-
-				
-//				var componentInfo = {
-//					dicComponents: {},
-//					dicClassComponent: {}
-//				};
-				
+			
 				var componentMappingString = "";
 				
+				var ind = 0;
 				for(var i in componentInfo.dicComponents){
 					var component = componentInfo.dicComponents[i];
 					for(var j in component.classUnits){
+					ind += 1;
 					var classUnit = component.classUnits[j];
-					componentMappingString += "contain "+component.name+".ss "+classUnit.name.replace(/\s/g, "")+"\n";
+					componentMappingString += "contain "+component.name+ind+".ss "+classUnit.name.replace(/\s/g, "")+"\n";
 					}
 				}
 				
-				debug.writeTxt("constructed_model_by_kdm_components_7_5", componentMappingString);
+				debug.writeTxt("clustered_classes_7_5", componentMappingString);
 
 				var controlFlowGraph = controlFlowGraphConstructor.establishControlFlow(componentInfo.dicComponents, componentInfo.dicClassComponent, codeAnalysisResults.dicMethodClass, dicResponseMethodUnits, codeAnalysisResults.dicMethodUnits, codeAnalysisResults.callGraph, ModelOutputDir);
 				
@@ -135,38 +134,27 @@
 
 				debug.writeJson2("type_dependency_graph_1_19", codeAnalysisResults.typeDependencyGraph);
 				
-				
 				console.log("method_parameters_19");
 				console.log(codeAnalysisResults.dicMethodParameters);
 				debug.writeJson2("method_parameters_19", codeAnalysisResults.dicMethodParameters);
 				
-//				var controlFlowGraph = {nodes: [], edges: []};
-				
 				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
-
-//				var domainModelInfo = {
-//						Elements: [],
-//						Usages: [],
-//						Realization:[],
-//						Assoc: [],
-//						OutputDir : ModelOutputDir+"/domainModel",
-//						AccessDir : ModelAccessDir+"/domainModel",
-//						DiagramType : "class_diagram",
-//					}
 				
-//				console.log("domain model Info");
-//				console.log(domainModelInfo);
-
 				Model.DomainModel = domainModelInfo.DomainModel;
 				
-//				Model.DomainModel = domainModelInfo;
-
 				debug.writeJson("constructed_model_by_kdm_domainmodel_7_5", Model.DomainModel);
 				
 
 				Model.UseCases = createUseCasesbyCFG(controlFlowGraph, Model.OutputDir, Model.OutputDir, domainModelInfo.DomainElementsByID);
 
-//				Model.UseCases = [];
+//				Model.UseCases = createUseCasesbyAndroidLog(componentInfo.dicComponents, Model.OutputDir, Model.OutputDir);
+				
+
+				modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
+				
+				modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnit, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+				
+				modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
 				
 				debug.writeJson("constructed_model_by_kdm_model_7_5", Model);
 
@@ -179,8 +167,6 @@
 
 		var dicComponents = componentInfo.dicComponents;
 		var dicClassComponent = componentInfo.dicClassComponent;
-		console.log("dicClassComponent");
-		console.log(dicClassComponent);
 
 		var DomainModel = {
 			Elements: [],
@@ -197,8 +183,7 @@
 
 		for(var i in dicComponents){
 			var component = dicComponents[i];
-			console.log('exam component');
-			console.log(component);
+			
 			var domainElement = {
 				Name: component.name,
 				_id: 'c'+component.UUID.replace(/\-/g, "_"),
@@ -206,51 +191,63 @@
 				Operations: [],
 				InheritanceStats: {},
 				Associations: [],
-				// Attachment: XMIClass
 			};
+			
 			domainElements.push(domainElement);
-			// var domainElement = createDomainElement(component);
-			// DomainModel.Elements.push(domainElement);
 			domainElementsByID[domainElement._id] = domainElement;
 		}
 
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
-			// console.log(edge)
-//			console.log(util.inspect(edge, false, null));
-			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
-			var domainElement = domainElementsByID[componentUUID];
 			
-			if(!domainElement){
+			var startNode = edge.start;
+			var callComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
+			var callDomainElement = domainElementsByID[callComponentUUID];
+			
+//			console.log("found domain element");
+//			console.log(domainElement);
+			
+			if(!callDomainElement){
 				continue;
 			}
-			var foundMethod = false;
-			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
-					var method = domainElement.Operations[j];
-					foundMethod = true;
-				}
-			}
-			if (!foundMethod) {
-				var parameters = dicMethodParameters[startNode.UUID];
-				if (parameters == null) {
-					parameters = [];
-				}
-				var method = {
-					Name: startNode.methodName,
-					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
-					Parameters: parameters,
-				}
-				domainElement.Operations.push(method);
-			}
+			
+//			var foundMethod = false;
+//			for (var j in domainElement.Operations) {
+//				if (domainElement.Operations[j]._id === 'a'+startNode.UUID.replace(/\-/g, "") ||
+//						domainElement.Operations[j].Name === startNode.methodName) {
+//					var method = domainElement.Operations[j];
+//					foundMethod = true;
+//					break;
+//				}
+//			}
+//			
+//			if (!foundMethod) {
+//				var parameters = dicMethodParameters[startNode.UUID];
+//				if (parameters == null) {
+//					parameters = [];
+//				}
+//				var method = {
+//					Name: startNode.methodName,
+//					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
+//					Parameters: parameters,
+//				}
+//				
+//				domainElement.Operations.push(method);
+//			}
+			
 			var endNode = edge.end;
-			var componentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
-			var domainElement = domainElementsByID[componentUUID];
+			var calleeComponentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
+			var calleeDomainElement = domainElementsByID[calleeComponentUUID];
+			
+			if(callDomainElement == calleeDomainElement){
+				continue;
+			}
+			
 			foundMethod = false;
-			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
-					var method = domainElement.Operations[j];
+			for (var j in calleeDomainElement.Operations) {
+				if (calleeDomainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") ||
+						calleeDomainElement.Operations[j].Name === endNode.methodName) {
+					var method = calleeDomainElement.Operations[j];
 					foundMethod = true;
 				}
 			}
@@ -264,54 +261,64 @@
 					_id: 'a'+endNode.UUID.replace(/\-/g, ""),
 					Parameters: parameters,
 				}
-				domainElement.Operations.push(method);
+				
+				calleeDomainElement.Operations.push(method);
 			}
 		}
 
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
 			var startNode = edge.start;
-			var componentUUID = 'c'+startNode.component.name.replace(/\-/g, "_");
-			var domainElement = domainElementsByID[componentUUID];
-			if(!domainElement){
+			var accessComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
+			var accessDomainElement = domainElementsByID[accessComponentUUID];
+			if(!accessDomainElement){
 				continue;
 			}
-			var foundMethod = false;
-			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
-					var method = domainElement.Operations[j];
-					foundMethod = true;
-				}
-			}
-			if (!foundMethod) {
-				var parameters = dicMethodParameters[startNode.UUID];
-				if (parameters == null) {
-					parameters = [];
-				}
-				var method = {
-					Name: startNode.name,
-					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
-					Parameters: parameters,
-				}
-				domainElement.Operations.push(method);
-			}
+			
+//			var foundMethod = false;
+//			for (var j in domainElement.Operations) {
+//				if (domainElement.Operations[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
+//					var method = domainElement.Operations[j];
+//					foundMethod = true;
+//				}
+//			}
+//			if (!foundMethod) {
+//				var parameters = dicMethodParameters[startNode.UUID];
+//				if (parameters == null) {
+//					parameters = [];
+//				}
+//				var method = {
+//					Name: startNode.name,
+//					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
+//					Parameters: parameters,
+//				}
+//				domainElement.Operations.push(method);
+//			}
+			
 			var endNode = edge.end;
-			var endComponentUUID = 'a'+dicClassComponent[endNode.UUID].replace(/\-/g, "");
-			var domainElement = domainElementsByID[componentUUID];
+//			var endComponentUUID = 'a'+dicClassComponent[endNode.UUID].replace(/\-/g, "");
+			var accesseeComponentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
+			var accesseeDomainElement = domainElementsByID[accesseeComponentUUID];
+			
+			if(accessDomainElement == accesseeDomainElement){
+				continue;
+			}
+			
 			var foundAttr = false;
-			for (var j in domainElement.Attributes) {
-				if (domainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
+			for (var j in accesseeDomainElement.Attributes) {
+				if (accesseeDomainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
 					foundAttr = true;
 				}
 			}
+			
 			if (!foundAttr) {
 				var attr = {
-					Name: endNode.attributeName,
+					Name: endNode.attrName,
 					_id: 'a'+endNode.UUID.replace(/\-/g, ""),
-					Type: endNode.attributeType,
-					TypeUUID: 'a'+endNode.attributeTypeUUID.replace(/\-/g, "")
+					Type: endNode.attrType,
+					TypeUUID: 'a'+endNode.UUID.replace(/\-/g, "")
 				};
-				domainElement.Attributes.push(attr);
+				accesseeDomainElement.Attributes.push(attr);
 			}
 		}
 
@@ -341,13 +348,7 @@
 			}
 		}
 		}
-		// console.log("domainElements");
-		// console.log(domainElements);
-		// console.log("domainElementsByID");
-		// console.log(domainElementsByID);
-
-		// console.log("check edgesPara");
-		// console.log(typeDependencyGraph.edgesPara);
+		
 		if(typeDependencyGraph){
 		for (var i in typeDependencyGraph.edgesPara) {
 			var edge = typeDependencyGraph.edgesPara[i];
@@ -451,26 +452,15 @@
 //		console.log(util.inspect(domainElementsByID, false, null));
 
 		DomainModel.Elements = domainElements;
-
-
-		// for(var i in classUnits){
-		// 	var classUnit = classUnits[i];
-		// 	console.log('exam class');
-		// 	console.log(classUnit);
-		// 	var domainElement = createDomainElement(classUnit);
-		// 	DomainModel.Elements.push(domainElement);
-		// 	domainElementsByID[domainElement._id] = domainElement;
-		// }
-
-
-		DomainModel.DiagramType = "class_diagram";
+		
+		DomainModel.DiagramType = "domain_model";
 
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson("constructed_domain_model_kdm", DomainModel);
 
-		createClassDiagramFunc(DomainModel.Elements, DomainModel.OutputDir+"/"+"class_diagram.dotty", function(){
-		   console.log("class diagram is output: "+DomainModel.OutputDir+"/"+"class_diagram.dotty");
-	   });
+//		createDomainModelDiagram(DomainModel.Elements, DomainModel.OutputDir+"/"+"domain_model.dotty", function(){
+//		   console.log("class diagram is output: "+DomainModel.OutputDir+"/"+"domain_model.dotty");
+//	   });
 
 
 		return {
@@ -479,125 +469,59 @@
 		}
 
 	}
+	
+	
+	function createUseCasesbyAndroidLog(dicComponent, ModelOutputDir, ModelAccessDir){
+		
+		var androidLogPath = "./data/GitAndroidAnalysis/android-demo-log.txt"	;
+		
+		var UseCases = [];
 
-	// draw the class diagram of the model
-	function createClassDiagramFunc(classElements, graphFilePath, callbackfunc){
-
-		      console.log("run the create class dia");
-              console.log("class diagram model is"+classElements);
-              console.log("class diagram model is"+JSON.stringify(classElements));
-		//           var json_obj = {
-//           	   "allClass" :[
-//				   {"className": "bookTicketMangement",
-//			        "attributes": [
-//					   	{"attributeName": "ticketName",
-//				         "attributeType": "String"
-//						},
-//						 {"attributeName": "ticketId",
-//						 "attributeType": "int"
-//                         }
-//                      ],
-//					"operations": [
-//						 {"operationName":"bookTicketsManagement(int)",
-//						  "operationReturn":"void"
-//						 }
-//					   ],
-//					"kids": ["BookTickets","bookTicketInterface"]
-//				   },
-//
-//				   {"className": "BookTickets",
-//					"attributes": [
-//						{"attributeName": "BookTicketName",
-//						 "attributeType": "int"
-//                           }
-//                       ],
-//					 "operations": [],
-//					 "kids": []
-//                   },
-//
-//                   {"className": "bookTicketInterface",
-//                    "attributes": [
-//                       {"attributeName": "BookTicketInput",
-//                        "attributeType": "int"
-//					   }
-//					 ],
-//                     "operations": [],
-//                      "kids": []
-//                   }
-//			   ]
-//		   }
-
-			var graph = 'digraph class_diagram {';
-             graph += 'node [fontsize = 8 shape = "record"]';
-             graph += ' edge [arrowhead = "ediamond"]'
-             for(i = 0;  i < classElements.length; i++){
-                 var curClass = classElements[i];
-                 graph += curClass["_id"];
-                 graph += '[ id = ' + curClass["_id"];
-                 graph += ' label = "{';
-                 graph += curClass["Name"];
-
-
-                 var classAttributes = classElements[i]["Attributes"];
-                 if (classAttributes.length != 0){
-                     graph += '|';
-                     for(j = 0; j < classAttributes.length; j++) {
-                         graph += '-   ' ;
-                         graph += classAttributes[j]["Name"];
-                         graph += ':'+classAttributes[j]["Type"];
-                         graph += '\\l';
-                     }
-                 }
-
-                 // graph += '|';
-
-                 var classOperations = classElements[i]["Operations"];
-                 if (classOperations.length != 0){
-                     graph += '|';
-                     for(j = 0; j < classOperations.length;j++) {
-
-                    	 graph += '+   ' ;
-                         graph += classOperations[j]["Name"] + '(';
-												 // console.log(util.inspect(dicMethodParameters, false, null));
-												 // console.log(util.inspect(classOperations, false, null));
-												 // console.log(util.inspect(classOperations[j], false, null));
-                         var para_len = classOperations[j]["Parameters"].length;
-                         for (k = 0; k < classOperations[j]["Parameters"].length - 1; k++) {
-                        	 graph += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
-                         }
-                         graph += ')';
-//                         graph += ':'+classOperations[j]["Parameters"][para_len - 1]["Type"];
-                         graph += "\\l";
-                     }
-                 }
-
-
-
-                 graph += '}"]';
-
-                 var classAss = classElements[i]["Associations"];
-                 for(j = 0; j < classAss.length;j++) {
-                     graph += curClass["_id"] ;
-                     graph += '->';
-                     graph += classAss[j]["id"] + ' ';
-
-                 }
-			 }
-
-
-
-
-            graph += 'imagepath = \"./public\"}';
-
-     		console.log("graph is:"+graph);
-     		dottyUtil = require("../../utils/DottyUtil.js");
-     		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-     			console.log("class Diagram is done");
-     		});
-
-
-             return graph;
+		var UseCase = {
+				_id: "src",
+				Name: "src",
+				PrecedenceRelations : [],
+				Activities : [],
+				OutputDir : ModelOutputDir+"/src",
+				AccessDir : ModelAccessDir+"/src",
+				DiagramType : "none"
 		}
+
+		var activities = [];
+		var activitiesByID = {}
+		var precedenceRelations = [];
+
+		
+		var transactions = androidLogUtil.identifyTransactions(androidLogPath, dicComponent);
+		
+		console.log("dicComponent");
+		console.log(dicComponent);
+		console.log(transactions);
+//		process.exit(0);
+
+		for(var i in transactions){
+			var transaction = transactions[i];
+		var prevNode = null;
+		for(var j in transaction.Nodes){
+			var node = transaction.Nodes[j];
+
+			activities.push(node);
+			activitiesByID[node._id] = node;
+			if(prevNode){
+				precedenceRelations.push({start: prevNode, end: node});
+			}
+			prevNode = node;
+		}
+		}
+
+		UseCase.Activities = UseCase.Activities.concat(activities);
+		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
+
+		UseCases.push(UseCase);
+
+		return UseCases;
+
+	}
 
 	function createUseCasesbyCFG(cfgGraph, ModelOutputDir, ModelAccessDir, domainElementsByID){
 
@@ -658,10 +582,7 @@
 
 			var start = activitiesByID[startId];
 			var end = activitiesByID[endId];
-//
-//			var start = edge.start;
-//			var end = edge.end;
-//
+			
 			if(!start || !end){
 				continue;
 			}

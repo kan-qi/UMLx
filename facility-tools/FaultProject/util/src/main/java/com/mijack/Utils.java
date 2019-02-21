@@ -102,7 +102,7 @@ public class Utils {
     }
 
     /**
-     * todo 使用DFS进行遍历
+     * todo ä½¿ç”¨DFSè¿›è¡Œé��åŽ†
      *
      * @param blockElement
      * @param name
@@ -110,9 +110,13 @@ public class Utils {
      */
     public static List<Element> findAllElement(Element blockElement, String name) {
         List<Element> result = new ArrayList<>();
+        if(blockElement == null) {
+        	return result;
+        }
         if (isEmpty(name)) {
             return result;
         }
+        
         Stack<Element> toSearch = new Stack<>();
         Set<Element> hasSearch = new HashSet<>();
         if (name.equals(blockElement.getName())) {
@@ -121,7 +125,7 @@ public class Utils {
         hasSearch.add(blockElement);
         toSearch.add(blockElement);
         while (!toSearch.isEmpty()) {
-            //取出对应栈顶元素
+            //å�–å‡ºå¯¹åº”æ ˆé¡¶å…ƒç´ 
             Element peek = toSearch.peek();
             List<Element> elements = peek.elements();
             int i = 0;
@@ -220,11 +224,11 @@ public class Utils {
         try {
             FileWriter writer = new FileWriter(xmlFile, false);
             OutputFormat outputFormat = new OutputFormat();
-            // 设置换行 为false时输出的xml不分行
+            // è®¾ç½®æ�¢è¡Œ ä¸ºfalseæ—¶è¾“å‡ºçš„xmlä¸�åˆ†è¡Œ
             outputFormat.setNewlines(true);
-            // 生成缩进
+            // ç”Ÿæˆ�ç¼©è¿›
             outputFormat.setIndent(true);
-            // 指定使用tab键缩进
+            // æŒ‡å®šä½¿ç”¨tabé”®ç¼©è¿›
             outputFormat.setIndent("\t");
             xmlWriter = new XMLWriter(writer, outputFormat);
             xmlWriter.write(document);

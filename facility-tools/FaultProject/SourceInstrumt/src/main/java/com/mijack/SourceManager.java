@@ -38,26 +38,26 @@ public class SourceManager {
     private SourceManager() {
         ObjectMapper mapper = new ObjectMapper();
         ObjectReader reader = mapper.reader();
-        try {
-            //加载framework class
-            ObjectNode tree = (ObjectNode) reader.readTree(new FileReader("F:\\IdeaProject\\FaultProject\\class.json"));
-            Iterator<Map.Entry<String, JsonNode>> fields = tree.fields();
-            while (fields.hasNext()) {
-                Map.Entry<String, JsonNode> next = fields.next();
-                String packageName = next.getKey();
-                ArrayNode value = (ArrayNode) next.getValue();
-                List<String> list = new ArrayList<>();
-                Iterator<JsonNode> iterator = value.iterator();
-                while (iterator.hasNext()) {
-                    String className = iterator.next().asText();
-                    list.add(className);
-                    addClassData(packageName, className);
-                }
-                frameworkClasses.addAll(list);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            //加载framework class
+//            ObjectNode tree = (ObjectNode) reader.readTree(new FileReader("F:\\IdeaProject\\FaultProject\\class.json"));
+//            Iterator<Map.Entry<String, JsonNode>> fields = tree.fields();
+//            while (fields.hasNext()) {
+//                Map.Entry<String, JsonNode> next = fields.next();
+//                String packageName = next.getKey();
+//                ArrayNode value = (ArrayNode) next.getValue();
+//                List<String> list = new ArrayList<>();
+//                Iterator<JsonNode> iterator = value.iterator();
+//                while (iterator.hasNext()) {
+//                    String className = iterator.next().asText();
+//                    list.add(className);
+//                    addClassData(packageName, className);
+//                }
+//                frameworkClasses.addAll(list);
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public void addClassData(String packageName, String className) {

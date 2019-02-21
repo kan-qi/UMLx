@@ -1,11 +1,7 @@
 /*
- * AnalysisEntrypoint.java - part of the GATOR project
- *
- * Copyright (c) 2018 The Ohio State University
- *
- * This file is distributed under the terms described in LICENSE in the
- * root directory.
+ * CodeAnalysis.java
  */
+
 package presto.android;
 
 import soot.Body;
@@ -85,7 +81,7 @@ public class CodeAnalysis {
 		  }
 		  this.attachment = method;
 		  this.signature = method.getSignature();
-	}
+	  }
 	String returnType;
 	List<String> parameterTypes;
 	String name;
@@ -113,30 +109,6 @@ public class CodeAnalysis {
 	}
   }
   
-//  private static void visit(CallGraph cg, SootMethod method) {
-//	  String identifier = method.getSignature();
-//	  visited.put(method.getSignature(), true);
-//	  dot.drawNode(identifier);
-//	  // iterate over unvisited parents
-//	  Iterator<MethodOrMethodContext> ptargets = new Targets(cg.edgesInto(method));
-//	  if (ptargets != null) {
-//	    while (ptargets.hasNext()) {
-//	        SootMethod parent = (SootMethod) ptargets.next();
-//	        if (!visited.containsKey(parent.getSignature())) visit(cg, parent);
-//	    }
-//	  }
-//	    // iterate over unvisited children
-//	    Iterator<MethodOrMethodContext> ctargets = new Targets(cg.edgesOutOf(method));
-//	  if (ctargets != null) {
-//	    while (ctargets.hasNext()) {
-//	       SootMethod child = (SootMethod) ctargets.next();
-//	       dot.drawEdge(identifier, child.getSignature());
-//	       Debug1.v().println(method + " may call " + child);
-//	       if (!visited.containsKey(child.getSignature())) visit(cg, child);
-//	    }
-//	  }
-//	}
-  
   
 private class CallGraphNode{
 	MethodUnit methodUnit;
@@ -149,27 +121,13 @@ private class CallGraphNode{
 	}
 	
 }
-
-//private class CallGraphCompositeNode{
-//	MethodUnit methodUnit;
-//	CompositeClassUnit compositeClassUnit;
-//	
-//	CallGraphCompositeNode(MethodUnit methodUnit, CompositeClassUnit compositeClassUnit) {
-//		super();
-//		this.methodUnit = methodUnit;
-//		this.compositeClassUnit = compositeClassUnit;
-//	}
-//	
-//}
   
 //output the call graph to JSON format
 private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, MethodUnit> methodBySig, Map<String, String> methodToClass, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic){
 		
 		Set<CallGraphNode[]> edges = new HashSet<CallGraphNode[]>();
-//		Set<CallGraphCompositeNode[]> compositeEdges = new HashSet<CallGraphCompositeNode[]>();
 		
 		Iterator<Edge> itr = cg.iterator();
-//		Map<String, Set<String>> map = new HashMap<String, Set<String>>();
 
 		while(itr.hasNext()){
 			Edge e = itr.next();
@@ -189,7 +147,6 @@ private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List
 			ClassUnit srcClass = classUnitByUUID.get(srcClassUUID);
 			ClassUnit targetClass = classUnitByUUID.get(targetClassUUID);
 			
-//			edges.add(new ClassUnit[] {srcClass, targetClass});
 			CallGraphNode srcNode = new CallGraphNode(srcMethod, srcClass);
 			CallGraphNode targetNode = new CallGraphNode(destMethod, targetClass);
 			
@@ -200,27 +157,7 @@ private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List
 			
 			CompositeClassUnit srcCompositeClass = compositeClassUnitByUUID.get(srcCompositeClassUUID);
 			CompositeClassUnit targetCompositeClass = compositeClassUnitByUUID.get(targetCompositeClassUUID);
-			
-//			CallGraphCompositeNode srcCompositeNode = new CallGraphCompositeNode(srcMethod, srcCompositeClass);
-//			CallGraphCompositeNode targetCompositeNode = new CallGraphCompositeNode(destMethod, targetCompositeClass);
-//			
-//			compositeEdges.add(new CallGraphCompositeNode[] {srcCompositeNode, targetCompositeNode});
-			
-			
-//			Set<String> neighborSet;
-//			if(map.containsKey(srcSig)){
-//				neighborSet = map.get(srcSig);
-//			}else{
-//				neighborSet = new HashSet<String>();
-//			}
-//			
-//			neighborSet.add(destSig);
-//			map.put(srcSig, neighborSet );
-//			
 		}
-//		Gson gson = new GsonBuilder().disableHtmlEscaping().create();
-//		String json = gson.toJson(map);
-//		return json;
 		
 		return convertCallGraphToJSON(edges);
 	}
@@ -229,24 +166,6 @@ private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List
 String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	
 	String outputS = "{";
-//	outputS += "\"compositeClassGraph\":[";
-//		int i = 0;
-//		for(CallGraphCompositeNode[] compEdge: compositeEdges) {
-//			if(compEdge[0] == null || compEdge[1] == null) {
-//				continue;
-//			}
-//			i++;
-//			if(i != 1) {
-//				outputS += ",";
-//			}
-//			outputS += "{\"start\":{\"UUID\":\""+compEdge[0].methodUnit.uuid+"\",\"classUnit\":\""+compEdge[0].compositeClassUnit.uuid+"\"},";
-////			outputS += "->";
-//			outputS += "\"end\":{\"UUID\":\""+compEdge[0].methodUnit.uuid+"\",\"classUnit\":\""+compEdge[0].compositeClassUnit.uuid+"\"}}";
-////			outputS += "\n";
-//		}
-//		outputS += "]";
-		
-//		outputS += "\"classGraph\":[";
 		outputS += "\"edges\":[";
 		
 		int i = 0;
@@ -259,15 +178,10 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 				outputS += ",";
 			}
 			outputS += "{\"start\":{\"methodUnit\":\""+edge[0].methodUnit.uuid+"\",\"classUnit\":\""+edge[0].classUnit.uuid+"\"},";
-//			outputS += "->";
 			outputS += "\"end\":{\"methodUnit\":\""+edge[1].methodUnit.uuid+"\",\"classUnit\":\""+edge[1].classUnit.uuid+"\"}}";
-//			outputS += "\n";
 			
 		}
 		outputS += "]}";
-		
-//		Debug1.v().printf("composite graph: %s", outputS);
-//		Debug4.v().printf("json: %s", outputS);
 		
 		return outputS;
 	}
@@ -275,7 +189,6 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
   
   class ClassUnit{
 	  public ClassUnit(SootClass sootClass, boolean isWithinBoundary) {
-		// TODO Auto-generated constructor stub
 		this.name = sootClass.getName();
 		this.attachment = sootClass;
 		this.uuid = UUID.randomUUID().toString();
@@ -342,8 +255,6 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	  
 	  public CompositeClassUnit(String name) {
 		  this.classUnits = new HashSet<ClassUnit>();
-//		  this.classUnits.add(classUnit);
-//		  this.name = classUnit.getName();
 		  this.name = name;
 		  this.uuid = UUID.randomUUID().toString();
 	  }
@@ -360,8 +271,6 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		  Json.append("\"classUnits\": [");
 		  while(iterator.hasNext()) {
 			  ClassUnit classUnit = iterator.next();
-//			  Json.append(classUnit.toJSONString());
-//			  Json.append("\""+classUnit.getName()+"\"");
 			  Json.append("\""+classUnit.uuid+"\"");
 			  if(iterator.hasNext()) {
 				  Json.append(",");
@@ -373,13 +282,11 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 
 	@Override
 	public boolean add(ClassUnit e) {
-		// TODO Auto-generated method stub
 		return this.classUnits.add(e);
 	}
 
 	@Override
 	public boolean addAll(Collection<? extends ClassUnit> c) {
-		// TODO Auto-generated method stub
 		return this.classUnits.addAll(c);
 	}
 
@@ -391,61 +298,51 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 
 	@Override
 	public boolean contains(Object o) {
-		// TODO Auto-generated method stub
 		return this.classUnits.contains(o);
 	}
 
 	@Override
 	public boolean containsAll(Collection<?> c) {
-		// TODO Auto-generated method stub
 		return this.classUnits.containsAll(c);
 	}
 
 	@Override
 	public boolean isEmpty() {
-		// TODO Auto-generated method stub
 		return this.classUnits.isEmpty();
 	}
 
 	@Override
 	public Iterator<ClassUnit> iterator() {
-		// TODO Auto-generated method stub
 		return this.classUnits.iterator();
 	}
 
 	@Override
 	public boolean remove(Object o) {
-		// TODO Auto-generated method stub
 		return this.classUnits.remove(0);
 	}
 
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		// TODO Auto-generated method stub
 		return this.classUnits.removeAll(c);
 	}
 
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		// TODO Auto-generated method stub
 		return this.classUnits.retainAll(c);
 	}
 
 	@Override
 	public int size() {
-		// TODO Auto-generated method stub
 		return this.classUnits.size();
 	}
 
 	@Override
 	public Object[] toArray() {
-		// TODO Auto-generated method stub
 		return this.classUnits.toArray();
 	}
 
 	@Override
 	public <T> T[] toArray(T[] a) {
-		// TODO Auto-generated method stub
 		return this.classUnits.toArray(a);
 	}
   }
@@ -464,21 +361,6 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		}
 		
 	}
-  
-//  private class AccessGraphCompositeNode{
-//		MethodUnit methodUnit;
-//		AttrUnit attrUnit;
-//		CompositeClassUnit compositeClassUnit;
-//		
-//		AccessGraphCompositeNode(MethodUnit methodUnit, AttrUnit attrUnit, CompositeClassUnit compositeClassUnit) {
-//			super();
-//			this.methodUnit = methodUnit;
-//			this.compositeClassUnit = compositeClassUnit;
-//			this.attrUnit = attrUnit;
-//		}
-//		
-//	}
-
   
   private class AttrUnit{
 	  String name;
@@ -511,21 +393,18 @@ public String constructCompositionGraph(List<ClassUnit> classUnits, List<Composi
 public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
 
 	  	Set<AccessGraphNode[]> edges = new HashSet<AccessGraphNode[]>();
-
-//		Set<CompositeClassUnit[]> compositeEdges = new HashSet<CompositeClassUnit[]>(); // call relation
 		
 		for (ClassUnit classUnit : classUnits) {
 			
-//			Debug1.v().printf("class unit id:%s\n", classUnit.uuid);
 			String compositeClassUnitUUID = classUnitToCompositeClassDic.get(classUnit.uuid);
-//			Debug1.v().printf("composite class unit id:%s\n", compositeClassUnitUUID);
 			CompositeClassUnit compositeClassUnit = compositeClassUnitByUUID.get(compositeClassUnitUUID);
-//			Debug1.v().printf("composite class unit:%s\n", compositeClassUnit.name);
 
 			Set<ClassUnit> referencedClassUnits = new HashSet<ClassUnit>();
 			
 			List<MethodUnit> methodUnits = classUnit.getMethods();
 			for (MethodUnit methodUnit : methodUnits) {
+				//need to identify the methods within the boundary.
+				
 //				var methodUnit = methodUnits[q];
 
 //				if (!methodUnit || !classUnit.isWithinBoundary) {
@@ -559,7 +438,6 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
 					continue;
 				}
 				
-//				Debug1.v().printf("active body:%s\n", methodUnit.name);
 				Debug2.v().printf("active body:%s", methodUnit.name);
 				
 //				if( s.containsFieldRef() ) {
@@ -574,7 +452,6 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
 				
 				AccessGraphNode srcAccessGraphNode = new AccessGraphNode(methodUnit, null, classUnit);
 				ArrayList<AccessGraphNode> referencedAccessGraphNodes = new ArrayList<AccessGraphNode>();
-//				ArrayList<AccessGraphCompositeNode> referencedAccessGraphCompositeNodes = new ArrayList<AccessGraphCompositeNode>();
 				
 				for (Unit u : methodBlockUnit.getUnits()) {
 //					Debug1.v().printf("unit:%s\n", u.toString());
@@ -620,19 +497,7 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
 			  }
 			
 			for(AccessGraphNode accessGraphNode : referencedAccessGraphNodes) {
-//				if(accessGraphNode == null) {
-//					continue;
-//				}
-//				Debug1.v().printf("target class unit:%s\n", targetClassUnit.name);
-				
-//				Debug1.v().printf("target composite class unit:%s\n", targetCompositeClassUnit.name);
-//				if(srcAccessGraphNode != accessGraphNode) {
 				edges.add(new AccessGraphNode[] {srcAccessGraphNode, accessGraphNode});
-//				}
-				
-//				if(compositeClassUnit != targetCompositeClassUnit) {
-//				compositeEdges.add(new CompositeClassUnit[]{compositeClassUnit, targetCompositeClassUnit});
-//				}
 			}
 			
 
@@ -646,24 +511,6 @@ public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeCla
 String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	
 	String outputS = "{";
-//	outputS += "\"compositeClassGraph\":[";
-//		int i = 0;
-//		for(CompositeClassUnit[] compEdge: compositeEdges) {
-//			if(compEdge[0] == null || compEdge[1] == null) {
-//				continue;
-//			}
-//			i++;
-//			if(i != 1) {
-//				outputS += ",";
-//			}
-//			outputS += "{\"start\":\""+compEdge[0].uuid+"\",";
-////			outputS += "->";
-//			outputS += "\"end\":\""+compEdge[1].uuid+"\"}";
-////			outputS += "\n";
-//		}
-//		outputS += "]";
-		
-//		outputS += "\"classGraph\":[";
 		
 		outputS += "\"edges\":[";
 		
@@ -679,22 +526,11 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 			
 			
 			outputS += "{\"start\":{\"methodUnit\":\""+edge[0].methodUnit.uuid+"\",\"classUnit\":\""+edge[0].classUnit.uuid+"\"},";
-//			outputS += "->";
-//			AttrUnit attrUnit = new AttrUnit("attN1", "attT1");
 			
 			outputS += "\"end\":{\"attrUnit\":"+edge[1].attrUnit.toJSONString()+",\"classUnit\":\""+edge[1].classUnit.uuid+"\"}}";
-//			outputS += "\n";
-			
-//			outputS += "{\"start\":\""+edge[0].uuid+"\",";
-////			outputS += "->";
-//			outputS += "\"end\":\""+edge[1].uuid+"\"}";
-////			outputS += "\n";
 			
 		}
 		outputS += "]}";
-		
-//		Debug1.v().printf("composite graph: %s", outputS);
-//		Debug4.v().printf("json: %s", outputS);
 		
 		return outputS;
 	}
@@ -726,14 +562,9 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
             ", #AppClasses: " + Scene.v().getApplicationClasses().size());
     Logger.trace("TIMECOST", "Start at " + System.currentTimeMillis());
     
-//  Logger.stat("#Stmt: " + numStmt[0] + " (not correct)");
-//  Debug2.v().printf("classes: %s", sb.toString());
-    
     List<ClassUnit> allClassUnits = new ArrayList<ClassUnit>();
     
-//    StringBuilder sb = new StringBuilder();
     for (SootClass c : Scene.v().getClasses()) {
-//    sb.append(c.getName()+"\n");
       ClassUnit classUnit = null;
 //      if(c.isApplicationClass()) {
 //    	  Debug2.v().printf("application class: %s\n", c.getName());
@@ -771,16 +602,12 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
     Map<String, MethodUnit> methodBySig = new HashMap<String, MethodUnit>();
     Map<String, String> methodToClass = new HashMap<String, String>();
     
-//    List<ClassUnit> toIterate = new ArrayList<ClassUnit>(classUnits);
     List<ClassUnit> classUnits = new ArrayList<ClassUnit>();
     for(ClassUnit classUnit : allClassUnits) {
-//    	ClassUnit classUnit = toIterate.remove(0);
     	if(!classUnit.isWithinBoundary) {
     		continue;
     	}
 
-//		Debug1.v().println(classUnit.name);
-		
 		String className = classUnit.name;
 		String compositeClassUnitName = getComponentName(className);
 		
@@ -827,7 +654,6 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	int i = 0;
 	for(String uuid: compositeClassUnitByUUID.keySet()) {
 		CompositeClassUnit compCU = compositeClassUnitByUUID.get(uuid);
-//		outputS += compCU.uuid;
 		outputS += compCU.toJSONString();
 		if(i != compositeClassUnitByUUID.keySet().size()-1) {
 		outputS += ",";
@@ -835,36 +661,10 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 		i++;
 	}
 	outputS += "]";
-	
-//	//output methodBySig
-//	outputS += ",methodBySig:[";
-//	i = 0;
-//	for(String methodSig: methodBySig.keySet()) {
-//		String classUUID = methodBySig.get(methodSig);
-////		outputS += compCU.uuid;
-//		outputS += "{\""+methodSig+"\":"+"\""+classUUID+"\"}";
-//		if(i != methodBySig.keySet().size()-1) {
-//		outputS += ",";
-//		}
-//		i++;
-//	}
-//	outputS += "]";
-	
-	//output classUnitByUUID
-	//output compositeClassUnitByUUID
-	//output classUnitToCompositeClassDic
 
     for(String m : classUnitToCompositeClassDic.keySet()) {
     	Debug2.v().printf("class id: %s; composite id: %s\n", m, classUnitToCompositeClassDic.get(m));
-//    	Debug1.v().printf("class id: %s; composite id: %s\n", m, classUnitToCompositeClassDic.get(m));
     }
-    
-    //create the hierarchy of the class units for the composite class units.
-    
-    // Analysis
-    // TODO: use reflection to allow nice little extensions.
-    
-//    identifyAggregateClassUnits(xmiString);
     
     CallGraph callGraph = genCallGraph();
 //	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
@@ -890,7 +690,6 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 private CallGraph genCallGraph() {
 
 	String apkPath = Configs.project;
-//  String androidJarPath = Configs.sdkDir + "/platforms/" + Configs.apiLevel;
   	String androidJarPath = Configs.sdkDir + "/platforms/";
   
     File apkFile = new File(apkPath);
@@ -925,7 +724,6 @@ private CallGraph genCallGraph() {
 	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
 	app.setOutputDir(Configs.outputDir);
 	
-//	Path curDir = Paths.get(System.getProperty("user.dir"));
 	Path gatorFilePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
 	File gatorFile = gatorFilePath.toFile();
 	if(!gatorFile.exists()) {
@@ -933,17 +731,10 @@ private CallGraph genCallGraph() {
 		return null;
 	}
 	
-	app.setGatorFile(gatorFile.getAbsolutePath());
+//	app.setGatorFile(gatorFile.getAbsolutePath());
 	
 	Debug1.v().println("Setup Application...");
 	Debug1.v().println("platforms: "+androidJarPath+" project: "+apkPath);
-  
-//  AndroidEntryPointCreator c = app.getEntryPointCreator();
-//  SootMethod entryPoint = c.createDummyMain();
-//  Options.v().set_main_class(entryPoint.getSignature());
-//  Scene.v().setEntryPoints(Collections.singletonList(entryPoint));
-  
-//  Debug1.v().println(entryPoint.getActiveBody());
   
   	soot.G.reset();
   	Options.v().set_src_prec(Options.src_prec_apk);
@@ -955,17 +746,13 @@ private CallGraph genCallGraph() {
 	Options.v().setPhaseOption("cg.spark", "on");
 	Scene.v().loadNecessaryClasses(); 
 	
-//	app.setCallbackFile("./AndroidCallbacks.txt");
-
 	app.setCallbackFile(callbackPath.toAbsolutePath().toString());
 	
 	try {
 		app.runInfoflow(sourceSinkPath.toAbsolutePath().toString());
 	} catch (IOException e1) {
-		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	} catch (XmlPullParserException e1) {
-		// TODO Auto-generated catch block
 		e1.printStackTrace();
 	}
 	

@@ -412,8 +412,6 @@ app.post('/genCOCOMOReport',function(req,res){
 		var cocomoDataResults= config.repoDir+"\\COCOMOResults.csv";
 		cocomoCalculator.loadCOCOMOData(cocomoDataPath, function(cocomoDataList){
 
-		// console.log(cocomoDataList);
-
 		var rows = "";
 
 		for(var i = 0; i < cocomoDataList.length; i++){
