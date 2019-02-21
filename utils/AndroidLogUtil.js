@@ -12,51 +12,91 @@
 	//the log file might be very large, specical stream reader is required.
 	
 	var es = require('event-stream');
+	var async = require("async");
 	
 	
-	function parseAndroidLogs(logPaths, startTime, endTime, callback){
+	function parseAndroidLogs(logPaths, dir, startTime, endTime, callback){
 //		var directory = path.join(__dirname, 'css');
 		// can also use this function as a filter of the file.
 		var lineNr = 0;
 
 	    var lastMethodSign = "";
 	    
+	    const stringData = {};
+	    
+	    var str = "";
+	    
 	    var data = [];
 	    
 	    var methods = [];
+	    
+//	    console.log(logPaths);
 	
-		  async.eachSeries(logPaths, function (file, callback) {
-		    if (!endsWith(file, '.json')) { return callback(false); } // (1)
+		  async.eachSeries(logPaths, function (file, done) {
+//		    if (!file.endsWith('.txt')) { callback(false); return;} // (1)
+			console.log(file);
 
-		    fs.stat(file, function (err, stats) {
-		      if (stats.isDirectory()) { return callback(); } // (2)
+		    fs.stat(dir+"/"+file, function (err, stats) {
+		      if(err){done(); return;}
+		      
+		      if (stats.isDirectory()) { done(); return;} // (2)
+		      console.log("read file: "+file);
+		      
+//		      const chunks = [];
 
-		      var stream = fs.createReadStream(file).on('end', function () {
+		      var stream = fs.createReadStream(dir+"/"+file).on('end', function () {
 //		        callback(); // (3)
-		    	  console.log("end file");
+		    	  console.log("end file"+file);
+		    	  done()
 		    	  
 		      }).on('data', function (data) {
-//		    	  concatenated += data.toString('utf8'); 
-		    	  
-		    	// pause the readstream
-					s.pause();
+//		    	console.log("data" + data.toString('utf8'));
+//		    	stringData.push(data);
+		    	  if(!stringData[file]){
+		    		  stringData[file] = [];
+		    	  }
+//		    	  console.log(data);
+//		    	  process.exit();
+		    	  stringData[file].push(data);
+		    });
+		      
+		  });
+		  }, function () {
+//		    res.end(); // (5)
 
-					lineNr += 1;
+			  console.log('Read entire file.')
+			  
+//			  str = stringData.toString('utf8'); 
+	    	  
+		    	// pause the readstream
+			  
+//			  console.log("log files");
+//			  console.log(str);
+
 
 					 //code here using lines[i] which will give you each line
 //			    	var line = lines[i];
+			  for(var i in stringData){
+				  var str = Buffer.concat(stringData[i]).toString();
+			  	
+					 var lines = str.split(/\r?\n/g);
+					 
+					 for(var j in lines){
+				
+
+				    lineNr += 1;
+				
+					var line = lines[j];
 
 			    	if(line === ""){
-			    		s.resume();
-			    		return;
+			    		continue;
 			    	}
 			    	
 //			    	var tagPos = line.indexOf("V/Xlog:");
 			    	var tagPos = line.indexOf("Xlog : ");
 			    	
 			    	if(tagPos == -1){
-			    		s.resume();
-			    		return;
+			    		continue;
 			    	}
 			    	
 //			    	console.log(line.substring(tagPos+7, line.length));
@@ -68,8 +108,7 @@
 					var timeStamp = Number(dataElement.time);
 					
 					if(timeStamp < startTime || timeStamp > endTime){
-						s.resume();
-			    		return;
+			    		continue;
 					}
 					
 //			    	console.log(dataElement);
@@ -84,15 +123,14 @@
 			    	lastMethodSign = dataElement.methodSign;
 			    	
 					// resume the readstream, possibly from a callback
-					s.resume();
+//					s.resume();
+			    	
+					 }
 					
-		      });
 //		      stream.pipe(res, { end: false }); // (4)
-		    });
-		  }, function () {
-//		    res.end(); // (5)
 			  
-			  console.log('Read entire file.')
+			  }
+				
 				if(callback){
 					callback(data);
 				}
@@ -102,9 +140,9 @@
 	
 	function parseAndroidLogFolder(logFolder, startTime, endTime, callback){
 //		var directory = path.join(__dirname, 'css');
-		fs.readdir(directory, function (err, files) {
+		fs.readdir(logFolder, function (err, files) {
 			
-			parseAndroidLogs(files, startTime, endtime, callback);
+			parseAndroidLogs(files, logFolder, startTime, endTime, callback);
 		  
 		});
 	}
@@ -279,7 +317,10 @@
 //	}
 	
 	function identifyTransactions(logPath, dicComponent, dicComponentDomainElement, dicResponseMethodUnits, startTime, endTime, callback){
-		parseAndroidLog(logPath, startTime, endTime, function(data){
+//		parseAndroidLog(logPath, startTime, endTime, function(data){
+//		console.log("identify transactions");
+//		process.exit();
+		parseAndroidLogFolder(logPath, startTime, endTime, function(data){
 //				
 //				for(var i in domainModel.Elements){
 //					var element = domainModel.Elements[i];
@@ -290,6 +331,10 @@
 //					}
 //				}
 			
+//				console.log("log data");
+//				console.log(data);
+//				process.exit(0);
+//			
 			
 				if(!data){
 					console.log('read log error');

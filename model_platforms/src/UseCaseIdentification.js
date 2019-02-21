@@ -53,11 +53,9 @@
 					Component: domainElement
 			}
 
-
 			activities.push(activity);
 			activitiesByID[activity._id] = activity;
 		}
-
 
 		var precedenceRelations = [];
 
@@ -93,7 +91,11 @@
   function identifyUseCasesfromAndroidLog(dicComponent, dicComponentDomainElement, dicResponseMethodUnits, ModelOutputDir, ModelAccessDir, androidLogPath, useCaseRecordPath, callback){
 		
 //		var androidLogPath = "./data/GitAndroidAnalysis/android-demo-log.txt"	;
-		
+	  
+//
+//		console.log(androidLogPath);
+//		process.exit(0);
+//		
 		var UseCases = [];
 		
 
@@ -252,6 +254,11 @@
 			});
 			});
 		}
+		
+		
+//		console.log("use case list");
+//		console.log(useCaseRecordList);
+//		process.exit(0);
 		
 		 return Promise.all(useCaseRecordList.map(useCaseRecord=>{
 		        return identifyUseCase(useCaseRecord);

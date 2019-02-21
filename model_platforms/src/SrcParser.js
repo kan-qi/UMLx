@@ -196,8 +196,9 @@
 //					dicDomainElement[domainElement["_id"]] = domainElement; 
 //				}
 				
-				if(modelInfo.logFile && modelInfo.useCaseRec){
-					useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, domainModelInfo.dicComponentDomainElement, dicResponseMethodUnits, Model.OutputDir, Model.OutputDir, modelInfo.path+"/"+modelInfo.logFile,  modelInfo.path+"/"+modelInfo.useCaseRec, function(useCases){
+				var log = modelInfo.logFile ? modelInfo.logFile : modelInfo.logFolder;
+				if(log && modelInfo.useCaseRec){
+					useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, domainModelInfo.dicComponentDomainElement, dicResponseMethodUnits, Model.OutputDir, Model.OutputDir, modelInfo.path+"/"+log,  modelInfo.path+"/"+modelInfo.useCaseRec, function(useCases){
 						Model.UseCases = useCases;
 						
 						modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
