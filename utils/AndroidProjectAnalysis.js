@@ -60,21 +60,49 @@ function analyseAndroidApks(projectList, reportDir){
 //      });
 //    }
     
-    return Promise.all(projectList.map(project=>{
-        return AndroidLogUtil.generateAndroidAnalysis(project.apkFileName, reportDir);
-    })).then(
-        function(){
-//            return new Promise((resolve, reject) => {
-//                setTimeout(function(){
-                	console.log("analysis finished");
-//                    resolve();
-//                }, 0);
-//            });
-        }
+//    return Promise.all(projectList.map(project=>{
+//        return AndroidLogUtil.generateAndroidAnalysis(project.apkFileName, reportDir);
+//    })).then(
+//        function(){
+////            return new Promise((resolve, reject) => {
+////                setTimeout(function(){
+//                	console.log("analysis finished");
+////                    resolve();
+////                }, 0);
+////            });
+//        }
+//
+//    ).catch(function(err){
+//        console.log(err);
+//    });
+    
+    
+    
+//    function asyncFunc(e) {
+//    	  return new Promise((resolve, reject) => {
+//    	    setTimeout(() => resolve(e), e * 1000);
+//    	  });
+//    	}
 
-    ).catch(function(err){
-        console.log(err);
-    });
+//    	const arr = [1, 2, 3];
+    	let final = [];
+
+    	function apkAnalysisList(projectList) {
+    	  return projectList.reduce((promise, project) => {
+    	    return promise
+    	      .then((result) => {
+    	        console.log("analysing project: "+project.apkFileName);
+    	        return AndroidLogUtil.generateAndroidAnalysis(project.apkFileName).then(result => final.push(result));
+    	      })
+    	      .catch(console.error);
+    	  }, Promise.resolve());
+    	}
+
+    	apkAnalysisList(projectList)
+    	  .then(() => function(){
+//    		  console.log(`FINAL RESULT is ${final}`);
+    		  console.log('analysis finished');
+    	  });
 	
 }
 

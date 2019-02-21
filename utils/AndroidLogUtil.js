@@ -438,6 +438,7 @@
 	function generateAndroidAnalysis(apkFileName, outputDir) {
 		  
 	var executeAPKAnalysis = function(apkFileName, outputDir, callback){
+		
 	  if(!apkFileName){
 		  	console.log('empty apk name');
 		  	if(callback){
@@ -448,20 +449,7 @@
 
 	  var apkName = apkFileName.replace(/\.apk/g, "");
 	  
-	  apkOutputDir = outputDir + "\\" + apkName;
-	  
-	//  FileManagerUtil.deleteFolderRecursive(outputDir);
 	
-	  	mkdirp(apkOutputDir, function(err) {
-	      //to generate svg file.
-	  		
-	  	if(err){
-	  		console.log('error in creating output folder');
-		  	if(callback){
-		  		callback(false);
-		  	}
-	  		return;
-	  	}
 			  
 //		var appRoot = path.dirname(require.main.filename);
 //		var apkName = apkFileName.replace(/\.apk/g, "");
@@ -489,7 +477,7 @@
 	   
 	   console.log(command);
 
-	   apkOutputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+//	   apkOutputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
 		
 		var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
 			if (error !== null) {
@@ -507,11 +495,10 @@
 			}
 			
 			if(callback){
-				callback(apkOutputDir)
+				callback(outputDir)
 			}
 		});
 		
-	  	});
 		
 	 }
 	
@@ -646,10 +633,29 @@
 
 			var apkName = apkFileName.replace(/\.apk/g, "");
 			 
-			var dir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+//			var dir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+			var dir = outputDir +"/"+apkName;
 //			var outputFile1 = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"/android-analysis-output.json";
 			
 			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
+			
+//			  apkOutputDir = outputDir + "\\" + apkName;
+			  
+				//  FileManagerUtil.deleteFolderRecursive(outputDir);
+				
+			mkdirp(dir, function(err) {
+				      //to generate svg file.
+				  		
+				  	if(err){
+				  		console.log('error in creating output folder');
+//					  	if(callback){
+//					  		callback(false);
+//					  	}
+				  		
+				  		reject(new Error('error in creating output folder.'));
+				  		
+				  		return;
+				  	}
 			
 			var watcher = null;
 			var timer = setTimeout(function () {
@@ -702,7 +708,7 @@
 
 				
 				if(executeAPKAnalysis){
-					executeAPKAnalysis(apkFileName, outputDir, function(result){
+					executeAPKAnalysis(apkFileName, dir, function(result){
 						clearTimeout(timer);
 						if(watcher != null){
 						watcher.close();
@@ -738,6 +744,7 @@
 		}, 10);
 		}
 			});
+		});
 			
 	}
 	

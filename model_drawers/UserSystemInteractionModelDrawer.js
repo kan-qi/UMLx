@@ -549,7 +549,6 @@
 		var debug = require("../utils/DebuggerOutput.js");
 		debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
 		
-		
 	}
 	
 	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
