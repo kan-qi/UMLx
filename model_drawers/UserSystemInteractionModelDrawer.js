@@ -469,10 +469,6 @@
 		
 	}
 
-	
-	// draw the domain model of the model
-
-
 
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
 
@@ -551,9 +547,8 @@
 	
 	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
 		
-     
 
-     	if(typeof dicComponent === 'undefined'){
+		if(typeof dicComponent === 'undefined'){
      		return;
      	}
 
@@ -578,20 +573,21 @@
                  graph += curClass["name"];
 
 
-                 var classStorableUnits = dicComponentElements[i]["StorableUnits"];
+                 var classStorableUnits = dicComponentElements[i]["attrUnits"];
 
                  if ( classStorableUnits.length != 0){
                      graph += '|';
                      for(j = 0; j < classStorableUnits.length; j++) {
+                   
                          graph += '-   ' ;
                          graph += classStorableUnits[j]["name"];
-                         // graph += ': '+classStorableUnits[j]["type"];
+                         graph += ':'+classStorableUnits[j]["kind"];
                          graph += '\\l';
                      }
                  }
 
 
-                 var classMethodUnits = dicComponentElements[i]["MethodUnits"];
+                 var classMethodUnits = dicComponentElements[i]["methodUnits"];
                  if (classMethodUnits.length != 0){
                      graph += '|';
 
@@ -602,10 +598,10 @@
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
-                         tempStr += classMethodUnits[j]["Signature"]["name"] + '(';
-                         var para_len = classMethodUnits[j]["Signature"]["parameterUnits"].length;
-                         for (k = 0; k < classMethodUnits[j]["Signature"]["parameterUnits"].length; k++) {
-                        	 tempStr += classMethodUnits[j]["Signature"]["parameterUnits"][k]["type"]["name"]+" "+ classMethodUnits[j]["Signature"]["parameterUnits"][k]["kind"];
+                         tempStr += classMethodUnits[j]["signature"]["name"] + '(';
+                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"]["name"]+" "+ classMethodUnits[j]["signature"]["parameterUnits"][k]["kind"];
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -618,9 +614,7 @@
 
                  }
 
-                 
-
-                 var classInterfaceUnits = dicComponentElements[i]["InterfaceUnits"];
+                 var classInterfaceUnits = dicComponentElements[i]["interfaceUnits"];
                  if(classInterfaceUnits.length != 0){
                  	graph += '|';
                  }
@@ -638,8 +632,7 @@
         	
         	
              
-            
-
+         
             graph += 'imagepath = \"./public\"}';
 
      		console.log("the dicComponent graph is:"+graph);
@@ -650,27 +643,22 @@
      		});
 
             return graph;
-
-<<<<<<< HEAD
-=======
-		var debug = require("../utils/DebuggerOutput.js");
-		debug.writeJson2("component_graph_7_5", dicComponent);
-		
-//		console.log('dicComponent');
-//		console.log(dicComponent);
-//		process.exit();
->>>>>>> 44426c0bb34558047a8e0e283f6c305dc5c9d93b
 	}
+
+
+
+	
 	
 	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
 
-<<<<<<< HEAD
 		// var debug = require("../utils/DebuggerOutput.js");
 		// debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
 
-		fs.writeFile('Output_2.txt', JSON.stringify(dicClassUnits), (err) => {  
+		fs.writeFile('dicClassUnits.txt', JSON.stringify(dicClassUnits), (err) => {  
 		    if (err) throw err; 
 		}) 
+
+
 
 		var keys = Object.keys(dicClassUnits);
 
@@ -690,30 +678,30 @@
                  graph += curClass["name"];
 
 
-                 var classStorableUnits = curClass["StorableUnits"];
+                 var classStorableUnits = curClass["attrUnits"];
 
-                 if ( classStorableUnits.length != 0){
+                 
+             	if ( classStorableUnits.length != 0){
                      graph += '|';
                      for(j = 0; j < classStorableUnits.length; j++) {
+      
                          graph += '-   ' ;
                          graph += classStorableUnits[j]["name"];
-                         // graph += ': '+classStorableUnits[j]["type"];
                          graph += '\\l';
                      }
                  }
 
-
-                 var classMethodUnits = curClass["MethodUnits"];
+         		var classMethodUnits = curClass["methodUnits"];
                  if (classMethodUnits.length != 0){
                      graph += '|';
                      var tempStr = "";
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
-                         tempStr += classMethodUnits[j]["Signature"]["name"] + '(';
-                         var para_len = classMethodUnits[j]["Signature"]["parameterUnits"].length;
-                         for (k = 0; k < classMethodUnits[j]["Signature"]["parameterUnits"].length; k++) {
-                        	 tempStr += classMethodUnits[j]["Signature"]["parameterUnits"][k]["type"]["name"]+" "+ classMethodUnits[j]["Signature"]["parameterUnits"][k]["kind"];
+                         tempStr += classMethodUnits[j]["signature"]["name"] + '(';
+                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"]["name"]+" "+ classMethodUnits[j]["signature"]["parameterUnits"][k]["kind"];
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -726,9 +714,7 @@
 
                  }
 
-                 
-
-                 var classInterfaceUnits = curClass["InterfaceUnits"];
+         		var classInterfaceUnits = curClass["interfaceUnits"];
                  if(classInterfaceUnits.length != 0){
                  	graph += '|';
                  }
@@ -739,6 +725,96 @@
                      graph += classInterfaceUnits[j]["name"] + ' ';
                  		graph += "\\l";
                  }
+
+             	                 
+                 graph += '}"]';
+
+			}
+        	
+     
+            graph += 'imagepath = \"./public\"}';
+
+     		console.log("the dicClassUnits graph is:"+graph);
+
+     		console.log("the dicClassUnits is:"+ graphFilePath);
+
+     		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+     			console.log("class Diagram is done");
+     		});
+
+            return graph;
+	
+	}
+	
+	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
+
+		// var debug = require("../utils/DebuggerOutput.js");
+		// debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
+
+		fs.writeFile('dicCompositeClassUnits.txt', JSON.stringify(dicCompositeClassUnits), (err) => {  
+		    if (err) throw err; 
+		}) 
+
+
+		// node ./UMLxAnalyticToolKit.js "./data/OpenSource/alltheapps_kdm.xml" "./data/OpenSource/debug" "kess"
+
+		var keys = Object.keys(dicCompositeClassUnits);
+
+		var graph = 'digraph class_diagram {';
+            graph += 'node [fontsize = 8 shape = "record"]';
+            graph += ' edge [arrowhead = "ediamond"]';
+
+
+        	 for(i = 0;  i < keys.length; i++){
+        	   
+                 var curClass = dicCompositeClassUnits[keys[i]];
+
+                 graph += i;
+                 
+                 graph += '[ id = ' + i;
+                 graph += ' label = "{';
+                 graph += curClass["name"];
+
+
+                 var classStorableUnits = curClass["attrUnits"];
+
+                 
+             	if ( classStorableUnits.length != 0){
+                     graph += '|';
+                     for(j = 0; j < classStorableUnits.length; j++) {
+                         graph += '-   ' ;
+                         graph += classStorableUnits[j]["name"];
+                         graph += '\\l';
+                     }
+                 }
+
+                
+             	
+
+         		var classMethodUnits = curClass["methodUnits"];
+                 if (classMethodUnits.length != 0){
+                     graph += '|';
+                     var tempStr = "";
+                     for(j = 0; j < classMethodUnits.length;j++) {
+
+                    	 tempStr += '+   ';
+                         tempStr += classMethodUnits[j]["signature"]["name"] + '(';
+                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"]["name"]+" "+ classMethodUnits[j]["signature"]["parameterUnits"][k]["kind"];
+                         }
+                         tempStr += ')';
+                         tempStr += "\\l";
+                     }
+
+                     tempStr = tempStr.replace(/</g, "\u02C2");
+                     tempStr = tempStr.replace(/>/g, "\u02C3");
+
+                     graph += tempStr;
+
+                 }
+
+           	                 
                  graph += '}"]';
 
 			}
@@ -756,35 +832,6 @@
 
             return graph;
 
-=======
-		var debug = require("../utils/DebuggerOutput.js");
-		debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
-		
-		
->>>>>>> 44426c0bb34558047a8e0e283f6c305dc5c9d93b
-	}
-	
-	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
-
-<<<<<<< HEAD
-		// var debug = require("../utils/DebuggerOutput.js");
-		// debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
-
-
-		// node ./UMLxAnalyticToolKit.js "./data/OpenSource/alltheapps_kdm.xml" "./data/OpenSource/debug" "kess"
-
-		console.log("run the create dicCompositeClassUnits dia");
-        console.log("dicCompositeClassUnits is "+dicCompositeClassUnits);
-        console.log("dicCompositeClassUnits is "+JSON.stringify(dicCompositeClassUnits));
-
-=======
-		var debug = require("../utils/DebuggerOutput.js");
-		debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
-		
-//		console.log('dicCompositeClassUnits');
-//		console.log(dicCompositeClassUnits);
-//		process.exit();
->>>>>>> 44426c0bb34558047a8e0e283f6c305dc5c9d93b
 	}
 	
 	module.exports = {
