@@ -202,7 +202,7 @@
 						
 						modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 						
-						modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnit, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+						modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
 						
 						modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
 						
@@ -219,7 +219,7 @@
 					
 					modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 					
-					modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnit, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+					modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
 					
 					modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
 					

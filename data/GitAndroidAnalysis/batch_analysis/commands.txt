@@ -34,3 +34,16 @@ wsl.exe java -Xmx12G -cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-t
 
 
 wsl.exe java -Xmx12G -cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid -sdkDir /mnt/c/Android_SDK -listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3/res -manifestFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3/AndroidManifest.xml -project /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -apiLevel android-26 -guiAnalysis -benchmarkName AnotherMonitor-release.apk -android /mnt/c/Android_SDK/platforms/android-26/android.jar -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3
+
+wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a -p /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release.apk -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release-3
+
+node --max_old_space_size=10240 ".\utils\AndroidProjectAnalysis.js" --analyse-android-projects "D:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\GitAndroidAnalysis\\batch_analysis\\repo_example-10.json"
+
+
+node --max_old_space_size=10240 ".\utils\AndroidProjectAnalysis.js" --analyse-android-apks "D:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\GitAndroidAnalysis\\batch_analysis\\repo_example-10.json"
+
+wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a -p "/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/OmniNotes-alphaDebug-6.0.0 Beta 9.apk" -client GUIHierarchyPrinterClient -outputDir "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/OmniNotes-alphaDebug-6.0.0 Beta 9"
+
+wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a -p "/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/ExoPlayer.apk" -client GUIHierarchyPrinterClient -outputDir "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/ExoPlayer"
+
+node --max_old_space_size=10240 ".\utils\AndroidProjectAnalysis.js" --analyse-android-apks "D:\\ResearchSpace\\ResearchProjects\\UMLx\\data\\GitAndroidAnalysis\\batch_analysis\\repo_example-11.json"

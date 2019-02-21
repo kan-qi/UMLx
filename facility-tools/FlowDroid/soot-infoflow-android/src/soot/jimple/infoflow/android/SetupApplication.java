@@ -1183,6 +1183,10 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 			String viewName = eventHandler[2];
 			String activityName = eventHandler[3];
 
+			if (activityName == null || activityName.equals("")) {
+				continue;
+			}
+
 			Debug.v().println("className: " + className + " methodName: " + methodName + " viewName: " + viewName
 					+ " activityName: " + activityName);
 
@@ -1818,7 +1822,7 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		}
 
 		String tname = node.getNodeName().trim();
-		if (tname.equals("Activity")) {
+		if (tname.equals("Activity") || tname.equals("Dialog")) {
 			// String activityName =
 			// node.getAttributes().getNamedItem("name").getNodeValue();
 			activityNode = node;

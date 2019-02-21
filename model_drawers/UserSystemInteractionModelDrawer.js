@@ -538,18 +538,28 @@
 
 		var debug = require("../utils/DebuggerOutput.js");
 		debug.writeJson2("component_graph_7_5", dicComponent);
+		
+//		console.log('dicComponent');
+//		console.log(dicComponent);
+//		process.exit();
 	}
 	
 	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
 
 		var debug = require("../utils/DebuggerOutput.js");
 		debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
+		
+		
 	}
 	
 	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
 
 		var debug = require("../utils/DebuggerOutput.js");
 		debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
+		
+//		console.log('dicCompositeClassUnits');
+//		console.log(dicCompositeClassUnits);
+//		process.exit();
 	}
 	
 	module.exports = {

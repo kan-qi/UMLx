@@ -68,6 +68,7 @@
 		var dicMethodUnits = {};
 		var dicMethodClass = {};
 		var dicMethodParameters = {};
+		var methodUnitsByName = {};
 		
 		for(var i in referencedClassUnits){
 			console.log("iterate class");
@@ -93,6 +94,8 @@
 							parameterUnits:referencedMethodUnit.parameterUnits
 						}
 				}
+				
+				methodUnitsByName[referencedClassUnit.name+":"+referencedMethodUnit.name] = referencedMethodUnit;
 				
 				
 				dicMethodClass[referencedMethodUnit.UUID] = referencedClassUnit.UUID;
@@ -288,9 +291,9 @@
 			dicMethodClass: dicMethodClass,
 			callGraph: callGraph,
 			accessGraph: accessGraph,
-//			extendsGraph: extendsGraph,
+			extendsGraph: convertExtensionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits),
 //			compositionGraph: compositionGraph,
-			typeDependencyGraph: convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits),
+			typeDependencyGraph: convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, methodUnitsByName),
 			referencedClassUnits: referencedClassUnits,
 			referencedCompositeClassUnits: referencedCompositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
@@ -300,11 +303,91 @@
 		
 		debug.writeJson2("converted-android-analysis-results-dicClassUnits", dicClassUnits);
 		debug.writeJson2("converted-android-analysis-results-dicMethodUnits", dicMethodUnits);
+		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph);
+		debug.writeJson2("converted-android-analysis-results-typeDependencyGraph", result.typeDependencyGraph);
 		
 		return result;
 	}
 	
-	function convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits){
+	function convertExtensionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits){
+		//construct access graph
+		var typeDependencyGraph = {
+			nodes: [],
+			edges: [],
+			nodesComposite: [],
+			edgesComposite: []
+		};
+		
+		var dicNodes = {};
+		var dicNodesComposite = {};
+		
+		for(var i in androidAnalysisResults.extendsGraph){
+			var edge = androidAnalysisResults.extendsGraph[i];
+			var fromClass = dicClassUnits[edge.from.UUID];
+			var toClass = dicClassUnits[edge.to.UUID];
+			
+			if(!fromClass || !toClass){
+				continue;
+			}
+			
+			var fromNode = {
+					name: fromClass.name,
+					UUID: fromClass.UUID,
+					component: fromClass
+			}
+			
+			var toNode = {
+					name: toClass.name,
+					UUID: toClass.UUID,
+					component: toClass
+			}
+			
+			
+			if(!dicNodes[fromNode.UUID]){
+				typeDependencyGraph.nodes.push(fromNode);
+				dicNodes[fromNode.UUID] = 1;
+			}
+			
+			if(!dicNodes[toNode.UUID]){
+				typeDependencyGraph.nodes.push(toNode);
+				dicNodes[toNode.UUID] = 1;
+			}
+			
+			typeDependencyGraph.edges.push({start: fromNode, end: toNode});
+			
+			var fromCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[fromNode.UUID]];
+			var toCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[toNode.UUID]];
+			
+			var fromNodeComposite = {
+					name: fromCompositeClassUnit.name,
+					UUID: fromCompositeClassUnit.UUID,
+					component: fromCompositeClassUnit
+			}
+			
+			var toNodeComposite = {
+					name: toCompositeClassUnit.name,
+					UUID: toCompositeClassUnit.UUID,
+					component: toCompositeClassUnit
+			}
+			
+			if(!dicNodes[fromNodeComposite.UUID]){
+				typeDependencyGraph.nodesComposite.push(fromNodeComposite);
+				dicNodesComposite[fromNodeComposite.UUID] = 1;
+			}
+			
+			if(!dicNodes[toNodeComposite.UUID]){
+				typeDependencyGraph.nodesComposite.push(toNodeComposite);
+				dicNodesComposite[toNodeComposite.UUID] = 1;
+			}
+			
+			typeDependencyGraph.edgesComposite.push({start: fromNodeComposite, end: toNodeComposite});
+			
+		}
+		
+		return typeDependencyGraph;
+	}
+	
+	function convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, methodUnitsByName){
 		//construct access graph
 		var typeDependencyGraph = {
 			nodesAttr: [],
@@ -336,7 +419,7 @@
 	
 		for(var i in androidAnalysisResults.typeDependencyGraph.nodes){
 			var node = androidAnalysisResults.typeDependencyGraph.nodes[i];
-			var dependencies = node.dependencies[i];
+			var dependencies = node.dependencies;
 			var classUnit = dicClassUnits[node.uuid];
 			if(!classUnit){
 				continue;
@@ -347,6 +430,8 @@
 			var compositeClassUnit = dicCompositeClassUnits[dicClassComposite[classUnit.UUID]];
 			for(var j in dependencies){
 				var dependency = dependencies[j];
+				console.log()
+				console.log(dependency["uuid"]);
 				var targetClassUnit = dicClassUnits[dependency["uuid"]];
 				var targetCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[targetClassUnit.UUID]];
 				

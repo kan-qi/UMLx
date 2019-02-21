@@ -435,9 +435,36 @@
 //		});
 	}
 	
-	function generateAndroidAnalysis(apkFileName, callbackfunc) {
+	function generateAndroidAnalysis(apkFileName, outputDir) {
+		  
+	var executeAPKAnalysis = function(apkFileName, outputDir, callback){
+	  if(!apkFileName){
+		  	console.log('empty apk name');
+		  	if(callback){
+		  		callback(false);
+		  	}
+	  		return;
+	  }
+
+	  var apkName = apkFileName.replace(/\.apk/g, "");
+	  
+	  apkOutputDir = outputDir + "\\" + apkName;
+	  
+	//  FileManagerUtil.deleteFolderRecursive(outputDir);
+	
+	  	mkdirp(apkOutputDir, function(err) {
+	      //to generate svg file.
+	  		
+	  	if(err){
+	  		console.log('error in creating output folder');
+		  	if(callback){
+		  		callback(false);
+		  	}
+	  		return;
+	  	}
+			  
 //		var appRoot = path.dirname(require.main.filename);
-		var apkName = apkFileName.replace(/\.apk/g, "");
+//		var apkName = apkFileName.replace(/\.apk/g, "");
 		
 //		var command = "wsl.exe java -Xmx12G " +
 //				"-cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main " +
@@ -462,44 +489,115 @@
 	   
 	   console.log(command);
 
-		var outputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
-
-		var child = exec(command, function(error, stdout, stderr) {
+	   apkOutputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+		
+		var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
 			if (error !== null) {
 				// On Windows, closing the eclipse window will trigger this error
 				// callbackfunc(new Error("Error generating KDM."));
 				console.log("error in generating apk analysis.");
-//				console.log(error);
+				console.log(error);
 //				if(callbackfunc){
 //					callbackfunc(false);
 //				}
+				if(callback){
+			  		callback(false);
+			  	}
 				return;
 			}
 			
-//			if(callbackfunc){
-//				callbackfunc(outputDir)
-//			}
+			if(callback){
+				callback(apkOutputDir)
+			}
 		});
-
-		var outputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
-//		var outputFile1 = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"/android-analysis-output.json";
 		
-		var outputFiles = ["gator-handlers.txt", "android-analysis-output.json"];
+	  	});
 		
+	 }
+	
 		
-		checkExistsWithTimeout(outputFiles, outputDir)
-			.then(function(res) {
-
-				child.kill();
-
-				callbackfunc(outputFile1);
-
-				console.log("android analysis is finished.")
-			})
-			.catch(function(err) {
-				callbackfunc(err);
-			});
+		return checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir)
+//			.then(function(res) {
+//				
+//				console.log("time out and kill");
+//				child.kill();
+//
+//				callbackfunc(outputFiles);
+//
+//				console.log("android analysis is finished.")
+//			})
+//			.catch(function(err) {
+//				callbackfunc(err);
+//			});
 	}
+	
+	
+//	function generateAndroidAnalysis(apkFileName, callbackfunc) {
+////		var appRoot = path.dirname(require.main.filename);
+//		var apkName = apkFileName.replace(/\.apk/g, "");
+//		
+////		var command = "wsl.exe java -Xmx12G " +
+////				"-cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main " +
+////				"-sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid " +
+////				"-sdkDir /mnt/c/Android_SDK " +
+////				"-listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml " +
+////				"-wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml " +
+////				"-resourcePath /tmp/gator-awg1muop/res " +
+////				"-manifestFile /tmp/gator-awg1muop/AndroidManifest.xml " +
+////				"-project \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
+////				"-apiLevel android-26 " +
+////				"-guiAnalysis " +
+////				"-benchmarkName \""+apkName+"\" "+
+////				"-android /mnt/c/Android_SDK/platforms/android-26/android.jar " +
+////				"-client GUIHierarchyPrinterClient " +
+////				"-outputDir \"/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"\"";
+//
+//	   var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
+//	   		"-p \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
+//	   		"-client GUIHierarchyPrinterClient " +
+//	   		"-outputDir \"/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"\"";
+//	   
+//	   console.log(command);
+//
+//		var outputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+//		
+//		var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
+//			if (error !== null) {
+//				// On Windows, closing the eclipse window will trigger this error
+//				// callbackfunc(new Error("Error generating KDM."));
+//				console.log("error in generating apk analysis.");
+////				console.log(error);
+////				if(callbackfunc){
+////					callbackfunc(false);
+////				}
+//				return;
+//			}
+//			
+////			if(callbackfunc){
+////				callbackfunc(outputDir)
+////			}
+//		});
+//
+//		var outputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+////		var outputFile1 = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"/android-analysis-output.json";
+//		
+//		var outputFiles = ["gator-handlers.txt", "android-analysis-output.json"];
+//		
+//		
+//		checkExistsWithTimeout(outputFiles, outputDir, command)
+//			.then(function(res) {
+//				
+//				console.log("time out and kill");
+//				child.kill();
+//
+//				callbackfunc(outputFiles);
+//
+//				console.log("android analysis is finished.")
+//			})
+//			.catch(function(err) {
+//				callbackfunc(err);
+//			});
+//	}
 	
 //	// helper to wait for KDM output file to exist, and have content
 //	// modified from source:
@@ -540,8 +638,19 @@
 	// helper to wait for KDM output file to exist, and have content
 	// modified from source:
 	// https://stackoverflow.com/a/47764403
-	function checkExistsWithTimeout(fileNames, dir, timeout = 100 * 1000) {
+	function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, timeout = 3 * 60 * 60 * 1000) {
+		
+		
 		return new Promise(function (resolve, reject) {
+			
+
+			var apkName = apkFileName.replace(/\.apk/g, "");
+			 
+			var dir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
+//			var outputFile1 = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"/android-analysis-output.json";
+			
+			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
+			
 			var watcher = null;
 			var timer = setTimeout(function () {
 				if(watcher != null){
@@ -550,22 +659,26 @@
 				reject(new Error('File did not exists and was not created during the timeout.'));
 			}, timeout);
 			
+			var alreadyExist = true;
 			try{
-				for(var i in filePaths){
-				   require('fs').accessSync(filePaths[i], fs.R_OK | fs.W_OK)
+				for(var i in fileNames){
+				   console.log("check file existence: "+fileNames[i]);
+				   require('fs').accessSync(dir+"/"+fileNames[i], fs.R_OK | fs.W_OK)
 				   //code to action if file exists
 				}
-
 			}catch(e){
 				   //code to action if file does not exist
 //				var dir = path.dirname(filePath);
 //				var basename = path.basename(filePath);
+				console.log("watch on files...");
+				alreadyExist = false;
 				var checkExists = {};
 				for(var i in fileNames){
 					checkExists[fileNames[i]] = 0;
 				}
-				watch = fs.watch(dir, function (eventType, filename) {
+				watcher = fs.watch(dir, function (eventType, filename) {
 					if (eventType === 'change') {
+						console.log(filename+" has changed");
 						checkExists[filename] = 1;
 						var allExists = true;
 						
@@ -578,14 +691,44 @@
 						
 						if(allExists){
 						clearTimeout(timer);
+						if(watcher != null){
 						watcher.close();
+						}
 						resolve();
 						}
 					}
 				});
+				
+
+				
+				if(executeAPKAnalysis){
+					executeAPKAnalysis(apkFileName, outputDir, function(result){
+						clearTimeout(timer);
+						if(watcher != null){
+						watcher.close();
+						}
+						
+						if(!result){
+							reject(new Error('analysis failed'));
+						}
+						else{
+							resolve();
+						}
+					});
+				}
+				else{
+					clearTimeout(timer);
+					if(watcher != null){
+					watcher.close();
+					}
+					
+					reject(new Error('analysis function doesn\'t exist.'));
+				}
 			}
 		
+		if(alreadyExist){
 		// files exist, just return
+		console.log("files already exist");
 		setTimeout(function () {
 			clearTimeout(timer);
 			if(watcher){
@@ -593,7 +736,7 @@
 			}
 			resolve();
 		}, 10);
-
+		}
 			});
 			
 	}

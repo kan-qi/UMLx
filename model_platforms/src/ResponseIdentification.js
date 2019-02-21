@@ -173,6 +173,8 @@
 	    for(var i = 0;i < lines.length;i++){
 	        //code here using lines[i] which will give you each line
 	    	var line = lines[i];
+	    	line = line.replace(/[<|>]/g, "");
+	    	line = line.replace(/:/g, ".");
 	    	console.log(line);
 	    	var matches = stringSimilarity.findBestMatch(line, methodSigns);
 //			if(matches.bestMatch.rating > 0.8){

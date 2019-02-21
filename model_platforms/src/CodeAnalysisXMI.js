@@ -238,6 +238,7 @@
 
 		var result =  {
 			dicClassUnits: dicClassUnits,
+			dicCompositeClassUnits: dicCompositeClasses,
 			dicMethodUnits: dicMethodUnits,
 			callGraph: callGraph,
 			dicMethodClass: dicMethodClass,
@@ -248,7 +249,7 @@
 			referencedclassUnits: referencedClassUnits,
 			referencedCompositeClassUnits: referencedCompositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
-			dicMethodParameters: dicMethodParameters,
+			dicMethodParameters: dicMethodParameters
 		};
 		
 		debug.writeJson2("source_code_analysis_kdm", result);

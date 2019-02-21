@@ -133,7 +133,7 @@ private class CallGraphNode{
 //output the call graph to JSON format
 private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, MethodUnit> methodBySig, Map<String, String> methodToClass, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic){
 		
-		
+		System.out.println("construct of call graph starts.");
 		Set<CallGraphNode[]> edges = new HashSet<CallGraphNode[]>();
 		
 		if(cg != null) {
@@ -162,13 +162,16 @@ private String constructCallGraph(CallGraph cg, List<ClassUnit> classUnits, List
 			
 			edges.add(new CallGraphNode[] {srcNode, targetNode});
 			
-			String srcCompositeClassUUID = classUnitToCompositeClassDic.get(srcClassUUID);
-			String targetCompositeClassUUID = classUnitToCompositeClassDic.get(targetClassUUID);
-			
-			CompositeClassUnit srcCompositeClass = compositeClassUnitByUUID.get(srcCompositeClassUUID);
-			CompositeClassUnit targetCompositeClass = compositeClassUnitByUUID.get(targetCompositeClassUUID);
+//			String srcCompositeClassUUID = classUnitToCompositeClassDic.get(srcClassUUID);
+//			String targetCompositeClassUUID = classUnitToCompositeClassDic.get(targetClassUUID);
+//			
+//			CompositeClassUnit srcCompositeClass = compositeClassUnitByUUID.get(srcCompositeClassUUID);
+//			CompositeClassUnit targetCompositeClass = compositeClassUnitByUUID.get(targetCompositeClassUUID);
 		}
 		}
+		
+		
+		System.out.println("construct of call graph finishes.");
 		
 		return convertCallGraphToJSON(edges);
 	}
@@ -696,6 +699,8 @@ String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode>
 }
 
 public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+	System.out.println("construct of extends graph starts.");
+	
 	List<List<ClassUnit>> extendsClasses = new ArrayList<List<ClassUnit>>();
 	String res = "{";
 	int i = 1;
@@ -723,7 +728,10 @@ public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeCl
 	}
 	res = res.substring(0,res.length()-1);
 	res += "}";	
-	Debug6.v().printf(res);
+//	Debug6.v().printf(res);
+	
+	System.out.println("construct of extends graph finishes.");
+	
 	return res;
 }
 
@@ -874,6 +882,9 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 		}
 		outputS += "]}";
 		
+		
+		System.out.println("convert access graph finishes.");
+		
 		return outputS;
 	}
 
@@ -1011,7 +1022,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
     }
     
     CallGraph callGraph = genCallGraph();
-	String extendsGraph = constructExtendsGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+//	String extendsGraph = constructExtendsGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 
 //	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
     outputS += ",\"typeDependencyGraph\":"+constructTypeDependencyGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
@@ -1021,7 +1032,9 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	outputS += ",\"callGraph\":"+constructCallGraph(callGraph, classUnits, compositeClassUnits, methodBySig, methodToClass, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
-   // var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
+	outputS += ",\"extendsGraph\":"+constructExtendsGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+
+	// var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 //	var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 
 	outputS += "}";
