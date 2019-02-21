@@ -501,7 +501,40 @@ public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<Comp
 }
 
 public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
-	return "";
+	List<List<ClassUnit>> extendsClasses = new ArrayList<List<ClassUnit>>();
+	String res = "{";
+	int i = 1;
+	for (ClassUnit classUnit : classUnits) {
+		SootClass xmiClassUnit = classUnit.attachment;
+		String from = xmiClassUnit.getSuperclass().getName();
+		//if parent class is not in the map, ignore it
+		if(classUnitByName.containsKey(classUnit.name) && classUnitByName.containsKey(from)){
+			ClassUnit parent = classUnitByName.get(from);
+			List<ClassUnit> temp = new ArrayList();
+			temp.add(parent);
+			temp.add(classUnit);
+			extendsClasses.add(temp);
+		}		
+	}
+	
+	for(List<ClassUnit> extendpair:extendsClasses){
+		String parentName = extendpair.get(0).name;
+		String parentUUID = extendpair.get(0).uuid;
+		String childName = extendpair.get(1).name;
+		String childUUID = extendpair.get(1).uuid;
+		res += "\""+i+"\":{\"from\":{\"name\":\""+parentName+"\",\"uuid\":\""+parentUUID+"\"},\"to\":{\"name\":\""+childName+"\",\"uuid\":\""+childUUID+"\"}},";	
+		i++;
+		
+	}
+	res = res.substring(0,res.length()-1);
+	res += "}";	
+	// Debug6.v().printf(res);
+	int ind = 10;
+	while (ind>0) {
+		ind--;
+		System.out.println("STUQZA-");
+	}
+	return res;
 }
 
 public String constructCompositionGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
