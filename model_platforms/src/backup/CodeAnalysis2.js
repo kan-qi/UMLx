@@ -45,7 +45,7 @@
 	var uuidV1 = require('uuid/v1');
 	var kdmModelUtils = require("./KDMModelUtils.js");
 	var kdmModelDrawer = require("./KDMModelDrawer.js");
-
+console.log("========================================");
 	var dicClassUnits = {};
 	var dicMethodUnits = {};
 	var dicCompositeClasses = {};

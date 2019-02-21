@@ -106,19 +106,19 @@
 					//						classUnits.push(identifiedClassUnit);
 					//						dicClassUnits[identifiedClassUnit.UUID] = identifiedClassUnit;
 
-					//						for(var l in identifiedClassUnit.MethodUnits){
-					//							dicMethodUnits[identifiedClassUnit.MethodUnits[l].UUID] = identifiedClassUnit.MethodUnits[l];
-					//							dicMethodClass[identifiedClassUnit.MethodUnits[l].UUID] = identifiedClassUnit.UUID;
+					//						for(var l in identifiedClassUnit.methodUnits){
+					//							dicMethodUnits[identifiedClassUnit.methodUnits[l].UUID] = identifiedClassUnit.methodUnits[l];
+					//							dicMethodClass[identifiedClassUnit.methodUnits[l].UUID] = identifiedClassUnit.UUID;
 					//						}
-					//						classUnits = classUnits.concat(identifiedClassUnit.ClassUnits);
+					//						classUnits = classUnits.concat(identifiedClassUnit.classUnits);
 					for (l in subClassUnits) {
 						subClassUnits[l].isWithinBoundary = XMIClass.isWithinBoundary;
 						//							classUnits.push(subClassUnits[l]);
 						dicClassUnits[subClassUnits[l].UUID] = subClassUnits[l];
 
-						for (var m in subClassUnits[l].MethodUnits) {
-							//								dicMethodUnits[subClassUnits[l].MethodUnits[m].UUID] = subClassUnits[l].MethodUnits[m];
-							dicMethodClass[subClassUnits[l].MethodUnits[m].UUID] = subClassUnits[l].UUID;
+						for (var m in subClassUnits[l].methodUnits) {
+							//								dicMethodUnits[subClassUnits[l].methodUnits[m].UUID] = subClassUnits[l].methodUnits[m];
+							dicMethodClass[subClassUnits[l].methodUnits[m].UUID] = subClassUnits[l].UUID;
 						}
 					}
 					// compositeClassUnit = aggregateClassUnit(identifiedClassUnit);
@@ -133,8 +133,8 @@
 
 					function findActionElementsFromActionElement(actionElement) {
 						var actionElements = [];
-						for (var i in actionElement.ActionElements) {
-							var containedActionElement = actionElement.ActionElements[i];
+						for (var i in actionElement.actionElements) {
+							var containedActionElement = actionElement.actionElements[i];
 							actionElements.push(containedActionElement);
 							actionElements = actionElements.concat(findActionElementsFromActionElement(containedActionElement));
 						}
@@ -147,8 +147,8 @@
 						var subMethodUnit = subMethodUnits[l];
 						//							dicMethodClass[subMethodUnit.UUID] = identifiedClassUnit.UUID;
 						dicMethodUnits[subMethodUnit.UUID] = subMethodUnit;
-						for (var m in subMethodUnit.BlockUnit.ActionElements) {
-							var actionElement = subMethodUnit.BlockUnit.ActionElements[m];
+						for (var m in subMethodUnit.blockUnit.actionElements) {
+							var actionElement = subMethodUnit.blockUnit.actionElements[m];
 							var containedActionElements = findActionElementsFromActionElement(actionElement);
 							containedActionElements.push(actionElement);
 							for (var m in containedActionElements) {
@@ -185,17 +185,17 @@
 
 		var compositeClassUnit = {
 			// name: XMIClassUnit['$']['name'],
-			MethodUnits: [],
-			StorableUnits: [],
-			//				Calls : [],
-			//				ClassUnits: [],
-			ClassUnits: subClassUnits,
-			//				BlockUnits : [],
-			//				Addresses: [],
-			//				Reads:[],
-			//				Calls:[],
-			//				Creates:[],
-			//				ActionElements:[],
+			methodUnits : [],
+			attrUnits: [],
+			//				calls : [],
+			//			 classUnits: [],
+			classUnits: subClassUnits,
+			//				blockUnits : [],
+			//				addresses: [],
+			//				reads:[],
+			//				calls:[],
+			//				creates:[],
+			//				actionElements:[],
 			//				isResponse: false,
 			// UUID: XMIClassUnit['$']['UUID'],
 			UUID: uuidV1(),
@@ -210,10 +210,10 @@
 		for (var i in subClassUnits) {
 			var subClassUnit = subClassUnits[i];
 			// console.log("found!!!");
-			// console.log(subClassUnit.MethodUnits);
-			// console.log(subClassUnit.StorableUnits);
-			compositeClassUnit.MethodUnits = compositeClassUnit.MethodUnits.concat(subClassUnit.MethodUnits);
-			compositeClassUnit.StorableUnits = compositeClassUnit.StorableUnits.concat(subClassUnit.StorableUnits);
+			// console.log(subClassUnit.methodUnits);
+			// console.log(subClassUnit.attrUnits);
+			compositeClassUnit.methodUnits = compositeClassUnit.methodUnits.concat(subClassUnit.methodUnits);
+			compositeClassUnit.attrUnits = compositeClassUnit.attrUnits.concat(subClassUnit.attrUnits);
 			dicClassComposite[subClassUnit.UUID] = compositeClassUnit.UUID;
 			childrenClasses.push(subClassUnit.UUID);
 			// console.log(compositeClassUnit);
@@ -226,30 +226,30 @@
 
 	
 	function identifyActionElement(XMIActionElement, xmiString, subClasses, subInterfaces, subMethods, subActionElements){
-		var ActionElement = {
+		var actionElement = {
 						name:XMIActionElement['$']['name'],
 						UUID:XMIActionElement['$']['UUID'],
 						kind:XMIActionElement['$']['kind'],
 						type:XMIActionElement['$']['xsi:type'],
 //						key: XMIActionElement['$']['name']+"_"+XMIActionElement['$']['kind']+XMIActionElement['$']['xsi:type'],
-//						MethodUnits : [],
-						StorableUnits: [],
-						ClassUnits: [],
-//						InterfaceUnits : [],
-//						Imports : [],
-//						BlockUnits : [],
-						Addresses: [],
-						Reads:[],
-						Calls:[],
-						Creates:[],
-						ActionElements:[],
+//						methodUnits : [],
+						attrUnits: [],
+						classUnits: [],
+//						interfaceUnits : [],
+//						imports : [],
+//						blockUnits : [],
+						addresses: [],
+						reads:[],
+						calls:[],
+						creates:[],
+						actionElements:[],
 						attachment:XMIActionElement
 		}
 
 		var XMIStorableUnits = jp.query(XMIActionElement, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
 		for(var i in XMIStorableUnits){
 			var XMIStorableUnit = XMIStorableUnits[i];
-			ActionElement.StorableUnits.push({
+		 actionElement.attrUnits.push({
 				name: XMIStorableUnit['$']['name'],
 				type: XMIStorableUnit['$']['type'],
 				kind: XMIStorableUnit['$']['kind'],
@@ -260,7 +260,7 @@
 		var XMIAddresses = jp.query(XMIActionElement, '$.actionRelation[?(@[\'$\'][\'xsi:type\']==\'action:Addresses\')]');
 		for(var i in XMIAddresses){
 			var XMIAddress = XMIAddresses[i];
-			ActionElement.Addresses.push({
+		 actionElement.addresses.push({
 				to: XMIAddress['$']['to'],
 				from:XMIAddress['$']['from']
 			})
@@ -297,7 +297,7 @@
 			}
 			}
 			
-			ActionElement.Reads.push({
+		 actionElement.reads.push({
 				to: targetTo,
 				from: targetFrom
 			})
@@ -306,7 +306,7 @@
 		var XMICalls = jp.query(XMIActionElement, '$.actionRelation[?(@[\'$\'][\'xsi:type\']==\'action:Calls\')]');
 		for(var i in XMICalls){
 			var XMICall = XMICalls[i];
-			ActionElement.Calls.push({
+		 actionElement.calls.push({
 				to: convertToJsonPath(XMICall['$']['to']),
 				from:convertToJsonPath(XMICall['$']['from'])
 			})
@@ -315,7 +315,7 @@
 		var XMICreates = jp.query(XMIActionElement, '$.actionRelation[?(@[\'$\'][\'xsi:type\']==\'action:Creates\')]');
 		for(var i in XMICreates){
 			var XMICreate = XMICreates[i];
-			ActionElement.Creates.push({
+		 actionElement.creates.push({
 				to: convertToJsonPath(XMICreate['$']['to']),
 				from:convertToJsonPath(XMICreate['$']['from'])
 			})
@@ -326,20 +326,20 @@
 		for(var i in includedXMIActionElements){
 			var includedXMIActionElement = includedXMIActionElements[i];
 			var includedActionElement = identifyActionElement(includedXMIActionElement, xmiString, subClasses, subInterfaces, subMethods, subActionElements);
-			ActionElement.ActionElements.push(includedActionElement);
+		 actionElement.actionElements.push(includedActionElement);
 
-//			ActionElement.MethodUnits = ActionElement.MethodUnits.concat(includedActionElement.MethodUnits);
-//			ActionElement.StorableUnits = ActionElement.StorableUnits.concat(includedActionElement.StorableUnits);
-//			ActionElement.Calls = ActionElement.Calls.concat(includedActionElement.Calls);
-//			ActionElement.ClassUnits=ActionElement.ClassUnits.concat(includedActionElement.ClassUnits);
-//			ActionElement.InterfaceUnits=ActionElement.InterfaceUnits.concat(includedActionElement.InterfaceUnits);
-//			ActionElement.Imports=ActionElement.Imports.concat(includedActionElement.Imports);
-//			ActionElement.BlockUnits=ActionElement.BlockUnits.concat(includedActionElement.BlockUnits);
-//			ActionElement.Addresses=ActionElement.Addresses.concat(includedActionElement.Addresses);
-//			ActionElement.Reads=ActionElement.Reads.concat(includedActionElement.Reads);
-//			ActionElement.Calls=ActionElement.Calls.concat(includedActionElement.Calls);
-//			ActionElement.Creates=ActionElement.Creates.concat(includedActionElement.Creates);
-//			ActionElement.ActionElements=ActionElement.ActionElements.concat(includedActionElement.ActionElements);
+//		 actionElement.methodUnits = actionElement.methodUnits.concat(includedActionElement.methodUnits);
+//		 actionElement.attrUnits = actionElement.attrUnits.concat(includedActionElement.attrUnits);
+//		 actionElement.calls = actionElement.calls.concat(includedActionElement.calls);
+//		 actionElement.classUnits=ActionElement.classUnits.concat(includedActionElement.classUnits);
+//		 actionElement.interfaceUnits=ActionElement.interfaceUnits.concat(includedActionElement.interfaceUnits);
+//		 actionElement.imports=ActionElement.imports.concat(includedActionElement.imports);
+//		 actionElement.blockUnits=ActionElement.blockUnits.concat(includedActionElement.blockUnits);
+//		 actionElement.addresses=ActionElement.addresses.concat(includedActionElement.addresses);
+//		 actionElement.reads=ActionElement.reads.concat(includedActionElement.reads);
+//		 actionElement.calls=ActionElement.calls.concat(includedActionElement.calls);
+//		 actionElement.creates=ActionElement.creates.concat(includedActionElement.creates);
+//		 actionElement.actionElements=ActionElement.actionElements.concat(includedActionElement.actionElements);
 			
 			if(subActionElements){
 				subActionElements.push(includedActionElement);
@@ -358,21 +358,20 @@
 				includedClassUnit.name = XMIActionElement.name+"_inner_"+i;
 			}
 
+		 actionElement.classUnits.push(includedClassUnit);
 
-			ActionElement.ClassUnits.push(includedClassUnit);
-
-//			ActionElement.MethodUnits = ActionElement.MethodUnits.concat(includedClassUnit.MethodUnits);
-//			ActionElement.StorableUnits = ActionElement.StorableUnits.concat(includedClassUnit.StorableUnits);
-//			ActionElement.Calls = ActionElement.Calls.concat(includedClassUnit.Calls);
-//			ActionElement.ClassUnits=ActionElement.ClassUnits.concat(includedClassUnit.ClassUnits);
-//			ActionElement.InterfaceUnits=ActionElement.InterfaceUnits.concat(includedClassUnit.InterfaceUnits);
-//			ActionElement.Imports=ActionElement.Imports.concat(includedClassUnit.Imports);
-//			ActionElement.BlockUnits=ActionElement.BlockUnits.concat(includedClassUnit.BlockUnits);
-//			ActionElement.Addresses=ActionElement.Addresses.concat(includedClassUnit.Addresses);
-//			ActionElement.Reads=ActionElement.Reads.concat(includedClassUnit.Reads);
-//			ActionElement.Calls=ActionElement.Calls.concat(includedClassUnit.Calls);
-//			ActionElement.Creates=ActionElement.Creates.concat(includedClassUnit.Creates);
-//			ActionElement.ActionElements=ActionElement.ActionElements.concat(includedClassUnit.ActionElements);
+//		 actionElement.methodUnits = actionElement.methodUnits.concat(includedClassUnit.methodUnits);
+//		 actionElement.attrUnits = actionElement.attrUnits.concat(includedClassUnit.attrUnits);
+//		 actionElement.calls = actionElement.calls.concat(includedClassUnit.calls);
+//		 actionElement.classUnits=ActionElement.classUnits.concat(includedClassUnit.classUnits);
+//		 actionElement.interfaceUnits=ActionElement.interfaceUnits.concat(includedClassUnit.interfaceUnits);
+//		 actionElement.imports=ActionElement.imports.concat(includedClassUnit.imports);
+//		 actionElement.blockUnits=ActionElement.blockUnits.concat(includedClassUnit.blockUnits);
+//		 actionElement.addresses=ActionElement.addresses.concat(includedClassUnit.addresses);
+//		 actionElement.reads=ActionElement.reads.concat(includedClassUnit.reads);
+//		 actionElement.calls=ActionElement.calls.concat(includedClassUnit.calls);
+//		 actionElement.creates=ActionElement.creates.concat(includedClassUnit.creates);
+//		 actionElement.actionElements=ActionElement.actionElements.concat(includedClassUnit.actionElements);
 			
 			if(subClasses){
 				subClasses.push(includedClassUnit);
@@ -380,32 +379,32 @@
 		}
 
 		console.log("identified action element");
-		console.log(ActionElement);
+		console.log(actionElement);
 
-		return ActionElement;
+		return actionElement;
 	}
 	
 	function identifyMethodUnit(XMIMethodUnit, xmiString, subClasses, subInterfaces, subMethods, subActionElements){
 		
-		var MethodUnit = {
+		var methodUnit = {
 //				key: '',
 				UUID: XMIMethodUnit['$']['UUID'],
-				Signature: null,
-//				Parameters: [],
-//				MethodUnits : [],
-//				StorableUnits: [],
-//				Calls : [],
-//				ClassUnits: [],
-//				InterfaceUnits : [],
-//				Imports : [],
-//				BlockUnits : [],
-				BlockUnit : {
-					ActionElements: []
+				signature: null,
+//				parameters: [],
+//				methodUnits : [],
+//				attrUnits: [],
+//				calls : [],
+//				classUnits: [],
+//				interfaceUnits : [],
+//				imports : [],
+//				blockUnits : [],
+				blockUnit : {
+					actionElements: []
 				},
-//				Addresses: [],
-//				Reads:[],
-//				Creates:[],
-//				ActionElements:[],
+//				addresses: [],
+//				reads:[],
+//				creates:[],
+//				actionElements:[],
 //				isResponse: false,
 				attachment: XMIMethodUnit
 		}
@@ -416,8 +415,8 @@
 		if(XMISignature){
 		var XMIParameters = jp.query(XMISignature, '$.parameterUnit[?(@[\'$\'][\'type\'])]');
 
-//		MethodUnit.UUID = XMISignature['$']['name'];
-		MethodUnit.Signature = {
+//	 methodUnit.UUID = XMISignature['$']['name'];
+	 methodUnit.signature = {
 				name: XMISignature['$']['name'],
 				parameterUnits: []
 		};
@@ -437,12 +436,12 @@
 			}
 			
 			console.log("iterate parameters");
-			MethodUnit.Signature.parameterUnits.push({
+		 methodUnit.signature.parameterUnits.push({
 				name: XMIParameters[j]["$"]["name"],
 				kind: XMIParameters[j]['$']['kind'],
 				type: parameterType
 			});
-//			MethodUnit.key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
+//		 methodUnit.key += "_"+ XMIParameters[j]["$"]["name"]+"_"+XMIParameters[j]["$"]["kind"];
 		}
 		}
 
@@ -453,28 +452,28 @@
 		for(var j in XMIActionElements){
 			var XMIActionElement = XMIActionElements[j];
 			actionElement = identifyActionElement(XMIActionElement, xmiString, subClasses, subInterfaces, subMethods, subActionElements);
-			MethodUnit.BlockUnit.ActionElements.push(actionElement);
+		 methodUnit.blockUnit.actionElements.push(actionElement);
 
 
-//			MethodUnit.MethodUnits=MethodUnit.MethodUnits.concat(actionElement.MethodUnits);
-//			MethodUnit.StorableUnits=MethodUnit.StorableUnits.concat(actionElement.StorableUnits);
-//			MethodUnit.Calls = MethodUnit.Calls.concat(actionElement.Calls);
-//			MethodUnit.ClassUnits=MethodUnit.ClassUnits.concat(actionElement.ClassUnits);
-//			MethodUnit.InterfaceUnits=MethodUnit.InterfaceUnits.concat(actionElement.InterfaceUnits);
-//			MethodUnit.Imports=MethodUnit.Imports.concat(actionElement.Imports);
-//			MethodUnit.BlockUnits.push(MethodUnit.BlockUnit);
-//			MethodUnit.BlockUnits=MethodUnit.BlockUnits.concat(actionElement.BlockUnits);
-//			MethodUnit.Addresses=MethodUnit.Addresses.concat(actionElement.Addresses);
-//			MethodUnit.Reads=MethodUnit.Reads.concat(actionElement.Reads);
-//			MethodUnit.Calls=MethodUnit.Calls.concat(actionElement.Calls);
-//			MethodUnit.Creates=MethodUnit.Creates.concat(actionElement.Creates);
-//			MethodUnit.ActionElements.push(actionElement);
-//			MethodUnit.ActionElements=MethodUnit.ActionElements.concat(actionElement.ActionElements);
+//		 methodUnit.methodUnits=MethodUnit.methodUnits.concat(actionElement.methodUnits);
+//		 methodUnit.attrUnits=MethodUnit.attrUnits.concat(actionElement.attrUnits);
+//		 methodUnit.calls = methodUnit.calls.concat(actionElement.calls);
+//		 methodUnit.classUnits=MethodUnit.classUnits.concat(actionElement.classUnits);
+//		 methodUnit.interfaceUnits=MethodUnit.interfaceUnits.concat(actionElement.interfaceUnits);
+//		 methodUnit.imports=MethodUnit.imports.concat(actionElement.imports);
+//		 methodUnit.blockUnits.push(methodUnit.blockUnit);
+//		 methodUnit.blockUnits=MethodUnit.blockUnits.concat(actionElement.blockUnits);
+//		 methodUnit.addresses=MethodUnit.addresses.concat(actionElement.addresses);
+//		 methodUnit.reads=MethodUnit.reads.concat(actionElement.reads);
+//		 methodUnit.calls=MethodUnit.calls.concat(actionElement.calls);
+//		 methodUnit.creates=MethodUnit.creates.concat(actionElement.creates);
+//		 methodUnit.actionElements.push(actionElement);
+//		 methodUnit.actionElements=MethodUnit.actionElements.concat(actionElement.actionElements);
 
-//			for(var k in actionElement.MethodUnits){
-//				var foundMethodUnit = actionElement.MethodUnits[k];
+//			for(var k in actionElement.methodUnits){
+//				var foundMethodUnit = actionElement.methodUnits[k];
 //				if(foundMethodUnit.isResponse){
-//					MethodUnit.isResponse = true;
+//				 methodUnit.isResponse = true;
 //					break;
 //				}
 //			}
@@ -487,11 +486,11 @@
 		
 		//testing for what are the response methods.
 		var debug = require("../../utils/DebuggerOutput.js");
-		if(MethodUnit.isResponse){
-		debug.appendFile("identified_response_method_units", MethodUnit.Signature.name);
+		if(methodUnit.isResponse){
+		debug.appendFile("identified_response_method_units", methodUnit.signature.name);
 		}
 
-		return MethodUnit;
+		return methodUnit;
 	}
 
 
@@ -534,23 +533,23 @@
 		console.log("identify:"+XMIClassUnit['$']['name']);
 
 		// those elements store all the same type of elements in the sub classes.
-		var ClassUnit = {
+		var classUnit = {
 				name: XMIClassUnit['$']['name'],
 				isAbstract: XMIClassUnit['$']['isAbstract'],
-				Source: null,
-				MethodUnits : [],
-				StorableUnits: [],
-//				Calls : [],
-//				ClassUnits: [],
-				InterfaceUnits : [],
-				Imports : [],
-				ClassUnits: [],
-//				BlockUnits : [],
-//				Addresses: [],
-//				Reads:[],
-//				Calls:[],
-//				Creates:[],
-//				ActionElements:[],
+				source : null,
+				methodUnits : [],
+				attrUnits: [],
+//				calls : [],
+//				classUnits: [],
+				interfaceUnits : [],
+				imports : [],
+				classUnits: [],
+//				blockUnits : [],
+//				addresses: [],
+//				reads:[],
+//				calls:[],
+//				creates:[],
+//				actionElements:[],
 //				isResponse: false,
 				UUID: XMIClassUnit['$']['UUID'],
 				attachment: XMIClassUnit
@@ -560,8 +559,8 @@
 
 		if(XMISource){
 		var XMIRegion = jp.query(XMISource, '$.region[?(@[\'$\'][\'xsi:language\'])]')[0];
-		ClassUnit.Source = {
-				Region: {
+		classUnit.source = {
+				region: {
 					language: XMIRegion['$']['language']
 				}
 		}
@@ -570,7 +569,7 @@
 
 		for(var i in XMIImports){
 			var XMIImport = XMIImports[i];
-			ClassUnit.Imports.push({
+			classUnit.imports.push({
 				from:XMIImport['$']['from'],
 				to:XMIImport['$']['to']
 			})
@@ -580,7 +579,7 @@
 
 		for(var i in XMIStorableUnits){
 			var XMIStorableUnit = XMIStorableUnits[i];
-			ClassUnit.StorableUnits.push({
+			classUnit.attrUnits.push({
 				name: XMIStorableUnit['$']['name'],
 				kind: XMIStorableUnit['$']['kind'],
 				type: XMIStorableUnit['$']['type'],
@@ -594,31 +593,31 @@
 		for(var i in XMIMethodUnits){
 			var XMIMethodUnit = XMIMethodUnits[i];
 			var methodUnit = identifyMethodUnit(XMIMethodUnit, xmiString, subClasses, subInterfaces, subMethods, subActionElements);
-			ClassUnit.MethodUnits.push(methodUnit);
+			classUnit.methodUnits.push(methodUnit);
 
-//			ClassUnit.MethodUnits = ClassUnit.MethodUnits.concat(methodUnit.MethodUnits);
-//			ClassUnit.StorableUnits = ClassUnit.StorableUnits.concat(methodUnit.StorableUnits);
-//			ClassUnit.Calls = ClassUnit.Calls.concat(methodUnit.Calls);
-//			ClassUnit.ClassUnits=ClassUnit.ClassUnits.concat(methodUnit.ClassUnits);
-//			ClassUnit.InterfaceUnits=ClassUnit.InterfaceUnits.concat(methodUnit.InterfaceUnits);
-//			ClassUnit.Imports=ClassUnit.Imports.concat(methodUnit.Imports);
-//			ClassUnit.BlockUnits=ClassUnit.BlockUnits.concat(methodUnit.BlockUnits);
-//			ClassUnit.Addresses=ClassUnit.Addresses.concat(methodUnit.Addresses);
-//			ClassUnit.Reads=ClassUnit.Reads.concat(methodUnit.Reads);
-//			ClassUnit.Calls=ClassUnit.Calls.concat(methodUnit.Calls);
-//			ClassUnit.Creates=ClassUnit.Creates.concat(methodUnit.Creates);
-//			ClassUnit.ActionElements=ClassUnit.ActionElements.concat(methodUnit.ActionElements);
+//			classUnit.methodUnits = classUnit.methodUnits.concat(methodUnit.methodUnits);
+//			classUnit.attrUnits = classUnit.attrUnits.concat(methodUnit.attrUnits);
+//			classUnit.calls = classUnit.calls.concat(methodUnit.calls);
+//			classUnit.classUnits=classUnit.classUnits.concat(methodUnit.classUnits);
+//			classUnit.interfaceUnits=classUnit.interfaceUnits.concat(methodUnit.interfaceUnits);
+//			classUnit.imports=classUnit.imports.concat(methodUnit.imports);
+//			classUnit.blockUnits=classUnit.blockUnits.concat(methodUnit.blockUnits);
+//			classUnit.addresses=classUnit.addresses.concat(methodUnit.addresses);
+//			classUnit.reads=classUnit.reads.concat(methodUnit.reads);
+//			classUnit.calls=classUnit.calls.concat(methodUnit.calls);
+//			classUnit.creates=classUnit.creates.concat(methodUnit.creates);
+//			classUnit.actionElements=classUnit.actionElements.concat(methodUnit.actionElements);
 
 //
-//			for(var j in methodUnit.MethodUnits){
-//				if(methodUnit.MethodUnits[j].isResponse){
-//					ClassUnit.isResponse = true;
+//			for(var j in methodUnit.methodUnits){
+//				if(methodUnit.methodUnits[j].isResponse){
+//					classUnit.isResponse = true;
 //					break;
 //				}
 //			}
 //
 //			if(methodUnit.isResponse){
-//				ClassUnit.isResponse = true;
+//				classUnit.isResponse = true;
 //			}
 			
 			if(subMethods){
@@ -626,11 +625,10 @@
 			}
 		}
 
-
 		var XMIInterfaceUnits = jp.query(XMIClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:InterfaceUnit\')]');
 		for(var i in XMIInterfaceUnits){
 			var XMIInterfaceUnit = XMIInterfaceUnits[i];
-			ClassUnit.InterfaceUnits.push({
+			classUnit.interfaceUnits.push({
 				name:XMIInterfaceUnit['$']['name']
 			});
 		}
@@ -646,36 +644,36 @@
 				IncludedClassUnit.name = XMIClassUnit.name+"_inner_"+i;
 			}
 
-//			ClassUnit.MethodUnits.concat(includedClassUnit.MethodUnits);
-//			ClassUnit.StorableUnits.concat(includedClassUnit.StorableUnits);
-//			ClassUnit.Calls.concat(includedClassUnit.Calls);
-//			ClassUnit.ClassUnits.concat(includedClassUnit.ClassUnits);
-//			ClassUnit.InterfaceUnits.concat(includedClassUnit.InterfaceUnits);
-//			ClassUnit.Imports.concat(includedClassUnit.Imports);
-//			ClassUnit.BlockUnits.concat(includedClassUnit.BlockUnits);
-//			ClassUnit.Addresses.concat(includedClassUnit.Addresses);
-//			ClassUnit.Reads.concat(includedClassUnit.Reads);
-//			ClassUnit.Calls.concat(includedClassUnit.Calls);
-//			ClassUnit.Creates.concat(includedClassUnit.Creates);
-//			ClassUnit.ActionElements.push(includedClassUnit.ActionElements);
+//			classUnit.methodUnits.concat(includedClassUnit.methodUnits);
+//			classUnit.attrUnits.concat(includedClassUnit.attrUnits);
+//			classUnit.calls.concat(includedClassUnit.calls);
+//			classUnit.classUnits.concat(includedClassUnit.classUnits);
+//			classUnit.interfaceUnits.concat(includedClassUnit.interfaceUnits);
+//			classUnit.imports.concat(includedClassUnit.imports);
+//			classUnit.blockUnits.concat(includedClassUnit.blockUnits);
+//			classUnit.addresses.concat(includedClassUnit.addresses);
+//			classUnit.reads.concat(includedClassUnit.reads);
+//			classUnit.calls.concat(includedClassUnit.calls);
+//			classUnit.creates.concat(includedClassUnit.creates);
+//			classUnit.actionElements.push(includedClassUnit.actionElements);
 
-//			ClassUnit.MethodUnits = ClassUnit.MethodUnits.concat(includedClassUnit.MethodUnits);
-//			ClassUnit.StorableUnits = ClassUnit.StorableUnits.concat(includedClassUnit.StorableUnits);
-//			ClassUnit.Calls = ClassUnit.Calls.concat(includedClassUnit.Calls);
-//			ClassUnit.ClassUnits=ClassUnit.ClassUnits.concat(includedClassUnit.ClassUnits);
-//			ClassUnit.InterfaceUnits=ClassUnit.InterfaceUnits.concat(includedClassUnit.InterfaceUnits);
-//			ClassUnit.Imports=ClassUnit.Imports.concat(includedClassUnit.Imports);
-//			ClassUnit.BlockUnits=ClassUnit.BlockUnits.concat(includedClassUnit.BlockUnits);
-//			ClassUnit.Addresses=ClassUnit.Addresses.concat(includedClassUnit.Addresses);
-//			ClassUnit.Reads=ClassUnit.Reads.concat(includedClassUnit.Reads);
-//			ClassUnit.Calls=ClassUnit.Calls.concat(includedClassUnit.Calls);
-//			ClassUnit.Creates=ClassUnit.Creates.concat(includedClassUnit.Creates);
-//			ClassUnit.ActionElements=ClassUnit.ActionElements.concat(includedClassUnit.ActionElements);
+//			classUnit.methodUnits = classUnit.methodUnits.concat(includedClassUnit.methodUnits);
+//			classUnit.attrUnits = classUnit.attrUnits.concat(includedClassUnit.attrUnits);
+//			classUnit.calls = classUnit.calls.concat(includedClassUnit.calls);
+//			classUnit.classUnits=classUnit.classUnits.concat(includedClassUnit.classUnits);
+//		 classUnit.interfaceUnits=classUnit.interfaceUnits.concat(includedClassUnit.interfaceUnits);
+//		 classUnit.imports=classUnit.imports.concat(includedClassUnit.imports);
+//		 classUnit.blockUnits=classUnit.blockUnits.concat(includedClassUnit.blockUnits);
+//		 classUnit.addresses=classUnit.addresses.concat(includedClassUnit.addresses);
+//		 classUnit.reads=classUnit.reads.concat(includedClassUnit.reads);
+//		 classUnit.calls=classUnit.calls.concat(includedClassUnit.calls);
+//		 classUnit.creates=classUnit.creates.concat(includedClassUnit.creates);
+//		 classUnit.actionElements=classUnit.actionElements.concat(includedClassUnit.actionElements);
 
-			ClassUnit.ClassUnits.push(IncludedClassUnit);
+		 classUnit.classUnits.push(IncludedClassUnit);
 
 //				if(includedClassUnit.isResponse){
-//					ClassUnit.isResponse = true;
+//				 classUnit.isResponse = true;
 //				}
 			
 			if(subClasses){
@@ -683,7 +681,7 @@
 			}
 		}
 
-		return ClassUnit;
+		return classUnit;
 
 	}
 	
@@ -760,18 +758,18 @@
 //		return compositionInstances;
 //	}
 
-	function identifyStorableUnits(xmiClass) {
-		var storableUnits = [];
+	function identifyAttrUnits(xmiClass) {
+		var attrUnits = [];
 		var XMIStorableUnits = jp.query(xmiClass, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
 		for (var i in XMIStorableUnits) {
 			var XMIStorableUnit = XMIStorableUnits[i];
-			storableUnits.push({
+			attrUnits.push({
 				name: XMIStorableUnit['$']['name'],
 				type:  convertToJsonPath(XMIStorableUnit['$']['type']) // this is a path to the class
 			});
 		}
 
-		return storableUnits;
+		return attrUnits;
 	}
 	
 	function identifyContainingMethodUnitByAction(){
@@ -906,20 +904,20 @@
 			function findCallsFromActionElement(actionElement){
 				var calls = [];
 	//			console.log("output action element");
-	//			console.log(responseMethod.Signature.name);
+	//			console.log(responseMethod.signature.name);
 	//			console.log(actionElement);
-				calls = calls.concat(actionElement.Calls);
+				calls = calls.concat(actionElement.calls);
 	
-				for(var i in actionElement.ActionElements){
-					calls = calls.concat(findCallsFromActionElement(actionElement.ActionElements[i]));
+				for(var i in actionElement.actionElements){
+					calls = calls.concat(findCallsFromActionElement(actionElement.actionElements[i]));
 				}
 	
 				return calls;
 			}
 	
-			for(var i in methodUnit.BlockUnit.ActionElements){
+			for(var i in methodUnit.blockUnit.actionElements){
 	
-				var actionElement = methodUnit.BlockUnit.ActionElements[i];
+				var actionElement = methodUnit.blockUnit.actionElements[i];
 				calls = calls.concat(findCallsFromActionElement(actionElement));
 			}
 	
@@ -927,23 +925,23 @@
 		}
 
 	//	function findSubClasses(classUnit){
-	//		function findSubClassesFromActionElement(ActionElement){
+	//		function findSubClassesFromActionElement(actionElement){
 	//			var classUnits = [];
-	//			for(var k in ActionElement.ClassUnits){
-	//				classUnits.push(ActionElement.ClassUnits[k]);
-	//				var subClassUnits = findSubClasses(ActionElement.ClassUnits[k]);
+	//			for(var k in actionElement.classUnits){
+	//				classUnits.push(actionElement.classUnits[k]);
+	//				var subClassUnits = findSubClasses(actionElement.classUnits[k]);
 	//				classUnits = classUnits.concat(subClassUnits);
 	//			}
 	//			return classUnits;
 	//		}
 	//		var classUnits = [];
-	//		for(var i in classUnit.MethodUnits){
-	//			var ActionElements = classUnit.MethodUnits[i].BlockUnit.ActionElements;
-	//			for(var j in ActionElements){
-	//				var ActionElement = ActionElements[j];
-	//				classUnits = classUnits.concat(findSubClassesFromActionElement(ActionElement));
-	//				for(var k in ActionElement.ActionElements){
-	//					classUnits = classUnits.concat(findSubClassesFromActionElement(ActionElement.ActionElements[k]));
+	//		for(var i in classUnit.methodUnits){
+	//			var actionElements = classUnit.methodUnits[i].blockUnit.actionElements;
+	//			for(var j in actionElements){
+	//				var actionElement = actionElements[j];
+	//				classUnits = classUnits.concat(findSubClassesFromActionElement(actionElement));
+	//				for(var k in actionElement.actionElements){
+	//					classUnits = classUnits.concat(findSubClassesFromActionElement(actionElement.actionElements[k]));
 	//				}
 	//			}
 	//		}
@@ -951,20 +949,20 @@
 	//		return classUnits;
 	//	}
 
-	//	function locateClassUnitForMethod(methodUnitToCompare, ClassUnits){
+	//	function locateClassUnitForMethod(methodUnitToCompare, classUnits){
 	//		console.log("UUID");
 	//		console.log(methodUnitToCompare.UUID);
 	//
 	//		function identifyFromActionElement(targetActionElement, methodUnitToCompare){
 	//
-	//			for(var i in targetActionElement.ClassUnits){
-	//			var result = locateClassUnitForMethod(methodUnitToCompare, targetActionElement.ClassUnits[i]);
+	//			for(var i in targetActionElement.classUnits){
+	//			var result = locateClassUnitForMethod(methodUnitToCompare, targetActionElement.classUnits[i]);
 	//			if(result){
 	//				return result;
 	//			}
 	//			}
-	//			for(var i in targetActionElement.ActionElements){
-	//				var result = identifyFromActionElement(targetActionElement.ActionElements, methodUnitToCompare);
+	//			for(var i in targetActionElement.actionElements){
+	//				var result = identifyFromActionElement(targetActionElement.actionElements, methodUnitToCompare);
 	//				if(result){
 	//					return result;
 	//				}
@@ -973,21 +971,21 @@
 	//			return false;
 	//		}
 	////		var classUnitToSelect = null;
-	//		for(var i in ClassUnits){
-	//			var classUnit = ClassUnits[i];
+	//		for(var i in classUnits){
+	//			var classUnit = classUnits[i];
 	//			if(!classUnit){
 	//				continue;
 	//			}
 	//			console.log(classUnit);
-	//			var MethodUnits = classUnit.MethodUnits;
-	//			for(var j in MethodUnits){
-	//				var methodUnit = MethodUnits[j];
+	//			var methodUnits = classUnit.methodUnits;
+	//			for(var j in methodUnits){
+	//				var methodUnit = methodUnits[j];
 	//				if(methodUnit.UUID === methodUnitToCompare.UUID){
 	//					return classUnit;
 	//				}
 	//				else{
-	//					for(var k in methodUnit.BlockUnit.ActionElements){
-	//						var actionElement = methodUnit.BlockUnit.ActionElements[k];
+	//					for(var k in methodUnit.blockUnit.actionElements){
+	//						var actionElement = methodUnit.blockUnit.actionElements[k];
 	//						var result = identifyFromActionElement(actionElement, methodUnitToCompare);
 	//						if(result){
 	//							return result;
@@ -1000,7 +998,7 @@
 	//		return false;
 	//	}
 	//
-	//	function locateMethodUnitForActionElement(actionElementToCompare, ClassUnits){
+	//	function locateMethodUnitForActionElement(actionElementToCompare, classUnits){
 	//		console.log("UUID");
 	//		console.log(actionElementToCompare.UUID);
 	////		var classUnitToSelect = null;
@@ -1016,8 +1014,8 @@
 	//				}
 	//				else{
 	//
-	//					for(var i in targetActionElement.ActionElements){
-	//						var includedActionElement = targetActionElement.ActionElements[i];
+	//					for(var i in targetActionElement.actionElements){
+	//						var includedActionElement = targetActionElement.actionElements[i];
 	//						var result = IdentifyFromActionElement(includedActionElement, associatedMethod, actionElementToCompare);
 	//						if(result){
 	//							return result;
@@ -1025,7 +1023,7 @@
 	//					}
 	//
 	//
-	//					var result = locateMethodUnitForActionElement(actionElementToCompare, targetActionElement.ClassUnits);
+	//					var result = locateMethodUnitForActionElement(actionElementToCompare, targetActionElement.classUnits);
 	//					if(result){
 	//						return false;
 	//					}
@@ -1034,13 +1032,13 @@
 	//			return false;
 	//		}
 	//
-	//		for(var i in ClassUnits){
-	//			var classUnit = ClassUnits[i];
-	//			var MethodUnits = classUnit.MethodUnits;
-	//			for(var j in MethodUnits){
-	//				var methodUnit = MethodUnits[j];
-	//				for(var k in methodUnit.BlockUnit.ActionElements){
-	//					var actionElement = methodUnit.BlockUnit.ActionElements[k];
+	//		for(var i in classUnits){
+	//			var classUnit = classUnits[i];
+	//			var methodUnits = classUnit.methodUnits;
+	//			for(var j in methodUnits){
+	//				var methodUnit = methodUnits[j];
+	//				for(var k in methodUnit.blockUnit.actionElements){
+	//					var actionElement = methodUnit.blockUnit.actionElements[k];
 	//					console.log("to compare action element");
 	//					console.log(actionElement.UUID);
 	//					var result = IdentifyFromActionElement(actionElement, methodUnit, actionElementToCompare);
@@ -1055,9 +1053,9 @@
 	//	}
 
 
-	//	function isResponseClass(ClassUnit){
-	//		for(var i in ClassUnit.MethodUnits){
-	//			if(ClassUnit.MethodUnits[i].isResponse){
+	//	function isResponseClass(classUnit){
+	//		for(var i in classUnit.methodUnits){
+	//			if(classUnit.methodUnits[i].isResponse){
 	//				return true;
 	//			}
 	//		}
@@ -1072,9 +1070,9 @@
 //			for(var j in component.classUnits){
 //				var classUnit = component.classUnits[j];
 //				
-//				var MethodUnits = classUnit.MethodUnits;
-//				for(var k in MethodUnits){
-//					var methodUnit = MethodUnits[k];
+//				var methodUnits = classUnit.methodUnits;
+//				for(var k in methodUnits){
+//					var methodUnit = methodUnits[k];
 //					if(methodUnit.UUID === targetMethodUnit.UUID){
 //						return component;
 //					}
@@ -1091,25 +1089,25 @@
 //		function findSubMethodsFromActionElement(actionElement){
 //			var subMethods = [];
 //			
-//			for(var i in actionElement.ClassUnits){
-//				var classUnit = actionElement.ClassUnits[i];
+//			for(var i in actionElement.classUnits){
+//				var classUnit = actionElement.classUnits[i];
 //				var result = findSubMethods(classUnit);
 //				subMethods = subMethods.concat(result);
 //			}
-//			for(var i in actionElement.ActionElements){
-//				var result = findSubMethodsFromActionElement(actionElement.ActionElements[i]);
+//			for(var i in actionElement.actionElements){
+//				var result = findSubMethodsFromActionElement(actionElement.actionElements[i]);
 //				subMethods = subMethods.concat(result);
 //			}
 //			
 //			return subMethods;
 //		}
 //		
-//		for(var i in classUnit.MethodUnits){
-//				var methodUnit = classUnit.MethodUnits[i];
+//		for(var i in classUnit.methodUnits){
+//				var methodUnit = classUnit.methodUnits[i];
 //				subMethods.push(methodUnit);
 //				
-//				for(var j in methodUnit.BlockUnit.ActionElements){
-//					var actionElement = methodUnit.BlockUnit.ActionElements[j];
+//				for(var j in methodUnit.blockUnit.actionElements){
+//					var actionElement = methodUnit.blockUnit.actionElements[j];
 //					var result = findSubMethodsFromActionElement(actionElement);
 //					subMethods = subMethods.concat(result);
 //				}
@@ -1173,7 +1171,7 @@
 			identifyClassUnit: identifyClassUnit,
 			identifyCalls: identifyCalls,
 			identifyExtends: identifyExtends,
-			identifyStorableUnits: identifyStorableUnits,
+			identifyAttrUnits: identifyAttrUnits,
 			identifyExternalClass: identifyExternalClass,
 //			identifyComposition: identifyComposition,
 			assignUUID: function(object) {

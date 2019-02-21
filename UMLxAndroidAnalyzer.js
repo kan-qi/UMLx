@@ -1,5 +1,55 @@
 (function() {
 
+	  //use promise to construct the repo objects
+    function analyseProject(projectXMI, clusterFile, stimulusFile, logFile, projectName, path, useCaseRec, reportDir, callback){
+      
+        if(!projectName){
+        		projectName = ""
+        }
+        	
+   		 let date = new Date();
+   	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+   	     analysisDate = analysisDate+"@"+Date.now();
+   	   
+   	     projectName = projectName + "_"+analysisDate;
+        	
+        	var outputDir = reportDir +"\\"+projectName+"_analysis";
+        	global.debugOutputDir = outputDir + "/debug";
+        	var inputFile = projectXMI;
+        	
+        	console.log(inputFile);
+        	
+        	mkdirp(outputDir, function(err) { 
+        	fs.exists(inputFile, (exists) => {
+        	if(!exists){
+        		console.log(inputFile+" doesn't exist.");
+        		if(callback){
+        			callback(false);
+        		}
+        	}
+        	else{
+            //to generate svg file.
+        	UMLxAnalyticToolKit.analyseSrc(inputFile, outputDir, projectName, function(model){
+        		if(!model){
+        			console.log('analysis error!');
+            		return;
+        		}
+        		console.log("finished sr analysis");
+        		FileManagerUtil.appendFile(reportPath, model.OutputDir+"\n", function(message){
+            		console.log('analysis finished!');
+            		console.log(message);
+            		
+            		if(callback){
+            			callback(model);
+            		}
+        		})
+        		  
+        	}, {clusterFile: clusterFile, stimulusFile: stimulusFile, logFile: logFile, path: path, useCaseRec: useCaseRec});
+        	
+        	}
+      	  });
+        });
+    }
 	
 	module.exports = {
 			analyseAPKGator: function(apkFilePath, callback){

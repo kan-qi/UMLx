@@ -33,7 +33,7 @@
 	}
 
 	function drawStimulusNode(id, label){
-		return id+'[label=<\
+		return '"'+id+'"[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/stimulus_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
@@ -42,7 +42,7 @@
 
 	function drawNode(id, label){
 		
-		return id+'[label=<\
+		return '"'+id+'"[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/activity_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
@@ -50,7 +50,7 @@
 	}
 
 	function drawOutOfScopeNode(id, label){
-		return id+'[label=<\
+		return '"'+id+'"[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/out_of_scope_activity_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
@@ -58,7 +58,7 @@
 	}
 
 	function drawFragmentNode(id, label){
-		return id+'[label=<\
+		return '"'+id+'"[label=<\
 			<TABLE BORDER="0" CELLBORDER="0" CELLSPACING="0">\
 			<TR><TD><IMG SRC="img/fragment_node_icon.png"/></TD></TR>\
 		 <TR><TD><B>'+processLabel(label)+'</B></TD></TR>\
@@ -651,10 +651,20 @@
 
             return graph;
 
+<<<<<<< HEAD
+=======
+		var debug = require("../utils/DebuggerOutput.js");
+		debug.writeJson2("component_graph_7_5", dicComponent);
+		
+//		console.log('dicComponent');
+//		console.log(dicComponent);
+//		process.exit();
+>>>>>>> 44426c0bb34558047a8e0e283f6c305dc5c9d93b
 	}
 	
 	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
 
+<<<<<<< HEAD
 		// var debug = require("../utils/DebuggerOutput.js");
 		// debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
 
@@ -746,10 +756,17 @@
 
             return graph;
 
+=======
+		var debug = require("../utils/DebuggerOutput.js");
+		debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
+		
+		
+>>>>>>> 44426c0bb34558047a8e0e283f6c305dc5c9d93b
 	}
 	
 	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
 
+<<<<<<< HEAD
 		// var debug = require("../utils/DebuggerOutput.js");
 		// debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
 
@@ -760,6 +777,14 @@
         console.log("dicCompositeClassUnits is "+dicCompositeClassUnits);
         console.log("dicCompositeClassUnits is "+JSON.stringify(dicCompositeClassUnits));
 
+=======
+		var debug = require("../utils/DebuggerOutput.js");
+		debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
+		
+//		console.log('dicCompositeClassUnits');
+//		console.log(dicCompositeClassUnits);
+//		process.exit();
+>>>>>>> 44426c0bb34558047a8e0e283f6c305dc5c9d93b
 	}
 	
 	module.exports = {

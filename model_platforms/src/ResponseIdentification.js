@@ -78,7 +78,7 @@
 			}
 	
 			for(var j in methodPatterns){
-				if(methodUnit.Signature.name.match(methodPatterns[j])){
+				if(methodUnit.signature.name.match(methodPatterns[j])){
 					methodUnit.isResponse = true;
 					break;
 				}	
@@ -129,17 +129,17 @@
 	}
 	
 	
-	function identifyResponseGator(codeAnalysisResults, responsePatternsFilePath){
-		responsePatternsFilePath = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release/gator-handlers.txt";
+	function identifyResponseGator(codeAnalysisResults, gatorFilePath){
+//		gatorFilePath = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/AnotherMonitor-release/gator-handlers.txt";
 		
 		var dicClassUnits = codeAnalysisResults.dicClassUnits;
 		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
 		
 		var scannedMethods = [];
 		
-		if (responsePatternsFilePath && fs.existsSync(responsePatternsFilePath)) {
+		if (gatorFilePath && fs.existsSync(gatorFilePath)) {
 		 
-		var contents = fs.readFileSync(responsePatternsFilePath, 'utf8');
+		var contents = fs.readFileSync(gatorFilePath, 'utf8');
 		
 //		console.log(contents);
 		
@@ -173,6 +173,8 @@
 	    for(var i = 0;i < lines.length;i++){
 	        //code here using lines[i] which will give you each line
 	    	var line = lines[i];
+	    	line = line.replace(/[<|>]/g, "");
+	    	line = line.replace(/:/g, ".");
 	    	console.log(line);
 	    	var matches = stringSimilarity.findBestMatch(line, methodSigns);
 //			if(matches.bestMatch.rating > 0.8){

@@ -91,7 +91,7 @@
 					callbackfunc(umlModelInfo);
 				}
 
-			});
+			}, umlModelInfo);
 		}
 		
 		mkdirp(umlModelInfo.OutputDir, function(err) {
