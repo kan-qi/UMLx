@@ -528,17 +528,37 @@ public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeCl
 	}
 	res = res.substring(0,res.length()-1);
 	res += "}";	
-	// Debug6.v().printf(res);
+	Debug6.v().printf(res);
 	int ind = 10;
-	while (ind>0) {
-		ind--;
-		System.out.println("STUQZA-");
-	}
 	return res;
 }
 
 public String constructCompositionGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
-	return "";
+	// Reference: Xiaoyue's constructTypeDependencyGraph()	
+	String res = "{";
+	int i = 1;
+	// traverse each node
+	for (ClassUnit classUnit : classUnits) {
+		String tailName = classUnit.name;
+		String tailUUID = classUnit.uuid;		
+		// get current node's fields
+		//Chain<SootField> curFields = classUnit.attachment.getFields();
+		Iterator<SootField> iterFields = classUnit.attachment.getFields().iterator();
+		// search for edges
+		while(iterFields.hasNext()) {
+			SootField tempField = iterFields.next();
+			String headName = tempField.getName();
+			if (classUnitByName.containsKey(headName)) {
+				// create edges
+				ClassUnit headNode = classUnitByName.get(headName);
+				String headUUID = headNode.uuid;		
+				res += "\""+i+"\":{\"tail\":{\"name\":\""+tailName+"\",\"uuid\":\""+tailUUID+"\"},\"head\":{\"name\":\""+headName+"\",\"uuid\":\""+headUUID+"\"}},";	
+				i++;
+			}
+		}
+	}
+	res += "}";
+	return res;
 }
   
 public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
