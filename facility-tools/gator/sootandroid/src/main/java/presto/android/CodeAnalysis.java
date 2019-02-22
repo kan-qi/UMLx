@@ -299,6 +299,10 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	  List<AttrUnit> attrUnits;
 	  String name;
 	  
+	  public List<AttrUnit> getAttr(){
+		  return this.attrUnits;
+	  }
+	  
 	  public List<MethodUnit> getMethods(){	
 		 return this.methodUnits;
 	  }
@@ -528,7 +532,7 @@ public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeCl
 	}
 	res = res.substring(0,res.length()-1);
 	res += "}";	
-	Debug6.v().printf(res);
+	//Debug6.v().printf(res);
 	int ind = 10;
 	return res;
 }
@@ -541,20 +545,12 @@ public String constructCompositionGraph(List<ClassUnit> classUnits, List<Composi
 	for (ClassUnit classUnit : classUnits) {
 		String tailName = classUnit.name;
 		String tailUUID = classUnit.uuid;		
-		// get current node's fields
-		//Chain<SootField> curFields = classUnit.attachment.getFields();
-		Iterator<SootField> iterFields = classUnit.attachment.getFields().iterator();
-		// search for edges
-		while(iterFields.hasNext()) {
-			SootField tempField = iterFields.next();
-			String headName = tempField.getName();
-			if (classUnitByName.containsKey(headName)) {
-				// create edges
-				ClassUnit headNode = classUnitByName.get(headName);
-				String headUUID = headNode.uuid;		
-				res += "\""+i+"\":{\"tail\":{\"name\":\""+tailName+"\",\"uuid\":\""+tailUUID+"\"},\"head\":{\"name\":\""+headName+"\",\"uuid\":\""+headUUID+"\"}},";	
-				i++;
-			}
+		
+		List<AttrUnit> tempAttributes = classUnit.getAttr();
+		for (AttrUnit attr : tempAttributes) {
+			String headJSON = attr.toJSONString();
+			res += "\"" + i + "\":{\"tail\":{\"name\":\"" + tailName + "\",\"uuid\":\"" + tailUUID + "\"},\"head\":" + headJSON;
+			i = i+1;
 		}
 	}
 	res += "}";
@@ -774,7 +770,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	  return "";
   }
 
-  public void run() {
+  public void run() {	  
     Logger.stat("#Classes: " + Scene.v().getClasses().size() +
             ", #AppClasses: " + Scene.v().getApplicationClasses().size());
     Logger.trace("TIMECOST", "Start at " + System.currentTimeMillis());
@@ -933,6 +929,8 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	
     Debug4.v().printf("%s", outputS);
     
+    String res = constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+    Debug2.v().printf(res);
   }
   
   
