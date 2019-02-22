@@ -17,14 +17,10 @@
 	var jp = require('jsonpath');
 	var kdmModelUtils = require("./KDMModelUtils.js");
 	var kdmModelDrawer = require("./KDMModelDrawer.js");
-
-//	var xpath = require('xpath');
-//	var dom = require('xmldom').DOMParser;
 	
 	var xmiSring = "";
 	
 	function establishControlFlow(dicComponents, dicClassComponent, dicMethodClass, dicResponseMethodUnits, dicMethods, callGraph, outputDir){
-		//the edges are now defined between methods...
 		var edges = [];
 		var nodes = [];
 
@@ -46,9 +42,6 @@
 		var nodes = [];
 		var nodesByID = {};
 		
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson("method_sequences", methodSequences);
-		
 		for(var i in methodSequences){
 			var methodSequence = methodSequences[i];
 			var preNode = null;
@@ -60,17 +53,9 @@
 				var targetComponent = dicComponents[dicClassComponent[targetClassUnitUUID]];
 
 				if(!targetComponent){
-//					targetComponent = {
-//							name: "undefined",
-//							UUID: "undefined"
-//					}
 					continue;
 				}
 				
-//				console.log("target method unit");
-//				console.log(targetMethodUnit);
-				
-				console.log("found target componet");
 				var node = nodesByID[targetMethodUnit.UUID];
 				if(!node){
 					node = {
@@ -81,14 +66,10 @@
 							},
 							trigger: action,
 							UUID: targetMethodUnit.UUID
-//							classUnit: targetClassUnit
-//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodes.push(node);
 					nodesByID[node.UUID] = node;
 				}
-
-//				var end = targetClassUnit.name;
 				
 				if(preNode && preComponent && preComponent != targetComponent){
 				edges.push({start: preNode, end: node});
@@ -115,8 +96,6 @@
 		var triggeringEdges = [];
 		
 		for(var i in nodes){
-//			var component = components[i];
-//			var classUnits = component.classUnits;
 			var node = nodes[i];
 			node.type = "node";
 			if(node.isResponse){
@@ -126,7 +105,6 @@
 									type: "stimulus",
 									name: "stl#"+node.name,
 									UUID: node.UUID+"_STL",
-//									Attachment: XMIActivity,
 									trigger: "stimulus"
 							}
 							
@@ -171,18 +149,13 @@
 	function findCallsForMethod(methodUnit, callGraph, dicMethods){
 		var calls = [];
 		
-//		var debug = require("../../utils/DebuggerOutput.js");
-		
 		for(var i in callGraph.edges){
 			var edge = callGraph.edges[i];
-//			debug.appendFile("found_calls", edge.start.UUID+":"+methodUnit.UUID+"\n");
 			if(edge.start.UUID === methodUnit.UUID){
 				calls.push({action:dicMethods[edge.start.UUID], methodUnit:dicMethods[edge.end.UUID]});
 			}
 		}
 	
-//		debug.appendFile("found_calls", "calls:"+JSON.stringify(calls)+"\n");
-						
 		return calls;
 	}
 	

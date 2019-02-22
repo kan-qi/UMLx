@@ -48,14 +48,6 @@
 	var kdmModelDrawer = require("./KDMModelDrawer.js");
 	var FileManagerUtils = require("../../utils/FileManagerUtils.js");
 
-//	var dicClassUnits = {};
-//	var dicMethodUnits = {};
-//	var dicCompositeClasses = {};
-//	var dicClassComposite = {}; // {subclass.UUID, compositeClassUnit.UUID}
-//	var dicCompositeSubclasses = {}; // {compositeClassUnit.UUID, [subclass.UUID]}
-//	var dicMethodClass = {};	 // {method.UUID, class.UUID}
-//	var dicActionElementMethod = {};
-
 	function analyseCode(jsonString, outputDir) {
 		
 //		var androidAnalysisResults = FileManagerUtils.readJSONSync("H:\\ResearchSpace\\ResearchProjects\\UMLx\\facility-tools\\GATOR_Tool\\gator-3.5\\output\\android-analysis-output.json");
@@ -275,12 +267,6 @@
 				
 			}
 		
-//		var accessGraph = androidAnalysisResults.accessGraph;
-		
-//		var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);		
-//		var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-//		var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
-
 		var debug = require("../../utils/DebuggerOutput.js");
 
 		var result = {
@@ -424,9 +410,7 @@
 			if(!classUnit){
 				continue;
 			}
-			console.log("class unit");
-			console.log(node.uuid);
-			console.log(dicClassUnits);
+			
 			var compositeClassUnit = dicCompositeClassUnits[dicClassComposite[classUnit.UUID]];
 			for(var j in dependencies){
 				var dependency = dependencies[j];

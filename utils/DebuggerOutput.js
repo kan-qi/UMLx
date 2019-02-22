@@ -9,8 +9,6 @@
 	function writeJson(token, message, callbackfunc){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
 		var OutputDir = "./debug";
-//		console.log(token);
-//		console.log(OutputDir);
 		mkdirp(OutputDir, function(err) { 
 		fs.writeFile(OutputDir+'/'+token+'.json', JSON.stringify(message), function(err){
 			if(err){
@@ -20,15 +18,21 @@
 		});
 	}
 	
-	function writeJson2(token, message, callbackfunc){
+	function writeJson2(token, message, outputDir){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-		var OutputDir = "./data/OpenSource/debug";
+		if(!outputDir){
+			outputDir = "./data/OpenSource/debug";
+		}
 		fs.writeFileSync(OutputDir+'/'+token+'.json', JSON.stringify(message));
 	}
 	
-	function writeJson3(token, message, callbackfunc){
+	function writeJson3(token, message, outputDir){
 //		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-		var OutputDir = "./data/OpenSource/debug";
+		
+		if(!outputDir){
+			outputDir = "./data/OpenSource/debug";
+		}
+		
 		var duplicate = JSON.parse(JSON.stringify(message));
 		deleteAttrRecur(duplicate, "attachment")
 		fs.writeFileSync(OutputDir+'/'+token+'.json', JSON.stringify(duplicate));
@@ -36,8 +40,7 @@
 	
 	function writeTxt(token, message, callbackfunc){
 		var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-//		console.log(token);
-//		console.log(OutputDir);
+		
 		mkdirp(OutputDir, function(err) { 
 		fs.writeFile(OutputDir+'/'+token+'.txt', message, function(err){
 			if(err){
