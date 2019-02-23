@@ -1073,7 +1073,6 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
     Debug2.v().printf(res);
   }
   
-  
 /*
  * Derive call graphs from source code.
  */

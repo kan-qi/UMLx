@@ -51,11 +51,11 @@
 									transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
 								}
 								
-								modelDrawer.drawPrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase.dotty", function(){
+								modelDrawer.drawUSIMDiagram(useCase, domainModel, useCase.OutputDir+"/usim.dotty", function(){
 
 									console.log("use case is drawn");
 								});
-								modelDrawer.drawSimplePrecedenceDiagram(useCase, domainModel, useCase.OutputDir+"/useCase_simple.dotty", function(){
+								modelDrawer.drawTransactionsDiagram(useCase, domainModel, useCase.OutputDir+"/transactions.dotty", function(){
 
 									console.log("simple use case is drawn");
 								});

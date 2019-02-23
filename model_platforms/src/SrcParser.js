@@ -108,8 +108,20 @@
 						 cut: 0.7,
 						 tag:"S1W3L1"
 				 }
+				 
+				var clusterConfig = null;
+				 
+				if(modelInfo.clusterConfig === "S1W3L1"){
+					clusterConfig = S1W3L1;
+				}
+				else if(modelInfo.clusterConfig === "S2W3L3"){
+					clusterConfig = S2W3L3;
+				}
+				else {
+					clusterConfig = S1W1L1;
+				}
 				
-				modelInfo.clusterFile = null;
+//				modelInfo.clusterFile = null;
 				if(modelInfo.clusterFile){
 				componentInfo = componentIdentifier.identifyComponentsACDC(
 						codeAnalysisResults.callGraph, 
@@ -142,7 +154,8 @@
 					codeAnalysisResults.dicClassComposite,
 //					S2W3L3,
 //					S1W3L1,
-					S1W1L1,
+//					S1W1L1,
+					clusterConfig,
 					Model.OutputDir
 				);
 				}
@@ -234,6 +247,9 @@
 		var dicComponentDomainElement = {};
 
 		for(var i in dicComponents){
+
+			console.log("create domain model element")
+			
 			var component = dicComponents[i];
 			
 			var domainElement = {
@@ -254,8 +270,10 @@
 			var edge = callGraph.edges[i];
 			
 			var startNode = edge.start;
-			console.log("domain model element")
-			console.log(startNode);
+//			var startComponent = dicClassComponent[startNode.component.UUID];
+//			if(!startComponent){
+//				continue;
+//			}
 			var callComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var callDomainElement = domainElementsByID[callComponentUUID];
 			
@@ -263,7 +281,12 @@
 				continue;
 			}
 			
+			
 			var endNode = edge.end;
+//			var endComponent = dicClassComponent[endNode.component.UUID];
+//			if(!endComponent){
+//				continue;
+//			}
 			var calleeComponentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
 			var calleeDomainElement = domainElementsByID[calleeComponentUUID];
 			

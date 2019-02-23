@@ -141,6 +141,38 @@
 			}
 		}
 		
+		var debug = require("../../utils/DebuggerOutput.js");
+
+		var result = {
+			dicClassUnits: dicClassUnits,
+			dicCompositeClassUnits: dicCompositeClassUnits,
+			dicClassComposite: dicClassComposite,
+			dicMethodUnits: dicMethodUnits,
+			dicMethodClass: dicMethodClass,
+			callGraph: convertCallDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits),
+			accessGraph: convertAccessDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits),
+			extendsGraph: convertExtensionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits),
+			compositionGraph: convertCompositionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits),
+			typeDependencyGraph: convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, methodUnitsByName, dicMethodUnits),
+			referencedClassUnits: referencedClassUnits,
+			referencedCompositeClassUnits: referencedCompositeClassUnits,
+			dicCompositeSubclasses: dicCompositeSubclasses,
+			dicMethodParameters: dicMethodParameters
+		};
+	
+//		debug.writeJson2("converted-android-analysis-results-dicClassUnits", dicClassUnits);
+//		debug.writeJson2("converted-android-analysis-results-dicMethodUnits", dicMethodUnits);
+		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
+		
+		return result;
+	}
+	
+	
+	function convertAccessDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits){
 		//construct access graph
 		var accessGraph = {
 			nodes: [],
@@ -208,7 +240,10 @@
 			
 		}
 		
-		
+		return accessGraph;
+	}
+	
+	function convertCallDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits){
 		var callGraph = {
 				nodes: [],
 				edges: [],
@@ -267,37 +302,91 @@
 				
 			}
 		
-		var debug = require("../../utils/DebuggerOutput.js");
-
-		var result = {
-			dicClassUnits: dicClassUnits,
-			dicCompositeClassUnits: dicCompositeClassUnits,
-			dicClassComposite: dicClassComposite,
-			dicMethodUnits: dicMethodUnits,
-			dicMethodClass: dicMethodClass,
-			callGraph: callGraph,
-			accessGraph: accessGraph,
-			extendsGraph: convertExtensionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits),
-//			compositionGraph: compositionGraph,
-			typeDependencyGraph: convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, methodUnitsByName),
-			referencedClassUnits: referencedClassUnits,
-			referencedCompositeClassUnits: referencedCompositeClassUnits,
-			dicCompositeSubclasses: dicCompositeSubclasses,
-			dicMethodParameters: dicMethodParameters
-		};
 		
-		
-		debug.writeJson2("converted-android-analysis-results-dicClassUnits", dicClassUnits);
-		debug.writeJson2("converted-android-analysis-results-dicMethodUnits", dicMethodUnits);
-		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph);
-		debug.writeJson2("converted-android-analysis-results-typeDependencyGraph", result.typeDependencyGraph);
-		
-		return result;
+		return callGraph;
 	}
 	
-	function convertExtensionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits){
+	function convertCompositionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits){
 		//construct access graph
-		var typeDependencyGraph = {
+		var compositionGraph = {
+			nodes: [],
+			edges: [],
+			nodesComposite: [],
+			edgesComposite: []
+		};
+		
+		var dicNodes = {};
+		var dicNodesComposite = {};
+		
+		for(var i in androidAnalysisResults.compositionGraph){
+			var edge = androidAnalysisResults.compositionGraph[i];
+			var fromClass = dicClassUnits[edge.from.UUID];
+			var toClass = dicClassUnits[edge.to.UUID];
+			
+			if(!fromClass || !toClass){
+				continue;
+			}
+			
+			var fromNode = {
+					name: fromClass.name,
+					UUID: fromClass.UUID,
+					component: fromClass
+			}
+			
+			var toNode = {
+					name: toClass.name,
+					UUID: toClass.UUID,
+					component: toClass
+			}
+			
+			
+			if(!dicNodes[fromNode.UUID]){
+				compositionGraph.nodes.push(fromNode);
+				dicNodes[fromNode.UUID] = 1;
+			}
+			
+			if(!dicNodes[toNode.UUID]){
+				compositionGraph.nodes.push(toNode);
+				dicNodes[toNode.UUID] = 1;
+			}
+			
+			compositionGraph.edges.push({start: fromNode, end: toNode});
+			
+			var fromCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[fromNode.UUID]];
+			var toCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[toNode.UUID]];
+			
+			var fromNodeComposite = {
+					name: fromCompositeClassUnit.name,
+					UUID: fromCompositeClassUnit.UUID,
+					component: fromCompositeClassUnit
+			}
+			
+			var toNodeComposite = {
+					name: toCompositeClassUnit.name,
+					UUID: toCompositeClassUnit.UUID,
+					component: toCompositeClassUnit
+			}
+			
+			if(!dicNodes[fromNodeComposite.UUID]){
+				compositionGraph.nodesComposite.push(fromNodeComposite);
+				dicNodesComposite[fromNodeComposite.UUID] = 1;
+			}
+			
+			if(!dicNodes[toNodeComposite.UUID]){
+				compositionGraph.nodesComposite.push(toNodeComposite);
+				dicNodesComposite[toNodeComposite.UUID] = 1;
+			}
+			
+			compositionGraph.edgesComposite.push({start: fromNodeComposite, end: toNodeComposite});
+			
+		}
+		
+		return compositionGraph;
+	}
+	
+	function convertExtensionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits){
+		//construct extension graph
+		var extensionGraph = {
 			nodes: [],
 			edges: [],
 			nodesComposite: [],
@@ -330,16 +419,16 @@
 			
 			
 			if(!dicNodes[fromNode.UUID]){
-				typeDependencyGraph.nodes.push(fromNode);
+				extensionGraph.nodes.push(fromNode);
 				dicNodes[fromNode.UUID] = 1;
 			}
 			
 			if(!dicNodes[toNode.UUID]){
-				typeDependencyGraph.nodes.push(toNode);
+				extensionGraph.nodes.push(toNode);
 				dicNodes[toNode.UUID] = 1;
 			}
 			
-			typeDependencyGraph.edges.push({start: fromNode, end: toNode});
+			extensionGraph.edges.push({start: fromNode, end: toNode});
 			
 			var fromCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[fromNode.UUID]];
 			var toCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[toNode.UUID]];
@@ -357,23 +446,23 @@
 			}
 			
 			if(!dicNodes[fromNodeComposite.UUID]){
-				typeDependencyGraph.nodesComposite.push(fromNodeComposite);
+				extensionGraph.nodesComposite.push(fromNodeComposite);
 				dicNodesComposite[fromNodeComposite.UUID] = 1;
 			}
 			
 			if(!dicNodes[toNodeComposite.UUID]){
-				typeDependencyGraph.nodesComposite.push(toNodeComposite);
+				extensionGraph.nodesComposite.push(toNodeComposite);
 				dicNodesComposite[toNodeComposite.UUID] = 1;
 			}
 			
-			typeDependencyGraph.edgesComposite.push({start: fromNodeComposite, end: toNodeComposite});
+			extensionGraph.edgesComposite.push({start: fromNodeComposite, end: toNodeComposite});
 			
 		}
 		
-		return typeDependencyGraph;
+		return extensionGraph;
 	}
 	
-	function convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, methodUnitsByName){
+	function convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, methodUnitsByName, dicMethodUnits){
 		//construct access graph
 		var typeDependencyGraph = {
 			nodesAttr: [],

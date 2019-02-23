@@ -183,7 +183,7 @@
 //		return component._id+'[label="'+componentInternal+'" shape=Mrecord];'
 //	}
 
-	function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
+	function drawUSIMDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
 		var activities = UseCase.Activities;
 		var precedenceRelations = UseCase.PrecedenceRelations;
 		console.log(precedenceRelations);
@@ -340,7 +340,7 @@
 		
 	}
 
-	function drawSimplePrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
+	function drawTransactionsDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
 		var activities = UseCase.Activities;
 		var precedenceRelations = UseCase.PrecedenceRelations;
 		console.log(precedenceRelations);
@@ -558,8 +558,8 @@
 	}
 	
 	module.exports = {
-			drawSimplePrecedenceDiagram:drawSimplePrecedenceDiagramFunc,
-			drawPrecedenceDiagram: drawPrecedenceDiagramFunc,
+			drawTransactionsDiagram:drawTransactionsDiagramFunc,
+			drawUSIMDiagram: drawUSIMDiagramFunc,
 			drawDomainModel: createDomainModelDiagram,
 			drawComponentDiagram: drawComponentDiagram,
 			drawClassDiagram: drawClassDiagram,
