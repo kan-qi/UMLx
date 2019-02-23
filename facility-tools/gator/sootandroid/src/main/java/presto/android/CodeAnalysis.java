@@ -543,20 +543,20 @@ public String constructCompositionGraph(List<ClassUnit> classUnits, List<Composi
 	int i = 1;
 	// traverse each node
 	for (ClassUnit classUnit : classUnits) {
-		String tailName = classUnit.name;
-		String tailUUID = classUnit.uuid;		
+		String startName = classUnit.name;
+		String startUUID = classUnit.uuid;		
 		
 		List<AttrUnit> tempAttributes = classUnit.getAttr();	
 		for (AttrUnit attr : tempAttributes) {
-			if (classUnitByName.containsKey(attr.type) && classUnitByName.containsKey(tailName)) {
+			if (classUnitByName.containsKey(attr.type) && classUnitByName.containsKey(startName)) {
 				ClassUnit headNode = (ClassUnit)classUnitByName.get(attr.type);
-				String headName = headNode.name;
-				String headUUID = headNode.uuid;
+				String endName = headNode.name;
+				String endUUID = headNode.uuid;
 				if (i==1) {
-					res += "\""+i+"\":{\"tail\":{\"name\":\""+tailName+"\",\"uuid\":\""+tailUUID+"\"},\"head\":{\"name\":\""+headName+"\",\"uuid\":\""+headUUID+"\"}}";	
+					res += "\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}}";	
 					
 				}else {
-					res += ",\""+i+"\":{\"tail\":{\"name\":\""+tailName+"\",\"uuid\":\""+tailUUID+"\"},\"head\":{\"name\":\""+headName+"\",\"uuid\":\""+headUUID+"\"}}";
+					res += ",\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}}";
 				}
 				i++;
 			}
