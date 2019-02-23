@@ -546,11 +546,20 @@ public String constructCompositionGraph(List<ClassUnit> classUnits, List<Composi
 		String tailName = classUnit.name;
 		String tailUUID = classUnit.uuid;		
 		
-		List<AttrUnit> tempAttributes = classUnit.getAttr();
+		List<AttrUnit> tempAttributes = classUnit.getAttr();	
 		for (AttrUnit attr : tempAttributes) {
-			String headJSON = attr.toJSONString();
-			res += "\"" + i + "\":{\"tail\":{\"name\":\"" + tailName + "\",\"uuid\":\"" + tailUUID + "\"},\"head\":" + headJSON;
-			i = i+1;
+			if (classUnitByName.containsKey(attr.type) && classUnitByName.containsKey(tailName)) {
+				ClassUnit headNode = (ClassUnit)classUnitByName.get(attr.type);
+				String headName = headNode.name;
+				String headUUID = headNode.uuid;
+				if (i==1) {
+					res += "\""+i+"\":{\"tail\":{\"name\":\""+tailName+"\",\"uuid\":\""+tailUUID+"\"},\"head\":{\"name\":\""+headName+"\",\"uuid\":\""+headUUID+"\"}}";	
+					
+				}else {
+					res += ",\""+i+"\":{\"tail\":{\"name\":\""+tailName+"\",\"uuid\":\""+tailUUID+"\"},\"head\":{\"name\":\""+headName+"\",\"uuid\":\""+headUUID+"\"}}";
+				}
+				i++;
+			}
 		}
 	}
 	res += "}";
