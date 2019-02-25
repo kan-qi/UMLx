@@ -889,6 +889,65 @@
 			return classClusters;
 	}
 	
+
+	function cutByRatio(clusterTree, ratio){
+		
+		var largestDis = clusterTree.dis;
+		
+		var cutoffDis = ratio*largestDistance;
+		
+		var nodesNullAll = [];
+		var nodesClassAll = [];
+		var edgesAll = [];
+
+		var clusteredClasses = findClusters(classes, metric, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, clusteringConfig, cutffDis);
+		//draw the clusters
+		
+		drawClusteringGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "clusteredComponents.dotty");
+		var metric = calculateWeight(callGraph, accessGraph, classes, classDic, methods, attrs, clusteringConfig.w);
+		
+//		debug.writeJson2("nodesNullAll", nodesNullAll, outputDir);
+//		debug.writeJson2("clustered_classes_"+clusteringConfig.tag, clusteredClasses, outputDir);
+		
+//		var debug = require("../../utils/DebuggerOutput.js");
+//		debug.writeJson2("clusters_"+clusteringConfig.tag, clusters, outputDir);
+
+		var dicComponents = {};
+		var dicClassComponent = {};  // {classUnit.UUID: component.UUID}
+
+		for(var i in clusters){
+			var classUnits = clusters[i];
+
+			//determine the component name by using the top level class or the class that has the largest number of methods.
+			// for now the simple implementation is to use the first class unit.
+
+			if(classUnits.length < 1){
+				continue;
+			}
+
+			var component = {
+					name: classUnits[0].name,
+					UUID: uuidv4(),
+					classUnits: classUnits
+			}
+
+			dicComponents[component.UUID] = component;
+
+			for (var j in classUnits) {
+				dicClassComponent[classUnits[j].UUID] = component.UUID;
+			}
+		}
+		
+//		drawComponentGraph(dicComponents, outputDir, "agglomerative_clustering_"+clusteringConfig.tag+".dotty");
+		
+		return {
+			dicComponents: dicComponents,
+			dicClassComponent: dicClassComponent
+		};
+		
+	
+	}
+	
 	function identifyComponentsACDC(
 			callGraph, 
 			accessGraph, 

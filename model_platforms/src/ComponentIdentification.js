@@ -95,150 +95,79 @@
 			methods.push(methodNum);
 			attrs.push(attrNum);
 		}
-//		
+
 		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson2("call_metrics", callMetric, outputDir);
-//		debug.writeJson2("access_metrics", accessMetric, outputDir);
-//		debug.writeJson2("typeDependency_metrics", typeDependencyMetric, outputDir);
-//		debug.writeJson2("extends_metrics", extendsMetric, outputDir);
-//		debug.writeJson2("composition_metrics", compositionMetric, outputDir);
-//		
-//		var metric = zeroArray(classes.length, classes.length);
-//		var relations = [];
-//		
+
 		var metric = calculateWeight(callGraph, accessGraph, classes, classDic, methods, attrs, clusteringConfig.w);
-
-//		if(clusteringConfig.w === 1){
-//		//need to parameterize the weighting schema
-//		//binary weighting schema
-//			
-//			//composite classes are used for metrics claculation and clustering
-//			var callMetric = calculateCallMetric(callGraph, classes, classDic, methods);
-//			var accessMetric = calculateAccessMetric(accessGraph, classes, classDic, methods, attrs);
-//			var typeDependencyMetric = calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods);
-//			var extendsMetric = calculateExtendsMetric(extendsGraph, classes, classDic, methods);
-//			var compositionMetric = calculateCompositionMetric(compositionGraph, classes, classDic, methods);
-//			
-//			for (var i = 0; i < classes.length; i++) {
-//				for (var j = 0; j < classes.length; j++) {
-//				var connectionCoef = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j] + extendsMetric[i][j] + compositionMetric[i][j];
-//				if(connectionCoef > 0){
-//				metric[i][j] = 1;
-//				}
-//				else{
-//				metric[i][j] = 0;
-//				}
-//				}
-//			}
-//		}
-//		else if(clusteringConfig.w === 2){
-//		//absolute weighting schema
-//		//composite classes are used for metrics claculation and clustering
-//			
-//		var callMetric = calculateCallMetric(callGraph, classes, classDic, methods);
-//		var accessMetric = calculateAccessMetric(accessGraph, classes, classDic, methods, attrs);
-//		var typeDependencyMetric = calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods);
-//		var extendsMetric = calculateExtendsMetric(extendsGraph, classes, classDic, methods);
-//		var compositionMetric = calculateCompositionMetric(compositionGraph, classes, classDic, methods);
-//			
-//		for (var i = 0; i < classes.length; i++) {
-//			for (var j = 0; j < classes.length; j++) {
-//				metric[i][j] = callMetric[i][j] + accessMetric[i][j] + typeDependencyMetric[i][j] + extendsMetric[i][j] + compositionMetric[i][j];
-//			}
-//		}
-//		}
-//		else if(clusteringConfig.w === 3){
-//		//relative weighting schema
-//		//need to evaluate the number of classes a class is connected with
-//			
-//		//composite classes are used for metrics claculation and clustering
-//		var callMetric = calculateCallMetric(callGraph, classes, classDic, methods, true);
-//		var accessMetric = calculateAccessMetric(accessGraph, classes, classDic, methods, attrs, true);
-//		var typeDependencyMetric = calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods, true);
-//		var extendsMetric = calculateExtendsMetric(extendsGraph, classes, classDic, methods, true);
-//		var compositionMetric = calculateCompositionMetric(compositionGraph, classes, classDic, methods, true);
-//			
-////		var frequencyTabCall = zeroList(classes.length, 1);
-////		var frequencyTabAccess = zeroList(classes.length, 1);
-////		var frequencyTabTypeDependency = zeroList(classes.length, 1);
-////		var frequencyTabExtends = zeroList(classes.length, 1);
-////		var frequencyTabComposition = zeroList(classes.length, 1);
-////		var NumC= classes.length;
-////		
-////		for(var i = 0; i < classes.length; i++){
-////			for (var j = 0; j < classes.length; j++) {
-////				if(callMetric[i][j]){
-////					frequencyTabcalls[i]++;
-////				}
-////				if(accessMetric[i][j]){
-////					frequencyTabAccess[i]++;
-////				}
-////				if(typeDependencyMetric[i][j]){
-////					frequencyTabTypeDependency[i]++;
-////				}
-////				if(extendsMetric[i][j]){
-////					frequencyTabExtends[i]++;
-////				}
-////				if(compositionMetric[i][j]){
-////					frequencyTabComposition[i]++;
-////				}
-////			}
-////		}
-////		
-//		//evaluate the normalized weight.
-//		for (var i = 0; i < classes.length; i++) {
-//			for (var j = 0; j < classes.length; j++) {
-//				metric[i][j] = callMetric[i][j]*Math.log(NumC/frequencyTabcalls[j]) + 
-//				accessMetric[i][j]*Math.log(NumC/frequencyTabAccess[j]) + 
-//				typeDependencyMetric[i][j]*Math.log(NumC/frequencyTabTypeDependency[j]) + 
-//				extendsMetric[i][j]*Math.log(NumC/frequencyTabExtends[j]) + 
-//				compositionMetric[i][j]*Math.log(NumC/frequencyTabComposition[j]);
-//			}
-//		}
-//		}
-		
 		debug.writeJson2("clustering_metrics_"+clusteringConfig.tag, metric, outputDir);
-
-		var nodesNullAll = [];
-		var nodesClassAll = [];
-		var edgesAll = [];
-
-		var clusteredClasses = findClusters(classes, metric, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, clusteringConfig);
-		//draw the clusters
-		drawClusteringGraph(nodesNullAll, nodesClassAll, edgesAll, outputDir, "clusteredComponents.dotty");
 		
 		var nodesNullAllTree = [];
 		var nodesClassAllTree = [];
 		var edgesAllTree = [];
 
-
 		var clusterTree = findClusters(classes, metric, nodesNullAllTree, nodesClassAllTree, edgesAllTree, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, clusteringConfig);
 		//draw the tree without cutting
 		drawClusteringGraph(nodesNullAllTree, nodesClassAllTree, edgesAllTree, outputDir, "clusteringTree.dotty");
+		debug.writeJson2("clustering_tree_"+clusteringConfig.tag, clusterTree, outputDir);
 		
+		var clusteringResult = cutByLevel(clusterTree, clusteringConfig, outputDir);
+	
+		drawComponentGraph(clusteringResult.dicComponents, outputDir, "agglomerative_clustering_"+clusteringConfig.tag+".dotty");
+		
+		return clusteringResult
+		
+	}
+	
+	function cutByLevel(clusteredClasses, clusteringConfig, outputDir){
 		var clusters = []; // [[component1], [component2], ...]
 
-		
 		//for each identified cluster we apply a cut to to sperate into the components
+		var rootClusterClass = {
+				size: clusteredClasses.length,
+				children: []
+		}
+		
+		var maxLevel = 0;
 		for(var i in clusteredClasses){
 		var clusteredClass = clusteredClasses[i];
-		var cutoffDepth = clusteringConfig.cut*clusteredClass.depth; //there might be multiple criterion to determining the cutoff tree
+		if(maxLevel < clusteredClass.depth){
+			maxLevel = clusteredClass.depth;
+		}
+		rootClusterClass.children.push(clusteredClass);
+//		var cutoffDepth = clusteringConfig.cut*clusteredClass.depth; //there might be multiple criterion to determining the cutoff tree
+		}
+		
+		rootClusterClass.depth = maxLevel+1;
+		
+		var cutoffDepth = clusteringConfig.cut*rootClusterClass.depth;
+//		var cutoffDepth = 3;
+//		console.log("cutoff");
+//		console.log(cutoffDepth);
+//		cutoffDepth = 12;
+//		process.exit();
+		
 
 		var currentLevel = [];
 		var currentLevelDepth = 0;
-		currentLevel.push(clusteredClass);
+		currentLevel.push(rootClusterClass);
 		var utilityCluster = []; //the classes that are not related to other components are regarded as utility components.
+		
+		console.log("test nest level");
 		while(currentLevelDepth < cutoffDepth){
 			var nextLevel = [];
 			var nodeToExpand = null;
+			
 			while ((nodeToExpand = currentLevel.shift())){
+				
 				if (nodeToExpand.size == 1 && nodeToExpand.hasOwnProperty('value')) {
 					utilityCluster.push(nodeToExpand.value);
+//					clusters.push([nodeToExpand.value]);
 				}
 				else {
 					nextLevel = nextLevel.concat(nodeToExpand.children);
 				}
 			}
+			
 			currentLevel = nextLevel;
 			currentLevelDepth++;
 		}
@@ -262,11 +191,13 @@
 			}
 			clusters.push(newComponent)
 		}
-		}
 		
+		console.log("clusters");
+		console.log(clusters);
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson2("clusters_"+clusteringConfig.tag, clusters, outputDir);
-
+//		process.exit();
+		
 		var dicComponents = {};
 		var dicClassComponent = {};  // {classUnit.UUID: component.UUID}
 
@@ -293,13 +224,11 @@
 			}
 		}
 		
-		drawComponentGraph(dicComponents, outputDir, "agglomerative_clustering_"+clusteringConfig.tag+".dotty");
-
 		return {
 			dicComponents: dicComponents,
 			dicClassComponent: dicClassComponent
 		};
-
+		
 	}
 	
 
@@ -386,18 +315,21 @@
 		console.log("call metric start");
 		
 		var metrics = zeroArray(classes.length, classes.length);
-
+		
 		var calls = zeroArray(classes.length, classes.length);
 		var callers = {};
 		var callees = {};
 		var calledTotal = zeroList(classes.length, 1);
 		var callerClasses = {};
+		
+		var connectors = zeroArray(classes.length, classes.length);
+		
 		for(var i in classDic){
 			callerClasses[classDic[i]] = new Set([i]);
 		}
+		
 		var calleeClasses = {};
 		for(var i in classDic){
-//			calleeClasses[i] = new Set([classes[i].UUID]);
 			calleeClasses[classDic[i]] = new Set([i]);
 		}
 
@@ -411,19 +343,12 @@
 
 			calls[col][row]++;
 			calledTotal[row]++;
+			connectors[col][row]++;
 			
-//			if(!callerClasses[col]){
-//				callerClasses[col] = new Set([edge.start.component.UUID]);
-//			}
-//			else 
 			if (!(edge.start.component.UUID in callerClasses[col])) {
 				callerClasses[col].add(edge.start.component.UUID);
 			}
 			
-//			if(!calleeClasses[row]){
-//				calleeClasses[row] = new Set([edge.end.component.UUID]);
-//			}
-//			else 
 			if (!(edge.end.component.UUID in calleeClasses[row])) {
 				calleeClasses[row].add(edge.end.component.UUID);
 			}
@@ -476,18 +401,12 @@
 			access[col][row]++;
 			accessedTotal[row]++;
 			
-//			if(!accessorClasses[col]){
-//				accessorClasses[col] = new Set([edge.start.component.UUID]);
-//			}
-//			else 
+			connectors[col][row]++;
+			
 			if (!(edge.start.component.UUID in accessorClasses[col])) {
 				accessorClasses[col].add(edge.start.component.UUID);
 			}
 			
-//			if(!accessedClasses[row]){
-//				accessedClasses[row] = new Set([edge.end.component.UUID]);
-//			}
-//			else 
 			if (!(edge.end.component.UUID in accessedClasses[row])) {
 				accessedClasses[row].add(edge.end.component.UUID);
 			}
@@ -514,10 +433,11 @@
 		}
 		
 		
-		for (var key1 in accessors) {
-//			if (accessors.hasOwnProperty(key1)) {
-				for (var key2 in accessors[key1]) {
-//					if (accessors[key1].hasOwnProperty(key2)) {
+		for (var key1 in connectors) {
+				for (var key2 in connectors) {
+					if(connectors[key1][key2] == 0){
+						continue;
+					}	
 					
 						if(type === 1){
 							//binary weight
@@ -550,9 +470,7 @@
 							
 							}
 						}
-//					}
 				}
-//			}
 		}
 		
 		return metrics;
@@ -569,235 +487,6 @@
 		
 		return newSet;
 	}
-
-//	function calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods, relative) {
-//		
-//		  console.log("type dependency metric start");
-//
-//		  var typeDependencyMetrics = zeroArray(classes.length, classes.length);
-//		  
-//		  if(!typeDependencyGraph){
-//			  return typeDependencyMetrics;
-//		  }
-//
-//		  console.log("typeDependencyGraph");
-//
-//		var attrs = zeroArray(classes.length, classes.length); //  the number of attributes of class Cli whose type is class Clj.
-//		var paras = zeroArray(classes.length, classes.length);
-//
-//			for (var i in typeDependencyGraph.edgesAttrComposite) {
-//				var edge = typeDependencyGraph.edgesAttrComposite[i];
-//				var col = classDic[edge.start.component.UUID];
-//				var row = classDic[edge.end.component.UUID];
-//				attrs[col][row]++;
-//			}
-//			
-//			for (var i in typeDependencyGraph.edgesPComposite) {
-//				var edge = typeDependencyGraph.edgesPComposite[i];
-//				var col = classDic[edge.start.component.UUID];
-//				var row = classDic[edge.end.component.UUID];
-//				paras[col][row]++;
-//			}
-//
-//		for (var i = 0; i < classes.length; i++) {
-//			for (var j = 0; j < classes.length; j++) {
-//				var addition = 0;
-//				if (methods[i] != 0) {
-//					addition = paras[i][j]/methods[i];
-//				}
-//				typeDependencyMetrics[i][j] = attrs[i][j]+addition;
-//			}
-//		}
-//		
-//		console.log("type dependency metric end");
-//		
-//		return typeDependencyMetrics;
-//	}
-//
-//	function calculateAccessMetric(accessGraph, classes, classDic, methods, attrs, relative) {
-//		console.log("access metric")
-//		
-//		var access = zeroArray(classes.length, classes.length);
-//		var accessedTotal = zeroList(classes.length);
-//		
-//		var accessors = {};
-//		var accessed = {};
-//		var accessMetrics = zeroArray(classes.length, classes.length);
-//
-//		for (var i in accessGraph.edgesComposite) {
-//			var edge = accessGraph.edgesComposite[i];
-//			var col = classDic[edge.start.component.UUID];
-//			var row = classDic[edge.end.component.UUID];
-//			if(col == null || row == null){
-//				continue;
-//			}
-//			access[col][row]++;
-//			accessedTotal[row]++;
-//
-//			if (!(col in accessors)) {
-//				accessors[col] = {}
-//			}
-//			if (!(row in accessors[col])) {
-//				accessors[col][row] = new Set([edge.start.component.UUID]);
-//			}
-//			else {
-//				accessors[col][row].add(edge.start.component.UUID);
-//			}
-//
-//			if (!(col in accessed)) {
-//				accessed[col] = {}
-//			}
-//			if (!(row in accessed[col])) {
-//				accessed[col][row] = new Set([edge.end.component.UUID]);
-//			}
-//			else {
-//				accessed[col][row].add(edge.end.component.UUID);
-//			}
-//		}
-//
-//		for (var key1 in accessors) {
-////			if (accessors.hasOwnProperty(key1)) {
-//				for (var key2 in accessors[key1]) {
-////					if (accessors[key1].hasOwnProperty(key2)) {
-//						if(relative){
-//							accessMetrics[parseInt(key1)][parseInt(key2)] = access[parseInt(key1)][parseInt(key2)]/attrs[parseInt(key2)]*(Math.log(classes.length)/accessedTotal[parseInt(key2)])
-//							+ access[parseInt(key2)][parseInt(key1)]/attrs[parseInt(key1)]*(Math.log(classes.length)/accessedTotal[parseInt(key1)]);
-//						}
-//						else{
-//							accessMetrics[parseInt(key1)][parseInt(key2)] = access[parseInt(key1)][parseInt(key2)]/attrs[parseInt(key2)]*
-//							+ access[parseInt(key2)][parseInt(key1)]/attrs[parseInt(key1)];
-//						}
-////					}
-//				}
-////			}
-//		}
-//		
-//		return accessMetrics;
-//
-//	}
-//
-//	function calculateCallMetric(callGraph, classes, classDic, methods, relative){
-//		console.log("call metric start");
-//
-//		var calls = zeroArray(classes.length, classes.length);
-//		var callers = {};
-//		var callees = {};
-//		var callMetrics = zeroArray(classes.length, classes.length);
-//		var calledTotal = zeroList(classes.length, 1);
-//
-//		for (var i in callGraph.edgesComposite) {
-//			var edge = callGraph.edgesComposite[i];
-//			var col = classDic[edge.start.component.UUID];
-//			var row = classDic[edge.end.component.UUID];
-//			if(col == null || row == null){
-//				continue;
-//			}
-//
-//			calls[col][row]++;
-//			
-//			calledTotal[row]++;
-//
-//			if (!(col in callers)) {
-//				callers[col] = {}
-//			}
-//			if (!(row in callers[col])) {
-//				callers[col][row] = new Set([edge.start.component.UUID]);
-//			}
-//			else if (!(callers[col][row].has(edge.start.component.UUID))) {
-//				callers[col][row].add(edge.start.component.UUID);
-//			}
-//
-//			if (!(col in callees)) {
-//				callees[col] = {}
-//			}
-//			if (!(row in callees[col])) {
-//				callees[col][row] = new Set([edge.end.component.UUID]);
-//			}
-//			else if (!(callees[col][row].has(edge.end.component.UUID))) {
-//				callees[col][row].add(edge.start.component.UUID);
-//			}
-//		}
-//
-//		for (var key1 in callers) {
-////			if (callers.hasOwnProperty(key1)) {
-//				for (var key2 in callers[key1]) {
-////					if (callers[key1].hasOwnProperty(key2)) {
-//						// callersNumber[parseInt(key1)][parseInt(key2)] = callers[key1][key2].size;
-//						// calleesNumber[parseInt(key1)][parseInt(key2)] = callees[key1][key2].size;
-////						callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/methods[parseInt(key1)]*(callers[key1][key2].size+callees[key1][key2].size)/(methods[parseInt(key1)]+methods[parseInt(key2)]);
-//						if(relative){
-//							callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/methods[parseInt(key2)]*(Math.log(classes.length)/calledTotal[parseInt(key2)])
-//								+ calls[parseInt(key2)][parseInt(key1)]/methods[parseInt(key1)]*(Math.log(classes.length)/calledTotal[parseInt(key1)]);
-//						}
-//						else{
-//							callMetrics[parseInt(key1)][parseInt(key2)] = calls[parseInt(key1)][parseInt(key2)]/methods[parseInt(key2)] 
-//							+ calls[parseInt(key2)][parseInt(key1)]/methods[parseInt(key1)];
-//						}
-////					}
-//				}
-////			}
-//		}
-//		
-//		console.log("call metric end");
-//		
-//		return callMetrics;
-//		
-//	}
-//
-//	function calculateExtendsMetric(extendsGraph, classes, classDic, methods) {
-//		var extendsMetrics = zeroArray(classes.length, classes.length);
-//
-//		if (!extendsGraph) {
-//			return extendsMetrics;
-//		}
-//
-//		for (var i in extendsGraph.edges) {
-//			var edge = extendsGraph.edges[i];
-//			var col = classDic[edge.start.component.UUID];
-//			var row = classDic[edge.end.component.UUID];
-//			extendsMetrics[col][row]++;
-//		}
-//
-//		return extendsMetrics;
-//	}
-//
-//	function calculateCompositionMetric(compositionGraph, classes, classDic, methods) {
-//		var compositionMetrics = zeroArray(classes.length, classes.length);
-//
-//		if (!compositionGraph) {
-//			return compositionMetrics;
-//		}
-//
-//		for (var i in compositionGraph.edges) {
-//			var edge = compositionGraph.edges[i];
-//			var col = classDic[edge.start.component.UUID];
-//			var row = classDic[edge.end.component.UUID];
-//			if(!col || !row){
-//				continue;
-//			}
-//			compositionMetrics[col][row]++;
-//		}
-//
-//		return compositionMetrics;
-//	}
-
-// link => 0: SINGLE_LINKAGE; 1: CONPLETE_LINKAGE; 2: AVERAGE_LINKAGE
-	// coupling metric table for class c1 to c5
-	//	   c1  c2  c3  c4  c5
-	// c1 [  ,   ,   ,   ,   ]
-	// c2 [  ,   ,   ,   ,   ]
-	// c3 [  ,   ,   ,   ,   ]
-	// c4 [  ,   ,   ,   ,   ]
-	// c5 [  ,   ,   ,   ,   ]
-	// true: W(i, j) > threshold, class i has the relatively strong relationship to class j
-	// var metrics = [
-	//     [true, false, true, false, true],
-	//     [false, true, false, false, true],
-	//     [false, true, true, true, false],
-	//     [false, true, false, false, false],
-	//     [false, true, true, false, false]
-	// ];
-	
 	
 	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, clusteringConfig, threshold) {
 
@@ -813,81 +502,59 @@
 			for(var j in metric){
 				indMetric.push(metric[j]);
 			}
+			
 			indMetrics.push(indMetric);
 		}
 
 		var linkage = null;
 		
 		if (clusteringConfig.l == 1) {
-//			linkage = clusterfck.SINGLE_LINKAGE;
 			linkage = "single"
 		}
 		else if (clusteringConfig.l == 2) {
-//			linkage = clusterfck.COMPLETE_LINKAGE;
-			linkage = "average"
+			linkage = "average";
 		}
 		else {
-//			linkage = clusterfck.AVERAGE_LINKAGE;
-			linkage = "complete";
+			linkage = "complete"
 		}
-		
-
-//		console.log("computation link");
-//		console.log(clusterfck.COMPLETE_LINKAGE);
-//		console.log(linkage);
-		
+	
 		var distance = null;
 		
 		if (clusteringConfig.s == 1) {
-			distance = distanceJaccSimi;
-		}
-		else if (clusteringConfig.s == 2) {
 			distance = distanceEucli;
 		}
+		else if (clusteringConfig.s == 2) {
+			distance = distanceJacc;
+		}
 		else {
-			distance = distanceCamb;
+			distance = distanceUnbEllenberg;
 		}
 
 		var clusters = clusterfck.hcluster(indMetrics, distance, linkage);
+		if(!Array.isArray(clusters)){
+			clusters = [clusters];
+		}
 		
-//		console.log("clusterfck");
-//		console.log(clusters);
-		
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson2("clusterfck", clusters);
-		
-//		console.log("metrics");
-//		console.log(indMetrics.length);
-//		console.log(indMetrics);
-		
-//		console.log(distance);
-		
-//		process.exit();
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson2("clusterfck", clusters);
 		
 		var classClusters = [];
 		var ind = 0
 		for (var i in clusters) {
 			var cluster = clusters[i];
 			
-//			console.log("examine cluster");
-//			console.log(cluster);
-			 
 			nodesNull = [];
 			nodesClass = [];
 			edges = [];
 			var dis = calculateDis(cluster, clusteringConfig.l, distance);
 			
-			console.log("dis");
-			console.log(dis);
-			
-//			process.exit();
-			
 			var startNode = {
 				name: 'c'+ind,
 				distance: dis
 			}
+			
 			ind++;
-			var classCluster = convertTree(cluster, classArray, nodesNull, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, linkage, distance);
+			var classCluster = convertTree(cluster, classArray, nodesNull, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, clusteringConfig.l, distance);
 			nodesClassAll.push(nodesClass);
 			nodesNullAll.push(nodesNull);
 			edgesAll.push(edges);
@@ -910,18 +577,23 @@
 	}
 	
 	// JaccSimi distance
-	function distanceJaccSimi(a, b) {
-		  var d = 0;
+	function distanceJacc(a, b) {
 		  var inter = 0
 		  var union = 0
+		  
 		  for (var i = 1; i < a.length; i++) {
 		    if (a[i] && b[i]) {
 		      inter++;
+		      union++;
 		    }
-		    if (a[i] || b[i]) {
+		    else if (a[i] && !b[i]) {
+		      union++;
+		    }
+		    else if (!a[i] && b[i]){
 		      union++;
 		    }
 		  }
+		  
 		  var JaccSimi;
 		  if (union == 0) {
 		    JaccSimi = 0
@@ -929,8 +601,8 @@
 		  else {
 		    JaccSimi = inter/union;
 		  }
-		  d = 1 - JaccSimi;
-		  return d;
+		  
+		  return 1-JaccSimi;
 	}
 	
 	// Euclidean distance
@@ -942,70 +614,86 @@
 		  return Math.sqrt(d);
 	}
 	
-	// Camberra distance
-	function distanceCamb(a, b) {
-		  var d = 0;
+	// Ellenberg distance
+	function distanceUnbEllenberg(a, b) {
+		  var Ma = 0
+		  var Mb = 0
+		  var Mc = 0
+		  
 		  for (var i = 1; i < a.length; i++) {
-		    d += Math.abs(a[i]-b[i])/Math.abs(a[i]+b[i])
+		    if (a[i] && b[i]) {
+		      Ma += a[i] + b[i];
+		    }
+		    else if (a[i] && !b[i]) {
+		      Mb++;
+		    }
+		    else if (!a[i] && b[i]){
+		      Mc++;
+		    }
 		  }
-		  return d;
+		  
+		  var unbEllenberg = 0;
+		  if (1/2*Ma + Mb + Mc == 0) {
+			  unbEllenberg = 0
+		  }
+		  else {
+			  unbEllenberg = (1/2*Ma)/(1/2*Ma + Mb + Mc);
+		  }
+		  
+		  return 1-unbEllenberg;
 	}
 
 	function calculateDis(node, linkage, distance) {
 
-		var dis = null;
+		var dis = -1;
+		
+//		console.log("calculating distance");
+		
     	if (node.left && node.right) {
 			var left = findAllClass(node.left);
+//			console.log("left");
+//			console.log(left.length);
 			var right = findAllClass(node.right);
+//			console.log("right");
+//			console.log(right.length);
 			var sum = 0;
 			var count = 0;
-			if (linkage == 1) {
-				dis = Number.MAX_VALUE;
-			}
-			else if (linkage == 2) {
-				dis = Number.MIN_VALUE;
-			}
+			var max = Number.NEGATIVE_INFINITY;
+			var min = Number.POSITIVE_INFINITY;
 			for (var i in left) {
 				var a = left[i];
 				for (var j in right) {
 					var b = right[j];
 					var d = distance(a, b);
-	
-					if (linkage == 1) {
-						if (d < dis) {
-							dis = d;
-						}
+					console.log("distance between a and b");
+					console.log(d);
+					sum += d;
+					count++;
+					
+					if(d > max){
+						max = d;
 					}
-					else if (linkage == 2) {
-						if (d > dis) {
-							dis = d;
-						}
-					}
-					else if (linkage == 3) {
-						sum += d;
-						count++;
+					
+					if(d < min){
+						min = d;
 					}
 				}
 			}
-		}
-		else {
-			dis = -1;
-		}
-		
-		if (linkage == 1 && dis == Number.MAX_VALUE) {
-			dis = null;
-		}
-		else if (linkage == 2 && dis == Number.MIN_VALUE) {
-			dis = null;
-		}
-		else if (linkage == 3) {
-			if (count == 0) {
-				dis = 0;
+			
+			if (linkage === 1 && max != Number.NEGATIVE_INFINITY) {
+				dis = max;
 			}
-			else {
-				dis = sum/count;
+			else if (linkage === 2 && min != Number.POSITIVE_INFINITY) {
+				dis = min;
 			}
+			else if (linkage === 3 && count !== 0) {
+					dis = sum/count;
+			}
+			
 		}
+    	
+    	console.log("dis");
+    	console.log(dis);
 
 		return dis;
 
@@ -1030,8 +718,6 @@
 				for (var i in children) {
 					var childClass = {};
 					var child = dicClassUnits[children[i]];
-					console.log('find child');
-					console.log(child);
 					if(!child){
 						continue;
 					}
@@ -1043,6 +729,7 @@
 				}
 				classClusters["children"] = childrenClasses;
 				classClusters["depth"] = 1;
+				
 			}
 			else {
 				var children = [];
@@ -1050,7 +737,7 @@
 				for (var property in cluster) {
 					if (property == "left" || property == "right") {
 						var dis = calculateDis(cluster[property], linkage, distance);
-
+		
 						var nodeF = null;
 						if (cluster[property]["size"] != 1) {
 							var endNode = {
@@ -1071,13 +758,14 @@
 							depth = child.depth;
 						}
 						children.push(child);
-
 					}
 				}
+				
 				classClusters["children"] = children;
 				classClusters["size"] = children.length;
-				classClusters["depth"] = depth;
+				classClusters["depth"] = depth+1;
 			}
+			
 			return classClusters;
 	}
 	
@@ -1138,11 +826,9 @@
 		var className = classUnit.packageName+"."+classUnit.name;
 		
 		var matches = stringSimilarity.findBestMatch(className, classNames);
-//		if(matches.bestMatch.rating > 0.8){
 		component = dicComponents[dicClassNameComponent[matches.bestMatch.target]];
 		component.classUnits.push(classUnit);
 		dicClassComponent[classUnit.UUID] = component.UUID;
-//		}
 		
 		}
 		
