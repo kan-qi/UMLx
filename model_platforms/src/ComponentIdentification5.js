@@ -281,12 +281,27 @@
 	}
 
 	function zeroArray(column, row) {
+//		val = 0;
+//		if(defaultVal){
+////			defaultVal = ;
+////			console.log(defaultVal);
+////			process.exit();
+////			val = JSON.parse(JSON.stringify(defaultVal));
+//			val = [];
+//		}
+		
 		var array = [];
 		for (var i = 0; i < column; i++) {
 			var tmp = [];
+//			if (row == 1) {
+//				tmp = 0;
+//			}
+//			else {
 				for (var j = 0; j < row; j++) {
 					tmp.push(0);
 				}
+//			}
+//			array.push(tmp.slice());
 			array.push(tmp);
 		}
 		return array;
@@ -298,6 +313,7 @@
 		}
 		else{
 			defaultVal = JSON.parse(JSON.stringify(defaultVal));
+//			defaultVal = [];
 		}
 		var array = [];
 		
@@ -316,9 +332,25 @@
 
 		var connectors = dependencyMetrics.connectors;
 		var referencedElements = dependencyMetrics.referencedElements;
-
+//		
+//		console.log(referencedElements);
+//		process.exit();
+		
 		var referencingClasses = dependencyMetrics.referencingClasses;
-
+		
+//		//call dependency
+//		updateDependency(calculateCallDependencyMetric, callGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencedClasses);
+//		
+//		//access dependency
+//		updateDependency(calculateAccessDependencyMetric, accessGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencedClasses);
+//		
+//		//type dependency - param, return, local
+//		updateDependency(calculateTypeDependencyMetric, typeDependencyGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencedClasses);
+//		
+//		//composition dependency
+//		updateDependency(calculateCompositionDependencyMetric, compositionGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencedClasses);
+//		
+		
 		for (var key1 in connectors) {
 				for (var key2 in connectors) {
 					if(connectors[key1][key2] == 0){
@@ -347,8 +379,8 @@
 						else{
 							var log_freq_1 = Math.log(classes.length/referencingClasses[parseInt(key1)]);
 							var log_freq_2 = Math.log(classes.length/referencingClasses[parseInt(key2)]);
-//							console.log(log_freq_1);
-//							console.log(log_freq_2);
+							console.log(log_freq_1);
+							console.log(log_freq_2);
 							//relative weight
 							if(key1 === key2){
 								metrics[parseInt(key1)][parseInt(key2)] = log_freq_1;
@@ -356,10 +388,22 @@
 							else{
 								metrics[parseInt(key1)][parseInt(key2)] = (referencedElements[parseInt(key1)][parseInt(key2)] ? connectors[parseInt(key1)][parseInt(key2)]/referencedElements[parseInt(key1)][parseInt(key2)] : 0) * log_freq_1 + (referencedElements[parseInt(key2)][parseInt(key1)] ? connectors[parseInt(key2)][parseInt(key1)]/referencedElements[parseInt(key2)][parseInt(key1)] : 0 )*log_freq_2;
 							}
+//							console.log(referencedElements[parseInt(key2)][parseInt(key1)]);
+//							console.log(referencedElements[parseInt(key1)][parseInt(key2)]);
+//							console.log(metrics[parseInt(key1)][parseInt(key2)]);
+//							console.log("metric");
 						}
 				}
 		}
 		
+		
+		
+//		console.log(referencingClasses);
+//		console.log(connectors);
+//		console.log(referencedElements);
+		
+//		console.log(metrics);
+//		process.exit();
 		
 		return metrics;
 		
@@ -375,18 +419,27 @@
 		var referencedElements = [];
 		for (var i = 0; i < classes.length; i++) {
 			var row = [];
+//			if (row == 1) {
+//				tmp = 0;
+//			}
+//			else {
 				for (var j = 0; j < classes.length; j++) {
-					row.push(new Set());
+					row.push([]);
 				}
+//			}
+//			array.push(tmp.slice());
 			referencedElements.push(row);
 		}
 		
 		var referencingClasses = [];
 		for (var i = 0; i < classes.length; i++) {
-			var set = new Set();
-			set.add(classes[i].UUID);
-			referencingClasses.push(set)
+			referencingClasses.push([classes[i].UUID]);
 		}
+		
+//		for(var i in classDic){
+//			referencingClasses[classDic[i]] = new Set([i]);
+//		}
+		
 
 		function addDependency(dependencyGraph, classDic, references, referencingClasses, referencedElements){
 			for (var i in dependencyGraph) {
@@ -400,12 +453,21 @@
 				
 				references[col][row]++;
 				
-				if (!referencingClasses[row].has(edge.start.component.UUID)) {
-					referencingClasses[row].add(edge.start.component.UUID);
+//				if (!(col in referencingClasses)) {
+//					referencingClasses[col] = []
+//				}
+				if (!(edge.start.component.UUID in referencingClasses[col])) {
+					referencingClasses[col].push(edge.start.component.UUID);
 				}
 				
-				if (! referencedElements[col][row].has(edge.end.UUID)) {
-					referencedElements[col][row].add(edge.end.UUID);
+//				if (!(col in referencedElements)) {
+//					referencedElements[col] = {}
+//				}
+//				if (!(row in referencedElements[col])) {
+//					referencedElements[col][row] = new Set([edge.end.UUID]);
+//				}
+				if (!(edge.end.UUID in referencedElements[col][row])) {
+					referencedElements[col][row].push(edge.end.UUID);
 				}
 			}
 		}
@@ -417,12 +479,20 @@
 		addDependency(accessGraph.edgesComposite, classDic, references, referencingClasses, referencedElements);
 		addDependency(compositionGraph.edgesComposite, classDic, references, referencingClasses, referencedElements);
 		
+		
 		console.log("type dependency metric end");
-
+		
+//		console.log(referencedElements);
+//		console.log(referencingClasses);
+		
+//		process.exit();
+		
 		return {
 			connectors: references,
-			referencedElements: referencedElements.map((item) => {return item.map((innerItem) => {return innerItem.size})}),
-			referencingClasses: referencingClasses.map((item) => {return item.size})
+//			referencedElements: referencedElements,
+//			referencingClasses: referencingClasses
+			referencedElements: referencedElements.map((item) => {return item.map((innerItem) => {return innerItem.length})}),
+			referencingClasses: referencingClasses.map((item) => {return item.length})
 		}
 	}
 	
@@ -590,7 +660,11 @@
 		
     	if (node.left && node.right) {
 			var left = findAllClass(node.left);
+//			console.log("left");
+//			console.log(left.length);
 			var right = findAllClass(node.right);
+//			console.log("right");
+//			console.log(right.length);
 			var sum = 0;
 			var count = 0;
 			var max = Number.NEGATIVE_INFINITY;

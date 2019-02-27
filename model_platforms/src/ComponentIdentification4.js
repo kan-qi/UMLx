@@ -98,7 +98,7 @@
 
 		var debug = require("../../utils/DebuggerOutput.js");
 
-		var metric = calculateWeight(typeDependencyGraph, callGraph, accessGraph, compositionGraph, extendsGraph, classes, classDic, methods, attrs, clusteringConfig.w);
+		var metric = calculateWeight(callGraph, accessGraph, classes, classDic, methods, attrs, clusteringConfig.w);
 		debug.writeJson2("clustering_metrics_"+clusteringConfig.tag, metric, outputDir);
 		
 		var nodesNullAllTree = [];
@@ -284,10 +284,15 @@
 		var array = [];
 		for (var i = 0; i < column; i++) {
 			var tmp = [];
+			if (row == 1) {
+				tmp = 0;
+			}
+			else {
 				for (var j = 0; j < row; j++) {
 					tmp.push(0);
 				}
-			array.push(tmp);
+			}
+			array.push(tmp.slice());
 		}
 		return array;
 	}
@@ -296,29 +301,37 @@
 		if(!defaultVal){
 			defaultVal = 0;
 		}
-		else{
-			defaultVal = JSON.parse(JSON.stringify(defaultVal));
-		}
 		var array = [];
-		
+		for (var i = 0; i < size; i++) {
+			array.push(defaultVal);
+		}
 		return array;
 	}
 	
 	
-	function calculateWeight(typeDependencyGraph, callGraph, accessGraph, compositionGraph, extendsGraph, classes, classDic, methods, attrs, type){
+	function calculateWeight(callGraph, accessGraph, classes, classDic, methods, attrs, type){
 		
 		console.log("call metric start");
 		
 		var metrics = zeroArray(classes.length, classes.length);
 		
+		var connectors = zeroArray(classes.length, classes.length);
+		var referencedElements = zeroArray(classes.length, classes.length);
+		var referencingClasses = zeroList(classes.length);
 		
-		var dependencyMetrics = calculateDependencyMetric(typeDependencyGraph, callGraph, accessGraph, compositionGraph, classes, classDic, methods, attrs);
-
-		var connectors = dependencyMetrics.connectors;
-		var referencedElements = dependencyMetrics.referencedElements;
-
-		var referencingClasses = dependencyMetrics.referencingClasses;
-
+		//call dependency
+		updateDependency(calculateCallDependencyMetric, callGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencedClasses);
+		
+		//access dependency
+		updateDependency(calculateAccessDependencyMetric, accessGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencedClasses);
+		
+		//type dependency - param, return, local
+		updateDependency(calculateTypeDependencyMetric, typeDependencyGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencedClasses);
+		
+		//composition dependency
+		updateDependency(calculateCompositionDependencyMetric, compositionGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencedClasses);
+		
+		
 		for (var key1 in connectors) {
 				for (var key2 in connectors) {
 					if(connectors[key1][key2] == 0){
@@ -345,47 +358,205 @@
 							
 						}
 						else{
-							var log_freq_1 = Math.log(classes.length/referencingClasses[parseInt(key1)]);
-							var log_freq_2 = Math.log(classes.length/referencingClasses[parseInt(key2)]);
-//							console.log(log_freq_1);
-//							console.log(log_freq_2);
+							var log_freq_1 = Math.log(classes.length/referencingClasses[parse(key1)]);
+							var log_freq_2 = Math.log(classes.length/referencingClasses[parse(key2)]);
 							//relative weight
 							if(key1 === key2){
 								metrics[parseInt(key1)][parseInt(key2)] = log_freq_1;
 							}
 							else{
-								metrics[parseInt(key1)][parseInt(key2)] = (referencedElements[parseInt(key1)][parseInt(key2)] ? connectors[parseInt(key1)][parseInt(key2)]/referencedElements[parseInt(key1)][parseInt(key2)] : 0) * log_freq_1 + (referencedElements[parseInt(key2)][parseInt(key1)] ? connectors[parseInt(key2)][parseInt(key1)]/referencedElements[parseInt(key2)][parseInt(key1)] : 0 )*log_freq_2;
+								metrics[parseInt(key1)][parseInt(key2)] = connectors[parseInt(key1)][parseInt(key2)]/referencedElements[parseInt(key2)]*log_freq_1 + connectors[parseInt(key2)][parseInt(key1)]/referencedElements[parseInt(key1)]*log_freq_2;
+							
 							}
 						}
 				}
 		}
 		
-		
 		return metrics;
 		
 	}
 	
+function updateDependency(calculateTypeDependencyMetric, dependencyGraph, classes, classDic, methods, attrs, type, connectors, referencedElements, referencingClasses){
+	var dependencyInfo = calculateTypeDependencyMetric(dependencyGraph, classes, classDic, methods, attrs);
 	
-	function calculateDependencyMetric(typeDependencyGraph, callGraph, accessGraph, compositionGraph, classes, classDic, methods, relative) {
-		
-		console.log("type dependency metric start");
+	for(var i in connectors){
+		for(var j in connectors[i]){
+			connectors[i][j] += dependencyInfo.connectors[i][j];
+		}
+	}
+	
+	for(var i in referencedElements){
+		referencedElements[i] += dependencyInfo.referencedElements[i];
+	}
+	
+	for(var i in referencingClasses){
+		referencingClasses[i] += dependencyInfo.referencingClasses[i];
+	}
+	
+	return {
+		connectors: calls,
+		referencedElements: callees.map((item) => {return item.map(innerItem) => {return innerItem.size}}),
+		referencingClasses: callerClasses.map((item) => {return item.size})
+	}
+}
+	
+function calculateAccessDependencyMetric(callGraph, accessGraph, classes, classDic, methods, attrs, type){
 
-		var references = zeroArray(classes.length, classes.length); //  the number of attributes of class Cli whose type is class Clj.
+		//access dependency
+		console.log("access metric")
+		var access = zeroArray(classes.length, classes.length);
+		var accessedTotal = zeroList(classes.length);
 		
-		var referencedElements = [];
-		for (var i = 0; i < classes.length; i++) {
-			var row = [];
-				for (var j = 0; j < classes.length; j++) {
-					row.push(new Set());
-				}
-			referencedElements.push(row);
+		var accessors = {};
+		var accessed = {};
+		var accessMetrics = zeroArray(classes.length, classes.length);
+		var accessorClasses = {};
+		
+		for(var i in classDic){
+			accessorClasses[classDic[i]] = new Set([i]);
+		}
+		var accessedClasses = {};
+		for(var i in classDic){
+			accessedClasses[classDic[i]] = new Set([i]);
+		}
+
+		for (var i in accessGraph.edgesComposite) {
+			var edge = accessGraph.edgesComposite[i];
+			var col = classDic[edge.start.component.UUID];
+			var row = classDic[edge.end.component.UUID];
+			if(col == null || row == null){
+				continue;
+			}
+			access[col][row]++;
+			accessedTotal[row]++;
+			
+			connectors[col][row]++;
+			
+			if (!(edge.start.component.UUID in accessorClasses[col])) {
+				accessorClasses[col].add(edge.start.component.UUID);
+			}
+			
+			if (!(edge.end.component.UUID in accessedClasses[row])) {
+				accessedClasses[row].add(edge.end.component.UUID);
+			}
+
+			if (!(col in accessors)) {
+				accessors[col] = {}
+			}
+			if (!(row in accessors[col])) {
+				accessors[col][row] = new Set([edge.start.UUID]);
+			}
+			else {
+				accessors[col][row].add(edge.start.UUID);
+			}
+
+			if (!(col in accessed)) {
+				accessed[col] = {}
+			}
+			if (!(row in accessed[col])) {
+				accessed[col][row] = new Set([edge.end.UUID]);
+			}
+			else {
+				accessed[col][row].add(edge.end.UUID);
+			}
 		}
 		
-		var referencingClasses = [];
-		for (var i = 0; i < classes.length; i++) {
-			var set = new Set();
-			set.add(classes[i].UUID);
-			referencingClasses.push(set)
+		return {
+			connectors: access,
+			referencedElements: accessed.map((item) => {return item.map(innerItem) => {return innerItem.size}}),
+			referencingClasses: accessorClasses.map((item) => {return item.size})
+		}
+}
+	
+function calculateCallDependencyMetric(callGraph, accessGraph, classes, classDic, methods, attrs, type){
+		
+		console.log("call metric start");
+		
+		var calls = zeroArray(classes.length, classes.length);
+		var callers = {};
+		var callees = {};
+		var calledTotal = zeroList(classes.length, 1);
+		var callerClasses = {};
+		
+		for(var i in classDic){
+			callerClasses[classDic[i]] = new Set([i]);
+		}
+		
+		var calleeClasses = {};
+		for(var i in classDic){
+			calleeClasses[classDic[i]] = new Set([i]);
+		}
+
+		//call dependency
+		for (var i in callGraph.edgesComposite) {
+			var edge = callGraph.edgesComposite[i];
+			var col = classDic[edge.start.component.UUID];
+			var row = classDic[edge.end.component.UUID];
+			if(col == null || row == null){
+				continue;
+			}
+
+			calls[col][row]++;
+			calledTotal[row]++;
+			connectors[col][row]++;
+			
+			if (!(edge.start.component.UUID in callerClasses[col])) {
+				callerClasses[col].add(edge.start.component.UUID);
+			}
+			
+			if (!(edge.end.component.UUID in calleeClasses[row])) {
+				calleeClasses[row].add(edge.end.component.UUID);
+			}
+
+			if (!(col in callers)) {
+				callers[col] = {}
+			}
+			if (!(row in callers[col])) {
+				callers[col][row] = new Set([edge.start.UUID]);
+			}
+			else if (!(callers[col][row].has(edge.start.UUID))) {
+				callers[col][row].add(edge.start.UUID);
+			}
+
+			if (!(col in callees)) {
+				callees[col] = {}
+			}
+			if (!(row in callees[col])) {
+				callees[col][row] = new Set([edge.end.UUID]);
+			}
+			else if (!(callees[col][row].has(edge.end.UUID))) {
+				callees[col][row].add(edge.start.UUID);
+			}
+		}
+		
+		return {
+			connectors: calls,
+			referencedElements: callees.map((item) => {return item.map(innerItem) => {return innerItem.size}}),
+			referencingClasses: callerClasses.map((item) => {return item.size})
+		}
+}
+	
+	function calculateTypeDependencyMetric(typeDependencyGraph, classes, classDic, methods, relative) {
+		
+		  console.log("type dependency metric start");
+
+		  var typeDependencyMetrics = zeroArray(classes.length, classes.length);
+		  
+		  if(!typeDependencyGraph){
+			  return typeDependencyMetrics;
+		  }
+
+		  console.log("typeDependencyGraph");
+
+		var references = zeroArray(classes.length, classes.length); //  the number of attributes of class Cli whose type is class Clj.
+//		var paras = zeroArray(classes.length, classes.length);
+//		var retVs = zeroArray(classes.length, classes.length);
+		
+		var referencingClasses = {};
+		var referencedElements = [];
+		
+		for(var i in classDic){
+			referencingClasses[classDic[i]] = new Set([i]);
 		}
 
 		function addDependency(dependencyGraph, classDic, references, referencingClasses, referencedElements){
@@ -400,11 +571,20 @@
 				
 				references[col][row]++;
 				
-				if (!referencingClasses[row].has(edge.start.component.UUID)) {
-					referencingClasses[row].add(edge.start.component.UUID);
+				if (!(col in referencingClasses)) {
+					referencingClasses[col] = {}
+				}
+				if (!(edge.start.component.UUID in referencingClasses[col])) {
+					referencingClasses[col].add(edge.start.component.UUID);
 				}
 				
-				if (! referencedElements[col][row].has(edge.end.UUID)) {
+				if (!(col in referencedElements)) {
+					referencedElements[col] = {}
+				}
+				if (!(row in referencedElements[col])) {
+					referencedElements[col][row] = new Set([edge.end.UUID]);
+				}
+				else if (!(referencedElements[col][row].has(edge.end.UUID))) {
 					referencedElements[col][row].add(edge.end.UUID);
 				}
 			}
@@ -413,19 +593,133 @@
 		addDependency(typeDependencyGraph.edgesReturnComposite, classDic, references, referencingClasses, referencedElements);
 		addDependency(typeDependencyGraph.edgesParamComposite, classDic, references, referencingClasses, referencedElements);
 		addDependency(typeDependencyGraph.edgesLocalComposite, classDic, references, referencingClasses, referencedElements);
-		addDependency(callGraph.edgesComposite, classDic, references, referencingClasses, referencedElements);
-		addDependency(accessGraph.edgesComposite, classDic, references, referencingClasses, referencedElements);
-		addDependency(compositionGraph.edgesComposite, classDic, references, referencingClasses, referencedElements);
+			
+//			for (var i in typeDependencyGraph.edgesPComposite) {
+//				var edge = typeDependencyGraph.edgesPComposite[i];
+//				var col = classDic[edge.start.component.UUID];
+//				var row = classDic[edge.end.component.UUID];
+//				
+//				if(!col || !row){
+//					continue;
+//				}
+//				
+//				references[col][row]++;
+//				
+//				if (!(col in referencingClasses)) {
+//					referencingClasses[col] = {}
+//				}
+//				if (!(edge.start.component.UUID in referencingClasses[col])) {
+//					referencingClasses[col].add(edge.start.component.UUID);
+//				}
+//				
+//				if (!(col in referencedElements)) {
+//					referencedElements[col] = {}
+//				}
+//				if (!(row in referencedElements[col])) {
+//					referencedElements[col][row] = new Set([edge.end.UUID]);
+//				}
+//				else if (!(referencedElements[col][row].has(edge.end.UUID))) {
+//					referencedElements[col][row].add(edge.end.UUID);
+//				}
+//			}
+			
+//			for (var i in typeDependencyGraph.edgesRComposite) {
+//				var edge = typeDependencyGraph.edgesRComposite[i];
+//				var col = classDic[edge.start.component.UUID];
+//				var row = classDic[edge.end.component.UUID];
+//				
+//				if(!col || !row){
+//					continue;
+//				}
+//				
+//				references[col][row]++;
+//				
+//				if (!(col in referencingClasses)) {
+//					referencingClasses[col] = {}
+//				}
+//				if (!(edge.start.component.UUID in referencingClasses[col])) {
+//					referencingClasses[col].add(edge.start.component.UUID);
+//				}
+//				
+//				if (!(col in referencedElements)) {
+//					referencedElements[col] = {}
+//				}
+//				if (!(row in referencedElements[col])) {
+//					referencedElements[col][row] = new Set([edge.end.UUID]);
+//				}
+//				else if (!(referencedElements[col][row].has(edge.end.UUID))) {
+//					referencedElements[col][row].add(edge.end.UUID);
+//				}
+//			}
 		
 		console.log("type dependency metric end");
-
+		
 		return {
 			connectors: references,
-			referencedElements: referencedElements.map((item) => {return item.map((innerItem) => {return innerItem.size})}),
-			referencingClasses: referencingClasses.map((item) => {return item.size})
+			referencedElements: referencedElements,
+			referencingClasses: referencingClasses
 		}
 	}
 	
+	function calculateCompositionMetric(compositionGraph, classes, classDic, methods) {
+		var compositionMetrics = zeroArray(classes.length, classes.length);
+
+		if (!compositionGraph) {
+			return false;
+		}
+		
+		var referencingClasses = {};
+		var referencedElements = [];
+		
+		for(var i in classDic){
+			referencingClasses[classDic[i]] = new Set([i]);
+		}
+
+		for (var i in compositionGraph.edges) {
+			var edge = compositionGraph.edges[i];
+			var col = classDic[edge.start.component.UUID];
+			var row = classDic[edge.end.component.UUID];
+			
+			if(!col || !row){
+				continue;
+			}
+			compositionMetrics[col][row]++;
+			
+			if (!(col in referencingClasses)) {
+				referencingClasses[col] = {}
+			}
+			if (!(edge.start.component.UUID in referencingClasses[col])) {
+				referencingClasses[col].add(edge.start.component.UUID);
+			}
+			
+			if (!(col in referencedElements)) {
+				referencedElements[col] = {}
+			}
+			if (!(row in referencedElements[col])) {
+				referencedElements[col][row] = new Set([edge.end.UUID]);
+			}
+			else if (!(referencedElements[col][row].has(edge.end.UUID))) {
+				referencedElements[col][row].add(edge.end.UUID);
+			}
+		}
+
+		return {
+			connectors: references,
+			referencedElements: referencedElements,
+			referencingClasses: referencingClasses
+		}
+	}
+	
+	function mergeTwoSets(set1, set2){
+		var newSet = new Set(set1);
+		for(var i in set2){
+			if(!(set2[i] in set1)){
+				newSet.add(set2[i]);
+			}
+		}
+		
+		return newSet;
+	}
 	
 	function findClusters(classArray, metrics, nodesNullAll, nodesClassAll, edgesAll, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, clusteringConfig, threshold) {
 
@@ -590,7 +884,11 @@
 		
     	if (node.left && node.right) {
 			var left = findAllClass(node.left);
+//			console.log("left");
+//			console.log(left.length);
 			var right = findAllClass(node.right);
+//			console.log("right");
+//			console.log(right.length);
 			var sum = 0;
 			var count = 0;
 			var max = Number.NEGATIVE_INFINITY;
