@@ -12,6 +12,7 @@
 	var activityDiagramParser= require("./ActivityDiagramParser.js");
 	var analysisDiagramParser= require("./AnalysisDiagramParser.js");
 	var useCaseDiagramParser = require("./UseCaseDiagramParser.js");
+	var TransactionIdentifier = require("./TransactionIdentification.js");
 	var visualSprintDiagramParser = require("./VisualSprintDiagramParser.js");
 	
 	var domainModelSearchUtil = require("../../utils/DomainModelSearchUtil.js");
@@ -207,12 +208,10 @@
 					Usages: [],
 					Realizations:[],
 					Associations: [],
-//					Inheritances: [],
 					Generalizations: [],
 					OutputDir : ModelOutputDir+"/domainModel",
 					AccessDir : ModelAccessDir+"/domainModel",
 					DiagramType : "class_diagram",
-//                    InheritanceStats: null
 				}
 		};
 	
@@ -377,6 +376,18 @@
 			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, ActorsByID);
 			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles);
 			analysisDiagramParser.parseAnalysisDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIExtension, XMIUMLModel);
+			
+			UseCase.Transactions = TransactionIdentifier.traverseUseCaseForTransactions(UseCase);
+			
+//			for(var j in useCase.Transactions){
+//				var transaction = useCase.Transactions[j];
+//				var TransactionStrByIDs = "";
+//				for(var k in transaction.Elements){
+//					var node = transaction.Elements[k];
+//					TransactionStrByIDs += node._id+"->";
+//				}
+//				transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
+//			}
 			
 			Model.UseCases.push(UseCase);
 			

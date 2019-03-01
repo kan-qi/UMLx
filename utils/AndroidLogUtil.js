@@ -15,7 +15,7 @@
 	var async = require("async");
 	
 	
-	function parseAndroidLogs(logPaths, dir, startTime, endTime, callback){
+	function parseAndroidLogsForUseCases(logPaths, dir, useCases, callback){
 		var lineNr = 0;
 
 	    var lastMethodSign = "";
@@ -72,47 +72,83 @@
 			    		continue;
 			    	}
 			    	
-			    	var dataElement = JSON.parse(line.substring(tagPos+7, line.length));
+			    	var dataElement = null;
+					 try {
+			    	dataElement = JSON.parse(line.substring(tagPos+7, line.length));
+					 } catch (e) {
+						 console.error(e);
+						 continue;
+					}
 			    	
 					var timeStamp = Number(dataElement.time);
 					
-					if(timeStamp < startTime || timeStamp > endTime){
-			    		continue;
-					}
+//					if(timeStamp < startTime || timeStamp > endTime){
+//			    		continue;
+//					}
 
-					if(dataElement.methodSign !== lastMethodSign){
-			    		methods.push(dataElement.methodSign);
-			    		data.push(dataElement);
-			    	}
+//					if(dataElement.methodSign !== lastMethodSign){
+//			    		methods.push(dataElement.methodSign);
+//			    		data.push(dataElement);
+//			    	}
+//			    	
+//			    	lastMethodSign = dataElement.methodSign;
 			    	
-			    	lastMethodSign = dataElement.methodSign;
+			    	for(var i in useCases){
+			    		var useCase = useCases[i];
+						
+						if(!useCase.lastMethodSign){
+							useCase.lastMethodSign = "";
+						}
+						
+						if(!useCase.calls){
+							useCase.calls = new Set();
+						}
+						
+						if(!useCase.methods){
+							useCase.methods = new Set();
+						}
+						    
+						if(timeStamp < useCase.startTime || timeStamp > useCase.endTime){
+							continue;
+						}
+						
+						if(useCase.lastMethodSign){
+						var call = {
+								start : useCase.lastMethodSign,
+								end : dataElement.methodSign
+						}
+						if(dataElement.methodSign !== useCase.lastMethodSign && !useCase.calls.has(call)){
+				    		useCase.methods.add(dataElement.methodSign);
+				    		useCase.calls.add(call);
+				    	}
+						}
+				    	
+				    	useCase.lastMethodSign = dataElement.methodSign;
+					}
+			    	
 					
 					 }
 			  }
 				
 				if(callback){
-					callback(data);
+					callback(useCases);
 				}
 			  
 		  });
 	}
 	
-	function parseAndroidLogFolder(logFolder, startTime, endTime, callback){
+	
+	function parseAndroidLogFolderForUseCases(logFolder, useCaseRec, callback){
 		fs.readdir(logFolder, function (err, files) {
-			parseAndroidLogs(files, logFolder, startTime, endTime, callback);
+			parseAndroidLogsForUseCases(files, logFolder, useCaseRec, callback);
 		  
 		});
 	}
 
-	function parseAndroidLog(logPath, startTime, endTime, callback){
+	function parseAndroidLogForUseCases(logPath, useCases, callback){
 		// can also use this function as a filter of the file.
+		
 		var lineNr = 0;
-
-	    var lastMethodSign = "";
-	    
-	    var data = [];
-	    
-	    var methods = [];
 		
 		var s = fs.createReadStream(logPath)
 		.pipe(es.split())
@@ -134,37 +170,71 @@
 	    		s.resume();
 	    		return;
 	    	}
+	    
+			console.log("checking use case analysis");
+			console.log(line.substring(tagPos+7, line.length));
+			
+			var dataElement = null;
+			 try {
+					dataElement = JSON.parse(line.substring(tagPos+7, line.length));
+				  } catch (e) {
+				    console.error(e);
+				    s.resume();
+				    return;
+				  }
 	    	
-	    	var dataElement = JSON.parse(line.substring(tagPos+7, line.length));
-// var dataElement = JSON.parse(line.substring(tagPos+8, line.length));
+	    
 	    	
+	    	// var dataElement = JSON.parse(line.substring(tagPos+8, line.length));
 	    	
 			var timeStamp = Number(dataElement.time);
-			
-			if(timeStamp < startTime || timeStamp > endTime){
-				s.resume();
-	    		return;
+
+			for(var i in useCases){
+				var useCase = useCases[i];
+				
+				if(!useCase.lastMethodSign){
+					useCase.lastMethodSign = "";
+				}
+				
+				if(!useCase.calls){
+					useCase.calls = new Set();
+				}
+				
+				if(!useCase.methods){
+					useCase.methods = new Set();
+				}
+				    
+				if(timeStamp < useCase.startTime || timeStamp > useCase.endTime){
+					continue;
+				}
+				
+				if(useCase.lastMethodSign){
+				var call = {
+						start : useCase.lastMethodSign,
+						end : dataElement.methodSign
+				}
+				if(dataElement.methodSign !== useCase.lastMethodSign && !useCase.calls.has(call)){
+		    		useCase.methods.add(dataElement.methodSign);
+		    		useCase.calls.add(call);
+		    	}
+				}
+		    	
+		    	useCase.lastMethodSign = dataElement.methodSign;
 			}
-	    	
-	    	if(dataElement.methodSign !== lastMethodSign){
-	    		methods.push(dataElement.methodSign);
-	    		data.push(dataElement);
-	    	}
-	    	
-	    	lastMethodSign = dataElement.methodSign;
 	    	
 			s.resume();
 		})
 		.on('error', function(err){
 			console.log('Error while reading file.', err);
 			if(callback){
-				callback(false);
+				callback(useCases);
 			}
+//			s.resume();
 		})
 		.on('end', function(){
-			console.log('Read entire file.')
+			console.log("use case analysis finishes");
 			if(callback){
-				callback(data);
+				callback(useCases);
 			}
 		})
 		);
@@ -211,114 +281,139 @@
 		);
 	}
 	
-	function identifyTransactions(logPath, dicComponent, dicComponentDomainElement, dicResponseMethodUnits, startTime, endTime, callback){
+	function identifyTransactions(logPath, dicComponent, dicComponentDomainElement, dicResponseMethodUnits, useCaseRec, callback){
 
-		parseAndroidLogFolder(logPath, startTime, endTime, function(data){
+		function identifyTransactionsFromLogData(useCaseData){
+
+			if(!useCaseData){
+				console.log('read log error');
+				if(callback){
+					callback(false);
+				}
+				return;
+			}
+		  
+		  	var dicMethodComponent = {};
+		  	var dicMethods = {};
+		  	var methodSigns = [];
+		  	
+		  	for(var i in dicComponent){
+		  		var component = dicComponent[i];
+		  		for(var j in component.classUnits){
+		  			var classUnit = component.classUnits[j];
+		  			var className = classUnit.name;
+		  			var packageName = classUnit.packageName;
+		  			for(var k in classUnit.methodUnits){
+		  				var methodUnit = classUnit.methodUnits[k];
+		  				var methodSign = codeAnalysisUtil.genMethodUnitSignFull(methodUnit, className, packageName);
+		  				dicMethodComponent[methodSign] = component;
+		  				dicMethods[methodSign] = methodUnit;
+		  				methodSigns.push(methodSign);
+		  			}
+		  		}
+		  	}
 			
-				if(!data){
-					console.log('read log error');
-					if(callback){
-						callback(false);
-					}
+			for(var i in useCaseData){
+
+			var transactions = [];
+				
+			var transaction = null;
+				
+			var lastDomainModelElement = null;
+				
+			var ind = 0;
+				
+			useCaseData[i].methods.forEach(function(method){
+				ind++;
+				
+				var domainModelElement = null;
+				var matches = stringSimilarity.findBestMatch(method, methodSigns);
+				// if(matches.bestMatch.rating > 0.9){
+				component = dicMethodComponent[matches.bestMatch.target];
+				domainModelElement = dicComponentDomainElement[component.UUID]
+				// }
+				
+				if(domainModelElement == null){
 					return;
 				}
-			  
-			  	var dicMethodComponent = {};
-			  	var dicMethods = {};
-			  	var methodSigns = [];
-			  	
-			  	for(var i in dicComponent){
-			  		var component = dicComponent[i];
-			  		for(var j in component.classUnits){
-			  			var classUnit = component.classUnits[j];
-			  			var className = classUnit.name;
-			  			var packageName = classUnit.packageName;
-			  			for(var k in classUnit.methodUnits){
-			  				var methodUnit = classUnit.methodUnits[k];
-			  				var methodSign = codeAnalysisUtil.genMethodUnitSignFull(methodUnit, className, packageName);
-			  				dicMethodComponent[methodSign] = component;
-			  				dicMethods[methodSign] = methodUnit;
-			  				methodSigns.push(methodSign);
-			  			}
-			  		}
-			  	}
-			  	
-				var transactions = [];
 				
-				var transaction = null;
+				console.log("best matched domain model element:" + domainModelElement.Name);
 				
-				var lastDomainModelElement = null;
+				var methodUnit = dicMethods[matches.bestMatch.target];
 				
-				var ind = 0;
-				
-				for(var i in data){
-					ind++;
-					
-					var dataElement = data[i];
-					
-					var domainModelElement = null;
-					var matches = stringSimilarity.findBestMatch(dataElement.methodSign, methodSigns);
-// if(matches.bestMatch.rating > 0.9){
-					component = dicMethodComponent[matches.bestMatch.target];
-					domainModelElement = dicComponentDomainElement[component.UUID]
-// }
-					
-					if(domainModelElement == null || domainModelElement == lastDomainModelElement){
-// lastDomainModelElement = domainModelElement;
-						continue;
+				if(dicResponseMethodUnits[methodUnit.UUID]){
+					if(transaction != null){
+						transactions.push(transaction);
 					}
-					
-					console.log("best matched domain model element:" + domainModelElement.Name);
-					
-					var methodUnit = dicMethods[matches.bestMatch.target];
-					
-					
-					if(dicResponseMethodUnits[methodUnit.UUID]){
-						if(transaction != null){
-							transactions.push(transaction);
-						}
-						transaction = {
-								Nodes: [],
-								OutScope: false,
-								TransactionStr: ""
-						}
-						
-					}
-					
-					if(!transaction){
-						continue;
-					}
-					
-					var activity = {
-							Name: methodUnit.name,
-							_id: uuidV1().replace(/\-/g, "_"),
-							Type: "activity",
-							Stimulus: transaction.Nodes.length == 0? true: false,
+					transaction = {
+							Nodes: [],
 							OutScope: false,
-							Group: "System",
-							Component: domainModelElement
+							TransactionStr: ""
 					}
 					
-					transaction.Nodes.push(activity);
+					lastDomainModelElement = null;
+				}
+				else if(domainModelElement == lastDomainModelElement){
+					return;
+				}
+				
+				if(!transaction){
+					return;
+				}
+				
+				var activity = {
+						Name: methodUnit.name,
+						_id: uuidV1().replace(/\-/g, "_"),
+						Type: "activity",
+						Stimulus: transaction.Nodes.length == 0? true: false,
+						OutScope: false,
+						Group: "System",
+						Component: domainModelElement
+				}
+				
+				transaction.Nodes.push(activity);
 
-					lastDomainModelElement = domainModelElement;
-				}
-				
-				if(transaction != null){
-					transactions.push(transaction);
-				}
-				
-				if(callback){
-					callback(transactions);
-				}
+				lastDomainModelElement = domainModelElement;
+			});
+			
+			if(transaction != null){
+				transactions.push(transaction);
+			}
+			
+			useCaseData[i].transactions = transactions;
+			
+
+			useCaseData[i].methods1 = Array.from(useCaseData[i].methods);
+			useCaseData[i].calls1 = Array.from(useCaseData[i].calls);
+			
+			}
+//			var debug = require("./DebuggerOutput.js");
+//			debug.writeJson2("use_case_data_from_log", useCaseData);
+//		  	console.log(useCaseData);
+//		  	process.exit();
+			
+			if(callback){
+				callback(useCaseData);
+			}
+			
+		}
+		
+		if(fs.lstatSync(logPath).isDirectory()){
+		parseAndroidLogFolderForUseCases(logPath, useCaseRec, function(useCaseData){
+			identifyTransactionsFromLogData(useCaseData);
 		});
+		}
+		else {
+			parseAndroidLogForUseCases(logPath, useCaseRec, function(useCaseData){
+				identifyTransactionsFromLogData(useCaseData);
+			});
+		}
 	}
 	
-	function identifyTransactionsFile(logPath, modelPath){
-				var str = fileManagerUtil.readFileSync(modelPath);
-				var dicComponent = JSON.parse(str);
-				return identifyTransactions(logPath, dicComponent);
-			  
+	function identifyTransactionsfromLogFile(logPath, modelPath){
+		var str = fileManagerUtil.readFileSync(modelPath);
+		var dicComponent = JSON.parse(str);
+		return identifyTransactions(logPath, dicComponent);
 	}
 	
 	function generateAndroidAnalysis(apkFileName, outputDir) {
@@ -476,9 +571,10 @@
 	}
 	
 	module.exports = {
-		parseAndroidLog: parseAndroidLog,
+		parseAndroidLogForUseCases: parseAndroidLogForUseCases,
+		parseAndroidLogFolderForUseCases: parseAndroidLogFolderForUseCases,
 		identifyTransactions: identifyTransactions,
-		identifyTransactionsFile: identifyTransactionsFile,
+		identifyTransactionsfromLogFile: identifyTransactionsfromLogFile,
 		filterAndroidLog: filterAndroidLog,
 		generateAndroidAnalysis: generateAndroidAnalysis
 	}

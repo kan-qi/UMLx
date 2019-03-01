@@ -18,6 +18,7 @@ var exec = require('child_process').exec;
 var AndroidLogUtil = require("./AndroidLogUtil.js");
 var FileManagerUtil = require("./FileManagerUtils.js");
 var RScriptExec = require('./RScriptUtil.js');
+var LogFilter = require('./AndroidLogFilter.js');
 var config = require("../config.js");
 
 var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
@@ -25,66 +26,7 @@ var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 
 function analyseAndroidApks(projectList, reportDir){
 	console.log("analyse android apks");
-//	var reportPath = reportDir+"\\analysis-results-folders.txt";
-//	global.debugCache = new Object();
-//	FileManagerUtil.deleteFileSync(reportPath);
 	
-	  //use promise to construct the repo objects
-//    function analyseApk(apkFileName, reportDir){
-//        return new Promise((resolve, reject) => {
-////        	config.setDebugOutputDir(projectPath+"/debug");
-//        	
-//        if(!apkFileName){
-//        		return;
-//        }
-//        
-//        var apkName = apkFileName.replace(/\.apk/g, "");
-//        
-//        var outputDir = reportDir + "\\" + apkName;
-//        
-////        FileManagerUtil.deleteFolderRecursive(outputDir);
-//
-//        	mkdirp(outputDir, function(err) {
-//            //to generate svg file.
-//        		AndroidLogUtil.generateAndroidAnalysis(apkFileName, function(outputFile){
-//        			
-//        		if(!outputFile){
-//        			console.log('analysis error!');
-//        		}
-//
-//        		resolve();
-//        		
-//        	});
-//        	
-//        	});
-//      });
-//    }
-    
-//    return Promise.all(projectList.map(project=>{
-//        return AndroidLogUtil.generateAndroidAnalysis(project.apkFileName, reportDir);
-//    })).then(
-//        function(){
-////            return new Promise((resolve, reject) => {
-////                setTimeout(function(){
-//                	console.log("analysis finished");
-////                    resolve();
-////                }, 0);
-////            });
-//        }
-//
-//    ).catch(function(err){
-//        console.log(err);
-//    });
-    
-    
-    
-//    function asyncFunc(e) {
-//    	  return new Promise((resolve, reject) => {
-//    	    setTimeout(() => resolve(e), e * 1000);
-//    	  });
-//    	}
-
-//    	const arr = [1, 2, 3];
     	let final = [];
 
     	function apkAnalysisList(projectList) {
@@ -100,77 +42,18 @@ function analyseAndroidApks(projectList, reportDir){
 
     	apkAnalysisList(projectList)
     	  .then(() => function(){
-//    		  console.log(`FINAL RESULT is ${final}`);
     		  console.log('analysis finished');
     	  });
 	
 }
 
-
-//function analyseAndroidApks(projectList, reportDir){
-//	console.log("analyse android apks");
-////	var reportPath = reportDir+"\\analysis-results-folders.txt";
-////	global.debugCache = new Object();
-////	FileManagerUtil.deleteFileSync(reportPath);
-//	
-//	  //use promise to construct the repo objects
-//    function analyseApk(apkFileName, reportDir){
-//        return new Promise((resolve, reject) => {
-////        	config.setDebugOutputDir(projectPath+"/debug");
-//        	
-//        if(!apkFileName){
-//        		return;
-//        }
-//        
-//        var apkName = apkFileName.replace(/\.apk/g, "");
-//        
-//        var outputDir = reportDir + "\\" + apkName;
-//        
-////        FileManagerUtil.deleteFolderRecursive(outputDir);
-//
-//        	mkdirp(outputDir, function(err) {
-//            //to generate svg file.
-//        		AndroidLogUtil.generateAndroidAnalysis(apkFileName, function(outputFile){
-//        			
-//        		if(!outputFile){
-//        			console.log('analysis error!');
-//        		}
-//
-//        		resolve();
-//        		
-//        	});
-//        	
-//        	});
-//      });
-//    }
-//    
-//    return Promise.all(projectList.map(project=>{
-//        return analyseApk(project.apkFileName, reportDir);
-//    })).then(
-//        function(){
-////            return new Promise((resolve, reject) => {
-////                setTimeout(function(){
-//                	console.log("analysis finished");
-////                    resolve();
-////                }, 0);
-////            });
-//        }
-//
-//    ).catch(function(err){
-//        console.log(err);
-//    });
-//	
-//}
-
 function analyseAndroidProject(projectList, reportDir){
 	var reportPath = reportDir+"\\analysis-results-folders.txt";
 	global.debugCache = new Object();
-//	FileManagerUtil.deleteFileSync(reportPath);
 	
 	  //use promise to construct the repo objects
     function analyseProject(projectXMI, project, reportDir){
         return new Promise((resolve, reject) => {
-//        	config.setDebugOutputDir(projectPath+"/debug");
         	
         var projectName = project.tag;
         if(!projectName){
@@ -220,7 +103,6 @@ function analyseAndroidProject(projectList, reportDir){
     }
     
     return Promise.all(projectList.map(project=>{
-//        return analyseProject(project.path+"\\"+project.modelFile, project.clusterFile, project.stimulusFile, project.logFile, project.tag, project.path, project.useCaseRec, reportDir);
         return analyseProject(project.path+"\\"+project.modelFile, project, reportDir);
 
     
@@ -393,6 +275,25 @@ else if(functionSelection === "--analyse-android-apks"){
 else if(functionSelection === "--analyse-android-projects"){
 	
 analyseAndroidProject(repo.projectList, repo.reportDir);
+
+}
+else if(functionSelection === "--filter-logs"){
+	
+//	filterLogs(repo.projectList, repo.reportDir);
+//	
+//	var projectPaths = "";
+	for(var i in repo.projectList){
+		var projectPath = repo.projectList[i].path; 
+		var logFile = repo.projectList[i].logFile;
+		var logFolder = repo.projectList[i].logFolder;
+		var filterFile = repo.projectList[i].filterFile;
+		if(logFile){
+		LogFilter.filterAndroidLog(projectPath+"/"+logFile, projectPath+"/"+filterFile, projectPath);
+		}
+		else{
+		LogFilter.filterAndroidLogs(projectPath+"/"+logFolder, projectPath+"/"+filterFile, projectPath);	
+		}
+	}
 
 }
 else if(functionSelection === "--generate-repo-analysis-report"){

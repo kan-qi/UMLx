@@ -102,8 +102,8 @@
 			
 			var useCaseRecord = useCaseRecords[i];
 			
-			var tagPos = useCaseRecord.indexOf(" Start ");
-	    	
+			var tagPos = useCaseRecord.indexOf(" Start ") == -1? useCaseRecord.indexOf(" start ") : useCaseRecord.indexOf(" Start ");
+			
 	    	if(tagPos == -1){
 	    		continue;
 	    	}
@@ -111,9 +111,13 @@
 	    	var startTime = new Date(useCaseRecord.substring(0, tagPos)).getTime();
 	    	var useCaseName = useCaseRecord.substring(tagPos+7, useCaseRecord.length);
 	    	
+	    	if(!useCaseName){
+	    		continue;
+	    	}
+	    	
 	    	var nextUseCaseRecord = useCaseRecords[++i];
 	    	
-	    	tagPos = nextUseCaseRecord.indexOf(" End ");
+	    	tagPos = nextUseCaseRecord.indexOf(" End ") == -1? nextUseCaseRecord.indexOf(" end ") : nextUseCaseRecord.indexOf(" End ");
 	    	
 	    	if(tagPos == -1){
 	    		console.log("tag doesn't match as pairs");
@@ -137,9 +141,13 @@
 	    
 		}
 
-		function identifyUseCase(useCaseRecord){
-			return new Promise((resolve, reject) => {
-			androidLogUtil.identifyTransactions(androidLogPath, dicComponent, dicComponentDomainElement, dicResponseMethodUnits, useCaseRecord.startTime, useCaseRecord.endTime, function(transactions){
+			androidLogUtil.identifyTransactions(androidLogPath, dicComponent, dicComponentDomainElement, dicResponseMethodUnits, useCaseRecordList, function(useCaseData){
+//
+//				console.log(useCaseData);
+//				process.exit();
+//				
+				for(var i in useCaseData){
+				var useCaseRecord = useCaseData[i];
 				
 				var UseCase = {
 						_id: useCaseRecord.useCaseName,
@@ -148,7 +156,8 @@
 						Activities : [],
 						OutputDir : ModelOutputDir+"/"+useCaseRecord.useCaseName,
 						AccessDir : ModelAccessDir+"/"+useCaseRecord.useCaseName,
-						DiagramType : "none"
+						DiagramType : "none",
+						Transactions: []
 				}
 
 				var activities = [];
@@ -156,11 +165,11 @@
 				var precedenceRelations = [];
 				
 
-				for(var i in transactions){
-					var transaction = transactions[i];
+				for(var j in useCaseRecord.transactions){
+					var transaction = useCaseRecord.transactions[j];
 					var prevNode = null;
-					for(var j in transaction.Nodes){
-						var node = transaction.Nodes[j];
+					for(var k in transaction.Nodes){
+						var node = transaction.Nodes[k];
 					
 						activities.push(node);
 						activitiesByID[node._id] = node;
@@ -169,36 +178,20 @@
 						}
 						prevNode = node;
 					}
+					UseCase.Transactions.push(transaction);
 				}
 
 				UseCase.Activities = UseCase.Activities.concat(activities);
 				UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
 				
 				UseCases.push(UseCase);
+				}
 				
-				resolve();
 				
+				if(callback){
+            		callback(UseCases);
+            	}
 			});
-			});
-		}
-		
-		 return Promise.all(useCaseRecordList.map(useCaseRecord=>{
-		        return identifyUseCase(useCaseRecord);
-		    })).then(
-		        function(){
-		            return new Promise((resolve, reject) => {
-		                setTimeout(function(){
-		                	if(callback){
-		                		callback(UseCases);
-		                	}
-		                    resolve();
-		                }, 0);
-		            });
-		        }
-
-		    ).catch(function(err){
-		        console.log(err);
-		    });
 
 
 	}

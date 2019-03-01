@@ -1,18 +1,24 @@
+(function() {
+	// the data structure are assumed in the upper analysis.
+	
 	var fs = require('fs');
 	var path = require('path');
-	var mkdirp = require('mkdirp');
-	var uuidV1 = require('uuid/v1');
-	var codeAnalysisUtil = require("./CodeAnalysisUtil.js");
-	var stringSimilarity = require('string-similarity');
 	var fileManagerUtil = require("./FileManagerUtils.js");
+
+	var async = require("async");
 	
 	//the log file might be very large, specical stream reader is required.
 	
 	var es = require('event-stream');
 
-	function filterAndroidLog(logPath){
+	function filterAndroidLog(logPath, filterFilePath, outputDir){
 		// can also use this function as a filter of the file.
 		console.log("filter android log");
+		
+		if(fs.lstatSync(logPath).isDirectory()){
+			 filterAndroidLogs(logPath, filterFilePath, outputDir);
+			return;
+		}
 		
 		var lineNr = 0;
 
@@ -20,6 +26,13 @@
 
 		var debuggerOutputUtil = require("./DebuggerOutput.js");
 		
+
+		var filterNames = []
+		
+		if(fileManagerUtil.existsSync(filterFilePath)){
+			filterNames = fileManagerUtil.readFileSync(filterFilePath).split(/\r?\n/g);
+		}
+
 		var s = fs.createReadStream(logPath)
 		.pipe(es.split())
 		.pipe(es.mapSync(function(line){
@@ -30,22 +43,21 @@
 
 			lineNr += 1;
 			
-			if((line.indexOf("getIntervalWidth()") > -1) || (line.indexOf("getIntervalRead()") > -1) || (line.indexOf("\"logType\":\"exit\"") > -1)){
-				s.resume();
-				return;
+			for(var i in filterNames){
+				if(line.indexOf(filterNames[i])>-1){
+					s.resume();
+					return;
+				}
 			}
 			
-			debuggerOutputUtil.appendFile1("filtered_android_log", line+"\n");
+			console.log(line);
+			
+			debuggerOutputUtil.appendFile2("filtered_android_log", line+"\n", outputDir);
 
-	    	
-			// resume the readstream, possibly from a callback
 			s.resume();
 		})
 		.on('error', function(err){
 			console.log('Error while reading file.', err);
-			if(callback){
-				callback(false);
-			}
 		})
 		.on('end', function(){
 			console.log('Read entire file.')
@@ -53,5 +65,97 @@
 		);
 	}
 	
-	filterAndroidLog("./data/GitAndroidAnalysis/batch_analysis/AnotherMonitor-release/another_monitor_log.file");
+	
+	function filterAndroidLogs(logFolder, filterFilePath, outputDir){
+		
+		var debuggerOutputUtil = require("./DebuggerOutput.js");
+		
+		fs.readdir(logFolder, function (err, logPaths) {
+			
+		    const stringData = {};
+		    
+			var filterNames = []
+			
+			if(fileManagerUtil.existsSync(filterFilePath)){
+				filterNames = fileManagerUtil.readFileSync(filterFilePath).split(/\r?\n/g);
+			}
+	    
+		  async.eachSeries(logPaths, function (file, done) {
+
+		    fs.stat(logFolder+"/"+file, function (err, stats) {
+		      if(err){done(); return;}
+		      
+		      if (stats.isDirectory()) { done(); return;}
+		      console.log("read file: "+file);
+
+		      var stream = fs.createReadStream(logFolder+"/"+file).on('end', function () {
+		    	  console.log("end file"+file);
+		    	  done()
+		    	  
+		      }).on('data', function (data) {
+		    	  if(!stringData[file]){
+		    		  stringData[file] = [];
+		    	  }
+		    	  stringData[file].push(data);
+		    });
+		      
+		  });
+		  }, function () {
+
+			  for(var i in stringData){
+				  console.log("log files");
+				  console.log(i);
+				  var str = Buffer.concat(stringData[i]).toString();
+			  	
+					 var lines = str.split(/\r?\n/g);
+					 var lineNr = 0;
+					 
+					 for(var j in lines){
+				
+
+				    lineNr += 1;
+				
+					var line = lines[j];
+
+			    	if(line === ""){
+			    		continue;
+			    	}
+			    	
+			    	var toFilter = false;
+			    	
+					for(var k in filterNames){
+						if(line.indexOf(filterNames[k])>-1){
+//							continue;
+							toFilter = true;
+							break;
+						}
+					}
+					
+					if(toFilter){
+						continue;
+					}
+					
+//					console.log(line);
+//					var filteredFileName = path.basename(i);
+					debuggerOutputUtil.appendFile2(i, line+"\n", logFolder+"/filteredLogs");
+					
+				}
+			  }
+			  
+			  
+			  process.exit();
+		  });
+		  
+		});
+	}
+	
+	
+	module.exports = {
+			filterAndroidLog: filterAndroidLog,
+			filterAndroidLogs: filterAndroidLogs
+		}
+	}())
+
+	
+//	filterAndroidLog("./data/GitAndroidAnalysis/log_analysis/AnotherMonitor-release/log.file", "./data/GitAndroidAnalysis/log_analysis/AnotherMonitor-release/filterNames");
 	

@@ -2,8 +2,9 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var path = require('path')
+	const mkdirpSync = require('mkdirp-sync');
 	
-	 function deleteFolderRecursive(dir, rmSelf) {
+	 function deleteFolderRecursive(dir, rmSelf){
 		    var files;
 		    rmSelf = (rmSelf === undefined) ? true : rmSelf;
 		    dir = dir + "/";
@@ -31,6 +32,10 @@
 
 	 function existsSync(filePath){
 			return fs.existsSync(filePath);
+	 }
+	 
+	 function mkDirSync(dirPath){
+		 mkdirpSync(dirPath);
 	 }
 	 
 	 function readFilesSync(filePaths){
@@ -191,6 +196,7 @@
 			writeFileSync: writeFileSync,
 			deleteFileSync: deleteFileSync,
 			appendFile: appendFile,
-			existsSync: existsSync
+			existsSync: existsSync,
+			mkDirSync: mkDirSync
 	}
 }())
