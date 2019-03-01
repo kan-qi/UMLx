@@ -134,17 +134,11 @@
 			maxLevel = clusteredClass.depth;
 		}
 		rootClusterClass.children.push(clusteredClass);
-//		var cutoffDepth = clusteringConfig.cut*clusteredClass.depth; //there might be multiple criterion to determining the cutoff tree
 		}
 		
 		rootClusterClass.depth = maxLevel+1;
 		
-		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth;
-//		var cutoffDepth = 3;
-//		console.log("cutoff");
-//		console.log(cutoffDepth);
-//		cutoffDepth = 12;
-//		process.exit();
+		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
 		
 		var currentLevel = [];
 		var currentLevelDepth = 0;
@@ -343,9 +337,6 @@
 						else{
 							var log_freq_1 = Math.log(classes.length/referencingClasses[parseInt(key1)]);
 							var log_freq_2 = Math.log(classes.length/referencingClasses[parseInt(key2)]);
-//							console.log(log_freq_1);
-//							console.log(log_freq_2);
-							//relative weight
 							if(key1 === key2){
 								metrics[parseInt(key1)][parseInt(key2)] = log_freq_1;
 							}
@@ -353,9 +344,7 @@
 								metrics[parseInt(key1)][parseInt(key2)] = (referencedElements[parseInt(key1)][parseInt(key2)] ? connectors[parseInt(key1)][parseInt(key2)]/referencedElements[parseInt(key1)][parseInt(key2)] : 0) * log_freq_1 + (referencedElements[parseInt(key2)][parseInt(key1)] ? connectors[parseInt(key2)][parseInt(key1)]/referencedElements[parseInt(key2)][parseInt(key1)] : 0 )*log_freq_2;
 							}
 						}
-//					}
 				}
-//			}
 		}
 		
 		

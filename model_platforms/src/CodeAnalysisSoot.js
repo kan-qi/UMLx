@@ -8,33 +8,7 @@
  * Identify the system components.
  * Establish the control flow between the components
  * Identify the stimuli.
- * 
- * /*
-	 * There are three layers:
-	 * codeElement-code:ClassUnit
-	 * 		-source
-	 * 			- region
-	 * 		-codeRelation-code:Imports
-	 *		-codeElement-code:StorableUnit
-	 *      -codeElement-code:MethodUnit
-	 *        -source
-	 *        -codeElement-code:signature
-	 *        	-parameterUnit
-	 *        -codeElement-action:BlockUnit
-	 *          -codeElement-action:ActionElement
-	 *            -codeElement-action:ActionElement
-	 *            -actionRelation-action:Address
-	 *            -actionRelation-action:Reads
-	 *            -actionRelation-action:Calls
-	 *            -actionRelation-action:Creates
-	 *            -codeElement-code:ClassUnit
-	 *      -codeElement-code:InterfaceUnit
-	 *           -codeRelation-code:Imports
-	 *           -codeRelation-code:MethodUnit
-	 *      -codeElement-code:ClassUnit
-	 *           
-	 * The function is recursively designed to take care of the structure.
-	 *           
+ *      
  */
 
 (function () {
@@ -107,15 +81,7 @@
 			
 			for(var j in referencedClassUnit.attrUnits){
 				var referencedAttrUnit = referencedClassUnit.attrUnits[j];
-//				var attrUnit = {
-//					name:referencedAttrUnit.name,
-//					type:referencedAttrUnit.type,
-//					UUID:referencedAttrUnit.UUID
-//				}
-				dicAttrUnits[referencedAttrUnit.UUID] = referencedAttrUnit;
-//				referencedClassUnit.AttrUnits.push(attrUnit);
-				
-				
+				dicAttrUnits[referencedAttrUnit.UUID] = referencedAttrUnit;				
 			}
 		}
 		
@@ -164,8 +130,6 @@
 			dicMethodParameters: dicMethodParameters
 		};
 	
-//		debug.writeJson2("converted-android-analysis-results-dicClassUnits", dicClassUnits);
-//		debug.writeJson2("converted-android-analysis-results-dicMethodUnits", dicMethodUnits);
 		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
