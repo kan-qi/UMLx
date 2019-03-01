@@ -328,8 +328,8 @@
 		var nodesAttrCompositeByID = {};
 		var edgesAttrCompositeByID = {};
 		
-
 		//right now I'm directly using the type dependency graph. Need to make an individual graph.
+
 		for(var i in androidAnalysisResults.typeDependencyGraph.nodes){
 			
 			var node = androidAnalysisResults.typeDependencyGraph.nodes[i];

@@ -304,10 +304,8 @@
 		return array;
 	}
 	
-	
 	function calculateWeight(typeDependencyGraph, callGraph, accessGraph, compositionGraph, extendsGraph, classes, classDic, methods, attrs, w){
-		
-		
+
 		console.log("call metric start");
 		
 		var metrics = zeroArray(classes.length, classes.length);
@@ -345,6 +343,8 @@
 						else{
 							var log_freq_1 = Math.log(classes.length/referencingClasses[parseInt(key1)]);
 							var log_freq_2 = Math.log(classes.length/referencingClasses[parseInt(key2)]);
+//							console.log(log_freq_1);
+//							console.log(log_freq_2);
 							//relative weight
 							if(key1 === key2){
 								metrics[parseInt(key1)][parseInt(key2)] = log_freq_1;
@@ -358,11 +358,10 @@
 //			}
 		}
 		
+		
 		return metrics;
 		
 	}
-	
-	
 	
 	function calculateDependencyMetric(typeDependencyGraph, callGraph, accessGraph, compositionGraph, classes, classDic, methods, relative) {
 		
