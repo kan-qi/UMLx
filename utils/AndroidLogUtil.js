@@ -9,90 +9,87 @@
 
 	var exec = require('child_process').exec;
 	
-	//the log file might be very large, specical stream reader is required.
+	// the log file might be very large, specical stream reader is required.
 	
 	var es = require('event-stream');
+	var async = require("async");
 	
 	
-	function parseAndroidLogs(logPaths, startTime, endTime, callback){
-//		var directory = path.join(__dirname, 'css');
-		// can also use this function as a filter of the file.
+	function parseAndroidLogs(logPaths, dir, startTime, endTime, callback){
 		var lineNr = 0;
 
 	    var lastMethodSign = "";
 	    
+	    const stringData = {};
+	    
+	    var str = "";
+	    
 	    var data = [];
 	    
 	    var methods = [];
-	
-		  async.eachSeries(logPaths, function (file, callback) {
-		    if (!endsWith(file, '.json')) { return callback(false); } // (1)
+	    
+		  async.eachSeries(logPaths, function (file, done) {
 
-		    fs.stat(file, function (err, stats) {
-		      if (stats.isDirectory()) { return callback(); } // (2)
+		    fs.stat(dir+"/"+file, function (err, stats) {
+		      if(err){done(); return;}
+		      
+		      if (stats.isDirectory()) { done(); return;}
+		      console.log("read file: "+file);
 
-		      var stream = fs.createReadStream(file).on('end', function () {
-//		        callback(); // (3)
-		    	  console.log("end file");
+		      var stream = fs.createReadStream(dir+"/"+file).on('end', function () {
+		    	  console.log("end file"+file);
+		    	  done()
 		    	  
 		      }).on('data', function (data) {
-//		    	  concatenated += data.toString('utf8'); 
-		    	  
-		    	// pause the readstream
-					s.pause();
+		    	  if(!stringData[file]){
+		    		  stringData[file] = [];
+		    	  }
+		    	  stringData[file].push(data);
+		    });
+		      
+		  });
+		  }, function () {
 
-					lineNr += 1;
+			  for(var i in stringData){
+				  var str = Buffer.concat(stringData[i]).toString();
+			  	
+					 var lines = str.split(/\r?\n/g);
+					 
+					 for(var j in lines){
+				
 
-					 //code here using lines[i] which will give you each line
-//			    	var line = lines[i];
+				    lineNr += 1;
+				
+					var line = lines[j];
 
 			    	if(line === ""){
-			    		s.resume();
-			    		return;
+			    		continue;
 			    	}
 			    	
-//			    	var tagPos = line.indexOf("V/Xlog:");
 			    	var tagPos = line.indexOf("Xlog : ");
 			    	
 			    	if(tagPos == -1){
-			    		s.resume();
-			    		return;
+			    		continue;
 			    	}
 			    	
-//			    	console.log(line.substring(tagPos+7, line.length));
-			    	
 			    	var dataElement = JSON.parse(line.substring(tagPos+7, line.length));
-//			    	var dataElement = JSON.parse(line.substring(tagPos+8, line.length));
-			    	
 			    	
 					var timeStamp = Number(dataElement.time);
 					
 					if(timeStamp < startTime || timeStamp > endTime){
-						s.resume();
-			    		return;
+			    		continue;
 					}
-					
-//			    	console.log(dataElement);
-			    	
-			    	if(dataElement.methodSign !== lastMethodSign){
-//			    		console.log(dataElement.methodSign);
+
+					if(dataElement.methodSign !== lastMethodSign){
 			    		methods.push(dataElement.methodSign);
 			    		data.push(dataElement);
-//			    		data[dataElement.time] = dataElement;
 			    	}
 			    	
 			    	lastMethodSign = dataElement.methodSign;
-			    	
-					// resume the readstream, possibly from a callback
-					s.resume();
 					
-		      });
-//		      stream.pipe(res, { end: false }); // (4)
-		    });
-		  }, function () {
-//		    res.end(); // (5)
-			  
-			  console.log('Read entire file.')
+					 }
+			  }
+				
 				if(callback){
 					callback(data);
 				}
@@ -101,10 +98,8 @@
 	}
 	
 	function parseAndroidLogFolder(logFolder, startTime, endTime, callback){
-//		var directory = path.join(__dirname, 'css');
-		fs.readdir(directory, function (err, files) {
-			
-			parseAndroidLogs(files, startTime, endtime, callback);
+		fs.readdir(logFolder, function (err, files) {
+			parseAndroidLogs(files, logFolder, startTime, endTime, callback);
 		  
 		});
 	}
@@ -127,16 +122,12 @@
 			s.pause();
 
 			lineNr += 1;
-
-			 //code here using lines[i] which will give you each line
-//	    	var line = lines[i];
-
+			
 	    	if(line === ""){
 	    		s.resume();
 	    		return;
 	    	}
 	    	
-//	    	var tagPos = line.indexOf("V/Xlog:");
 	    	var tagPos = line.indexOf("Xlog : ");
 	    	
 	    	if(tagPos == -1){
@@ -144,10 +135,8 @@
 	    		return;
 	    	}
 	    	
-//	    	console.log(line.substring(tagPos+7, line.length));
-	    	
 	    	var dataElement = JSON.parse(line.substring(tagPos+7, line.length));
-//	    	var dataElement = JSON.parse(line.substring(tagPos+8, line.length));
+// var dataElement = JSON.parse(line.substring(tagPos+8, line.length));
 	    	
 	    	
 			var timeStamp = Number(dataElement.time);
@@ -156,19 +145,14 @@
 				s.resume();
 	    		return;
 			}
-			
-//	    	console.log(dataElement);
 	    	
 	    	if(dataElement.methodSign !== lastMethodSign){
-//	    		console.log(dataElement.methodSign);
 	    		methods.push(dataElement.methodSign);
 	    		data.push(dataElement);
-//	    		data[dataElement.time] = dataElement;
 	    	}
 	    	
 	    	lastMethodSign = dataElement.methodSign;
 	    	
-			// resume the readstream, possibly from a callback
 			s.resume();
 		})
 		.on('error', function(err){
@@ -200,7 +184,6 @@
 		.pipe(es.split())
 		.pipe(es.mapSync(function(line){
 			
-			
 			// pause the readstream
 			s.pause();
 
@@ -213,7 +196,6 @@
 			
 			debuggerOutputUtil.appendFile1("filtered_android_log", line);
 
-	    	
 			// resume the readstream, possibly from a callback
 			s.resume();
 		})
@@ -229,67 +211,9 @@
 		);
 	}
 	
-//	function parseAndroidLog(logPath){
-//		
-//				var str = fileManagerUtil.readFileSync(logPath);
-//
-//			  	var data = [];
-////				var data = {};
-//			    var lines = str.split(/\r?\n/g);
-//			    var cols = [];
-//			    var lastMethodSign = "";
-//			    
-//			    var methods = [];
-//			    
-//			    for(var i = 0;i < lines.length;i++){
-//			        //code here using lines[i] which will give you each line
-//			    	var line = lines[i];
-//
-//			    	if(line === ""){
-//			    		continue;
-//			    	}
-//			    	
-////			    	var tagPos = line.indexOf("V/Xlog:");
-//			    	var tagPos = line.indexOf("Xlog : ");
-//			    	
-//			    	if(tagPos == -1){
-//			    		continue;
-//			    	}
-//			    	
-//			    	var dataElement = JSON.parse(line.substring(tagPos+7, line.length));
-////			    	var dataElement = JSON.parse(line.substring(tagPos+8, line.length));
-//			    	
-////			    	console.log(dataElement);
-//			    	
-//			    	if(dataElement.methodSign !== lastMethodSign){
-////			    		console.log(dataElement.methodSign);
-//			    		methods.push(dataElement.methodSign);
-//			    		data.push(dataElement);
-////			    		data[dataElement.time] = dataElement;
-//			    	}
-//			    	
-//			    	lastMethodSign = dataElement.methodSign;
-//			    }
-//			    
-//
-//				var debug = require("./DebuggerOutput.js");
-//				debug.writeJson("android_transaction_data", methods);
-//		
-//			    return data;
-//	}
-	
 	function identifyTransactions(logPath, dicComponent, dicComponentDomainElement, dicResponseMethodUnits, startTime, endTime, callback){
-		parseAndroidLog(logPath, startTime, endTime, function(data){
-//				
-//				for(var i in domainModel.Elements){
-//					var element = domainModel.Elements[i];
-//					console.log("processing element: "+element.Name);
-//					for(var j in element.Operations){
-//						var operation = element.Operations[j];
-//						domainModelElementsByMethod[operation.Name] = element;
-//					}
-//				}
-			
+
+		parseAndroidLogFolder(logPath, startTime, endTime, function(data){
 			
 				if(!data){
 					console.log('read log error');
@@ -303,8 +227,6 @@
 			  	var dicMethods = {};
 			  	var methodSigns = [];
 			  	
-			  	console.log("establish methods for components:");
-			  	
 			  	for(var i in dicComponent){
 			  		var component = dicComponent[i];
 			  		for(var j in component.classUnits){
@@ -317,24 +239,15 @@
 			  				dicMethodComponent[methodSign] = component;
 			  				dicMethods[methodSign] = methodUnit;
 			  				methodSigns.push(methodSign);
-//			  				console.log(methodSign);
 			  			}
 			  		}
 			  	}
 			  	
-
-				var debug = require("./DebuggerOutput.js");
-//				debug.writeJson2("dicMethodComponent", dicMethodComponent);
-				debug.writeJson2("methodSigns", methodSigns);
-				
 				var transactions = [];
 				
 				var transaction = null;
 				
 				var lastDomainModelElement = null;
-				
-//				console.log("log data");
-//				console.log(data);
 				
 				var ind = 0;
 				
@@ -343,21 +256,15 @@
 					
 					var dataElement = data[i];
 					
-					console.log("processing call: "+dataElement.methodSign);
-					
-//					var domainModelElement = domainModelElementsByMethod[dataElement.methodSign];
-//					var domainModelElement = dicMethodComponent[dataElement.methodSign];
-					
 					var domainModelElement = null;
 					var matches = stringSimilarity.findBestMatch(dataElement.methodSign, methodSigns);
-					console.log("best matched method:" + matches.bestMatch.target);
-//					if(matches.bestMatch.rating > 0.9){
+// if(matches.bestMatch.rating > 0.9){
 					component = dicMethodComponent[matches.bestMatch.target];
 					domainModelElement = dicComponentDomainElement[component.UUID]
-//					}
+// }
 					
 					if(domainModelElement == null || domainModelElement == lastDomainModelElement){
-//						lastDomainModelElement = domainModelElement;
+// lastDomainModelElement = domainModelElement;
 						continue;
 					}
 					
@@ -384,7 +291,6 @@
 					
 					var activity = {
 							Name: methodUnit.name,
-//							Name: ind+"method",
 							_id: uuidV1().replace(/\-/g, "_"),
 							Type: "activity",
 							Stimulus: transaction.Nodes.length == 0? true: false,
@@ -398,46 +304,27 @@
 					lastDomainModelElement = domainModelElement;
 				}
 				
-//				console.log("transaction retrieved");
-//				console.log(startTime);
-//				console.log(endTime);
-//				console.log(data);
-//				console.log(transaction);
-//				process.exit(0);
-				
 				if(transaction != null){
 					transactions.push(transaction);
 				}
 				
-//				console.log("transactions:");
-//				console.log(transactions);
-				
-//				var debug = require("./DebuggerOutput.js");
-//				debug.writeJson2("identifiedTransactions", transactions);
-				
-//				return transactions;
-				
 				if(callback){
 					callback(transactions);
 				}
-//			  
-//		});
 		});
 	}
 	
 	function identifyTransactionsFile(logPath, modelPath){
-//		fs.readFile(modelPath, 'utf-8', (err, str) => {
-//			  if (err) throw err;
 				var str = fileManagerUtil.readFileSync(modelPath);
 				var dicComponent = JSON.parse(str);
 				return identifyTransactions(logPath, dicComponent);
 			  
-//		});
 	}
 	
 	function generateAndroidAnalysis(apkFileName, outputDir) {
 		  
 	var executeAPKAnalysis = function(apkFileName, outputDir, callback){
+		
 	  if(!apkFileName){
 		  	console.log('empty apk name');
 		  	if(callback){
@@ -448,40 +335,6 @@
 
 	  var apkName = apkFileName.replace(/\.apk/g, "");
 	  
-	  apkOutputDir = outputDir + "\\" + apkName;
-	  
-	//  FileManagerUtil.deleteFolderRecursive(outputDir);
-	
-	  	mkdirp(apkOutputDir, function(err) {
-	      //to generate svg file.
-	  		
-	  	if(err){
-	  		console.log('error in creating output folder');
-		  	if(callback){
-		  		callback(false);
-		  	}
-	  		return;
-	  	}
-			  
-//		var appRoot = path.dirname(require.main.filename);
-//		var apkName = apkFileName.replace(/\.apk/g, "");
-		
-//		var command = "wsl.exe java -Xmx12G " +
-//				"-cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main " +
-//				"-sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid " +
-//				"-sdkDir /mnt/c/Android_SDK " +
-//				"-listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml " +
-//				"-wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml " +
-//				"-resourcePath /tmp/gator-awg1muop/res " +
-//				"-manifestFile /tmp/gator-awg1muop/AndroidManifest.xml " +
-//				"-project \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
-//				"-apiLevel android-26 " +
-//				"-guiAnalysis " +
-//				"-benchmarkName \""+apkName+"\" "+
-//				"-android /mnt/c/Android_SDK/platforms/android-26/android.jar " +
-//				"-client GUIHierarchyPrinterClient " +
-//				"-outputDir \"/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"\"";
-
 	   var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
 	   		"-p \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
 	   		"-client GUIHierarchyPrinterClient " +
@@ -489,17 +342,10 @@
 	   
 	   console.log(command);
 
-	   apkOutputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
-		
 		var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
 			if (error !== null) {
-				// On Windows, closing the eclipse window will trigger this error
-				// callbackfunc(new Error("Error generating KDM."));
 				console.log("error in generating apk analysis.");
 				console.log(error);
-//				if(callbackfunc){
-//					callbackfunc(false);
-//				}
 				if(callback){
 			  		callback(false);
 			  	}
@@ -507,137 +353,19 @@
 			}
 			
 			if(callback){
-				callback(apkOutputDir)
+				callback(outputDir)
 			}
 		});
 		
-	  	});
 		
 	 }
 	
 		
 		return checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir)
-//			.then(function(res) {
-//				
-//				console.log("time out and kill");
-//				child.kill();
-//
-//				callbackfunc(outputFiles);
-//
-//				console.log("android analysis is finished.")
-//			})
-//			.catch(function(err) {
-//				callbackfunc(err);
-//			});
+
 	}
 	
 	
-//	function generateAndroidAnalysis(apkFileName, callbackfunc) {
-////		var appRoot = path.dirname(require.main.filename);
-//		var apkName = apkFileName.replace(/\.apk/g, "");
-//		
-////		var command = "wsl.exe java -Xmx12G " +
-////				"-cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main " +
-////				"-sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid " +
-////				"-sdkDir /mnt/c/Android_SDK " +
-////				"-listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml " +
-////				"-wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml " +
-////				"-resourcePath /tmp/gator-awg1muop/res " +
-////				"-manifestFile /tmp/gator-awg1muop/AndroidManifest.xml " +
-////				"-project \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
-////				"-apiLevel android-26 " +
-////				"-guiAnalysis " +
-////				"-benchmarkName \""+apkName+"\" "+
-////				"-android /mnt/c/Android_SDK/platforms/android-26/android.jar " +
-////				"-client GUIHierarchyPrinterClient " +
-////				"-outputDir \"/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"\"";
-//
-//	   var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
-//	   		"-p \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
-//	   		"-client GUIHierarchyPrinterClient " +
-//	   		"-outputDir \"/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"\"";
-//	   
-//	   console.log(command);
-//
-//		var outputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
-//		
-//		var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
-//			if (error !== null) {
-//				// On Windows, closing the eclipse window will trigger this error
-//				// callbackfunc(new Error("Error generating KDM."));
-//				console.log("error in generating apk analysis.");
-////				console.log(error);
-////				if(callbackfunc){
-////					callbackfunc(false);
-////				}
-//				return;
-//			}
-//			
-////			if(callbackfunc){
-////				callbackfunc(outputDir)
-////			}
-//		});
-//
-//		var outputDir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
-////		var outputFile1 = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"/android-analysis-output.json";
-//		
-//		var outputFiles = ["gator-handlers.txt", "android-analysis-output.json"];
-//		
-//		
-//		checkExistsWithTimeout(outputFiles, outputDir, command)
-//			.then(function(res) {
-//				
-//				console.log("time out and kill");
-//				child.kill();
-//
-//				callbackfunc(outputFiles);
-//
-//				console.log("android analysis is finished.")
-//			})
-//			.catch(function(err) {
-//				callbackfunc(err);
-//			});
-//	}
-	
-//	// helper to wait for KDM output file to exist, and have content
-//	// modified from source:
-//	// https://stackoverflow.com/a/47764403
-//	function checkExistsWithTimeout(filePath, timeout = 100 * 1000) {
-//		return new Promise(function (resolve, reject) {
-//			var watcher = null;
-//			var timer = setTimeout(function () {
-//				if(watcher != null){
-//				watcher.close();
-//				}
-//				reject(new Error('File did not exists and was not created during the timeout.'));
-//			}, timeout);
-//	
-//			fs.access(filePath, fs.constants.R_OK, function (err) {
-//				if (!err) {
-//					clearTimeout(timer);
-//					if(watcher){
-//					watcher.close();
-//					}
-//					resolve();
-//				}
-//			});
-//	
-//			var dir = path.dirname(filePath);
-//			var basename = path.basename(filePath);
-//			watch = fs.watch(dir, function (eventType, filename) {
-//				if (eventType === 'change' && filename === basename) {
-//					clearTimeout(timer);
-//					watcher.close();
-//					resolve();
-//				}
-//			});
-//		});
-//	}
-	
-	
-	// helper to wait for KDM output file to exist, and have content
-	// modified from source:
-	// https://stackoverflow.com/a/47764403
 	function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, timeout = 3 * 60 * 60 * 1000) {
 		
 		
@@ -646,10 +374,20 @@
 
 			var apkName = apkFileName.replace(/\.apk/g, "");
 			 
-			var dir = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName;
-//			var outputFile1 = "D:/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/batch_analysis/"+apkName+"/android-analysis-output.json";
+			var dir = outputDir +"/"+apkName;
 			
 			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
+				
+			mkdirp(dir, function(err) {
+				      // to generate svg file.
+				  		
+				  	if(err){
+				  		console.log('error in creating output folder');
+				  		
+				  		reject(new Error('error in creating output folder.'));
+				  		
+				  		return;
+				  	}
 			
 			var watcher = null;
 			var timer = setTimeout(function () {
@@ -664,13 +402,9 @@
 				for(var i in fileNames){
 				   console.log("check file existence: "+fileNames[i]);
 				   require('fs').accessSync(dir+"/"+fileNames[i], fs.R_OK | fs.W_OK)
-				   //code to action if file exists
 				}
 			}catch(e){
-				   //code to action if file does not exist
-//				var dir = path.dirname(filePath);
-//				var basename = path.basename(filePath);
-				console.log("watch on files...");
+// console.log("watch on files...");
 				alreadyExist = false;
 				var checkExists = {};
 				for(var i in fileNames){
@@ -678,7 +412,7 @@
 				}
 				watcher = fs.watch(dir, function (eventType, filename) {
 					if (eventType === 'change') {
-						console.log(filename+" has changed");
+// console.log(filename+" has changed");
 						checkExists[filename] = 1;
 						var allExists = true;
 						
@@ -702,7 +436,7 @@
 
 				
 				if(executeAPKAnalysis){
-					executeAPKAnalysis(apkFileName, outputDir, function(result){
+					executeAPKAnalysis(apkFileName, dir, function(result){
 						clearTimeout(timer);
 						if(watcher != null){
 						watcher.close();
@@ -727,7 +461,6 @@
 			}
 		
 		if(alreadyExist){
-		// files exist, just return
 		console.log("files already exist");
 		setTimeout(function () {
 			clearTimeout(timer);
@@ -738,6 +471,7 @@
 		}, 10);
 		}
 			});
+		});
 			
 	}
 	

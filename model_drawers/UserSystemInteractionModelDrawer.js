@@ -93,52 +93,54 @@
 		return name.replace(/[\$|\<|\>]/g,"");
 	}
 
-	function drawDomainObjectNode(component){
-		//temporarily eliminate some unnecessary nodes
-		console.log("domain objects");
-		console.log(component);
+// 	function drawDomainObjectNode(component){
+// 		//temporarily eliminate some unnecessary nodes
+// 		console.log("domain objects");
+// 		console.log(component);
 		
-		component.Name = filterName(component.Name);
+// 		component.Name = filterName(component.Name);
 		
-		if(!component || !component.Name || component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
-			return null;
-		}
+// 		if(!component || !component.Name || component.Name === "System Boundary" || component.Name.startsWith('$') || component.Name === "SearchInvalidMessage" || component.Name.startsWith('ItemList')){
+// 			return null;
+// 		}
 		
-		var componentInternal = "<TABLE BORDER=\"1\" CELLBORDER=\"1\" CELLSPACING=\"0\">";
-		var componentInternalIndex = 0;
-		componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+component.Name+"</B></TD></TR>";
-		componentInternalIndex++;
-		for (var i in component.Attributes){
-			var attribute = component.Attributes[i];
-//			componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
-//			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name+"</B></TD></TR>";
-			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type+" "+filterName(attribute.Name)+"</B></TD></TR>";
+// 		var componentInternal = "<TABLE BORDER=\"1\" CELLBORDER=\"1\" CELLSPACING=\"0\">";
+// 		var componentInternalIndex = 0;
+// 		componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+component.Name+"</B></TD></TR>";
+// 		componentInternalIndex++;
+// 		for (var i in component.Attributes){
+// 			var attribute = component.Attributes[i];
+// //			componentInternal += '"'+attribute.Name+'"->"'+component.Name+'";';
+// //			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type.substring(7).replace("__", "[]")+" "+attribute.Name+"</B></TD></TR>";
+// 			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+attribute.Type+" "+filterName(attribute.Name)+"</B></TD></TR>";
 			
-			componentInternalIndex++;
-		}
+// 			componentInternalIndex++;
+// 		}
 		
-		for (var i in component.Operations){
-			var operation = component.Operations[i];
+// 		for (var i in component.Operations){
+// 			var operation = component.Operations[i];
 			
-			var operationSign = codeAnalysisUtil.genMethodSignSimple(operation);
+// 			var operationSign = codeAnalysisUtil.genMethodSignSimple(operation);
 			
-			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+filterName(operationSign)+"</B></TD></TR>";
-			componentInternalIndex++;
-		}
+// 			componentInternal += "<TR><TD PORT=\"f"+componentInternalIndex+"\"><B>"+filterName(operationSign)+"</B></TD></TR>";
+// 			componentInternalIndex++;
+// 		}
 
-//		label =<<TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
-//        <TR><TD PORT="f0"><B>title</B></TD></TR>
-//        <TR><TD PORT="f1">index</TD></TR>
-//        <TR><TD PORT="f2">field1</TD></TR>
-//        <TR><TD PORT="f3">field2</TD></TR>
-//    </TABLE>>
-		componentInternal += "</TABLE>";
+// //		label =<<TABLE BORDER="1" CELLBORDER="1" CELLSPACING="0">
+// //        <TR><TD PORT="f0"><B>title</B></TD></TR>
+// //        <TR><TD PORT="f1">index</TD></TR>
+// //        <TR><TD PORT="f2">field1</TD></TR>
+// //        <TR><TD PORT="f3">field2</TD></TR>
+// //    </TABLE>>
+// 		componentInternal += "</TABLE>";
 		
-		console.log("domain objects");
-		console.log(component);
-		console.log(componentInternal);
-		return component._id+'[label=<'+componentInternal+'> shape="none"];'
-	}
+// 		console.log("domain objects");
+// 		console.log(component);
+// 		console.log(componentInternal);
+
+
+// 		return component._id+'[label=<'+componentInternal+'> shape="none"];'
+// 	}
 	
 //	function drawDomainObjectNode(component){
 //		//temporarily eliminate some unnecessary nodes
@@ -186,10 +188,27 @@
 //		return component._id+'[label="'+componentInternal+'" shape=Mrecord];'
 //	}
 
-	function drawPrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
+	function drawUSIMDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
+
+		console.log("the domainmodel is: " + JSON.stringify(DomainModel));
+
+
+		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {  
+		    if (err) throw err; 
+		}) 
+
+
+		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {  
+		    if (err) throw err; 
+		}) 
+
+
 		var activities = UseCase.Activities;
 		var precedenceRelations = UseCase.PrecedenceRelations;
+
 		console.log(precedenceRelations);
+
+
 		var graph = 'digraph g {\
 			node [shape=plaintext]';
 //			node [margin=0 fontcolor=blue fontsize=12 width=0.01 shape=circle style=filled]';
@@ -298,12 +317,16 @@
 		
 		graph += "subgraph cluster"+1000+" {";
 //		var j = 0;
+
+
+
 		for(var i in DomainModel.Elements){
 			//arrange the nodes in the subgraph
 			
 			
 			
 			var domainObject = DomainModel.Elements[i];
+
 			var domainObjectToDraw = drawDomainObjectNode(domainObject);
 			
 			if(domainObjectToDraw){
@@ -326,24 +349,99 @@
 //		}
 		graph += "label = <<B>Domain Model</B>>;style=\"bold\";};";
 		
+		
+
 		for(var i in edgesToDomainObjects){
 			graph += edgesToDomainObjects[i];
 		}
+
+		
+
+
+
 		
 		graph += 'imagepath = \"./public\"}';
 		
 		
 //		dottyUtil = require("../utils/DottyUtil.js");
 		console.log("test graph");
-		console.log(graph);
+		console.log("the modele graph is " + graph);
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+
+			console.log("the usim file is in" +graphFilePath);
 			console.log("drawing is down");
 		});
+
 		return graph
 		
 	}
 
-	function drawSimplePrecedenceDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
+
+
+
+	function drawDomainObjectNode(component){
+
+		var graph = '';
+             graph += 'node [fontsize = 8 shape = "record"]';
+             graph += ' edge [arrowhead = "ediamond"]'
+		
+		//var curClass = domainModelElements[i];
+		var curClass = component;
+
+             graph += curClass["_id"];
+             graph += '[ id = ' + curClass["_id"];
+             graph += ' label = "{';
+             graph += curClass["Name"];
+
+
+             var classAttributes = curClass["Attributes"];
+             if (classAttributes.length != 0){
+                 graph += '|';
+                 for(j = 0; j < classAttributes.length; j++) {
+                     graph += '-   ' ;
+                     graph += classAttributes[j]["Name"];
+                     graph += ':'+classAttributes[j]["Type"];
+                     graph += '\\l';
+                 }
+             }
+
+
+             var classOperations = curClass["Operations"];
+             if (classOperations.length != 0){
+                 graph += '|';
+                 for(j = 0; j < classOperations.length;j++) {
+
+                	 graph += '+   ' ;
+                     graph += classOperations[j]["Name"] + '(';
+                     var para_len = classOperations[j]["Parameters"].length;
+                     for (k = 0; k < classOperations[j]["Parameters"].length; k++) {
+                    	 graph += classOperations[j]["Parameters"][k]["Type"]+" "+ classOperations[j]["Parameters"][k]["Name"];
+                     }
+
+                     graph += ')';
+                     graph += "\\l";
+                 }
+             }
+
+             graph += '}"]';
+
+                 
+		return graph ;
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+	function drawTransactionsDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
 		var activities = UseCase.Activities;
 		var precedenceRelations = UseCase.PrecedenceRelations;
 		console.log(precedenceRelations);
@@ -411,6 +509,8 @@
 
 		return graph;
 	}
+
+
 	
 	function drawDomainModelFunc(DomainModel, graphFilePath, callbackfunc){
 
@@ -470,6 +570,11 @@
 	}
 
 
+
+
+
+
+
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
 
 		console.log("the whole class diagram model is" + domainModel);
@@ -482,7 +587,8 @@
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
              graph += ' edge [arrowhead = "ediamond"]'
-             for(i = 0;  i < domainModelElements.length; i++){
+
+            for(i = 0;  i < domainModelElements.length; i++){
                  var curClass = domainModelElements[i];
                  graph += curClass["_id"];
                  graph += '[ id = ' + curClass["_id"];
@@ -544,9 +650,15 @@
 
             return graph;
 		}
+
+
+
+
+
 	
 	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
 		
+
 
 		if(typeof dicComponent === 'undefined'){
      		return;
@@ -643,6 +755,7 @@
      		});
 
             return graph;
+
 	}
 
 
@@ -650,6 +763,7 @@
 	
 	
 	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
+
 
 		// var debug = require("../utils/DebuggerOutput.js");
 		// debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
@@ -744,9 +858,15 @@
 
             return graph;
 	
+
+		var debug = require("../utils/DebuggerOutput.js");
+		debug.writeJson2("class_unit_graph_7_5", dicClassUnits);
+		
+
 	}
 	
 	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
+
 
 		// var debug = require("../utils/DebuggerOutput.js");
 		// debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
@@ -832,11 +952,15 @@
 
             return graph;
 
+
+		var debug = require("../utils/DebuggerOutput.js");
+		debug.writeJson2("composite_class_graph_7_5", dicCompositeClassUnits);
+
 	}
 	
 	module.exports = {
-			drawSimplePrecedenceDiagram:drawSimplePrecedenceDiagramFunc,
-			drawPrecedenceDiagram: drawPrecedenceDiagramFunc,
+			drawTransactionsDiagram:drawTransactionsDiagramFunc,
+			drawUSIMDiagram: drawUSIMDiagramFunc,
 			drawDomainModel: createDomainModelDiagram,
 			drawComponentDiagram: drawComponentDiagram,
 			drawClassDiagram: drawClassDiagram,

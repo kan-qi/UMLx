@@ -53,19 +53,14 @@
 					Component: domainElement
 			}
 
-
 			activities.push(activity);
 			activitiesByID[activity._id] = activity;
 		}
-
 
 		var precedenceRelations = [];
 
 		for(var i in edges){
 			var edge = edges[i];
-
-			console.log("edge");
-			console.log(edge);
 
 			var startId = "a"+edge.start.UUID.replace(/\-/g, "_");
 			var endId = "a"+edge.end.UUID.replace(/\-/g, "_");
@@ -77,7 +72,6 @@
 				continue;
 			}
 
-			console.log("push edge");
 			precedenceRelations.push({start: start, end: end});
 		}
 
@@ -91,8 +85,6 @@
 	}
     
   function identifyUseCasesfromAndroidLog(dicComponent, dicComponentDomainElement, dicResponseMethodUnits, ModelOutputDir, ModelAccessDir, androidLogPath, useCaseRecordPath, callback){
-		
-//		var androidLogPath = "./data/GitAndroidAnalysis/android-demo-log.txt"	;
 		
 		var UseCases = [];
 		
@@ -119,10 +111,6 @@
 	    	var startTime = new Date(useCaseRecord.substring(0, tagPos)).getTime();
 	    	var useCaseName = useCaseRecord.substring(tagPos+7, useCaseRecord.length);
 	    	
-//	    	console.log("use case record:");
-//	    	console.log(startTime);
-//	    	console.log(useCaseName);
-	    	
 	    	var nextUseCaseRecord = useCaseRecords[++i];
 	    	
 	    	tagPos = nextUseCaseRecord.indexOf(" End ");
@@ -135,8 +123,6 @@
 	    	
 	    	var endTime = new Date(nextUseCaseRecord.substring(0, tagPos)).getTime();
 	    	
-//	    	console.log(endTime);
-	    	
 	    	if(useCaseName !== nextUseCaseRecord.substring(tagPos+5, nextUseCaseRecord.length)){
 	    		console.log("tag doesn't match as pairs");
 	    		i--;
@@ -148,62 +134,13 @@
 	    		startTime: startTime,
 	    		endTime: endTime
 	    	});
-	    	
-		
-//			var UseCase = {
-//					_id: useCaseName,
-//					Name: useCaseName,
-//					PrecedenceRelations : [],
-//					Activities : [],
-//					OutputDir : ModelOutputDir+"/"+useCaseName,
-//					AccessDir : ModelAccessDir+"/"+useCaseName,
-//					DiagramType : "none"
-//			}
-//
-//			var activities = [];
-//			var activitiesByID = {}
-//			var precedenceRelations = [];
-			
-			
-//		var transactions = androidLogUtil.identifyTransactions(androidLogPath, dicComponent, startTime, endTime);
-//		
-////		console.log("dicComponent");
-////		console.log(dicComponent);
-//		console.log("identified transactions");
-//		console.log(transactions);
-//		process.exit(0);
-//
-//		for(var i in transactions){
-//			var transaction = transactions[i];
-//		var prevNode = null;
-//		for(var j in transaction.Nodes){
-//			var node = transaction.Nodes[j];
-//
-//			activities.push(node);
-//			activitiesByID[node._id] = node;
-//			if(prevNode){
-//				precedenceRelations.push({start: prevNode, end: node});
-//			}
-//			prevNode = node;
-//		}
-//		}
-//
-//		UseCase.Activities = UseCase.Activities.concat(activities);
-//		UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
-//
-//		UseCases.push(UseCase);
-	    	
+	    
 		}
 
-//		return UseCases;
-		
-		
 		function identifyUseCase(useCaseRecord){
 			return new Promise((resolve, reject) => {
 			androidLogUtil.identifyTransactions(androidLogPath, dicComponent, dicComponentDomainElement, dicResponseMethodUnits, useCaseRecord.startTime, useCaseRecord.endTime, function(transactions){
 				
-//		    	process.exit(0);
-		    	
 				var UseCase = {
 						_id: useCaseRecord.useCaseName,
 						Name: useCaseRecord.useCaseName,
@@ -218,11 +155,6 @@
 				var activitiesByID = {}
 				var precedenceRelations = [];
 				
-//				console.log("dicComponent");
-//				console.log(dicComponent);
-//				console.log("identified transactions");
-//				console.log(transactions);
-//				process.exit(0);
 
 				for(var i in transactions){
 					var transaction = transactions[i];
@@ -242,9 +174,6 @@
 				UseCase.Activities = UseCase.Activities.concat(activities);
 				UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
 				
-//				console.log(UseCase);
-//            	process.exit(0);
-
 				UseCases.push(UseCase);
 				
 				resolve();
@@ -257,26 +186,11 @@
 		        return identifyUseCase(useCaseRecord);
 		    })).then(
 		        function(){
-					console.log("=============Cache==============");
-//					var OutputDir = global.debugOutputDir ? global.debugOutputDir : './debug';
-//					for (var key in global.debugCache) {
-//						mkdirp(OutputDir, function(err) { 
-//							fs.writeFile(key, global.debugCache[key], function(err){
-//								if(err){
-//									console.log(err);
-//								}
-//							});
-//							});
-//						}
-					console.log("Finish write debug cache in files");
 		            return new Promise((resolve, reject) => {
 		                setTimeout(function(){
-		                	console.log("analysis finished");
 		                	if(callback){
 		                		callback(UseCases);
 		                	}
-//		                	console.log(UseCases);
-//		                	process.exit(0);
 		                    resolve();
 		                }, 0);
 		            });

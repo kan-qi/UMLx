@@ -16,9 +16,6 @@
 	var jp = require('jsonpath');
 	var codeAnalysisUtil = require("../../utils/CodeAnalysisUtil.js");
 	var stringSimilarity = require('string-similarity');
-
-//	var xpath = require('xpath');
-//	var dom = require('xmldom').DOMParser;
 	
 	function identifyResponse(codeAnalysisResults, responsePatternsFilePath){
 		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
@@ -31,8 +28,6 @@
 		if (responsePatternsFilePath && fs.existsSync(responsePatternsFilePath)) {
 		 
 		var contents = fs.readFileSync(responsePatternsFilePath, 'utf8');
-		
-//		console.log(contents);
 		
 		if(contents){
 		var lines = contents.split(/\r?\n/g);
@@ -60,14 +55,9 @@
 		   // Do something
 		}
 		
-//		console.log("method patterns");
-//		console.log(methodPatterns);
-//		console.log("parameter type patterns");
-//		console.log(parameterTypePatterns);
-//		console.log("parameter patterns");
-//		console.log(parameterPatterns);
-		
 		var dicResponseMethodUnits = {};
+
+		var methodSigns = [];
 		
 		for(var i in dicMethodUnits){
 			var methodUnit = dicMethodUnits[i];
@@ -91,10 +81,6 @@
 			
 			for(var j in methodUnit.parameterUnits){
 				var parameterUnit = methodUnit.parameterUnits[j];
-//				if(parameterUnit.type.indexOf("event") !=-1 || parameterUnit.type.indexOf("Event") !=-1) {
-//						MethodUnit.isResponse = true;
-//						console.log("found response method");
-//				}
 				
 				for(var k in parameterPatterns){
 					var parameterPattern = parameterPatterns[k];
@@ -120,10 +106,15 @@
 
 				if(methodUnit.isResponse){
 					dicResponseMethodUnits[methodUnit.UUID] = methodUnit;
+					var methodSign = codeAnalysisUtil.genMethodSignType(methodUnit);
+					methodSigns.push(methodSign);
 					break;
 				}
 			}
 		}
+		
+		var debug = require("../../utils/DebuggerOutput.js");
+		debug.writeJson2("identified_reponse_methods", methodSigns);
 		
 		return dicResponseMethodUnits;
 	}
@@ -141,10 +132,9 @@
 		 
 		var contents = fs.readFileSync(gatorFilePath, 'utf8');
 		
-//		console.log(contents);
-		
 		var dicMethodSign = {};
 		var methodSigns = [];
+		
 		for(var i in dicClassUnits){
 			var classUnit = dicClassUnits[i];
 			
@@ -155,13 +145,14 @@
 				var methodSign = classUnit.packageName+"."+classUnit.name+"."+codeAnalysisUtil.genMethodSignType(methodUnit);
 			
 				dicMethodSign[methodSign] = methodUnit.UUID;
+				
 				methodSigns.push(methodSign);
 			}
 		}
 		
 
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson2("method_signs", methodSigns);
+		debug.writeJson2("identified_reponse_methods", methodSigns);
 		
 		var dicResponseMethodUnits = {};
 		
@@ -183,8 +174,6 @@
 	    	}
 		}
 		}
-		
-//		process.exit(0);
 		
 		return dicResponseMethodUnits;
 	}

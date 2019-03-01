@@ -226,6 +226,9 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	  List<AttrUnit> attrUnits;
 	  String name;
 	  
+	  public List<AttrUnit> getAttr(){
+		  return this.attrUnits;
+	  }
 	  
 	  public List<MethodUnit> getMethods(){	
 		 return this.methodUnits;
@@ -732,11 +735,35 @@ public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeCl
 	
 	System.out.println("construct of extends graph finishes.");
 	
+	int ind = 10;
 	return res;
 }
 
 public String constructCompositionGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
-	return "";
+	// Reference: Xiaoyue's constructTypeDependencyGraph()	
+	String res = "{";
+	int i = 1;
+	// traverse each node
+	for (ClassUnit classUnit : classUnits) {
+		String startName = classUnit.name;
+		String startUUID = classUnit.uuid;		
+		
+		List<AttrUnit> tempAttributes = classUnit.getAttr();
+		for (AttrUnit attr : tempAttributes) {
+			classUnit endClass = classUnitByName(attr.type);
+			if(endClass == null) {
+				continue;
+			}
+			String endName = endClass.name;
+			String endUUID = endClass.uuid;
+			String headJSON = attr.toJSONString();
+			//res += "\"" + i + "\":{\"start\":{\"name\":\"" + startName + "\",\"uuid\":\"" + startUUID + "\"},\"end\":" + headJSON+"}";
+			res += "\"" + i + "\":{\"start\":{\"name\":\"" + startName + "\",\"uuid\":\"" + startUUID + "\"},\"end\":{\"name\":\"" + endName + "\",\"uuid\":\"" + endUUID + "\"};
+			i = i+1;
+		}
+	}
+	res += "}";
+	return res;
 }
   
 public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
@@ -910,7 +937,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	  return "";
   }
 
-  public void run() {
+  public void run() {	  
     Logger.stat("#Classes: " + Scene.v().getClasses().size() +
             ", #AppClasses: " + Scene.v().getApplicationClasses().size());
     Logger.trace("TIMECOST", "Start at " + System.currentTimeMillis());
@@ -1033,6 +1060,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	outputS += ",\"extendsGraph\":"+constructExtendsGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	outputS += ",\"compositionGraph\":"+constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 
 	// var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 //	var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
@@ -1041,8 +1069,9 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	
     Debug4.v().printf("%s", outputS);
     
+    String res = constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+    Debug2.v().printf(res);
   }
-  
   
 /*
  * Derive call graphs from source code.
