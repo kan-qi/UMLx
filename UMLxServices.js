@@ -29,6 +29,23 @@ const { fork } = require('child_process');
 var currentModel = null;
 // global variable to map appToken -> endpoint location
 var endpoints = {};
+
+/* output/ and uploads/ folders auto-creation */
+var checkDirExist = (folderpath) => {
+	const pathArr = folderpath.split('/');
+	let _path = '';
+	for (let i = 0; i < pathArr.length; i++) {
+    	if (pathArr[i]) {
+    		_path += pathArr[i] + '/';
+      		if (!fs.existsSync(_path)) {
+        		fs.mkdirSync(_path);
+      		}
+    	}
+  	}
+}
+checkDirExist('public/output');
+checkDirExist('public/uploads');
+
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         var date = new Date();
@@ -174,6 +191,8 @@ function filter(transaction){
 	
 	return false;
 }
+
+
 
 for(var i in transactionEvaluationContents){
 	var identifiedTransactions = {};
@@ -655,6 +674,7 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 			console.log("model is extracted");
 			umlEvaluator.evaluateModel(modelInfo, function(){
 				console.log("model analysis complete");
+
                 effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
                     if(!estimationResults){
                         console.log("error");
@@ -676,7 +696,9 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
                     });
 
                 });
+
 			});
+
 		});
 	});
 });
@@ -986,6 +1008,8 @@ app.get('/surveyAnalytics', function (req, res){
 });
 
 
+
+
 app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { name: 'uml-other', maxCount: 1 },
     { name: 'uml-model-name', maxCount: 1 }, { name: 'uml-model-type', maxCount: 1 }, { name: 'repo-id', maxCount: 1 }]), function (req, res) {
     const worker = fork('./UMLxAnalyzeWorker.js',
@@ -997,20 +1021,28 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
     console.l("token: " + token);
     let subscription = endpoints[token];
     console.l("subscription: " + subscription);
+    
     worker.on('message', (text) => {
         console.l("killing child process");
         sendPush(subscription, 'Evaluation finished');
         worker.kill();
+        res.redirect('/'); // 第二次redirect 
     });
+
     let obj = encapsulateReq(req);
     let objJson = JSON.stringify(obj);
     worker.send(objJson);
     console.l("DEBUGGGG: inside uploadUMLFile");
     sendPush(subscription, 'Project Analyzing');
-    res.redirect('/');
+    
     console.l("DEBUGGGG: before evaluate project");
+
+    
     // setTimeout(() => evaluateUploadedProject(req), 2000);
 });
+
+
+
 
 function encapsulateReq(req) {
     let obj = {};
@@ -1277,6 +1309,8 @@ app.get('/reanalyseRepo', function (req, res){
     console.l("token: " + token);
     let subscription = endpoints[token];
     console.l("subscription: " + subscription);
+    console.l("test1");
+
     worker.on('message', (text) => {
         if(text.isEqual('ok')) {
             sendPush(subscription, 'Reanalyse finished');
@@ -1288,6 +1322,8 @@ app.get('/reanalyseRepo', function (req, res){
         console.l("killing child process");
         worker.kill();
     });
+    console.l("test2");
+
     worker.send(repoId);
     console.l("DEBUGGGG: Reanalyse task sent to worker");
     sendPush(subscription, 'Project Reanalysing');
