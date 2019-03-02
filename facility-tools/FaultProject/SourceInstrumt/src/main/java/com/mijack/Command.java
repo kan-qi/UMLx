@@ -17,7 +17,8 @@ import java.util.Map;
 public class Command {
 
     public static String transformJavaFile(String file, String baseDir, String outputDir) {
-        CommandLine cmdLine = new CommandLine("\"D:\\Program Files (x86)\\srcML 0.9.5\\bin\\srcml.exe\" ${file} -o ${target}.xml");
+//        CommandLine cmdLine = new CommandLine("\"D:\\Program Files (x86)\\srcML 0.9.5\\bin\\srcml.exe\" ${file} -o ${target}.xml");
+        CommandLine cmdLine = new CommandLine("srcml.exe ${file} -o ${target}.xml");
         String target = outputDir + (file.substring(baseDir.length()));
         Map<String, String> map = new HashMap<>();
         map.put("file", file);

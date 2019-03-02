@@ -45,7 +45,7 @@ public class Debug {
 	// private ExecutorService executor = Executors.newFixedThreadPool(1);
 
 	private static Debug theInstance;
-	
+
 	public static String outputDir = System.getProperty("user.dir");
 
 	// time analysis begins
@@ -53,9 +53,10 @@ public class Debug {
 
 	private Debug() throws Exception {
 		// debugFileName = "./test-soot-infoflow-android.txt";
-//		debugFileName = "/mnt/h/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/output/test-soot-infoflow-android.txt";
-		debugFileName = outputDir+"/test-soot-infoflow-android.txt";
-		
+		// debugFileName =
+		// "/mnt/h/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/output/test-soot-infoflow-android.txt";
+		debugFileName = outputDir + "/test-soot-infoflow-android-2-17.txt";
+
 		debugFile = new File(debugFileName);
 		out = new PrintWriter(debugFile);
 

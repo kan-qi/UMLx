@@ -6,7 +6,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 source("transaction_weights_calibration4.R")
-source("comparison_between_size_metrics.R")
+#source("comparison_between_size_metrics.R")
+source("comparison_between_size_metrics_sloc.R")
 library(jsonlite)
 library(reshape)
 library(tidyverse)
@@ -917,11 +918,7 @@ ggplot(predictedValuesDUCP, aes(x = DUCP, y = Effort)) +
   geom_histogram(aes(y = ..density..), colour="black", fill="white") +
   geom_line(aes(y = density), data = normaldens, colour = "red") +
   facet_wrap(~ level, scales = "free", nrow=4) + xlab("Posterior Estimates") +ylab("Density")+
-<<<<<<< HEAD
       theme_bw(base_size=12)
-=======
-      theme_bw(base_size=10)
->>>>>>> 0946ae77c1969aebf136a88f6d93b8ffe5fe39a5
   #geom_text(
   #data    = dat_text,
   #mapping = aes(x = 0, y = 0, label = label),
@@ -1038,14 +1035,18 @@ ggplot(data = meltMergedMMREPRED, aes(x = Bins, y = Value)) + geom_point(shape =
 comparison between UCP, COCOMO, a-priori COCOMO
 ```{r modelPlot, warning = FALSE, fig.width=5,fig.height=4}
 #df <- read.csv("modelEvaluations-8-16-3.csv")
-otherSizeMetricsData=modelData[c("Effort", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP", "IFPUG", "MKII", "COSMIC")]
+
+source("comparison_between_size_metrics_sloc.R")
+
+otherSizeMetricsData=modelData[c("Effort", "KSLOC", "COCOMO_Estimate", "Priori_COCOMO_Estimate", "UCP", "IFPUG", "MKII", "COSMIC")]
 otherSizeMetricsData <- na.omit(otherSizeMetricsData)
 
 comparisonRet <- compareBetweenSizeMetrics(TNModelData, SWTIIModelData, SWTIIIModelData, otherSizeMetricsData)
+
 #for testing
-#model1 <- TNresults[[TNModelSelector]][["model"]]
-#model2 <- SWTIIresults[[SWTIIModelSelector]][["model"]]
-#model3 <- SWTIIIresults[[SWTIIIModelSelector]][["model"]]
+model1 <- TNresults[[TNModelSelector]][["model"]]
+model2 <- SWTIIresults[[SWTIIModelSelector]][["model"]]
+model3 <- SWTIIIresults[[SWTIIIModelSelector]][["model"]]
 #ret <- compareBetweenSizeMetrics(TNModelData, SWTIIModelData, SWTIIIModelData, otherSizeMetricsData, model1, model2, model3)
 
 cvResults <-comparisonRet[["cvResults"]]
@@ -1070,6 +1071,10 @@ print('average improvement by MKII')
 print(colMeans(avgPreds[, "MKII"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
 print('average improvement by COSMIC')
 print(colMeans(avgPreds[, "COSMIC"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by SLOC')
+print(colMeans(avgPreds[, "SLOC"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
+print('average improvement by SLOC_LN')
+print(colMeans(avgPreds[, "SLOC_LN"] - avgPreds[,!colnames(avgPreds) %in% c("Pred")]))
 
 #print(mean(avgPreds[, "EXUCP"] - avgPreds[,"UCP"]))
 #print(mean(avgPreds[, "EXUCP"] - avgPreds[,"COCOMO"]))
@@ -1097,7 +1102,7 @@ ggplot(meltAvgPreds) + theme_bw() +
 print("melt avg preds info as dots and smooth function")
 ggplot(meltAvgPreds) + theme_bw() + 
 		geom_point(aes(x=Pred, y=Value, group=Method,color=Method,shape=Method),size=1.5) +
-		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8))+
+		scale_shape_manual(values=c(0,1,2,3,4,5,6,7,8,9,10))+
 		stat_smooth(aes(x=Pred, y=Value, group=Method,color=Method), method = lm, formula = y ~ poly(x, 10), se = FALSE)+ xlab("Relative Deviation (%)") +
 		ylab("Percentage of Estimates <= x%")+ theme(legend.position="bottom")
 
