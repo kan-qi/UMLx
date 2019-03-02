@@ -39,7 +39,7 @@ public class Configs {
   // root directory of Android SDK
   public static String sdkDir;
   
-  public static String outputDir = System.getProperty("user.dir");
+  public static String outputDir = null;
 
   public static String apiLevel;
   public static int numericApiLevel;

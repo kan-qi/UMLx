@@ -87,7 +87,7 @@ public class AnalysisEntrypoint {
     
     Debug2.v().printf("classes: %s", sb.toString());
     
-    
+    if(Configs.outputDir == null) {
     Path curDir = Paths.get(System.getProperty("user.dir"));
 	
 	File outputDir = Paths.get(curDir.toString(), "output", Configs.benchmarkName).toFile();
@@ -95,6 +95,10 @@ public class AnalysisEntrypoint {
 		outputDir.mkdir();
 	}
 	Configs.outputDir = outputDir.getAbsolutePath();
+    }
+	
+	
+	System.out.println("enter GUI analysis");
 
     // Analysis
     // TODO: use reflection to allow nice little extensions.
@@ -107,6 +111,9 @@ public class AnalysisEntrypoint {
 
 //      System.exit(0);
     }
+    
+
+	System.out.println("exit GUI analysis");
     
     if(Configs.codeAnalysis) {
     CodeAnalysis codeAnalysis = CodeAnalysis.v();
