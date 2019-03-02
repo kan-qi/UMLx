@@ -115,8 +115,28 @@ public class CodeAnalysis {
 		str.append("]}");
 		return str.toString();
 	}
-  }
+}
+
   
+//private class Parameter{
+//	String name;
+//	String type;
+//	
+//	Parameter(name, type){
+//		this.name = name;
+//		this.type = type;
+//	}
+//	
+//	public String toJSONString() {
+//		StringBuilder str = new StringBuilder();
+//		str.append("{");
+//		str.append("\"name\":\""+name+"\",");
+//		str.append("\"type\":\""+type);
+//		str.append("}");
+//		return str.toString();
+//	}
+//}
+
   
 private class CallGraphNode{
 	MethodUnit methodUnit;
@@ -739,32 +759,32 @@ public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeCl
 	return res;
 }
 
-public String constructCompositionGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
-	// Reference: Xiaoyue's constructTypeDependencyGraph()	
-	String res = "{";
-	int i = 1;
-	// traverse each node
-	for (ClassUnit classUnit : classUnits) {
-		String startName = classUnit.name;
-		String startUUID = classUnit.uuid;		
-		
-		List<AttrUnit> tempAttributes = classUnit.getAttr();
-		for (AttrUnit attr : tempAttributes) {
-			classUnit endClass = classUnitByName(attr.type);
-			if(endClass == null) {
-				continue;
-			}
-			String endName = endClass.name;
-			String endUUID = endClass.uuid;
-			String headJSON = attr.toJSONString();
-			//res += "\"" + i + "\":{\"start\":{\"name\":\"" + startName + "\",\"uuid\":\"" + startUUID + "\"},\"end\":" + headJSON+"}";
-			res += "\"" + i + "\":{\"start\":{\"name\":\"" + startName + "\",\"uuid\":\"" + startUUID + "\"},\"end\":{\"name\":\"" + endName + "\",\"uuid\":\"" + endUUID + "\"};
-			i = i+1;
-		}
-	}
-	res += "}";
-	return res;
-}
+//public String constructCompositionGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+//	// Reference: Xiaoyue's constructTypeDependencyGraph()	
+//	String res = "{";
+//	int i = 1;
+//	// traverse each node
+//	for (ClassUnit classUnit : classUnits) {
+//		String startName = classUnit.name;
+//		String startUUID = classUnit.uuid;		
+//		
+//		List<AttrUnit> tempAttributes = classUnit.getAttr();
+//		for (AttrUnit attr : tempAttributes) {
+//			classUnit endClass = classUnitByName(attr.type);
+//			if(endClass == null) {
+//				continue;
+//			}
+//			String endName = endClass.name;
+//			String endUUID = endClass.uuid;
+//			String headJSON = attr.toJSONString();
+//			//res += "\"" + i + "\":{\"start\":{\"name\":\"" + startName + "\",\"uuid\":\"" + startUUID + "\"},\"end\":" + headJSON+"}";
+//			res += "\"" + i + "\":{\"start\":{\"name\":\"" + startName + "\",\"uuid\":\"" + startUUID + "\"},\"end\":{\"name\":\"" + endName + "\",\"uuid\":\"" + endUUID + "\"}";
+//			i = i+1;
+//		}
+//	}
+//	res += "}";
+//	return res;
+//}
   
 public String constructAccessGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
 
@@ -913,7 +933,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 		System.out.println("convert access graph finishes.");
 		
 		return outputS;
-	}
+}
 
 //public static Set<Class> getDependencies(Scene scene, CallGraph callGraph, Class<?> clazz) {
 //    Set<Class> dependencies = Sets.newHashSet();
@@ -1060,7 +1080,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	outputS += ",\"extendsGraph\":"+constructExtendsGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
-	outputS += ",\"compositionGraph\":"+constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+//	outputS += ",\"compositionGraph\":"+constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 
 	// var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 //	var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
@@ -1069,8 +1089,8 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	
     Debug4.v().printf("%s", outputS);
     
-    String res = constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
-    Debug2.v().printf(res);
+//    String res = constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+//    Debug2.v().printf(res);
   }
   
 /*
@@ -1114,9 +1134,9 @@ private CallGraph genCallGraph() {
 	}
 
 	SetupApplication app = new SetupApplication(androidJarPath, apkPath);
-	String testingMsg = app.setOutputDir(Configs.outputDir);
-	Debug1.v().println("testing...");
-	Debug1.v().println(testingMsg);
+	app.setOutputDir(Configs.outputDir);
+//	Debug1.v().println("testing...");
+//	Debug1.v().println(testingMsg);
 	
 	Path gatorFilePath = Paths.get(Configs.outputDir, Configs.benchmarkName + ".xml");
 	File gatorFile = gatorFilePath.toFile();

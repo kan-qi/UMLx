@@ -183,8 +183,6 @@
 				    return;
 				  }
 	    	
-	    
-	    	
 	    	// var dataElement = JSON.parse(line.substring(tagPos+8, line.length));
 	    	
 			var timeStamp = Number(dataElement.time);
@@ -240,46 +238,6 @@
 		);
 	}
 	
-	function filterAndroidLog(logPath){
-		// can also use this function as a filter of the file.
-		console.log("filter android log");
-		
-		var lineNr = 0;
-
-	    var lastMethodSign = "";
-
-		var debuggerOutputUtil = require("./DebuggerOutput.js");
-		
-		var s = fs.createReadStream(logPath)
-		.pipe(es.split())
-		.pipe(es.mapSync(function(line){
-			
-			// pause the readstream
-			s.pause();
-
-			lineNr += 1;
-			
-			if(line.indexOf("getIntervalWidth()") > -1){
-				s.resume();
-				return;
-			}
-			
-			debuggerOutputUtil.appendFile1("filtered_android_log", line);
-
-			// resume the readstream, possibly from a callback
-			s.resume();
-		})
-		.on('error', function(err){
-			console.log('Error while reading file.', err);
-			if(callback){
-				callback(false);
-			}
-		})
-		.on('end', function(){
-			console.log('Read entire file.')
-		})
-		);
-	}
 	
 	function identifyTransactions(logPath, dicComponent, dicComponentDomainElement, dicResponseMethodUnits, useCaseRec, callback){
 
@@ -387,10 +345,6 @@
 			useCaseData[i].calls1 = Array.from(useCaseData[i].calls);
 			
 			}
-//			var debug = require("./DebuggerOutput.js");
-//			debug.writeJson2("use_case_data_from_log", useCaseData);
-//		  	console.log(useCaseData);
-//		  	process.exit();
 			
 			if(callback){
 				callback(useCaseData);
@@ -454,8 +408,6 @@
 		
 		
 	 }
-	
-		
 		return checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir)
 
 	}
@@ -575,7 +527,6 @@
 		parseAndroidLogFolderForUseCases: parseAndroidLogFolderForUseCases,
 		identifyTransactions: identifyTransactions,
 		identifyTransactionsfromLogFile: identifyTransactionsfromLogFile,
-		filterAndroidLog: filterAndroidLog,
 		generateAndroidAnalysis: generateAndroidAnalysis
 	}
 }())

@@ -1,5 +1,5 @@
 /**
- *
+ * Identify use cases from the constructed CFG or Android instrumentation logs.
  */
 
 (function() {
@@ -81,7 +81,7 @@
 		UseCases.push(UseCase);
 
 		return UseCases;
-
+		
 	}
     
     
@@ -194,7 +194,14 @@ function traverseUseCaseForTransactions(useCase){
 			return UseCases;
 		}
 		
+		if(FileManagerUtil.existsSync(useCaseRecordPath)){
 		var useCaseRecords = FileManagerUtil.readFileSync(useCaseRecordPath).split(/\r?\n/g);
+		}
+		else{
+			if(callback){
+				callback(false);
+			}
+		}
 		
 		var useCaseRecordList = [];
 		
@@ -283,6 +290,11 @@ function traverseUseCaseForTransactions(useCase){
 				UseCase.PrecedenceRelations = UseCase.PrecedenceRelations.concat(precedenceRelations);
 				
 				UseCases.push(UseCase);
+				
+				if(callback){
+					callback(UseCases);
+				}
+				
 				}
 				
 			});

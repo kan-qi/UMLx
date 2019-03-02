@@ -261,24 +261,12 @@
 
 
 		var compositeClassUnit = {
-			// name: XMIClassUnit['$']['name'],
 			methodUnits: [],
 			attrUnits: [],
-			//				calls : [],
-			//				classUnits: [],
 			classUnits: [],
-			//				blockUnits : [],
-			//				addresses: [],
-			//				reads:[],
-			//				calls:[],
-			//				creates:[],
-			//				actionElements:[],
-			//				isResponse: false,
-			// UUID: XMIClassUnit['$']['UUID'],
 			UUID: uuidV1(),
 			isComposite: (subClassUnits.length != 1),
 			isWithinBoundary: isWithinBoundary
-			// attachment: XMIClassUnit
 		}
 		compositeClassUnit.name = compositeClassUnit.UUID;
 
@@ -286,9 +274,6 @@
 
 		for (var i in subClassUnits) {
 			var subClassUnit = subClassUnits[i];
-			// console.log("found!!!");
-			// console.log(subClassUnit.methodUnits);
-			// console.log(subClassUnit.attrUnits);
 			compositeClassUnit.methodUnits = compositeClassUnit.methodUnits.concat(subClassUnit.methodUnits);
 			compositeClassUnit.attrUnits = compositeClassUnit.attrUnits.concat(subClassUnit.attrUnits);
 			dicClassComposite[subClassUnit.UUID] = compositeClassUnit.UUID;

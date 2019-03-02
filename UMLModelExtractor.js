@@ -39,18 +39,6 @@
 				for(var i in umlModelInfo.UseCases) {
 								var useCase = umlModelInfo.UseCases[i];
 								
-//								useCase.Transactions = traverseUseCaseForTransactions(useCase);
-//								
-//								for(var j in useCase.Transactions){
-//									var transaction = useCase.Transactions[j];
-//									var TransactionStrByIDs = "";
-//									for(var k in transaction.Elements){
-//										var node = transaction.Elements[k];
-//										TransactionStrByIDs += node._id+"->";
-//									}
-//									transaction.TransactionStrByIDs = transaction.TransactionStrByIDs;
-//								}
-								
 								modelDrawer.drawUSIMDiagram(useCase, domainModel, useCase.OutputDir+"/usim.dotty", function(){
 
 									console.log("use case is drawn");

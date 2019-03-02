@@ -159,9 +159,6 @@
 					Model.OutputDir
 				);
 				}
-				
-//				debug.writeJson2("dic_class_component_1_19", componentInfo.dicClassComponent);
-				debug.writeJson3("identified_components", componentInfo.dicComponents);
 			
 				var componentMappingString = "";
 				
@@ -191,6 +188,11 @@
 				var log = modelInfo.logFile ? modelInfo.logFile : modelInfo.logFolder;
 				if(log && modelInfo.useCaseRec){
 					useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, domainModelInfo.dicComponentDomainElement, dicResponseMethodUnits, Model.OutputDir, Model.OutputDir, modelInfo.path+"/"+log,  modelInfo.path+"/"+modelInfo.useCaseRec, function(useCases){
+						if(!useCases){
+							console.log("no use cases identified");
+							return;
+						}
+							
 						Model.UseCases = useCases;
 						
 						modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
@@ -270,10 +272,6 @@
 			var edge = callGraph.edges[i];
 			
 			var startNode = edge.start;
-//			var startComponent = dicClassComponent[startNode.component.UUID];
-//			if(!startComponent){
-//				continue;
-//			}
 			var callComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var callDomainElement = domainElementsByID[callComponentUUID];
 			
@@ -281,14 +279,14 @@
 				continue;
 			}
 			
-			
 			var endNode = edge.end;
-//			var endComponent = dicClassComponent[endNode.component.UUID];
-//			if(!endComponent){
-//				continue;
-//			}
 			var calleeComponentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
 			var calleeDomainElement = domainElementsByID[calleeComponentUUID];
+			
+			if(!calleeDomainElement){
+				continue;
+			}
+			
 			
 			if(callDomainElement == calleeDomainElement){
 				continue;
@@ -302,7 +300,10 @@
 					foundMethod = true;
 				}
 			}
+			
+			
 			if (!foundMethod) {
+
 				var parameters = dicMethodParameters[endNode.UUID];
 				if (parameters == null) {
 					parameters = [];
@@ -310,7 +311,7 @@
 				var method = {
 					Name: endNode.methodName,
 					_id: 'a'+endNode.UUID.replace(/\-/g, ""),
-					Parameters: parameters,
+					Parameters: parameters.map((param)=>{return {Type: param.type}})
 				}
 				
 				calleeDomainElement.Operations.push(method);
@@ -350,62 +351,6 @@
 				};
 				accesseeDomainElement.Attributes.push(attr);
 			}
-		}
-
-		if(typeDependencyGraph){
-		for (var i in typeDependencyGraph.edgesAttr) {
-			var edge = typeDependencyGraph.edgesAttr[i];
-			var startNode = edge.start;
-			if(!dicClassComponent[startNode.UUID]){
-				continue;
-			}
-			var componentUUID = 'c'+dicClassComponent[startNode.UUID].replace(/\-/g, "_");
-			var domainElement = domainElementsByID[componentUUID];
-			var foundAttr = false;
-			for (var j in domainElement.Attributes) {
-				if (domainElement.Attributes[j]._id == 'a'+startNode.UUID.replace(/\-/g, "")) {
-					foundAttr = true;
-				}
-			}
-			if (!foundAttr) {
-				var attr = {
-					Name: startNode.attributeName,
-					_id: 'a'+startNode.UUID.replace(/\-/g, ""),
-					Type: edge.end.name,
-					TypeUUID: 'a'+edge.end.UUID.replace(/\-/g, "")
-				};
-				domainElement.Attributes.push(attr);
-			}
-		}
-		}
-		
-		if(typeDependencyGraph){
-		for (var i in typeDependencyGraph.edgesPara) {
-			var edge = typeDependencyGraph.edgesPara[i];
-			var startNode = edge.start;
-			var componentUUID = 'c'+dicClassComponent[startNode.UUID].replace(/\-/g, "_");
-			var domainElement = domainElementsByID[componentUUID];
-			var foundMethod = false;
-			for (var j in domainElement.Operations) {
-				if (domainElement.Operations[j]._id == 'a'+startNode.method.UUID.replace(/\-/g, "")) {
-					var method = domainElement.Operations[j];
-					foundMethod = true;
-				}
-			}
-			if (!foundMethod) {
-				var parameters = dicMethodParameters[startNode.method.UUID];
-				if (parameters == null) {
-					parameters = [];
-				}
-				var method = {
-					Name: startNode.method.name,
-					_id: 'a'+startNode.method.UUID.replace(/\-/g, ""),
-					Parameters: parameters,
-				}
-				domainElement.Operations.push(method);
-			}
-			domainElementsByID[componentUUID] = domainElement;
-		}
 		}
 		
 		DomainModel.Elements = domainElements;
