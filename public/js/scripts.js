@@ -1,17 +1,44 @@
-$(document).ready(function() {
-    $('.nav-tabs').on('shown.bs.tab', 'a', function(e) {
-        console.log(e.relatedTarget);
-        if (e.relatedTarget) {
-            $(e.relatedTarget).removeClass('active');
-        }
-    });    
-});
+// $(document).ready(function() {
+//     // $('.nav-tabs').on('shown.bs.tab', 'a', function(e) {
+//     //     console.log(e.relatedTarget);
+//     //     if (e.relatedTarget) {
+//     //         $(e.relatedTarget).removeClass('active');
+//     //     }
+//     // });    
 
+
+// });
+$(document).on('change', ':file', function() {
+    var input = $(this),
+        numFiles = input.get(0).files ? input.get(0).files.length : 1,
+        label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+    input.trigger('fileselect', [numFiles, label]);
+  });
+
+  // We can watch for our custom `fileselect` event like this
+$(document).ready( function() {
+    $(':file').on('fileselect', function(event, numFiles, label) {
+
+        var input = $(this).parents('.input-group').find(':text'),
+            log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+        if( input.length ) {
+            input.val(log);
+        } else {
+            if( log ) alert(log);
+        }
+
+    });
+});
 
 function showLoading() {
     var classList = document.getElementById("loadingScreen").classList;
+    console.log(classList);
     classList.remove("hidden");
-  }
+    console.log(classList);
+    console.log('a')
+    
+}
 
 function setCookie(cname, cvalue, exdays) {
     var expires = "";

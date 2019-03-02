@@ -2,16 +2,32 @@
 -var path = repoInfo.AccessDir;
 input(type='hidden', value=repoID)#myrepoId
 div.block.panel.panel-default
-  div.panel-heading
+  //- div.panel-heading
    div.panel-title.analytics-title.pull-left
     include breadcrumb
    div.clearFix
   div.panel-body(id="repo-stats-chart")
    div.repo-info-content
     div.tab-content
-      div.tab-pane.fade.in.active(id="repo_analytics")
+      div.tab-pane.fade(id="repo_analytics")
         div.repo-analysis-detail
           div.repo-metrics
+      div.tab-pane.fade.in.active(id="main_page" style = "width: 100%; padding : 0; margin-top: -60px")
+        div.form-container
+            form#model-file-submit-form.form-horizontal.form(novalidate='', method='post', action='/uploadUMLFile', enctype='multipart/form-data')
+                div.input-group
+                    input.form-control.form-blank(type='text',readonly)
+                    label.input-group-btn
+                        span.btn.btn-primary.form-button Browse
+                            input#uml-file(type="file", style="display: none;", name='uml-file', accept='text/xml', role = "button" )
+                div
+                    button.btn.btn-dark.btn-submit.btn-lg(type='submit', onclick='showLoading()') Submit
+                #loadingScreen.hidden
+                    div.full-page-model
+                    div.full-page-model-content
+                        div(style='padding: 30px')
+                            img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                            p(style = "font-size : 16px;") Processing...
       div.tab-pane.fade(id="repo_estimation")
         include estimationPanel
       div.tab-pane.fade(id="repo_trending")
