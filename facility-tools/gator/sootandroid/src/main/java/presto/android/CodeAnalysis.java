@@ -541,19 +541,26 @@ public String constructCompositionGraph(List<ClassUnit> classUnits, List<Composi
 	// Reference: Xiaoyue's constructTypeDependencyGraph()	
 	String res = "{";
 	int i = 1;
-	// traverse each node as starter of an edge
+	// traverse each class as start vertex of an edge
 	for (ClassUnit classUnit : classUnits) {
 		String startName = classUnit.name;
 		String startUUID = classUnit.uuid;		
 		
-		// traverse each node as head of an edge
+		// traverse each attr of start vertex as end vertex of an edge
 		List<AttrUnit> tempAttributes = classUnit.getAttr();	
 		for (AttrUnit attr : tempAttributes) {
-			// version variation: change edge head to be instance of an attribute class
-			String endName = attr.name;
-			String endUUID = attr.uuid;
-			res += "\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}},";	
-			i++;
+			// check if both vertex is valid in collection
+			if (classUnitByName.containsKey(attr.type) && classUnitByName.containsKey(startName)) {
+				String endName = attr.name;
+				String endUUID = attr.uuid;
+				if (i==1) {
+					res += "\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}}";	
+					
+				}else {
+					res += ",\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}}";
+				}
+				i++;
+			}
 		}
 	}
 	res += "}";
