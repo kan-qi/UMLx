@@ -541,25 +541,19 @@ public String constructCompositionGraph(List<ClassUnit> classUnits, List<Composi
 	// Reference: Xiaoyue's constructTypeDependencyGraph()	
 	String res = "{";
 	int i = 1;
-	// traverse each node
+	// traverse each node as starter of an edge
 	for (ClassUnit classUnit : classUnits) {
 		String startName = classUnit.name;
 		String startUUID = classUnit.uuid;		
 		
+		// traverse each node as head of an edge
 		List<AttrUnit> tempAttributes = classUnit.getAttr();	
 		for (AttrUnit attr : tempAttributes) {
-			if (classUnitByName.containsKey(attr.type) && classUnitByName.containsKey(startName)) {
-				ClassUnit headNode = (ClassUnit)classUnitByName.get(attr.type);
-				String endName = headNode.name;
-				String endUUID = headNode.uuid;
-				if (i==1) {
-					res += "\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}}";	
-					
-				}else {
-					res += ",\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}}";
-				}
-				i++;
-			}
+			// version variation: change edge head to be instance of an attribute class
+			String endName = attr.name;
+			String endUUID = attr.uuid;
+			res += "\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}},";	
+			i++;
 		}
 	}
 	res += "}";
@@ -860,7 +854,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
     	
     	List<MethodUnit> methodUnits = classUnit.getMethods();
     	
-    	for(MethodUnit methodUnit : methodUnits) {
+    	for(MethodUnit methodUnit : mcoethodUnits) {
     		methodBySig.put(methodUnit.signature, methodUnit);
     		methodToClass.put(methodUnit.uuid, classUnit.uuid);
     	}
