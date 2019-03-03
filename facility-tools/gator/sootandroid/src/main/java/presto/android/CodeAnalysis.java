@@ -1073,8 +1073,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
     Debug4.v().printf("%s", outputS);
     
     String res = constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
-    System.out.println(res);
-//    Debug2.v().printf(res);
+    Debug7.v().printf("STUqza\n" + res);
   }
   
 /*

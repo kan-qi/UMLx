@@ -50,10 +50,10 @@ public class Debug7 {
   private long startTime;
 
   private Debug7() throws Exception {
-    debugFileName = Configs.outputDir+"/callgraph.json";
+    debugFileName = Configs.outputDir+"/compositionGraph.json";
     if (debugFileName == null) {
-      debugFile = File.createTempFile(Configs.benchmarkName + "-DEBUG-", ".txt");
-      debugFileName = debugFile.getAbsolutePath();
+    	debugFileName = Configs.outputDir+"/debug7_logs.txt";
+      debugFileName = Configs.outputDir+"/debug7_logs.txt";
     } else {
       debugFile = new File(debugFileName);
     }
@@ -67,7 +67,7 @@ public class Debug7 {
           out.flush();
           out.close();
         }
-        System.out.println("\033[1;31m[DEBUG] Debug file at `"
+        System.out.println("\033[0;32m[DEBUG] Debug file at `"
                 + debugFileName + "'.\033[0m");
       }
     });
