@@ -747,23 +747,35 @@ public String constructCompositionGraph(List<ClassUnit> classUnits, List<Composi
 	for (ClassUnit classUnit : classUnits) {
 		String startName = classUnit.name;
 		String startUUID = classUnit.uuid;		
+		int methodCount = classUnit.getMethods().size();
+		// construct json string: class-vertex
+		if (i==1) {
+			res += "\""+i+"\":{\"class\":\""+startName+"\",\"uuid\":\""+startUUID+"\",\"methodCount\":\""+methodCount+"\",\"dependencies\":{\"attrDependencies\":{";
+		}else {
+			res += ",\""+i+"\":{\"class\":\""+startName+"\",\"uuid\":\""+startUUID+"\",\"methodCount\":\""+methodCount+"\",\"dependencies\":{\"attrDependencies\":{";
+		}
+		i++;
 		
 		// traverse each attr of start vertex as end vertex of an edge
-		List<AttrUnit> tempAttributes = classUnit.getAttr();	
+		List<AttrUnit> tempAttributes = classUnit.getAttr();
+		int k = 1;
 		for (AttrUnit attr : tempAttributes) {
 			// check if both vertex is valid in collection
 			if (classUnitByName.containsKey(attr.type) && classUnitByName.containsKey(startName)) {
+				ClassUnit attrClass = classUnitByName.get(attr.type);
 				String endName = attr.name;
 				String endUUID = attr.uuid;
-				if (i==1) {
-					res += "\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}}";	
+				// construct json string: attrDependencies
+				if (k==1) {
+					res += "\""+k+"\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}";	
 					
 				}else {
-					res += ",\""+i+"\":{\"start\":{\"name\":\""+startName+"\",\"uuid\":\""+startUUID+"\"},\"end\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}}";
+					res += ",\""+k+"\":{\"name\":\""+endName+"\",\"uuid\":\""+endUUID+"\"}";	
 				}
-				i++;
+				k++;
 			}
 		}
+		res += "}}}";
 	}
 	res += "}";
 	return res;
@@ -1073,7 +1085,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
     Debug4.v().printf("%s", outputS);
     
     String res = constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
-    Debug7.v().printf("STUqza\n" + res);
+    Debug7.v().printf(res);
   }
   
 /*
