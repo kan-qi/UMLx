@@ -308,13 +308,14 @@
 				if (parameters == null) {
 					parameters = [];
 				}
-				var method = {
+				var operation = {
 					Name: endNode.methodName,
 					_id: 'a'+endNode.UUID.replace(/\-/g, ""),
-					Parameters: parameters.map((param)=>{return {Type: param.type}})
+					Parameters: parameters.map((param)=>{return {Type: param.type}}),
+					ReturnVal: {}
 				}
 				
-				calleeDomainElement.Operations.push(method);
+				calleeDomainElement.Operations.push(operation);
 			}
 		}
 

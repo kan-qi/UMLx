@@ -36,52 +36,67 @@
 		var dicMethodClass = {};
 		var dicMethodParameters = {};
 		var methodUnitsByName = {};
+		var classUnits = [];
 		
 		for(var i in referencedClassUnits){
-			console.log("iterate class");
 			var referencedClassUnit = referencedClassUnits[i];
-			
-			console.log(referencedClassUnits[i].UUID);
 			
 			//process the name
 			var packageName = referencedClassUnit.name.substring(0, referencedClassUnit.name.lastIndexOf('.'));
 			var className = referencedClassUnit.name.substring(referencedClassUnit.name.lastIndexOf('.')+1, referencedClassUnit.name.length);
 			
-			referencedClassUnit.name = className;
-			referencedClassUnit.packageName = packageName;
 			
-			dicClassUnits[referencedClassUnit.UUID] = referencedClassUnit;
+			var classUnit = {
+					UUID: referencedClassUnit.UUID,
+					name: className,
+					packageName: packageName,
+					isWithinBoundary: referencedClassUnit.isWithinBoundary,
+					methodUnits: [],
+					attrUnits: []
+			}
+			
+			dicClassUnits[classUnit.UUID] = classUnit;
+			classUnits.push(classUnit);
 			
 			for(var j in referencedClassUnit.methodUnits){
+				
 				var referencedMethodUnit = referencedClassUnit.methodUnits[j];
-				dicMethodUnits[referencedMethodUnit.UUID] = {
+				
+				var methodUnit = {
 						UUID: referencedMethodUnit.UUID,
 						signature:{
 							name:referencedMethodUnit.name,
-							parameterUnits:referencedMethodUnit.parameterUnits
+							parameterUnits: referencedMethodUnit.parameterTypes.map((parameterType)=>{return {type: parameterType}})
 						}
 				}
 				
-				methodUnitsByName[referencedClassUnit.name+":"+referencedMethodUnit.name] = referencedMethodUnit;
+				classUnit.methodUnits.push(methodUnit);
 				
+				//need to adjust the method from Gator.
 				
-				dicMethodClass[referencedMethodUnit.UUID] = referencedClassUnit.UUID;
+				dicMethodUnits[methodUnit.UUID] = methodUnit;
 				
-				for(var k in referencedMethodUnit.parameterTypes){
-					var referencedParameter = referencedMethodUnit.parameterTypes[k];
-					if(!dicMethodParameters[referencedMethodUnit.UUID]){
-						dicMethodParameters[referencedMethodUnit.UUID] = [];
+				methodUnitsByName[referencedClassUnit.name+":"+methodUnit.name] = methodUnit;
+				
+				dicMethodClass[methodUnit.UUID] = referencedClassUnit.UUID;
+				
+				for(var k in methodUnit.parameterUnits){
+					var parameterUnit = referencedMethodUnit.parameterUnits[k];
+					if(!dicMethodParameters[methodUnit.UUID]){
+						dicMethodParameters[methodUnit.UUID] = [];
 					}
-					console.log(dicMethodParameters[referencedMethodUnit.UUID]);
-					dicMethodParameters[referencedMethodUnit.UUID].push({type: referencedParameter});
+					dicMethodParameters[methodUnit.UUID].push(parameterUnit);
 				}
 			}
 			
-			referencedClassUnit.StorableUnits = [];
-			
 			for(var j in referencedClassUnit.attrUnits){
 				var referencedAttrUnit = referencedClassUnit.attrUnits[j];
-				dicAttrUnits[referencedAttrUnit.UUID] = referencedAttrUnit;				
+				var attrUnit = {
+						name: referencedAttrUnit.name,
+						type: referencedAttrUnit.type,
+						UUID: referencedAttrUnit.UUID
+				}
+				dicAttrUnits[attrUnit.UUID] = attrUnit;				
 			}
 		}
 		
@@ -89,6 +104,7 @@
 		var dicClassComposite = {};
 		var referencedCompositeClassUnits = androidAnalysisResults.compositeClassUnits;
 		var dicCompositeClassUnits = {};
+		var compositeClassUnits = [];
 		
 		for(var i in referencedCompositeClassUnits){
 			var referencedCompositeClassUnit = referencedCompositeClassUnits[i];
@@ -97,18 +113,27 @@
 			var packageName = referencedCompositeClassUnit.name.substring(0, referencedCompositeClassUnit.name.lastIndexOf('.'));
 			var className = referencedCompositeClassUnit.name.substring(referencedCompositeClassUnit.name.lastIndexOf('.')+1, referencedCompositeClassUnit.name.length);
 			
-			referencedCompositeClassUnit.name = className;
-			referencedCompositeClassUnit.packageName = packageName;
+			var compositeClassUnit = {
+					name: className,
+					packageName : packageName,
+					UUID : referencedCompositeClassUnit.UUID,
+					classUnits : []
+			}
+			
 			
 			for(var j in referencedCompositeClassUnit.classUnits){
 				var subClassUnit = referencedCompositeClassUnit.classUnits[j];
-				if(!dicCompositeSubclasses[referencedCompositeClassUnit.UUID]){
-					dicCompositeSubclasses[referencedCompositeClassUnit.UUID] = [];
+
+				compositeClassUnit.classUnits.push(subClassUnit);
+				if(!dicCompositeSubclasses[compositeClassUnit.UUID]){
+					dicCompositeSubclasses[compositeClassUnit.UUID] = [];
 				}
-				dicCompositeSubclasses[referencedCompositeClassUnit.UUID].push(subClassUnit);
-				dicClassComposite[subClassUnit] = referencedCompositeClassUnit.UUID;
-				dicCompositeClassUnits[referencedCompositeClassUnit.UUID] = referencedCompositeClassUnit;
+				dicCompositeSubclasses[compositeClassUnit.UUID].push(subClassUnit);
+				dicClassComposite[subClassUnit] = compositeClassUnit.UUID;
+				dicCompositeClassUnits[compositeClassUnit.UUID] = compositeClassUnit;
 			}
+			
+			compositeClassUnits.push(compositeClassUnit);
 		}
 		
 		var debug = require("../../utils/DebuggerOutput.js");
@@ -124,8 +149,8 @@
 			extendsGraph: convertExtensionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits, dicAttrUnits),
 			compositionGraph: convertCompositionDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, dicMethodUnits, dicAttrUnits),
 			typeDependencyGraph: convertTypeDependencyGraph(androidAnalysisResults, dicClassUnits, dicClassComposite, dicCompositeClassUnits, methodUnitsByName, dicMethodUnits, dicAttrUnits),
-			referencedClassUnits: referencedClassUnits,
-			referencedCompositeClassUnits: referencedCompositeClassUnits,
+			referencedClassUnits: classUnits,
+			referencedCompositeClassUnits: compositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
 			dicMethodParameters: dicMethodParameters
 		};

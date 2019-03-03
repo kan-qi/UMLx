@@ -320,7 +320,7 @@
 				}
 				
 				var activity = {
-						Name: methodUnit.name,
+						Name: methodUnit.signature.name,
 						_id: uuidV1().replace(/\-/g, "_"),
 						Type: "activity",
 						Stimulus: transaction.Nodes.length == 0? true: false,

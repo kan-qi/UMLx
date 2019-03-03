@@ -83,11 +83,7 @@
 
 	function analyseCode(xmiString, outputDir) {
 		assignUUID(xmiString);
-
-		//		var debug = require("../../utils/DebuggerOutput.js");
-		//		debug.writeJson("KDM_Example", xmiString);
-		//		console.log("determine the class units within the model");
-
+		
 		console.log("========================================");
 
 		console.log("identify the structured class units");
@@ -115,38 +111,20 @@
 					var subClassUnits = [];
 					var subMethodUnits = [];
 					var subInterfaces = [];
-					//						var subActionElements = [];
 
 					var identifiedClassUnit = kdmModelUtils.identifyClassUnit(XMIClass, xmiString, subClassUnits, subInterfaces, subMethodUnits);
 					identifiedClassUnit.isWithinBoundary = isWithinBoundary;
 
 					subClassUnits.push(identifiedClassUnit);
 
-					// define the composite classes
-					//						var subClassUnits = findSubClasses(identifiedClassUnit);
-					//						subClassUnits.push(identifiedClassUnit);
-					//						classUnits.push(identifiedClassUnit);
-					//						dicClassUnits[identifiedClassUnit.UUID] = identifiedClassUnit;
-
-					//						for(var l in identifiedClassUnit.methodUnits){
-					//							dicMethodUnits[identifiedClassUnit.methodUnits[l].UUID] = identifiedClassUnit.methodUnits[l];
-					//							dicMethodClass[identifiedClassUnit.methodUnits[l].UUID] = identifiedClassUnit.UUID;
-					//						}
-					//						classUnits = classUnits.concat(identifiedClassUnit.classUnits);
 					for (l in subClassUnits) {
 						subClassUnits[l].isWithinBoundary = isWithinBoundary;
-						//							classUnits.push(subClassUnits[l]);
 						dicClassUnits[subClassUnits[l].UUID] = subClassUnits[l];
 
 						for (var m in subClassUnits[l].methodUnits) {
-							//								dicMethodUnits[subClassUnits[l].methodUnits[m].UUID] = subClassUnits[l].methodUnits[m];
 							dicMethodClass[subClassUnits[l].methodUnits[m].UUID] = subClassUnits[l].UUID;
 						}
 					}
-					// compositeClassUnit = aggregateClassUnit(identifiedClassUnit);
-					//
-//					 console.log("subClassUnits");
-//					 console.log(subClassUnits);
 
 					compositeClassUnit = aggregateClassUnit(subClassUnits, isWithinBoundary, dicClassComposite, dicCompositeSubclasses);
 					dicCompositeClasses[compositeClassUnit.UUID] = compositeClassUnit;
@@ -167,7 +145,6 @@
 					//define the dictionary for methods and classes.
 					for (var l in subMethodUnits) {
 						var subMethodUnit = subMethodUnits[l];
-						//							dicMethodClass[subMethodUnit.UUID] = identifiedClassUnit.UUID;
 						dicMethodUnits[subMethodUnit.UUID] = subMethodUnit;
 						for (var m in subMethodUnit.blockUnit.actionElements) {
 							var actionElement = subMethodUnit.blockUnit.actionElements[m];
@@ -178,35 +155,15 @@
 							}
 						}
 					}
-
-					//						for(var l in subActionElements){
-					//							dicActionElementMethod[subActionElements[l].UUID] = identifiedClassUnit.UUID;
-					//						}
 				}
 			}
 		}
 
-		// console.log("classUnits");
-		// console.log(classUnits);
-		// console.log("topClassUnits");
-		// console.log(topClassUnits);
-		//
-		// console.log("dicCompositeClasses");
-		// console.log(dicCompositeClasses);
-		//
-		// console.log("dicClassComposite");
-		// console.log(dicClassComposite);
-
 		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson2("identified_class_units", dicClassUnits);
 
-		//		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson2("identified_method_units", dicMethodUnits);
 
-		//		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson2("identified_method_class", dicMethodClass);
-
-		//		var debug = require("../../utils/DebuggerOutput.js");
 		debug.writeJson2("identified_action_element_method", dicActionElementMethod);
 
 		debug.writeJson2("identified_class_composite", dicClassComposite);
@@ -228,14 +185,6 @@
 		var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters);
 		var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters);
 
-		//		console.log("dicCompositeSubclasses");
-		//		console.log(dicCompositeSubclasses);
-		// console.log("typeDependencyGraph");
-		// console.log(typeDependencyGraph);
-
-		//		debug.writeJson("constructed_call_graph", callGraph);
-
-
 		var result =  {
 			dicClassUnits: dicClassUnits,
 			dicCompositeClassUnits: dicCompositeClasses,
@@ -251,8 +200,6 @@
 			dicCompositeSubclasses: dicCompositeSubclasses,
 			dicMethodParameters: dicMethodParameters
 		};
-		
-		debug.writeJson2("source_code_analysis_kdm", result);
 		
 		return result;
 	}
@@ -279,35 +226,14 @@
 			dicClassComposite[subClassUnit.UUID] = compositeClassUnit.UUID;
 			childrenClasses.push(subClassUnit.UUID);
 			compositeClassUnit.classUnits.push(subClassUnit.UUID);
-			// console.log(compositeClassUnit);
 		}
 
 		dicCompositeSubclasses[compositeClassUnit.UUID] = childrenClasses;
-		
-//		console.log(compositeClassUnit);
-//		process.exit(0);
 
 		return compositeClassUnit;
 	}
 
-	//	function locateCompositeClassUnit(classUnitUUID, dicCompositeClasses) {
-	//
-	//		for (var i in dicCompositeClasses) {
-	//			var compositeClassUnit = dicCompositeClasses[i];
-	//			if (compositeClassUnit.UUID == classUnitUUID) {
-	//				return compositeClassUnit;
-	//			}
-	//		}
-	//
-	//		return null;
-	//
-	//	}
-
 	function constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedCompositeClassUnits, dicMethodParameters) {
-
-		// var edges = [];
-		// var nodes = [];
-		// var nodesByName = {};
 
 		var edgesAttr = [];
 		var nodesAttr = [];
@@ -333,14 +259,8 @@
 		var edgesPComposite = [];
 		var nodesByNamePComposite = {};
 
-		// console.log("top classes");
-		// console.log(topClassUnits);
-
 		for (var i in dicClassUnits) {
 			var classUnit = dicClassUnits[i];
-			//			console.log('test');
-			//			console.log(classUnit);
-			// var xmiClassUnit = classUnit.attachment;
 			var XMIClassAttrUnits = classUnit.attrUnits
 			for (var q in XMIClassAttrUnits) {
 				var XMIClassAttrUnit = XMIClassAttrUnits[q];
@@ -349,8 +269,6 @@
 				}
 				var XMIClassAttrUnitType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(XMIClassAttrUnit.type));
 				var targetClassUnit = null;
-				// console.log('AttrUnit');
-				// console.log(XMIClassAttrUnitType[0]['$']['UUID']);
 
 				if (!XMIClassAttrUnitType || XMIClassAttrUnitType.length < 1) {
 					continue;
@@ -391,13 +309,11 @@
 				if (!startNodeComposite) {
 					startNodeComposite = {
 						name: compositeClassUnit.name,
-						// isResponse: methodUnit.isResponse,
 						component: {
 							name: compositeClassUnit.name,
 							UUID: compositeClassUnit.UUID
 						},
 						UUID: compositeClassUnit.UUID
-						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodesAttrComposite.push(startNodeComposite);
 					nodesByNameAttrComposite[compositeClassUnit.UUID] = startNodeComposite;
@@ -407,18 +323,15 @@
 				if (!endNodeComposite) {
 					endNodeComposite = {
 						name: compositeTargetClassUnit.name,
-						// isResponse: targetMethodUnit.isResponse,
 						component: {
 							name: compositeTargetClassUnit.name,
 							UUID: compositeTargetClassUnit.UUID,
 						},
 						UUID: compositeTargetClassUnit.UUID
-						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodesAttrComposite.push(endNodeComposite);
 					nodesByNameAttrComposite[compositeTargetClassUnit.UUID] = endNodeComposite;
 				}
-				//				var end = targetClassUnit.name;
 				edgesAttrComposite.push({ start: startNodeComposite, end: endNodeComposite });
 
 
@@ -440,14 +353,12 @@
 				if (!startNode) {
 					startNode = {
 						name: classUnit.name + ":" + XMIClassAttrUnit.name,
-						// isResponse: methodUnit.isResponse,
 						component: {
 							name: classUnit.name,
 							UUID: classUnit.UUID
 						},
 						UUID: XMIClassAttrUnit.UUID,
 						attributeName: XMIClassAttrUnit.name
-						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodesAttr.push(startNode);
 					nodesByNameAttr[classUnit.UUID] = startNode;
@@ -457,33 +368,22 @@
 				if (!endNode) {
 					endNode = {
 						name: targetClassUnit.name,
-						// isResponse: targetMethodUnit.isResponse,
 						component: {
 							name: targetClassUnit.name,
 							UUID: targetClassUnit.UUID,
 						},
 						UUID: targetClassUnit.UUID
-						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodesAttr.push(endNode);
 					nodesByNameAttr[targetClassUnit.UUID] = endNode;
 				}
-				//				var end = targetClassUnit.name;
 				edgesAttr.push({ start: startNode, end: endNode });
 
-
-
-
 			}
-			// var calls = kdmModelUtils.identifyCalls(xmiClassUnit);
-			// var XMIMethodUnits = jp.query(xmiClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
 			var methodUnits = classUnit.methodUnits;
 			for (var i in methodUnits) {
-				// var XMIMethodUnit = XMIMethodUnits[i];
-				// var methodUnit = kdmModelUtils.identifyMethodUnit(XMIMethodUnit, xmiString);
 				var methodUnit = methodUnits[i];
 				var methodParameters = methodUnit.signature.parameterUnits; // the parameters of the method, including input and return
-				// var methodClassUnit = locateClassUnitForMethod(methodUnit, topClassUnits); // the class which owns the method
 				var methodClassUnit = classUnit;
 
 				if (!methodParameters || !methodClassUnit || !methodClassUnit.isWithinBoundary) {
@@ -535,13 +435,11 @@
 						if (!startNodeComposite) {
 							startNodeComposite = {
 								name: compositeClassUnit.name + ":" + methodUnit.signature.name + ":" + methodLocalVariable.name,
-								// isResponse: methodUnit.isResponse,
 								component: {
 									name: compositeClassUnit.name,
 									UUID: compositeClassUnit.UUID
 								},
 								 UUID: compositeClassUnit.UUID
-								//							isWithinBoundary: targetClassUnit.isWithinBoundary
 							};
 							nodesPComposite.push(startNodeComposite);
 							nodesByNamePComposite[methodUnit.UUID] = startNodeComposite;
@@ -551,18 +449,15 @@
 						if (!endNodeComposite) {
 							endNodeComposite = {
 								name: compositeTargetClassUnit.name,
-								// isResponse: targetMethodUnit.isResponse,
 								component: {
 									name: compositeTargetClassUnit.name,
 									UUID: compositeTargetClassUnit.UUID,
 								},
 								UUID: compositeTargetClassUnit.UUID
-								//							isWithinBoundary: targetClassUnit.isWithinBoundary
 							};
 							nodesPComposite.push(endNodeComposite);
 							nodesByNamePComposite[compositeTargetClassUnit.UUID] = endNodeComposite;
 						}
-						//				var end = targetClassUnit.name;
 						edgesPComposite.push({ start: startNodeComposite, end: endNodeComposite });
 
 						if (methodClassUnit != targetClassUnit) {
@@ -586,7 +481,6 @@
 								if (methodParameters[l].hasOwnProperty('name')) {
 									name = methodParameters[l].name;
 								}
-								//								var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
 								var type = methodParameters[l].type;
 								var typeClass = null;
 								for (var j in dicClassUnits) {
@@ -600,7 +494,6 @@
 								}
 								var parameter = {
 									Name: name,
-									// kind: methodParameters[l].kind,
 									Type: typeClass.name,
 									TypeUUID: typeClass.UUID,
 								};
@@ -613,13 +506,10 @@
 						if (!startNode) {
 							startNode = {
 								name: methodClassUnit.name + ":" + methodUnit.signature.name + ":" + methodLocalVariable.name,
-								// isResponse: methodUnit.isResponse,
 								component: {
 									name: methodClassUnit.name,
 									UUID: methodClassUnit.UUID
 								},
-								// UUID: methodLocalVariable.UUID
-								//							isWithinBoundary: targetClassUnit.isWithinBoundary
 							};
 							nodesLocal.push(startNode);
 							nodesByNameLocal[methodUnit.UUID] = startNode;
@@ -631,43 +521,26 @@
 						if (!endNode) {
 							endNode = {
 								name: targetClassUnit.name,
-								// isResponse: targetMethodUnit.isResponse,
 								component: {
 									name: targetClassUnit.name,
 									UUID: targetClassUnit.UUID
 								},
 								UUID: targetClassUnit.UUID
-								//							isWithinBoundary: targetClassUnit.isWithinBoundary
 							};
 							nodesLocal.push(endNode);
 							nodesByNameLocal[targetClassUnit.UUID] = endNode;
 							nodesP.push(endNode);
 							nodesByNameP[targetClassUnit.UUID] = endNode;
 						}
-						//				var end = targetClassUnit.name;
 						edgesLocal.push({ start: startNode, end: endNode });
 						edgesP.push({ start: startNode, end: endNode });
-
-
-
-						// console.log("checkcheckcheck!");
-						// console.log({start: startNodeComposite, end: endNodeComposite});
-						// console.log({start: startNode, end: endNode});
-
 					}
 				}
 
 				// targeted at input and return parameters of this method
 				for (var i in methodParameters) {
 					var methodParameter = methodParameters[i];
-					//					var XMIParameterType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameter.type));
 					var type = methodParameter.type;
-					//					
-					//					if(!XMIParameterType || XMIParameterType.length < 1){
-					//						continue;
-					//					}
-
-					//					console.log(XMIParameterType);
 
 					var targetClassUnit = null;
 					for (var j in dicClassUnits) {
@@ -704,13 +577,11 @@
 					if (!startNodeComposite) {
 						startNodeComposite = {
 							name: compositeClassUnit.name + ":" + methodUnit.signature.name + ":" + methodParameter.name,
-							// isResponse: methodUnit.isResponse,
 							component: {
 								name: compositeClassUnit.name,
 								UUID: compositeClassUnit.UUID
 							},
 							 UUID: compositeClassUnit.UUID
-							//							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 						nodesPComposite.push(startNodeComposite);
 						nodesByNamePComposite[methodUnit.UUID] = startNodeComposite;
@@ -720,18 +591,15 @@
 					if (!endNodeComposite) {
 						endNodeComposite = {
 							name: compositeTargetClassUnit.name,
-							// isResponse: targetMethodUnit.isResponse,
 							component: {
 								name: compositeTargetClassUnit.name,
 								UUID: compositeTargetClassUnit.UUID,
 							},
 							UUID: compositeTargetClassUnit.UUID
-							//							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 						nodesPComposite.push(endNodeComposite);
 						nodesByNamePComposite[compositeTargetClassUnit.UUID] = endNodeComposite;
 					}
-					//				var end = targetClassUnit.name;
 					edgesPComposite.push({ start: startNodeComposite, end: endNodeComposite });
 
 					if (methodClassUnit != targetClassUnit) {
@@ -765,7 +633,6 @@
 								}
 							},
 							UUID: methodClassUnit.UUID
-							//							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 						nodesPara.push(startNode);
 						nodesByNamePara[methodUnit.UUID] = startNode;
@@ -777,36 +644,23 @@
 					if (!endNode) {
 						endNode = {
 							name: targetClassUnit.name,
-							// isResponse: targetMethodUnit.isResponse,
 							component: {
 								name: targetClassUnit.name,
 								UUID: targetClassUnit.UUID
 							},
 							UUID: targetClassUnit.UUID
-							//							isWithinBoundary: targetClassUnit.isWithinBoundary
 						};
 						nodesPara.push(endNode);
 						nodesByNamePara[targetClassUnit.UUID] = endNode;
 						nodesP.push(endNode);
 						nodesByNameP[targetClassUnit.UUID] = endNode;
 					}
-					//				var end = targetClassUnit.name;
 					edgesPara.push({ start: startNode, end: endNode });
 					edgesP.push({ start: startNode, end: endNode });
-
-
-
-					// console.log("checkcheckcheck!")
-					// console.log({start: startNodeComposite, end: endNodeComposite})
-					// console.log({start: startNode, end: endNode})
-
 
 				}
 			}
 		}
-
-		// console.log("edgesPComposite");
-		// console.log(edgesPComposite);
 
 		kdmModelDrawer.drawGraph(edgesAttr, nodesAttr, outputDir, "type_dependency_graph_attributes.dotty");
 		kdmModelDrawer.drawGraph(edgesLocal, nodesLocal, outputDir, "type_dependency_graph_local.dotty");
@@ -831,37 +685,20 @@
 		var nodesComposite = []; // classes
 		var nodesByNameComposite = {};
 
-		// console.log("top classes");
-		// console.log(topClassUnits);
-
 		for (var i in dicClassUnits) {
 			var classUnit = dicClassUnits[i];
-			// console.log('test');
-			// console.log(classUnit);
 			var xmiClassUnit = classUnit.attachment;
 			var methodUnits = classUnit.methodUnits;
-			// var XMIMethodUnits = jp.query(xmiClassUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:MethodUnit\')]');
 			for (var q in methodUnits) {
-				// var XMIMethodUnit = XMIMethodUnits[q];
-				// var methodUnit = kdmModelUtils.identifyMethodUnit(XMIMethodUnit, xmiString);
 				var methodUnit = methodUnits[q];
-				// var methodClassUnit = locateClassUnitForMethod(methodUnit, topClassUnits); // the class which owns the method
 
 				if (!methodUnit || !classUnit.isWithinBoundary) {
 					continue;
 				}
-
-				// console.log("Reads!!!!");
-				// console.log(methodUnit);
-				// console.log("methodUnitAbove");
 				var methodBlockUnit = methodUnit.blockUnit;
-				// console.log(methodBlockUnit);
-				// if (methodBlockUnit.length > 0) {
 				var methodActionElementsOut = methodUnit.blockUnit.actionElements;
 				for (var z in methodActionElementsOut) {
-					console.log("actionelementout");
 					var methodActionElementOut = methodActionElementsOut[z];
-					console.log(methodActionElementOut);
 					var methodActionElementsIn = methodActionElementOut.actionElements;
 					for (var y in methodActionElementsIn) {
 						var methodActionElementIn = methodActionElementsIn[y];
@@ -902,8 +739,6 @@
 								}
 								var XMIClassAttrUnitType = jp.query(xmiString, kdmModelUtils.convertToJsonPath(targetAttrUnit.type));
 								var targetStorableType = null;
-								// console.log('storableUnit');
-								// console.log(XMIClassAttrUnitType[0]['$']['UUID']);
 								for (var j in dicClassUnits) {
 									var classUnitCandidate = dicClassUnits[j];
 									if (classUnitCandidate.UUID == XMIClassAttrUnitType[0]['$']['UUID']) {
@@ -945,8 +780,6 @@
 											UUID: compositeClassUnit.UUID
 										},
 										UUID: methodUnit.UUID
-										// UUID: compositeClassUnit.UUID
-										//							isWithinBoundary: targetClassUnit.isWithinBoundary
 									};
 									nodesComposite.push(startNodeComposite);
 									nodesByNameComposite[methodUnit.UUID] = startNodeComposite;
@@ -956,18 +789,15 @@
 								if (!endNodeComposite) {
 									endNodeComposite = {
 										name: compositeTargetClassUnit.name,
-										// isResponse: targetMethodUnit.isResponse,
 										component: {
 											name: compositeTargetClassUnit.name,
 											UUID: compositeTargetClassUnit.UUID,
 										},
 										UUID: targetAttrUnit.UUID
-										//							isWithinBoundary: targetClassUnit.isWithinBoundary
 									};
 									nodesComposite.push(endNodeComposite);
 									nodesByNameComposite[targetAttrUnit.UUID] = endNodeComposite;
 								}
-								//				var end = targetClassUnit.name;
 								edgesComposite.push({ start: startNodeComposite, end: endNodeComposite });
 
 
@@ -992,7 +822,6 @@
 										if (methodParameters[l].hasOwnProperty('name')) {
 											name = methodParameters[l].name;
 										}
-										//											var type = jp.query(xmiString, kdmModelUtils.convertToJsonPath(methodParameters[l].type));
 										var type = methodParameters[l].type;
 										var typeClass = null;
 										for (var j in dicClassUnits) {
@@ -1006,7 +835,6 @@
 										}
 										var parameter = {
 											Name: name,
-											// kind: methodParameters[l].kind,
 											Type: typeClass.name,
 											TypeUUID: typeClass.UUID,
 										};
@@ -1021,14 +849,12 @@
 								if (!startNode) {
 									startNode = {
 										name: classUnit.name + ":" + methodUnit.signature.name,
-										// isResponse: methodUnit.isResponse,
 										component: {
 											name: classUnit.name,
 											UUID: classUnit.UUID
 										},
 										UUID: methodUnit.UUID,
 										methodName: methodUnit.signature.name,
-										//							isWithinBoundary: targetClassUnit.isWithinBoundary
 									};
 									nodes.push(startNode);
 									nodesByName[methodUnit.UUID] = startNode;
@@ -1038,7 +864,6 @@
 								if (!endNode) {
 									endNode = {
 										name: targetClassUnit.name + ":" + targetAttrUnit.name,
-										// isResponse: targetMethodUnit.isResponse,
 										component: {
 											name: targetClassUnit.name,
 											UUID: targetClassUnit.UUID,
@@ -1047,12 +872,10 @@
 										attributeName: targetAttrUnit.name,
 										attributeType: targetStorableType.name,
 										attributeTypeUUID: targetStorableType.UUID,
-										//							isWithinBoundary: targetClassUnit.isWithinBoundary
 									};
 									nodes.push(endNode);
 									nodesByName[targetAttrUnit.UUID] = endNode;
 								}
-								//				var end = targetClassUnit.name;
 								edges.push({ start: startNode, end: endNode });
 							}
 
@@ -1131,7 +954,6 @@
 
 				console.log("identified composite classes");
 
-//				if ((compositeClassUnit != compositeTargetClassUnit) && compositeClassUnit.isComposite) {
 					if (!referencedCompositeClassUnits.includes(compositeClassUnit)) {
 						referencedCompositeClassUnits.push(compositeClassUnit);
 					}
@@ -1139,23 +961,16 @@
 					if (!referencedCompositeClassUnits.includes(compositeTargetClassUnit)) {
 						referencedCompositeClassUnits.push(compositeTargetClassUnit);
 					}
-//				}
-//				else {
-//					continue;
-//				}
 
 				var startNodeComposite = nodesByNameComposite[callMethodUnit.UUID];
 				if (!startNodeComposite) {
 					startNodeComposite = {
 						name: compositeClassUnit.name + ":" + callMethodUnit.signature.name,
-						// isResponse: methodUnit.isResponse,
 						component: {
 							name: compositeClassUnit.name,
 							UUID: compositeClassUnit.UUID
 						},
 						UUID: callMethodUnit.UUID
-						// UUID: compositeClassUnit.UUID
-						// isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodesComposite.push(startNodeComposite);
 					nodesByNameComposite[callMethodUnit.UUID] = startNodeComposite;
@@ -1165,13 +980,11 @@
 				if (!endNodeComposite) {
 					endNodeComposite = {
 						name: compositeTargetClassUnit.name + ":" + targetMethodUnit.signature.name,
-						// isResponse: targetMethodUnit.isResponse,
 						component: {
 							name: compositeTargetClassUnit.name,
 							UUID: compositeTargetClassUnit.UUID,
 						},
 						UUID: targetMethodUnit.UUID
-						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodesComposite.push(endNodeComposite);
 					nodesByNameComposite[targetMethodUnit.UUID] = endNodeComposite;
@@ -1180,7 +993,6 @@
 
 
 
-//				if (callClassUnit != targetClassUnit) {
 					if (!referencedClassUnits.includes(callClassUnit)) {
 						referencedClassUnits.push(callClassUnit);
 					}
@@ -1188,10 +1000,6 @@
 					if (!referencedClassUnits.includes(targetClassUnit)) {
 						referencedClassUnits.push(targetClassUnit);
 					}
-//				}
-//				else {
-//					continue;
-//				}
 
 				if (!(dicMethodParameters.hasOwnProperty(callMethodUnit.UUID))) {
 					var methodParameters = callMethodUnit.signature.parameterUnits;
@@ -1214,7 +1022,6 @@
 						}
 						var parameter = {
 							Name: name,
-							// kind: methodParameters[l].kind,
 							Type: typeClass.name,
 							TypeUUID: typeClass.UUID,
 						};
@@ -1231,12 +1038,9 @@
 						component: {
 							name: callClassUnit.name,
 							UUID: callClassUnit.UUID,
-							// methodNumber: callClassUnit.methodUnits.length
 						},
 						UUID: callMethodUnit.UUID,
 						methodName: callMethodUnit.signature.name,
-
-						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodes.push(startNode);
 					nodesByName[callMethodUnit.UUID] = startNode;
@@ -1250,23 +1054,19 @@
 						component: {
 							name: targetClassUnit.name,
 							UUID: targetClassUnit.UUID,
-							// methodNumber: callClassUnit.methodUnits.length
 						},
 						UUID: targetMethodUnit.UUID,
 						methodName: targetMethodUnit.signature.name,
 
-						//							isWithinBoundary: targetClassUnit.isWithinBoundary
 					};
 					nodes.push(endNode);
 					nodesByName[targetMethodUnit.UUID] = endNode;
 				}
-				//				var end = targetClassUnit.name;
 				edges.push({ start: startNode, end: endNode });
 			}
 
 		}
 
-		// drawGraph(edges, nodes, outputDir, "kdm_call_graph.dotty");
 		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "call_dependency_graph.dotty");
 		kdmModelDrawer.drawGraph(edgesComposite, nodesComposite, outputDir, "call_dependency_graph_composite.dotty");
 
@@ -1328,9 +1128,6 @@
 
 				// TODO: create a composite graph
 				// Or is it really necessary?
-
-
-				// create the normal graph (non-composite)
 
 				var startNode = nodesByName[childXMIClassUnit['$'].UUID];
 				if (!startNode) {
@@ -1645,7 +1442,6 @@
 		return {
 			name: XMIMethodUnit['$']['name'],
 			kind: XMIMethodUnit['$']['kind'],
-			//				key: XMIMethodUnit['$']['name']+"_"+ XMIMethodUnit['$']['kind'],
 			UUID: XMIMethodUnit['$']['UUID']
 		};
 	}
@@ -1654,7 +1450,6 @@
 		return {
 			name: XMIActionElement['$']['name'],
 			kind: XMIActionElement['$']['kind'],
-			//				key: XMIActionElement['$']['name']+"_"+ XMIActionElement['$']['kind']
 			UUID: XMIActionElement['$']['UUID'],
 		}
 	}
@@ -1692,12 +1487,7 @@
 		//the system classes are determined by excluding the classes that are within the external packages.
 		console.log("determine external class units");
 
-		//		var externalClassUnits = [];
 		var externalClassUnitsByName = {};
-		//		for(var i in externalClassUnits){
-		//			var externalClassUnit = externalClassUnits[i];
-		//			externalClassUnitsByName[externalClassUnit.name] = externaClassUnit;
-		//		}
 		var XMIExternalModels = jp.query(xmiString, '$..model[?(@[\'$\'][\'xsi:type\']==\'code:CodeModel\' && @[\'$\'][\'name\']==\'externals\')]');
 
 		for (var i in XMIExternalModels) {
@@ -1705,7 +1495,6 @@
 			var XMIExternalClasses = jp.query(XMIExternalModel, '$..codeElement[?(@[\'$\'][\'xsi:type\']==\'code:ClassUnit\' || @[\'$\'][\'xsi:type\']==\'code:InterfaceUnit\' || @[\'$\'][\'xsi:type\']==\'code:StorableUnit\')]');
 			console.log("ok");
 			console.log(XMIExternalClasses);
-			//			var XMIExternalClasses = [];
 			for (var j in XMIExternalClasses) {
 				var XMIExternalClassUnit = XMIExternalClasses[j];
 				var classUnit = {

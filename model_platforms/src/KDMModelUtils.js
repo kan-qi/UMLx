@@ -288,8 +288,6 @@
 				attachment: XMIMethodUnit
 		}
 
-
-
 		var XMISignature = jp.query(XMIMethodUnit, '$.codeElement[?(@[\'$\'][\'xsi:type\']==\'code:Signature\')]')[0];
 		if(XMISignature){
 		var XMIParameters = jp.query(XMISignature, '$.parameterUnit[?(@[\'$\'][\'type\'])]');
@@ -652,12 +650,10 @@
 		return {
 			name: XMIActionElement['$']['name'],
 			kind: XMIActionElement['$']['kind'],
-			//				key: XMIActionElement['$']['name']+"_"+ XMIActionElement['$']['kind']
 			UUID: XMIActionElement['$']['UUID'],
 		}
 	}
 
-	// system components only include the ones that are the system level. Extra rules or manual effort is required.
 	function identifyComponentsFromExternalResources(filePath, callbackfunc) {
 		fs.readFile(filePath, "utf8", function (err, data) {
 			if (err) {

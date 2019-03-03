@@ -505,18 +505,18 @@
                  graph += i;
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
-                 graph += curClass["name"];
+                 graph += filterName(curClass["name"]);
 
 
-                 var classStorableUnits = dicComponentElements[i]["attrUnits"];
+                 var attrUnits = dicComponentElements[i]["attrUnits"];
 
-                 if ( classStorableUnits.length != 0){
+                 if ( attrUnits.length != 0){
                      graph += '|';
-                     for(j = 0; j < classStorableUnits.length; j++) {
+                     for(j = 0; j < attrUnits.length; j++) {
                    
                          graph += '-   ' ;
-                         graph += classStorableUnits[j]["name"];
-                         graph += ':'+classStorableUnits[j]["kind"];
+                         graph += filterName(attrUnits[j]["name"]);
+                         graph += ':'+attrUnits[j]["kind"];
                          graph += '\\l';
                      }
                  }
@@ -529,13 +529,13 @@
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
-                         tempStr += classMethodUnits[j]["name"] + '(';
-                         var para_len = classMethodUnits[j]["parameterTypes"].length;
-                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
+                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
+                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
                         	 if(k != 0){
                         		 tempStr += ",";
                         	 }
-                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
+                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -556,7 +556,7 @@
                  
                  for(j = 0; j < classInterfaceUnits.length;j++) {
                      graph += '*   ';
-                     graph += classInterfaceUnits[j]["name"] + ' ';
+                     graph += filterName(classInterfaceUnits[j]["name"]) + ' ';
                  		graph += "\\l";
                  }
                  }
@@ -601,18 +601,18 @@
                  
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
-                 graph += curClass["name"];
+                 graph += filterName(curClass["name"]);
 
 
-                 var classStorableUnits = curClass["attrUnits"];
+                 var attrUnits = curClass["attrUnits"];
 
                  
-             	if ( classStorableUnits.length != 0){
+             	if ( attrUnits.length != 0){
                      graph += '|';
-                     for(j = 0; j < classStorableUnits.length; j++) {
+                     for(j = 0; j < attrUnits.length; j++) {
       
                          graph += '-   ' ;
-                         graph += classStorableUnits[j]["name"];
+                         graph += filterName(attrUnits[j]["name"]);
                          graph += '\\l';
                      }
                  }
@@ -625,15 +625,15 @@
 
                     	 tempStr += '+   ';
                     	 console.log(classMethodUnits[j]);
-                         tempStr += classMethodUnits[j]["name"] + '(';
+                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
                          console.log(classMethodUnits[j]);
-                         var para_len = classMethodUnits[j]["parameterTypes"].length;
-                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
+                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
                         	 if(k != 0){
                         		 tempStr += ",";
                         	 }
                         	 
-                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
+                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -654,7 +654,7 @@
                  
                  for(j = 0; j < classInterfaceUnits.length;j++) {
                      graph += '*   ';
-                     graph += classInterfaceUnits[j]["name"] + ' ';
+                     graph += filterName(classInterfaceUnits[j]["name"]) + ' ';
                  		graph += "\\l";
                  }
          		}
@@ -704,18 +704,18 @@
                  
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
-                 graph += curClass["name"];
+                 graph += filterName(curClass["name"]);
 
 
-                 var classStorableUnits = curClass["attrUnits"];
+                 var attrUnits = curClass["attrUnits"];
 
                  
-                if(classStorableUnits){
-             	if ( classStorableUnits.length != 0){
+                if(attrUnits){
+             	if ( attrUnits.length != 0){
                      graph += '|';
-                     for(j = 0; j < classStorableUnits.length; j++) {
+                     for(j = 0; j < attrUnits.length; j++) {
                          graph += '-   ' ;
-                         graph += classStorableUnits[j]["name"];
+                         graph += filterName(attrUnits[j]["name"]);
                          graph += '\\l';
                      }
                  }
@@ -730,13 +730,13 @@
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
-                         tempStr += classMethodUnits[j]["name"] + '(';
-                         var para_len = classMethodUnits[j]["parameterTypes"].length;
-                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
+                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
+                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
                         	 if(k != 0){
                         		 tempStr += ",";
                         	 }
-                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
+                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
                          }
                          tempStr += ')';
                          tempStr += "\\l";

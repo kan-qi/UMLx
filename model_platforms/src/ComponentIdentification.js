@@ -167,8 +167,6 @@
 			currentLevelDepth++;
 		}
 		
-//		clusters.push(utilityCluster);
-		
 		for (var i in currentLevel) {
 			var newComponent = [];
 			var bfs = [currentLevel[i]];

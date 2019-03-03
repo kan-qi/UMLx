@@ -751,7 +751,6 @@ public String constructExtendsGraph(List<ClassUnit> classUnits, List<CompositeCl
 	}
 	res = res.substring(0,res.length()-1);
 	res += "}";	
-//	Debug6.v().printf(res);
 	
 	System.out.println("construct of extends graph finishes.");
 	
