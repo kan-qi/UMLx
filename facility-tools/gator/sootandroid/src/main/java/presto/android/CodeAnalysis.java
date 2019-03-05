@@ -629,11 +629,14 @@ public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<Comp
 		}
 	}
 	
-	return convertTypeDependencyGraphToJSON(mappings);
+	String typeDependencyJson = "[";
+	typeDependencyJson += convertTypeDependencyGraphToJSON(mappings) + ",";
+	typeDependencyJson += convertTypeDependencyGraphToAttributeJSON(mappings) + "]";
+	return typeDependencyJson;
 }
 
 String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode> typeDepGraph) {
-	String output = "{\"nodes\":[";
+	String output = "{\"typeDependencyNodes\":[";
 	
 	// Loop through each class node
 	int classIter = 0;
@@ -686,7 +689,44 @@ String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode>
 	    	    	output += ",";
 	    	    }
 	    	}
-	    	output += "]";	    	
+	    	output += "]}";    	
+    	
+	    	typeDepIter++;
+	    	if (typeDepIter < typeDepCount) {
+	    		output += ",";
+	    	}
+	    }
+	    
+	    output += "]}";
+	    
+	    classIter++;
+	    if (classIter < classCount) {
+	    	output += ",";
+	    }
+	}
+	
+	output += "]}";
+			
+	return output;
+}
+
+String convertTypeDependencyGraphToAttributeJSON(HashMap<String, TypeDependencyGraphNode> typeDepGraph) {
+	String output = "{\"attributeNodes\":[";
+	
+	// Loop through each class node
+	int classIter = 0;
+	int classCount = typeDepGraph.size();
+	for (TypeDependencyGraphNode node : typeDepGraph.values()) {
+	    output += "{\"class\":\"" + node.className + "\",\"uuid\":\"" + node.uuid + "\",\"attributeDependencies\":[";
+	    
+	    // Loop through each class it has an attribute dependency on
+	    int typeDepIter = 0;
+	    int typeDepCount = node.typeDependencies.size();
+	    for (TypeDependencyUnit dependency : node.typeDependencies.values()) {
+	    	output += "{\"class\":\"" + dependency.typeDependency.className + "\",\"uuid\":\"" + dependency.typeDependency.uuid + "\"";
+	    	
+	    	int depCount;
+	    	int iterCount = 0;    	
 	    	
 	    	output += ",\"attrDependencies\":[";
 	    	depCount = dependency.attributeDependencies.size();
@@ -699,9 +739,8 @@ String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode>
 	    			output += ",";
 	    		}
 	    	}
-	    	output += "]";	    	
-    	
-	    	output += "}";
+	    	output += "]}";	    	
+
 	    	typeDepIter++;
 	    	if (typeDepIter < typeDepCount) {
 	    		output += ",";
