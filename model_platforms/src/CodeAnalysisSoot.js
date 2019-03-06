@@ -319,9 +319,9 @@
 		
 		//right now I'm directly using the type dependency graph. Need to make an individual graph.
 
-		for(var i in androidAnalysisResults.typeDependencyGraph.nodes){
+		for(var i in androidAnalysisResults.compositionGraph.nodes){
 			
-			var node = androidAnalysisResults.typeDependencyGraph.nodes[i];
+			var node = androidAnalysisResults.compositionGraph.nodes[i];
 			var dependencies = node.dependencies;
 			var targetClassUnit = dicClassUnits[node.uuid];
 			if(!targetClassUnit){
@@ -497,8 +497,8 @@
 		
 		for(var i in androidAnalysisResults.extendsGraph){
 			var edge = androidAnalysisResults.extendsGraph[i];
-			var fromClass = dicClassUnits[edge.from.UUID];
-			var toClass = dicClassUnits[edge.to.UUID];
+			var fromClass = dicClassUnits[edge.from.uuid];
+			var toClass = dicClassUnits[edge.to.uuid];
 			
 			if(!fromClass || !toClass){
 				continue;
