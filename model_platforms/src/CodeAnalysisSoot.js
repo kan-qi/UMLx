@@ -615,8 +615,6 @@
 			var targetCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[targetClassUnit.UUID]];
 			for(var j in dependencies){
 				var dependency = dependencies[j];
-//				console.log()
-//				console.log(dependency["uuid"]);
 				var classUnit = dicClassUnits[dependency["uuid"]];
 				var compositeClassUnit = dicCompositeClassUnits[dicClassComposite[classUnit.UUID]];
 				

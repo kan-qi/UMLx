@@ -125,7 +125,6 @@
 			    	
 					for(var k in filterNames){
 						if(line.indexOf(filterNames[k])>-1){
-//							continue;
 							toFilter = true;
 							break;
 						}
@@ -134,9 +133,7 @@
 					if(toFilter){
 						continue;
 					}
-					
-//					console.log(line);
-//					var filteredFileName = path.basename(i);
+
 					debuggerOutputUtil.appendFile2(i, line+"\n", logFolder+"/filteredLogs");
 					
 				}
@@ -156,6 +153,3 @@
 		}
 	}())
 
-	
-//	filterAndroidLog("./data/GitAndroidAnalysis/log_analysis/AnotherMonitor-release/log.file", "./data/GitAndroidAnalysis/log_analysis/AnotherMonitor-release/filterNames");
-	
