@@ -409,22 +409,16 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	  String className;
 	  String uuid;
 	  Map<String, String> methods;
-	  Map<String, String> attributes;
 	  Map<String, TypeDependencyUnit> typeDependencies;	// Other classes that this class has relationships with
 	  
 	  public TypeDependencyGraphNode(ClassUnit classUnit) {
 		  this.className = classUnit.name;
 		  this.uuid = classUnit.uuid;
 		  this.methods = new HashMap<String, String>();
-		  this.attributes = new HashMap<String, String>();
 		  this.typeDependencies = new HashMap<String, TypeDependencyUnit>();
 		  
 		  for (MethodUnit method : classUnit.getMethods()){
 			  this.methods.put(method.name, method.uuid);
-		  }
-		  
-		  for (AttrUnit attribute : classUnit.getAttributes()) {
-			  this.attributes.put(attribute.name, attribute.uuid);
 		  }
 	  }
 	  
@@ -441,11 +435,6 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	  public void addLocalVariableTypeDependency(TypeDependencyGraphNode typeDependency, String methodName) {
 		  TypeDependencyUnit edge = this.getTypeDependencyUnit(typeDependency);
 		  edge.addLocalVarDependency(methodName);
-	  }
-	  
-	  public void addAttributeTypeDependency(TypeDependencyGraphNode typeDependency, String attrName) {
-		  TypeDependencyUnit edge = this.getTypeDependencyUnit(typeDependency);
-		  edge.addAttributeDependency(attrName);
 	  }
 	  
 	  private TypeDependencyUnit getTypeDependencyUnit(TypeDependencyGraphNode typeDependency) {
@@ -472,11 +461,6 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		  this.returnDependencies = new ArrayList<String>();
 		  this.parameterDependencies = new HashMap<String, Integer>();
 		  this.localVarDependencies = new HashMap<String, Integer>();
-		  this.attributeDependencies = new ArrayList<String>();
-	  }
-	  
-	  public void addAttributeDependency(String attrName) {
-		  this.attributeDependencies.add(attrName);
 	  }
 	  
 	  public void addReturnDependency(String methodName) {
@@ -499,20 +483,6 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 		  }		  
 	  }
   }
-  
-//  private class AccessGraphCompositeNode{
-//		MethodUnit methodUnit;
-//		AttrUnit attrUnit;
-//		CompositeClassUnit compositeClassUnit;
-//		
-//		AccessGraphCompositeNode(MethodUnit methodUnit, AttrUnit attrUnit, CompositeClassUnit compositeClassUnit) {
-//			super();
-//			this.methodUnit = methodUnit;
-//			this.compositeClassUnit = compositeClassUnit;
-//			this.attrUnit = attrUnit;
-//		}
-//		
-//	}
 
   private class AttrUnit {
 	  String name;
@@ -530,6 +500,102 @@ String convertCallGraphToJSON(Set<CallGraphNode[]> edges) {
 	}
   }
   
+  private class AttrDependencyGraphNode {
+	  String className;
+	  String uuid;
+	  Map<String, String> attributes;
+	  Map<String, AttributeDependencyUnit> typeDependencies;	// Other classes that this class has relationships with
+	  
+	  public AttributeDependencyGraphNode(ClassUnit classUnit) {
+		  this.className = classUnit.name;
+		  this.uuid = classUnit.uuid;
+		  this.attributes = new HashMap<String, String>();
+		  this.typeDependencies = new HashMap<String, AttributeDependencyUnit>();
+		  
+		  for (AttrUnit attribute : classUnit.getAttributes()) {
+			  this.attributes.put(attribute.name, attribute.uuid);
+		  }
+	  }
+	  
+	  public void addAttributeAttributeDependency(AttributeDependencyGraphNode AttributeDependency, String attrName) {
+		  AttributeDependencyUnit edge = this.getAttributeDependencyUnit(AttributeDependency);
+		  edge.addAttributeDependency(attrName);
+	  }
+	  
+	  private AttributeDependencyUnit getAttributeDependencyUnit(AttributeDependencyGraphNode AttributeDependency) {
+		  if (!this.typeDependencies.containsKey(AttributeDependency.className)) {
+			  AttributeDependencyUnit typeDepEdge = new AttributeDependencyUnit(AttributeDependency);
+			  this.typeDependencies.put(AttributeDependency.className, typeDepEdge);
+		  }
+		  
+		  return (AttributeDependencyUnit)this.typeDependencies.get(AttributeDependency.className);
+	  }
+  }
+  
+  
+  private class AttributeDependencyUnit {
+	  AttributeDependencyGraphNode AttributeDependency;	// The class that the parent node has a dependency on
+	  List<String> attributeDependencies;	// Keep track of attribute names
+	  
+	  public AttributeDependencyUnit(AttributeDependencyGraphNode AttributeDependency) {
+		  this.AttributeDependency = AttributeDependency;
+		  this.attributeDependencies = new ArrayList<String>();
+	  }
+	  
+	  public void addAttributeDependency(String attrName) {
+		  this.attributeDependencies.add(attrName);
+	  }
+  }
+
+  private class AttrUnit {
+	  String name;
+	  String type;
+	  String uuid;
+	  
+	public AttrUnit(String name, String type) {
+		this.name = name;
+		this.type = type;
+		this.uuid = UUID.randomUUID().toString();
+	}
+	  
+	public String toJSONString() {
+		return "{\"name\":\""+this.name+"\", \"type\":\""+this.type+"\", \"UUID\":\""+this.uuid+"\"}";
+	}
+  }
+  
+ public String constructCompositionGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
+
+	 HashMap mappings = new HashMap<String, AttributeDependencyGraphNode>();
+		
+		for (ClassUnit classUnit : classUnits) {
+			// Create a AttributeDependencyGraphNode for the class if it doesn't exist yet
+			if (!mappings.containsKey(classUnit.name)) {
+				AttributeDependencyGraphNode classNode = new AttributeDependencyGraphNode(classUnit);
+				mappings.put(classUnit.name, classNode);
+			}
+			
+			AttributeDependencyGraphNode currentClassNode = (AttributeDependencyGraphNode)mappings.get(classUnit.name);
+			
+			// Loop through attributes of the class
+			List<AttrUnit> attributes = classUnit.getAttributes();
+			for (AttrUnit attribute : attributes) {
+				// Create a AttributeDependencyGraphNode for the attribute type if it doesn't exist yet
+				if (classUnitByName.containsKey(attribute.type)) {
+					ClassUnit attrType = (ClassUnit)classUnitByName.get(attribute.type);
+					if (!mappings.containsKey(attribute.type)) {
+						AttributeDependencyGraphNode node = new AttributeDependencyGraphNode(attrType);
+						mappings.put(attribute.type, node);
+					}
+					
+					// Add the attribute type dependency
+					AttributeDependencyGraphNode attrNode = (AttributeDependencyGraphNode)mappings.get(attribute.type);
+					currentClassNode.addAttributeAttributeDependency(attrNode, attribute.name);
+				}
+			}
+		}
+		
+		return convertCompositionGraph(mappings);
+ }
   
 public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<CompositeClassUnit> compositeClassUnits, Map<String, ClassUnit> classUnitByName, Map<String, ClassUnit> classUnitByUUID, Map<String, CompositeClassUnit> compositeClassUnitByUUID, Map<String, String> classUnitToCompositeClassDic) {
 	HashMap mappings = new HashMap<String, TypeDependencyGraphNode>();
@@ -629,14 +695,11 @@ public String constructTypeDependencyGraph(List<ClassUnit> classUnits, List<Comp
 		}
 	}
 	
-	String typeDependencyJson = "[";
-	typeDependencyJson += convertTypeDependencyGraphToJSON(mappings) + ",";
-	typeDependencyJson += convertTypeDependencyGraphToAttributeJSON(mappings) + "]";
-	return typeDependencyJson;
+	return convertTypeDependencyGraphToJSON(mappings);
 }
 
 String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode> typeDepGraph) {
-	String output = "{\"typeDependencyNodes\":[";
+	String output = "{\"Nodes\":[";
 	
 	// Loop through each class node
 	int classIter = 0;
@@ -710,20 +773,20 @@ String convertTypeDependencyGraphToJSON(HashMap<String, TypeDependencyGraphNode>
 	return output;
 }
 
-String convertTypeDependencyGraphToAttributeJSON(HashMap<String, TypeDependencyGraphNode> typeDepGraph) {
-	String output = "{\"attributeNodes\":[";
+String convertCompositionGraph(HashMap<String, AttributeDependencyGraphNode> attributeCompGraph) {
+	String output = "{\"Nodes\":[";
 	
 	// Loop through each class node
 	int classIter = 0;
-	int classCount = typeDepGraph.size();
-	for (TypeDependencyGraphNode node : typeDepGraph.values()) {
+	int classCount = attributeCompGraph.size();
+	for (AttributeDependencyGraphNode node : attributeCompGraph.values()) {
 	    output += "{\"class\":\"" + node.className + "\",\"uuid\":\"" + node.uuid + "\",\"attributeDependencies\":[";
 	    
 	    // Loop through each class it has an attribute dependency on
 	    int typeDepIter = 0;
 	    int typeDepCount = node.typeDependencies.size();
-	    for (TypeDependencyUnit dependency : node.typeDependencies.values()) {
-	    	output += "{\"class\":\"" + dependency.typeDependency.className + "\",\"uuid\":\"" + dependency.typeDependency.uuid + "\"";
+	    for (AttributeDependencyUnit dependency : node.typeDependencies.values()) {
+	    	output += "{\"class\":\"" + dependency.AttributeDependency.className + "\",\"uuid\":\"" + dependency.AttributeDependency.uuid + "\"";
 	    	
 	    	int depCount;
 	    	int iterCount = 0;    	
@@ -1118,7 +1181,7 @@ String convertAccessGraphToJSON(Set<AccessGraphNode[]> edges) {
 	//	var typeDependencyGraph = constructTypeDependencyGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 	outputS += ",\"accessGraph\":"+constructAccessGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 	outputS += ",\"extendsGraph\":"+constructExtendsGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
-//	outputS += ",\"compositionGraph\":"+constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
+	outputS += ",\"compositionGraph\":"+constructCompositionGraph(classUnits, compositeClassUnits, classUnitByName, classUnitByUUID, compositeClassUnitByUUID, classUnitToCompositeClassDic);
 
 	// var extendsGraph = constructExtendsGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
 //	var compositionGraph = constructCompositionGraph(topClassUnits, xmiString, outputDir, referencedClassUnits, referencedClassUnitsComposite, dicMethodParameters);
