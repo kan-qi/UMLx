@@ -299,7 +299,6 @@ function traverseUseCaseForTransactions(useCase){
 				
 			});
 
-
 	}
 
 	module.exports = {

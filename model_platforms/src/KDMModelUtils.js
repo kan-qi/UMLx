@@ -115,19 +115,6 @@
 					}
 		}
 		
-		
-//		var debug = require("../../utils/DebuggerOutput.js");
-//		debug.writeJson("identified_class_units", dicClassUnits);
-//
-//		debug.writeJson("identified_method_units", dicMethodUnits);
-//
-//		debug.writeJson("identified_method_class", dicMethodClass);
-//
-//		debug.writeJson("identified_action_element_method", dicActionElementMethod);
-//
-//		debug.writeJson("identified_class_composite", dicClassComposite);
-//
-//		debug.writeJson("identified_composite_classes", dicCompositeClasses);
 	}
 
 	function aggregateClassUnit(subClassUnits, isWithinBoundary, dicClassComposite, dicCompositeSubclasses) {
@@ -335,41 +322,6 @@
 		return methodUnit;
 	}
 
-
-	/*
-	 * There are three layers:
-	 * codeElement-code:ClassUnit
-	 * 		-source
-	 * 			- region
-	 * 		-codeRelation-code:Imports
-	 *		-codeElement-code:StorableUnit
-	 *      -codeElement-code:MethodUnit
-	 *        -source
-	 *        -codeElement-code:signature
-	 *        	-parameterUnit
-	 *        -codeElement-action:BlockUnit
-	 *          -codeElement-action:ActionElement
-	 *            -codeElement-action:ActionElement
-	 *            -actionRelation-action:Address
-	 *            -actionRelation-action:Reads
-	 *            -actionRelation-action:Writes
-	 *            -actionRelation-action:Calls
-	 *            -actionRelation-action:Creates
-	 *            -codeElement-code:ClassUnit
-	 *      -codeElement-code:InterfaceUnit
-	 *           -codeRelation-code:Imports
-	 *           -codeRelation-code:MethodUnit
-	 *      -codeElement-code:ClassUnit
-	 *
-	 * The function is recursively designed to take care of the structure.
-	 * 
-	 * In adding to the class units, additional information about the hierarchy that are needed for the following analysis is also preserved for better performance.
-	 * 
-	 * 1. the sub classes information.
-	 * 2. the sub method information.
-	 * 3. the sub action information.
-	 *
-	 */
 	function identifyClassUnit(XMIClassUnit, xmiString, subClasses, subInterfaces, subMethods, subActionElements){
 
 		console.log("identify:"+XMIClassUnit['$']['name']);

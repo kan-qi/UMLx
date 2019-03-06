@@ -121,7 +121,6 @@
 					clusterConfig = S1W1L1;
 				}
 				
-//				modelInfo.clusterFile = null;
 				if(modelInfo.clusterFile){
 				componentInfo = componentIdentifier.identifyComponentsACDC(
 						codeAnalysisResults.callGraph, 
@@ -152,9 +151,6 @@
 					codeAnalysisResults.dicCompositeClassUnits,
 					codeAnalysisResults.dicClassUnits,
 					codeAnalysisResults.dicClassComposite,
-//					S2W3L3,
-//					S1W3L1,
-//					S1W1L1,
 					clusterConfig,
 					Model.OutputDir
 				);

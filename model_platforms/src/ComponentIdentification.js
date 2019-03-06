@@ -772,7 +772,6 @@
 			graph += '"a'+component['UUID'].replace(/-/g, '')+'" [label="'+component['name'].replace(/[\$|\s+]/g, '')+'"]';
 		}
 
-		// graph += 'node [fontsize=24 shape=point]';
 		graph += 'node [fontsize=24 shape=rectangle]';
 		for (var i in disComponents) {
 			var component = disComponents[i];
@@ -786,7 +785,6 @@
 			var component = disComponents[i];
 			for (var j in component.classUnits) {
 				var classUnit = component.classUnits[j];
-//				graph += component['name'].replace(/[\.|\$|\s+]/g, '')+' -> {'+classUnit['name'].replace(/[\.|\$|\s+]/g, '')+'}';
 				graph += '"a'+component['UUID'].replace(/-/g, '')+'"->"a'+classUnit['UUID'].replace(/-/g, '')+'"';
 			}
 		}
