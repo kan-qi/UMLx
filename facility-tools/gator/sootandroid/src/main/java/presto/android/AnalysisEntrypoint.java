@@ -40,7 +40,6 @@ public class AnalysisEntrypoint {
       validate();
     }
 
-
 //    final int[] numStmt = {0};
 //    Scene.v().getClasses().parallelStream().forEach(new Consumer<SootClass>() {
 //      @Override
@@ -108,8 +107,6 @@ public class AnalysisEntrypoint {
       Date endTime = new Date();
       Logger.verb(this.getClass().getSimpleName(),
               "Soot stopped on " + endTime);
-
-//      System.exit(0);
     }
     
 
@@ -118,10 +115,8 @@ public class AnalysisEntrypoint {
     if(Configs.codeAnalysis) {
     CodeAnalysis codeAnalysis = CodeAnalysis.v();
     codeAnalysis.run();
-//    System.exit(0);
     }
     
-
     System.exit(0);
   }
 

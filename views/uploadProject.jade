@@ -253,13 +253,13 @@ html
               button.btn.btn-default.pull-left(type='button', onclick='showPage(2)') < Previous
               button.btn.btn-success.pull-right(type='button', onclick='showPage(4)') Next > 
         // Page4
-        #page4.hidden
+        #page4.hidden 
           .alert.alert-info
             | Project model file and documents
           .form-group
               label.control-label(style='text-align:left', for='uml-file').col-xs-4 Model File (file types: xml are supported)
               .col-xs-8
-                input#uml-file.form-control(type='file', name='uml-file', accept='text/xml')
+                input#uml-file.form-control(type='file', name='uml-file', accept='.apk, text/xml')
           .form-group
               label.control-label(style='text-align:left', for='uml-other').col-xs-4 Other Documents (file types: zip, rar, tar are supported)
               .col-xs-8
@@ -268,7 +268,6 @@ html
           .form-group
             .col-sm-offset-2.col-xs-8
               button.btn.btn-default.pull-left(type='button', onclick='showPage(3)') < Previous
-
               button.btn.btn-success.pull-right(type='submit', onclick='showLoading()') Submit
         #loadingScreen.hidden
           div.full-page-model
