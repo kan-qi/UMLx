@@ -23,6 +23,7 @@ var url = "mongodb://127.0.0.1:27017/repo_info_schema";
 var unzip = require('unzip');
 var rimraf = require('rimraf');
 var download = require('download');
+const androidAnalyzer = require('./UMLxAndroidAnalyzer');
 const { fork } = require('child_process');
 //var Worker = require('webworker-threads').Worker;
 
@@ -609,98 +610,119 @@ app.post('/predictProjectEffort', upload.fields([{name:'distributed_system',maxC
 ,{name:'includes_special_security_objectives', maxCount:1},{name:'provides_direct_access_for_third_parties', maxCount:1},{name:'special_user_training_facilities_are_required', maxCount:1},{name:'familiar_with_the_project_model_that_is_used', maxCount:1},{name:'application_experience', maxCount:1}
 ,{name:'object_oriented_experience', maxCount:1},{name:'lead_analyst_capability', maxCount:1},{name:'motivation', maxCount:1},{name:'stable_requirements', maxCount:1},{name:'part_time_staff', maxCount:1}
 ,{name:'difficult_programming_language', maxCount:1},{name:'uml_file', maxCount:1},{name:'uml_other', maxCount:1}, {name:'model', maxCount:1},{name:'simulation', maxCount:1}]), function(req,res){
-	var projectInfo = {};
-	projectInfo.distributedSystem = req.body['distributed_system'];
-	projectInfo.responseTime = req.body['response_time'];
-	projectInfo.endUserEfficiency = req.body['end_user_efficiency'];
-	projectInfo.complexInternalProcessing = req.body['complex_internal_processing'];
-	projectInfo.codeReusable = req.body['code_must_be_reusable'];
-	projectInfo.easyInstall = req.body['easy_to_install'];
-	projectInfo.easyUse = req.body['easy_to_use'];
-	projectInfo.portable = req.body['portable'];
-	projectInfo.easyToChange = req.body['easy_to_change'];
-	projectInfo.concurrent = req.body['concurrent'];
-	projectInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
-	projectInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
-	projectInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
-	projectInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
-	projectInfo.applicationExperience = req.body['application_experience'];
-	projectInfo.objectOrientedExperience = req.body['object_oriented_experience'];
-	projectInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
-	projectInfo.motivation = req.body['motivation'];
-	projectInfo.stableRequirements = req.body['stable_requirements'];
-	projectInfo.partTimeStaff = req.body['part_time_staff'];
-	projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
-	
-	if(req.body['personnel']){
-		projectInfo.personnel = Number(req.body['personnel']);
-	}
-	
-	if(req.body['schedule']){
-		projectInfo.schedule = Number(req.body['schedule']);
-	}
-	
-	if(req.body['hours-per-month']){
-		projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
-	}
-	
-	projectInfo.hoursPerMonth = 40;
-	
-	var umlFilePath = req.files['uml_file'][0].path;
-	
-	var estimationModel = req.body['model'];
-	
-	console.log("estimate project effort");
-	var umlModelType = "uml";
-	var umlModelName = "query1";
-	var formInfo = req.body;
-	umlModelInfoManager.queryTempRepoInfo(function(repoInfo){
-		if(!repoInfo){
-			res.end("error");
-			return;
+	console.log("poilkj");
+	var uploadedFile = req.files['uml_file'][0];
+    if (uploadedFile.mimetype == "text/xml") { // xml file
+        var projectInfo = {};
+		projectInfo.distributedSystem = req.body['distributed_system'];
+		projectInfo.responseTime = req.body['response_time'];
+		projectInfo.endUserEfficiency = req.body['end_user_efficiency'];
+		projectInfo.complexInternalProcessing = req.body['complex_internal_processing'];
+		projectInfo.codeReusable = req.body['code_must_be_reusable'];
+		projectInfo.easyInstall = req.body['easy_to_install'];
+		projectInfo.easyUse = req.body['easy_to_use'];
+		projectInfo.portable = req.body['portable'];
+		projectInfo.easyToChange = req.body['easy_to_change'];
+		projectInfo.concurrent = req.body['concurrent'];
+		projectInfo.specialSecurityObjectives = req.body['includes_special_security_objectives'];
+		projectInfo.directAccessForThirdParties = req.body['provides_direct_access_for_third_parties'];
+		projectInfo.userTrainingFacilitiesRequired = req.body['special_user_training_facilities_are_required'];
+		projectInfo.familiarWithProjectModel = req.body['familiar_with_the_project_model_that_is_used'];
+		projectInfo.applicationExperience = req.body['application_experience'];
+		projectInfo.objectOrientedExperience = req.body['object_oriented_experience'];
+		projectInfo.leadAnalystCapability = req.body['lead_analyst_capability'];
+		projectInfo.motivation = req.body['motivation'];
+		projectInfo.stableRequirements = req.body['stable_requirements'];
+		projectInfo.partTimeStaff = req.body['part_time_staff'];
+		projectInfo.difficultProgrammingLanguage = req.body['difficult_programming_language'];
+		
+		if(req.body['personnel']){
+			projectInfo.personnel = Number(req.body['personnel']);
 		}
-		var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
-//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
-		var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
-		modelInfo.projectInfo = projectInfo;
-//		console.log('updated model info');
-//		console.log(modelInfo);
-		umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
-			//update model analytics.
-			if(!modelInfo){
+		
+		if(req.body['schedule']){
+			projectInfo.schedule = Number(req.body['schedule']);
+		}
+		
+		if(req.body['hours-per-month']){
+			projectInfo.hoursPerMonth = Number(req.body['hours-per-month']);
+		}
+		
+		projectInfo.hoursPerMonth = 40;
+		
+		var umlFilePath = req.files['uml_file'][0].path;
+		
+		var estimationModel = req.body['model'];
+		
+		console.log("estimate project effort");
+		var umlModelType = "uml";
+		var umlModelName = "query1";
+		var formInfo = req.body;
+		umlModelInfoManager.queryTempRepoInfo(function(repoInfo){
+			if(!repoInfo){
 				res.end("error");
 				return;
 			}
-			console.log("model is extracted");
-			umlEvaluator.evaluateModel(modelInfo, function(){
-				console.log("model analysis complete");
+			var umlFileInfo = umlFileManager.getUMLFileInfo(repoInfo, umlFilePath, umlModelType, formInfo);
+	//		console.log('umlFileInfo => ' + JSON.stringify(umlFileInfo));
+			var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName, repoInfo);
+			modelInfo.projectInfo = projectInfo;
+	//		console.log('updated model info');
+	//		console.log(modelInfo);
+			umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
+				//update model analytics.
+				if(!modelInfo){
+					res.end("error");
+					return;
+				}
+				console.log("model is extracted");
+				umlEvaluator.evaluateModel(modelInfo, function(){
+					console.log("model analysis complete");
 
-                effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
-                    if(!estimationResults){
-                        console.log("error");
-                        res.render('estimationResultPaneSimplified', {error: "inter process error"});
-                        return;
-                    }
+	                effortPredictor.predictEffortByModel(modelInfo, estimationModel, function(estimationResults){
+	                    if(!estimationResults){
+	                        console.log("error");
+	                        res.render('estimationResultPaneSimplified', {error: "inter process error"});
+	                        return;
+	                    }
 
-                    console.log("estimation results");
-                    console.log(estimationResults);
+	                    console.log("estimation results");
+	                    console.log(estimationResults);
 
-                    modelInfo[estimationModel] = estimationResults;
-                    modelInfo.repo_id = repoInfo._id;
+	                    modelInfo[estimationModel] = estimationResults;
+	                    modelInfo.repo_id = repoInfo._id;
 
-                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
+	                    umlModelInfoManager.saveEstimation(modelInfo, function(modelInfo){
 
-                    	currentModel = modelInfo;
-                        res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
+	                    	currentModel = modelInfo;
+	                        res.render('estimationResultPaneSimplified', {estimationResults:estimationResults, modelInfo: modelInfo});
 
-                    });
+	                    });
 
-                });
+	                });
+
+				});
 
 			});
-
 		});
-	});
+    }
+    else if (path.extname(uploadedFile.originalname) == ".apk") { // apk file
+        console.l("apk file found => go to UMLxAndroidAnalyzer.js");
+        androidAnalyzer.analyseAPKGator(
+            uploadedFile.path, 
+            (result, model) => {
+                if (result != true) {
+                	res.send("failed");
+                	console.l("Android APK Analysis failed");
+                }
+                else {
+                	console.l("Android APK Analysis succeed");
+                	res.render('estimationResultPaneSimplified', {estimationResults:model.eucp_lm, modelInfo: model});
+                	//res.send("success");
+                }
+            }
+        );
+    }
 });
 
 // console.l = console.log;
