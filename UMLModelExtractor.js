@@ -18,52 +18,82 @@
 	
 	
 	function extractModelInfo(umlModelInfo, callbackfunc) {
+		var constructModel = null;
+        if(umlModelInfo.apkFile){
+        	
+        	constructModel = function(modelParser, modelString, umlModelInfo, callbackfunc){
+                console.l("apk file found => go to UMLxAndroidAnalyzer.js");
+    			var workDir = path.dirname(umlModelInfo.umlFilePath);
+                modelParser.analyseAPKGator(
+//                    uploadedFile.path, 
+                		umlModelInfo.umlFilePath, workDir, umlModelInfo.OutputDir,
+                    (result) => {
+                        if (result != true) {
+                        	console.l("Android APK Analysis failed");
+                        	if(callbackfunc){
+                        		callbackfunc(false);
+                        	}
+                        }
+                        else {
+                        	console.l("Android APK Analysis succeed");
+                        	if(callbackfunc){
+                        		callbackfunc(result);
+                        	}
+                        }
+//                        process.send('ok');
+                        
+                    }
+                );
+                //process.send('ok');
+        	}
 		
-		var constructModel = function(modelParser, modelString, umlModelInfo, callbackfunc){
-			var path = require('path');
-			var workDir = path.dirname(umlModelInfo.umlFilePath);
-			modelParser.extractUserSystermInteractionModel(modelString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
-				
-				if(!model){
-					return;
-				}
-				
-				// set up the model info properties
-				for(var i in model){
-					umlModelInfo[i] = model[i];
-				}
-				
-				// set up the domain model
-				var domainModel = umlModelInfo.DomainModel;
-				
-				for(var i in umlModelInfo.UseCases) {
-								var useCase = umlModelInfo.UseCases[i];
-								
-								modelDrawer.drawUSIMDiagram(useCase, domainModel, useCase.OutputDir+"/usim.dotty", function(){
+        }
+        else{
+        	constructModel  = function(modelParser, modelString, umlModelInfo, callbackfunc){
+    			var path = require('path');
+    			var workDir = path.dirname(umlModelInfo.umlFilePath);
+    			modelParser.extractUserSystermInteractionModel(modelString, workDir, umlModelInfo.OutputDir, umlModelInfo.AccessDir, function(model){
+    				
+    				if(!model){
+    					return;
+    				}
+    				
+    				// set up the model info properties
+    				for(var i in model){
+    					umlModelInfo[i] = model[i];
+    				}
+    				
+    				// set up the domain model
+    				var domainModel = umlModelInfo.DomainModel;
+    				
+    				for(var i in umlModelInfo.UseCases) {
+    								var useCase = umlModelInfo.UseCases[i];
+    								
+    								modelDrawer.drawUSIMDiagram(useCase, domainModel, useCase.OutputDir+"/usim.dotty", function(){
 
-									console.log("use case is drawn");
-								});
-								modelDrawer.drawTransactionsDiagram(useCase, domainModel, useCase.OutputDir+"/transactions.dotty", function(){
+    									console.log("use case is drawn");
+    								});
+    								modelDrawer.drawTransactionsDiagram(useCase, domainModel, useCase.OutputDir+"/transactions.dotty", function(){
 
-									console.log("simple use case is drawn");
-								});
-								
-								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
-									console.log("paths are drawn");
-								});
-				}
-			
-				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
-					console.log("domain model is drawn");
-				});
+    									console.log("simple use case is drawn");
+    								});
+    								
+    								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
+    									console.log("paths are drawn");
+    								});
+    				}
+    			
+    				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
+    					console.log("domain model is drawn");
+    				});
 
-				if(callbackfunc){
-					callbackfunc(umlModelInfo);
-				}
+    				if(callbackfunc){
+    					callbackfunc(umlModelInfo);
+    				}
 
-			}, umlModelInfo);
-		}
-		
+    			}, umlModelInfo);
+    		}
+        }
 		mkdirp(umlModelInfo.OutputDir, function(err) {
 
 			if(err) {
@@ -79,6 +109,10 @@
 				modelParser = srcParser;
 				modelParser.isJSONBased = true;
 				constructModel(modelParser, modelJson, umlModelInfo, callbackfunc);
+			}
+			else if(umlModelInfo.umlFilePath.endsWith(".apk")){
+				umlModelInfo.apkFile = true;
+				constructModel(androidAnalyzer, null, umlModelInfo, callbackfunc);
 			}
 			else {
 			console.log("xml parser");
@@ -106,6 +140,7 @@
 			constructModel(xmiParser, xmiString, umlModelInfo, callbackfunc);
 			
 			});
+			
 			
 			}
 			

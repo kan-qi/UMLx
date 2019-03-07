@@ -60,21 +60,9 @@ function evaluateUploadedProject(req) {
     }
     else if (req.files['uml-file'] != null) {
         var uploadedFile = req.files['uml-file'][0];
-        if (uploadedFile.mimetype == "text/xml") { // xml file
+        if (uploadedFile.mimetype == "text/xml" || path.extname(uploadedFile.originalname) == ".apk") { // xml file
             umlFilePath = uploadedFile.path;
             console.l("path:" + umlFilePath);
-        }
-        else if (path.extname(uploadedFile.originalname) == ".apk") { // apk file
-            console.l("apk file found => go to UMLxAndroidAnalyzer.js");
-            androidAnalyzer.analyseAPKGator(
-                uploadedFile.path, 
-                (result) => {
-                    if (result != true) console.l("Android APK Analysis failed");
-                    else console.l("Android APK Analysis succeed");
-                    process.send('ok');
-                }
-            );
-            //process.send('ok');
         }
     }
     //same problem as above comment
@@ -142,6 +130,7 @@ function evaluateUploadedProject(req) {
             modelInfo.projectInfo = projectInfo;
             console.l('updated model info');
             console.l(modelInfo);
+            
             umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
                 //update model analytics.
                 console.l("model is extracted");

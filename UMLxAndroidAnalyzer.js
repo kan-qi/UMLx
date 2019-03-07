@@ -6,58 +6,6 @@
     var FileManagerUtil = require("./utils/FileManagerUtils.js");
     var UMLxAnalyticToolKit = require("./utils/UMLxAnalyticToolKitCore.js");
 
-	  //use promise to construct the repo objects
-    function analyseProject(projectXMI, clusterFile, stimulusFile, logFile, projectName, path, useCaseRec, reportDir, callback){
-      
-        if(!projectName){
-        		projectName = ""
-        }
-        	
-   		 let date = new Date();
-   	     let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
-   	     analysisDate = analysisDate+"@"+Date.now();
-   	   
-   	     projectName = projectName + "_"+analysisDate;
-        	
-        	var outputDir = reportDir +"\\"+projectName+"_analysis";
-        	global.debugOutputDir = outputDir + "/debug";
-        	var inputFile = projectXMI;
-        	
-        	console.log(inputFile);
-        	
-        	mkdirp(outputDir, function(err) { 
-        	fs.exists(inputFile, (exists) => {
-        	if(!exists){
-        		console.log(inputFile+" doesn't exist.");
-        		if(callback){
-        			callback(false);
-        		}
-        	}
-        	else{
-            //to generate svg file.
-        	UMLxAnalyticToolKit.analyseSrc(inputFile, outputDir, projectName, function(model){
-        		if(!model){
-        			console.log('analysis error!');
-            		return;
-        		}
-        		console.log("finished sr analysis");
-        		FileManagerUtil.appendFile(reportPath, model.OutputDir+"\n", function(message){
-            		console.log('analysis finished!');
-            		console.log(message);
-            		
-            		if(callback){
-            			callback(model);
-            		}
-        		})
-        		  
-        	}, {clusterFile: clusterFile, stimulusFile: stimulusFile, logFile: logFile, path: path, useCaseRec: useCaseRec});
-        	
-        	}
-      	  });
-        });
-    }
-
-
     function analyseAndroidApks(apkFileName, reportDir){
         console.log("analyse android apks");
         //return AndroidLogUtil.generateAndroidAnalysis(apkFileName, reportDir);
@@ -70,7 +18,8 @@
                 "path": "/Users/diaozhuoran/desktop/DR2/UMLxKqi/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor_release-1",
                 "modelFile": "android-analysis-output.json",
                 "stimulusFile": "gator-handlers.txt",
-                "tag": "AnotherMonitor_release-1",
+//                "tag": "AnotherMonitor_release-1",
+                "tag": path.baseName(apkFileName),
                 "apkFileName":"AnotherMonitor_release.apk",
                 "logFile":"filtered_android_log.txt",
                 "useCaseRec":"record.txt",
@@ -81,25 +30,25 @@
     }
 
     function analyseAndroidProject(project, reportDir){
-        var reportPath = reportDir+"/analysis-results-folders.txt";
-        global.debugCache = new Object();
+//        var reportPath = reportDir+"/analysis-results-folders.txt";
+//        global.debugCache = new Object();
         
         //use promise to construct the repo objects
-        var analyseProject = function(projectXMI, project, reportDir){
+        var analyseProject = function(projectXMI, project, outputDir){
             return new Promise((resolve, reject) => {
                 var projectName = project.tag;
                 if(!projectName){
                     projectName = ""
                 }
 
-                let date = new Date();
-                let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
-                analysisDate = analysisDate+"@"+Date.now();
+//                let date = new Date();
+//                let analysisDate = date.getFullYear() + "-" + date.getMonth()+ "-" + date.getDate();
+//                analysisDate = analysisDate+"@"+Date.now();
+//
+//                projectName = projectName + "_"+analysisDate;
 
-                projectName = projectName + "_"+analysisDate;
-
-                var outputDir = reportDir +"/"+projectName+"_analysis";
-                global.debugOutputDir = outputDir + "/debug";
+//                var outputDir = reportDir +"/"+projectName+"_analysis";
+//                global.debugOutputDir = outputDir + "/debug";
                 var inputFile = projectXMI;
 
                 console.log(inputFile);
@@ -115,15 +64,15 @@
                             UMLxAnalyticToolKit.analyseSrc(inputFile, outputDir, projectName, function(model){
                                 if(!model){
                                     console.log('analysis error!');
-                                    resolve();
+                                    resolve(false);
                                     return;
                                 }
-                                console.log("finished sr analysis");
-                                FileManagerUtil.appendFile(reportPath, model.OutputDir+"\n", function(message){
-                                    console.log('analysis finished!');
-                                    console.log(message);
-                                    resolve(true, model);
-                                })
+                                else{
+                                	console.log('analysis finished!');
+                                	resolve(model); //this grammer may not be correct, but "model" needs to be returned to line 103 to deliver the result to the front end.
+                                	return;
+                                	
+                                }
                             }, project);
                         }
                     });
@@ -135,7 +84,7 @@
     }
 	
 	module.exports = {
-			analyseAPKGator: function(apkFilePath, callback){
+			analyseAPKGator: function(apkFilePath, workDir, outputdir, callback){
 				//our gator analyzer is currently called by the following command.
 				
 				//./gator a -p /mnt/d/ResearchSpace/ResearchProjects/UMLx/data/GitAndroidAnalysis/demo-release-unsigned.apk -client GUIHierarchyPrinterClient
@@ -144,11 +93,11 @@
 				
 				// example of doing similar things are in ./utils/EclipseUtil.js, for example, line 13, using "exec"
                 //const reportDir = "./data/GitAndroidAnalysis/batch_analysis";
-                const reportDir = "./public/output";
+//                const reportDir = "./public/output";
                 analyseAndroidApks(apkFilePath, reportDir)
                     .then((project) => {
                         console.l("apk analysis finish");
-                        analyseAndroidProject(project, reportDir)
+                        analyseAndroidProject(project, outputDir)
                             .then(result => {
                                 console.l("Android project analysis finish");
                                 callback(result);
