@@ -1028,6 +1028,7 @@ app.post('/uploadUMLFile', upload.fields([{ name: 'uml-file', maxCount: 1 }, { n
         worker.kill();
         res.redirect('/'); // 第二次redirect 
     });
+    
 
     let obj = encapsulateReq(req);
     let objJson = JSON.stringify(obj);

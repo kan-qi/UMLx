@@ -70,8 +70,6 @@ function analyseAndroidProject(projectList, reportDir){
         	global.debugOutputDir = outputDir + "/debug";
         	var inputFile = projectXMI;
         	
-        	console.log(inputFile);
-        	
         	mkdirp(outputDir, function(err) { 
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
