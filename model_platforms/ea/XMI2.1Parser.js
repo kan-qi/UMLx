@@ -103,7 +103,7 @@
 						name: XMIParameter['$']['name'],
 						type: XMIParameter['$']['type']
 				}
-				parameterUnits.push(parameter);
+				parameterUnits.push(parameterUnit);
 			}
 			
 			var operation = {

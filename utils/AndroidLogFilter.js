@@ -16,7 +16,7 @@
 		console.log("filter android log");
 		
 		if(fs.lstatSync(logPath).isDirectory()){
-			 filterAndroidLogs(logPath, filterFilePath, outputDir);
+			filterAndroidLogs(logPath, filterFilePath, outputDir);
 			return;
 		}
 		
@@ -72,6 +72,8 @@
 		
 		fs.readdir(logFolder, function (err, logPaths) {
 			
+			console.log(logFolder);
+			
 		    const stringData = {};
 		    
 			var filterNames = []
@@ -81,6 +83,7 @@
 			}
 	    
 		  async.eachSeries(logPaths, function (file, done) {
+			console.log(file);
 
 		    fs.stat(logFolder+"/"+file, function (err, stats) {
 		      if(err){done(); return;}
@@ -134,7 +137,7 @@
 						continue;
 					}
 
-					debuggerOutputUtil.appendFile2(i, line+"\n", logFolder+"/filteredLogs");
+					debuggerOutputUtil.appendFile2(i, line+"\n", outputDir+"/filteredLogs");
 					
 				}
 			  }

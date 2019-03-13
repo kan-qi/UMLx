@@ -370,8 +370,11 @@
 		return identifyTransactions(logPath, dicComponent);
 	}
 	
-	function generateAndroidAnalysis(apkFileName, outputDir) {
-		  
+	function generateAndroidAnalysis(project) {
+		var apkFileName = project.apkFileName;
+		var apkFilePath = project.path+"/"+apkFileName;
+		var outputDir = project.path;
+		console.log(outputDir);
 		var executeAPKAnalysis = function(apkFileName, outputDir, callback){
 			
 		 	if(!apkFileName){
@@ -383,12 +386,25 @@
 		  	}
 
 		  	var apkName = apkFileName.replace(/\.apk/g, "");
+		  	
+		  	var wslPath = function(path){
+		  		path = path.replace(/:/g, "");
+		  		path = path.replace(/\\/g, "/");
+		  		path = "/mnt/"+path;
+		  		return path;
+		  	}
 		  
-		   	var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
-		   		"-p \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
-		   		"-client GUIHierarchyPrinterClient " +
-		   		"-outputDir \"" + outputDir + "/" + apkName + "\""; 
+//		   	var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
+//		   		"-p \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
+//		   		"-client GUIHierarchyPrinterClient " +
+//		   		"-outputDir \"" + outputDir + "/" + apkName + "\""; 
+		   	
+		 	var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
+	   		"-p \""+wslPath(apkFilePath)+"\" "+
+	   		"-client GUIHierarchyPrinterClient " +
+	   		"-outputDir \"" + wslPath(outputDir) + "\""; 
 		   
+		 	console.log(wslPath(outputDir));
 		   	console.log(command);
 
 			var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
@@ -410,7 +426,117 @@
 	}
 	
 	
-	function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, timeout = 3 * 60 * 60 * 1000) {
+function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, timeout = 3 * 60 * 60 * 1000) {
+		
+		
+		return new Promise(function (resolve, reject) {
+			
+
+			var apkName = apkFileName.replace(/\.apk/g, "");
+			 
+//			var dir = outputDir +"/"+apkName;
+			
+			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
+				
+			mkdirp(outputDir, function(err) {
+				      // to generate svg file.
+				  		
+				  	if(err){
+				  		console.log('error in creating output folder');
+				  		
+				  		reject(new Error('error in creating output folder.'));
+				  		
+				  		return;
+				  	}
+			
+			var watcher = null;
+			var timer = setTimeout(function () {
+				if(watcher != null){
+				watcher.close();
+				}
+				reject(new Error('File did not exists and was not created during the timeout.'));
+			}, timeout);
+			
+			var alreadyExist = true;
+			try{
+				for(var i in fileNames){
+				   console.log("check file existence: "+fileNames[i]);
+				   require('fs').accessSync(outputDir+"/"+fileNames[i], fs.R_OK | fs.W_OK)
+				}
+			}catch(e){
+// console.log("watch on files...");
+				alreadyExist = false;
+				var checkExists = {};
+				for(var i in fileNames){
+					checkExists[fileNames[i]] = 0;
+				}
+				watcher = fs.watch(outputDir, function (eventType, filename) {
+					if (eventType === 'change') {
+// console.log(filename+" has changed");
+						checkExists[filename] = 1;
+						var allExists = true;
+						
+						for(var i in fileNames){
+							if(checkExists[fileNames[i]] == 0){
+								allExists = false;
+								break;
+							}
+						}
+						
+						if(allExists){
+						clearTimeout(timer);
+						if(watcher != null){
+						watcher.close();
+						}
+						resolve();
+						}
+					}
+				});
+				
+
+				
+				if(executeAPKAnalysis){
+					executeAPKAnalysis(apkFileName, outputDir, function(result){
+						clearTimeout(timer);
+						if(watcher != null){
+						watcher.close();
+						}
+						
+						if(!result){
+							reject(new Error('analysis failed'));
+						}
+						else{
+							resolve();
+						}
+					});
+				}
+				else{
+					clearTimeout(timer);
+					if(watcher != null){
+					watcher.close();
+					}
+					
+					reject(new Error('analysis function doesn\'t exist.'));
+				}
+			}
+		
+		if(alreadyExist){
+		console.log("files already exist");
+		setTimeout(function () {
+			clearTimeout(timer);
+			if(watcher){
+			watcher.close();
+			}
+			resolve();
+		}, 10);
+		}
+			});
+		});
+			
+	}
+	
+	
+	function checkExistsWithTimeout1(executeAPKAnalysis, apkFileName, outputDir, timeout = 3 * 60 * 60 * 1000) {
 		
 		
 		return new Promise(function (resolve, reject) {

@@ -76,7 +76,7 @@
 				
 				dicMethodUnits[methodUnit.UUID] = methodUnit;
 				
-				methodUnitsByName[referencedClassUnit.name+":"+methodUnit.name] = methodUnit;
+				methodUnitsByName[classUnit.name+":"+methodUnit.signature.name] = methodUnit;
 				
 				dicMethodClass[methodUnit.UUID] = referencedClassUnit.UUID;
 				
@@ -138,6 +138,17 @@
 		
 		var debug = require("../../utils/DebuggerOutput.js");
 
+//		console.log(classUnits.length);
+//                for(var i in classUnits){
+//                    debug.appendFile2("classes", "packageName: "+classUnits[i].packageName+" className: "+classUnits[i].name+"\n", outputDir);
+//                }
+//
+//        console.log(compositeClassUnits.length);
+//        for(var i in compositeClassUnits){
+//            debug.appendFile2("composite-classes", compositeClassUnits[i].name+"\n", outputDir);
+//        }
+//        process.exit();
+
 		var result = {
 			dicClassUnits: dicClassUnits,
 			dicCompositeClassUnits: dicCompositeClassUnits,
@@ -155,11 +166,11 @@
 			dicMethodParameters: dicMethodParameters
 		};
 	
-		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
-		debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
-		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
-		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
-		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
+		//debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
 		
 		return result;
 	}
@@ -173,9 +184,14 @@
 			nodesComposite: [],
 			edgesComposite: []
 		}
+
+        var accessGraphJSON = androidAnalysisResults.accessGraph;
+        if(typeof accessGraphJSON !== 'object'){
+          accessGraphJSON = FileManagerUtils.readJSONSync(androidAnalysisResults.accessGraph);
+        }
 		
-		for(var i in androidAnalysisResults.accessGraph.edges){
-			var edge = androidAnalysisResults.accessGraph.edges[i];
+		for(var i in accessGraphJSON.edges){
+			var edge = accessGraphJSON.edges[i];
 			
 			var accessMethodUnit = dicMethodUnits[edge.start.methodUnit];
 			var accessClassUnit = dicClassUnits[edge.start.classUnit];
@@ -245,9 +261,14 @@
 				nodesComposite: [],
 				edgesComposite: []
 			}
+
+           var callGraphJSON = androidAnalysisResults.callGraph;
+           if(typeof callGraphJSON !== 'object'){
+			callGraphJSON = FileManagerUtils.readJSONSync(androidAnalysisResults.callGraph);
+			}
 			
-			for(var i in androidAnalysisResults.callGraph.edges){
-				var edge = androidAnalysisResults.callGraph.edges[i];
+			for(var i in callGraphJSON.edges){
+				var edge = callGraphJSON.edges[i];
 				var callMethodUnit = dicMethodUnits[edge.start.methodUnit];
 				var callClassUnit = dicClassUnits[edge.start.classUnit];
 				var callCompositeClassUnit = dicCompositeClassUnits[dicClassComposite[edge.start.classUnit]];
@@ -318,10 +339,14 @@
 		var edgesAttrCompositeByID = {};
 		
 		//right now I'm directly using the type dependency graph. Need to make an individual graph.
+        var compositionGraphJSON = androidAnalysisResults.compositionGraph;
+        if(typeof compositionGraphJSON !== 'object'){
+        compositionGraphJSON = FileManagerUtils.readJSONSync(androidAnalysisResults.compositionGraph);
+        }
 
-		for(var i in androidAnalysisResults.compositionGraph.nodes){
+		for(var i in compositionGraphJSON.nodes){
 			
-			var node = androidAnalysisResults.compositionGraph.nodes[i];
+			var node = compositionGraphJSON.nodes[i];
 			var dependencies = node.dependencies;
 			var targetClassUnit = dicClassUnits[node.uuid];
 			if(!targetClassUnit){
@@ -421,9 +446,14 @@
 		var dicNodesComposite = {};
 		var dicEdges = {};
 		var dicEdgesComposite = {};
+
+        var extendsGraphJSON = androidAnalysisResults.extendsGraph;
+        if(typeof extendsGraphJSON !== 'object'){
+		extendsGraphJSON = FileManagerUtils.readJSONSync(androidAnalysisResults.extendsGraph);
+		}
 		
-		for(var i in androidAnalysisResults.extendsGraph){
-			var edge = androidAnalysisResults.extendsGraph[i];
+		for(var i in extendsGraphJSON){
+			var edge = extendsGraphJSON[i];
 			var fromClass = dicClassUnits[edge.from.uuid];
 			var toClass = dicClassUnits[edge.to.uuid];
 			
@@ -530,9 +560,14 @@
 
 		var nodesReturnCompositeByID = {};
 		var edgesReturnCompositeByID = {};
+
+        var typeDependencyGraphJSON = androidAnalysisResults.typeDependencyGraph;
+        if(typeof typeDependencyGraphJSON !== 'object'){
+		typeDependencyGraphJSON = FileManagerUtils.readJSONSync(androidAnalysisResults.typeDependencyGraph);
+		}
 	
-		for(var i in androidAnalysisResults.typeDependencyGraph.nodes){
-			var node = androidAnalysisResults.typeDependencyGraph.nodes[i];
+		for(var i in typeDependencyGraphJSON.nodes){
+			var node = typeDependencyGraphJSON.nodes[i];
 			var dependencies = node.dependencies;
 			var targetClassUnit = dicClassUnits[node.uuid];
 			if(!targetClassUnit){
@@ -554,7 +589,7 @@
 					var startNode = nodeReturnByID[methodUnit.UUID];
 					if(!startNode){
 						startNode = {
-							name: methodUnit.name +":returnDependency",
+							name: methodUnit.signature.name +":returnDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
 							component: {
@@ -584,7 +619,7 @@
 					var startNodeComposite = nodesReturnCompositeByID[methodUnit.UUID];
 					if(!startNodeComposite){
 						startNodeComposite = {
-							name: methodUnit.name +":returnDependency",
+							name: methodUnit.signature.name +":returnDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
 							component: {
@@ -623,7 +658,7 @@
 					var startNode = nodesParamByID[methodUnit.UUID];
 					if(!startNode){
 						startNode = {
-							name: methodUnit.name +":paramDependency",
+							name: methodUnit.signature.name +":paramDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
 							component: {
@@ -653,7 +688,7 @@
 					var startNodeComposite = nodesParamCompositeByID[methodUnit.UUID];
 					if(!startNodeComposite){
 						startNodeComposite = {
-							name: methodUnit.name +":paramDependency",
+							name: methodUnit.signature.name +":paramDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
 							component: {
@@ -692,7 +727,7 @@
 					var startNode = nodesLocalByID[methodUnit.UUID];
 					if(!startNode){
 						startNode = {
-							name: methodUnit.name +":localDependency",
+							name: methodUnit.signature.name +":localDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
 							component: {
@@ -724,7 +759,7 @@
 					var startNodeComposite = nodesLocalCompositeByID[methodUnit.UUID];
 					if(!startNodeComposite){
 						startNodeComposite = {
-							name: methodUnit.name +":localDependency",
+							name: methodUnit.signature.name +":localDependency",
 							UUID: methodUnit.UUID,
 							method:methodUnit,
 							component: {

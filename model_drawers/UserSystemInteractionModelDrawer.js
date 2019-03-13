@@ -286,7 +286,7 @@
 
              graph += '}"]';
 
-                 
+
 		return graph ;
 	}
 
@@ -312,12 +312,12 @@
 			}
 		}
 		var dottyDraw = new DottyDraw();
-		
+
 		for(var i in activities){
 			var activity = activities[i];
-			
+
 			var node = drawNode(activity._id, filterName(activity.Name));
-			
+
 			if(activity.Stimulus){
 				node = drawStimulusNode(activity._id, filterName(activity.Name));
 			} else if(activity.OutScope){
@@ -325,13 +325,13 @@
 			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
 				node = drawFragmentNode(activity._id, filterName(activity.Name));
 			}
-			
+
 				graph += dottyDraw.draw(node);
 		}
-		
+
 		console.log("activities...");
 		console.log(graph);
-		
+
 		var precedenceRelations = UseCase.PrecedenceRelations;
 		for(var i in precedenceRelations){
 			var precedenceRelation = precedenceRelations[i];
@@ -344,10 +344,10 @@
 				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
 				}
 		}
-		
-		
+
+
 		graph += 'imagepath = \"./public\"}';
-	
+
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
@@ -356,7 +356,7 @@
 	}
 
 
-	
+
 	function drawDomainModelFunc(DomainModel, graphFilePath, callbackfunc){
 
 
@@ -377,31 +377,31 @@
 			}
 		}
 		var dottyDraw = new DottyDraw();
-		
-		
+
+
 //		var j = 0;
 		for(var i in DomainModel.Elements){
 			//arrange the nodes in the subgraph
-			
-			
-			
+
+
+
 			var domainObject = DomainModel.Elements[i];
 			var domainObjectToDraw = drawDomainObjectNode(domainObject);
-			
+
 			if(domainObjectToDraw){
 				graph += dottyDraw.draw(domainObjectToDraw);
-				
+
 			}
 		}
-		
+
 		graph += 'imagepath = \"./public\"}';
-		
+
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
 
 		return graph;
-		
+
 	}
 
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
@@ -412,7 +412,7 @@
 		      console.log("run the create class dia");
               console.log("class diagram model is"+domainModelElements);
               console.log("class diagram model is"+JSON.stringify(domainModelElements));
-              
+
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
              graph += ' edge [arrowhead = "ediamond"]'

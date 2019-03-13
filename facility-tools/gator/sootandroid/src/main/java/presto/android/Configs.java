@@ -151,6 +151,8 @@ public class Configs {
   // hailong: enable TextView.setText() analysis
   public static boolean enableSetTextAnalysis = false;
 
+  public static String appPkg = null;
+
   public static void addLibraryPackage(String packageName) {
     if (libraryPackages == null) {
       libraryPackages = Lists.newArrayList();
@@ -159,8 +161,14 @@ public class Configs {
   }
 
   public static boolean isLibraryClass(String className) {
-    if (libraryPackages == null)
-      return false;
+    if (libraryPackages == null || libraryPackages.isEmpty()) {
+      if(className.startsWith(appPkg)){
+        return false;
+      }
+      else{
+        return true;
+      }
+    }
     if(className.startsWith("java")) {
     	return true;
     }

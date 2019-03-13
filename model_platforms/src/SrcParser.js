@@ -182,6 +182,8 @@
 				debug.writeJson2("constructed_domain_model", Model.DomainModel);
 				
 				var log = modelInfo.logFile ? modelInfo.logFile : modelInfo.logFolder;
+				log = modelInfo.filteredLogFolder ? modelInfo.filteredLogFolder : log;
+				log = modelInfo.filteredLogFile ? modelInfo.filteredLogFile : log;
 				if(log && modelInfo.useCaseRec){
 					useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, domainModelInfo.dicComponentDomainElement, dicResponseMethodUnits, Model.OutputDir, Model.OutputDir, modelInfo.path+"/"+log,  modelInfo.path+"/"+modelInfo.useCaseRec, function(useCases){
 						if(!useCases){

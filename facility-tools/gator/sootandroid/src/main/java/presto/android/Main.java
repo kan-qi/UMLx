@@ -9,6 +9,8 @@
 package presto.android;
 
 import org.junit.Assert;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import presto.android.Configs.AsyncOpStrategy;
 import presto.android.Configs.TestGenStrategy;
 import soot.Pack;
@@ -19,6 +21,8 @@ import soot.SootMethod;
 import soot.Transform;
 import soot.options.Options;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -42,6 +46,25 @@ public class Main {
     parseArgs(args);
     checkAndPrintEnvironmentInformation(args);
     setupAndInvokeSoot();
+  }
+
+  private static String readPackageName() {
+    String packageName = "";
+    String fn = Configs.manifestLocation;
+    DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+    //Start from Android O. Android manifest file can contain namespaces other
+    //than android:
+    dbFactory.setNamespaceAware(true);
+    try {
+      DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+      Document doc = dBuilder.parse(fn);
+      Node root = doc.getElementsByTagName("manifest").item(0);
+      packageName = root.getAttributes().getNamedItem("package").getTextContent().toString();
+    } catch (Exception ex) {
+      throw new RuntimeException(ex);
+    }
+
+    return packageName.replace(".debug", "");
   }
 
   /**
@@ -122,6 +145,7 @@ public class Main {
         Configs.addLibraryPackage(args[++i]);
       } else if ("-manifestFile".equals(s)) {
         Configs.manifestLocation = args[++i];
+        Configs.appPkg = readPackageName();
       } else if ("-resourcePath".equals(s)) {
         Configs.resourceLocation = args[++i];
       } else if ("-fast".equals((s))) {

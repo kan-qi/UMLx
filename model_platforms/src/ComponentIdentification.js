@@ -456,9 +456,10 @@
 		if(!Array.isArray(clusters)){
 			clusters = [clusters];
 		}
-		
+
+
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson2("clusterfck", clusters);
+//		debug.writeJson2("clusterfck", clusters);
 		
 		var classClusters = [];
 		var ind = 0
@@ -583,8 +584,6 @@
 				for (var j in right) {
 					var b = right[j];
 					var d = distance(a, b);
-					console.log("distance between a and b");
-					console.log(d);
 					sum += d;
 					count++;
 					
@@ -609,9 +608,6 @@
 			}
 			
 		}
-    	
-    	console.log("dis");
-    	console.log(dis);
 
 		return dis;
 	}
