@@ -387,24 +387,29 @@
 
 		  	var apkName = apkFileName.replace(/\.apk/g, "");
 		  	
-		  	var wslPath = function(path){
-		  		path = path.replace(/:/g, "");
-		  		path = path.replace(/\\/g, "/");
-		  		path = "/mnt/"+path;
-		  		return path;
-		  	}
+//		  	var wslPath = function(path){
+//		  		path = path.replace(/:/g, "");
+//		  		path = path.replace(/\\/g, "/");
+//		  		path = "/mnt/"+path;
+//		  		return path;
+//		  	}
 		  
 //		   	var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
 //		   		"-p \"/mnt/f/D/AndroidAnalysis/UMLxExperiment/APKs/"+apkFileName+"\" "+
 //		   		"-client GUIHierarchyPrinterClient " +
 //		   		"-outputDir \"" + outputDir + "/" + apkName + "\""; 
 		   	
-		 	var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
-	   		"-p \""+wslPath(apkFilePath)+"\" "+
-	   		"-client GUIHierarchyPrinterClient " +
-	   		"-outputDir \"" + wslPath(outputDir) + "\""; 
+//		 	var command = "wsl.exe /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
+//	   		"-p \""+wslPath(apkFilePath)+"\" "+
+//	   		"-client GUIHierarchyPrinterClient " +
+//	   		"-outputDir \"" + wslPath(outputDir) + "\"";
+
+	   		var command = "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
+            	   		"-p \""+apkFilePath+"\" "+
+            	   		"-client GUIHierarchyPrinterClient " +
+            	   		"-outputDir \"" + outputDir + "\"";
 		   
-		 	console.log(wslPath(outputDir));
+		 	console.log(outputDir);
 		   	console.log(command);
 
 			var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
