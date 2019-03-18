@@ -15,38 +15,35 @@
 	var mkdirp = require('mkdirp');
 	var jsonQuery = require('json-query');
 	var jp = require('jsonpath');
+	var path = require('path');
+	var androidAnalyzer = require('./UMLxAndroidAnalyzer');
 	
 	
-	function extractModelInfo(umlModelInfo, callbackfunc) {
+	function extractModelInfo(umlModelInfo, callbackfunc){
+		console.log(callbackfunc);
 		var constructModel = null;
         if(umlModelInfo.apkFile){
-        	
-        	constructModel = function(modelParser, modelString, umlModelInfo, callbackfunc){
+        	constructModel = function(modelParser, modelString, umlModelInfo, callback){
                 console.l("apk file found => go to UMLxAndroidAnalyzer.js");
     			var workDir = path.dirname(umlModelInfo.umlFilePath);
                 modelParser.analyseAPKGator(
-//                    uploadedFile.path, 
-                		umlModelInfo.umlFilePath, workDir, umlModelInfo.OutputDir,
+                	umlModelInfo.umlFilePath, workDir, umlModelInfo.OutputDir,
                     (result) => {
-                        if (result != true) {
+                    	//console.l(result)
+                        if (result == false) {
                         	console.l("Android APK Analysis failed");
-                        	if(callbackfunc){
-                        		callbackfunc(false);
+                        	if(callback){
+                        		callback(false);
                         	}
                         }
                         else {
                         	console.l("Android APK Analysis succeed");
-                        	if(callbackfunc){
-                        		callbackfunc(result);
+                        	if(callback){
+                        		callback(result);
                         	}
-                        }
-//                        process.send('ok');
-                        
-                    }
-                );
-                //process.send('ok');
+                        }                        
+                    }, umlModelInfo);
         	}
-		
         }
         else{
         	constructModel  = function(modelParser, modelString, umlModelInfo, callbackfunc){
@@ -104,49 +101,44 @@
 
 			fs.readFile(umlModelInfo.umlFilePath, "utf8", function(err, data) {
 			
-			if(umlModelInfo.umlFilePath.endsWith(".json")){
-				var modelJson = JSON.parse(data);
-				modelParser = srcParser;
-				modelParser.isJSONBased = true;
-				constructModel(modelParser, modelJson, umlModelInfo, callbackfunc);
-			}
-			else if(umlModelInfo.umlFilePath.endsWith(".apk")){
-				umlModelInfo.apkFile = true;
-				constructModel(androidAnalyzer, null, umlModelInfo, callbackfunc);
-			}
-			else {
-			console.log("xml parser");
-			parser.parseString(data, function(err, xmiString) {
-			// determine what type xmi file it is.
-			var xmiParser = null;
-			if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
-				xmiParser = eaParser;
-			}
-			else if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0]) {
-				xmiParser = vpParser;
-			}
-			else if(jp.query(xmiString, '$..["kdm:Segment"]')[0]){
-				xmiParser = srcParser;
-			}
-			
-			if(xmiParser == null){
-				if(callbackfunc){
-					callbackfunc(false);
+				if(umlModelInfo.umlFilePath.endsWith(".json")){
+					var modelJson = JSON.parse(data);
+					modelParser = srcParser;
+					modelParser.isJSONBased = true;
+					constructModel(modelParser, modelJson, umlModelInfo, callbackfunc);
 				}
-				console.log("parser not found");
-				return;
-			}
-			
-			constructModel(xmiParser, xmiString, umlModelInfo, callbackfunc);
-			
+				else if(umlModelInfo.apkFile){
+					umlModelInfo.apkFile = true;
+					constructModel(androidAnalyzer, null, umlModelInfo, callbackfunc);
+				}
+				else {
+					console.log("xml parser");
+					parser.parseString(data, function(err, xmiString) {
+					// determine what type xmi file it is.
+						var xmiParser = null;
+						if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Enterprise Architect")]')[0]) {
+							xmiParser = eaParser;
+						}
+						else if(jp.query(xmiString, '$..["xmi:Extension"][?(@["$"]["extender"]=="Visual Paradigm")]')[0]) {
+							xmiParser = vpParser;
+						}
+						else if(jp.query(xmiString, '$..["kdm:Segment"]')[0]){
+							xmiParser = srcParser;
+						}
+						
+						if(xmiParser == null){
+							if(callbackfunc){
+								callbackfunc(false);
+							}
+							console.log("parser not found");
+							return;
+						}
+						
+						constructModel(xmiParser, xmiString, umlModelInfo, callbackfunc);
+					});
+				}
 			});
-			
-			
-			}
-			
-			
 		});
-	});
 	}
 	
 //	function traverseUseCaseForTransactions(useCase){
@@ -249,8 +241,6 @@
 //
 //			return uniquePaths;
 //	}
-
-	
 	module.exports = {
 		extractModelInfo : extractModelInfo,
 		extractModelInfoTest : function(umlModelInfo, func){
@@ -260,6 +250,6 @@
 					return console.log(err);
 				}
 			});
-		},
+		}
 	}
 }());

@@ -40,6 +40,7 @@ function evaluateUploadedProject(req) {
     console.l("DEBUGGGG: start evaluating project");
     var umlFilePath = null;
     var umlOtherPath = null;
+    var isAPK = false;
     //need to implement unzipped xml file data-analysis, for now only process single xml file!!
     if(req.files['uml-file'] != null && req.files['uml-other'] != null){
         // console.log("================================path===================");
@@ -61,6 +62,9 @@ function evaluateUploadedProject(req) {
     else if (req.files['uml-file'] != null) {
         var uploadedFile = req.files['uml-file'][0];
         if (uploadedFile.mimetype == "text/xml" || path.extname(uploadedFile.originalname) == ".apk") { // xml file
+            if (path.extname(uploadedFile.originalname) == ".apk") {
+                isAPK = true;
+            }
             umlFilePath = uploadedFile.path;
             console.l("path:" + umlFilePath);
         }
@@ -128,9 +132,9 @@ function evaluateUploadedProject(req) {
             console.l('umlFileInfo => ' + JSON.stringify(umlFileInfo));
             var modelInfo = umlModelInfoManager.initModelInfo(umlFileInfo, umlModelName,repoInfo);
             modelInfo.projectInfo = projectInfo;
+            modelInfo['apkFile'] = isAPK
             console.l('updated model info');
             console.l(modelInfo);
-            
             umlModelExtractor.extractModelInfo(modelInfo, function(modelInfo){
                 //update model analytics.
                 console.l("model is extracted");
@@ -139,9 +143,9 @@ function evaluateUploadedProject(req) {
                     console.l('Error: model info null');
                     return;
                 }
+                modelInfo.Name = umlModelName
                 umlEvaluator.evaluateModel(modelInfo, function(modelInfo2){
                     console.l("model analysis complete");
-                    console.log(modelInfo2);
                     if(!modelInfo2){
                         // res.redirect('/');
                         console.l('Error: modelinfo2 null');

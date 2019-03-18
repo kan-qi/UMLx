@@ -16,7 +16,7 @@
     var EffortPredictor = require("../UMLxEffortPredictor.js");
     
 	var path = require('path');
-
+	console.log(UMLModelExtractor);
 	// var isForPackage = false;
 
     function analyseUML(inputFilePath, outputDir, projectName, callbackfunc, properties) {

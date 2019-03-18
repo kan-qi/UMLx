@@ -185,7 +185,7 @@
 		},
 		readJSONSync: function(filePath, callbackfunc){
 			var str = fs.readFileSync(filePath, 'utf-8');
-			console.log(str);
+			//console.log(str);
 				 var obj = JSON.parse(str);
 				  return obj
 		},
