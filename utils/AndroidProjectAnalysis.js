@@ -50,7 +50,6 @@ function analyseAndroidApks(projectList, reportDir){
 function analyseAndroidProject(projectList, reportDir){
 	var reportPath = reportDir+"\\analysis-results-folders.txt";
 	global.debugCache = new Object();
-	
 	  //use promise to construct the repo objects
     function analyseProject(projectXMI, project, reportDir){
         return new Promise((resolve, reject) => {
@@ -69,7 +68,13 @@ function analyseAndroidProject(projectList, reportDir){
         	var outputDir = reportDir +"\\"+projectName+"_analysis";
         	global.debugOutputDir = outputDir + "/debug";
         	var inputFile = projectXMI;
-        	
+        	console.log("inputfile is" + inputFile);
+        	console.log("outputDir is" + outputDir);
+
+        	//inputFile = "/Users/douhuiming/Desktop/UMLx/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor_release/android-analysis-output.json";
+        	// outputDir = "";
+
+
         	mkdirp(outputDir, function(err) { 
         	fs.exists(inputFile, (exists) => {
         	if(!exists){
@@ -77,7 +82,10 @@ function analyseAndroidProject(projectList, reportDir){
         		resolve();
         	}
         	else{
+
             //to generate svg file.
+
+
         	UMLxAnalyticToolKit.analyseSrc(inputFile, outputDir, projectName, function(model){
         		if(!model){
         			console.log('analysis error!');
@@ -219,6 +227,7 @@ var repoDesPath = process.argv[3];
 
 var repo = JSON.parse(FileManagerUtil.readFileSync(repoDesPath));
 
+
 //1. create a list of projects:
  		
 if(functionSelection === "--scan-repo"){
@@ -275,6 +284,7 @@ else if(functionSelection === "--analyse-android-projects"){
 analyseAndroidProject(repo.projectList, repo.reportDir);
 
 }
+
 else if(functionSelection === "--filter-logs"){
 	
 //	filterLogs(repo.projectList, repo.reportDir);

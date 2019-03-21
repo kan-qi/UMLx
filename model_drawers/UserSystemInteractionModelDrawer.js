@@ -578,6 +578,8 @@
 
 	}
 
+
+
 	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
 
 		fs.writeFile('dicClassUnits.txt', JSON.stringify(dicClassUnits), (err) => {  
@@ -779,3 +781,12 @@
 			drawCompositeClassDiagram: drawCompositeClassDiagram
 	}
 }())
+
+
+
+
+
+
+
+
+
