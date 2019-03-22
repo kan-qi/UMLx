@@ -370,8 +370,7 @@
 		}
 		
 		modelEvaluationStr += toModelEvaluationStr(model, modelNum);
-		
-		
+
 		model.ModelEvaluationFileName = "modelEvaluation.csv";
 		model.UseCaseEvaluationFileName = "useCaseEvaluation.csv";
 		model.DomainModelEvaluationFileName = "domainModelEvaluation.csv";

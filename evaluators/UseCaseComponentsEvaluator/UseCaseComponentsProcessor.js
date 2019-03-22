@@ -40,9 +40,6 @@
 	 
 	
 	module.exports = {
-//			processDiagram: function(diagram, usecase){
-//				return true;
-//			},
 			processTransaction: function(transaction, usecase){
 //				var transactionLength = 0;
 //				var avgDegree = 0;
@@ -56,7 +53,7 @@
 				{
 					var node = transaction.Nodes[i];
 //					var components = diagram.allocate(node);
-					
+
 					if(node.Component){
 						var component = node.Component;
 //						avgDegree += component.InboundNumber;
@@ -69,8 +66,8 @@
 					
 //					transactionLength++;
 					TransactionStr += node.Name;
-					if(i != transaction.Nodes.length - 1){
-						TransactionStr += "->";
+					if(i !== transaction.Nodes.length - 1){
+						TransactionStr += "-->";
 					}
 					
 				}

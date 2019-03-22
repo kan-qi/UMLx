@@ -138,10 +138,10 @@
 		
 		rootClusterClass.depth = maxLevel+1;
 		
-		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
-		
-		cutoffDepth = 10;
-		
+//		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
+
+		var cutoffDepth = rootClusterClass.depth;
+
 		var currentLevel = [];
 		var currentLevelDepth = 0;
 		currentLevel.push(rootClusterClass);

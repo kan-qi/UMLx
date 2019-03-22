@@ -50,7 +50,7 @@ public class Debug5 {
   private long startTime;
 
   private Debug5() throws Exception {
-    debugFileName = Configs.outputDir+"/callgraph.json";
+    debugFileName = Configs.outputDir+"/soot-callgraph.json";
     if (debugFileName == null) {
       debugFile = File.createTempFile(Configs.benchmarkName + "-DEBUG-", ".txt");
       debugFileName = debugFile.getAbsolutePath();
