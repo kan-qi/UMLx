@@ -76,8 +76,26 @@ public class GatorConnector {
         return theInstance;
     }
 
+    private String unpackResource(File apkFile, String outputDir){
+        outputDir = outputDir + "/Resources";
+        String command = "./tools/apktool d \""+apkFile+"\" -o \""+outputDir+"\" -f";
 
-    public MultiMap<String, String> run(String apkPath, String skdDir, String outputDir){
+        System.out.println(command);
+
+//        try {
+//            CommandLine.run(command);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+
+        return outputDir;
+
+    }
+
+
+    public MultiMap<String, String> run(String apkPath, String sdkDir, String outputDir, int sdkVer){
 
         MultiMap<String, String> handlers = new HashMultiMap<String, String>();
 
@@ -96,19 +114,44 @@ public class GatorConnector {
             return handlers;
         }
 
+        String resFolder = this.unpackResource(apkFile, outputDir);
+        String androidSDK = "android-"+sdkVer;
+
+        System.out.println("finished unpacking apk.");
+//        System.exit(0);
+
 //        String command = gatorDir.toString()+"/gator a -p \""+apkPath+"\" -client GUIHierarchyPrinterClient -outputDir \""+outputDir+"\"";
 
 //        String command = "java -Xmx16G -cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid -sdkDir /mnt/f/D/Android_SDK -listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /tmp/gator-l_9nb_8u/res -manifestFile /tmp/gator-l_9nb_8u/AndroidManifest.xml -project /mnt/f/D/AndroidAnalysis/APKs/AnotherMonitor_release.apk -apiLevel android-26 -guiAnalysis -benchmarkName AntennaPod_3_18.apk -android /mnt/f/D/Android_SDK/platforms/android-26/android.jar -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output";
-//
-//        System.out.println(command);
-//
-//        try {
-//            CommandLine.run(command);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
+        String command = "java -Xmx16G -cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar " +
+                "presto.android.Main " +
+                "-sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid " +
+                "-sdkDir /mnt/f/D/Android_SDK " +
+                "-listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml " +
+                "-wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml " +
+                "-resourcePath "+resFolder+"/res " +
+                "-manifestFile "+resFolder+"/AndroidManifest.xml " +
+                "-project "+apkPath+" " +
+                "-apiLevel "+androidSDK+" " +
+                "-guiAnalysis " +
+                "-benchmarkName "+appName+" " +
+//                "-android /mnt/f/D/Android_SDK/platforms/android-26/android.jar " +
+                "-android "+sdkDir+"/"+androidSDK+"/android.jar "+
+                "-client GUIHierarchyPrinterClient " +
+                "-outputDir "+outputDir;
+
+        System.out.println(command);
+
+//        System.exit(0);
+
+        try {
+            CommandLine.run(command);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         String gatorFile = outputDir+"/"+appName+".xml";
 

@@ -11,18 +11,10 @@ import soot.toolkits.graph.DirectedGraph;
 import soot.toolkits.graph.ExceptionalUnitGraph;
 import soot.util.HashMultiMap;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
 import soot.util.MultiMap;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 //dump the call graph from FlowDroid
@@ -98,6 +90,13 @@ public class UMLxAndroidToolKit {
             e.printStackTrace();
         }
 
+        if(manifest == null){
+            System.out.println("issues with parsing sdk");
+            return;
+        }
+
+        Configs.sdkVer = manifest.targetSdkVersion();
+
         File apkFile = new File(Configs.project);
         String extension = apkFile.getName().substring(apkFile.getName().lastIndexOf("."));
         if (!extension.equals(".apk") || !apkFile.exists()){
@@ -131,7 +130,7 @@ public class UMLxAndroidToolKit {
         DebugOutput.v().println("platforms: "+Configs.sdkDir+" project: "+Configs.project);
 
         MultiMap<String, String> flowDroidCallbacks = FlowDroidConnector.v().run(Configs.project, Configs.sdkDir, Configs.outputDir);
-        MultiMap<String, String> gatorCallbacks = GatorConnector.v().run(Configs.project, Configs.sdkDir, Configs.outputDir);
+        MultiMap<String, String> gatorCallbacks = GatorConnector.v().run(Configs.project, Configs.sdkDir, Configs.outputDir, Configs.sdkVer);
 //
 //        System.exit(0);
 

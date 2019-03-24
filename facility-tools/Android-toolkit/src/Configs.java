@@ -5,6 +5,7 @@ public class Configs {
     public static String benchmarkName = "annotatePod";
     public static String project;
     public static String sdkDir;
+    public static int sdkVer;
     private static String appPkg = "de.danoeh.antennapod";
 
     public static List<String> libraryPackages = null;
