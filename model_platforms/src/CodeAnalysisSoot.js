@@ -166,11 +166,11 @@
 			dicMethodParameters: dicMethodParameters
 		};
 	
-		//debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
-		//debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
-		//debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
-		//debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
-		//debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
+	    debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
 		
 		return result;
 	}
@@ -340,9 +340,23 @@
 		
 		//right now I'm directly using the type dependency graph. Need to make an individual graph.
         var compositionGraphJSON = androidAnalysisResults.compositionGraph;
-        if(typeof compositionGraphJSON !== 'object'){
+        if(compositionGraphJSON && typeof compositionGraphJSON !== 'object'){
         compositionGraphJSON = FileManagerUtils.readJSONSync(androidAnalysisResults.compositionGraph);
         }
+
+//        //for legacy data structure
+//        if(!compositionGraphJSON && androidAnalysis.typeDependencyGraph){
+//            compositionGraphJSON = {
+//                nodes: []
+//            }
+//            for(var i in androidAnalysis.typeDependencyGraph.nodes){
+//                compositionGraphJSON.nodes.push({
+//                androidAnalysis.typeDependencyGraph.nodes[i]
+//                }
+//                )
+//                }
+//            }
+//        }
 
 		for(var i in compositionGraphJSON.nodes){
 			

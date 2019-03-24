@@ -9,7 +9,7 @@
 	var eaParser = require('./model_platforms/ea/XMI2.1Parser.js');
 	var srcParser = require('./model_platforms/src/SrcParser.js');
 	var vpParser = require('./model_platforms/visual_paradigm/XMI2.1Parser.js');
-	var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
+//	var pathsDrawer = require("./model_drawers/TransactionsDrawer.js");
 	var modelDrawer = require("./model_drawers/UserSystemInteractionModelDrawer.js");
 	var domainModelDrawer = require("./model_drawers/DomainModelDrawer.js");
 	var mkdirp = require('mkdirp');
@@ -35,6 +35,9 @@
 				
 				// set up the domain model
 				var domainModel = umlModelInfo.DomainModel;
+
+				var debug = require("./utils/DebuggerOutput.js");
+				debug.writeJson2("constructed_domain_model", domainModel, umlModelInfo.OutputDir);
 				
 				for(var i in umlModelInfo.UseCases) {
 								var useCase = umlModelInfo.UseCases[i];
@@ -48,14 +51,18 @@
 									console.log("simple use case is drawn");
 								});
 								
-								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
-									console.log("paths are drawn");
-								});
+//								pathsDrawer.drawPaths(useCase.Paths, useCase.OutputDir+"/paths.dotty", function(){
+//									console.log("paths are drawn");
+//								});
 				}
 			
 				modelDrawer.drawDomainModel(domainModel, domainModel.OutputDir+"/domainModel.dotty", function(){
 					console.log("domain model is drawn");
 				});
+
+
+				var debug = require("./utils/DebuggerOutput.js");
+				debug.writeJson2("constructed_usim_model", umlModelInfo, umlModelInfo.OutputDir);
 
 				if(callbackfunc){
 					callbackfunc(umlModelInfo);
@@ -113,107 +120,6 @@
 		});
 	});
 	}
-	
-//	function traverseUseCaseForTransactions(useCase){
-//		
-////		console.log("UMLDiagramTraverser: traverseBehaviralDiagram");
-//	
-//		function isCycled(path){
-//			var lastNode = path[path.length-1];
-//				for(var i=0; i < path.length-1; i++){
-//					if(path[i] == lastNode){
-//						return true;
-//					}
-//				}
-//			return false;
-//		}
-//
-//			var toExpandCollection = new Array();
-//			
-//			for (var j in useCase.Activities){
-//				var activity = useCase.Activities[j];
-//				//define the node structure to keep the infor while traversing the graph
-//				if(activity.Stimulus){
-//				var node = {
-//					//id: startElement, //ElementGUID
-//					Node: activity,
-//					PathToNode: [activity],
-//					OutScope: activity.OutScope
-//				};
-//				toExpandCollection.push(node);
-//				}
-//			}
-//			
-//			var Paths = new Array();
-//			var toExpand;
-//			
-//			while((toExpand = toExpandCollection.pop()) != null){
-//				console.log("path searching...");
-//				var node = toExpand.Node;
-//				var pathToNode = toExpand.PathToNode;
-//
-//					var childNodes = [];
-//					for(var j in useCase.PrecedenceRelations){
-//						var edge = useCase.PrecedenceRelations[j];
-//						if(edge.start == node){
-//							childNodes.push(edge.end);
-//						}
-//					}
-//				
-//				if(childNodes.length == 0){
-//					Paths.push({Nodes: pathToNode, OutScope: toExpand.OutScope});
-//				}
-//				else{
-//					for(var j in childNodes){
-//						var childNode = childNodes[j];
-//						if(!childNode){
-//							continue;
-//						}
-//						
-//						var OutScope = false;
-//						if(toExpand.OutScope||childNode.OutScope){
-//							OutScope = true;
-//						}
-//						
-//						var toExpandNode = {
-//							Node: childNode,
-//							PathToNode: pathToNode.concat(childNode),
-//							OutScope: OutScope
-//						}
-//
-//						if(!isCycled(toExpandNode.PathToNode) && childNode.Group === "System"){
-//						toExpandCollection.push(toExpandNode);
-//						}
-//						else{
-//						Paths.push({Nodes: toExpandNode.PathToNode, OutScope: toExpandNode.OutScope});
-//						}
-//					}		
-//				}
-//				
-//				
-//			}
-//			
-//			//eliminate the duplicates
-//			var pathsByString = {};
-//			var uniquePaths = [];
-//			for(var i in Paths){
-//				path = Paths[i];
-//				var pathString = "";
-//				for(var j in path.Nodes){
-//					var node = path.Nodes[j];
-//					pathString += node._id;
-//				}
-//				if(!pathsByString[pathString]){
-//					pathsByString[pathString] = 1;
-//					uniquePaths.push(path);
-//				}
-//				else{
-//				console.log("duplicate");
-//				}
-//			}
-//
-//			return uniquePaths;
-//	}
 
 	
 	module.exports = {

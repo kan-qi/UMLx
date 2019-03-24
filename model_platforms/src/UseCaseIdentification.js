@@ -13,9 +13,20 @@
     var FileManagerUtil = require("../../utils/FileManagerUtils.js");
     var androidLogUtil = require("../../utils/AndroidLogUtil.js");
 
-    function identifyUseCasesfromCFG(cfgGraph, ModelOutputDir, ModelAccessDir, domainElementsByID){
+	var kdmModelDrawer = require("./KDMModelDrawer.js");
 
+
+// should directly analysis the inter-component control flow on top of the soot-cfg.
+    function identifyUseCasesfromCFG(dicComponents, dicClassComponent, dicMethodClass, dicResponseMethodUnits, dicMethodUnits, icfg, ModelOutputDir, ModelAccessDir, domainElementsByID){
+
+        console.log(icfg);
 		var UseCases = [];
+
+		if(!icfg){
+		    return UseCases;
+		}
+
+		icfg = FileManagerUtil.readJSONSync(icfg);
 
 		var UseCase = {
 				_id: "src",
@@ -27,6 +38,125 @@
 				DiagramType : "none"
 		}
 
+		function establishHyperControlFlow(dicComponents, dicClassComponent, dicMethodClass, dicResponseMethodUnits, dicMethods, cfgGraph, outputDir){
+        		var edges = [];
+        		var nodes = [];
+
+        		var methodSequences = [];
+
+        		function expandMethod(methodUnit, cfgGraph, dicMethods, expandedMethods){
+
+                		var methodSequence = [];
+
+                			var calls = findCallsForMethod(methodUnit.UUID, cfgGraph, dicMethods);
+                			expandedMethods[methodUnit.UUID] = 1;
+
+//                			console.log(calls);
+//                			process.exit();
+
+                			for(var i in calls){
+                			var call = calls[i];
+
+                			methodSequence.push(call);
+
+                			if(!expandedMethods[call]){
+                			var result = expandMethod(call, cfgGraph, dicMethods,expandedMethods);
+                			methodSequence = methodSequence.concat(result);
+                			}
+                		}
+
+                		return methodSequence;
+                }
+
+                	/*
+                	 * this function will exclude the calls within another function
+                	 */
+                	function findCallsForMethod(methodUnit, cfgGraph, dicMethods){
+//                		var calls = [];
+
+//                		for(var i in cfgGraph.edges){
+//                			var edge = cfgGraph.edges[i];
+//                			if(edge.start.UUID === methodUnit.UUID){
+//                				calls.push({action:dicMethods[edge.start.UUID], methodUnit:dicMethods[edge.end.UUID]});
+//                			}
+//                		}
+
+//                        console.log(cfgGraph);
+
+                        if(!cfgGraph[methodUnit.UUID]){
+                            return [];
+                        }
+                        else{
+                		    return cfgGraph[methodUnit.UUID].calls;
+                		}
+                	}
+
+        		for(var i in dicResponseMethodUnits){
+        			var responseMethod = dicResponseMethodUnits[i];
+        			var methodSequence = [];
+        			methodSequence.push({
+        				action:"response",
+        				methodUnit: responseMethod
+        			});
+        			var expandedMethods = expandMethod(responseMethod, cfgGraph, dicMethods,{});
+        			methodSequence = methodSequence.concat(expandedMethods);
+        			methodSequences.push(methodSequence)
+
+        		}
+
+        		var nodes = [];
+        		var nodesByID = {};
+
+        		for(var i in methodSequences){
+        			var methodSequence = methodSequences[i];
+        			var preNode = null;
+        			var preComponent = null;
+        			for(var j in methodSequence){
+        				var action = methodSequence[j].action;
+        				var targetMethodUnit = methodSequence[j].methodUnit;
+        				var targetClassUnitUUID = dicMethodClass[targetMethodUnit.UUID];
+        				var targetComponent = dicComponents[dicClassComponent[targetClassUnitUUID]];
+
+        				if(!targetComponent){
+        					continue;
+        				}
+
+        				var node = nodesByID[targetMethodUnit.UUID];
+        				if(!node){
+        					node = {
+        							name: targetComponent.name+"_"+targetMethodUnit.signature.name,
+        							isResponse: action === "response" ? true : false,
+        							component: {
+        								UUID: targetComponent.UUID
+        							},
+        							trigger: action,
+        							UUID: targetMethodUnit.UUID
+        					};
+        					nodes.push(node);
+        					nodesByID[node.UUID] = node;
+        				}
+
+        				if(preNode && preComponent && preComponent != targetComponent){
+        				edges.push({start: preNode, end: node});
+        				}
+
+        				preNode = node;
+        				preComponent = targetComponent;
+        			}
+        		}
+
+        //		var cfg = identifyStimuli(nodes, edges);
+
+
+        		kdmModelDrawer.drawGraph(edges, nodes, outputDir, "kdm_cfg_graph.dotty");
+
+        		return {
+        		    nodes: nodes,
+        		    edges: edges
+        		}
+        	}
+
+        var cfgGraph = establishHyperControlFlow(dicComponents, dicClassComponent, dicMethodClass, dicResponseMethodUnits, dicMethodUnits, icfg, ModelOutputDir);
 		var nodes = cfgGraph.nodes;
 		var edges = cfgGraph.edges;
 
