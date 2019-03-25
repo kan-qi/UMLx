@@ -46,7 +46,7 @@
 
 									console.log("use case is drawn");
 								});
-								modelDrawer.drawTransactionsDiagram(useCase, domainModel, useCase.OutputDir+"/transactions.dotty", function(){
+								modelDrawer.drawTransactionsDiagram(useCase, useCase.OutputDir+"/transactions.dotty", function(){
 
 									console.log("simple use case is drawn");
 								});

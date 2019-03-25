@@ -29,7 +29,8 @@ public class ICFG implements Iterable<ICFG.CallEdge>{
     }
 
     //output the call graph to JSON formate
-    public String toJSON(){
+    public String toJSON(CodeAnalysis.CodeAnalysisResult codeAnalysisResult){
+        Map<SootMethod, String> methodUnitUUIDs = codeAnalysisResult.methodUnitUUIDs;
 
         StringBuilder json = new StringBuilder();
         json.append("{");
@@ -39,8 +40,11 @@ public class ICFG implements Iterable<ICFG.CallEdge>{
             if(i != 0){
                 json.append(",");
             }
+
+            String srcUUID = methodUnitUUIDs.get(srcMtd);
             json.append("\""+srcMtd.getName()+"\":{");
             json.append("\"cls\":\""+srcMtd.getDeclaringClass().getName()+"\",");
+            json.append("\"srcUUID\":\""+ (srcUUID == null ? "" : srcUUID) +"\",");
             json.append("\"calls\":[");
             Set<CallEdge> callEdges = srcMethodToEdges.get(srcMtd);
 
@@ -59,6 +63,8 @@ public class ICFG implements Iterable<ICFG.CallEdge>{
 
             int j = 0;
             for(CallEdge edge : callEdgesSorted){
+                String targetUUID = methodUnitUUIDs.get(edge.tgt);
+                edge.tgtUUID = targetUUID;
                 if(j != 0){
                     json.append(",");
                 }
@@ -134,6 +140,7 @@ public class ICFG implements Iterable<ICFG.CallEdge>{
     }
 
     static class CallEdge{
+        public String tgtUUID;
         SootMethod src = null;
         Unit srcUnit = null;
         SootMethod tgt = null;
@@ -149,6 +156,7 @@ public class ICFG implements Iterable<ICFG.CallEdge>{
             return "{" +
                     "\"tgtCls\": \"" + tgt.getDeclaringClass().getName() +
                     "\", \"tgt\": \"" + tgt.getName() +
+                    "\", \"tgtUUID\": \"" + (tgtUUID == null ? "" : tgtUUID) +
                     "\", \"order\": \"" + order +
                     "\"}";
         }

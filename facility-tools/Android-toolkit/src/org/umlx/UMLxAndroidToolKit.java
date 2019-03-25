@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.umlx.utils.FlowDroidConnector;
 import org.umlx.utils.GatorConnector;
-import org.umlx.writers.CFGWriter;
-import org.umlx.writers.CFGWriter2;
-import org.umlx.writers.CallGraphWriter;
-import org.umlx.writers.ClassWriter;
+import org.umlx.writers.*;
 import org.xmlpull.v1.XmlPullParserException;
 import soot.*;
 import soot.jimple.infoflow.android.entryPointCreators.AndroidEntryPointCreator;
@@ -112,8 +109,8 @@ public class UMLxAndroidToolKit {
         DebugOutput.v().println("Setup Application...");
         DebugOutput.v().println("platforms: "+ Configs.sdkDir+" project: "+ Configs.project);
 
-        MultiMap<String, String> flowDroidCallbacks = FlowDroidConnector.v().run(Configs.project, Configs.sdkDir, Configs.outputDir);
         MultiMap<String, String> gatorCallbacks = GatorConnector.v().run(Configs.project, Configs.sdkDir, Configs.outputDir, Configs.sdkVer);
+        MultiMap<String, String> flowDroidCallbacks = FlowDroidConnector.v().run(Configs.project, Configs.sdkDir, Configs.outputDir);
 
         soot.G.reset();
         Options.v().set_src_prec(Options.src_prec_apk);
@@ -231,6 +228,8 @@ public class UMLxAndroidToolKit {
         System.out.println("soot analysis end");
 
         PackManager.v().writeOutput();
+
+        CFGWriter1.v().print(icfg.toJSON(codeAnalysisResult[0]));
 
         CFGWriter2.v().print(icfg.serialize(codeAnalysisResult[0]));
 

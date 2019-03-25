@@ -72,19 +72,20 @@ public class GatorConnector {
 
 //        String command = "./tools/apktool d \""+apkFile+"\" -o \""+dir.getAbsolutePath()+"\" -f";
 
-
-        String command = "java -Xmx512M -jar ./tools/apktool.jar d -o "+dir.getAbsolutePath()+" -f "+apkFile;
+        String command = "java -Xmx512M -jar ./tools/apktool.jar d --no-src -o "+dir.getAbsolutePath()+" -f "+apkFile;
 //        String command = "java -Xmx512M -jar ./tools/apktool.jar d -o \""+dir.getAbsolutePath()+"\" -f \""+apkFile+"\"";
 
         System.out.println(command);
 
-//        try {
-//            org.umlx.utils.CommandLine.run(command);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            CommandLine.run(command);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+//        System.exit(0);
 
         return dir.getAbsolutePath();
 
