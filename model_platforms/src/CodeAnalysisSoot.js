@@ -53,7 +53,7 @@
 					isWithinBoundary: referencedClassUnit.isWithinBoundary,
 					methodUnits: [],
 					attrUnits: []
-			}
+			};
 			
 			dicClassUnits[classUnit.UUID] = classUnit;
 			classUnits.push(classUnit);
@@ -96,7 +96,8 @@
 						type: referencedAttrUnit.type,
 						UUID: referencedAttrUnit.UUID
 				}
-				dicAttrUnits[attrUnit.UUID] = attrUnit;				
+				dicAttrUnits[attrUnit.UUID] = attrUnit;
+				classUnit.attrUnits.push(attrUnit);
 			}
 		}
 		
@@ -165,7 +166,9 @@
 			dicCompositeSubclasses: dicCompositeSubclasses,
 			dicMethodParameters: dicMethodParameters
 		};
-	
+
+		debug.writeJson2("converted-android-analysis-results-dic-method-units", dicMethodUnits, outputDir);
+	    debug.writeJson2("converted-android-analysis-results-dic-class-units", dicClassUnits, outputDir);
 		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
 	    debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);

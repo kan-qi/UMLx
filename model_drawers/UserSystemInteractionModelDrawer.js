@@ -313,7 +313,7 @@ var transactions = UseCase.Transactions;
 			}
 		}
 		var dottyDraw = new DottyDraw();
-//		var drawNodeID = {};
+        // var drawNodeID = {};
 
 		for(var i in transactions){
             var transaction = transactions[i];
@@ -420,7 +420,7 @@ var transactions = UseCase.Transactions;
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
 
 		console.log("the whole class diagram model is" + domainModel);
-		console.log("the whole class diagram model is"+JSON.stringify(domainModel));
+		console.log("the whole class diagram model is" + JSON.stringify(domainModel));
 		var  domainModelElements = domainModel.Elements;
 		      console.log("run the create class dia");
               console.log("class diagram model is"+domainModelElements);
@@ -529,7 +529,7 @@ var transactions = UseCase.Transactions;
                    
                          graph += '-   ' ;
                          graph += filterName(attrUnits[j]["name"]);
-                         graph += ':'+attrUnits[j]["kind"];
+                         graph += ':'+attrUnits[j]["type"];
                          graph += '\\l';
                      }
                  }
@@ -626,6 +626,7 @@ var transactions = UseCase.Transactions;
       
                          graph += '-   ' ;
                          graph += filterName(attrUnits[j]["name"]);
+                         graph += ':'+attrUnits[j]["type"];
                          graph += '\\l';
                      }
                  }

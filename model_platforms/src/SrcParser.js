@@ -267,10 +267,10 @@
 		}
 
 		var operationsBySign = {};
-		
+
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
-			
+
 			var startNode = edge.start;
 			var callComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var callDomainElement = domainElementsByID[callComponentUUID];
@@ -325,6 +325,7 @@
 		
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
+
 			var startNode = edge.start;
 			var accessComponentUUID = 'c'+dicClassComponent[startNode.component.UUID].replace(/\-/g, "_");
 			var accessDomainElement = domainElementsByID[accessComponentUUID];
@@ -335,11 +336,11 @@
 			var endNode = edge.end;
 			var accesseeComponentUUID = 'c'+dicClassComponent[endNode.component.UUID].replace(/\-/g, "_");
 			var accesseeDomainElement = domainElementsByID[accesseeComponentUUID];
-			
+
 			if(accessDomainElement == accesseeDomainElement){
 				continue;
 			}
-			
+
 			var foundAttr = false;
 			for (var j in accesseeDomainElement.Attributes) {
 				if (accesseeDomainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") || attrsBySign[codeAnalysisUtil.genAttrSign(accesseeDomainElement.Attributes[j])]) {
@@ -358,7 +359,7 @@
 				attrsBySign[codeAnalysisUtil.genAttrSign(attr)] = 1;
 			}
 		}
-		
+//        process.exit();
 		DomainModel.Elements = domainElements;
 		
 		DomainModel.DiagramType = "domain_model";

@@ -13,8 +13,7 @@
 	
 	var es = require('event-stream');
 	var async = require("async");
-	
-	
+
 	function parseAndroidLogsForUseCases(logPaths, dir, useCases, callback){
 		var lineNr = 0;
 
@@ -409,8 +408,8 @@
             	   		"-client GUIHierarchyPrinterClient " +
             	   		"-outputDir \"" + outputDir + "\"";
 		   
-		 	console.log(outputDir);
-		   	console.log(command);
+//		 	console.log(outputDir);
+//		   	console.log(command);
 
 			var child = exec(command,  {maxBuffer: 1024 * 1024*100, stdio: 'ignore' }, function(error, stdout, stderr) {
 				if (error !== null) {
@@ -439,7 +438,7 @@ function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, time
 
 			var apkName = apkFileName.replace(/\.apk/g, "");
 			 
-//			var dir = outputDir +"/"+apkName;
+            //	var dir = outputDir +"/"+apkName;
 			
 			var fileNames = ["gator-handlers.txt", "android-analysis-output.json"];
 				
@@ -469,7 +468,7 @@ function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, time
 				   require('fs').accessSync(outputDir+"/"+fileNames[i], fs.R_OK | fs.W_OK)
 				}
 			}catch(e){
-// console.log("watch on files...");
+            // console.log("watch on files...");
 				alreadyExist = false;
 				var checkExists = {};
 				for(var i in fileNames){
@@ -477,7 +476,7 @@ function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, time
 				}
 				watcher = fs.watch(outputDir, function (eventType, filename) {
 					if (eventType === 'change') {
-// console.log(filename+" has changed");
+            // console.log(filename+" has changed");
 						checkExists[filename] = 1;
 						var allExists = true;
 						
@@ -592,7 +591,7 @@ function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, time
 					   require('fs').accessSync(dir+"/"+fileNames[i], fs.R_OK | fs.W_OK)
 					}
 				}catch(e){
-	// console.log("watch on files...");
+	            // console.log("watch on files...");
 					alreadyExist = false;
 					var checkExists = {};
 					for(var i in fileNames){
@@ -600,7 +599,7 @@ function checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir, time
 					}
 					watcher = fs.watch(dir, function (eventType, filename) {
 						if (eventType === 'change') {
-	// console.log(filename+" has changed");
+	            // console.log(filename+" has changed");
 							checkExists[filename] = 1;
 							var allExists = true;
 							
