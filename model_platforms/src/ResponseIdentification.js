@@ -133,6 +133,7 @@
 		var contents = fs.readFileSync(gatorFilePath, 'utf8');
 		
 		var dicMethodSign = {};
+
 		var methodSigns = [];
 		
 		for(var i in dicClassUnits){
@@ -158,7 +159,7 @@
 		
 		var dicResponseMethodUnits = {};
 		
-		if(contents){
+		if(contents && methodSigns.length > 0){
 		var lines = contents.split(/\r?\n/g);
 		
 		console.log("methods");
@@ -168,7 +169,8 @@
 	    	var line = lines[i];
 	    	line = line.replace(/[<|>]/g, "");
 	    	line = line.replace(/:/g, ".");
-	    	console.log(line);
+//	    	console.log(line);
+//	    	console.log(methodSigns);
 	    	var matches = stringSimilarity.findBestMatch(line, methodSigns);
 //			if(matches.bestMatch.rating > 0.8){
 			var matchedMethodUnit = dicMethodUnits[dicMethodSign[matches.bestMatch.target]];

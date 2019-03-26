@@ -103,13 +103,13 @@ public class GatorConnector {
         }
         String appName = apkFile.getName();
 
-        Path gatorDir = Paths.get(System.getenv("GatorRoot"));
+        String gatorDir = System.getenv("GatorRoot");
 
-        File gatorDirFolder = gatorDir.toFile();
-        if (!gatorDirFolder.exists()){
+        if (!new File(gatorDir).exists()){
             System.out.println("Please configure gator.");
             return handlers;
         }
+
 
         String resFolder = this.unpackResource(apkFile, outputDir);
         String androidSDK = "android-"+sdkVer;
@@ -121,12 +121,12 @@ public class GatorConnector {
 
 //        String command = "java -Xmx16G -cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar presto.android.Main -sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid -sdkDir /mnt/f/D/Android_SDK -listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml -wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml -resourcePath /tmp/gator-l_9nb_8u/res -manifestFile /tmp/gator-l_9nb_8u/AndroidManifest.xml -project /mnt/f/D/AndroidAnalysis/APKs/AnotherMonitor_release.apk -apiLevel android-26 -guiAnalysis -benchmarkName AntennaPod_3_18.apk -android /mnt/f/D/Android_SDK/platforms/android-26/android.jar -client GUIHierarchyPrinterClient -outputDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output";
 
-        String command = "java -Xmx16G -cp /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar " +
+        String command = "java -Xmx16G -cp "+gatorDir+"/sootandroid/build/libs/sootandroid-1.0-SNAPSHOT-all.jar " +
                 "presto.android.Main " +
-                "-sootandroidDir /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid " +
-                "-sdkDir /mnt/f/D/Android_SDK " +
-                "-listenerSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/listeners.xml " +
-                "-wtgSpecFile /mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/sootandroid/wtg.xml " +
+                "-sootandroidDir "+gatorDir+"/sootandroid " +
+                "-sdkDir "+sdkDir+" " +
+                "-listenerSpecFile "+gatorDir+"/sootandroid/listeners.xml " +
+                "-wtgSpecFile "+gatorDir+"/sootandroid/wtg.xml " +
                 "-resourcePath "+resFolder+"/res " +
                 "-manifestFile "+resFolder+"/AndroidManifest.xml " +
                 "-project "+apkPath+" " +
@@ -134,7 +134,7 @@ public class GatorConnector {
                 "-guiAnalysis " +
                 "-benchmarkName "+appName+" " +
 //                "-android /mnt/f/D/Android_SDK/platforms/android-26/android.jar " +
-                "-android "+sdkDir+"/"+androidSDK+"/android.jar "+
+                "-android "+sdkDir+"/platforms/"+androidSDK+"/android.jar "+
                 "-client GUIHierarchyPrinterClient " +
                 "-outputDir "+outputDir;
 

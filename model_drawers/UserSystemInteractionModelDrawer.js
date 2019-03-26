@@ -497,10 +497,8 @@ var transactions = UseCase.Transactions;
 
 	
 	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
-		
 
-
-		if(typeof dicComponent === 'undefined'){
+		if(typeof dicComponent === 'undefined' || Object.keys(dicComponent).length == 0){
      		return;
      	}
 

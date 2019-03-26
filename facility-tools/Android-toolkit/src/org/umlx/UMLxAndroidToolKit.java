@@ -20,6 +20,8 @@ import soot.util.MultiMap;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.*;
 
 //dump the call graph from FlowDroid
@@ -50,7 +52,7 @@ public class UMLxAndroidToolKit {
     }
 
     private static void printUsage(){
-        System.out.println("Incorrect arguments: [0] = apk-file-path, [1] = android-jar-directory, [2] = output-dir");
+        System.out.println("Incorrect arguments: [0] = apk-file-path, [1] = output-dir");
     }
 
     public static void main(String[] args){
@@ -60,14 +62,23 @@ public class UMLxAndroidToolKit {
 
 //        java -cp "./out/production/Android-toolkit:./libs/*" org.umlx.UMLxAndroidToolKit "/mnt/f/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "/mnt/f/D/Android_SDK/platforms" "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output"
 
-        if (args.length < 3){
+        if (args.length < 2){
             printUsage();
             return;
         }
 
+        Path sdkDir = Paths.get(System.getenv("ANDROID_SDK"));
+
+        if (!sdkDir.toFile().exists()){
+            System.out.println("Please configure ANDROID_SDK.");
+            return;
+        }
+
+        Configs.sdkDir = sdkDir.toString();
+
         Configs.project = args[0];
-        Configs.sdkDir = args[1];
-        Configs.outputDir = args[2];
+//      Configs.sdkDir = args[1];
+        Configs.outputDir = args[1];
 
 
 //        org.umlx.Configs.project = "/mnt/f/D/AndroidAnalysis/APKs/AnotherMonitor_release.apk";
@@ -115,7 +126,7 @@ public class UMLxAndroidToolKit {
         soot.G.reset();
         Options.v().set_src_prec(Options.src_prec_apk);
         Options.v().set_process_dir(Collections.singletonList(Configs.project));
-        Options.v().set_android_jars(Configs.sdkDir);
+        Options.v().set_android_jars(Configs.sdkDir+"/platforms");
         // Enable whole-program mode
         Options.v().set_whole_program(true);
         Options.v().set_allow_phantom_refs(true);

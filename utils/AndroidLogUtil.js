@@ -403,10 +403,15 @@
 //	   		"-client GUIHierarchyPrinterClient " +
 //	   		"-outputDir \"" + wslPath(outputDir) + "\"";
 
-	   		var command = "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
-            	   		"-p \""+apkFilePath+"\" "+
-            	   		"-client GUIHierarchyPrinterClient " +
-            	   		"-outputDir \"" + outputDir + "\"";
+//	   		var command = "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/gator/gator a " +
+//            	   		"-p \""+apkFilePath+"\" "+
+//            	   		"-client GUIHierarchyPrinterClient " +
+//            	   		"-outputDir \"" + outputDir + "\"";
+
+
+           var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" "
+           +"org.umlx.UMLxAndroidToolKit \""+apkFilePath+"\""
+           +" \""+outputDir+"\"";
 		   
 //		 	console.log(outputDir);
 //		   	console.log(command);
@@ -424,7 +429,11 @@
 				if(callback){
 					callback(outputDir)
 				}
-			});	
+			});
+
+			child.stdout.on('data', function(data) {
+                console.log(data);
+            });
 		}
 		return checkExistsWithTimeout(executeAPKAnalysis, apkFileName, outputDir)
 	}

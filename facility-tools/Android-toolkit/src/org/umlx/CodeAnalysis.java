@@ -1045,6 +1045,7 @@ public class CodeAnalysis {
 		GraphsWriter.v().writeGraph("android-analysis-output", ",\"accessGraph\":\""+ Configs.outputDir+"/accessgraph.json\"");
 		GraphsWriter.v().writeGraph("android-analysis-output", ",\"extendsGraph\":\""+ Configs.outputDir+"/extendsgraph.json\"");
 		GraphsWriter.v().writeGraph("android-analysis-output", ",\"compositionGraph\":\""+ Configs.outputDir+"/compositiongraph.json\"");
+		GraphsWriter.v().writeGraph("android-analysis-output", ",\"cfg\":\""+ Configs.outputDir+"/soot-cfg-2.json\"");
 		GraphsWriter.v().writeGraph("android-analysis-output", "}");
 
 //	outputS += "}";

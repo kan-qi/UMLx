@@ -164,7 +164,8 @@
 			referencedClassUnits: classUnits,
 			referencedCompositeClassUnits: compositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
-			dicMethodParameters: dicMethodParameters
+			dicMethodParameters: dicMethodParameters,
+			cfg: androidAnalysisResults.cfg
 		};
 
 		debug.writeJson2("converted-android-analysis-results-dic-method-units", dicMethodUnits, outputDir);
