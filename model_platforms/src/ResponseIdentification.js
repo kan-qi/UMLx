@@ -22,9 +22,7 @@
 		var methodPatterns = ['main'];
 		var parameterTypePatterns = ['event', 'Event'];
 		var parameterPatterns = ['event', 'Event'];
-		
-		var scannedMethods = [];
-		
+
 		if (responsePatternsFilePath && fs.existsSync(responsePatternsFilePath)) {
 		 
 		var contents = fs.readFileSync(responsePatternsFilePath, 'utf8');
@@ -126,8 +124,6 @@
 		var dicClassUnits = codeAnalysisResults.dicClassUnits;
 		var dicMethodUnits = codeAnalysisResults.dicMethodUnits;
 		
-		var scannedMethods = [];
-		
 		if (gatorFilePath && fs.existsSync(gatorFilePath)) {
 		 
 		var contents = fs.readFileSync(gatorFilePath, 'utf8');
@@ -153,10 +149,6 @@
 			}
 		}
 		
-
-		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson2("identified_reponse_methods", methodSigns);
-		
 		var dicResponseMethodUnits = {};
 		
 		if(contents && methodSigns.length > 0){
@@ -169,16 +161,19 @@
 	    	var line = lines[i];
 	    	line = line.replace(/[<|>]/g, "");
 	    	line = line.replace(/:/g, ".");
-//	    	console.log(line);
-//	    	console.log(methodSigns);
-	    	var matches = stringSimilarity.findBestMatch(line, methodSigns);
+	    	var parts = line.split(" ");
+	    	if(parts.length !== 3){
+	    	    continue;
+	    	}
+	    	var gatorRespMtd = parts[0]+parts[2];
+	    	var matches = stringSimilarity.findBestMatch(gatorRespMtd, methodSigns);
 //			if(matches.bestMatch.rating > 0.8){
 			var matchedMethodUnit = dicMethodUnits[dicMethodSign[matches.bestMatch.target]];
 			dicResponseMethodUnits[matchedMethodUnit.UUID] = matchedMethodUnit;
 	    	}
 		}
 		}
-		
+
 		return dicResponseMethodUnits;
 	}
 		

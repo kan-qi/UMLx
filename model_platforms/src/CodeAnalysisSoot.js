@@ -34,7 +34,7 @@
 		var dicMethodUnits = {};
 		var dicAttrUnits = {};
 		var dicMethodClass = {};
-		var dicMethodParameters = {};
+//		var dicMethodParameters = {};
 		var methodUnitsByName = {};
 		var classUnits = [];
 		
@@ -82,10 +82,10 @@
 				
 				for(var k in methodUnit.parameterUnits){
 					var parameterUnit = referencedMethodUnit.parameterUnits[k];
-					if(!dicMethodParameters[methodUnit.UUID]){
-						dicMethodParameters[methodUnit.UUID] = [];
-					}
-					dicMethodParameters[methodUnit.UUID].push(parameterUnit);
+//					if(!dicMethodParameters[methodUnit.UUID]){
+//						dicMethodParameters[methodUnit.UUID] = [];
+//					}
+//					dicMethodParameters[methodUnit.UUID].push(parameterUnit);
 				}
 			}
 			
@@ -164,7 +164,7 @@
 			referencedClassUnits: classUnits,
 			referencedCompositeClassUnits: compositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
-			dicMethodParameters: dicMethodParameters,
+//			dicMethodParameters: dicMethodParameters,
 			cfg: androidAnalysisResults.cfg
 		};
 

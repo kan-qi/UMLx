@@ -175,7 +175,7 @@
 				
 //				debug.writeJson2("control_flow_graph", controlFlowGraph);
 				
-				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodParameters);
+				domainModelInfo = createDomainModel(componentInfo, Model.OutputDir, Model.OutputDir, codeAnalysisResults.callGraph, codeAnalysisResults.accessGraph, codeAnalysisResults.typeDependencyGraph, codeAnalysisResults.dicMethodUnits);
 				
 				Model.DomainModel = domainModelInfo.DomainModel;
 				
@@ -229,7 +229,7 @@
 				
 	}
 
-	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodParameters){
+	function createDomainModel(componentInfo, ModelOutputDir, ModelAccessDir, callGraph, accessGraph, typeDependencyGraph, dicMethodUnits){
 
 		var dicComponents = componentInfo.dicComponents;
 		var dicClassComponent = componentInfo.dicClassComponent;
@@ -293,20 +293,19 @@
 			if(callDomainElement == calleeDomainElement){
 				continue;
 			}
-			
+
+            var methodUnit = dicMethodUnits[endNode.UUID];
 			foundMethod = false;
 			for (var j in calleeDomainElement.Operations) {
 				if (calleeDomainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") ||
-						calleeDomainElement.Operations[j].Name === endNode.methodName || operationsBySign[codeAnalysisUtil.genMethodSign(calleeDomainElement.Operations[j])]) {
-//					var method = calleeDomainElement.Operations[j];
+						calleeDomainElement.Operations[j].Name === endNode.methodName || operationsBySign[codeAnalysisUtil.genMethodSign(methodUnit)]) {
 					foundMethod = true;
 				}
 			}
 			
 			
 			if (!foundMethod) {
-
-				var parameters = dicMethodParameters[endNode.UUID];
+				var parameters = methodUnit.parameterUnits;
 				if (parameters == null) {
 					parameters = [];
 				}
@@ -319,7 +318,8 @@
 				
 				calleeDomainElement.Operations.push(operation);
 				
-				operationsBySign[codeAnalysisUtil.genMethodSign(operation)] = 1;
+				operationsBySign[codeAnalysisUtil.genMethodSign(methodUnit)] = 1;
+
 			}
 		}
 
