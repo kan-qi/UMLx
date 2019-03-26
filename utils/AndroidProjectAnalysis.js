@@ -284,8 +284,9 @@ analyseAndroidProject(repo.projectList, repo.reportDir);
 else if(functionSelection === "--filter-logs"){
 	
 //	filterLogs(repo.projectList, repo.reportDir);
+  
 //	var projectPaths = "";
-
+  
 	for(var i in repo.projectList){
 		var projectPath = repo.projectList[i].path; 
 		var logFile = repo.projectList[i].logFile;
