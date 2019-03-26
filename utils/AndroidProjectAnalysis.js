@@ -201,8 +201,8 @@ function analyseSloc(repoRecordPath){
 }
 
 function generateSlocReport(repoListPath, repoRecordPath){
-	 //to generate svg file.
-//	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
+	//  to generate svg file.
+    //	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
 	var classPath = '".' + pathSeparator + 'facility-tools' + pathSeparator + 'Repo Analyser' + pathSeparator + 'bin"';
 
   var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoListPath+'" "'+repoRecordPath+'"';
@@ -255,7 +255,7 @@ var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
 analyseSloc(repoRecordPath);
 }
 else if(functionSelection === "--generate-sloc-report"){
-	//4. calculate sloc for each repo
+//5. calculate sloc for each repo
 var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
 var repoListPath = repoRecordPath + pathSeparator + "repositories.txt";
 generateSlocReport(repoListPath, repoRecordPath);
@@ -284,8 +284,9 @@ analyseAndroidProject(repo.projectList, repo.reportDir);
 else if(functionSelection === "--filter-logs"){
 	
 //	filterLogs(repo.projectList, repo.reportDir);
-//	
+  
 //	var projectPaths = "";
+  
 	for(var i in repo.projectList){
 		var projectPath = repo.projectList[i].path; 
 		var logFile = repo.projectList[i].logFile;

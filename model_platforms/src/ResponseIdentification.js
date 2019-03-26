@@ -32,7 +32,7 @@
 		if(contents){
 		var lines = contents.split(/\r?\n/g);
 		 
-	    for(var i = 0;i < lines.length;i++){
+	    for(var i = 0; i < lines.length; i++){
 	        //code here using lines[i] which will give you each line
 	    	var line = lines[i];
 	    	
@@ -133,10 +133,13 @@
 		var contents = fs.readFileSync(gatorFilePath, 'utf8');
 		
 		var dicMethodSign = {};
+
 		var methodSigns = [];
 		
 		for(var i in dicClassUnits){
 			var classUnit = dicClassUnits[i];
+
+			console.log(classUnit);
 			
 			for(var j in classUnit.methodUnits){
 				
@@ -156,7 +159,7 @@
 		
 		var dicResponseMethodUnits = {};
 		
-		if(contents){
+		if(contents && methodSigns.length > 0){
 		var lines = contents.split(/\r?\n/g);
 		
 		console.log("methods");
@@ -166,7 +169,8 @@
 	    	var line = lines[i];
 	    	line = line.replace(/[<|>]/g, "");
 	    	line = line.replace(/:/g, ".");
-	    	console.log(line);
+//	    	console.log(line);
+//	    	console.log(methodSigns);
 	    	var matches = stringSimilarity.findBestMatch(line, methodSigns);
 //			if(matches.bestMatch.rating > 0.8){
 			var matchedMethodUnit = dicMethodUnits[dicMethodSign[matches.bestMatch.target]];
