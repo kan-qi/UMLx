@@ -3,10 +3,9 @@
 	
 	module.exports = {
 		genMethodSign: function(method){
-			
-			var functionSignature = method.Name+"(";
-			
-			
+
+			var functionSignature = method.signature.name+"(";
+
 			for(var j in method.Parameters){
 				var parameter = method.Parameters[j];
 				if(parameter.Name === 'return'){
@@ -28,7 +27,7 @@
 		},
 		genMethodSignSimple: function(method){
 			
-			var functionSignature = method.Name+"(";
+			var functionSignature = method.signature.name+"(";
 			
 			for(var j in method.Parameters){
 				var parameter = method.Parameters[j];
@@ -47,7 +46,7 @@
 		
 		genMethodSignType: function(method){
 			
-			var functionSignature = method.name+"(";
+			var functionSignature = method.signature.name+"(";
 			
 			if(method.returnType){
 				functionSignature = method.returnType + " " + functionSignature;

@@ -7,6 +7,7 @@
 			 var data = [];
 			    var lines = csvData.split(/\r?\n/g);
 //			    console.log(lines);
+//			    console.log(lines);
 			    var cols = [];
 			    for(var i = 0;i < lines.length;i++){
 			        //code here using lines[i] which will give you each line
