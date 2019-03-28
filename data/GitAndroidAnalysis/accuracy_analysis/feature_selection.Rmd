@@ -171,13 +171,14 @@ data[cols] <- lapply(data[cols], function(x) ifelse(is.na(x), ave(x, FUN = funct
 
 ## Preparing the independent variables
 1. Removing all the variables with zero value for all the observations. 
-2. Facorizing the type variable
+2. Facoterizing the type variable
 3. Calculating the corelation between all the independent and dependent variables.
 4. Choosing all the variables with highest corelation values. 
 
 Calculating the correlation and choosing the independent variables with correlation higher than 0.6 with the dependent variable (Effort).
 
 ``` {r}
+# rank the variables by the correlation.
 r_limit <- 0.5
 x <- data[cols]
 x <- subset(x, select = colnames(x) != "Effort")
@@ -195,6 +196,63 @@ abline(h=-1*r_limit,col="red")
 corr <- as.data.frame(corr)
 corr <- subset(corr, corr["Effort"] >= r_limit)
 ind_variables <- row.names(corr)
+
+# Rank the variables by other criteria
+library(BayesFactor)
+
+stats <- data.frame(matrix(nrow = 0, ncol = 5))
+colnames(stats) <- c("var", "r2", "AIC", "BIC", "BF")
+features <- cols[cols != "Effort"]
+for (var in features[2:47]) {
+  regression_formula <- as.formula(paste("Effort ~ ", var))
+  model <- lm(regression_formula, data = data)
+  r2 = summary(model)$r.squared
+  aic = AIC(model)
+  bic = BIC(model)
+  bf = lmBF(regression_formula, data = data)
+  stats[nrow(stats) + 1,] <- list(var, r2, aic, bic, bf)
+}
+
+#R2
+r2_data <- stats[, c("var", "r2")]
+r2_data.sort <- r2_data[order(-r2_data$r2), ]
+r2_data.sort
+r2_d <- r2_data[,c("r2")]
+names(r2_d) <- r2_data$var
+plot(r2_d)
+text(1:length(r2_d),r2_d,r2_data$var,cex=0.4, pos=4, col="blue")
+abline(h=r_limit,col="red")
+abline(h=-1*r_limit,col="red")
+
+#AIC
+aic_data <- stats[, c("var", "AIC")]
+aic_data.sort <- aic_data[order(aic_data$AIC), ]
+aic_data.sort
+aic_d <- aic_data[, c("AIC")]
+plot(aic_d)
+text(1:length(aic_d),aic_d,aic_data$var,cex=0.4, pos=4, col="blue")
+abline(h=r_limit,col="red")
+abline(h=-1*r_limit,col="red")
+
+#BIC
+bic_data <- stats[, c("var", "BIC")]
+bic_data.sort <- bic_data[order(bic_data$BIC), ]
+bic_data.sort
+bic_d <- bic_data[, c("BIC")]
+plot(bic_d)
+text(1:length(bic_d),bic_d,bic_data$var,cex=0.4, pos=4, col="blue")
+abline(h=r_limit,col="red")
+abline(h=-1*r_limit,col="red")
+
+#Bayes Factor
+bf_data <- stats[, c("var", "BF")]
+bf_data.sort <- bf_data[order(-bf_data$BF), ]
+bf_data.sort
+bf_d <- bf_data[, c("BF")]
+plot(bf_d)
+text(1:length(bf_d),bf_d,bf_data$var,cex=0.4, pos=4, col="blue")
+abline(h=r_limit,col="red")
+abline(h=-1*r_limit,col="red")
 ```
 
 Looking at the graph, following are the most correlated independent variables:  
@@ -338,38 +396,5 @@ plot(cvfit)
 ```
 ## Feature ranking
 ```{r}
-library(BayesFactor)
 
-stats <- data.frame(matrix(nrow = 0, ncol = 5))
-colnames(stats) <- c("var", "r2", "AIC", "BIC", "BF")
-features <- cols[cols != "Effort"]
-for (var in features[2:47]) {
-  regression_formula <- as.formula(paste("Effort ~ ", var))
-  model <- lm(regression_formula, data = data)
-  r2 = summary(model)$r.squared
-  aic = AIC(model)
-  bic = BIC(model)
-  bf = lmBF(regression_formula, data = data)
-  stats[nrow(stats) + 1,] <- list(var, r2, aic, bic, bf)
-}
-
-#R2
-r2_data <- stats[, c("var", "r2")]
-r2_data.sort <- r2_data[order(-r2_data$r2), ]
-r2_data.sort
-
-#AIC
-aic_data <- stats[, c("var", "AIC")]
-aic_data.sort <- aic_data[order(aic_data$AIC), ]
-aic_data.sort
-
-#BIC
-bic_data <- stats[, c("var", "BIC")]
-bic_data.sort <- bic_data[order(bic_data$BIC), ]
-bic_data.sort
-
-#Bayes Factor
-bf_data <- stats[, c("var", "BF")]
-bf_data.sort <- bf_data[order(-bf_data$BF), ]
-bf_data.sort
 ```
