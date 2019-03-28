@@ -16,7 +16,7 @@
 		console.log("filter android log");
 		
 		if(fs.lstatSync(logPath).isDirectory()){
-			 filterAndroidLogs(logPath, filterFilePath, outputDir);
+			filterAndroidLogs(logPath, filterFilePath, outputDir);
 			return;
 		}
 		
@@ -72,6 +72,8 @@
 		
 		fs.readdir(logFolder, function (err, logPaths) {
 			
+			console.log(logFolder);
+			
 		    const stringData = {};
 		    
 			var filterNames = []
@@ -81,6 +83,7 @@
 			}
 	    
 		  async.eachSeries(logPaths, function (file, done) {
+			console.log(file);
 
 		    fs.stat(logFolder+"/"+file, function (err, stats) {
 		      if(err){done(); return;}
@@ -125,7 +128,6 @@
 			    	
 					for(var k in filterNames){
 						if(line.indexOf(filterNames[k])>-1){
-//							continue;
 							toFilter = true;
 							break;
 						}
@@ -134,10 +136,8 @@
 					if(toFilter){
 						continue;
 					}
-					
-//					console.log(line);
-//					var filteredFileName = path.basename(i);
-					debuggerOutputUtil.appendFile2(i, line+"\n", logFolder+"/filteredLogs");
+
+					debuggerOutputUtil.appendFile2(i, line+"\n", outputDir+"/filteredLogs");
 					
 				}
 			  }
@@ -156,6 +156,3 @@
 		}
 	}())
 
-	
-//	filterAndroidLog("./data/GitAndroidAnalysis/log_analysis/AnotherMonitor-release/log.file", "./data/GitAndroidAnalysis/log_analysis/AnotherMonitor-release/filterNames");
-	

@@ -21,6 +21,11 @@
 			return functionSignature;
 			
 		},
+		genAttrSign: function(attr){
+			
+			return attr.Type+":"+attr.Name;
+			
+		},
 		genMethodSignSimple: function(method){
 			
 			var functionSignature = method.Name+"(";

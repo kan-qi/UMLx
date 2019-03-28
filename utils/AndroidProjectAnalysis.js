@@ -9,7 +9,6 @@
 //				modelFile: ""
 //			}//model file paths
 //}
-
 	
 var path = require('path');
 var mkdirp = require('mkdirp');
@@ -23,6 +22,10 @@ var config = require("../config.js");
 
 var UMLxAnalyticToolKit = require("./UMLxAnalyticToolKitCore.js");
 
+// Use the forward slash separator for running on macOS/Unix/Linux
+//var pathSeparator = "\\";
+var pathSeparator = "/";
+
 
 function analyseAndroidApks(projectList, reportDir){
 	console.log("analyse android apks");
@@ -34,7 +37,7 @@ function analyseAndroidApks(projectList, reportDir){
     	    return promise
     	      .then((result) => {
     	        console.log("analysing project: "+project.apkFileName);
-    	        return AndroidLogUtil.generateAndroidAnalysis(project.apkFileName).then(result => final.push(result));
+    	        return AndroidLogUtil.generateAndroidAnalysis(project).then(result => final.push(result));
     	      })
     	      .catch(console.error);
     	  }, Promise.resolve());
@@ -48,7 +51,7 @@ function analyseAndroidApks(projectList, reportDir){
 }
 
 function analyseAndroidProject(projectList, reportDir){
-	var reportPath = reportDir+"\\analysis-results-folders.txt";
+	var reportPath = reportDir + pathSeparator + "analysis-results-folders.txt";
 	global.debugCache = new Object();
 	  //use promise to construct the repo objects
     function analyseProject(projectXMI, project, reportDir){
@@ -65,15 +68,12 @@ function analyseAndroidProject(projectList, reportDir){
    	   
    	     projectName = projectName + "_"+analysisDate;
         	
-        	var outputDir = reportDir +"\\"+projectName+"_analysis";
+					var outputDir = reportDir + pathSeparator + projectName + "_analysis";
+					
         	global.debugOutputDir = outputDir + "/debug";
         	var inputFile = projectXMI;
         	console.log("inputfile is" + inputFile);
         	console.log("outputDir is" + outputDir);
-
-        	//inputFile = "/Users/douhuiming/Desktop/UMLx/UMLx/data/GitAndroidAnalysis/batch_analysis/AnotherMonitor_release/android-analysis-output.json";
-        	// outputDir = "";
-
 
         	mkdirp(outputDir, function(err) { 
         	fs.exists(inputFile, (exists) => {
@@ -107,9 +107,9 @@ function analyseAndroidProject(projectList, reportDir){
         	
         });
     }
-    
+   
     return Promise.all(projectList.map(project=>{
-        return analyseProject(project.path+"\\"+project.modelFile, project, reportDir);
+        return analyseProject(project.path + pathSeparator + project.modelFile, project, reportDir);
 
     
     })).then(
@@ -143,7 +143,7 @@ function analyseAndroidProject(projectList, reportDir){
 function scanRepo(repoListPath, repoRecordPath){
 		  //to generate svg file.
 //			var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
-			var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+			var classPath = '".' + pathSeparator + 'facility-tools' + pathSeparator + 'Repo Analyser' + pathSeparator + 'bin"';
 			
 		    var command = 'java -classpath '+classPath+' repo.AnalysisKit "scan-repo" "'+repoListPath+'" "'+repoRecordPath+'"';
 		  	console.log(command);
@@ -164,7 +164,7 @@ function scanRepo(repoListPath, repoRecordPath){
 function selectFiles(repoRecordPath){
 	 //to generate svg file.
 //	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
-	var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '".' + pathSeparator + 'facility-tools' + pathSeparator + 'Repo Analyser' + pathSeparator + 'bin"';
 
     var command = 'java -classpath '+classPath+' repo.AnalysisKit "select-files" "'+repoRecordPath+'"';
   	console.log(command);
@@ -185,7 +185,7 @@ function analyseSloc(repoRecordPath){
 	 //to generate svg file.
 
 //	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
-	var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '".' + pathSeparator + 'facility-tools' + pathSeparator + 'Repo Analyser' + pathSeparator + 'bin"';
 
    var command = 'java -classpath '+classPath+' repo.AnalysisKit "analyse-sloc" "'+repoRecordPath+'"';
  	console.log(command);
@@ -205,7 +205,7 @@ function analyseSloc(repoRecordPath){
 function generateSlocReport(repoListPath, repoRecordPath){
 	 //to generate svg file.
 //	var classPath = '"C:\\Users\\flyqk\\Documents\\Research Projects\\UMLx\\facility-tools\\Repo Analyser\\bin"';
-	var classPath = '".\\facility-tools\\Repo Analyser\\bin"';
+	var classPath = '".' + pathSeparator + 'facility-tools' + pathSeparator + 'Repo Analyser' + pathSeparator + 'bin"';
 
   var command = 'java -classpath '+classPath+' repo.AnalysisKit "generate-report" "'+repoListPath+'" "'+repoRecordPath+'"';
 	console.log(command);
@@ -225,7 +225,7 @@ function generateSlocReport(repoListPath, repoRecordPath){
 var functionSelection = process.argv[2];
 var repoDesPath = process.argv[3];
 
-var repo = JSON.parse(FileManagerUtil.readFileSync(repoDesPath));
+var repo = JSON.parse(FileManagerUtil.readFileSync(repoDesPath).trim());
 
 
 //1. create a list of projects:
@@ -237,10 +237,10 @@ if(functionSelection === "--scan-repo"){
 		projectPaths += repo.projectList[i].path+"\n";
 	}
 
-	var repoRecordPath = repo.reportDir+"\\sloc";
+	var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
 	
 	mkdirp(repoRecordPath, function(err) {
-		  var repoListPath = repoRecordPath+"\\repositories.txt";
+		  var repoListPath = repoRecordPath + pathSeparator + "repositories.txt";
 		  FileManagerUtil.writeFileSync(repoListPath, projectPaths);
 		  scanRepo(repoListPath, repoRecordPath);
 	});
@@ -248,23 +248,23 @@ if(functionSelection === "--scan-repo"){
 else if(functionSelection === "--select-files"){
 //3. open repo browser to select the files that should be include in the list
 //var repoListDir= repo.reportDir+"\\temp";
-var repoRecordPath = repo.reportDir+"\\sloc";
+var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
 selectFiles(repoRecordPath);
 }
 else if(functionSelection === "--analyse-sloc"){
 //4. calculate sloc for each repo
 //var repoListDir= repo.reportDir+"\\temp";
-var repoRecordPath = repo.reportDir+"\\sloc";
+var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
 analyseSloc(repoRecordPath);
 }
 else if(functionSelection === "--generate-sloc-report"){
 	//4. calculate sloc for each repo
-var repoRecordPath = repo.reportDir+"\\sloc";
-var repoListPath = repoRecordPath+"\\repositories.txt";
+var repoRecordPath = repo.reportDir + pathSeparator + "sloc";
+var repoListPath = repoRecordPath + pathSeparator + "repositories.txt";
 generateSlocReport(repoListPath, repoRecordPath);
 }
 else if(functionSelection === "--calculate-cocomo-estimation-result"){
-	var cocomoDataPath = repo.repoDir+"\\COCOMORatings1.csv";
+	var cocomoDataPath = repo.repoDir + pathSeparator + "COCOMORatings1.csv";
 	var cocomoCalculator = require("../effort_estimators/COCOMOCalculator.js");
 	cocomoCalculator.loadCOCOMOData(cocomoDataPath, function(cocomoDataList){
 		for(var i in cocomoDataList){
@@ -299,6 +299,7 @@ else if(functionSelection === "--filter-logs"){
 		LogFilter.filterAndroidLog(projectPath+"/"+logFile, projectPath+"/"+filterFile, projectPath);
 		}
 		else{
+		console.log(projectPath+"/"+logFolder)
 		LogFilter.filterAndroidLogs(projectPath+"/"+logFolder, projectPath+"/"+filterFile, projectPath);	
 		}
 	}
@@ -306,7 +307,7 @@ else if(functionSelection === "--filter-logs"){
 }
 else if(functionSelection === "--generate-repo-analysis-report"){
 
-var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir+"\\analysis-results-folders.txt").split(/\r?\n/g);
+var modelOutputDirs = FileManagerUtil.readFileSync(repo.reportDir + pathSeparator + "analysis-results-folders.txt").split(/\r?\n/g);
 var transactionFiles = [];
 var filteredTransactionFiles = [];
 var modelEvaluationFiles = [];
@@ -319,9 +320,9 @@ for(var i in modelOutputDirs){
 		continue;
 	}
 	
-	filteredTransactionFiles.push(modelOutputDir+"\\"+"filteredTransactionEvaluation.csv");
-	transactionFiles.push(modelOutputDir+"\\"+"transactionEvaluation.csv");
-	modelEvaluationFiles.push(modelOutputDir+"\\"+"modelEvaluation.csv");
+	filteredTransactionFiles.push(modelOutputDir + pathSeparator +"filteredTransactionEvaluation.csv");
+	transactionFiles.push(modelOutputDir + pathSeparator + "transactionEvaluation.csv");
+	modelEvaluationFiles.push(modelOutputDir + pathSeparator + "modelEvaluation.csv");
 }
 
 
@@ -342,7 +343,7 @@ for(var i in modelEvaluationContents){
 		  }
 }
 	  
-FileManagerUtil.writeFileSync(repo.reportDir+"\\modelEvaluations.csv", modelEvaluationConsolidation);
+FileManagerUtil.writeFileSync(repo.reportDir + pathSeparator + "modelEvaluations.csv", modelEvaluationConsolidation);
 
 var transactionEvaluationContents = FileManagerUtil.readFilesSync(transactionFiles);
 var transactionEvaluationConsolidation = "";
@@ -385,8 +386,6 @@ for(var i in transactionEvaluationContents){
 	  FileManagerUtil.writeFileSync(filteredTransactionFiles[i],  filteredTransactionEvaluationStr);
 }
 
-FileManagerUtil.writeFileSync(repo.repoDir+"\\transactionEvaluations.csv", transactionEvaluationConsolidation);
+FileManagerUtil.writeFileSync(repo.repoDir + pathSeparator + "transactionEvaluations.csv", transactionEvaluationConsolidation);
 
 }
-
-

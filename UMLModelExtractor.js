@@ -75,7 +75,7 @@
 			fs.readFile(umlModelInfo.umlFilePath, "utf8", function(err, data) {
 			
 			if(umlModelInfo.umlFilePath.endsWith(".json")){
-				var modelJson = JSON.parse(data);
+				var modelJson = JSON.parse(data.trim());
 				modelParser = srcParser;
 				modelParser.isJSONBased = true;
 				constructModel(modelParser, modelJson, umlModelInfo, callbackfunc);

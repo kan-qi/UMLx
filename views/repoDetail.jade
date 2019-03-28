@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 -var repoID = repoInfo._id
 -var path = repoInfo.AccessDir;
 input(type='hidden', value=repoID)#myrepoId
@@ -188,3 +189,195 @@ div.block.panel.panel-default
           p #{repoInfo.OutputDir}
         div#displayRepoArchive
 
+=======
+-var repoID = repoInfo._id
+-var path = repoInfo.AccessDir;
+input(type='hidden', value=repoID)#myrepoId
+div.block.panel.panel-default
+  div.panel-heading
+   div.panel-title.analytics-title.pull-left
+    include breadcrumb
+   if repoInfo
+    div.repo-analytics-ops.pull-right
+      div.dropdown
+        button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Repo
+          span.caret
+        ul.dropdown-menu
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models (simulation)
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
+          li
+            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
+          //li
+            //a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
+      div.dropdown
+        button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
+          span.caret
+        ul.dropdown-menu
+          li
+            a.dropdown-item(id="open_btn" onclick="openDialogueBox('#{repoInfo._id}', '1');" href="javaScript:void(0);") Empirical Data For Use Cases
+          li
+            a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '2');" href="javaScript:void(0);") Empirical Data For Models
+          //li
+            //a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '3');" href="javaScript:void(0);") COCOMO Data
+      div.dropdown
+          button.btn.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
+            span.caret
+          ul.dropdown-menu
+            li
+              a.request-repo-analytics.dropdown-item(id="reanalyse_repo", href="#", data-my="#{repoInfo._id}") Reanalyse Repo
+            li
+              a.dropdown-item(href='reloadRepo?repo_id=#{repoInfo._id}') Reload Repo
+   div.clearFix
+  div.panel-body(id="repo-stats-chart")
+   div.repo-info-content
+    ul.nav.nav-tabs
+     li.active
+      a(data-toggle='tab', href='#repo_analytics') Overview
+     li
+      a(data-toggle='tab', href='#repo_estimation') Estimation
+     li
+      a(data-toggle='tab', href='#repo_trending') Trending
+     li
+      a(data-toggle='tab', href='#project_list') Projects 
+        span(class="badge") #{modelAllNum}
+     li
+      a(data-toggle='tab', id='modelArchive', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
+    div.tab-content
+      div.tab-pane.fade.in.active(id="repo_analytics")
+        div.repo-analysis-detail
+          div.repo-metrics
+      div.tab-pane.fade(id="repo_estimation")
+        include estimationPanel
+      div.tab-pane.fade(id="repo_trending")
+        if repoInfo
+          div.col-sm-12.scatter-plot-row(id="trending-line" data="./#{repoInfo.AccessDir}/modelVersionInfo.csv")
+          div.col-sm-12.status-row
+            div.col-sm-3
+              div#project-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{totalRec}
+                  span Projects
+            div.col-sm-3
+              div#usecase-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.UseCaseNum}
+                  span Use Cases
+            div.col-sm-3
+              div#transaction-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.NT}
+                  span Transactions
+            div.col-sm-3 
+              div#class-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.EntityNum}
+                  span Classes
+          div.col-sm-12.status-row
+            div.col-sm-3
+              div#sloc-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.SLOC}
+                  span SLOC
+            div.col-sm-3
+              div#schedule-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.schedule}
+                  span Schedule
+            div.col-sm-3
+              div#personnel-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.personnel}
+                  span Personnel
+            div.col-sm-3 
+              div#eucp-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.EUCP}
+                  span Eucp
+          div.col-sm-12.status-row
+            div.col-sm-3
+              div#exucp-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.EXUCP}
+                  span EXUCP
+            div.col-sm-3
+              div#ducp-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.DUCP}
+                  span DUCP
+            div.col-sm-3
+              div#effort-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.effort}
+                  span Effort
+            div.col-sm-3
+              div#estimate-card.analytics-card
+                .col-sm-4.image-box
+                  img(src="img/project.png", alt="")
+                  img(src="img/check.png", name="checkImg", style="heigth:25px;width:25px;opacity:1;display:none")
+                .col-sm-8.text-box
+                  h2 #{repoInfo.estimatedEffort}
+                  span Estimated Effort 
+      div.tab-pane.fade(id="project_list")
+        .container
+          h3.row
+            .col-sm-2 Index
+            .col-sm-8 Project Name
+            .col-sm-2 Date
+          .list-group
+            - var pageIndex = (currentPage - 1)*(pageSize) + 1
+            div(id='page-panel')
+              each item in repoInfo.Models
+                a.list-group-item.row.model-title(href="queryModelInfo?model_id=" + item._id)
+                  .col-sm-2 #{pageIndex++}
+                  .col-sm-8 #{item.Name}
+                  .col-sm-2 #{item.creationTime}
+              include pagination.jade
+      div.tab-pane.fade(id="repo_archive")
+        div
+          p #{repoInfo.OutputDir}
+        div#displayRepoArchive
+
+>>>>>>> 7b85a9ccc409a3da27ab038aa761c8d3e7c267c4

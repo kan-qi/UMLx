@@ -8,11 +8,15 @@
  */
 package presto.android;
 
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 import presto.android.gui.GUIAnalysis;
 import soot.Scene;
 import soot.SootClass;
 import soot.SootMethod;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -39,7 +43,6 @@ public class AnalysisEntrypoint {
     if (!"1".equals(System.getenv("PRODUCTION"))) {
       validate();
     }
-
 
 //    final int[] numStmt = {0};
 //    Scene.v().getClasses().parallelStream().forEach(new Consumer<SootClass>() {
@@ -71,8 +74,8 @@ public class AnalysisEntrypoint {
     if (Configs.libraryPackages == null || Configs.libraryPackages.isEmpty()) {
       //If library packages are not defined
       Logger.trace("VERB", "lib pkg list is empty. Use default");
-      Configs.addLibraryPackage("android.support.*");
-      Configs.addLibraryPackage("com.google.android.gms.*");
+      //Configs.addLibraryPackage("android.support.*");
+      //Configs.addLibraryPackage("com.google.android.gms.*");
     }
     
     StringBuilder sb = new StringBuilder();
@@ -103,14 +106,16 @@ public class AnalysisEntrypoint {
     // Analysis
     // TODO: use reflection to allow nice little extensions.
     if (Configs.guiAnalysis) {
+      try {
       GUIAnalysis guiAnalysis = GUIAnalysis.v();
       guiAnalysis.run();
       Date endTime = new Date();
       Logger.verb(this.getClass().getSimpleName(),
               "Soot stopped on " + endTime);
-
-//      System.exit(0);
-    }
+      }catch(Exception e) {
+    	  System.out.println(e.toString());
+      }
+     }
     
 
 	System.out.println("exit GUI analysis");
@@ -118,10 +123,8 @@ public class AnalysisEntrypoint {
     if(Configs.codeAnalysis) {
     CodeAnalysis codeAnalysis = CodeAnalysis.v();
     codeAnalysis.run();
-//    System.exit(0);
     }
     
-
     System.exit(0);
   }
 

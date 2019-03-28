@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 div.banner
      div.content-flex
         div.col-md-10.banner-title
@@ -17,4 +18,25 @@ div.banner
                         a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#project_list') Projects 
                             span(class="badge") #{modelAllNum}
                     li.padding
+=======
+div.banner
+     div.content-flex
+        div.col-md-10.banner-title
+            a.home-button(href='/') UMLx
+          ul.nav.nav-tabs.no-border.dropdown-style
+            li.dropdown
+                button.btn.btn-secondary.dropdown-toggle.menu-font.menu.btn-default(data-toggle='dropdown',role='button',aria-haspopup="true",aria-expanded="false") Menu
+                    span.caret
+                ul.dropdown-menu.dropdown-menu-right(style = "margin-top : 2px; width: 100px; border-radius : 5px;")
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab", data-toggle="tab", href='#main_page' aria-expanded="true") Overview
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#repo_estimation') Estimation
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#repo_trending') Trending
+                    li.padding
+                        a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", href='#project_list') Projects 
+                            span(class="badge") #{modelAllNum}
+                    li.padding
+>>>>>>> 7b85a9ccc409a3da27ab038aa761c8d3e7c267c4
                         a.dropdown-item.btn-menu.menu-font(role="tab",data-toggle="tab", id='modelArchive', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives       

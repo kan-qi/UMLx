@@ -29,12 +29,12 @@
 	var codeAnalysisXMI = require("./CodeAnalysisXMI.js");
 	var codeAnalysisSoot = require("./CodeAnalysisSoot.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
-//	var componentIdentifierACDC = require("./ComponentIdentificationACDC.js");
 	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var useCaseIdentifier = require("./UseCaseIdentification.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
 	var androidLogUtil = require("../../utils/AndroidLogUtil.js");
+	var codeAnalysisUtil = require("../../utils/CodeAnalysisUtil.js");
 
 	var responsePatternsFile = "response-patterns.txt";
 	
@@ -121,7 +121,6 @@
 					clusterConfig = S1W1L1;
 				}
 				
-//				modelInfo.clusterFile = null;
 				if(modelInfo.clusterFile){
 				componentInfo = componentIdentifier.identifyComponentsACDC(
 						codeAnalysisResults.callGraph, 
@@ -152,9 +151,6 @@
 					codeAnalysisResults.dicCompositeClassUnits,
 					codeAnalysisResults.dicClassUnits,
 					codeAnalysisResults.dicClassComposite,
-//					S2W3L3,
-//					S1W3L1,
-//					S1W1L1,
 					clusterConfig,
 					Model.OutputDir
 				);
@@ -186,6 +182,8 @@
 				debug.writeJson2("constructed_domain_model", Model.DomainModel);
 				
 				var log = modelInfo.logFile ? modelInfo.logFile : modelInfo.logFolder;
+				log = modelInfo.filteredLogFolder ? modelInfo.filteredLogFolder : log;
+				log = modelInfo.filteredLogFile ? modelInfo.filteredLogFile : log;
 				if(log && modelInfo.useCaseRec){
 					useCaseIdentifier.identifyUseCasesfromAndroidLog(componentInfo.dicComponents, domainModelInfo.dicComponentDomainElement, dicResponseMethodUnits, Model.OutputDir, Model.OutputDir, modelInfo.path+"/"+log,  modelInfo.path+"/"+modelInfo.useCaseRec, function(useCases){
 						if(!useCases){
@@ -268,6 +266,8 @@
 			dicComponentDomainElement[component.UUID] = domainElement;
 		}
 
+		var operationsBySign = {};
+		
 		for (var i in callGraph.edges) {
 			var edge = callGraph.edges[i];
 			
@@ -295,8 +295,8 @@
 			foundMethod = false;
 			for (var j in calleeDomainElement.Operations) {
 				if (calleeDomainElement.Operations[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") ||
-						calleeDomainElement.Operations[j].Name === endNode.methodName) {
-					var method = calleeDomainElement.Operations[j];
+						calleeDomainElement.Operations[j].Name === endNode.methodName || operationsBySign[codeAnalysisUtil.genMethodSign(calleeDomainElement.Operations[j])]) {
+//					var method = calleeDomainElement.Operations[j];
 					foundMethod = true;
 				}
 			}
@@ -316,9 +316,13 @@
 				}
 				
 				calleeDomainElement.Operations.push(operation);
+				
+				operationsBySign[codeAnalysisUtil.genMethodSign(operation)] = 1;
 			}
 		}
 
+		var attrsBySign = {};
+		
 		for (var i in accessGraph.edges) {
 			var edge = accessGraph.edges[i];
 			var startNode = edge.start;
@@ -338,7 +342,7 @@
 			
 			var foundAttr = false;
 			for (var j in accesseeDomainElement.Attributes) {
-				if (accesseeDomainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "")) {
+				if (accesseeDomainElement.Attributes[j]._id == 'a'+endNode.UUID.replace(/\-/g, "") || attrsBySign[codeAnalysisUtil.genAttrSign(accesseeDomainElement.Attributes[j])]) {
 					foundAttr = true;
 				}
 			}
@@ -351,6 +355,7 @@
 					TypeUUID: 'a'+endNode.UUID.replace(/\-/g, "")
 				};
 				accesseeDomainElement.Attributes.push(attr);
+				attrsBySign[codeAnalysisUtil.genAttrSign(attr)] = 1;
 			}
 		}
 		

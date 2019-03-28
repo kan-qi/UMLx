@@ -816,7 +816,7 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		}
 
 		if (this.gatorFile != null) {
-			List<String[]> eventHandlers = new ArrayList<String[]>();
+			List<String[]> eventHandlers = null;
 			try {
 				eventHandlers = parseGatorFile();
 			} catch (SAXException e) {

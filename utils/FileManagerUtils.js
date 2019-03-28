@@ -183,9 +183,8 @@
 				   }
 			});
 		},
-		readJSONSync: function(filePath, callbackfunc){
+		readJSONSync: function(filePath){
 			var str = fs.readFileSync(filePath, 'utf-8');
-			console.log(str);
 				 var obj = JSON.parse(str);
 				  return obj
 		},

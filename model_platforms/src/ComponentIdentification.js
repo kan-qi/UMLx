@@ -456,9 +456,10 @@
 		if(!Array.isArray(clusters)){
 			clusters = [clusters];
 		}
-		
+
+
 		var debug = require("../../utils/DebuggerOutput.js");
-		debug.writeJson2("clusterfck", clusters);
+//		debug.writeJson2("clusterfck", clusters);
 		
 		var classClusters = [];
 		var ind = 0
@@ -583,8 +584,6 @@
 				for (var j in right) {
 					var b = right[j];
 					var d = distance(a, b);
-					console.log("distance between a and b");
-					console.log(d);
 					sum += d;
 					count++;
 					
@@ -609,9 +608,6 @@
 			}
 			
 		}
-    	
-    	console.log("dis");
-    	console.log(dis);
 
 		return dis;
 	}
@@ -772,7 +768,6 @@
 			graph += '"a'+component['UUID'].replace(/-/g, '')+'" [label="'+component['name'].replace(/[\$|\s+]/g, '')+'"]';
 		}
 
-		// graph += 'node [fontsize=24 shape=point]';
 		graph += 'node [fontsize=24 shape=rectangle]';
 		for (var i in disComponents) {
 			var component = disComponents[i];
@@ -786,7 +781,6 @@
 			var component = disComponents[i];
 			for (var j in component.classUnits) {
 				var classUnit = component.classUnits[j];
-//				graph += component['name'].replace(/[\.|\$|\s+]/g, '')+' -> {'+classUnit['name'].replace(/[\.|\$|\s+]/g, '')+'}';
 				graph += '"a'+component['UUID'].replace(/-/g, '')+'"->"a'+classUnit['UUID'].replace(/-/g, '')+'"';
 			}
 		}

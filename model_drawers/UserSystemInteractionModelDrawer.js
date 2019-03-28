@@ -1,3 +1,4 @@
+
 /**
  * http://usejsdoc.org/
  */
@@ -587,6 +588,7 @@
 		}) 
 
 
+		console.log("Here is dicClassUnits" + JSON.stringify(dicClassUnits));
 
 		var keys = Object.keys(dicClassUnits);
 
@@ -670,7 +672,9 @@
 
      		console.log("the dicClassUnits graph is:"+graph);
 
-     		console.log("the dicClassUnits is:"+ graphFilePath);
+     		console.log("the graph is stored in:"+ graphFilePath);
+
+
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
      			console.log("class Diagram is done");
@@ -781,7 +785,6 @@
 			drawCompositeClassDiagram: drawCompositeClassDiagram
 	}
 }())
-
 
 
 
