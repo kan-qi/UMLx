@@ -138,10 +138,10 @@
 		
 		rootClusterClass.depth = maxLevel+1;
 		
-		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
-		
-		cutoffDepth = 10;
-		
+//		var cutoffDepth = (1-clusteringConfig.cut)*rootClusterClass.depth; //there might be multiple criterion to determining the cutoff tree
+
+		var cutoffDepth = rootClusterClass.depth;
+
 		var currentLevel = [];
 		var currentLevelDepth = 0;
 		currentLevel.push(rootClusterClass);
@@ -569,6 +569,10 @@
 	function calculateDis(node, linkage, distance) {
 
 		var dis = -1;
+
+		if(!node){
+		    return dis;
+		}
 		
 //		console.log("calculating distance");
 		
@@ -614,6 +618,10 @@
 
 	function convertTree(cluster, classes, nodesDis, nodesClass, edges, startNode, dicCompositeSubclasses, classUnits, dicClassUnits, dicCompositeClassUnits, linkage, distance) {
 		  var classClusters = {};
+
+		  if(!cluster){
+		  return classClusters;
+		  }
 		  
 			if (cluster.size == 1) {
 				

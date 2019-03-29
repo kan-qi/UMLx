@@ -34,7 +34,7 @@
 		var dicMethodUnits = {};
 		var dicAttrUnits = {};
 		var dicMethodClass = {};
-		var dicMethodParameters = {};
+//		var dicMethodParameters = {};
 		var methodUnitsByName = {};
 		var classUnits = [];
 		
@@ -53,7 +53,7 @@
 					isWithinBoundary: referencedClassUnit.isWithinBoundary,
 					methodUnits: [],
 					attrUnits: []
-			}
+			};
 			
 			dicClassUnits[classUnit.UUID] = classUnit;
 			classUnits.push(classUnit);
@@ -82,10 +82,10 @@
 				
 				for(var k in methodUnit.parameterUnits){
 					var parameterUnit = referencedMethodUnit.parameterUnits[k];
-					if(!dicMethodParameters[methodUnit.UUID]){
-						dicMethodParameters[methodUnit.UUID] = [];
-					}
-					dicMethodParameters[methodUnit.UUID].push(parameterUnit);
+//					if(!dicMethodParameters[methodUnit.UUID]){
+//						dicMethodParameters[methodUnit.UUID] = [];
+//					}
+//					dicMethodParameters[methodUnit.UUID].push(parameterUnit);
 				}
 			}
 			
@@ -96,7 +96,8 @@
 						type: referencedAttrUnit.type,
 						UUID: referencedAttrUnit.UUID
 				}
-				dicAttrUnits[attrUnit.UUID] = attrUnit;				
+				dicAttrUnits[attrUnit.UUID] = attrUnit;
+				classUnit.attrUnits.push(attrUnit);
 			}
 		}
 		
@@ -163,14 +164,17 @@
 			referencedClassUnits: classUnits,
 			referencedCompositeClassUnits: compositeClassUnits,
 			dicCompositeSubclasses: dicCompositeSubclasses,
-			dicMethodParameters: dicMethodParameters
+//			dicMethodParameters: dicMethodParameters,
+			cfg: androidAnalysisResults.cfg
 		};
-	
-		//debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
-		//debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
-		//debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
-		//debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
-		//debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
+
+		debug.writeJson2("converted-android-analysis-results-dic-method-units", dicMethodUnits, outputDir);
+	    debug.writeJson2("converted-android-analysis-results-dic-class-units", dicClassUnits, outputDir);
+		debug.writeJson2("converted-android-analysis-results-call-graph", result.callGraph, outputDir);
+	    debug.writeJson2("converted-android-analysis-results-access-graph", result.accessGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
+		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
 		
 		return result;
 	}
@@ -340,9 +344,23 @@
 		
 		//right now I'm directly using the type dependency graph. Need to make an individual graph.
         var compositionGraphJSON = androidAnalysisResults.compositionGraph;
-        if(typeof compositionGraphJSON !== 'object'){
+        if(compositionGraphJSON && typeof compositionGraphJSON !== 'object'){
         compositionGraphJSON = FileManagerUtils.readJSONSync(androidAnalysisResults.compositionGraph);
         }
+
+//        //for legacy data structure
+//        if(!compositionGraphJSON && androidAnalysis.typeDependencyGraph){
+//            compositionGraphJSON = {
+//                nodes: []
+//            }
+//            for(var i in androidAnalysis.typeDependencyGraph.nodes){
+//                compositionGraphJSON.nodes.push({
+//                androidAnalysis.typeDependencyGraph.nodes[i]
+//                }
+//                )
+//                }
+//            }
+//        }
 
 		for(var i in compositionGraphJSON.nodes){
 			

@@ -27,7 +27,6 @@ fs.readFile(inputDir2, 'utf-8', (err, str) => {
 	obj2 = JSON.parse(str);
 });
 
-
 fs.readFile(inputDir3, 'utf-8', (err, str) => {
 	obj3 = JSON.parse(str);
 });
@@ -43,10 +42,7 @@ fs.readFile(inputDir5, 'utf-8', (err, str) => {
 
 setTimeout(myFunction,2000); 
 
-
-
 function myFunction() {
-  
   
   drawComponentDiagram1(obj1, obj2, obj3, obj4, obj5, outputDir1);
   drawComponentDiagram2(obj1, obj2, obj3, obj4, obj5, outputDir2);
@@ -55,6 +51,10 @@ function myFunction() {
 
 
 function drawComponentDiagram1(edgesComponent1, edgesComponent2, edgesComponent3, edgesComponent4, edgesComponent5, graphFilePath){
+
+ nodeType1 = ", style=filled, fillcolor=grey";
+ nodeType2 = "";
+
 
 
  var graph = "digraph graphname{";
@@ -68,62 +68,64 @@ function drawComponentDiagram1(edgesComponent1, edgesComponent2, edgesComponent3
 
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "access";
  edgesComponent =  edgesComponent1["edges"];
- graph = drawItems_UUID(graph, edgesComponent, myMap, count, list);
- console.log(count);
-
-
+ graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 
  
  graph += "edge [color=black]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "call";
  edgesComponent =  edgesComponent2["edges"];
- graph = drawItems_UUID(graph, edgesComponent, myMap, count, list);
+ //graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
+ graph =  drawItems_UUID_subGraph(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
+
 
 
 
  graph += "edge [color=yellow]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "composition";
  edgesComponent =  edgesComponent3["edges"];
- graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
+ //graph = drawItems_classUnit_subGraph(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 
 
   
  graph += "edge [color=green]";
  list = [];
  count += myMap.size;
-// myMap = new Map();
+ edgeLabel = "extension";
  edgesComponent =  edgesComponent4["edges"];
- graph = drawItems_UUID(graph, edgesComponent, myMap, count, list);
+
+ graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
+ //graph = drawItems_UUID_subGraph(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 
 
  graph += "edge [color=blue]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "type_dependency"; 
  edgesComponent =  edgesComponent5["edgesLocal"];
- graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 
  graph += "edge [color=red]";
  list = [];
- count += myMap.size;
-// myMap = new Map(); 
+ count += myMap.size; 
+ edgeLabel = "type_dependency"; 
  edgesComponent =  edgesComponent5["edgesParam"];
- graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 
-graph += "edge [color=pink]";
+ graph += "edge [color=pink]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "type_dependency"; 
  edgesComponent =  edgesComponent5["edgesReturn"];
- graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
  graph +="}";
 
@@ -150,57 +152,57 @@ function drawComponentDiagram2(edgesComponent1, edgesComponent2, edgesComponent3
  graph += "edge [color=brown]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "access";
  edgesComponent =  edgesComponent1["edgesComposite"];
- graph = drawItems_UUID(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
  
  graph += "edge [color=black]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "call";
  edgesComponent =  edgesComponent2["edgesComposite"];
- graph = drawItems_UUID(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 
 
  graph += "edge [color=yellow]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "composition";
  edgesComponent =  edgesComponent3["edgesComposite"];
- graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 
  graph += "edge [color=green]";
  list = [];
  count += myMap.size;
-// myMap = new Map();
+ edgeLabel = "extension";
  edgesComponent =  edgesComponent4["edgesComposite"];
- graph = drawItems_UUID(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType2);
 
 
  graph += "edge [color=blue]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "type_dependency"; 
  edgesComponent =  edgesComponent5["nodesLocalComposite"];
- graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 
  graph += "edge [color=red]";
  list = [];
- count += myMap.size;
-// myMap = new Map();  
+ count += myMap.size; 
+ edgeLabel = "type_dependency"; 
  edgesComponent =  edgesComponent5["edgesParamComposite"];
- graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
 
  graph += "edge [color=pink]";
  list = [];
  count += myMap.size;
-// myMap = new Map(); 
+ edgeLabel = "type_dependency"; 
  edgesComponent =  edgesComponent5["edgesReturnComposite"];
- graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list);
+ graph = drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType1);
 
  
  graph +="}";
@@ -215,7 +217,7 @@ function drawComponentDiagram2(edgesComponent1, edgesComponent2, edgesComponent3
 
 
 
-function drawItems_UUID(graph, edgesComponent, myMap, count, list) {
+function drawItems_UUID(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType) {
 
 	for(i = 0; i < edgesComponent.length; i ++){
 
@@ -243,12 +245,11 @@ function drawItems_UUID(graph, edgesComponent, myMap, count, list) {
 	        }
 	    }
 
-	   
 
 	    if(flag == true){
 	    	list.push({'start': startUUID, 'end': endUUID});
-	    	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\"]   "+endUUID+" [label=\""
-			+edgesComponent[i]['end']['component']['name']+ "\"] "+startUUID+"->"+endUUID+" [fontcolor=darkgreen]";
+	    	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\""+ nodeType +"]   "+endUUID+" [label=\""
+			+edgesComponent[i]['end']['component']['name']+ "\""+ nodeType +"]   "+startUUID+"->"+endUUID+" [label=" + edgeLabel +", fontcolor=black]";
 	    }
 		
 	}
@@ -257,7 +258,55 @@ function drawItems_UUID(graph, edgesComponent, myMap, count, list) {
 }
 
 
-function drawItems_classUnit(graph, edgesComponent, myMap, count) {
+function drawItems_UUID_subGraph(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType) {
+
+
+	graph += "subgraph cluster_level1{";
+	for(i = 0; i < edgesComponent.length; i ++){
+
+		var startUUID = edgesComponent[i]['start']['component']["UUID"];
+		var endUUID = edgesComponent[i]['end']['component']["UUID"];
+
+		if(!myMap.has(startUUID)){
+			myMap.set(startUUID, count++);
+		}
+
+		if(!myMap.has(endUUID)){
+			myMap.set(endUUID, count++);
+		}
+
+		startUUID = myMap.get(startUUID);
+		endUUID = myMap.get(endUUID);
+
+		var flag = true;
+
+		var arrayLength = list.length;
+	    for (var j = 0; j < arrayLength; j++) {
+	        if(list[j]['start'] == startUUID && list[j]['end'] == endUUID ){
+	        	flag = false;
+	        	break;
+	        }
+	    }
+
+
+	    if(flag == true){
+	    	list.push({'start': startUUID, 'end': endUUID});
+	    	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\""+ nodeType +"]   "+endUUID+" [label=\""
+			+edgesComponent[i]['end']['component']['name']+ "\""+ nodeType +"]   "+startUUID+"->"+endUUID+" [label=" + edgeLabel +", fontcolor=black]";
+	    }
+		
+	}
+
+	graph += "}";
+
+	return graph
+}
+
+
+
+
+
+function drawItems_classUnit(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType) {
 	
 
 	for(i = 0; i < edgesComponent.length; i ++){
@@ -288,12 +337,56 @@ function drawItems_classUnit(graph, edgesComponent, myMap, count) {
 
 	    if(flag == true){
 	    	list.push({'start': startUUID, 'end': endUUID});
-	    	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\"]   "+endUUID+" [label=\""
-			+edgesComponent[i]['end']['component']['name']+ "\"] "+startUUID+"->"+endUUID+" [fontcolor=darkgreen]";
+	    	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\""+ nodeType +"]   "+endUUID+" [label=\""
+			+edgesComponent[i]['end']['component']['name']+ "\""+ nodeType +"]   "+startUUID+"->"+endUUID+" [label=" + edgeLabel +", fontcolor=black]";
 	    }
 		
 
 	}
+
+
+	return graph
+}
+
+function drawItems_classUnit_subGraph(graph, edgesComponent, myMap, count, list, edgeLabel, nodeType) {
+	
+	graph += "subgraph cluster_level2{";
+	for(i = 0; i < edgesComponent.length; i ++){
+		var startUUID = edgesComponent[i]['start']['component']["classUnit"];
+		var endUUID = edgesComponent[i]['end']['component']["classUnit"];
+
+		if(!myMap.has(startUUID)){
+			myMap.set(startUUID, count++);
+		}
+
+		if(!myMap.has(endUUID)){
+			myMap.set(endUUID, count++);
+		}
+
+		startUUID = myMap.get(startUUID);
+		endUUID = myMap.get(endUUID);
+
+
+		var flag = true;
+
+		var arrayLength = list.length;
+	    for (var j = 0; j < arrayLength; j++) {
+	        if(list[j]['start'] == startUUID && list[j]['end'] == endUUID ){
+	        	flag = false;
+	        	break;
+	        }
+	    }
+
+	    if(flag == true){
+	    	list.push({'start': startUUID, 'end': endUUID});
+	    	graph +=startUUID+" [label=\""+ edgesComponent[i]['start']['component']['name'] + "\""+ nodeType +"]   "+endUUID+" [label=\""
+			+edgesComponent[i]['end']['component']['name']+ "\""+ nodeType +"]   "+startUUID+"->"+endUUID+" [label=" + edgeLabel +", fontcolor=black]";
+	    }
+		
+
+	}
+
+	graph += "}";
 
 	return graph
 }

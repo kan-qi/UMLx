@@ -1,4 +1,3 @@
-
 /**
  * http://usejsdoc.org/
  */
@@ -287,14 +286,15 @@
 
              graph += '}"]';
 
-                 
+
 		return graph ;
 	}
 
-	function drawTransactionsDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
-		var activities = UseCase.Activities;
-		var precedenceRelations = UseCase.PrecedenceRelations;
-		console.log(precedenceRelations);
+	function drawTransactionsDiagramFunc(UseCase, graphFilePath, callbackfunc){
+//		var activities = UseCase.Activities;
+var transactions = UseCase.Transactions;
+//		var precedenceRelations = UseCase.PrecedenceRelations;
+//		console.log(precedenceRelations);
 		var graph = 'digraph g {\
 			fontsize=24\
 			node [shape=plaintext fontsize=24]';
@@ -313,42 +313,54 @@
 			}
 		}
 		var dottyDraw = new DottyDraw();
-		
-		for(var i in activities){
-			var activity = activities[i];
-			
-			var node = drawNode(activity._id, filterName(activity.Name));
-			
-			if(activity.Stimulus){
-				node = drawStimulusNode(activity._id, filterName(activity.Name));
-			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
-			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
-				node = drawFragmentNode(activity._id, filterName(activity.Name));
-			}
-			
-				graph += dottyDraw.draw(node);
-		}
-		
-		console.log("activities...");
-		console.log(graph);
-		
-		var precedenceRelations = UseCase.PrecedenceRelations;
-		for(var i in precedenceRelations){
-			var precedenceRelation = precedenceRelations[i];
-			console.log(precedenceRelation);
-				if(precedenceRelation.start && precedenceRelation.end){
-//				dotty += '"'+start.Name+'"->"'+end.Name+'";';
+        // var drawNodeID = {};
 
-				var start = precedenceRelation.start._id;
-				var end = precedenceRelation.end._id;
-				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
+		for(var i in transactions){
+            var transaction = transactions[i];
+		    var prevActivity = null;
+            for(var j in transaction.Nodes){
+
+			var activity = transaction.Nodes[j];
+			activity.draw_id = activity._id+""+i+""+j;
+			var node = drawNode(activity.draw_id, filterName(activity.Name));
+
+			if(activity.Stimulus){
+				node = drawStimulusNode(activity.draw_id, filterName(activity.Name));
+			} else if(activity.OutScope){
+				node = drawOutOfScopeNode(activity.draw_id, filterName(activity.Name));
+			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
+				node = drawFragmentNode(activity.draw_id, filterName(activity.Name));
+			}
+
+				graph += dottyDraw.draw(node);
+
+				if(prevActivity){
+				graph += dottyDraw.draw('"'+prevActivity.draw_id+'"->"'+activity.draw_id+'";');
+				}
+
+				prevActivity = activity;
 				}
 		}
-		
-		
+
+//		console.log("activities...");
+//		console.log(graph);
+//
+//		var precedenceRelations = UseCase.PrecedenceRelations;
+//		for(var i in precedenceRelations){
+//			var precedenceRelation = precedenceRelations[i];
+//			console.log(precedenceRelation);
+//				if(precedenceRelation.start && precedenceRelation.end){
+////				dotty += '"'+start.Name+'"->"'+end.Name+'";';
+//
+//				var start = precedenceRelation.start._id;
+//				var end = precedenceRelation.end._id;
+//				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
+//				}
+//		}
+
+
 		graph += 'imagepath = \"./public\"}';
-	
+
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
@@ -357,7 +369,7 @@
 	}
 
 
-	
+
 	function drawDomainModelFunc(DomainModel, graphFilePath, callbackfunc){
 
 
@@ -378,42 +390,42 @@
 			}
 		}
 		var dottyDraw = new DottyDraw();
-		
-		
+
+
 //		var j = 0;
 		for(var i in DomainModel.Elements){
 			//arrange the nodes in the subgraph
-			
-			
-			
+
+
+
 			var domainObject = DomainModel.Elements[i];
 			var domainObjectToDraw = drawDomainObjectNode(domainObject);
-			
+
 			if(domainObjectToDraw){
 				graph += dottyDraw.draw(domainObjectToDraw);
-				
+
 			}
 		}
-		
+
 		graph += 'imagepath = \"./public\"}';
-		
+
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
 
 		return graph;
-		
+
 	}
 
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
 
 		console.log("the whole class diagram model is" + domainModel);
-		console.log("the whole class diagram model is"+JSON.stringify(domainModel));
+		console.log("the whole class diagram model is" + JSON.stringify(domainModel));
 		var  domainModelElements = domainModel.Elements;
 		      console.log("run the create class dia");
               console.log("class diagram model is"+domainModelElements);
               console.log("class diagram model is"+JSON.stringify(domainModelElements));
-              
+
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
              graph += ' edge [arrowhead = "ediamond"]'
@@ -485,90 +497,118 @@
 
 	
 	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
-		
 
 
-		if(typeof dicComponent === 'undefined'){
+		fs.writeFile('dicComponentDiagram.txt', JSON.stringify(dicComponent), (err) => {  
+		    if (err) throw err; 
+		}) 
+
+
+		if(typeof dicComponent === 'undefined' || Object.keys(dicComponent).length == 0){
      		return;
      	}
 
-        console.log("dicComponent is "+ dicComponent[Object.keys(dicComponent)[0]]);
-        var  dicComponentElements = dicComponent[Object.keys(dicComponent)[0]]["classUnits"];  
+        // console.log("dicComponent is "+ dicComponent[Object.keys(dicComponent)[0]]);
+        // var  dicComponentElements = dicComponent[Object.keys(dicComponent)[0]]["classUnits"];  
         
 		var graph = 'digraph class_diagram {';
             graph += 'node [fontsize = 8 shape = "record"]';
             graph += ' edge [arrowhead = "ediamond"]';
 
-        	 for(i = 0;  i < dicComponentElements.length; i++){
-        	   
-                 var curClass = dicComponentElements[i];
-                 
-                 graph += i;
-                 graph += '[ id = ' + i;
-                 graph += ' label = "{';
-                 graph += filterName(curClass["name"]);
+            var size = Object.keys(dicComponent).length; 
+
+            for(var e = 0; e < size; e ++){
+
+            	var  dicComponentElements = dicComponent[Object.keys(dicComponent)[e]]; 
+
+            	graph += e;
+                graph += '[ id = ' + e;
+                graph += ' label = "{';
+                graph += filterName(dicComponentElements["name"]);
 
 
-                 var attrUnits = dicComponentElements[i]["attrUnits"];
 
-                 if ( attrUnits.length != 0){
-                     graph += '|';
-                     for(j = 0; j < attrUnits.length; j++) {
-                   
-                         graph += '-   ' ;
-                         graph += filterName(attrUnits[j]["name"]);
-                         graph += ':'+attrUnits[j]["kind"];
-                         graph += '\\l';
-                     }
-                 }
+            	var  dicClassUnits = dicComponentElements["classUnits"];
 
-                 var classMethodUnits = dicComponentElements[i]["methodUnits"];
-                 if (classMethodUnits.length != 0){
-                     graph += '|';
+            	for(var i = 0; i < dicClassUnits.length; i ++){
+            		 var attrUnits = dicClassUnits[i]["attrUnits"];
+	                 if ( attrUnits.length != 0){
+	                     graph += '|';
+	                     break;
+	                 }
+            	}
 
-                     var tempStr = "";
-                     for(j = 0; j < classMethodUnits.length;j++) {
 
-                    	 tempStr += '+   ';
-                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
-                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
-                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
-                        	 if(k != 0){
-                        		 tempStr += ",";
-                        	 }
-                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
-                         }
-                         tempStr += ')';
-                         tempStr += "\\l";
-                     }
 
-                     tempStr = tempStr.replace(/</g, "\u02C2");
-                     tempStr = tempStr.replace(/>/g, "\u02C3");
+            	
 
-                     graph += tempStr;
+            	for(var i = 0; i < dicClassUnits.length; i ++){
 
-                 }
+            		 var attrUnits = dicClassUnits[i]["attrUnits"];
 
-                 var classInterfaceUnits = dicComponentElements[i]["interfaceUnits"];
-                 if(classInterfaceUnits){
-                 if(classInterfaceUnits.length != 0){
-                 	graph += '|';
-                 }
-                 
-                 for(j = 0; j < classInterfaceUnits.length;j++) {
-                     graph += '*   ';
-                     graph += filterName(classInterfaceUnits[j]["name"]) + ' ';
-                 		graph += "\\l";
-                 }
-                 }
+	                 if ( attrUnits.length != 0){
+	                     
+	                     for(j = 0; j < attrUnits.length; j++) {
+	                   
+	                         graph += '-   ' ;
+	                         graph += filterName(attrUnits[j]["name"]);
+	                         graph += ':'+attrUnits[j]["type"];
+	                         graph += '\\l';
+	                     }
+	                 }
+            	}
 
-                
-                 graph += '}"]';
-			}
-        	
-        	
-             
-         
+
+            	for(var i = 0; i < dicClassUnits.length; i ++){
+
+	                 var classMethodUnits = dicClassUnits[i]["methodUnits"];
+
+	                 if (classMethodUnits.length != 0){
+	                     graph += '|';
+	                     break;
+	                 }
+            	}
+
+            	
+
+            	for(var i = 0; i < dicClassUnits.length; i ++){
+
+	                 var classMethodUnits = dicClassUnits[i]["methodUnits"];
+
+	                 if (classMethodUnits.length != 0){
+	                     
+
+	                     var tempStr = "";
+	                     for(j = 0; j < classMethodUnits.length;j++) {
+
+	                    	 tempStr += '+   ';
+	                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
+	                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+	                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+	                        	 if(k != 0){
+	                        		 tempStr += ",";
+	                        	 }
+	                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+	                         }
+	                         tempStr += ')';
+	                         tempStr += "\\l";
+	                     }
+
+	                     tempStr = tempStr.replace(/</g, "\u02C2");
+	                     tempStr = tempStr.replace(/>/g, "\u02C3");
+
+	                     graph += tempStr;
+
+	                     
+
+	                 }
+            	}
+
+            	graph += '}"]';
+
+
+            }
+
             graph += 'imagepath = \"./public\"}';
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
@@ -581,6 +621,10 @@
 
 
 
+
+
+
+
 	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
 
 		fs.writeFile('dicClassUnits.txt', JSON.stringify(dicClassUnits), (err) => {  
@@ -588,7 +632,6 @@
 		}) 
 
 
-		console.log("Here is dicClassUnits" + JSON.stringify(dicClassUnits));
 
 		var keys = Object.keys(dicClassUnits);
 
@@ -617,6 +660,7 @@
       
                          graph += '-   ' ;
                          graph += filterName(attrUnits[j]["name"]);
+                         graph += ':'+attrUnits[j]["type"];
                          graph += '\\l';
                      }
                  }
@@ -672,11 +716,10 @@
 
      		console.log("the dicClassUnits graph is:"+graph);
 
-     		console.log("the graph is stored in:"+ graphFilePath);
-
-
+     		console.log("the dicClassUnits is:"+ graphFilePath);
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+     			console.log("the class digram is" + graphFilePath);
      			console.log("class Diagram is done");
      		});
 
@@ -688,12 +731,15 @@
 		
 
 	}
+
 	
 	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
 
 		fs.writeFile('dicCompositeClassUnits.txt', JSON.stringify(dicCompositeClassUnits), (err) => {  
 		    if (err) throw err; 
 		}) 
+
+		console.log("the dicCompositeClassUnits is" + JSON.stringify(dicCompositeClassUnits));
 		
 		var keys = Object.keys(dicCompositeClassUnits);
 
@@ -713,49 +759,84 @@
                  graph += filterName(curClass["name"]);
 
 
-                 var attrUnits = curClass["attrUnits"];
+                var dicClassUnits = curClass["classUnits"];
 
-                 
-                if(attrUnits){
-             	if ( attrUnits.length != 0){
-                     graph += '|';
-                     for(j = 0; j < attrUnits.length; j++) {
-                         graph += '-   ' ;
-                         graph += filterName(attrUnits[j]["name"]);
-                         graph += '\\l';
-                     }
-                 }
-                }
+                dicClassUnits = "[{\"UUID\":\"225c78a3-297d-415c-92b6-e2df2f0e3d20\",\"name\":\"de.danoeh.antennapod.BuildConfig\",\"isWithinBoundary\":\"true\",\"methodUnits\":[{\"name\":\"<clinit>\",\"UUID\":\"47625ce2-02a2-4738-b2d5-dd1d9c5f226e\",\"returnType\":\"void\",\"parameterTypes\":[]},{\"name\":\"<init>\",\"UUID\":\"072da5b6-8800-4004-82c8-d8170c984df6\",\"returnType\":\"void\",\"parameterTypes\":[]}],\"attrUnits\":[{\"name\":\"APPLICATION_ID\",\"type\":\"java.lang.String\",\"UUID\":\"a5b75cce-438b-410b-9692-1234e1c6eccd\"},{\"name\":\"BUILD_TYPE\",\"type\":\"java.lang.String\",\"UUID\":\"1f586f85-2a8b-4ac0-9f2f-2153180827c2\"},{\"name\":\"DEBUG\",\"type\":\"boolean\",\"UUID\":\"05cbd678-d7e5-40c4-8463-afcdfa94ff23\"},{\"name\":\"FLATTR_APP_KEY\",\"type\":\"java.lang.String\",\"UUID\":\"c163a6ca-2bb3-4b89-9e50-0aad32956d91\"},{\"name\":\"FLATTR_APP_SECRET\",\"type\":\"java.lang.String\",\"UUID\":\"63fd3552-c2db-4bce-a8bc-322220c961c5\"},{\"name\":\"FLAVOR\",\"type\":\"java.lang.String\",\"UUID\":\"29afafce-7567-45e3-9d33-648267e14d31\"},{\"name\":\"VERSION_CODE\",\"type\":\"int\",\"UUID\":\"d6b48683-5fdd-4ffa-921e-41c5bb2962ca\"},{\"name\":\"VERSION_NAME\",\"type\":\"java.lang.String\",\"UUID\":\"8c81b25f-7d59-4a35-ac6b-5d62a457b683\"}]},{\"UUID\":\"cc70d86e-04a2-41e2-9a1f-cd166a0cd80f\",\"name\":\"de.danoeh.antennapod.CrashReportWriter\",\"isWithinBoundary\":\"true\",\"methodUnits\":[{\"name\":\"<init>\",\"UUID\":\"5ef99cad-1944-4e3f-ab1a-036b77c6d4d7\",\"returnType\":\"void\",\"parameterTypes\":[]},{\"name\":\"getFile\",\"UUID\":\"5b5d3456-b178-4f51-abd7-dda4795abf59\",\"returnType\":\"java.io.File\",\"parameterTypes\":[]},{\"name\":\"uncaughtException\",\"UUID\":\"012ba2a8-e28c-4611-81ea-83b6dfbfe43e\",\"returnType\":\"void\",\"parameterTypes\":[\"java.lang.Thread\",\"java.lang.Throwable\"]}],\"attrUnits\":[{\"name\":\"TAG\",\"type\":\"java.lang.String\",\"UUID\":\"82f139d3-f96d-4624-89b8-18234f878a03\"},{\"name\":\"defaultHandler\",\"type\":\"java.lang.Thread$UncaughtExceptionHandler\",\"UUID\":\"4297d5ab-bdd1-48e6-b31b-db6928bb122b\"}]}]";
+                dicClassUnits = JSON.parse(dicClassUnits);
 
                 
-         		var classMethodUnits = curClass["methodUnits"];
-         		if(classMethodUnits){
-                 if (classMethodUnits.length != 0){
-                     graph += '|';
-                     var tempStr = "";
-                     for(j = 0; j < classMethodUnits.length;j++) {
 
-                    	 tempStr += '+   ';
-                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
-                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
-                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
-                        	 if(k != 0){
-                        		 tempStr += ",";
-                        	 }
-                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
-                         }
-                         tempStr += ')';
-                         tempStr += "\\l";
-                     }
+            	for(var k = 0; k < dicClassUnits.length; k ++){
+            		 var attrUnits = dicClassUnits[k]["attrUnits"];
+            		
+	                 if ( attrUnits !== undefined && attrUnits.length != 0){
+	                     graph += '|';
+	                     break;
+	                 }
+            	}
 
-                     tempStr = tempStr.replace(/</g, "\u02C2");
-                     tempStr = tempStr.replace(/>/g, "\u02C3");
 
-                     graph += tempStr;
 
-                 }
-         		}
+            	for(var k = 0; k < dicClassUnits.length; k ++){
+            		console.log("the dicClassUnits_length is " + dicClassUnits.length);
 
+            		 var attrUnits = dicClassUnits[k]["attrUnits"];
+
+	                 if ( attrUnits !== undefined && attrUnits.length != 0){
+	                     
+	                     for(j = 0; j < attrUnits.length; j++) {
+	                   
+	                         graph += '-   ' ;
+	                         graph += filterName(attrUnits[j]["name"]);
+	                         console.log(attrUnits[j]["name"]);
+	                         graph += ':'+attrUnits[j]["type"];
+	                         graph += '\\l';
+	                     }
+	                 }
+            	}
+
+
+            	for(var k = 0; k < dicClassUnits.length; k ++){
+
+	                 var classMethodUnits = dicClassUnits[k]["methodUnits"];
+
+	                 if (classMethodUnits !== undefined && classMethodUnits.length != 0){
+	                     graph += '|';
+	                     break;
+	                 }
+            	}
+
+            	
+
+            	for(var k = 0; k < dicClassUnits.length; k ++){
+
+	                 var classMethodUnits = dicClassUnits[k]["methodUnits"];
+
+	                 if (classMethodUnits !== undefined && classMethodUnits.length != 0){
+	                     
+
+	                     var tempStr = "";
+	                     for(j = 0; j < classMethodUnits.length;j++) {
+
+	                    	 tempStr += '+   ';
+	                         tempStr += filterName(classMethodUnits[j]["name"]) + '(';
+	                       
+
+	                         tempStr += filterName(classMethodUnits[j]["returnType"])
+
+	                         tempStr += ')';
+	                         tempStr += "\\l";
+	                     }
+
+	                     tempStr = tempStr.replace(/</g, "\u02C2");
+	                     tempStr = tempStr.replace(/>/g, "\u02C3");
+
+	                     graph += tempStr;
+
+	                     
+
+	                 }
+            	}
            	                 
                  graph += '}"]';
 
@@ -763,10 +844,6 @@
         	
      
             graph += 'imagepath = \"./public\"}';
-
-//     		console.log("the dicClassUnits graph is:"+graph);
-//
-//     		console.log("the dicClassUnits is:"+ graphFilePath);
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
      			console.log("class Diagram is done");
@@ -785,11 +862,3 @@
 			drawCompositeClassDiagram: drawCompositeClassDiagram
 	}
 }())
-
-
-
-
-
-
-
-
