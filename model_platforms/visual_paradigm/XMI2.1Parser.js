@@ -11,9 +11,9 @@
 	var sequenceDiagramParser= require("./SequenceDiagramParser.js");
 	var activityDiagramParser= require("./ActivityDiagramParser.js");
 	//var analysisDiagramParser= require("./AnalysisDiagramParser.js");
-	//var useCaseDiagramParser = require("./UseCaseDiagramParser.js");	
+	//var useCaseDiagramParser = require("./UseCaseDiagramParser.js");
+	var TransactionIdentifier = require("./TransactionIdentification.js");
 	
-
 	var domainModelSearchUtil = require("../../utils/DomainModelSearchUtil.js");
 	
 	function contains(arr, obj) {  
@@ -168,6 +168,8 @@
 			
 			sequenceDiagramParser.parseSequenceDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, ActorsByID);
 			activityDiagramParser.parseActivityDiagram(UseCase, XMIUseCase, DomainElementsBySN, CustomProfiles, XMIUMLModel);
+			
+			UseCase.Transactions = TransactionIdentifier.traverseUseCaseForTransactions(UseCase);
 			
 			Model.UseCases.push(UseCase);
 		}

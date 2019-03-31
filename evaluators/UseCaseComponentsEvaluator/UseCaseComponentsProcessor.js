@@ -10,7 +10,7 @@
  * 4. actor1 -> boundary -> control -> actor2, mainly for calling for service outside of the system
  * 5. actor2 -> control -> entity, mainly for outside system calling all services from the system
  * 
- * I'll have to rework on the pattern tree. To integrate widecard functionality.
+ * I'll have to rework on the pattern tree. To integrate wide-card functionality.
  * 
  * summary: search for independent transactions, and recognize the patterns.
  * Date: 8/9/2017
@@ -40,38 +40,33 @@
 	 
 	
 	module.exports = {
-//			processDiagram: function(diagram, usecase){
-//				return true;
-//			},
 			processTransaction: function(transaction, usecase){
-//				var transactionLength = 0;
-//				var avgDegree = 0;
-//				var archDiff = 0;
 				var boundaryNum = 0;
 				var controlNum = 0;
 				var entityNum = 0;
 				var actorNum = 0;
 				var TransactionStr = "";
-				for(var i = 0; i < transaction.Nodes.length; i++)
+				var i = 0;
+				for(var j in transaction.Nodes)
 				{
-					var node = transaction.Nodes[i];
-//					var components = diagram.allocate(node);
-					
+					var node = transaction.Nodes[j];
+
 					if(node.Component){
 						var component = node.Component;
-//						avgDegree += component.InboundNumber;
 
 						if(component.Type=="actor")actorNum++;
 						if(component.Type=="boundary")boundaryNum++;
 						if(component.Type=="control")controlNum++;
 						if(component.Type=="entity")entityNum++;
 					}
-					
-//					transactionLength++;
-					TransactionStr += node.Name;
-					if(i != transaction.Nodes.length - 1){
-						TransactionStr += "->";
+
+					if(i !== 0){
+						TransactionStr += "-->";
 					}
+
+					TransactionStr += node.Name;
+
+					i++
 					
 				}
 				transaction.TransactionStr = TransactionStr;
@@ -80,19 +75,7 @@
 					console.log("undefined transactions");
 					return false;
 				}
-				
-				
-//				if(transactionLength > 0){
-//					avgDegree = avgDegree / transactionLength;
-//				}
-//				else {
-//					avgDegree = 0;
-//				}
-//				archDiff = avgDegree*transactionLength;
-				
-//				transaction.transactionLength = transactionLength;
-//				transaction.avgDegree = avgDegree;
-//				transaction.archDiff = archDiff;
+
 				transaction.boundaryNum = boundaryNum;
 				transaction.controlNum = controlNum;
 				transaction.entityNum = entityNum;
@@ -104,8 +87,6 @@
 			},
 			processElement: function(element, usecase){
 				element.Name = element.Name ? element.Name.replace(/,/gi, "") : "undefined";
-//				var elementType = "";
-//				var components = diagram.allocate(Element);
 				if(element.Component){
 					var component = element.Component;
 					element.Type = component.Type;
@@ -136,8 +117,7 @@
 				if(maxDepth < depth){
 					maxDepth = depth;
 				}
-//				console.log("depth.....")
-//				console.log(maxDepth);
+				
 			    var ancestors = [];
 				for(var i in relations){
 					var relation = relations[i];

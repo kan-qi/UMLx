@@ -10,8 +10,6 @@
  */
 (function() {
 	
-	
-
 	/*
 	 * This method is used to draw different dependency graphs between different nodes.
 	 */
@@ -20,21 +18,14 @@
 				fileName = "kdm_callgraph_diagram.dotty";
 			}
 			var path = outputDir+"/"+fileName;
-//			useCase.DiagramType = "kdm_diagram";
 			
-//			var nodesByID = {};
-//			for(var i in nodes){
-//				var node = nodes[i];
-//				nodesByID[node._id] = node;
-//			}
-
 			let graph = 'digraph g {\
 				fontsize=26\
 				rankdir="LR"\
 				node [fontsize=24 shape=rectangle]';
 
 			nodes.forEach((node) => {
-				graph += '"'+node.name+'" [';
+				graph += '"'+node.Name+'" [';
 				if(node.isWithinBoundary){
 					graph += " color=red";
 				}
@@ -59,10 +50,9 @@
 			var filter = true;
 
 			edges.forEach((edge) => {
-//				var start = nodesByID[edge.start].name;
-//				var end = nodesByID[edge.end].name;
-				var start = edge.start.name;
-				var end = edge.end.name;
+				
+				var start = edge.start.Name;
+				var end = edge.end.Name;
 				var edge = '"'+start+'"->"'+end+'";';
 				if(!drawnEdges[edge]){
 				graph += '"'+start+'"->"'+end+'";';

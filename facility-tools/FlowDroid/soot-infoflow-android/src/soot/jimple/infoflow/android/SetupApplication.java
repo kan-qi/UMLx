@@ -816,7 +816,7 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		}
 
 		if (this.gatorFile != null) {
-			List<String[]> eventHandlers = new ArrayList<String[]>();
+			List<String[]> eventHandlers = null;
 			try {
 				eventHandlers = parseGatorFile();
 			} catch (SAXException e) {
@@ -825,9 +825,9 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 				e.printStackTrace();
 			}
 
-			this.callbackMethods.putAll(calculateCallbackMethodsGator(entryPointClasses, eventHandlers));
+//			this.callbackMethods.putAll(calculateCallbackMethodsGator(entryPointClasses, eventHandlers));
 
-			Debug3.v().println("profile call back method gator");
+			Debug3.v().println("profile call back method fast");
 			for (SootClass callbackClass : callbackMethods.keySet()) {
 				Debug3.v().println("callbackClass:" + callbackClass.getName());
 				Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
@@ -1070,9 +1070,9 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 				e.printStackTrace();
 			}
 
-			this.callbackMethods.putAll(calculateCallbackMethodsGator(entryPointClasses, eventHandlers));
+//			this.callbackMethods.putAll(calculateCallbackMethodsGator(entryPointClasses, eventHandlers));
 
-			Debug3.v().println("profile call back method gator");
+			Debug3.v().println("profile call back methods");
 			for (SootClass callbackClass : callbackMethods.keySet()) {
 				Debug3.v().println("callbackClass:" + callbackClass.getName());
 				Set<CallbackDefinition> callbackDefinitions = callbackMethods.get(callbackClass);
@@ -1938,8 +1938,8 @@ public class SetupApplication implements ITaintWrapperDataFlowAnalysis {
 		}
 
 		// We don't need the computed callbacks anymore
-		this.callbackMethods.clear();
-		this.fragmentClasses.clear();
+//		this.callbackMethods.clear();
+//		this.fragmentClasses.clear();
 
 		// Notify our result handlers
 		for (ResultsAvailableHandler handler : resultsAvailableHandlers)

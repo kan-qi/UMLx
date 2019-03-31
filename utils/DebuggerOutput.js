@@ -3,6 +3,7 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var config = require("../config.js");
+	var FileManagerUtil = require("./FileManagerUtils.js");
 	
 //	var OutputDir = './debug';
 
@@ -103,12 +104,22 @@
 				});
 	}
 	
+	function appendFile2(token, message, OutputDir){
+		if(!OutputDir){
+		OutputDir = './debug';
+		}
+		FileManagerUtil.mkDirSync(OutputDir);
+		var filename = OutputDir+'/'+token+'.txt';
+		fs.appendFileSync(OutputDir+'/'+token+'.txt', message);
+	}
+	
 	
 	module.exports = {
 			writeJson: writeJson,
 			writeTxt: writeTxt,
 			appendFile:appendFile,
 			appendFile1:appendFile1,
+			appendFile2:appendFile2,
 			writeJson2: writeJson2,
 			writeJson3: writeJson3
 	}

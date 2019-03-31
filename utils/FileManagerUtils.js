@@ -2,8 +2,9 @@
 	var fs = require('fs');
 	var mkdirp = require('mkdirp');
 	var path = require('path')
+	const mkdirpSync = require('mkdirp-sync');
 	
-	 function deleteFolderRecursive(dir, rmSelf) {
+	 function deleteFolderRecursive(dir, rmSelf){
 		    var files;
 		    rmSelf = (rmSelf === undefined) ? true : rmSelf;
 		    dir = dir + "/";
@@ -31,6 +32,10 @@
 
 	 function existsSync(filePath){
 			return fs.existsSync(filePath);
+	 }
+	 
+	 function mkDirSync(dirPath){
+		 mkdirpSync(dirPath);
 	 }
 	 
 	 function readFilesSync(filePaths){
@@ -178,11 +183,51 @@
 				   }
 			});
 		},
-		readJSONSync: function(filePath, callbackfunc){
+		readJSONSync: function(filePath){
 			var str = fs.readFileSync(filePath, 'utf-8');
-			console.log(str);
 				 var obj = JSON.parse(str);
 				  return obj
+		},
+		writeFiles: function(dir, files, callbackfunc){
+			function writeFile(path, content){
+				return new Promise((resolve, reject) => {
+					fs.writeFile(path, content, function(err){
+						if(err){
+							reject(err);
+							return;
+						}
+						resolve();
+					});
+				  });
+			}
+			
+			let chain = Promise.resolve();
+			
+			mkdirp(dir, function(err) { 
+				if(err) {
+					console.log(err);
+					if(!callbackfunc){
+						callbackfunc(err);
+					}
+					return;
+				}
+			for(var i in files){
+				var file = files[i];
+				chain = chain.then(writeFile(dir+"/"+file.fileName, file.content));
+			}
+			
+			chain.then(function(){
+				if(callbackfunc){
+					callbackfunc();
+				}
+			}).catch(function(err){
+				console.log(err);
+				if(callbackfunc){
+					callbackfunc(err);
+				}
+			});
+			});
+			
 		},
 		parseCSVData: parseCSVData,
 			deleteFolderRecursive : deleteFolderRecursive,
@@ -191,6 +236,7 @@
 			writeFileSync: writeFileSync,
 			deleteFileSync: deleteFileSync,
 			appendFile: appendFile,
-			existsSync: existsSync
+			existsSync: existsSync,
+			mkDirSync: mkDirSync
 	}
 }())
