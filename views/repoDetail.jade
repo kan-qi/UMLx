@@ -2,69 +2,247 @@
 -var path = repoInfo.AccessDir;
 input(type='hidden', value=repoID)#myrepoId
 div.block.panel.panel-default
-  div.panel-heading
-   div.panel-title.analytics-title.pull-left
-    include breadcrumb
-   if repoInfo
-    div.repo-analytics-ops.pull-right
-      div.dropdown
-        button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Dump Repo
-          span.caret
-        ul.dropdown-menu
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/modelEvaluation.csv') Evaluation For Models (simulation)
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/useCaseEvaluation.csv') Evaluation For Use Cases
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/domainModelEvaluation.csv') Evaluation For Domain Models
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/transactionAnalytics.csv') Evaluation For Transactions
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/entityAnalytics.csv.csv') Evaluation For Classes
-          li
-            a.dumpEvaluationData.dropdown-item(href='./#{repoInfo.AccessDir}/elementAnalytics.csv') Evaluation For Elements
-          //li
-            //a.dumpEvaluationData.dropdown-item(href='dumpRepoDescriptiveDistributions?repo_id=#{repoInfo._id}') Descriptive Distributions
-      div.dropdown
-        button.btn.btn-secondary.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Load
-          span.caret
-        ul.dropdown-menu
-          li
-            a.dropdown-item(id="open_btn" onclick="openDialogueBox('#{repoInfo._id}', '1');" href="javaScript:void(0);") Empirical Data For Use Cases
-          li
-            a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '2');" href="javaScript:void(0);") Empirical Data For Models
-          //li
-            //a.dropdown-item(onclick="openDialogueBox('#{repoInfo._id}', '3');" href="javaScript:void(0);") COCOMO Data
-      div.dropdown
-          button.btn.dropdown-toggle.btn-default(data-toggle='dropdown',type='button',aria-haspopup="true",aria-expanded="false") Analysis
-            span.caret
-          ul.dropdown-menu
-            li
-              a.request-repo-analytics.dropdown-item(id="reanalyse_repo", href="#", data-my="#{repoInfo._id}") Reanalyse Repo
-            li
-              a.dropdown-item(href='reloadRepo?repo_id=#{repoInfo._id}') Reload Repo
-   div.clearFix
   div.panel-body(id="repo-stats-chart")
    div.repo-info-content
-    ul.nav.nav-tabs
-     li.active
-      a(data-toggle='tab', href='#repo_analytics') Overview
-     li
-      a(data-toggle='tab', href='#repo_estimation') Estimation
-     li
-      a(data-toggle='tab', href='#repo_trending') Trending
-     li
-      a(data-toggle='tab', href='#project_list') Projects 
-        span(class="badge") #{modelAllNum}
-     li
-      a(data-toggle='tab', id='modelArchive', href='#repo_archive', data-url='#{path}', onclick='walkRepoDir(this)') Archives
     div.tab-content
-      div.tab-pane.fade.in.active(id="repo_analytics")
-        div.repo-analysis-detail
-          div.repo-metrics
-      div.tab-pane.fade(id="repo_estimation")
+      div.tab-pane.fade.main_page.in.active(id="main_page")
+        div.form-container
+          form#project-effort-prediction-form.form-horizontal.form(novalidate='', onsubmit='return predict_project_effort_func()', method='post', action='/')
+            #sec-1(hidden)
+                .panel-group
+                    .panel.panel-default
+                        .panel-heading
+                            h4.panel-title
+                                div.panel_words Technical Complexity Factor
+                                div.panel_triangle_toggle
+                                    a(data-toggle='collapse', href='#collapse1')
+                                        span.glyphicon.glyphicon-triangle-left.collapseButtom1
+                        #collapse1.panel-collapse.collapse
+                            .panel-body
+                                .form-group
+                                    label.control-label(for='distributed_system') Distributed System
+                                    select#distributed_system.form-control(name='distributed_system')
+                                        option(selected="selected") 1 
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='response_time') Response time or throughput performance objectives
+                                    select#response_time.form-control(name='response_time')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='end_user_efficiency') End user efficiency
+                                    select#end_user_efficiency.form-control(name='end_user_efficiency')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='complex_internal_processing') Complex internal processing
+                                    select#complex_internal_processing.form-control(name='complex_internal_processing')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='code_must_be_reusable') Code must be reusable
+                                    select#code_must_be_reusable.form-control(name='code_must_be_reusable')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='easy_to_install') Easy to install
+                                    select#easy_to_install.form-control(name='easy_to_install')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='easy_to_use') Easy to use
+                                    select#easy_to_use.form-control(name='easy_to_use')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='portable') Portable
+                                    select#portable.form-control(name='portable')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='easy_to_change') Easy to change
+                                    select#easy_to_change.form-control(name='easy_to_change')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='concurrent') Concurrent
+                                    select#concurrent.form-control(name='concurrent')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='includes_special_security_objectives') Includes special security objectives
+                                    select#includes_special_security_objectives.form-control(name='includes_special_security_objectives')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='provides_direct_access_for_third_parties') Provides direct access for third parties
+                                    select#provides_direct_access_for_third_parties.form-control(name='provides_direct_access_for_third_parties')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='special_user_training_facilities_are_required') Special user training facilities are required
+                                    select#special_user_training_facilities_are_required.form-control(name='special_user_training_facilities_are_required')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+            //input#uuid_page2(type='hidden', name='uuid_page2', value='')
+            // Page 3
+            #sec-2(hidden)
+                .panel-group
+                    .panel.panel-default
+                        .panel-heading
+                            h4.panel-title
+                                div.panel_words Environmental Factors
+                                div.panel_triangle_toggle
+                                    a(data-toggle='collapse', href='#collapse2')
+                                        //span.if-collapsed.glyphicon.glyphicon-triangle-bottom.collapseButtom
+                                        span.glyphicon.glyphicon-triangle-left.collapseButtom2
+                        #collapse2.panel-collapse.collapse
+                            .panel-body
+                                .form-group
+                                    label.control-label(for='familiar_with_the_project_model_that_is_used') Familiar with the project model that is used
+                                    select#familiar_with_the_project_model_that_is_used.form-control(name='familiar_with_the_project_model_that_is_used')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='application_experience') Application experience
+                                    select#application_experience.form-control(name='application_experience')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='object_oriented_experience') Object-oriented experience
+                                    select#object_oriented_experience.form-control(name='object_oriented_experience')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='lead_analyst_capability') Lead analyst capability
+                                    select#lead_analyst_capability.form-control(name='lead_analyst_capability')
+                                        option 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='motivation') Motivation
+                                    select#motivation.form-control(name='motivation')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='stable_requirements') Stable requirements
+                                    select#stable_requirements.form-control(name='stable_requirements')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='part_time_staff') Part-time staff
+                                    select#part_time_staff.form-control(name='part_time_staff')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+                                .form-group
+                                    label.control-label(for='difficult_programming_language') Difficult programming language
+                                    select#difficult_programming_language.form-control(name='difficult_programming_language')
+                                        option(selected="selected") 1
+                                        option 2
+                                        option 3
+                                        option 4
+                                        option 5
+            div.clear
+            #sec-4(hidden)
+                .panel-group
+                    .panel.panel-default
+                        .panel-heading
+                            h4.panel-title
+                                | Select Estimator
+                        #collapse1.panel-collapse
+                            .panel-body
+                                div(id="model-query-box")
+                                    div.row-item(id='model-selector-box')
+                                         select#model.estimation-form-control(name='model')
+                                           option(value="eucp_lm" selected="selected") EUCP
+                                           option(value="exucp_lm") EXUCP
+                                           option(value="ducp_lm") DUCP
+                                    //div.checkbox.row-item
+                                     //label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                      //input(type='checkbox' value='simulation-data')
+                                    //button.btn.btn-primary.row-item(id='estimate-project-effort-button', type="submit") Query
+            div.input-group
+                  input.form-control.form-blank(type='text',readonly)
+                  label.input-group-btn
+                      span.btn.btn-primary.form-button(for='uml_file') Browse
+                          input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml', role = "button" )
+            div
+                button.btn.btn-dark.btn-submit.btn-lg(type='submit') Submit
+                img.row-item.hidden(id='model-query-progressing' src='img/progress-bar.gif')
+                input(type='hidden', name='repo-id', value='#{repoInfo._id}')
+                input(type='hidden', name='requestUUID', value='#{repoInfo.requestUUID}')
+            div.clear
+        #sec-5
+          .result-heading
+                  | Result
+          #collapse1.panel-collapse
+              div(id="estimation-result-panel-body")
+        #loadingScreen.hidden
+            div.full-page-model
+            div.full-page-model-content
+                div(style='padding: 30px')
+                    img(id='model-query-progressing' src='img/progress-bar.gif' style='width:100px')
+                    p Processing...
+      //div.tab-pane.fade(id="repo_estimation")
         include estimationPanel
       div.tab-pane.fade(id="repo_trending")
         if repoInfo
@@ -187,4 +365,4 @@ div.block.panel.panel-default
         div
           p #{repoInfo.OutputDir}
         div#displayRepoArchive
-
+     
