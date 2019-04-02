@@ -431,7 +431,7 @@
 		var graphImagePathVariableToWriteAfterTheOtherThingIsWritten = 'imagepath = \"./\"}';
 		dottyUtil = require("../../utils/DottyUtil.js");
 		//dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-		//	console.log("drawing is down");
+		//	console.log("drawing is done");
 		//});
 		fs.writeFile(
 			graphFilePath,
