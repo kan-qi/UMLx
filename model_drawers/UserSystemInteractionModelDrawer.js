@@ -233,7 +233,7 @@
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 
 			console.log("the usim file is in" +graphFilePath);
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph
@@ -362,7 +362,7 @@ var transactions = UseCase.Transactions;
 		graph += 'imagepath = \"./public\"}';
 
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph;
@@ -410,7 +410,7 @@ var transactions = UseCase.Transactions;
 		graph += 'imagepath = \"./public\"}';
 
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph;

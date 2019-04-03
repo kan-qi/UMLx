@@ -244,7 +244,7 @@ function drawPrecedenceDiagramFunc(UseCase, graphFilePath, callbackfunc){
 	
 	dottyUtil = require("../utils/DottyUtil.js");
 	dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-		console.log("drawing is down");
+		console.log("drawing is done");
 	});
 //	var graphFilePath = precedenceRelations.OutputDir+'/'+precedenceRelations.DotGraphFile; 
 //	console.log(graphFilePath);
