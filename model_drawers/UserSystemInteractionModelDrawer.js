@@ -286,15 +286,14 @@
 
              graph += '}"]';
 
-
+                 
 		return graph ;
 	}
 
-	function drawTransactionsDiagramFunc(UseCase, graphFilePath, callbackfunc){
-//		var activities = UseCase.Activities;
-var transactions = UseCase.Transactions;
-//		var precedenceRelations = UseCase.PrecedenceRelations;
-//		console.log(precedenceRelations);
+	function drawTransactionsDiagramFunc(UseCase, DomainModel, graphFilePath, callbackfunc){
+		var activities = UseCase.Activities;
+		var precedenceRelations = UseCase.PrecedenceRelations;
+		console.log(precedenceRelations);
 		var graph = 'digraph g {\
 			fontsize=24\
 			node [shape=plaintext fontsize=24]';
@@ -313,54 +312,42 @@ var transactions = UseCase.Transactions;
 			}
 		}
 		var dottyDraw = new DottyDraw();
-        // var drawNodeID = {};
-
-		for(var i in transactions){
-            var transaction = transactions[i];
-		    var prevActivity = null;
-            for(var j in transaction.Nodes){
-
-			var activity = transaction.Nodes[j];
-			activity.draw_id = activity._id+""+i+""+j;
-			var node = drawNode(activity.draw_id, filterName(activity.Name));
-
+		
+		for(var i in activities){
+			var activity = activities[i];
+			
+			var node = drawNode(activity._id, filterName(activity.Name));
+			
 			if(activity.Stimulus){
-				node = drawStimulusNode(activity.draw_id, filterName(activity.Name));
+				node = drawStimulusNode(activity._id, filterName(activity.Name));
 			} else if(activity.OutScope){
-				node = drawOutOfScopeNode(activity.draw_id, filterName(activity.Name));
+				node = drawOutOfScopeNode(activity._id, filterName(activity.Name));
 			} else if(activity.Type === "fragment_start" || activity.Type === "fragment_end"){
-				node = drawFragmentNode(activity.draw_id, filterName(activity.Name));
+				node = drawFragmentNode(activity._id, filterName(activity.Name));
 			}
-
+			
 				graph += dottyDraw.draw(node);
+		}
+		
+		console.log("activities...");
+		console.log(graph);
+		
+		var precedenceRelations = UseCase.PrecedenceRelations;
+		for(var i in precedenceRelations){
+			var precedenceRelation = precedenceRelations[i];
+			console.log(precedenceRelation);
+				if(precedenceRelation.start && precedenceRelation.end){
+//				dotty += '"'+start.Name+'"->"'+end.Name+'";';
 
-				if(prevActivity){
-				graph += dottyDraw.draw('"'+prevActivity.draw_id+'"->"'+activity.draw_id+'";');
-				}
-
-				prevActivity = activity;
+				var start = precedenceRelation.start._id;
+				var end = precedenceRelation.end._id;
+				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
 				}
 		}
-
-//		console.log("activities...");
-//		console.log(graph);
-//
-//		var precedenceRelations = UseCase.PrecedenceRelations;
-//		for(var i in precedenceRelations){
-//			var precedenceRelation = precedenceRelations[i];
-//			console.log(precedenceRelation);
-//				if(precedenceRelation.start && precedenceRelation.end){
-////				dotty += '"'+start.Name+'"->"'+end.Name+'";';
-//
-//				var start = precedenceRelation.start._id;
-//				var end = precedenceRelation.end._id;
-//				graph += dottyDraw.draw('"'+start+'"->"'+end+'";');
-//				}
-//		}
-
-
+		
+		
 		graph += 'imagepath = \"./public\"}';
-
+	
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
@@ -369,7 +356,7 @@ var transactions = UseCase.Transactions;
 	}
 
 
-
+	
 	function drawDomainModelFunc(DomainModel, graphFilePath, callbackfunc){
 
 
@@ -390,42 +377,42 @@ var transactions = UseCase.Transactions;
 			}
 		}
 		var dottyDraw = new DottyDraw();
-
-
+		
+		
 //		var j = 0;
 		for(var i in DomainModel.Elements){
 			//arrange the nodes in the subgraph
-
-
-
+			
+			
+			
 			var domainObject = DomainModel.Elements[i];
 			var domainObjectToDraw = drawDomainObjectNode(domainObject);
-
+			
 			if(domainObjectToDraw){
 				graph += dottyDraw.draw(domainObjectToDraw);
-
+				
 			}
 		}
-
+		
 		graph += 'imagepath = \"./public\"}';
-
+		
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 			console.log("drawing is down");
 		});
 
 		return graph;
-
+		
 	}
 
 	function createDomainModelDiagram(domainModel, graphFilePath, callbackfunc){
 
 		console.log("the whole class diagram model is" + domainModel);
-		console.log("the whole class diagram model is" + JSON.stringify(domainModel));
+		console.log("the whole class diagram model is"+JSON.stringify(domainModel));
 		var  domainModelElements = domainModel.Elements;
 		      console.log("run the create class dia");
               console.log("class diagram model is"+domainModelElements);
               console.log("class diagram model is"+JSON.stringify(domainModelElements));
-
+              
 			var graph = 'digraph class_diagram {';
              graph += 'node [fontsize = 8 shape = "record"]';
              graph += ' edge [arrowhead = "ediamond"]'
@@ -497,8 +484,10 @@ var transactions = UseCase.Transactions;
 
 	
 	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
+		
 
-		if(typeof dicComponent === 'undefined' || Object.keys(dicComponent).length == 0){
+
+		if(typeof dicComponent === 'undefined'){
      		return;
      	}
 
@@ -516,18 +505,18 @@ var transactions = UseCase.Transactions;
                  graph += i;
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
-                 graph += filterName(curClass["name"]);
+                 graph += curClass["name"];
 
 
-                 var attrUnits = dicComponentElements[i]["attrUnits"];
+                 var classStorableUnits = dicComponentElements[i]["attrUnits"];
 
-                 if ( attrUnits.length != 0){
+                 if ( classStorableUnits.length != 0){
                      graph += '|';
-                     for(j = 0; j < attrUnits.length; j++) {
+                     for(j = 0; j < classStorableUnits.length; j++) {
                    
                          graph += '-   ' ;
-                         graph += filterName(attrUnits[j]["name"]);
-                         graph += ':'+attrUnits[j]["type"];
+                         graph += classStorableUnits[j]["name"];
+                         graph += ':'+classStorableUnits[j]["kind"];
                          graph += '\\l';
                      }
                  }
@@ -540,13 +529,13 @@ var transactions = UseCase.Transactions;
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
-                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
-                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
-                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+                         tempStr += classMethodUnits[j]["name"] + '(';
+                         var para_len = classMethodUnits[j]["parameterTypes"].length;
+                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
                         	 if(k != 0){
                         		 tempStr += ",";
                         	 }
-                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -567,7 +556,7 @@ var transactions = UseCase.Transactions;
                  
                  for(j = 0; j < classInterfaceUnits.length;j++) {
                      graph += '*   ';
-                     graph += filterName(classInterfaceUnits[j]["name"]) + ' ';
+                     graph += classInterfaceUnits[j]["name"] + ' ';
                  		graph += "\\l";
                  }
                  }
@@ -612,19 +601,18 @@ var transactions = UseCase.Transactions;
                  
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
-                 graph += filterName(curClass["name"]);
+                 graph += curClass["name"];
 
 
-                 var attrUnits = curClass["attrUnits"];
+                 var classStorableUnits = curClass["attrUnits"];
 
                  
-             	if ( attrUnits.length != 0){
+             	if ( classStorableUnits.length != 0){
                      graph += '|';
-                     for(j = 0; j < attrUnits.length; j++) {
+                     for(j = 0; j < classStorableUnits.length; j++) {
       
                          graph += '-   ' ;
-                         graph += filterName(attrUnits[j]["name"]);
-                         graph += ':'+attrUnits[j]["type"];
+                         graph += classStorableUnits[j]["name"];
                          graph += '\\l';
                      }
                  }
@@ -637,15 +625,15 @@ var transactions = UseCase.Transactions;
 
                     	 tempStr += '+   ';
                     	 console.log(classMethodUnits[j]);
-                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
+                         tempStr += classMethodUnits[j]["name"] + '(';
                          console.log(classMethodUnits[j]);
-                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
-                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+                         var para_len = classMethodUnits[j]["parameterTypes"].length;
+                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
                         	 if(k != 0){
                         		 tempStr += ",";
                         	 }
                         	 
-                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
                          }
                          tempStr += ')';
                          tempStr += "\\l";
@@ -666,7 +654,7 @@ var transactions = UseCase.Transactions;
                  
                  for(j = 0; j < classInterfaceUnits.length;j++) {
                      graph += '*   ';
-                     graph += filterName(classInterfaceUnits[j]["name"]) + ' ';
+                     graph += classInterfaceUnits[j]["name"] + ' ';
                  		graph += "\\l";
                  }
          		}
@@ -716,18 +704,18 @@ var transactions = UseCase.Transactions;
                  
                  graph += '[ id = ' + i;
                  graph += ' label = "{';
-                 graph += filterName(curClass["name"]);
+                 graph += curClass["name"];
 
 
-                 var attrUnits = curClass["attrUnits"];
+                 var classStorableUnits = curClass["attrUnits"];
 
                  
-                if(attrUnits){
-             	if ( attrUnits.length != 0){
+                if(classStorableUnits){
+             	if ( classStorableUnits.length != 0){
                      graph += '|';
-                     for(j = 0; j < attrUnits.length; j++) {
+                     for(j = 0; j < classStorableUnits.length; j++) {
                          graph += '-   ' ;
-                         graph += filterName(attrUnits[j]["name"]);
+                         graph += classStorableUnits[j]["name"];
                          graph += '\\l';
                      }
                  }
@@ -742,13 +730,13 @@ var transactions = UseCase.Transactions;
                      for(j = 0; j < classMethodUnits.length;j++) {
 
                     	 tempStr += '+   ';
-                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
-                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
-                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+                         tempStr += classMethodUnits[j]["name"] + '(';
+                         var para_len = classMethodUnits[j]["parameterTypes"].length;
+                         for (k = 0; k < classMethodUnits[j]["parameterTypes"].length; k++) {
                         	 if(k != 0){
                         		 tempStr += ",";
                         	 }
-                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+                        	 tempStr += classMethodUnits[j]["parameterTypes"][k]["type"];
                          }
                          tempStr += ')';
                          tempStr += "\\l";

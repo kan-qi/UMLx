@@ -62,12 +62,14 @@ public class UMLxAndroidToolKit {
 
 //        java -cp "./out/production/Android-toolkit:./libs/*" org.umlx.UMLxAndroidToolKit "/mnt/f/D/AndroidAnalysis/APKs/AntennaPod_3_18.apk" "/mnt/f/D/Android_SDK/platforms" "/mnt/f/D/ResearchSpace/ResearchProjects/UMLx/facility-tools/Android-toolkit/output"
 
+
         if (args.length < 2){
             printUsage();
             return;
         }
 
         Path sdkDir = Paths.get(System.getenv("ANDROID_SDK"));
+
 
         if (!sdkDir.toFile().exists()){
             System.out.println("Please configure ANDROID_SDK.");
