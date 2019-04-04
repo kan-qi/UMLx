@@ -82,14 +82,14 @@
 		console.log("the domainmodel is: " + JSON.stringify(DomainModel));
 
 
-//		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {  
-//		    if (err) throw err; 
-//		}) 
+//		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {
+//		    if (err) throw err;
+//		})
 //
 //
-//		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {  
-//		    if (err) throw err; 
-//		}) 
+//		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {
+//		    if (err) throw err;
+//		})
 
 
 		var activities = UseCase.Activities;
@@ -496,7 +496,7 @@ var transactions = UseCase.Transactions;
 		}
 
 	
-	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
+	function drawComponentDiagram(dicComponent, dicClassUnits, graphFilePath, callbackfunc){
 
 		if(typeof dicComponent === 'undefined' || Object.keys(dicComponent).length == 0){
      		return;
@@ -695,7 +695,7 @@ var transactions = UseCase.Transactions;
 
 	}
 	
-	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
+	function drawCompositeClassDiagram(dicCompositeClassUnits, dicClassUnits, graphFilePath, callbackfunc){
 
 		fs.writeFile('dicCompositeClassUnits.txt', JSON.stringify(dicCompositeClassUnits), (err) => {  
 		    if (err) throw err; 
