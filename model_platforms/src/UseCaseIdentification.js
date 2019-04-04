@@ -185,8 +185,6 @@
         				continue;
         				}
 
-
-
                         if(!preActivity){
                                     var activityID = "a"+targetMethodUnit['UUID'].replace(/\-/g, "_");
 

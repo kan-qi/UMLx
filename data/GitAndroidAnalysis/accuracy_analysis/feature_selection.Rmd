@@ -16,6 +16,19 @@ Loading data form the csv file
 ```{r}
 data <- read.csv('./modelEvaluations-1-3.csv',stringsAsFactors= T)
 summary(data)
+
+
+#data <- read.csv('./csv_result-desharnais.csv',stringsAsFactors= T)
+#print(cor(data$Transactions, data$Effort))
+
+#data <- read.csv('./UCP_Dataset_OnlineV1.1.csv',stringsAsFactors= T)
+#print(cor(data$Trans, data$Real_Effort_Person_Hours))
+
+#data <- read.csv('./UCP_Dataset_OnlineV1.1.csv',stringsAsFactors= T)
+#print(cor(data$Trans, data$Real_Effort_Person_Hours))
+
+data <- read.csv('./csv_result-albrecht.csv',stringsAsFactors= T)
+print(cor(data$Transactions, data$Effort))
 ```
 
 ## Preprocessing the data
