@@ -19,7 +19,7 @@
 	var jp = require('jsonpath');
 	var uuidV1 = require('uuid/v1');
 	var kdmModelUtils = require("./KDMModelUtils.js");
-	var kdmModelDrawer = require("./KDMModelDrawer.js");
+	var dependencyGraphDrawer = require("./DependencyGraphDrawer.js");
 	var FileManagerUtils = require("../../utils/FileManagerUtils.js");
 
 	function analyseCode(jsonString, outputDir) {
@@ -175,6 +175,15 @@
 		debug.writeJson2("converted-android-analysis-results-extension-graph", result.extendsGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-composition-graph", result.compositionGraph, outputDir);
 		debug.writeJson2("converted-android-analysis-results-type-dependency-graph", result.typeDependencyGraph, outputDir);
+
+
+		dependencyGraphDrawer.drawClassDependencyGraph(codeAnalysisResults, outputDir);
+
+        dependencyGraphDrawer.drawClassDependencyGraphGroupedByCompositeClass(codeAnalysisResults, outputDir);
+
+        dependencyGraphDrawer.drawClassDependencyGraphGroupedByComponent(codeAnalysisResults, outputDir);
+
+        dependencyGraphDrawer.drawCompositeClassDependencyGraph(codeAnalysisResults, outputDir);
 		
 		return result;
 	}
