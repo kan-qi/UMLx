@@ -217,9 +217,9 @@ div.block.panel.panel-default
                                 div(id="model-query-box")
                                     div.row-item(id='model-selector-box')
                                          select#model.estimation-form-control(name='model')
-                                           option(value="eucp_lm" selected) EUCP
-                                           option(value="exucp_lm") EXUCP
-                                           option(value="ducp_lm") DUCP
+                                           option#estimator1(value="eucp_lm") EUCP
+                                           option#estimator2(value="exucp_lm") EXUCP
+                                           option#estimator3(value="ducp_lm") DUCP
                                     //div.checkbox.row-item
                                      //label Simulation &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                       //input(type='checkbox' value='simulation-data')
@@ -234,6 +234,21 @@ div.block.panel.panel-default
                 label.input-group-btn()
                     span.btn.btn-primary.form-button Browse
                         input#uml_file(type="file", style="display: none;", name='uml_file', accept='text/xml, .apk', role = "button" )
+            button.btn.silver(type="button", data-toggle="modal", data-target="#exampleModalCenter" style = "color: white; font-size: 16px; margin-right: 15px") Estimator
+            // Estimator Modal
+            #exampleModalCenter.modal.fade(tabindex='-1', role='dialog', aria-labelledby='exampleModalCenterTitle', aria-hidden='true')
+              .modal-dialog.modal-dialog-centered(role='document' style="margin-top : 15%;" )
+                .modal-content
+                  .modal-header
+                    h2#exampleModalLongTitle.modal-title.text-center Choose the estimator 
+                    //- button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    //-   span(aria-hidden='true') ×
+                  .modal-body
+                    button.btn.btn-lg.btn-block.estimator-select(type='button' onclick = "estimator_selected(this, 0)") EUCP
+                    button.btn.btn-lg.btn-block.estimator-select(type='button' onclick = "estimator_selected(this, 1)") EXUCP
+                    button.btn.btn-lg.btn-block.estimator-select(type='button' onclick = "estimator_selected(this, 2)") DUCP
+                  .modal-footer
+                    button.btn.btn-primary.silver(type='button', data-dismiss='modal') Close
             div
                 button.btn.btn-dark.btn-submit.btn-lg(type='submit') Submit
         #sec-5
