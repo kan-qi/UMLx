@@ -134,7 +134,6 @@ public class UMLxAndroidToolKit {
         Options.v().set_process_multiple_dex(true);
         Scene.v().loadNecessaryClasses();
         Options.v().set_app(true);
-        Options.v().set_allow_phantom_refs(true);
 
 
         System.out.println("callbacks:");
@@ -164,15 +163,22 @@ public class UMLxAndroidToolKit {
 
         createMainMethod();
 
-        DebugOutput.v().println("classes and methods:");
+        DebugOutput.v().println("classes and methods1:");
         for (SootClass cs : Scene.v().getClasses()) {
             ClassWriter.v().println(cs.getName());
             DebugOutput.v().println("classes: "+cs.getName());
+//            if(cs.getName().equals("org.apache.log.LogTarget")){
+//                cs.setPhantomClass();
+//                continue;
+//            }
             if (cs.getName().startsWith(Configs.appPkg)) {
-                cs.setLibraryClass();
-            } else {
                 cs.setApplicationClass();
+                DebugOutput.v().println("application classes: "+cs.getName());
             }
+//            else {
+//                cs.setLibraryClass();
+//                DebugOutput.v().println("library classes: "+cs.getName());
+//            }
 
             for (SootMethod mtd : cs.getMethods()) {
 
@@ -218,6 +224,9 @@ public class UMLxAndroidToolKit {
                     }
                 }
                 ));
+
+        Options.v().setPhaseOption("jb", "on");
+        Options.v().setPhaseOption("cg", "on");
 
         Options.v().setPhaseOption("jtp.npc", "on");
         final CodeAnalysis.CodeAnalysisResult[] codeAnalysisResult = new CodeAnalysis.CodeAnalysisResult[1];
