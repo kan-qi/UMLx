@@ -768,8 +768,7 @@ var transactions = UseCase.Transactions;
 
             	for(var k = 0; k < dicClassUnits.length; k ++){
             		 var attrUnits = dicClassUnits[k]["attrUnits"];
-            		
-	                 if ( attrUnits !== undefined && attrUnits.length != 0){
+	                 if ( attrUnits.length != 0){
 	                     graph += '|';
 	                     break;
 	                 }
@@ -782,7 +781,7 @@ var transactions = UseCase.Transactions;
 
             		 var attrUnits = dicClassUnits[k]["attrUnits"];
 
-	                 if ( attrUnits !== undefined && attrUnits.length != 0){
+	                 if ( attrUnits.length != 0){
 	                     
 	                     for(j = 0; j < attrUnits.length; j++) {
 	                   
@@ -800,11 +799,12 @@ var transactions = UseCase.Transactions;
 
 	                 var classMethodUnits = dicClassUnits[k]["methodUnits"];
 
-	                 if (classMethodUnits !== undefined && classMethodUnits.length != 0){
+	                 if (classMethodUnits.length != 0){
 	                     graph += '|';
 	                     break;
 	                 }
             	}
+
 
             	
 
@@ -812,7 +812,7 @@ var transactions = UseCase.Transactions;
 
 	                 var classMethodUnits = dicClassUnits[k]["methodUnits"];
 
-	                 if (classMethodUnits !== undefined && classMethodUnits.length != 0){
+	                 if (classMethodUnits.length != 0){
 	                     
 
 	                     var tempStr = "";
@@ -820,10 +820,17 @@ var transactions = UseCase.Transactions;
 
 	                    	 tempStr += '+   ';
 	                         tempStr += filterName(classMethodUnits[j]["name"]) + '(';
-	                       
 
-	                         tempStr += filterName(classMethodUnits[j]["returnType"])
+	                         tempStr += filterName(classMethodUnits[j]["returnType"]);
 
+
+	                         // var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+	                         // for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+	                        	//  if(k != 0){
+	                        	// 	 tempStr += ",";
+	                        	//  }
+	                        	//  tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+	                         // }
 	                         tempStr += ')';
 	                         tempStr += "\\l";
 	                     }
@@ -837,7 +844,9 @@ var transactions = UseCase.Transactions;
 
 	                 }
             	}
-           	                 
+
+
+          	                 
                  graph += '}"]';
 
 			}
@@ -862,3 +871,12 @@ var transactions = UseCase.Transactions;
 			drawCompositeClassDiagram: drawCompositeClassDiagram
 	}
 }())
+
+
+
+
+//node --max_old_space_size=10240 "./utils/AndroidProjectAnalysis.js" --analyse-android-projects "/data/GitAndroidAnalysis/batch_analysis/repo_example-12.json"
+
+
+
+
