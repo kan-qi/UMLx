@@ -29,7 +29,6 @@
 	var codeAnalysisXMI = require("./CodeAnalysisXMI.js");
 	var codeAnalysisSoot = require("./CodeAnalysisSoot.js");
 	var componentIdentifier = require("./ComponentIdentification.js");
-//	var controlFlowGraphConstructor = require("./ControlFlowGraphConstruction.js");
 	var useCaseIdentifier = require("./UseCaseIdentification.js");
 	var responseIdentifier = require("./ResponseIdentification.js");
 	var util = require('util');
@@ -195,9 +194,9 @@
 						
 						modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 						
-						modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+						modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
 						
-						modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
+						modelDrawer.drawComponentDiagram(componentInfo.dicComponents, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
 						
 						debug.writeJson("constructed_model", Model);
 
@@ -214,9 +213,9 @@
 
 					modelDrawer.drawClassDiagram(codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/classDiagram.dotty");
 					
-					modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
+					modelDrawer.drawCompositeClassDiagram(codeAnalysisResults.dicCompositeClassUnits, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/compositeClassDiagram.dotty");
 					
-					modelDrawer.drawComponentDiagram(componentInfo.dicComponents, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
+					modelDrawer.drawComponentDiagram(componentInfo.dicComponents, codeAnalysisResults.dicClassUnits, Model.DomainModel.OutputDir+"/componentDiagram.dotty");
 					
 					debug.writeJson("constructed_model", Model);
 

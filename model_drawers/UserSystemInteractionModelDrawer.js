@@ -82,14 +82,14 @@
 		console.log("the domainmodel is: " + JSON.stringify(DomainModel));
 
 
-//		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {  
-//		    if (err) throw err; 
-//		}) 
+//		fs.writeFile('DomainModel_1.txt', JSON.stringify(DomainModel), (err) => {
+//		    if (err) throw err;
+//		})
 //
 //
-//		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {  
-//		    if (err) throw err; 
-//		}) 
+//		fs.writeFile('UseCase_1.txt', JSON.stringify(UseCase), (err) => {
+//		    if (err) throw err;
+//		})
 
 
 		var activities = UseCase.Activities;
@@ -233,7 +233,7 @@
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
 
 			console.log("the usim file is in" +graphFilePath);
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph
@@ -362,7 +362,7 @@ var transactions = UseCase.Transactions;
 		graph += 'imagepath = \"./public\"}';
 
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph;
@@ -410,7 +410,7 @@ var transactions = UseCase.Transactions;
 		graph += 'imagepath = \"./public\"}';
 
 		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-			console.log("drawing is down");
+			console.log("drawing is done");
 		});
 
 		return graph;
@@ -496,119 +496,89 @@ var transactions = UseCase.Transactions;
 		}
 
 	
-	function drawComponentDiagram(dicComponent, graphFilePath, callbackfunc){
-
-
-		fs.writeFile('dicComponentDiagram.txt', JSON.stringify(dicComponent), (err) => {  
-		    if (err) throw err; 
-		}) 
-
+	function drawComponentDiagram(dicComponent, dicClassUnits, graphFilePath, callbackfunc){
 
 		if(typeof dicComponent === 'undefined' || Object.keys(dicComponent).length == 0){
      		return;
      	}
 
-        // console.log("dicComponent is "+ dicComponent[Object.keys(dicComponent)[0]]);
-        // var  dicComponentElements = dicComponent[Object.keys(dicComponent)[0]]["classUnits"];  
+        console.log("dicComponent is "+ dicComponent[Object.keys(dicComponent)[0]]);
+        var  dicComponentElements = dicComponent[Object.keys(dicComponent)[0]]["classUnits"];  
         
 		var graph = 'digraph class_diagram {';
             graph += 'node [fontsize = 8 shape = "record"]';
             graph += ' edge [arrowhead = "ediamond"]';
 
-            var size = Object.keys(dicComponent).length; 
-
-            for(var e = 0; e < size; e ++){
-
-            	var  dicComponentElements = dicComponent[Object.keys(dicComponent)[e]]; 
-
-            	graph += e;
-                graph += '[ id = ' + e;
-                graph += ' label = "{';
-                graph += filterName(dicComponentElements["name"]);
+        	 for(i = 0;  i < dicComponentElements.length; i++){
+        	   
+                 var curClass = dicComponentElements[i];
+                 
+                 graph += i;
+                 graph += '[ id = ' + i;
+                 graph += ' label = "{';
+                 graph += filterName(curClass["name"]);
 
 
+                 var attrUnits = dicComponentElements[i]["attrUnits"];
 
-            	var  dicClassUnits = dicComponentElements["classUnits"];
+                 if ( attrUnits.length != 0){
+                     graph += '|';
+                     for(j = 0; j < attrUnits.length; j++) {
+                   
+                         graph += '-   ' ;
+                         graph += filterName(attrUnits[j]["name"]);
+                         graph += ':'+attrUnits[j]["type"];
+                         graph += '\\l';
+                     }
+                 }
 
-            	for(var i = 0; i < dicClassUnits.length; i ++){
-            		 var attrUnits = dicClassUnits[i]["attrUnits"];
-	                 if ( attrUnits.length != 0){
-	                     graph += '|';
-	                     break;
-	                 }
-            	}
+                 var classMethodUnits = dicComponentElements[i]["methodUnits"];
+                 if (classMethodUnits.length != 0){
+                     graph += '|';
 
+                     var tempStr = "";
+                     for(j = 0; j < classMethodUnits.length;j++) {
 
+                    	 tempStr += '+   ';
+                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
+                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+                        	 if(k != 0){
+                        		 tempStr += ",";
+                        	 }
+                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+                         }
+                         tempStr += ')';
+                         tempStr += "\\l";
+                     }
 
-            	
+                     tempStr = tempStr.replace(/</g, "\u02C2");
+                     tempStr = tempStr.replace(/>/g, "\u02C3");
 
-            	for(var i = 0; i < dicClassUnits.length; i ++){
+                     graph += tempStr;
 
-            		 var attrUnits = dicClassUnits[i]["attrUnits"];
+                 }
 
-	                 if ( attrUnits.length != 0){
-	                     
-	                     for(j = 0; j < attrUnits.length; j++) {
-	                   
-	                         graph += '-   ' ;
-	                         graph += filterName(attrUnits[j]["name"]);
-	                         graph += ':'+attrUnits[j]["type"];
-	                         graph += '\\l';
-	                     }
-	                 }
-            	}
+                 var classInterfaceUnits = dicComponentElements[i]["interfaceUnits"];
+                 if(classInterfaceUnits){
+                 if(classInterfaceUnits.length != 0){
+                 	graph += '|';
+                 }
+                 
+                 for(j = 0; j < classInterfaceUnits.length;j++) {
+                     graph += '*   ';
+                     graph += filterName(classInterfaceUnits[j]["name"]) + ' ';
+                 		graph += "\\l";
+                 }
+                 }
 
-
-            	for(var i = 0; i < dicClassUnits.length; i ++){
-
-	                 var classMethodUnits = dicClassUnits[i]["methodUnits"];
-
-	                 if (classMethodUnits.length != 0){
-	                     graph += '|';
-	                     break;
-	                 }
-            	}
-
-            	
-
-            	for(var i = 0; i < dicClassUnits.length; i ++){
-
-	                 var classMethodUnits = dicClassUnits[i]["methodUnits"];
-
-	                 if (classMethodUnits.length != 0){
-	                     
-
-	                     var tempStr = "";
-	                     for(j = 0; j < classMethodUnits.length;j++) {
-
-	                    	 tempStr += '+   ';
-	                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
-	                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
-	                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
-	                        	 if(k != 0){
-	                        		 tempStr += ",";
-	                        	 }
-	                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
-	                         }
-	                         tempStr += ')';
-	                         tempStr += "\\l";
-	                     }
-
-	                     tempStr = tempStr.replace(/</g, "\u02C2");
-	                     tempStr = tempStr.replace(/>/g, "\u02C3");
-
-	                     graph += tempStr;
-
-	                     
-
-	                 }
-            	}
-
-            	graph += '}"]';
-
-
-            }
-
+                
+                 graph += '}"]';
+			}
+        	
+        	
+             
+         
             graph += 'imagepath = \"./public\"}';
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
@@ -618,12 +588,6 @@ var transactions = UseCase.Transactions;
             return graph;
 
 	}
-
-
-
-
-
-
 
 	function drawClassDiagram(dicClassUnits, graphFilePath, callbackfunc){
 
@@ -719,7 +683,6 @@ var transactions = UseCase.Transactions;
      		console.log("the dicClassUnits is:"+ graphFilePath);
 
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
-     			console.log("the class digram is" + graphFilePath);
      			console.log("class Diagram is done");
      		});
 
@@ -731,15 +694,12 @@ var transactions = UseCase.Transactions;
 		
 
 	}
-
 	
-	function drawCompositeClassDiagram(dicCompositeClassUnits, graphFilePath, callbackfunc){
+	function drawCompositeClassDiagram(dicCompositeClassUnits, dicClassUnits, graphFilePath, callbackfunc){
 
 		fs.writeFile('dicCompositeClassUnits.txt', JSON.stringify(dicCompositeClassUnits), (err) => {  
 		    if (err) throw err; 
 		}) 
-
-		console.log("the dicCompositeClassUnits is" + JSON.stringify(dicCompositeClassUnits));
 		
 		var keys = Object.keys(dicCompositeClassUnits);
 
@@ -759,94 +719,50 @@ var transactions = UseCase.Transactions;
                  graph += filterName(curClass["name"]);
 
 
-                var dicClassUnits = curClass["classUnits"];
+                 var attrUnits = curClass["attrUnits"];
 
-                dicClassUnits = "[{\"UUID\":\"225c78a3-297d-415c-92b6-e2df2f0e3d20\",\"name\":\"de.danoeh.antennapod.BuildConfig\",\"isWithinBoundary\":\"true\",\"methodUnits\":[{\"name\":\"<clinit>\",\"UUID\":\"47625ce2-02a2-4738-b2d5-dd1d9c5f226e\",\"returnType\":\"void\",\"parameterTypes\":[]},{\"name\":\"<init>\",\"UUID\":\"072da5b6-8800-4004-82c8-d8170c984df6\",\"returnType\":\"void\",\"parameterTypes\":[]}],\"attrUnits\":[{\"name\":\"APPLICATION_ID\",\"type\":\"java.lang.String\",\"UUID\":\"a5b75cce-438b-410b-9692-1234e1c6eccd\"},{\"name\":\"BUILD_TYPE\",\"type\":\"java.lang.String\",\"UUID\":\"1f586f85-2a8b-4ac0-9f2f-2153180827c2\"},{\"name\":\"DEBUG\",\"type\":\"boolean\",\"UUID\":\"05cbd678-d7e5-40c4-8463-afcdfa94ff23\"},{\"name\":\"FLATTR_APP_KEY\",\"type\":\"java.lang.String\",\"UUID\":\"c163a6ca-2bb3-4b89-9e50-0aad32956d91\"},{\"name\":\"FLATTR_APP_SECRET\",\"type\":\"java.lang.String\",\"UUID\":\"63fd3552-c2db-4bce-a8bc-322220c961c5\"},{\"name\":\"FLAVOR\",\"type\":\"java.lang.String\",\"UUID\":\"29afafce-7567-45e3-9d33-648267e14d31\"},{\"name\":\"VERSION_CODE\",\"type\":\"int\",\"UUID\":\"d6b48683-5fdd-4ffa-921e-41c5bb2962ca\"},{\"name\":\"VERSION_NAME\",\"type\":\"java.lang.String\",\"UUID\":\"8c81b25f-7d59-4a35-ac6b-5d62a457b683\"}]},{\"UUID\":\"cc70d86e-04a2-41e2-9a1f-cd166a0cd80f\",\"name\":\"de.danoeh.antennapod.CrashReportWriter\",\"isWithinBoundary\":\"true\",\"methodUnits\":[{\"name\":\"<init>\",\"UUID\":\"5ef99cad-1944-4e3f-ab1a-036b77c6d4d7\",\"returnType\":\"void\",\"parameterTypes\":[]},{\"name\":\"getFile\",\"UUID\":\"5b5d3456-b178-4f51-abd7-dda4795abf59\",\"returnType\":\"java.io.File\",\"parameterTypes\":[]},{\"name\":\"uncaughtException\",\"UUID\":\"012ba2a8-e28c-4611-81ea-83b6dfbfe43e\",\"returnType\":\"void\",\"parameterTypes\":[\"java.lang.Thread\",\"java.lang.Throwable\"]}],\"attrUnits\":[{\"name\":\"TAG\",\"type\":\"java.lang.String\",\"UUID\":\"82f139d3-f96d-4624-89b8-18234f878a03\"},{\"name\":\"defaultHandler\",\"type\":\"java.lang.Thread$UncaughtExceptionHandler\",\"UUID\":\"4297d5ab-bdd1-48e6-b31b-db6928bb122b\"}]}]";
-                dicClassUnits = JSON.parse(dicClassUnits);
+                 
+                if(attrUnits){
+             	if ( attrUnits.length != 0){
+                     graph += '|';
+                     for(j = 0; j < attrUnits.length; j++) {
+                         graph += '-   ' ;
+                         graph += filterName(attrUnits[j]["name"]);
+                         graph += '\\l';
+                     }
+                 }
+                }
 
                 
+         		var classMethodUnits = curClass["methodUnits"];
+         		if(classMethodUnits){
+                 if (classMethodUnits.length != 0){
+                     graph += '|';
+                     var tempStr = "";
+                     for(j = 0; j < classMethodUnits.length;j++) {
 
-            	for(var k = 0; k < dicClassUnits.length; k ++){
-            		 var attrUnits = dicClassUnits[k]["attrUnits"];
-	                 if ( attrUnits.length != 0){
-	                     graph += '|';
-	                     break;
-	                 }
-            	}
+                    	 tempStr += '+   ';
+                         tempStr += filterName(classMethodUnits[j]["signature"]["name"]) + '(';
+                         var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
+                         for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
+                        	 if(k != 0){
+                        		 tempStr += ",";
+                        	 }
+                        	 tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
+                         }
+                         tempStr += ')';
+                         tempStr += "\\l";
+                     }
 
+                     tempStr = tempStr.replace(/</g, "\u02C2");
+                     tempStr = tempStr.replace(/>/g, "\u02C3");
 
+                     graph += tempStr;
 
-            	for(var k = 0; k < dicClassUnits.length; k ++){
-            		console.log("the dicClassUnits_length is " + dicClassUnits.length);
+                 }
+         		}
 
-            		 var attrUnits = dicClassUnits[k]["attrUnits"];
-
-	                 if ( attrUnits.length != 0){
-	                     
-	                     for(j = 0; j < attrUnits.length; j++) {
-	                   
-	                         graph += '-   ' ;
-	                         graph += filterName(attrUnits[j]["name"]);
-	                         console.log(attrUnits[j]["name"]);
-	                         graph += ':'+attrUnits[j]["type"];
-	                         graph += '\\l';
-	                     }
-	                 }
-            	}
-
-
-            	for(var k = 0; k < dicClassUnits.length; k ++){
-
-	                 var classMethodUnits = dicClassUnits[k]["methodUnits"];
-
-	                 if (classMethodUnits.length != 0){
-	                     graph += '|';
-	                     break;
-	                 }
-            	}
-
-
-            	
-
-            	for(var k = 0; k < dicClassUnits.length; k ++){
-
-	                 var classMethodUnits = dicClassUnits[k]["methodUnits"];
-
-	                 if (classMethodUnits.length != 0){
-	                     
-
-	                     var tempStr = "";
-	                     for(j = 0; j < classMethodUnits.length;j++) {
-
-	                    	 tempStr += '+   ';
-	                         tempStr += filterName(classMethodUnits[j]["name"]) + '(';
-
-	                         tempStr += filterName(classMethodUnits[j]["returnType"]);
-
-
-	                         // var para_len = classMethodUnits[j]["signature"]["parameterUnits"].length;
-	                         // for (k = 0; k < classMethodUnits[j]["signature"]["parameterUnits"].length; k++) {
-	                        	//  if(k != 0){
-	                        	// 	 tempStr += ",";
-	                        	//  }
-	                        	//  tempStr += classMethodUnits[j]["signature"]["parameterUnits"][k]["type"];
-	                         // }
-	                         tempStr += ')';
-	                         tempStr += "\\l";
-	                     }
-
-	                     tempStr = tempStr.replace(/</g, "\u02C2");
-	                     tempStr = tempStr.replace(/>/g, "\u02C3");
-
-	                     graph += tempStr;
-
-	                     
-
-	                 }
-            	}
-
-
-          	                 
+           	                 
                  graph += '}"]';
 
 			}
@@ -854,7 +770,13 @@ var transactions = UseCase.Transactions;
      
             graph += 'imagepath = \"./public\"}';
 
+//     		console.log("the dicClassUnits graph is:"+graph);
+//
+//     		console.log("the dicClassUnits is:"+ graphFilePath);
+
      		dottyUtil.drawDottyGraph(graph, graphFilePath, function(){
+
+     			console.log("the test graphFilePath is:"+ graphFilePath);
      			console.log("class Diagram is done");
      		});
 
@@ -871,12 +793,3 @@ var transactions = UseCase.Transactions;
 			drawCompositeClassDiagram: drawCompositeClassDiagram
 	}
 }())
-
-
-
-
-//node --max_old_space_size=10240 "./utils/AndroidProjectAnalysis.js" --analyse-android-projects "/data/GitAndroidAnalysis/batch_analysis/repo_example-12.json"
-
-
-
-

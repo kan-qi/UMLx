@@ -17,6 +17,7 @@
 
 
 // should directly analysis the inter-component control flow on top of the soot-cfg.
+
     function identifyUseCasesfromCFG(dicComponents, dicClassComponent, dicMethodClass, dicResponseMethodUnits, dicMethodUnits, dicClassUnits, icfg, ModelOutputDir, ModelAccessDir, domainElementsByID){
 
 		var UseCases = [];
@@ -184,8 +185,6 @@
         				if(!domainElement){
         				continue;
         				}
-
-
 
                         if(!preActivity){
                                     var activityID = "a"+targetMethodUnit['UUID'].replace(/\-/g, "_");

@@ -412,6 +412,10 @@
            var command = "java -cp \"./facility-tools/Android-toolkit/out/production/Android-toolkit:./facility-tools/Android-toolkit/libs/*\" "
            +"org.umlx.UMLxAndroidToolKit \""+apkFilePath+"\""
            +" \""+outputDir+"\"";
+
+//           var command = "java -cp \"./facility-tools/Android-toolkit/bin:./facility-tools/Android-toolkit/libs/*\" "
+//                      +"org.umlx.UMLxAndroidToolKit \""+apkFilePath+"\""
+//                      +" \""+outputDir+"\"";
 		   
 //		 	console.log(outputDir);
 //		   	console.log(command);

@@ -508,7 +508,7 @@ function drawItems_Components(graph, allComponents, myMap) {
 
 //  node GenerateEdgeGraphWithComponent.js "./tempData/converted-android-analysis-results-access-graph.json" "./tempData/converted-android-analysis-results-call-graph.json" "./tempData/converted-android-analysis-results-composition-graph.json" "./tempData/converted-android-analysis-results-extension-graph.json" "./tempData/converted-android-analysis-results-type-dependency-graph.json" "./tempData/result1_Use_Component.txt" "./tempData/result2_Use_Component.txt" 
 
-//  node drawGraphWithSubGraph.js "./tempData/converted-android-analysis-results-access-graph.json" "./tempData/converted-android-analysis-results-call-graph.json" "./tempData/converted-android-analysis-results-composition-graph.json" "./tempData/converted-android-analysis-results-extension-graph.json" "./tempData/converted-android-analysis-results-type-dependency-graph.json" "./tempData/dicCompositeClassUnits.txt" "./tempData/result1_Use_Component.txt" "./tempData/result2_Use_Component.txt" 
+//  node drawGraphWithSubGraph2.js "./tempData/converted-android-analysis-results-access-graph.json" "./tempData/converted-android-analysis-results-call-graph.json" "./tempData/converted-android-analysis-results-composition-graph.json" "./tempData/converted-android-analysis-results-extension-graph.json" "./tempData/converted-android-analysis-results-type-dependency-graph.json" "./tempData/dicCompositeClassUnits.txt" "./tempData/result1_Use_Component.txt" "./tempData/result2_Use_Component.txt" 
 
 
 

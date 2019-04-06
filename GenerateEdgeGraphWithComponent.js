@@ -156,6 +156,8 @@ function drawComponentDiagram1(edgesComponent1, edgesComponent2, edgesComponent3
 
 function drawComponentDiagram2(edgesComponent1, edgesComponent2, edgesComponent3, edgesComponent4, edgesComponent5, graphFilePath){
 
+ nodeType1 = ", style=filled, fillcolor=grey";
+ nodeType2 = "";
 
  var graph = "digraph graphname{";
 
